@@ -1,0 +1,123 @@
+import json
+
+# System architecture based on Phase I code bundle
+system_architecture = {
+    "system_name": "LuvOnPurpose Sovereign System",
+    "phase": "Phase I",
+    "version": "v5",
+    "status": "Active",
+    "core_modules": [
+        {
+            "id": 1,
+            "name": "Token Chain Validation",
+            "file": "TokenChainValidation.py",
+            "linked_scroll": "Scroll 16 – Token Trigger Chain Logic",
+            "function": "Enforces proper token activation order: Mirror → Gift → Spark → House",
+            "key_features": [
+                "Sequential token activation enforcement",
+                "Overflow call denial",
+                "Token chain logging"
+            ],
+            "status": "✅ Active"
+        },
+        {
+            "id": 2,
+            "name": "Gift Token Unlock Timer",
+            "file": "GiftTokenUnlockTimer.py",
+            "linked_scroll": "Scroll 25 – Gifting System Logic",
+            "function": "Controls unlocking conditions for Gift Tokens based on time or task completion",
+            "key_features": [
+                "1-year anniversary tracking",
+                "House Stewardship Scrolls completion check",
+                "Status reporting (LOCKED/UNLOCKED)"
+            ],
+            "status": "✅ Active"
+        },
+        {
+            "id": 3,
+            "name": "Tokenized Receipt Generator",
+            "file": "TokenizedReceiptGenerator.py",
+            "linked_scroll": "Scroll 18 – Consent to Pay in Cryptocurrency",
+            "function": "Generates ceremonial receipts for crypto payments",
+            "key_features": [
+                "Payer alias tracking",
+                "Wallet address recording",
+                "Transaction hash storage",
+                "Timestamp logging"
+            ],
+            "status": "✅ Active"
+        },
+        {
+            "id": 4,
+            "name": "House Activation Validator",
+            "file": "HouseActivationValidator.py",
+            "linked_scroll": "Scroll 19 – Crown of Completion",
+            "function": "Validates all required conditions for House Activation",
+            "key_features": [
+                "Sealed scrolls verification",
+                "Token trigger validation (MIRROR, GIFT, SPARK, HOUSE)",
+                "LuvLedger status check",
+                "GPT readiness verification",
+                "Crown of Completion issuance"
+            ],
+            "status": "✅ Active"
+        },
+        {
+            "id": 5,
+            "name": "Offline Companion System",
+            "file": "OfflineCompanionSystem.py",
+            "linked_scroll": "Scroll 20 – Offline Companion System",
+            "function": "Enables local saving and offline recovery in case of GPT unavailability",
+            "key_features": [
+                "Local file logging",
+                "Timestamped backups",
+                "Sync key logic",
+                "Offline recovery mechanism"
+            ],
+            "status": "✅ Active"
+        }
+    ],
+    "system_layers": {
+        "token_layer": {
+            "name": "Token & Activation Layer",
+            "components": ["Token Chain Validation", "Gift Token Unlock Timer"],
+            "purpose": "Manages token lifecycle and activation sequences"
+        },
+        "financial_layer": {
+            "name": "Financial & Payment Layer",
+            "components": ["Tokenized Receipt Generator"],
+            "purpose": "Handles cryptocurrency payments and receipts"
+        },
+        "validation_layer": {
+            "name": "Validation & Verification Layer",
+            "components": ["House Activation Validator"],
+            "purpose": "Ensures all conditions are met for House activation"
+        },
+        "resilience_layer": {
+            "name": "Resilience & Recovery Layer",
+            "components": ["Offline Companion System"],
+            "purpose": "Maintains system availability and data integrity"
+        }
+    },
+    "key_concepts": {
+        "token_sequence": ["MIRROR", "GIFT", "SPARK", "HOUSE"],
+        "activation_requirements": [
+            "Sealed scrolls",
+            "Complete token sequence",
+            "LuvLedger active",
+            "GPT ready"
+        ],
+        "crown_of_completion": "Issued upon successful House activation"
+    }
+}
+
+# Write to JSON
+with open('/tmp/system_architecture.json', 'w') as f:
+    json.dump(system_architecture, f, indent=2)
+
+print("✓ System architecture mapped")
+print(f"✓ Total core modules: {len(system_architecture['core_modules'])}")
+print(f"✓ System layers: {len(system_architecture['system_layers'])}")
+print("\nCore Modules:")
+for module in system_architecture['core_modules']:
+    print(f"  - {module['name']}: {module['file']}")

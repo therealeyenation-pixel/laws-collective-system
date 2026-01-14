@@ -1,93 +1,76 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Download, Share2, Search } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Download, Share2, Zap, Shield, BookOpen, DollarSign, Gavel } from "lucide-react";
 import { toast } from "sonner";
 
-interface Scroll {
-  number: number;
-  name: string;
-  category: string;
-  purpose: string;
-  file: string;
+interface SystemData {
+  system_name: string;
+  version: string;
+  status: string;
+  core_pillars: Array<{
+    name: string;
+    description: string;
+    workstreams: string[];
+    components: string[];
+  }>;
+  execution_modules: Array<{
+    id: number;
+    name: string;
+    layer: string;
+    function: string;
+    status: string;
+  }>;
+  system_architecture: Record<
+    string,
+    {
+      name: string;
+      purpose: string;
+      [key: string]: any;
+    }
+  >;
+  activation_flow: Record<string, string>;
 }
 
 export default function Home() {
-  const [scrolls, setScrolls] = useState<Scroll[]>([]);
-  const [filteredScrolls, setFilteredScrolls] = useState<Scroll[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [systemData, setSystemData] = useState<SystemData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch scrolls data
   useEffect(() => {
-    fetch("/scrolls_data.json")
+    fetch("/complete_system.json")
       .then((res) => res.json())
       .then((data) => {
-        setScrolls(data);
-        setFilteredScrolls(data);
+        setSystemData(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading scrolls:", err);
-        toast.error("Failed to load scrolls data");
+        console.error("Error loading system data:", err);
+        toast.error("Failed to load system data");
         setLoading(false);
       });
   }, []);
 
-  // Filter scrolls based on search and category
-  useEffect(() => {
-    let filtered = scrolls;
-
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter((s) => s.category === selectedCategory);
-    }
-
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (s) =>
-          s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.purpose.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.number.toString().includes(searchTerm)
-      );
-    }
-
-    setFilteredScrolls(filtered);
-  }, [searchTerm, selectedCategory, scrolls]);
-
-  // Get unique categories
-  const uniqueCategories = Array.from(new Set(scrolls.map((s) => s.category)));
-  const categories = ["all", ...uniqueCategories];
-
-  // Handle download
   const handleDownload = () => {
-    const dataStr = JSON.stringify(filteredScrolls, null, 2);
+    if (!systemData) return;
+    const dataStr = JSON.stringify(systemData, null, 2);
     const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `luvonpurpose-scrolls-${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `luvonpurpose-system-${new Date().toISOString().split("T")[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
-    toast.success("Scrolls data downloaded successfully");
+    toast.success("System architecture downloaded");
   };
 
-  // Handle share
   const handleShare = async () => {
-    const text = `LuvOnPurpose Scrolls Explorer\n\nTotal Scrolls: ${filteredScrolls.length}\nCategories: ${categories.filter((c) => c !== "all").join(", ")}\n\nExplore the complete LuvOnPurpose system architecture.`;
+    const text = `LuvOnPurpose Sovereign System\n\nA comprehensive, integrated system featuring:\n- 4 Core Pillars\n- 5 Execution Modules\n- 7 System Layers\n- Multi-workstream architecture\n\nExplore the complete build.`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "LuvOnPurpose Scrolls Explorer",
+          title: "LuvOnPurpose System",
           text: text,
         });
         toast.success("Shared successfully");
@@ -95,10 +78,32 @@ export default function Home() {
         console.error("Share failed:", err);
       }
     } else {
-      // Fallback: copy to clipboard
       await navigator.clipboard.writeText(text);
       toast.success("Copied to clipboard");
     }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading LuvOnPurpose System...</p>
+      </div>
+    );
+  }
+
+  if (!systemData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-muted-foreground">Unable to load system data</p>
+      </div>
+    );
+  }
+
+  const pillarIcons: Record<string, React.ReactNode> = {
+    "Sovereign System Build": <Shield className="w-6 h-6" />,
+    "Legal & Probate Case": <Gavel className="w-6 h-6" />,
+    "Education & Academy": <BookOpen className="w-6 h-6" />,
+    "Grant & Funding": <DollarSign className="w-6 h-6" />,
   };
 
   return (
@@ -113,192 +118,225 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-            LuvOnPurpose Scrolls Explorer
+            LuvOnPurpose Sovereign System
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 drop-shadow-md max-w-2xl">
-            Discover the complete architecture of the LuvOnPurpose Sovereign System
+          <p className="text-xl md:text-2xl text-white/90 drop-shadow-md max-w-3xl">
+            An integrated, multi-workstream architecture combining token activation, legal
+            governance, education, and financial systems
           </p>
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* System Overview */}
       <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
-        {/* Controls */}
-        <div className="mb-8 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-3 text-muted-foreground" />
-              <Input
-                placeholder="Search scrolls by name, number, or description..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+        <div className="mb-8 flex flex-col sm:flex-row gap-3">
+          <Button
+            onClick={handleDownload}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <Download size={18} />
+            Download Architecture
+          </Button>
+          <Button
+            onClick={handleShare}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <Share2 size={18} />
+            Share
+          </Button>
+        </div>
+
+        {/* System Status */}
+        <Card className="p-6 mb-8 bg-secondary/10 border-accent/30">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">System Name</p>
+              <p className="text-lg font-semibold">{systemData.system_name}</p>
             </div>
-
-            {/* Category Filter */}
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Filter by category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat === "all" ? "All Categories" : cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Version</p>
+              <p className="text-lg font-semibold">{systemData.version}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">Status</p>
+              <p className="text-lg font-semibold text-accent">{systemData.status}</p>
+            </div>
           </div>
+        </Card>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              onClick={handleDownload}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <Download size={18} />
-              Download Data
-            </Button>
-            <Button
-              onClick={handleShare}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <Share2 size={18} />
-              Share
-            </Button>
-          </div>
-        </div>
+        {/* Tabs for different views */}
+        <Tabs defaultValue="pillars" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="pillars">Core Pillars</TabsTrigger>
+            <TabsTrigger value="modules">Execution Modules</TabsTrigger>
+            <TabsTrigger value="layers">System Layers</TabsTrigger>
+          </TabsList>
 
-        {/* Results Summary */}
-        <div className="mb-8 p-4 bg-secondary/20 rounded-lg border border-secondary/30">
-          <p className="text-sm text-muted-foreground">
-            Showing <span className="font-semibold text-foreground">{filteredScrolls.length}</span> of{" "}
-            <span className="font-semibold text-foreground">{scrolls.length}</span> scrolls
-          </p>
-        </div>
-
-        {/* Scrolls Grid */}
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <p className="text-muted-foreground">Loading scrolls...</p>
-          </div>
-        ) : filteredScrolls.length === 0 ? (
-          <div className="flex items-center justify-center py-12">
-            <p className="text-muted-foreground">No scrolls found matching your criteria</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredScrolls.map((scroll) => (
-              <Card
-                key={scroll.number}
-                className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-accent"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-lg font-bold text-foreground">
-                      Scroll {scroll.number}
-                    </h3>
-                    <p className="text-sm text-muted-foreground font-medium">
-                      {scroll.category}
-                    </p>
+          {/* Core Pillars Tab */}
+          <TabsContent value="pillars" className="space-y-6 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {systemData.core_pillars.map((pillar, idx) => (
+                <Card key={idx} className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="text-accent">
+                      {pillarIcons[pillar.name] || <Zap className="w-6 h-6" />}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-foreground">{pillar.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{pillar.description}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 text-accent font-bold">
-                    {scroll.number}
+
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground mb-2">Workstreams:</p>
+                      <ul className="space-y-1">
+                        {pillar.workstreams.map((ws, i) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            {ws}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold text-foreground mb-2">Components:</p>
+                      <ul className="space-y-1">
+                        {pillar.components.map((comp, i) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                            {comp}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
 
-                <h4 className="font-semibold text-foreground mb-3">
-                  {scroll.name}
-                </h4>
+          {/* Execution Modules Tab */}
+          <TabsContent value="modules" className="space-y-4 mt-6">
+            <div className="space-y-4">
+              {systemData.execution_modules.map((module) => (
+                <Card key={module.id} className="p-6 border-l-4 border-l-accent">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-lg font-bold text-foreground">{module.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{module.layer}</p>
+                    </div>
+                    <span className="text-xs font-semibold px-3 py-1 bg-accent/20 text-accent rounded-full">
+                      {module.status}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{module.function}</p>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
 
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                  {scroll.purpose}
-                </p>
+          {/* System Layers Tab */}
+          <TabsContent value="layers" className="space-y-4 mt-6">
+            <div className="space-y-4">
+              {Object.entries(systemData.system_architecture).map(([key, layer]) => (
+                <Card key={key} className="p-6">
+                  <h3 className="text-lg font-bold text-foreground mb-2">{layer.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{layer.purpose}</p>
 
-                <div className="pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground">
-                    File: <span className="font-mono">{scroll.file}</span>
-                  </p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
+                  {layer.key_tokens && (
+                    <div className="mb-3">
+                      <p className="text-sm font-semibold text-foreground mb-2">Key Tokens:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {layer.key_tokens.map((token: string, i: number) => (
+                          <span
+                            key={i}
+                            className="text-xs font-mono bg-secondary/30 text-foreground px-2 py-1 rounded"
+                          >
+                            {token}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {layer.key_features && (
+                    <div className="mb-3">
+                      <p className="text-sm font-semibold text-foreground mb-2">Key Features:</p>
+                      <ul className="space-y-1">
+                        {layer.key_features.map((feature: string, i: number) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {layer.key_checks && (
+                    <div>
+                      <p className="text-sm font-semibold text-foreground mb-2">Key Checks:</p>
+                      <ul className="space-y-1">
+                        {layer.key_checks.map((check: string, i: number) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            {check}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {layer.key_components && (
+                    <div>
+                      <p className="text-sm font-semibold text-foreground mb-2">Components:</p>
+                      <ul className="space-y-1">
+                        {layer.key_components.map((comp: string, i: number) => (
+                          <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            {comp}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </section>
 
-      {/* System Overview Section */}
+      {/* Activation Flow */}
       <section className="py-12 px-4 md:px-8 bg-secondary/10 border-t border-border">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8 text-center">System Architecture</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">House Activation Flow</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* House & Activation */}
-            <Card className="p-6">
-              <h3 className="text-xl font-bold mb-4 text-accent">
-                House & Activation (Scrolls 41–53)
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Governs the activation, registration, and management of Houses within the LuvOnPurpose
-                Sovereign System. Includes protocols for vault initialization, stewardship oaths, and
-                system integrity.
-              </p>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>Starter, Mirrored, and Adapted House activation</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>Bundle registration and vault initialization</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>House expansion and upgrade protocols</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>Emergency custodian override safeguards</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Financial & Ledger */}
-            <Card className="p-6">
-              <h3 className="text-xl font-bold mb-4 text-accent">
-                Financial & Ledger (Scrolls 54–61)
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Establishes the complete financial automation engine within LuvLedger. Governs fund
-                allocation, reporting, commercial entity synchronization, and system economic health.
-              </p>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>LuvLedger integration and allocation engines</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>Tax and reporting synchronization</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>Commercial entity expansion logic</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent" />
-                  <span>System stability and economic health monitoring</span>
-                </li>
-              </ul>
-            </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Object.entries(systemData.activation_flow).map(([step, description], idx) => (
+              <div key={step} className="flex gap-4">
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-accent text-white font-bold">
+                    {idx + 1}
+                  </div>
+                  {idx < Object.keys(systemData.activation_flow).length - 1 && (
+                    <div className="w-1 h-12 bg-accent/30 mt-2" />
+                  )}
+                </div>
+                <div className="pb-4">
+                  <p className="text-sm font-semibold text-foreground">{description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Flow Diagram Section */}
+      {/* System Flow Diagram */}
       <section className="py-12 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">Financial Automation Spine</h2>
@@ -309,20 +347,14 @@ export default function Home() {
               className="w-full h-auto"
             />
           </div>
-          <p className="text-center text-muted-foreground mt-4 text-sm">
-            The eight scrolls form the financial automation spine: Integration → Allocation → Reporting
-            → Entity Sync → Expansion → Ratio Enforcement → Stability → Core Engine
-          </p>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="py-8 px-4 md:px-8 bg-secondary/10 border-t border-border text-center text-muted-foreground text-sm">
-        <p>
-          LuvOnPurpose Master Developer Archive v1.0 | Last Updated: November 17, 2024
-        </p>
+        <p>LuvOnPurpose Sovereign System | {systemData.version}</p>
         <p className="mt-2">
-          Contains 21 comprehensive scrolls covering House activation and financial automation
+          Integrated architecture: 4 Core Pillars • 5 Execution Modules • 7 System Layers
         </p>
       </footer>
     </div>
