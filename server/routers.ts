@@ -1,5 +1,6 @@
-import { COOKIE_NAME } from "@shared/const";
+
 import { getSessionCookieOptions } from "./_core/cookies";
+import { COOKIE_NAME } from "../shared/const";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { luvSystemRouter } from "./routers/luv-system";
@@ -10,6 +11,12 @@ import { luvledgerRouter } from "./routers/luvledger";
 import { blockchainRouter } from "./routers/blockchain";
 import { autonomousEngineRouter } from "./routers/autonomous-engine";
 import { tokenEconomyRouter } from "./routers/token-economy";
+import { curriculumGenerationRouter } from "./routers/curriculum-generation";
+import { gamifiedSimulatorRouter } from "./routers/gamified-simulator";
+import { cryptoWalletRouter } from "./routers/crypto-wallet";
+import { offlineSyncRouter } from "./routers/offline-sync";
+import { luvLedgerTrackingRouter } from "./routers/luv-ledger-tracking";
+import { auditTrailUIRouter } from "./routers/audit-trail-ui";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -22,6 +29,12 @@ export const appRouter = router({
   blockchain: blockchainRouter,
   autonomousEngine: autonomousEngineRouter,
   tokenEconomy: tokenEconomyRouter,
+  curriculumGeneration: curriculumGenerationRouter,
+  gamifiedSimulator: gamifiedSimulatorRouter,
+  cryptoWallet: cryptoWalletRouter,
+  offlineSync: offlineSyncRouter,
+  luvLedgerTracking: luvLedgerTrackingRouter,
+  auditTrailUI: auditTrailUIRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
