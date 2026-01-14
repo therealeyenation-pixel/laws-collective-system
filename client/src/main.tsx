@@ -10,7 +10,7 @@ import "./index.css";
 
 const queryClient = new QueryClient();
 
-const redirectToLoginIfUnauthorized = (error: unknown) => {
+const redirectToLoginIfUnauthorized = (error: unknown, queryKey?: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
   if (typeof window === "undefined") return;
 
@@ -18,13 +18,26 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 
   if (!isUnauthorized) return;
 
+  // Don't redirect for auth.me queries - let the ProtectedRoute handle it
+  // This prevents redirect loops on mobile
+  if (queryKey && Array.isArray(queryKey) && queryKey[0]?.[0] === 'auth' && queryKey[0]?.[1] === 'me') {
+    console.log('[Auth] Skipping redirect for auth.me query');
+    return;
+  }
+
   window.location.href = getLoginUrl();
 };
 
 queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
-    redirectToLoginIfUnauthorized(error);
+    const queryKey = event.query.queryKey;
+    // Skip redirect for auth-related queries
+    if (queryKey && Array.isArray(queryKey) && queryKey[0]?.[0] === 'auth') {
+      console.log('[Auth] Auth query error, not redirecting:', error);
+      return;
+    }
+    redirectToLoginIfUnauthorized(error, queryKey);
     console.error("[API Query Error]", error);
   }
 });

@@ -232,3 +232,8 @@
 ## Phase 14: Fix Dashboard Redirect Loop
 - [x] Fix System Dashboard authentication redirect loop on mobile
 - [x] Ensure dashboard pages work without forced redirect
+
+
+## Phase 15: Fix Mobile Session Persistence
+- [x] Fix authentication session not persisting on mobile protected routes
+- [x] Ensure cookies are sent correctly with API requests
