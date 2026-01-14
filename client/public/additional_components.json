@@ -1,0 +1,90 @@
+{
+  "additional_components": {
+    "business_simulators": {
+      "name": "Business Simulators",
+      "type": "Interactive Simulation System",
+      "purpose": "Educational and operational business simulation platform",
+      "specs": [
+        "01_Turn_Cycle_Spec.md - Game turn mechanics",
+        "02_Screens_IA.md - User interface architecture",
+        "03_Data_Model_Schema.md - Data structure definitions",
+        "04_Equations_KPI_Spec.md - Key performance indicators",
+        "05_Event_Library.md - Event system documentation",
+        "06_AI_Hints_and_Tutorials.md - AI guidance system",
+        "07_Scoring_Objectives.md - Scoring methodology",
+        "08_Integration_HandOff.md - System integration points"
+      ],
+      "documentation": [
+        "QuickStart_Simulator.pdf",
+        "CHANGELOG.md",
+        "Readiness_Note.md"
+      ],
+      "licensing": [
+        "Activation_License_OneUse.md",
+        "Versioning_Policy.md"
+      ],
+      "status": "Active"
+    },
+    "scientific_witness_scroll_set": {
+      "name": "Scientific Witness Scroll Set",
+      "type": "Educational & Research Collection",
+      "purpose": "Unified body of six scrolls documenting convergence of science and sacred knowing",
+      "classification": "Case Exhibit & Educational Vault Scroll Collection",
+      "vault_seal_code": "3K6ETAW22JE7J6GMWGBE",
+      "scrolls": [
+        {
+          "number": 1,
+          "title": "Preface and Index",
+          "content": "Overview and navigation guide"
+        },
+        {
+          "number": 2,
+          "title": "PEAR Lab Experiments",
+          "subtitle": "Intention as Force",
+          "focus": "Consciousness and intention research"
+        },
+        {
+          "number": 3,
+          "title": "SRI Remote Viewing Program",
+          "subtitle": "Vision Beyond Distance",
+          "focus": "Extrasensory perception research"
+        },
+        {
+          "number": 4,
+          "title": "Water and the Word",
+          "subtitle": "The Emoto Resonance Studies",
+          "focus": "Water crystallization and consciousness"
+        },
+        {
+          "number": 5,
+          "title": "HeartMath and the Field of Coherence",
+          "focus": "Heart-brain coherence and electromagnetic fields"
+        },
+        {
+          "number": 6,
+          "title": "The Max Planck Continuum",
+          "subtitle": "Consciousness as Source Field",
+          "focus": "Quantum consciousness theory"
+        }
+      ],
+      "placement": [
+        "Eternal_Flame_Vault/Core_Scrolls/Case_Exhibits/",
+        "06_Education_and_Simulation_Lane/History_of_Consciousness_Studies/"
+      ],
+      "custodians": "ORÁCULA | LuvOnPurpose Academy Division",
+      "status": "Secured – Active Collection",
+      "timestamp": "1 November 2025"
+    }
+  },
+  "system_expansion": {
+    "new_lanes": [
+      "06_Education_and_Simulation_Lane - Education and business simulation integration"
+    ],
+    "new_collections": [
+      "Scientific Witness Scroll Set - Consciousness and empirical research",
+      "Business Simulators - Interactive learning and operational systems"
+    ],
+    "total_scrolls_identified": "67+ (Scrolls 1-61 plus additional collections)",
+    "integration_notes": "These components represent expansion of the core system into education, simulation, and consciousness research domains"
+  }
+}
