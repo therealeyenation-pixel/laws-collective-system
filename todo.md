@@ -237,3 +237,8 @@
 ## Phase 15: Fix Mobile Session Persistence
 - [x] Fix authentication session not persisting on mobile protected routes
 - [x] Ensure cookies are sent correctly with API requests
+
+
+## Phase 16: Make Dashboards Accessible on Mobile
+- [x] Remove authentication requirement from dashboard routes for preview testing
+- [x] Allow dashboard access without login
