@@ -242,3 +242,7 @@
 ## Phase 16: Make Dashboards Accessible on Mobile
 - [x] Remove authentication requirement from dashboard routes for preview testing
 - [x] Allow dashboard access without login
+
+
+## Phase 17: Fix DashboardLayout Auth Check
+- [x] Remove authentication requirement from DashboardLayout component
