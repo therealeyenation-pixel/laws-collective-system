@@ -327,3 +327,9 @@
 ### Phase 21.4: Grant Templates
 - [x] Create grant application template for 508(c)(1)(a) nonprofit
 - [x] Template includes all standard sections (org info, need statement, budget, etc.)
+
+
+## Phase 22: Fix Dashboard Redirect Loop (Again)
+- [x] Fix Trust System Dashboard (/system) flashing and redirecting to sign in
+- [x] Fix Main Dashboard (/dashboard) flashing and redirecting to sign in
+- [x] Ensure pages stay accessible without authentication loop

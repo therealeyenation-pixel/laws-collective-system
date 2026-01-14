@@ -32,10 +32,15 @@ queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
     const queryKey = event.query.queryKey;
-    // Skip redirect for auth-related queries
-    if (queryKey && Array.isArray(queryKey) && queryKey[0]?.[0] === 'auth') {
-      console.log('[Auth] Auth query error, not redirecting:', error);
-      return;
+    // Skip redirect for auth-related queries and dashboard queries
+    // This prevents redirect loops when viewing dashboards without auth
+    if (queryKey && Array.isArray(queryKey)) {
+      const routerName = queryKey[0]?.[0];
+      const skipRedirectRouters = ['auth', 'companySetup', 'autonomousEngine', 'luv', 'academy', 'documentVault', 'tokenEconomy'];
+      if (skipRedirectRouters.includes(routerName)) {
+        console.log('[Auth] Skipping redirect for query:', routerName);
+        return;
+      }
     }
     redirectToLoginIfUnauthorized(error, queryKey);
     console.error("[API Query Error]", error);
