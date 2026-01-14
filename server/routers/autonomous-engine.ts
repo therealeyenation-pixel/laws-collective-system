@@ -189,6 +189,111 @@ Generate a JSON response with:
       return operations;
     }),
 
+  // Get recent operations across all entities
+  getRecentOperations: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+
+    const operations = await db
+      .select()
+      .from(autonomousOperations)
+      .orderBy(autonomousOperations.createdAt)
+      .limit(20);
+
+    return operations;
+  }),
+
+  // Run autonomous cycle for all entities
+  runAutonomousCycle: protectedProcedure
+    .input(z.object({}).optional())
+    .mutation(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Get all active business entities for the user
+      const entities = await db
+        .select()
+        .from(businessEntities)
+        .where(eq(businessEntities.userId, ctx.user.id));
+
+      const results = [];
+
+      for (const entity of entities) {
+        // Determine operation type based on entity type
+        let operationType: "revenue_generation" | "expense_management" | "allocation_distribution" | "market_analysis" | "strategic_decision";
+        const structure = entity.financialStructure as any;
+        
+        switch (structure?.role) {
+          case "commercial_engine":
+            operationType = "revenue_generation";
+            break;
+          case "education_platform":
+            operationType = "allocation_distribution";
+            break;
+          case "media_truth":
+            operationType = "market_analysis";
+            break;
+          case "nonprofit_outreach":
+            operationType = "allocation_distribution";
+            break;
+          default:
+            operationType = "strategic_decision";
+        }
+
+        // Generate operation description based on entity role
+        const descriptions: Record<string, string> = {
+          "commercial_engine": `Generated licensing opportunity for ${entity.name}`,
+          "education_platform": `Created new curriculum module for ${entity.name}`,
+          "media_truth": `Scheduled content publication for ${entity.name}`,
+          "nonprofit_outreach": `Allocated community resources for ${entity.name}`,
+          "root_authority": `Governance review completed for ${entity.name}`,
+        };
+
+        const description = descriptions[structure?.role] || `Autonomous operation for ${entity.name}`;
+
+        // Create autonomous operation record
+        const operationResult = await db.insert(autonomousOperations).values({
+          businessEntityId: entity.id,
+          operationType: operationType,
+          decision: {
+            action: description,
+            timestamp: new Date().toISOString(),
+            entityRole: structure?.role,
+          },
+          reasoning: `Automated cycle execution for ${entity.entityType} entity`,
+          status: "pending",
+        });
+
+        results.push({
+          entityId: entity.id,
+          entityName: entity.name,
+          operationType,
+          description,
+          status: "pending",
+        });
+      }
+
+      // Log to audit trail
+      await db.insert(activityAuditTrail).values({
+        userId: ctx.user.id,
+        activityType: "autonomous_cycle",
+        entityType: "system",
+        entityId: 0,
+        action: "cycle_executed",
+        details: {
+          entitiesProcessed: entities.length,
+          operationsCreated: results.length,
+          timestamp: new Date().toISOString(),
+        } as any,
+      });
+
+      return {
+        success: true,
+        operationsCreated: results.length,
+        operations: results,
+      };
+    }),
+
   // Generate business metrics and performance report
   generatePerformanceReport: protectedProcedure
     .input(
