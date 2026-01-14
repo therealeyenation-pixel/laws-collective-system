@@ -5,13 +5,32 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "./const";
 
+function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    window.location.href = getLoginUrl();
+    return null;
+  }
+
+  return <Component />;
+}
 
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
+      <Route path="/" component={Home} />
+      <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
+      <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
