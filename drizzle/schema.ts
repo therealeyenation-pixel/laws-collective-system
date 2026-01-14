@@ -234,3 +234,184 @@ export const studentEnrollments = mysqlTable("student_enrollments", {
 
 export type StudentEnrollment = typeof studentEnrollments.$inferSelect;
 export type InsertStudentEnrollment = typeof studentEnrollments.$inferInsert;
+
+
+/**
+ * Cryptocurrency Wallets - Store user crypto addresses and balances
+ */
+export const cryptoWallets = mysqlTable("crypto_wallets", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  walletAddress: varchar("walletAddress", { length: 255 }).notNull().unique(),
+  walletType: mysqlEnum("walletType", ["bitcoin", "ethereum", "solana", "other"]).notNull(),
+  balance: decimal("balance", { precision: 20, scale: 8 }).default("0").notNull(),
+  publicKey: varchar("publicKey", { length: 255 }),
+  status: mysqlEnum("status", ["active", "inactive", "suspended"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CryptoWallet = typeof cryptoWallets.$inferSelect;
+export type InsertCryptoWallet = typeof cryptoWallets.$inferInsert;
+
+/**
+ * Token Economy - Track system tokens earned and spent
+ */
+export const tokenAccounts = mysqlTable("token_accounts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  tokenBalance: decimal("tokenBalance", { precision: 20, scale: 8 }).default("0").notNull(),
+  totalEarned: decimal("totalEarned", { precision: 20, scale: 8 }).default("0").notNull(),
+  totalSpent: decimal("totalSpent", { precision: 20, scale: 8 }).default("0").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TokenAccount = typeof tokenAccounts.$inferSelect;
+export type InsertTokenAccount = typeof tokenAccounts.$inferInsert;
+
+/**
+ * Token Transactions - Track all token movements
+ */
+export const tokenTransactions = mysqlTable("token_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  amount: decimal("amount", { precision: 20, scale: 8 }).notNull(),
+  transactionType: mysqlEnum("transactionType", ["earned", "spent", "transferred", "converted", "reward"]).notNull(),
+  source: varchar("source", { length: 255 }),
+  description: text("description"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TokenTransaction = typeof tokenTransactions.$inferSelect;
+export type InsertTokenTransaction = typeof tokenTransactions.$inferInsert;
+
+/**
+ * Game Sessions - Track simulator game play and token earning
+ */
+export const gameSessions = mysqlTable("game_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  simulatorId: int("simulatorId").notNull(),
+  gameType: varchar("gameType", { length: 100 }).notNull(),
+  difficulty: mysqlEnum("difficulty", ["beginner", "intermediate", "advanced"]).notNull(),
+  score: int("score").default(0).notNull(),
+  tokensEarned: decimal("tokensEarned", { precision: 20, scale: 8 }).default("0").notNull(),
+  status: mysqlEnum("status", ["in_progress", "completed", "abandoned"]).default("in_progress").notNull(),
+  gameState: json("gameState"),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type GameSession = typeof gameSessions.$inferSelect;
+export type InsertGameSession = typeof gameSessions.$inferInsert;
+
+/**
+ * Achievements & Badges - Track player accomplishments
+ */
+export const achievements = mysqlTable("achievements", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  achievementType: varchar("achievementType", { length: 100 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  tokensReward: decimal("tokensReward", { precision: 20, scale: 8 }).default("0").notNull(),
+  unlockedAt: timestamp("unlockedAt").defaultNow().notNull(),
+});
+
+export type Achievement = typeof achievements.$inferSelect;
+export type InsertAchievement = typeof achievements.$inferInsert;
+
+/**
+ * Autonomous Business Operations - Track AI-driven business decisions
+ */
+export const autonomousOperations = mysqlTable("autonomous_operations", {
+  id: int("id").autoincrement().primaryKey(),
+  businessEntityId: int("businessEntityId").notNull(),
+  operationType: varchar("operationType", { length: 100 }).notNull(),
+  decision: json("decision").notNull(),
+  reasoning: text("reasoning"),
+  outcome: json("outcome"),
+  status: mysqlEnum("status", ["pending", "executed", "reviewed", "rejected"]).default("pending").notNull(),
+  reviewedBy: int("reviewedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  reviewNotes: text("reviewNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AutonomousOperation = typeof autonomousOperations.$inferSelect;
+export type InsertAutonomousOperation = typeof autonomousOperations.$inferInsert;
+
+/**
+ * Generated Curriculum - AI-generated courses and content
+ */
+export const generatedCurriculum = mysqlTable("generated_curriculum", {
+  id: int("id").autoincrement().primaryKey(),
+  courseId: int("courseId").notNull(),
+  generationVersion: int("generationVersion").default(1).notNull(),
+  generatedBy: varchar("generatedBy", { length: 100 }).default("ai").notNull(),
+  contentData: json("contentData").notNull(),
+  difficulty: mysqlEnum("difficulty", ["beginner", "intermediate", "advanced"]).notNull(),
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("draft").notNull(),
+  generatedAt: timestamp("generatedAt").defaultNow().notNull(),
+});
+
+export type GeneratedCurriculum = typeof generatedCurriculum.$inferSelect;
+export type InsertGeneratedCurriculum = typeof generatedCurriculum.$inferInsert;
+
+/**
+ * Offline Sync Queue - Track operations pending sync
+ */
+export const syncQueue = mysqlTable("sync_queue", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  operationType: varchar("operationType", { length: 100 }).notNull(),
+  data: json("data").notNull(),
+  status: mysqlEnum("status", ["pending", "synced", "failed"]).default("pending").notNull(),
+  retryCount: int("retryCount").default(0).notNull(),
+  lastError: text("lastError"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  syncedAt: timestamp("syncedAt"),
+});
+
+export type SyncQueue = typeof syncQueue.$inferSelect;
+export type InsertSyncQueue = typeof syncQueue.$inferInsert;
+
+/**
+ * Activity Audit Trail - Complete log of all system activities
+ */
+export const activityAuditTrail = mysqlTable("activity_audit_trail", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  activityType: varchar("activityType", { length: 100 }).notNull(),
+  entityType: varchar("entityType", { length: 100 }),
+  entityId: int("entityId"),
+  action: varchar("action", { length: 100 }).notNull(),
+  details: json("details"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ActivityAuditTrail = typeof activityAuditTrail.$inferSelect;
+export type InsertActivityAuditTrail = typeof activityAuditTrail.$inferInsert;
+
+/**
+ * Cryptocurrency Transactions - Track all crypto payments and transfers
+ */
+export const cryptoTransactions = mysqlTable("crypto_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  walletId: int("walletId").notNull(),
+  transactionHash: varchar("transactionHash", { length: 255 }).notNull().unique(),
+  amount: decimal("amount", { precision: 20, scale: 8 }).notNull(),
+  transactionType: mysqlEnum("transactionType", ["deposit", "withdrawal", "payment", "transfer"]).notNull(),
+  status: mysqlEnum("status", ["pending", "confirmed", "failed"]).default("pending").notNull(),
+  confirmations: int("confirmations").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  confirmedAt: timestamp("confirmedAt"),
+});
+
+export type CryptoTransaction = typeof cryptoTransactions.$inferSelect;
+export type InsertCryptoTransaction = typeof cryptoTransactions.$inferInsert;

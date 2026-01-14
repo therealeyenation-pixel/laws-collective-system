@@ -8,6 +8,8 @@ import { academyRouter } from "./routers/academy";
 import { simulatorsRouter } from "./routers/simulators";
 import { luvledgerRouter } from "./routers/luvledger";
 import { blockchainRouter } from "./routers/blockchain";
+import { autonomousEngineRouter } from "./routers/autonomous-engine";
+import { tokenEconomyRouter } from "./routers/token-economy";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -18,6 +20,8 @@ export const appRouter = router({
   simulators: simulatorsRouter,
   luvledger: luvledgerRouter,
   blockchain: blockchainRouter,
+  autonomousEngine: autonomousEngineRouter,
+  tokenEconomy: tokenEconomyRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

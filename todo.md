@@ -1,74 +1,96 @@
-# LuvOnPurpose Sovereign Wealth System - TODO
+# LuvOnPurpose Autonomous Wealth System - TODO
 
-## Phase 1: Organizational Management System
-- [x] Expand database schema with departments, staff, roles tables
-- [x] Create department management tRPC routers
-- [x] Build staff/personnel management system
-- [x] Implement admin lead hierarchy
-- [ ] Create organizational structure UI components
-- [ ] Add department assignment functionality
+## Phase 1: Database Schema Redesign
+- [ ] Add cryptocurrency wallet tables (addresses, balances, transactions)
+- [ ] Add token economy tables (token balances, token transactions, token history)
+- [ ] Add offline sync tables (sync queue, pending operations, conflict resolution)
+- [ ] Add game mechanics tables (game sessions, player scores, achievements, rewards)
+- [ ] Add autonomous business operation tables (business state, autonomous decisions, operation logs)
+- [ ] Add curriculum generation tables (generated courses, content versions, generation logs)
+- [ ] Extend LuvLedger for token tracking and cryptocurrency integration
+- [ ] Add audit trail tables (activity logs, decision logs, approval records)
+- [ ] Push updated schema to database
 
-## Phase 2: Academy Curriculum Management
-- [x] Design curriculum data model (subjects, levels, courses)
-- [x] Create curriculum management tRPC routers
-- [ ] Build curriculum UI for browsing and enrollment
-- [ ] Implement student progress tracking
-- [x] Create age-appropriate level system
-- [ ] Add teacher assignment and scheduling
+## Phase 2: Autonomous Business Engine
+- [ ] Create autonomous business operation router
+- [ ] Implement AI-driven decision logic for each department
+- [ ] Build autonomous income generation simulation
+- [ ] Create business state management system
+- [ ] Implement autonomous operation logging
+- [ ] Build human audit trail for business decisions
+- [ ] Create business performance metrics system
 
-## Phase 3: Business Simulators
-- [x] Design simulator game engine (turn-based mechanics)
-- [x] Create 10 department-specific simulators
-- [ ] Implement public educational mode
-- [ ] Implement private operational mode
-- [ ] Build simulator UI with decision trees
-- [x] Add KPI tracking and scoring system
-- [ ] Implement business document generation
-- [x] Create certificate issuance system
+## Phase 3: Automated Curriculum Generation
+- [ ] Create curriculum generation router with LLM integration
+- [ ] Implement automatic course creation from business data
+- [ ] Build curriculum update logic based on business changes
+- [ ] Create content versioning system
+- [ ] Implement difficulty level adaptation
+- [ ] Build curriculum generation audit trail
+- [ ] Create curriculum preview and approval system
 
-## Phase 4: Grant Simulator
-- [x] Design grant package creation workflow
-- [x] Build grant simulator game mechanics
-- [ ] Create funding package templates
-- [ ] Implement grant application generation
-- [ ] Add funding amount calculation
-- [ ] Create grant tracking system
+## Phase 4: Gamified Simulators with Token Earning
+- [ ] Redesign simulator engine with game mechanics
+- [ ] Create interactive game scenarios
+- [ ] Implement token earning system for simulator completion
+- [ ] Build achievement and badge system
+- [ ] Create leaderboards and progress tracking
+- [ ] Implement difficulty scaling based on performance
+- [ ] Add token reward distribution logic
 
-## Phase 5: LuvLedger Integration
-- [x] Implement 60/40 allocation logic (house/external)
-- [x] Implement 70/30 allocation logic (inheritance/operations)
-- [x] Create transaction recording system
-- [x] Build account management
-- [x] Implement automated distribution
-- [ ] Create allocation visualization
-- [x] Add transaction history tracking
+## Phase 5: Cryptocurrency Integration
+- [ ] Integrate cryptocurrency wallet support
+- [ ] Create wallet management router
+- [ ] Implement cryptocurrency transaction handling
+- [ ] Build payment processing for simulator access
+- [ ] Create token-to-crypto conversion system
+- [ ] Implement secure key management
+- [ ] Add transaction verification and confirmation
 
-## Phase 6: Blockchain & Trust Hierarchy
-- [ ] Implement blockchain record creation
-- [ ] Create hash verification system
-- [ ] Build trust hierarchy visualization
-- [ ] Implement trust level management
-- [ ] Add immutability verification
-- [ ] Create blockchain explorer UI
+## Phase 6: Offline-First Sync Layer
+- [ ] Implement local-first database (SQLite for offline)
+- [ ] Create sync queue for pending operations
+- [ ] Build conflict resolution logic
+- [ ] Implement data compression for sync
+- [ ] Create offline operation validation
+- [ ] Build sync status monitoring
+- [ ] Implement automatic sync when connection available
 
-## Phase 7: Access Control
-- [ ] Implement public vs. private content separation
-- [ ] Create role-based access control (RBAC)
-- [ ] Add authentication checks on all routes
-- [ ] Build permission system
-- [ ] Implement content visibility rules
-- [ ] Create admin panel for access management
+## Phase 7: LuvLedger Activity Tracking & Blockchain
+- [ ] Extend LuvLedger to track all activities (certificates, businesses, tokens)
+- [ ] Implement blockchain logging for all transactions
+- [ ] Create activity immutability verification
+- [ ] Build complete audit trail system
+- [ ] Implement blockchain hash verification
+- [ ] Create activity search and filtering
+- [ ] Build activity reporting system
 
-## Phase 8: Deployment & Testing
-- [ ] End-to-end testing of all features
-- [ ] Performance optimization
+## Phase 8: Audit Trail UI
+- [ ] Create activity log viewer component
+- [ ] Build business decision review interface
+- [ ] Implement curriculum generation history viewer
+- [ ] Create blockchain verification UI
+- [ ] Build approval/rejection interface for autonomous decisions
+- [ ] Implement activity filtering and search
+- [ ] Create audit reports and exports
+
+## Phase 9: Testing & Deployment
+- [ ] Test offline-first functionality
+- [ ] Test cryptocurrency integration
+- [ ] Test token economy mechanics
+- [ ] Test autonomous business operations
+- [ ] Test curriculum generation
+- [ ] Test simulator game mechanics
+- [ ] Test LuvLedger tracking
+- [ ] Performance testing
 - [ ] Security audit
-- [ ] Documentation
-- [ ] Final checkpoint and deployment
+- [ ] Deploy complete system
 
-## Cross-Cutting Concerns
-- [ ] Error handling and logging
-- [ ] User feedback and notifications
-- [ ] Data validation
-- [ ] API rate limiting
-- [ ] Caching strategy
+## Cross-Cutting Features
+- [ ] Autonomous decision logging and audit trail
+- [ ] Human oversight capability without intervention
+- [ ] Complete activity tracking via LuvLedger
+- [ ] Blockchain immutability for all records
+- [ ] Token economy integration throughout
+- [ ] Offline-first architecture
+- [ ] Cryptocurrency payment support
