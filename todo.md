@@ -227,3 +227,8 @@
 - [x] Fix authentication state not being detected on mobile after sign-in
 - [x] Add always-visible navigation links for dashboard access
 - [x] Ensure signed-in users see welcome message and navigation cards
+
+
+## Phase 14: Fix Dashboard Redirect Loop
+- [x] Fix System Dashboard authentication redirect loop on mobile
+- [x] Ensure dashboard pages work without forced redirect

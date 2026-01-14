@@ -9,17 +9,49 @@ import Dashboard from "./pages/Dashboard";
 import SystemDashboard from "./pages/SystemDashboard";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
+import { Shield } from "lucide-react";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
+  // Show loading state while checking auth
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
+  // If not authenticated after loading completes, show sign-in prompt instead of redirect
+  // This prevents redirect loops on mobile
   if (!isAuthenticated) {
-    window.location.href = getLoginUrl();
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center space-y-6 max-w-md">
+          <Shield className="w-16 h-16 mx-auto text-amber-500" />
+          <h1 className="text-2xl font-bold">Sign In Required</h1>
+          <p className="text-muted-foreground">
+            Please sign in to access the Trust System Dashboard and manage your company entities.
+          </p>
+          <button
+            onClick={() => window.location.href = getLoginUrl()}
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+          >
+            Sign In to Continue
+          </button>
+          <button
+            onClick={() => window.location.href = '/'}
+            className="block mx-auto text-sm text-muted-foreground hover:text-foreground"
+          >
+            ← Back to Home
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return <Component />;
