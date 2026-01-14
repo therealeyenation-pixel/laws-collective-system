@@ -51,7 +51,7 @@ export type InsertBusinessEntity = typeof businessEntities.$inferInsert;
 export const simulatorSessions = mysqlTable("simulator_sessions", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
-  simulatorType: mysqlEnum("simulatorType", ["business_setup", "financial_management", "entity_operations"]).notNull(),
+  simulatorType: mysqlEnum("simulatorType", ["business_setup", "financial_management", "entity_operations", "grant_creation"]).notNull(),
   currentTurn: int("currentTurn").default(0).notNull(),
   totalTurns: int("totalTurns").default(12).notNull(),
   status: mysqlEnum("status", ["in_progress", "completed", "abandoned"]).default("in_progress").notNull(),
@@ -153,3 +153,84 @@ export const trustRelationships = mysqlTable("trust_relationships", {
 
 export type TrustRelationship = typeof trustRelationships.$inferSelect;
 export type InsertTrustRelationship = typeof trustRelationships.$inferInsert;
+/**
+ * Organizational Structure - 10 Departments
+ */
+export const departments = mysqlTable("departments", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  managerId: int("managerId"),
+  status: mysqlEnum("status", ["active", "inactive"]).default("active"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Department = typeof departments.$inferSelect;
+export type InsertDepartment = typeof departments.$inferInsert;
+
+/**
+ * Staff Members - Managers, Administrators, Admin Leads
+ */
+export const staffMembers = mysqlTable("staff_members", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  departmentId: int("departmentId").notNull(),
+  role: mysqlEnum("role", ["manager", "administrator", "admin_lead", "teacher", "staff"]).notNull(),
+  title: varchar("title", { length: 100 }),
+  status: mysqlEnum("status", ["active", "inactive", "on_leave"]).default("active"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StaffMember = typeof staffMembers.$inferSelect;
+export type InsertStaffMember = typeof staffMembers.$inferInsert;
+
+/**
+ * Academy Curriculum - Subjects and Courses
+ */
+export const curriculumSubjects = mysqlTable("curriculum_subjects", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 50 }).notNull(), // "traditional", "business", "practical"
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CurriculumSubject = typeof curriculumSubjects.$inferSelect;
+export type InsertCurriculumSubject = typeof curriculumSubjects.$inferInsert;
+
+/**
+ * Courses - Organized by subject, level, and age group
+ */
+export const courses = mysqlTable("courses", {
+  id: int("id").autoincrement().primaryKey(),
+  subjectId: int("subjectId").notNull(),
+  title: varchar("title", { length: 150 }).notNull(),
+  level: mysqlEnum("level", ["beginner", "intermediate", "advanced"]).notNull(),
+  ageGroup: varchar("ageGroup", { length: 50 }), // "5-8", "9-12", "13-16", "17+"
+  description: text("description"),
+  instructor: varchar("instructor", { length: 100 }),
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("draft"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Course = typeof courses.$inferSelect;
+export type InsertCourse = typeof courses.$inferInsert;
+
+/**
+ * Student Enrollments - Track course progress
+ */
+export const studentEnrollments = mysqlTable("student_enrollments", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseId: int("courseId").notNull(),
+  status: mysqlEnum("status", ["enrolled", "in_progress", "completed", "dropped"]).default("enrolled"),
+  progressPercentage: int("progressPercentage").default(0),
+  enrolledAt: timestamp("enrolledAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type StudentEnrollment = typeof studentEnrollments.$inferSelect;
+export type InsertStudentEnrollment = typeof studentEnrollments.$inferInsert;

@@ -15,6 +15,20 @@
       "when": 1768354696016,
       "tag": "0001_hot_omega_flight",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768357783352,
+      "tag": "0002_pale_moondragon",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1768357972095,
+      "tag": "0003_wakeful_prima",
+      "breakpoints": true
     }
   ]
 }

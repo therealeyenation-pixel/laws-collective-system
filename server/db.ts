@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, businessEntities, simulatorSessions, certificates, luvLedgerAccounts, trustRelationships } from "../drizzle/schema";
+import { InsertUser, users, businessEntities, simulatorSessions, certificates, luvLedgerAccounts, trustRelationships, departments, staffMembers, curriculumSubjects, courses, studentEnrollments } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -119,4 +119,42 @@ export async function getTrustRelationshipsForUser(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(trustRelationships).where(eq(trustRelationships.parentUserId, userId));
+}
+
+// Organizational queries
+export async function getDepartments() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(departments);
+}
+
+export async function getStaffByDepartment(departmentId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(staffMembers).where(eq(staffMembers.departmentId, departmentId));
+}
+
+export async function getStaffByUser(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(staffMembers).where(eq(staffMembers.userId, userId));
+}
+
+// Curriculum queries
+export async function getCurriculumSubjects() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(curriculumSubjects);
+}
+
+export async function getCoursesBySubject(subjectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(courses).where(eq(courses.subjectId, subjectId));
+}
+
+export async function getStudentEnrollments(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(studentEnrollments).where(eq(studentEnrollments.userId, userId));
 }

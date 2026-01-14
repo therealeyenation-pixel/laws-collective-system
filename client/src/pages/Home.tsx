@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
+import { useState, useEffect } from "react";
 
 interface SystemData {
   system_name: string;
@@ -38,6 +39,58 @@ interface SystemData {
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
+  const [systemData, setSystemData] = useState<SystemData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/master_system.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setSystemData(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading system data:", err);
+        toast.error("Failed to load system data");
+        setIsLoading(false);
+      });
+  }, []);
+
+  const handleDownload = () => {
+    if (!systemData) return;
+    const dataStr = JSON.stringify(systemData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "luv-on-purpose-system.json";
+    link.click();
+    toast.success("System data downloaded");
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "LuvOnPurpose Sovereign System",
+        text: "Explore the complete LuvOnPurpose multi-generational system architecture",
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <Zap className="w-12 h-12 animate-pulse mx-auto text-accent" />
+          <p className="text-foreground">Loading LuvOnPurpose System...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
@@ -50,28 +103,37 @@ export default function Home() {
                 LuvOnPurpose Sovereign System
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Empower people today, secure resources tomorrow, preserve legacy for generations
+                Multi-Generational Wealth Architecture
               </p>
             </div>
             <div className="flex gap-2">
               {!isAuthenticated ? (
                 <Button
+                  variant="default"
                   onClick={() => (window.location.href = getLoginUrl())}
-                  className="gap-2"
                 >
-                  Login
+                  Sign In
                 </Button>
               ) : (
                 <>
                   <Button
-                    onClick={() => (window.location.href = "/dashboard")}
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownload}
                     className="gap-2"
                   >
-                    Dashboard
+                    <Download className="w-4 h-4" />
+                    Export
                   </Button>
-                  <div className="text-sm text-muted-foreground">
-                    Welcome, {user?.name || "User"}
-                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleShare}
+                    className="gap-2"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    Share
+                  </Button>
                 </>
               )}
             </div>
@@ -81,131 +143,87 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="container max-w-7xl mx-auto px-4 py-12">
-        {/* Public Landing Section */}
+        {/* L.A.W.S. Framework - Public Section */}
         <section className="mb-12">
-          <Card className="p-8 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
-              Welcome to LuvOnPurpose
+          <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
+            <h2 className="text-2xl font-bold text-foreground mb-4">
+              L.A.W.S. Collective Framework
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Our Vision</h3>
-                <p className="text-muted-foreground">
-                  Build a sovereign, multi-generational system that starts with people and grows into legacy. A 5-year implementation arc leading to 100+ year vision.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-2">Our Mission</h3>
-                <p className="text-muted-foreground">
-                  Establish indigenous sovereignty rights, create closed-loop economic systems, and enable autonomous businesses that generate wealth without human labor.
-                </p>
-              </div>
+            <p className="text-muted-foreground mb-6">
+              A community-focused framework helping people reconnect with land, strengthen identity, restore balance, and build practical skills for generational wealth.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                {
+                  title: "LAND - Reconnection & Stability",
+                  desc: "Understanding roots, migrations, and family history",
+                  icon: <Map className="w-5 h-5" />,
+                },
+                {
+                  title: "AIR - Education & Knowledge",
+                  desc: "Learning, personal development, and communication",
+                  icon: <Wind className="w-5 h-5" />,
+                },
+                {
+                  title: "WATER - Healing & Balance",
+                  desc: "Emotional resilience, healing cycles, and healthy decision-making",
+                  icon: <Droplets className="w-5 h-5" />,
+                },
+                {
+                  title: "SELF - Purpose & Skills",
+                  desc: "Financial literacy, business readiness, and purposeful growth",
+                  icon: <Heart className="w-5 h-5" />,
+                },
+              ].map((item, i) => (
+                <Card key={i} className="p-4 bg-background/50">
+                  <div className="flex items-start gap-3">
+                    <div className="text-green-600 dark:text-green-400">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-foreground text-sm">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
             </div>
           </Card>
         </section>
 
-        {/* L.A.W.S. Framework - Public Section */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-foreground mb-6">
-            L.A.W.S. Collective Framework
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            A community-focused framework helping people reconnect with land, strengthen identity, restore balance, and build practical skills for generational wealth.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              {
-                title: "LAND - Reconnection & Stability",
-                desc: "Understanding roots, migrations, and family history",
-                icon: <Map className="w-5 h-5" />,
-              },
-              {
-                title: "AIR - Education & Knowledge",
-                desc: "Learning, personal development, and communication",
-                icon: <Wind className="w-5 h-5" />,
-              },
-              {
-                title: "WATER - Healing & Balance",
-                desc: "Emotional resilience, healing cycles, and healthy decision-making",
-                icon: <Droplets className="w-5 h-5" />,
-              },
-              {
-                title: "SELF - Purpose & Skills",
-                desc: "Financial literacy, business readiness, and purposeful growth",
-                icon: <Heart className="w-5 h-5" />,
-              },
-            ].map((item, i) => (
-              <Card key={i} className="p-4 bg-background/50 border-l-4 border-l-accent">
-                <div className="flex items-start gap-3">
-                  <div className="text-accent">{item.icon}</div>
-                  <div>
-                    <h4 className="font-semibold text-foreground text-sm">
-                      {item.title}
-                    </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            ))}
+        {/* Call to Action */}
+        <section className="text-center space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">
+              Ready to Build Your Sovereign Future?
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Join the LuvOnPurpose system to access our comprehensive academy, business simulators, and autonomous wealth generation tools.
+            </p>
           </div>
-        </section>
-
-        {/* Authenticated Content */}
-        {isAuthenticated ? (
-          <section className="mb-12">
-            <Card className="p-8 bg-gradient-to-br from-accent/5 to-primary/5 border-accent/20">
-              <h2 className="text-2xl font-bold text-foreground mb-4">
-                System Access
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                You have access to the complete LuvOnPurpose system architecture, including:
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  "Sovereign System Build",
-                  "Legal & Probate Case Framework",
-                  "Educational Academy",
-                  "Grant & Funding Packages",
-                  "Interactive Simulators",
-                  "LuvLedger Asset Management",
-                  "Blockchain Integration",
-                  "Multi-Level Trust Architecture",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </section>
-        ) : (
-          <section className="mb-12">
-            <Card className="p-8 bg-gradient-to-br from-accent/5 to-primary/5 border-accent/20">
-              <h2 className="text-2xl font-bold text-foreground mb-4">
-                Access the Full System
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Login to access the complete LuvOnPurpose system architecture, including interactive simulators, business setup tools, and the LuvLedger asset management system.
-              </p>
-              <Button
-                onClick={() => (window.location.href = getLoginUrl())}
-                className="gap-2"
-              >
-                Login to Continue
-              </Button>
-            </Card>
-          </section>
-        )}
-
-        {/* Footer Info */}
-        <section className="mt-12 p-6 bg-secondary/30 rounded-lg border border-border">
-          <p className="text-xs text-muted-foreground text-center">
-            LuvOnPurpose Sovereign System | Multi-Generational Architecture |
-            5-Year Implementation Arc + 100+ Year Legacy Vision
-          </p>
+          {!isAuthenticated ? (
+            <Button
+              size="lg"
+              onClick={() => (window.location.href = getLoginUrl())}
+              className="gap-2"
+            >
+              <Shield className="w-5 h-5" />
+              Get Started
+            </Button>
+          ) : (
+            <Button
+              size="lg"
+              onClick={() => (window.location.href = "/dashboard")}
+              className="gap-2"
+            >
+              <Shield className="w-5 h-5" />
+              Go to Dashboard
+            </Button>
+          )}
         </section>
       </main>
     </div>

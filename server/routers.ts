@@ -3,11 +3,21 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { luvSystemRouter } from "./routers/luv-system";
+import { organizationRouter } from "./routers/organization";
+import { academyRouter } from "./routers/academy";
+import { simulatorsRouter } from "./routers/simulators";
+import { luvledgerRouter } from "./routers/luvledger";
+import { blockchainRouter } from "./routers/blockchain";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   luv: luvSystemRouter,
+  organization: organizationRouter,
+  academy: academyRouter,
+  simulators: simulatorsRouter,
+  luvledger: luvledgerRouter,
+  blockchain: blockchainRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
