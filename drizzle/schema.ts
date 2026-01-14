@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, boolean } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -415,3 +415,235 @@ export const cryptoTransactions = mysqlTable("crypto_transactions", {
 
 export type CryptoTransaction = typeof cryptoTransactions.$inferSelect;
 export type InsertCryptoTransaction = typeof cryptoTransactions.$inferInsert;
+
+
+/**
+ * ============================================
+ * LUV LEARNING ACADEMY - K-12 Sovereign Education System
+ * ============================================
+ */
+
+/**
+ * Academy Houses - Three Learning Houses by Age Group
+ */
+export const academyHouses = mysqlTable("academy_houses", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  ageRange: varchar("ageRange", { length: 20 }).notNull(), // "K-5", "6-8", "9-12"
+  gradeRange: varchar("gradeRange", { length: 20 }).notNull(), // "K-5", "6-8", "9-12"
+  ceremonialName: varchar("ceremonialName", { length: 150 }), // "House of Wonder", etc.
+  iconPath: varchar("iconPath", { length: 255 }),
+  colorTheme: varchar("colorTheme", { length: 50 }),
+  status: mysqlEnum("status", ["active", "inactive", "coming_soon"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AcademyHouse = typeof academyHouses.$inferSelect;
+export type InsertAcademyHouse = typeof academyHouses.$inferInsert;
+
+/**
+ * Divine STEM Modules - Core Curriculum Categories
+ */
+export const divineStemModules = mysqlTable("divine_stem_modules", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 150 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  ceremonialTitle: varchar("ceremonialTitle", { length: 200 }), // "Science of Origin & Observation"
+  iconEmoji: varchar("iconEmoji", { length: 10 }),
+  category: mysqlEnum("category", ["stem", "ceremonial", "entrepreneurial", "creative", "language"]).notNull(),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  status: mysqlEnum("status", ["active", "inactive", "coming_soon"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DivineStemModule = typeof divineStemModules.$inferSelect;
+export type InsertDivineStemModule = typeof divineStemModules.$inferInsert;
+
+/**
+ * Academy Courses - Courses within Divine STEM Modules
+ */
+export const academyCourses = mysqlTable("academy_courses", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  moduleId: int("moduleId").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description"),
+  scrollTitle: varchar("scrollTitle", { length: 200 }), // Ceremonial scroll name
+  level: mysqlEnum("level", ["foundational", "developing", "mastery"]).notNull(),
+  estimatedHours: int("estimatedHours").default(10),
+  tokensReward: int("tokensReward").default(100),
+  prerequisites: json("prerequisites"), // Array of course IDs
+  learningObjectives: json("learningObjectives"),
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AcademyCourse = typeof academyCourses.$inferSelect;
+export type InsertAcademyCourse = typeof academyCourses.$inferInsert;
+
+/**
+ * Academy Lessons - Individual lessons within courses
+ */
+export const academyLessons = mysqlTable("academy_lessons", {
+  id: int("id").autoincrement().primaryKey(),
+  courseId: int("courseId").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  scrollName: varchar("scrollName", { length: 200 }), // Ceremonial scroll name
+  content: text("content"),
+  contentType: mysqlEnum("contentType", ["text", "video", "interactive", "ceremony", "practice"]).notNull(),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  estimatedMinutes: int("estimatedMinutes").default(30),
+  tokensReward: int("tokensReward").default(10),
+  resources: json("resources"), // Links, files, etc.
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AcademyLesson = typeof academyLessons.$inferSelect;
+export type InsertAcademyLesson = typeof academyLessons.$inferInsert;
+
+/**
+ * House of Many Tongues - Language Learning Module
+ */
+export const academyLanguages = mysqlTable("academy_languages", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  nativeName: varchar("nativeName", { length: 100 }), // Name in the language itself
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  category: mysqlEnum("category", ["indigenous", "ancestral_flame", "global_trade"]).notNull(),
+  description: text("description"),
+  culturalContext: text("culturalContext"),
+  iconEmoji: varchar("iconEmoji", { length: 10 }),
+  status: mysqlEnum("status", ["active", "inactive", "coming_soon"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AcademyLanguage = typeof academyLanguages.$inferSelect;
+export type InsertAcademyLanguage = typeof academyLanguages.$inferInsert;
+
+/**
+ * Language Lessons - Lessons for each language
+ */
+export const languageLessons = mysqlTable("language_lessons", {
+  id: int("id").autoincrement().primaryKey(),
+  languageId: int("languageId").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  level: mysqlEnum("level", ["beginner", "intermediate", "advanced"]).notNull(),
+  lessonType: mysqlEnum("lessonType", ["vocabulary", "pronunciation", "conversation", "ceremony", "story", "chant"]).notNull(),
+  content: json("content"), // Structured lesson content
+  audioUrl: varchar("audioUrl", { length: 500 }),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  tokensReward: int("tokensReward").default(15),
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LanguageLesson = typeof languageLessons.$inferSelect;
+export type InsertLanguageLesson = typeof languageLessons.$inferInsert;
+
+/**
+ * Student Academy Profiles - Student information and preferences
+ */
+export const studentProfiles = mysqlTable("student_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  guardianUserId: int("guardianUserId"), // Parent/guardian user ID
+  houseId: int("houseId"), // Assigned house
+  displayName: varchar("displayName", { length: 100 }),
+  gradeLevel: varchar("gradeLevel", { length: 10 }),
+  birthYear: int("birthYear"),
+  primaryLanguageId: int("primaryLanguageId"),
+  selectedLanguages: json("selectedLanguages"), // Array of language IDs they're learning
+  ceremonialPath: varchar("ceremonialPath", { length: 100 }), // Optional ceremonial designation
+  preferences: json("preferences"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StudentProfile = typeof studentProfiles.$inferSelect;
+export type InsertStudentProfile = typeof studentProfiles.$inferInsert;
+
+/**
+ * Student Progress - Track progress through courses and lessons
+ */
+export const studentProgress = mysqlTable("student_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  studentProfileId: int("studentProfileId").notNull(),
+  courseId: int("courseId"),
+  lessonId: int("lessonId"),
+  languageLessonId: int("languageLessonId"),
+  progressType: mysqlEnum("progressType", ["course", "lesson", "language"]).notNull(),
+  status: mysqlEnum("status", ["not_started", "in_progress", "completed", "mastered"]).default("not_started").notNull(),
+  progressPercentage: int("progressPercentage").default(0),
+  score: int("score"),
+  tokensEarned: int("tokensEarned").default(0),
+  timeSpentMinutes: int("timeSpentMinutes").default(0),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StudentProgress = typeof studentProgress.$inferSelect;
+export type InsertStudentProgress = typeof studentProgress.$inferInsert;
+
+/**
+ * Living Scrolls - Student-created vocabulary and learning records
+ */
+export const livingScrolls = mysqlTable("living_scrolls", {
+  id: int("id").autoincrement().primaryKey(),
+  studentProfileId: int("studentProfileId").notNull(),
+  scrollType: mysqlEnum("scrollType", ["voice_scroll", "house_lexicon", "translation_book", "mastery_scroll"]).notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  languageId: int("languageId"),
+  content: json("content"), // Vocabulary, phrases, notes
+  entriesCount: int("entriesCount").default(0),
+  isPublic: boolean("isPublic").default(false),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LivingScroll = typeof livingScrolls.$inferSelect;
+export type InsertLivingScroll = typeof livingScrolls.$inferInsert;
+
+/**
+ * Mastery Certificates - Blockchain-anchored completion certificates
+ */
+export const masteryCertificates = mysqlTable("mastery_certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  studentProfileId: int("studentProfileId").notNull(),
+  certificateType: mysqlEnum("certificateType", ["course_completion", "house_graduation", "language_mastery", "stem_mastery", "sovereign_diploma"]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  courseId: int("courseId"),
+  houseId: int("houseId"),
+  languageId: int("languageId"),
+  level: varchar("level", { length: 50 }),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  verificationCode: varchar("verificationCode", { length: 100 }).unique(),
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+  metadata: json("metadata"),
+});
+
+export type MasteryCertificate = typeof masteryCertificates.$inferSelect;
+export type InsertMasteryCertificate = typeof masteryCertificates.$inferInsert;
+
+/**
+ * Guardian Dashboard - Parent/guardian access and controls
+ */
+export const guardianAccess = mysqlTable("guardian_access", {
+  id: int("id").autoincrement().primaryKey(),
+  guardianUserId: int("guardianUserId").notNull(),
+  studentProfileId: int("studentProfileId").notNull(),
+  accessLevel: mysqlEnum("accessLevel", ["view_only", "manage", "full_control"]).default("manage").notNull(),
+  notifications: json("notifications"), // Notification preferences
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GuardianAccess = typeof guardianAccess.$inferSelect;
+export type InsertGuardianAccess = typeof guardianAccess.$inferInsert;

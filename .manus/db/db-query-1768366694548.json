@@ -1,0 +1,9 @@
+{
+  "query": "\nINSERT INTO academy_houses (name, slug, description, ageRange, gradeRange, ceremonialName, colorTheme, status) VALUES\n('House of Wonder', 'house-of-wonder', 'Discovery, curiosity, and foundational learning for young flames. Where imagination meets knowledge.', '5-10', 'K-5', 'The Chamber of First Light', 'amber', 'active'),\n('House of Form', 'house-of-form', 'Structure, discipline, and intermediate skills. Where young minds learn to shape their purpose.', '11-13', '6-8', 'The Chamber of Sacred Structure', 'emerald', 'active'),\n('House of Mastery', 'house-of-mastery', 'Advanced application, sovereignty, and leadership. Where students become keepers of the flame.', '14-18', '9-12', 'The Chamber of Sovereign Fire', 'purple', 'active')\nON DUPLICATE KEY UPDATE name = VALUES(name);\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute \nINSERT INTO academy_houses (name, slug, description, ageRange, gradeRange, ceremonialName, colorTheme, status) VALUES\n('House of Wonder', 'house-of-wonder', 'Discovery, curiosity, and foundational learning for young flames. Where imagination meets knowledge.', '5-10', 'K-5', 'The Chamber of First Light', 'amber', 'active'),\n('House of Form', 'house-of-form', 'Structure, discipline, and intermediate skills. Where young minds learn to shape their purpose.', '11-13', '6-8', 'The Chamber of Sacred Structure', 'emerald', 'active'),\n('House of Mastery', 'house-of-mastery', 'Advanced application, sovereignty, and leadership. Where students become keepers of the flame.', '14-18', '9-12', 'The Chamber of Sovereign Fire', 'purple', 'active')\nON DUPLICATE KEY UPDATE name = VALUES(name);\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 402
+}

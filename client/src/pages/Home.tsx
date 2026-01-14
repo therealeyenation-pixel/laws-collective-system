@@ -20,6 +20,8 @@ import {
   Coins,
   Activity,
   ArrowRight,
+  Flame,
+  GraduationCap,
 } from "lucide-react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
@@ -220,7 +222,7 @@ export default function Home() {
           )}
           
           {/* Navigation Cards - ALWAYS visible */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             <Card 
               className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20"
               onClick={() => (window.location.href = "/system")}
@@ -252,6 +254,22 @@ export default function Home() {
                 <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
               </div>
             </Card>
+            
+            <Card 
+              className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-orange-200 dark:border-orange-800 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20"
+              onClick={() => (window.location.href = "/academy")}
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-full bg-orange-100 dark:bg-orange-900">
+                  <Flame className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-bold text-foreground">Luv Learning Academy</h3>
+                  <p className="text-sm text-muted-foreground">K-12 sovereign education & Divine STEM</p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
+              </div>
+            </Card>
           </div>
           
           {/* Quick Action Buttons - ALWAYS visible */}
@@ -272,6 +290,15 @@ export default function Home() {
             >
               <Activity className="w-5 h-5" />
               Open Dashboard
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => (window.location.href = "/academy")}
+              className="gap-2 border-orange-300 text-orange-700 hover:bg-orange-50"
+            >
+              <Flame className="w-5 h-5" />
+              Luv Academy
             </Button>
             {!isAuthenticated && (
               <Button
