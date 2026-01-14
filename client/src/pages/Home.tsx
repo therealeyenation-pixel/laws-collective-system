@@ -22,6 +22,7 @@ import {
   ArrowRight,
   Flame,
   GraduationCap,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
@@ -270,6 +271,22 @@ export default function Home() {
                 <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
               </div>
             </Card>
+            
+            <Card 
+              className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20"
+              onClick={() => (window.location.href = "/vault")}
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+                  <FileText className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-bold text-foreground">Document Vault</h3>
+                  <p className="text-sm text-muted-foreground">Secure business plans & grants</p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
+              </div>
+            </Card>
           </div>
           
           {/* Quick Action Buttons - ALWAYS visible */}
@@ -299,6 +316,15 @@ export default function Home() {
             >
               <Flame className="w-5 h-5" />
               Luv Academy
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => (window.location.href = "/vault")}
+              className="gap-2 border-purple-300 text-purple-700 hover:bg-purple-50"
+            >
+              <FileText className="w-5 h-5" />
+              Document Vault
             </Button>
             {!isAuthenticated && (
               <Button

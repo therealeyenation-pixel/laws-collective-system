@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import SystemDashboard from "./pages/SystemDashboard";
 import AcademyDashboard from "./pages/AcademyDashboard";
+import DocumentVault from "./pages/DocumentVault";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -67,6 +68,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/system" component={SystemDashboard} />
       <Route path="/academy" component={AcademyDashboard} />
+      <Route path="/vault" component={DocumentVault} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

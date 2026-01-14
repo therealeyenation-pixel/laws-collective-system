@@ -647,3 +647,121 @@ export const guardianAccess = mysqlTable("guardian_access", {
 
 export type GuardianAccess = typeof guardianAccess.$inferSelect;
 export type InsertGuardianAccess = typeof guardianAccess.$inferInsert;
+
+
+// ============================================
+// SECURE DOCUMENT VAULT
+// ============================================
+
+/**
+ * Secure Documents - Private documents with access control
+ */
+export const secureDocuments = mysqlTable("secure_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  ownerId: int("ownerId").notNull(), // User who owns the document
+  entityId: int("entityId"), // Optional: linked to a business entity
+  folderId: int("folderId"), // Optional: parent folder
+  documentType: mysqlEnum("documentType", [
+    "business_plan", 
+    "grant_application", 
+    "financial_statement", 
+    "legal_document", 
+    "contract", 
+    "certificate",
+    "report",
+    "template",
+    "other"
+  ]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  fileName: varchar("fileName", { length: 255 }),
+  fileUrl: varchar("fileUrl", { length: 500 }), // S3 or storage URL
+  fileSize: int("fileSize"),
+  mimeType: varchar("mimeType", { length: 100 }),
+  content: text("content"), // For text-based documents stored directly
+  version: int("version").default(1).notNull(),
+  status: mysqlEnum("status", ["draft", "final", "archived"]).default("draft").notNull(),
+  isTemplate: boolean("isTemplate").default(false),
+  accessLevel: mysqlEnum("accessLevel", ["owner_only", "entity_members", "authorized_users", "public"]).default("owner_only").notNull(),
+  blockchainHash: varchar("blockchainHash", { length: 100 }), // For immutability verification
+  metadata: json("metadata"), // Additional metadata
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SecureDocument = typeof secureDocuments.$inferSelect;
+export type InsertSecureDocument = typeof secureDocuments.$inferInsert;
+
+/**
+ * Document Folders - Organize documents into folders
+ */
+export const documentFolders = mysqlTable("document_folders", {
+  id: int("id").autoincrement().primaryKey(),
+  ownerId: int("ownerId").notNull(),
+  entityId: int("entityId"), // Optional: linked to a business entity
+  parentFolderId: int("parentFolderId"), // For nested folders
+  name: varchar("name", { length: 100 }).notNull(),
+  description: varchar("description", { length: 500 }),
+  color: varchar("color", { length: 20 }), // For UI display
+  icon: varchar("icon", { length: 50 }), // Icon name
+  accessLevel: mysqlEnum("accessLevel", ["owner_only", "entity_members", "authorized_users"]).default("owner_only").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DocumentFolder = typeof documentFolders.$inferSelect;
+export type InsertDocumentFolder = typeof documentFolders.$inferInsert;
+
+/**
+ * Document Access - Granular access control for documents
+ */
+export const documentAccess = mysqlTable("document_access", {
+  id: int("id").autoincrement().primaryKey(),
+  documentId: int("documentId").notNull(),
+  userId: int("userId"), // Specific user access
+  entityId: int("entityId"), // Entity-wide access
+  role: mysqlEnum("role", ["viewer", "editor", "admin"]).default("viewer").notNull(),
+  canDownload: boolean("canDownload").default(true),
+  canShare: boolean("canShare").default(false),
+  expiresAt: timestamp("expiresAt"), // Optional expiration
+  grantedBy: int("grantedBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DocumentAccess = typeof documentAccess.$inferSelect;
+export type InsertDocumentAccess = typeof documentAccess.$inferInsert;
+
+/**
+ * Document Versions - Track document version history
+ */
+export const documentVersions = mysqlTable("document_versions", {
+  id: int("id").autoincrement().primaryKey(),
+  documentId: int("documentId").notNull(),
+  version: int("version").notNull(),
+  content: text("content"),
+  fileUrl: varchar("fileUrl", { length: 500 }),
+  changeNotes: text("changeNotes"),
+  createdBy: int("createdBy").notNull(),
+  blockchainHash: varchar("blockchainHash", { length: 100 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DocumentVersion = typeof documentVersions.$inferSelect;
+export type InsertDocumentVersion = typeof documentVersions.$inferInsert;
+
+/**
+ * Document Access Log - Audit trail for document access
+ */
+export const documentAccessLog = mysqlTable("document_access_log", {
+  id: int("id").autoincrement().primaryKey(),
+  documentId: int("documentId").notNull(),
+  userId: int("userId").notNull(),
+  action: mysqlEnum("action", ["view", "download", "edit", "share", "delete", "restore"]).notNull(),
+  ipAddress: varchar("ipAddress", { length: 50 }),
+  userAgent: varchar("userAgent", { length: 500 }),
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DocumentAccessLog = typeof documentAccessLog.$inferSelect;
+export type InsertDocumentAccessLog = typeof documentAccessLog.$inferInsert;
