@@ -209,81 +209,80 @@ export default function Home() {
               Join the LuvOnPurpose system to access our comprehensive academy, business simulators, and autonomous wealth generation tools.
             </p>
           </div>
-          {!isAuthenticated ? (
-            <Button
-              size="lg"
-              onClick={() => (window.location.href = getLoginUrl())}
-              className="gap-2"
-            >
-              <Shield className="w-5 h-5" />
-              Get Started
-            </Button>
-          ) : (
-            <div className="space-y-6">
-              {/* Welcome Message */}
-              <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4 max-w-md mx-auto">
-                <p className="text-green-800 dark:text-green-200 font-medium">
-                  Welcome back, {user?.name || 'User'}!
-                </p>
-              </div>
-              
-              {/* Navigation Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                <Card 
-                  className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20"
-                  onClick={() => (window.location.href = "/system")}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-full bg-amber-100 dark:bg-amber-900">
-                      <Shield className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-                    </div>
-                    <div className="text-left">
-                      <h3 className="font-bold text-foreground">Trust System Dashboard</h3>
-                      <p className="text-sm text-muted-foreground">View your company entities, tokens & operations</p>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
-                  </div>
-                </Card>
-                
-                <Card 
-                  className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20"
-                  onClick={() => (window.location.href = "/dashboard")}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
-                      <Activity className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div className="text-left">
-                      <h3 className="font-bold text-foreground">Main Dashboard</h3>
-                      <p className="text-sm text-muted-foreground">Business entities, simulators & LuvLedger</p>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
-                  </div>
-                </Card>
-              </div>
-              
-              {/* Quick Action Buttons */}
-              <div className="flex flex-wrap justify-center gap-3">
-                <Button
-                  size="lg"
-                  onClick={() => (window.location.href = "/system")}
-                  className="gap-2 bg-amber-600 hover:bg-amber-700"
-                >
-                  <Shield className="w-5 h-5" />
-                  Open Trust System
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => (window.location.href = "/dashboard")}
-                  className="gap-2"
-                >
-                  <Activity className="w-5 h-5" />
-                  Open Dashboard
-                </Button>
-              </div>
+          
+          {/* Welcome Message - shows when authenticated */}
+          {isAuthenticated && user && (
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4 max-w-md mx-auto">
+              <p className="text-green-800 dark:text-green-200 font-medium">
+                Welcome back, {user.name || 'User'}!
+              </p>
             </div>
           )}
+          
+          {/* Navigation Cards - ALWAYS visible */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            <Card 
+              className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20"
+              onClick={() => (window.location.href = "/system")}
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-full bg-amber-100 dark:bg-amber-900">
+                  <Shield className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-bold text-foreground">Trust System Dashboard</h3>
+                  <p className="text-sm text-muted-foreground">View company entities, tokens & operations</p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
+              </div>
+            </Card>
+            
+            <Card 
+              className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20"
+              onClick={() => (window.location.href = "/dashboard")}
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+                  <Activity className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-bold text-foreground">Main Dashboard</h3>
+                  <p className="text-sm text-muted-foreground">Business entities, simulators & LuvLedger</p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground ml-auto" />
+              </div>
+            </Card>
+          </div>
+          
+          {/* Quick Action Buttons - ALWAYS visible */}
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button
+              size="lg"
+              onClick={() => (window.location.href = "/system")}
+              className="gap-2 bg-amber-600 hover:bg-amber-700"
+            >
+              <Shield className="w-5 h-5" />
+              Open Trust System
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => (window.location.href = "/dashboard")}
+              className="gap-2"
+            >
+              <Activity className="w-5 h-5" />
+              Open Dashboard
+            </Button>
+            {!isAuthenticated && (
+              <Button
+                size="lg"
+                onClick={() => (window.location.href = getLoginUrl())}
+                className="gap-2"
+              >
+                Sign In
+              </Button>
+            )}
+          </div>
         </section>
       </main>
     </div>

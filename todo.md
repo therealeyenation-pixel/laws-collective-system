@@ -221,3 +221,9 @@
 - [x] Add dashboard navigation buttons to home page after sign-in
 - [x] Make Trust System Dashboard accessible on mobile
 - [x] Add clear call-to-action buttons for signed-in users
+
+
+## Phase 13: Authentication Detection Fix
+- [x] Fix authentication state not being detected on mobile after sign-in
+- [x] Add always-visible navigation links for dashboard access
+- [x] Ensure signed-in users see welcome message and navigation cards
