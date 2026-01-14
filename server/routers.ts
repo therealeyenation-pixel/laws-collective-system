@@ -19,6 +19,10 @@ import { luvLedgerTrackingRouter } from "./routers/luv-ledger-tracking";
 import { auditTrailUIRouter } from "./routers/audit-trail-ui";
 import { companySetupRouter } from "./routers/company-setup";
 import { trustAuthorityRouter } from "./routers/trust-authority";
+import { entityCommercialEngineRouter } from "./routers/entity-commercial-engine";
+import { entityEducationEngineRouter } from "./routers/entity-education-engine";
+import { entityMediaEngineRouter } from "./routers/entity-media-engine";
+import { entityPlatformEngineRouter } from "./routers/entity-platform-engine";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -39,6 +43,10 @@ export const appRouter = router({
   auditTrailUI: auditTrailUIRouter,
   companySetup: companySetupRouter,
   trustAuthority: trustAuthorityRouter,
+  entityCommercial: entityCommercialEngineRouter,
+  entityEducation: entityEducationEngineRouter,
+  entityMedia: entityMediaEngineRouter,
+  entityPlatform: entityPlatformEngineRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
