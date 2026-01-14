@@ -17,6 +17,8 @@ import { cryptoWalletRouter } from "./routers/crypto-wallet";
 import { offlineSyncRouter } from "./routers/offline-sync";
 import { luvLedgerTrackingRouter } from "./routers/luv-ledger-tracking";
 import { auditTrailUIRouter } from "./routers/audit-trail-ui";
+import { companySetupRouter } from "./routers/company-setup";
+import { trustAuthorityRouter } from "./routers/trust-authority";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -35,6 +37,8 @@ export const appRouter = router({
   offlineSync: offlineSyncRouter,
   luvLedgerTracking: luvLedgerTrackingRouter,
   auditTrailUI: auditTrailUIRouter,
+  companySetup: companySetupRouter,
+  trustAuthority: trustAuthorityRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
