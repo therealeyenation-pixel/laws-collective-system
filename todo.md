@@ -468,3 +468,11 @@
 - [ ] Hide bot list on mobile when chatting
 - [ ] Add back button to return to bot list
 - [ ] Improve touch targets for bot selection
+
+
+## Phase 37: Fix Simulator Start Button
+- [x] Fix Start button not responding on Dashboard simulators
+- [x] Ensure simulator game launches properly on mobile
+- [x] Add full interactive quiz game with 12 questions each
+- [x] Add progress bar and score tracking
+- [x] Add token earning system
