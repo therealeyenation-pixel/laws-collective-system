@@ -283,7 +283,7 @@ export const companySetupRouter = router({
     // Create Trust (Root)
     const trustResult = await db.insert(businessEntities).values({
       userId: ctx.user.id,
-      name: "CALEA Freeman Family Trust",
+      name: "98 Trust",
       entityType: "trust",
       description: "Root holding authority, lineage anchor, protection layer",
       trustLevel: 5,
@@ -295,13 +295,13 @@ export const companySetupRouter = router({
       userId: ctx.user.id,
       businessEntityId: trustId,
       accountType: "trust",
-      accountName: "CALEA Freeman Family Trust",
+      accountName: "98 Trust",
       allocationPercentage: "100",
       status: "active",
     });
 
     results.push({
-      name: "CALEA Freeman Family Trust",
+      name: "98 Trust",
       entityId: trustId,
       accountId: trustAccountResult[0].insertId,
       percentage: 100,

@@ -112,20 +112,20 @@ export default function Landing() {
 
   const testimonials = [
     {
-      name: "The Freeman Family",
-      role: "Trust Founders",
-      quote: "LuvOnPurpose helped us structure our family trust and create a legacy that will last for generations.",
+      name: "Community Leader",
+      role: "Founding Member",
+      quote: "L.A.W.S. Collective helped us structure our family's future and create a legacy that will last for generations.",
       rating: 5,
     },
     {
       name: "Community Member",
       role: "Academy Graduate",
-      quote: "The education I received through Luv Academy transformed my understanding of wealth building.",
+      quote: "The education I received through the Academy transformed my understanding of wealth building.",
       rating: 5,
     },
     {
       name: "Business Owner",
-      role: "L.A.W.S. Collective",
+      role: "Collective Member",
       quote: "The autonomous systems run my business operations while I focus on what matters most - my family.",
       rating: 5,
     },
@@ -150,7 +150,7 @@ export default function Landing() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <span className="text-xl font-bold text-stone-900">
-                Luv<span className="text-green-600">OnPurpose</span>
+                L.A.W.S.<span className="text-green-600"> Collective</span>
               </span>
             </div>
             
@@ -275,7 +275,7 @@ export default function Landing() {
               <Card className="p-8 bg-gradient-to-br from-green-600 to-green-700 text-white">
                 <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
                 <p className="mb-6 text-green-100">
-                  Join hundreds of families who are building their sovereign future with LuvOnPurpose.
+                  Join hundreds of families who are building their sovereign future with L.A.W.S. Collective.
                 </p>
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center gap-2">
@@ -459,7 +459,7 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <span className="text-xl font-bold">
-                Luv<span className="text-green-400">OnPurpose</span>
+                L.A.W.S.<span className="text-green-400"> Collective</span>
               </span>
               <p className="mt-4 text-stone-400 max-w-md">
                 Building multi-generational wealth through purpose, community, and sovereign systems.
@@ -484,8 +484,8 @@ export default function Landing() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-stone-800 text-center text-stone-400">
-            <p>&copy; {new Date().getFullYear()} LuvOnPurpose Autonomous Wealth System, LLC. All rights reserved.</p>
-            <p className="mt-2 text-sm">Multi-Generational Wealth Architecture | 5-Year Implementation Arc + 100+ Year Legacy Vision</p>
+            <p>&copy; {new Date().getFullYear()} L.A.W.S. Collective. All rights reserved.</p>
+            <p className="mt-2 text-sm">Multi-Generational Wealth Architecture | Building Legacy Through Purpose & Community</p>
           </div>
         </div>
       </footer>

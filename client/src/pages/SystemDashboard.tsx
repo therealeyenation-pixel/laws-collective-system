@@ -156,7 +156,7 @@ export default function SystemDashboard() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              {trustEntity?.name || "CALEA Freeman Family Trust"}
+              {trustEntity?.name || "Trust System"}
             </h1>
             <p className="text-muted-foreground mt-1">
               Autonomous Wealth System Dashboard

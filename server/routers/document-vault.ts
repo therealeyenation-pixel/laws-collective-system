@@ -531,10 +531,10 @@ export const documentVaultRouter = router({
 
       const defaultDocuments = [
         {
-          title: "98 Trust - CALEA Freeman Family Trust Business Plan",
-          description: "Comprehensive business plan for the CALEA Freeman Family Trust, establishing the foundation for multi-generational wealth preservation and sovereign governance.",
+          title: "98 Trust Business Plan",
+          description: "Comprehensive business plan for the 98 Trust, establishing the foundation for multi-generational wealth preservation and sovereign governance.",
           documentType: "business_plan" as const,
-          content: `# 98 Trust - CALEA Freeman Family Trust Business Plan\n\n## Executive Summary\nThe CALEA Freeman Family Trust serves as the sovereign foundation for multi-generational wealth preservation, governance, and legacy protection.\n\n## Mission\nTo establish and maintain a perpetual trust structure that protects family assets, ensures proper succession, and creates lasting generational wealth.\n\n## Key Objectives\n- Establish sovereign trust governance\n- Protect family assets across generations\n- Create sustainable wealth distribution mechanisms\n- Maintain legal compliance while maximizing protection\n\n## Structure\n- Trust Type: Irrevocable Family Trust\n- Governance: Board of Trustees\n- Distribution: 40/30/20/10 allocation model`,
+          content: `# 98 Trust Business Plan\n\n## Executive Summary\nThe 98 Trust serves as the sovereign foundation for multi-generational wealth preservation, governance, and legacy protection.\n\n## Mission\nTo establish and maintain a perpetual trust structure that protects family assets, ensures proper succession, and creates lasting generational wealth.\n\n## Key Objectives\n- Establish sovereign trust governance\n- Protect family assets across generations\n- Create sustainable wealth distribution mechanisms\n- Maintain legal compliance while maximizing protection\n\n## Structure\n- Trust Type: Irrevocable Family Trust\n- Governance: Board of Trustees\n- Distribution: 40/30/20/10 allocation model`,
           status: "final" as const,
           accessLevel: "owner_only" as const,
         },

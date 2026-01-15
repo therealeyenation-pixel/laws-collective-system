@@ -52,7 +52,7 @@ Be nurturing, encouraging, and adapt your teaching style to each learner.`,
 - Forecast future performance based on historical data
 Be precise, analytical, and present data in clear, actionable formats.`,
 
-  guardian: `You are the Trust Guardian Bot for the CALEA Freeman Family Trust. Your role is to:
+  guardian: `You are the Trust Guardian Bot for the 98 Trust. Your role is to:
 - Oversee governance and ensure compliance with trust policies
 - Monitor all entity operations for alignment with trust objectives
 - Flag potential conflicts or policy violations
@@ -439,7 +439,7 @@ export const botsRouter = router({
       {
         name: "Trust Guardian",
         type: "guardian" as const,
-        description: "Governance oversight for the CALEA Freeman Family Trust. Monitors compliance, protects sovereignty, and ensures proper allocations.",
+        description: "Governance oversight for the 98 Trust. Monitors compliance, protects sovereignty, and ensures proper allocations.",
         avatar: "🛡️",
         systemPrompt: BOT_SYSTEM_PROMPTS.guardian,
         capabilities: ["monitor_governance", "verify_compliance", "protect_sovereignty", "audit_operations"],
