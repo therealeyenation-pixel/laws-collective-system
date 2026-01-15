@@ -10,7 +10,8 @@ import {
   autonomousOperations,
   tokenAccounts,
   notifications,
-  luvLedgerAccounts
+  luvLedgerAccounts,
+  scheduledBotTasks
 } from "../../drizzle/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
@@ -78,6 +79,38 @@ Be precise with numbers and clear about financial implications.`,
 - Support multimedia content creation
 Be creative, truthful, and focused on impactful storytelling.`,
 
+  outreach: `You are the Outreach Bot for LuvOnPurpose marketing and community growth. Your role is to:
+- Generate compelling social media posts for Twitter/X, Instagram, LinkedIn, and Facebook
+- Create email campaign content and newsletter drafts
+- Develop promotional materials and announcements
+- Craft engagement messages for community building
+- Write press releases and media pitches
+- Create content calendars and posting schedules
+- Generate hashtag strategies and viral content ideas
+Be persuasive, authentic, and aligned with the LuvOnPurpose mission of generational wealth and sovereignty.`,
+
+  seo: `You are the SEO Bot for LuvOnPurpose digital optimization. Your role is to:
+- Analyze and suggest keywords for website content
+- Generate SEO-optimized titles, meta descriptions, and headers
+- Create content briefs for high-ranking articles
+- Audit existing content for SEO improvements
+- Suggest internal linking strategies
+- Monitor competitor keywords and strategies
+- Generate schema markup recommendations
+- Create FAQ content for featured snippets
+Be technical, data-driven, and focused on organic search visibility.`,
+
+  engagement: `You are the Engagement Bot for LuvOnPurpose audience analytics. Your role is to:
+- Analyze visitor behavior and engagement patterns
+- Suggest optimal posting times for different platforms
+- Create A/B testing strategies for content
+- Generate audience persona insights
+- Track and report on key engagement metrics
+- Recommend content types based on performance data
+- Identify trending topics relevant to the community
+- Suggest community engagement activities and events
+Be analytical, strategic, and focused on building lasting audience relationships.`,
+
   custom: `You are a custom AI assistant for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
 };
 
@@ -120,7 +153,7 @@ export const botsRouter = router({
   create: protectedProcedure
     .input(z.object({
       name: z.string().min(1).max(100),
-      type: z.enum(["operations", "support", "education", "analytics", "guardian", "finance", "media", "custom"]),
+      type: z.enum(["operations", "support", "education", "analytics", "guardian", "finance", "media", "outreach", "seo", "engagement", "custom"]),
       description: z.string().optional(),
       avatar: z.string().optional(),
       systemPrompt: z.string().optional(),
@@ -430,6 +463,33 @@ export const botsRouter = router({
         capabilities: ["generate_content", "create_narratives", "schedule_publications", "truth_mapping"],
         isPublic: true,
       },
+      {
+        name: "Outreach Bot",
+        type: "outreach" as const,
+        description: "Marketing and community growth assistant. Generate social media posts, email campaigns, and promotional content to expand your reach.",
+        avatar: "📢",
+        systemPrompt: BOT_SYSTEM_PROMPTS.outreach,
+        capabilities: ["social_media_posts", "email_campaigns", "press_releases", "content_calendar", "hashtag_strategy"],
+        isPublic: true,
+      },
+      {
+        name: "SEO Bot",
+        type: "seo" as const,
+        description: "Search engine optimization expert. Improve your website visibility with keyword analysis, meta descriptions, and content optimization.",
+        avatar: "🔍",
+        systemPrompt: BOT_SYSTEM_PROMPTS.seo,
+        capabilities: ["keyword_research", "meta_optimization", "content_audit", "schema_markup", "competitor_analysis"],
+        isPublic: true,
+      },
+      {
+        name: "Engagement Bot",
+        type: "engagement" as const,
+        description: "Audience analytics and engagement strategist. Optimize posting times, track metrics, and build lasting audience relationships.",
+        avatar: "📈",
+        systemPrompt: BOT_SYSTEM_PROMPTS.engagement,
+        capabilities: ["analytics_tracking", "posting_optimization", "ab_testing", "audience_insights", "trend_identification"],
+        isPublic: true,
+      },
     ];
 
     for (const botData of defaultBots) {
@@ -512,4 +572,313 @@ export const botsRouter = router({
 
       return { success: true };
     }),
+
+  /**
+   * Get scheduled tasks for a bot or all bots
+   */
+  getScheduledTasks: protectedProcedure
+    .input(z.object({
+      botId: z.number().optional(),
+    }).optional())
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const conditions = input?.botId
+        ? and(eq(scheduledBotTasks.createdBy, ctx.user.id), eq(scheduledBotTasks.botId, input.botId))
+        : eq(scheduledBotTasks.createdBy, ctx.user.id);
+
+      const tasks = await db.select()
+        .from(scheduledBotTasks)
+        .where(conditions)
+        .orderBy(desc(scheduledBotTasks.createdAt));
+
+      return tasks;
+    }),
+
+  /**
+   * Create a scheduled task
+   */
+  createScheduledTask: protectedProcedure
+    .input(z.object({
+      botId: z.number(),
+      name: z.string().min(1).max(100),
+      description: z.string().optional(),
+      taskType: z.enum([
+        "daily_report",
+        "weekly_audit",
+        "monthly_analysis",
+        "content_schedule",
+        "engagement_check",
+        "seo_audit",
+        "token_report",
+        "operation_review",
+        "custom"
+      ]),
+      prompt: z.string().min(1),
+      schedule: z.string().min(1), // Cron expression
+      notifyOnComplete: z.boolean().default(true),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Calculate next run time based on schedule
+      const now = new Date();
+      
+      await db.insert(scheduledBotTasks).values({
+        botId: input.botId,
+        name: input.name,
+        description: input.description,
+        taskType: input.taskType,
+        prompt: input.prompt,
+        schedule: input.schedule,
+        nextRunAt: now, // Will be updated by scheduler
+        createdBy: ctx.user.id,
+        notifyOnComplete: input.notifyOnComplete,
+      });
+
+      return { success: true };
+    }),
+
+  /**
+   * Toggle scheduled task active status
+   */
+  toggleScheduledTask: protectedProcedure
+    .input(z.object({
+      taskId: z.number(),
+      isActive: z.boolean(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      await db.update(scheduledBotTasks)
+        .set({ isActive: input.isActive })
+        .where(and(
+          eq(scheduledBotTasks.id, input.taskId),
+          eq(scheduledBotTasks.createdBy, ctx.user.id)
+        ));
+
+      return { success: true };
+    }),
+
+  /**
+   * Delete a scheduled task
+   */
+  deleteScheduledTask: protectedProcedure
+    .input(z.object({ taskId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      await db.delete(scheduledBotTasks)
+        .where(and(
+          eq(scheduledBotTasks.id, input.taskId),
+          eq(scheduledBotTasks.createdBy, ctx.user.id)
+        ));
+
+      return { success: true };
+    }),
+
+  /**
+   * Run a scheduled task manually
+   */
+  runScheduledTask: protectedProcedure
+    .input(z.object({ taskId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Get the task
+      const [task] = await db.select()
+        .from(scheduledBotTasks)
+        .where(and(
+          eq(scheduledBotTasks.id, input.taskId),
+          eq(scheduledBotTasks.createdBy, ctx.user.id)
+        ))
+        .limit(1);
+
+      if (!task) throw new Error("Task not found");
+
+      // Get the bot
+      const [bot] = await db.select()
+        .from(bots)
+        .where(eq(bots.id, task.botId))
+        .limit(1);
+
+      if (!bot) throw new Error("Bot not found");
+
+      // Get context data based on task type
+      let contextData = "";
+      
+      if (task.taskType === "daily_report" || task.taskType === "operation_review") {
+        const ops = await db.select()
+          .from(autonomousOperations)
+          .orderBy(desc(autonomousOperations.createdAt))
+          .limit(10);
+        contextData = `Recent Operations: ${JSON.stringify(ops.map(o => ({ type: o.operationType, status: o.status, entity: o.businessEntityId })))}`;
+      } else if (task.taskType === "token_report") {
+        const tokens = await db.select()
+          .from(tokenAccounts)
+          .limit(10);
+        contextData = `Token Accounts: ${JSON.stringify(tokens.map(t => ({ user: t.userId, balance: t.tokenBalance })))}`;
+      } else if (task.taskType === "weekly_audit" || task.taskType === "monthly_analysis") {
+        const entities = await db.select()
+          .from(businessEntities)
+          .limit(10);
+        contextData = `Business Entities: ${JSON.stringify(entities.map(e => ({ name: e.name, type: e.entityType })))}`;
+      }
+
+      // Run the task using LLM
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: bot.systemPrompt },
+          { role: "user", content: `${task.prompt}\n\nContext:\n${contextData}\n\nPlease provide a comprehensive response for this ${task.taskType.replace("_", " ")}.` }
+        ],
+      });
+
+      const result = typeof response.choices[0].message.content === "string"
+        ? response.choices[0].message.content
+        : JSON.stringify(response.choices[0].message.content);
+
+      // Update task with result
+      const resultHistory = (task.resultHistory as any[] || []).slice(-9); // Keep last 10
+      resultHistory.push({
+        runAt: new Date().toISOString(),
+        result: result.substring(0, 1000), // Truncate for storage
+      });
+
+      await db.update(scheduledBotTasks)
+        .set({
+          lastRunAt: new Date(),
+          resultHistory: resultHistory as any,
+        })
+        .where(eq(scheduledBotTasks.id, input.taskId));
+
+      // Create notification if enabled
+      if (task.notifyOnComplete) {
+        await db.insert(notifications).values({
+          userId: ctx.user.id,
+          type: "info",
+          title: `Scheduled Task Complete: ${task.name}`,
+          message: result.substring(0, 200) + (result.length > 200 ? "..." : ""),
+          actionUrl: "/bots",
+        });
+      }
+
+      // Log the action
+      await db.insert(botActions).values({
+        botId: task.botId,
+        userId: ctx.user.id,
+        actionType: "analyze",
+        targetType: "scheduled_task",
+        targetId: task.id,
+        description: `Ran scheduled task: ${task.name}`,
+        result: { output: result.substring(0, 500) } as any,
+        status: "completed",
+      });
+
+      return { success: true, result };
+    }),
+
+  /**
+   * Initialize default scheduled tasks for system bots
+   */
+  initializeDefaultTasks: protectedProcedure.mutation(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Database unavailable");
+
+    // Check if tasks already exist
+    const existingTasks = await db.select()
+      .from(scheduledBotTasks)
+      .where(eq(scheduledBotTasks.createdBy, ctx.user.id))
+      .limit(1);
+
+    if (existingTasks.length > 0) {
+      return { success: true, message: "Tasks already initialized" };
+    }
+
+    // Get system bots
+    const systemBots = await db.select().from(bots);
+    const botMap = new Map(systemBots.map(b => [b.type, b.id]));
+
+    const defaultTasks = [
+      {
+        botId: botMap.get("operations"),
+        name: "Daily Operations Report",
+        description: "Generate a daily summary of all autonomous operations",
+        taskType: "daily_report" as const,
+        prompt: "Generate a comprehensive daily report of all autonomous operations. Include: pending operations, completed operations, any issues or alerts, and recommendations for tomorrow.",
+        schedule: "0 9 * * *", // 9 AM daily
+      },
+      {
+        botId: botMap.get("analytics"),
+        name: "Weekly Performance Audit",
+        description: "Weekly analysis of business performance across all entities",
+        taskType: "weekly_audit" as const,
+        prompt: "Conduct a weekly audit of business performance. Analyze: entity performance metrics, token circulation, operation success rates, and provide strategic recommendations.",
+        schedule: "0 10 * * 1", // 10 AM every Monday
+      },
+      {
+        botId: botMap.get("finance"),
+        name: "Token Economy Report",
+        description: "Daily token balance and transaction summary",
+        taskType: "token_report" as const,
+        prompt: "Generate a token economy report. Include: total tokens in circulation, entity balances, recent transactions, and any anomalies in token flow.",
+        schedule: "0 8 * * *", // 8 AM daily
+      },
+      {
+        botId: botMap.get("guardian"),
+        name: "Monthly Governance Review",
+        description: "Monthly compliance and governance analysis",
+        taskType: "monthly_analysis" as const,
+        prompt: "Conduct a monthly governance review. Check: trust compliance, allocation distributions, sovereignty protections, and flag any policy concerns.",
+        schedule: "0 9 1 * *", // 9 AM on 1st of each month
+      },
+      {
+        botId: botMap.get("outreach"),
+        name: "Content Calendar Update",
+        description: "Generate weekly social media content suggestions",
+        taskType: "content_schedule" as const,
+        prompt: "Create a content calendar for the upcoming week. Include: 7 social media post ideas, 2 email newsletter topics, and 1 blog post outline. Focus on community engagement and brand awareness.",
+        schedule: "0 8 * * 0", // 8 AM every Sunday
+      },
+      {
+        botId: botMap.get("seo"),
+        name: "SEO Health Check",
+        description: "Weekly SEO audit and recommendations",
+        taskType: "seo_audit" as const,
+        prompt: "Perform an SEO health check. Analyze: current keyword rankings, content optimization opportunities, meta description improvements, and competitor insights.",
+        schedule: "0 7 * * 2", // 7 AM every Tuesday
+      },
+      {
+        botId: botMap.get("engagement"),
+        name: "Engagement Metrics Review",
+        description: "Daily engagement analysis and optimization tips",
+        taskType: "engagement_check" as const,
+        prompt: "Review engagement metrics. Analyze: best performing content, optimal posting times, audience growth trends, and provide 3 actionable recommendations to boost engagement.",
+        schedule: "0 18 * * *", // 6 PM daily
+      },
+    ];
+
+    let created = 0;
+    for (const task of defaultTasks) {
+      if (task.botId) {
+        await db.insert(scheduledBotTasks).values({
+          botId: task.botId,
+          name: task.name,
+          description: task.description,
+          taskType: task.taskType,
+          prompt: task.prompt,
+          schedule: task.schedule,
+          createdBy: ctx.user.id,
+          notifyOnComplete: true,
+        });
+        created++;
+      }
+    }
+
+    return { success: true, message: `Created ${created} scheduled tasks` };
+  }),
 });

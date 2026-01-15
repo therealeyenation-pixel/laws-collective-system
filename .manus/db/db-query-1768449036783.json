@@ -1,0 +1,52 @@
+{
+  "query": "SELECT id, title, ownerId, accessLevel, status FROM secure_documents;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, title, ownerId, accessLevel, status FROM secure_documents;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "98 Trust - CALEA Freeman Family Trust Business Plan",
+      "ownerId": "1",
+      "accessLevel": "owner_only",
+      "status": "final"
+    },
+    {
+      "id": "2",
+      "title": "LuvOnPurpose Autonomous Wealth System, LLC Business Plan",
+      "ownerId": "1",
+      "accessLevel": "owner_only",
+      "status": "final"
+    },
+    {
+      "id": "3",
+      "title": "The L.A.W.S. Collective LLC Business Plan",
+      "ownerId": "1",
+      "accessLevel": "owner_only",
+      "status": "final"
+    },
+    {
+      "id": "4",
+      "title": "Real-Eye-Nation Business Plan",
+      "ownerId": "1",
+      "accessLevel": "owner_only",
+      "status": "final"
+    },
+    {
+      "id": "5",
+      "title": "508-LuvOnPurpose Academy and Outreach Business Plan",
+      "ownerId": "1",
+      "accessLevel": "owner_only",
+      "status": "final"
+    },
+    {
+      "id": "6",
+      "title": "Grant Application Template - Community Education Program",
+      "ownerId": "1",
+      "accessLevel": "owner_only",
+      "status": "final"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\townerId\taccessLevel\tstatus\n1\t98 Trust - CALEA Freeman Family Trust Business Plan\t1\towner_only\tfinal\n2\tLuvOnPurpose Autonomous Wealth System, LLC Business Plan\t1\towner_only\tfinal\n3\tThe L.A.W.S. Collective LLC Business Plan\t1\towner_only\tfinal\n4\tReal-Eye-Nation Business Plan\t1\towner_only\tfinal\n5\t508-LuvOnPurpose Academy and Outreach Business Plan\t1\towner_only\tfinal\n6\tGrant Application Template - Community Education Program\t1\towner_only\tfinal\n",
+  "stderr": "",
+  "execution_time_ms": 396
+}

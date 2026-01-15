@@ -81,6 +81,14 @@ export default function DocumentVault() {
     },
   });
 
+  const seedDocumentsMutation = trpc.documentVault.seedDocuments.useMutation({
+    onSuccess: (data) => {
+      if (data.count > 0) {
+        refetchDocs();
+      }
+    },
+  });
+
   const filteredDocuments = documents?.filter(doc => {
     const matchesType = selectedType === "all" || doc.documentType === selectedType;
     const matchesSearch = searchQuery === "" || 
@@ -218,6 +226,19 @@ export default function DocumentVault() {
           <div className="space-y-4">
             {docsLoading ? (
               <div className="text-center py-12 text-gray-500">Loading documents...</div>
+            ) : !documents || documents.length === 0 ? (
+              <div className="text-center py-12">
+                <FileText className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No Documents Yet</h3>
+                <p className="text-gray-500 mb-4">Initialize your vault with business plans and grant templates</p>
+                <button
+                  onClick={() => seedDocumentsMutation.mutate()}
+                  disabled={seedDocumentsMutation.isPending}
+                  className="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50"
+                >
+                  {seedDocumentsMutation.isPending ? "Creating Documents..." : "Initialize Document Vault"}
+                </button>
+              </div>
             ) : filteredDocuments && filteredDocuments.length > 0 ? (
               filteredDocuments.map((doc) => (
                 <div

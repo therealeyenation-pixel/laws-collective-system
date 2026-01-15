@@ -836,6 +836,9 @@ export const bots = mysqlTable("bots", {
     "guardian",        // Trust governance oversight
     "finance",         // Financial management and tokens
     "media",           // Content and narrative generation
+    "outreach",        // Marketing and social media outreach
+    "seo",             // Search engine optimization
+    "engagement",      // Audience analytics and engagement
     "custom"           // User-defined bots
   ]).notNull(),
   description: text("description"),
@@ -916,3 +919,38 @@ export const botActions = mysqlTable("bot_actions", {
 
 export type BotAction = typeof botActions.$inferSelect;
 export type InsertBotAction = typeof botActions.$inferInsert;
+
+
+/**
+ * Scheduled Bot Tasks - Automated recurring bot actions
+ */
+export const scheduledBotTasks = mysqlTable("scheduled_bot_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  botId: int("botId").notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  taskType: mysqlEnum("taskType", [
+    "daily_report",      // Generate daily summary report
+    "weekly_audit",      // Weekly compliance/performance audit
+    "monthly_analysis",  // Monthly business analysis
+    "content_schedule",  // Scheduled content generation
+    "engagement_check",  // Check engagement metrics
+    "seo_audit",         // SEO health check
+    "token_report",      // Token economy report
+    "operation_review",  // Review pending operations
+    "custom"             // Custom scheduled task
+  ]).notNull(),
+  prompt: text("prompt").notNull(), // What the bot should do
+  schedule: varchar("schedule", { length: 50 }).notNull(), // Cron expression or interval
+  lastRunAt: timestamp("lastRunAt"),
+  nextRunAt: timestamp("nextRunAt"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdBy: int("createdBy").notNull(),
+  notifyOnComplete: boolean("notifyOnComplete").default(true).notNull(),
+  resultHistory: json("resultHistory"), // Last N results
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ScheduledBotTask = typeof scheduledBotTasks.$inferSelect;
+export type InsertScheduledBotTask = typeof scheduledBotTasks.$inferInsert;

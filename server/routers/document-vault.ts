@@ -507,6 +507,102 @@ export const documentVaultRouter = router({
       return docs;
     }),
 
+  // Seed default documents (business plans and grant applications)
+  seedDocuments: publicProcedure
+    .mutation(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const userId = ctx.user?.id;
+      
+      if (!userId) {
+        throw new Error("Authentication required");
+      }
+
+      // Check if documents already exist for this user
+      const existingDocs = await db
+        .select()
+        .from(secureDocuments)
+        .where(eq(secureDocuments.ownerId, userId))
+        .limit(1);
+
+      if (existingDocs.length > 0) {
+        return { success: true, message: "Documents already exist", count: 0 };
+      }
+
+      const defaultDocuments = [
+        {
+          title: "98 Trust - CALEA Freeman Family Trust Business Plan",
+          description: "Comprehensive business plan for the CALEA Freeman Family Trust, establishing the foundation for multi-generational wealth preservation and sovereign governance.",
+          documentType: "business_plan" as const,
+          content: `# 98 Trust - CALEA Freeman Family Trust Business Plan\n\n## Executive Summary\nThe CALEA Freeman Family Trust serves as the sovereign foundation for multi-generational wealth preservation, governance, and legacy protection.\n\n## Mission\nTo establish and maintain a perpetual trust structure that protects family assets, ensures proper succession, and creates lasting generational wealth.\n\n## Key Objectives\n- Establish sovereign trust governance\n- Protect family assets across generations\n- Create sustainable wealth distribution mechanisms\n- Maintain legal compliance while maximizing protection\n\n## Structure\n- Trust Type: Irrevocable Family Trust\n- Governance: Board of Trustees\n- Distribution: 40/30/20/10 allocation model`,
+          status: "final" as const,
+          accessLevel: "owner_only" as const,
+        },
+        {
+          title: "LuvOnPurpose Autonomous Wealth System, LLC Business Plan",
+          description: "Business plan for the autonomous wealth generation platform that powers the LuvOnPurpose ecosystem.",
+          documentType: "business_plan" as const,
+          content: `# LuvOnPurpose Autonomous Wealth System, LLC\n\n## Vision\nTo create an autonomous, self-sustaining wealth generation system that operates 24/7 to build generational prosperity.\n\n## Core Components\n- Autonomous Decision Engine\n- Token Economy Management\n- Multi-Entity Coordination\n- Blockchain Verification\n\n## Revenue Streams\n- Platform licensing\n- Token transaction fees\n- Educational services\n- Consulting services\n\n## Technology Stack\n- AI-powered decision making\n- Blockchain verification\n- Real-time analytics\n- Secure document management`,
+          status: "final" as const,
+          accessLevel: "owner_only" as const,
+        },
+        {
+          title: "The L.A.W.S. Collective LLC Business Plan",
+          description: "Business plan for the community-focused collective helping people reconnect with land, strengthen identity, and build practical skills.",
+          documentType: "business_plan" as const,
+          content: `# The L.A.W.S. Collective LLC\n\n## Framework\n- LAND: Reconnection & Stability\n- AIR: Education & Knowledge\n- WATER: Healing & Balance\n- SELF: Purpose & Skills\n\n## Mission\nA community-focused framework helping people reconnect with land, strengthen identity, restore balance, and build practical skills for generational wealth.\n\n## Programs\n- Land stewardship education\n- Financial literacy workshops\n- Healing and wellness circles\n- Skills development training\n\n## Impact Goals\n- 1,000 families served annually\n- 100 acres of community land\n- 50 certified practitioners`,
+          status: "final" as const,
+          accessLevel: "owner_only" as const,
+        },
+        {
+          title: "Real-Eye-Nation Business Plan",
+          description: "Media and narrative platform for truth documentation and community storytelling.",
+          documentType: "business_plan" as const,
+          content: `# Real-Eye-Nation\n\n## Purpose\nTo create authentic narratives that document truth, preserve history, and amplify community voices.\n\n## Services\n- Documentary production\n- Podcast network\n- Written publications\n- Digital archive\n\n## Content Pillars\n- Historical documentation\n- Community stories\n- Educational content\n- Investigative journalism\n\n## Distribution\n- Streaming platforms\n- Social media\n- Community events\n- Educational institutions`,
+          status: "final" as const,
+          accessLevel: "owner_only" as const,
+        },
+        {
+          title: "508-LuvOnPurpose Academy and Outreach Business Plan",
+          description: "Educational institution providing Divine STEM curriculum and community outreach programs.",
+          documentType: "business_plan" as const,
+          content: `# 508-LuvOnPurpose Academy and Outreach\n\n## Educational Philosophy\nIntegrating traditional wisdom with modern STEM education through the Divine STEM curriculum.\n\n## Programs\n- House of Wonder (Ages 5-8)\n- House of Form (Ages 9-12)\n- House of Mastery (Ages 13+)\n- House of Many Tongues (Language)\n\n## Curriculum Areas\n- Science of Origin\n- Sacred Geometry\n- Ancestral Mathematics\n- Nature's Patterns\n\n## Outreach\n- Community workshops\n- Summer programs\n- Parent education\n- Teacher training`,
+          status: "final" as const,
+          accessLevel: "owner_only" as const,
+        },
+        {
+          title: "Grant Application Template - Community Education Program",
+          description: "Template for grant applications focused on community education and development initiatives.",
+          documentType: "grant_application" as const,
+          content: `# Grant Application Template\n\n## Organization Information\n- Organization Name: [Your Organization]\n- EIN: [Tax ID]\n- Contact: [Primary Contact]\n\n## Project Summary\n[Brief description of the proposed project]\n\n## Need Statement\n[Describe the community need this project addresses]\n\n## Goals & Objectives\n1. [Goal 1]\n2. [Goal 2]\n3. [Goal 3]\n\n## Budget\n- Personnel: $\n- Materials: $\n- Operations: $\n- Total: $\n\n## Timeline\n- Phase 1: [Dates]\n- Phase 2: [Dates]\n- Phase 3: [Dates]\n\n## Evaluation\n[How will success be measured?]`,
+          status: "final" as const,
+          accessLevel: "owner_only" as const,
+          isTemplate: true,
+        },
+      ];
+
+      let count = 0;
+      for (const doc of defaultDocuments) {
+        const contentHash = crypto.createHash("sha256").update(doc.content).digest("hex");
+        
+        await db.insert(secureDocuments).values({
+          ownerId: userId,
+          title: doc.title,
+          description: doc.description,
+          documentType: doc.documentType,
+          content: doc.content,
+          status: doc.status,
+          accessLevel: doc.accessLevel,
+          isTemplate: doc.isTemplate || false,
+          blockchainHash: contentHash,
+          version: 1,
+        });
+        count++;
+      }
+
+      return { success: true, message: `Created ${count} documents`, count };
+    }),
+
   // Get document statistics
   getStats: publicProcedure
     .query(async ({ ctx }) => {

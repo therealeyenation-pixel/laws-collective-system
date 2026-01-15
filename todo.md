@@ -373,3 +373,15 @@
 - [x] Create bot management UI
 - [x] Create chat interface for interacting with bots
 - [x] Integrate bots with existing systems (operations, tokens, entities)
+
+
+## Phase 27: Marketing Bots & Document Vault Fix
+- [x] Fix Document Vault - investigate why documents not showing
+- [x] Seed business plan documents into database
+- [x] Add Outreach Bot for social media and email campaigns
+- [x] Add SEO Bot for search optimization
+- [x] Add Engagement Bot for analytics and content timing
+- [x] Implement scheduled bot actions (daily reports, weekly audits)
+- [x] Add voice input for bot conversations
+- [x] Add scheduled tasks management UI
+- [x] Add task run/pause controls

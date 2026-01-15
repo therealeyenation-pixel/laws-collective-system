@@ -64,6 +64,20 @@
       "when": 1768448446594,
       "tag": "0008_simple_midnight",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1768449172335,
+      "tag": "0009_dazzling_enchantress",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1768449245167,
+      "tag": "0010_premium_blob",
+      "breakpoints": true
     }
   ]
 }
