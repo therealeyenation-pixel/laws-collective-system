@@ -378,7 +378,7 @@ export default function Landing() {
                   </div>
                   <div>
                     <p className="font-medium text-stone-900">Email Us</p>
-                    <p className="text-stone-600">therealeyenation@gmail.com</p>
+                    <p className="text-stone-600">1luvonpurpose@gmail.com</p>
                   </div>
                 </div>
               </div>

@@ -63,18 +63,19 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 }
 
 function Router() {
-  // Dashboard routes are now accessible without authentication for mobile preview testing
-  // Authentication is still checked within the components for personalized content
+  // Public routes: Landing page and Academy
+  // Protected routes: Trust System, Dashboard, Document Vault, Bots, Social Media
   return (
     <Switch>
       <Route path="/" component={Landing} />
       <Route path="/home" component={Home} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/system" component={SystemDashboard} />
       <Route path="/academy" component={AcademyDashboard} />
-      <Route path="/vault" component={DocumentVault} />
-      <Route path="/bots" component={Bots} />
-      <Route path="/social-media" component={SocialMedia} />
+      {/* Protected routes - require authentication */}
+      <Route path="/dashboard">{() => <ProtectedRoute component={Dashboard} />}</Route>
+      <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} />}</Route>
+      <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} />}</Route>
+      <Route path="/bots">{() => <ProtectedRoute component={Bots} />}</Route>
+      <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
