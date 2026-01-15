@@ -476,3 +476,88 @@
 - [x] Add full interactive quiz game with 12 questions each
 - [x] Add progress bar and score tracking
 - [x] Add token earning system
+
+
+## Phase 38: Redesign Simulators as Business Setup Courses
+- [x] Business Setup Course - learning + document generation:
+  - [ ] Module 1: Business Foundations (lesson + quiz)
+    - [ ] Lesson: Understanding business structures (LLC, Corp, Nonprofit, Trust)
+    - [ ] Quiz checkpoint
+    - [ ] Output: Entity type selection worksheet
+  - [ ] Module 2: Mission & Vision (lesson + quiz)
+    - [ ] Lesson: Crafting mission statements and value propositions
+    - [ ] Quiz checkpoint
+    - [ ] Output: Mission statement document
+  - [ ] Module 3: Market Research (lesson + quiz)
+    - [ ] Lesson: Identifying target market and customer profiles
+    - [ ] Quiz checkpoint
+    - [ ] Output: Customer persona document
+  - [ ] Module 4: Products & Services (lesson + quiz)
+    - [ ] Lesson: Defining offerings and pricing strategies
+    - [ ] Quiz checkpoint
+    - [ ] Output: Product/service catalog
+  - [ ] Module 5: Legal Formation (lesson + quiz)
+    - [ ] Lesson: Articles of Organization, Operating Agreements
+    - [ ] Quiz checkpoint
+    - [ ] Output: Draft legal documents
+  - [ ] Module 6: Business Plan Assembly (lesson + final)
+    - [ ] Lesson: Putting it all together
+    - [ ] Final assessment
+    - [ ] Output: Complete Business Plan PDF
+
+- [ ] Financial Management Course - learning + spreadsheets:
+  - [ ] Module 1: Startup Costs (lesson + quiz)
+    - [ ] Lesson: Calculating initial investment needs
+    - [ ] Quiz checkpoint
+    - [ ] Output: Startup costs worksheet
+  - [ ] Module 2: Revenue Planning (lesson + quiz)
+    - [ ] Lesson: Projecting income and pricing
+    - [ ] Quiz checkpoint
+    - [ ] Output: Revenue projection spreadsheet
+  - [ ] Module 3: Expense Management (lesson + quiz)
+    - [ ] Lesson: Operating costs and overhead
+    - [ ] Quiz checkpoint
+    - [ ] Output: Expense budget
+  - [ ] Module 4: Cash Flow (lesson + quiz)
+    - [ ] Lesson: Managing money in and out
+    - [ ] Quiz checkpoint
+    - [ ] Output: Cash flow projection
+  - [ ] Module 5: Break-Even & Profitability (lesson + quiz)
+    - [ ] Lesson: Understanding when you make money
+    - [ ] Quiz checkpoint
+    - [ ] Output: Break-even analysis
+  - [ ] Module 6: Financial Plan Assembly (lesson + final)
+    - [ ] Lesson: Complete financial picture
+    - [ ] Final assessment
+    - [ ] Output: Complete Financial Plan PDF
+
+- [x] Entity Operations Course - learning + procedures:
+  - [ ] Module 1: Organizational Structure (lesson + quiz)
+    - [ ] Lesson: Roles, responsibilities, org charts
+    - [ ] Quiz checkpoint
+    - [ ] Output: Org chart and role definitions
+  - [ ] Module 2: Standard Operating Procedures (lesson + quiz)
+    - [ ] Lesson: Creating SOPs for consistency
+    - [ ] Quiz checkpoint
+    - [ ] Output: SOP templates
+  - [ ] Module 3: Compliance & Licensing (lesson + quiz)
+    - [ ] Lesson: Legal requirements by entity type
+    - [ ] Quiz checkpoint
+    - [ ] Output: Compliance checklist
+  - [ ] Module 4: Contracts & Agreements (lesson + quiz)
+    - [ ] Lesson: Essential business contracts
+    - [ ] Quiz checkpoint
+    - [ ] Output: Contract templates
+  - [ ] Module 5: Operations Calendar (lesson + quiz)
+    - [ ] Lesson: Annual compliance and deadlines
+    - [ ] Quiz checkpoint
+    - [ ] Output: Annual calendar
+  - [ ] Module 6: Operations Manual Assembly (lesson + final)
+    - [ ] Lesson: Complete operations guide
+    - [ ] Final assessment
+    - [ ] Output: Complete Operations Manual PDF
+
+- [ ] Save all course outputs to Document Vault
+- [x] Track course progress with visual indicators
+- [x] Award tokens for module completion
+- [ ] Issue certificates upon course completion

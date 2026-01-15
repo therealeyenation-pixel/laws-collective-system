@@ -12,145 +12,169 @@ import {
   Lock,
   Users,
   FileText,
-  ArrowLeft,
-  CheckCircle,
-  XCircle,
+  GraduationCap,
   Trophy,
+  Download,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import BusinessCourse from "@/components/BusinessCourse";
+import FinancialCourse from "@/components/FinancialCourse";
+import OperationsCourse from "@/components/OperationsCourse";
 
-interface SimulatorState {
-  active: boolean;
-  type: string;
-  title: string;
-  turn: number;
-  maxTurns: number;
-  score: number;
-  currentQuestion: {
-    question: string;
-    options: string[];
-    correctIndex: number;
-  } | null;
+type CourseType = "business" | "financial" | "operations" | null;
+
+interface CourseProgress {
+  business: { completed: boolean; tokens: number; data: any };
+  financial: { completed: boolean; tokens: number; data: any };
+  operations: { completed: boolean; tokens: number; data: any };
 }
-
-const simulatorQuestions: Record<string, Array<{ question: string; options: string[]; correctIndex: number }>> = {
-  business: [
-    { question: "What is the primary purpose of a Family Trust?", options: ["Tax evasion", "Asset protection and wealth transfer", "Hiding money", "Avoiding creditors"], correctIndex: 1 },
-    { question: "Which entity type provides limited liability protection?", options: ["Sole Proprietorship", "General Partnership", "LLC", "DBA"], correctIndex: 2 },
-    { question: "What does 'sovereign' mean in the context of wealth building?", options: ["Being a king", "Self-governing and independent", "Having no rules", "Avoiding taxes"], correctIndex: 1 },
-    { question: "What is the L.A.W.S. framework?", options: ["Legal documents", "Land, Air, Water, Self", "Lawyers and workers", "Laws of the state"], correctIndex: 1 },
-    { question: "Why is multi-generational planning important?", options: ["To spend money faster", "To build lasting legacy", "To avoid responsibility", "To hide assets"], correctIndex: 1 },
-    { question: "What role does the Trust play in the entity structure?", options: ["Marketing", "Governance and oversight", "Sales", "Customer service"], correctIndex: 1 },
-    { question: "How are tokens used in the LuvOnPurpose system?", options: ["Cryptocurrency trading", "Tracking value and contributions", "Gambling", "Buying products"], correctIndex: 1 },
-    { question: "What is a 508(c)(1)(a) organization?", options: ["For-profit company", "Tax-exempt religious/educational nonprofit", "Government agency", "Private bank"], correctIndex: 1 },
-    { question: "What percentage should be allocated to education?", options: ["0%", "10%", "30%", "100%"], correctIndex: 2 },
-    { question: "What is the purpose of the LuvLedger?", options: ["Social media", "Tracking all financial activities", "Gaming", "Email"], correctIndex: 1 },
-    { question: "Why is blockchain verification important?", options: ["Speed", "Immutability and trust", "Cost savings", "Marketing"], correctIndex: 1 },
-    { question: "What is the ultimate goal of the autonomous system?", options: ["Quick profits", "Multi-generational wealth and legacy", "Day trading", "Speculation"], correctIndex: 1 },
-  ],
-  financial: [
-    { question: "What is asset allocation?", options: ["Spending all money", "Distributing investments across categories", "Saving nothing", "Borrowing money"], correctIndex: 1 },
-    { question: "What percentage goes to the Commercial Engine?", options: ["10%", "20%", "30%", "40%"], correctIndex: 3 },
-    { question: "What is the purpose of the Education Engine?", options: ["Entertainment", "Building knowledge and skills", "Gambling", "Speculation"], correctIndex: 1 },
-    { question: "How does token economy work?", options: ["Random distribution", "Value-based earning and spending", "Government control", "Bank loans"], correctIndex: 1 },
-    { question: "What is compound growth?", options: ["Linear increase", "Growth on growth over time", "Decrease", "Stagnation"], correctIndex: 1 },
-    { question: "Why diversify across entities?", options: ["Confusion", "Risk management", "Tax evasion", "Hiding money"], correctIndex: 1 },
-    { question: "What is passive income?", options: ["Working harder", "Earnings without active work", "Borrowing", "Spending"], correctIndex: 1 },
-    { question: "How often should you review allocations?", options: ["Never", "Quarterly or annually", "Every hour", "Only when losing money"], correctIndex: 1 },
-    { question: "What is the Media Engine's allocation?", options: ["10%", "20%", "30%", "40%"], correctIndex: 1 },
-    { question: "What is the Platform Engine's allocation?", options: ["10%", "20%", "30%", "40%"], correctIndex: 0 },
-    { question: "Why track all transactions on blockchain?", options: ["Speed", "Transparency and accountability", "Cost", "Fashion"], correctIndex: 1 },
-    { question: "What is the goal of autonomous operations?", options: ["Replace humans", "Efficient, consistent execution", "Chaos", "Randomness"], correctIndex: 1 },
-  ],
-  operations: [
-    { question: "What is governance in a trust structure?", options: ["Dictatorship", "Rules and decision-making processes", "Anarchy", "Randomness"], correctIndex: 1 },
-    { question: "Who has final authority in the Trust?", options: ["Government", "Trustees/Beneficiaries", "Banks", "Random people"], correctIndex: 1 },
-    { question: "What is an autonomous operation?", options: ["Manual work", "Self-executing business process", "Chaos", "Guessing"], correctIndex: 1 },
-    { question: "Why is audit trail important?", options: ["Decoration", "Accountability and verification", "Confusion", "Hiding"], correctIndex: 1 },
-    { question: "What is conflict resolution?", options: ["Fighting", "Resolving disagreements fairly", "Ignoring problems", "Running away"], correctIndex: 1 },
-    { question: "How are decisions escalated?", options: ["Randomly", "Based on thresholds and rules", "Never", "Always"], correctIndex: 1 },
-    { question: "What is the role of human oversight?", options: ["None", "Review and approve key decisions", "Do everything", "Ignore everything"], correctIndex: 1 },
-    { question: "What triggers a governance review?", options: ["Nothing", "High-value or sensitive decisions", "Every decision", "Random"], correctIndex: 1 },
-    { question: "How are policies enforced?", options: ["Hope", "Automated rules and checks", "Luck", "Guessing"], correctIndex: 1 },
-    { question: "What is sovereignty protection?", options: ["Attack", "Preserving independence and control", "Surrender", "Chaos"], correctIndex: 1 },
-    { question: "Why document all decisions?", options: ["Waste time", "Legal protection and learning", "Confusion", "Hiding"], correctIndex: 1 },
-    { question: "What is the benefit of automation?", options: ["Laziness", "Consistency and efficiency", "Chaos", "Randomness"], correctIndex: 1 },
-  ],
-};
 
 export default function Dashboard() {
   const { data: overview, isLoading } = trpc.luv.getSystemOverview.useQuery();
-  const [simulator, setSimulator] = useState<SimulatorState>({
-    active: false,
-    type: "",
-    title: "",
-    turn: 0,
-    maxTurns: 12,
-    score: 0,
-    currentQuestion: null,
+  const [activeCourse, setActiveCourse] = useState<CourseType>(null);
+  const [courseProgress, setCourseProgress] = useState<CourseProgress>({
+    business: { completed: false, tokens: 0, data: null },
+    financial: { completed: false, tokens: 0, data: null },
+    operations: { completed: false, tokens: 0, data: null },
   });
 
-  const startSimulator = (type: string, title: string) => {
-    const questions = simulatorQuestions[type];
-    if (!questions || questions.length === 0) {
-      toast.error("Simulator not available");
+  const handleCourseComplete = (
+    type: CourseType,
+    data: any,
+    tokens: number
+  ) => {
+    if (!type) return;
+    
+    setCourseProgress((prev) => ({
+      ...prev,
+      [type]: { completed: true, tokens, data },
+    }));
+    
+    toast.success(`Course Complete! You earned ${tokens} tokens. Your documents are ready.`, {
+      duration: 5000,
+    });
+    
+    setActiveCourse(null);
+  };
+
+  const downloadBusinessPlan = () => {
+    const { business, financial, operations } = courseProgress;
+    
+    if (!business.data && !financial.data && !operations.data) {
+      toast.error("Complete at least one course to generate documents");
       return;
     }
-    setSimulator({
-      active: true,
-      type,
-      title,
-      turn: 1,
-      maxTurns: questions.length,
-      score: 0,
-      currentQuestion: questions[0],
-    });
-    toast.success(`Starting ${title}`);
-  };
 
-  const answerQuestion = (selectedIndex: number) => {
-    if (!simulator.currentQuestion) return;
-    
-    const isCorrect = selectedIndex === simulator.currentQuestion.correctIndex;
-    const newScore = isCorrect ? simulator.score + 10 : simulator.score;
-    
-    if (isCorrect) {
-      toast.success("Correct! +10 tokens");
-    } else {
-      toast.error("Incorrect. The right answer was: " + simulator.currentQuestion.options[simulator.currentQuestion.correctIndex]);
+    // Generate comprehensive business plan from all course data
+    let content = "# BUSINESS PLAN\n\n";
+    content += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+    content += "---\n\n";
+
+    if (business.data) {
+      content += "## BUSINESS OVERVIEW\n\n";
+      content += `**Business Name:** ${business.data.businessName || "[Not specified]"}\n\n`;
+      content += `**Entity Type:** ${business.data.entityType || "[Not specified]"}\n\n`;
+      content += `### Mission Statement\n${business.data.missionStatement || "[Not specified]"}\n\n`;
+      content += `### Vision Statement\n${business.data.visionStatement || "[Not specified]"}\n\n`;
+      content += `### Core Values\n${business.data.coreValues || "[Not specified]"}\n\n`;
+      content += `### Target Market\n${business.data.targetMarket || "[Not specified]"}\n\n`;
+      content += `### Customer Profile\n${business.data.customerProfile || "[Not specified]"}\n\n`;
+      content += `### Products\n${business.data.products || "[Not specified]"}\n\n`;
+      content += `### Services\n${business.data.services || "[Not specified]"}\n\n`;
+      content += `### Pricing Strategy\n${business.data.pricingStrategy || "[Not specified]"}\n\n`;
+      content += `### Competitive Advantage\n${business.data.competitiveAdvantage || "[Not specified]"}\n\n`;
+      content += "### Legal Formation\n";
+      content += `- Registered Agent: ${business.data.registeredAgent || "[Not specified]"}\n`;
+      content += `- Principal Address: ${business.data.principalAddress || "[Not specified]"}\n`;
+      content += `- Management Structure: ${business.data.managementStructure || "[Not specified]"}\n`;
+      content += `- Members: ${business.data.memberNames || "[Not specified]"}\n`;
+      content += `- Initial Capital: ${business.data.initialCapital || "[Not specified]"}\n\n`;
+      content += "### Operating Agreement Terms\n";
+      content += `- Profit Distribution: ${business.data.profitDistribution || "[Not specified]"}\n`;
+      content += `- Voting Rights: ${business.data.votingRights || "[Not specified]"}\n`;
+      content += `- Meeting Requirements: ${business.data.meetingRequirements || "[Not specified]"}\n`;
+      content += `- Dissolution Terms: ${business.data.dissolutionTerms || "[Not specified]"}\n\n`;
     }
 
-    const questions = simulatorQuestions[simulator.type];
-    const nextTurn = simulator.turn + 1;
-
-    if (nextTurn > simulator.maxTurns) {
-      // Simulator complete
-      setSimulator(prev => ({ ...prev, active: false, score: newScore }));
-      toast.success(`Simulator Complete! You earned ${newScore} tokens!`, {
-        duration: 5000,
-      });
-    } else {
-      setSimulator(prev => ({
-        ...prev,
-        turn: nextTurn,
-        score: newScore,
-        currentQuestion: questions[nextTurn - 1],
-      }));
+    if (financial.data) {
+      content += "---\n\n## FINANCIAL PLAN\n\n";
+      content += "### Startup Costs\n";
+      content += `- Equipment & Technology: $${financial.data.equipmentCosts || "0"}\n`;
+      content += `- Initial Inventory: $${financial.data.inventoryCosts || "0"}\n`;
+      content += `- Legal & Professional: $${financial.data.legalFees || "0"}\n`;
+      content += `- Licenses & Permits: $${financial.data.licensingFees || "0"}\n`;
+      content += `- Initial Marketing: $${financial.data.marketingBudget || "0"}\n`;
+      content += `- Operating Reserve: $${financial.data.operatingReserve || "0"}\n\n`;
+      content += "### Revenue Projections\n";
+      content += `- Monthly Product Revenue: $${financial.data.productRevenue || "0"}\n`;
+      content += `- Monthly Service Revenue: $${financial.data.serviceRevenue || "0"}\n`;
+      content += `- Year 1 Total: $${financial.data.yearOneRevenue || "0"}\n`;
+      content += `- Year 2 Total: $${financial.data.yearTwoRevenue || "0"}\n`;
+      content += `- Year 3 Total: $${financial.data.yearThreeRevenue || "0"}\n\n`;
+      content += "### Monthly Operating Expenses\n";
+      content += `- Rent/Mortgage: $${financial.data.rent || "0"}\n`;
+      content += `- Utilities: $${financial.data.utilities || "0"}\n`;
+      content += `- Salaries & Wages: $${financial.data.salaries || "0"}\n`;
+      content += `- Insurance: $${financial.data.insurance || "0"}\n`;
+      content += `- Marketing: $${financial.data.marketing || "0"}\n`;
+      content += `- Supplies: $${financial.data.supplies || "0"}\n\n`;
+      content += "### Cash Flow\n";
+      content += `- Opening Balance: $${financial.data.openingBalance || "0"}\n`;
+      content += `- Monthly Inflow: $${financial.data.monthlyInflow || "0"}\n`;
+      content += `- Monthly Outflow: $${financial.data.monthlyOutflow || "0"}\n\n`;
+      content += "### Break-Even Analysis\n";
+      content += `- Fixed Costs: $${financial.data.fixedCosts || "0"}/month\n`;
+      content += `- Price per Unit: $${financial.data.pricePerUnit || "0"}\n`;
+      content += `- Variable Cost per Unit: $${financial.data.variableCostPerUnit || "0"}\n\n`;
+      content += "### Funding Plan\n";
+      content += `- Owner Investment: $${financial.data.ownerInvestment || "0"}\n`;
+      content += `- Loans: $${financial.data.loans || "0"}\n`;
+      content += `- Grants: $${financial.data.grants || "0"}\n`;
+      content += `- Investors: $${financial.data.investors || "0"}\n\n`;
     }
-  };
 
-  const exitSimulator = () => {
-    setSimulator({
-      active: false,
-      type: "",
-      title: "",
-      turn: 0,
-      maxTurns: 12,
-      score: 0,
-      currentQuestion: null,
-    });
-    toast.info("Simulator exited");
+    if (operations.data) {
+      content += "---\n\n## OPERATIONS MANUAL\n\n";
+      content += "### Organizational Structure\n";
+      content += `**Structure Type:** ${operations.data.orgStructure || "[Not specified]"}\n\n`;
+      content += `**Key Roles:**\n${operations.data.roles || "[Not specified]"}\n\n`;
+      content += `**Responsibilities:**\n${operations.data.responsibilities || "[Not specified]"}\n\n`;
+      content += `**Reporting Lines:**\n${operations.data.reportingLines || "[Not specified]"}\n\n`;
+      content += "### Standard Operating Procedures\n";
+      content += `**Core Procedures:**\n${operations.data.coreProcedures || "[Not specified]"}\n\n`;
+      content += `**Quality Standards:**\n${operations.data.qualityStandards || "[Not specified]"}\n\n`;
+      content += `**Customer Service:**\n${operations.data.customerService || "[Not specified]"}\n\n`;
+      content += "### Compliance Requirements\n";
+      content += `**Required Licenses:**\n${operations.data.requiredLicenses || "[Not specified]"}\n\n`;
+      content += `**Required Permits:**\n${operations.data.permits || "[Not specified]"}\n\n`;
+      content += `**Insurance Coverage:**\n${operations.data.insuranceTypes || "[Not specified]"}\n\n`;
+      content += `**Regulatory Bodies:**\n${operations.data.regulatoryBodies || "[Not specified]"}\n\n`;
+      content += "### Contracts & Agreements\n";
+      content += `**Vendor Contracts:**\n${operations.data.vendorContracts || "[Not specified]"}\n\n`;
+      content += `**Customer Agreements:**\n${operations.data.customerAgreements || "[Not specified]"}\n\n`;
+      content += `**Employment Contracts:**\n${operations.data.employmentContracts || "[Not specified]"}\n\n`;
+      content += "### Operations Calendar\n";
+      content += `**Annual Filings:**\n${operations.data.annualFilings || "[Not specified]"}\n\n`;
+      content += `**Tax Deadlines:**\n${operations.data.taxDeadlines || "[Not specified]"}\n\n`;
+      content += `**Renewals:**\n${operations.data.renewalDates || "[Not specified]"}\n\n`;
+      content += `**Review Schedule:**\n${operations.data.reviewSchedule || "[Not specified]"}\n\n`;
+    }
+
+    content += "---\n\n";
+    content += "*This business plan was generated through the L.A.W.S. Collective Business Setup Course.*\n";
+    content += `*Total tokens earned: ${courseProgress.business.tokens + courseProgress.financial.tokens + courseProgress.operations.tokens}*\n`;
+
+    // Download as markdown file
+    const blob = new Blob([content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `business-plan-${new Date().toISOString().split("T")[0]}.md`;
+    link.click();
+    URL.revokeObjectURL(url);
+    
+    toast.success("Business Plan downloaded!");
   };
 
   if (isLoading) {
@@ -163,71 +187,50 @@ export default function Dashboard() {
     );
   }
 
-  // Simulator active view
-  if (simulator.active && simulator.currentQuestion) {
+  // Active course view
+  if (activeCourse === "business") {
     return (
       <DashboardLayout>
-        <div className="max-w-2xl mx-auto space-y-6">
-          {/* Simulator Header */}
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              onClick={exitSimulator}
-              className="gap-2 min-h-[44px]"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Exit
-            </Button>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Turn {simulator.turn} of {simulator.maxTurns}</p>
-              <p className="font-bold text-accent">{simulator.score} tokens</p>
-            </div>
-          </div>
-
-          {/* Simulator Title */}
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-foreground">{simulator.title}</h1>
-            <div className="w-full bg-secondary rounded-full h-2 mt-4">
-              <div 
-                className="bg-accent h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(simulator.turn / simulator.maxTurns) * 100}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Question Card */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold text-foreground mb-6">
-              {simulator.currentQuestion.question}
-            </h2>
-            <div className="space-y-3">
-              {simulator.currentQuestion.options.map((option, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  className="w-full justify-start text-left min-h-[56px] p-4"
-                  onClick={() => answerQuestion(index)}
-                >
-                  <span className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center mr-3 flex-shrink-0">
-                    {String.fromCharCode(65 + index)}
-                  </span>
-                  <span className="flex-1">{option}</span>
-                </Button>
-              ))}
-            </div>
-          </Card>
-
-          {/* Score Display */}
-          <Card className="p-4 bg-accent/10">
-            <div className="flex items-center justify-center gap-4">
-              <Trophy className="w-6 h-6 text-accent" />
-              <span className="text-lg font-bold">Current Score: {simulator.score} tokens</span>
-            </div>
-          </Card>
-        </div>
+        <BusinessCourse
+          onComplete={(data, tokens) => handleCourseComplete("business", data, tokens)}
+          onExit={() => setActiveCourse(null)}
+        />
       </DashboardLayout>
     );
   }
+
+  if (activeCourse === "financial") {
+    return (
+      <DashboardLayout>
+        <FinancialCourse
+          onComplete={(data, tokens) => handleCourseComplete("financial", data, tokens)}
+          onExit={() => setActiveCourse(null)}
+        />
+      </DashboardLayout>
+    );
+  }
+
+  if (activeCourse === "operations") {
+    return (
+      <DashboardLayout>
+        <OperationsCourse
+          onComplete={(data, tokens) => handleCourseComplete("operations", data, tokens)}
+          onExit={() => setActiveCourse(null)}
+        />
+      </DashboardLayout>
+    );
+  }
+
+  const totalTokensEarned = 
+    courseProgress.business.tokens + 
+    courseProgress.financial.tokens + 
+    courseProgress.operations.tokens;
+
+  const coursesCompleted = [
+    courseProgress.business.completed,
+    courseProgress.financial.completed,
+    courseProgress.operations.completed,
+  ].filter(Boolean).length;
 
   return (
     <DashboardLayout>
@@ -235,12 +238,39 @@ export default function Dashboard() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground">
-            LuvOnPurpose Sovereign System
+            L.A.W.S. Collective Dashboard
           </h1>
           <p className="text-muted-foreground mt-2">
-            Your personal gateway to autonomous wealth generation and multi-generational legacy building
+            Your personal gateway to building a real, functioning business through guided courses
           </p>
         </div>
+
+        {/* Progress Overview */}
+        {totalTokensEarned > 0 && (
+          <Card className="p-6 bg-gradient-to-br from-accent/10 to-primary/10 border-accent/20">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-4">
+                <Trophy className="w-10 h-10 text-accent" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Tokens Earned</p>
+                  <p className="text-3xl font-bold text-foreground">{totalTokensEarned}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="text-sm text-muted-foreground">Courses Completed</p>
+                  <p className="text-2xl font-bold text-foreground">{coursesCompleted}/3</p>
+                </div>
+                {coursesCompleted > 0 && (
+                  <Button onClick={downloadBusinessPlan} className="gap-2 min-h-[48px]">
+                    <Download className="w-4 h-4" />
+                    Download Business Plan
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* System Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -294,13 +324,165 @@ export default function Dashboard() {
         </div>
 
         {/* Main Tabs */}
-        <Tabs defaultValue="entities" className="w-full">
+        <Tabs defaultValue="courses" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="courses">Business Courses</TabsTrigger>
             <TabsTrigger value="entities">Business Entities</TabsTrigger>
-            <TabsTrigger value="simulators">Simulators</TabsTrigger>
             <TabsTrigger value="ledger">LuvLedger</TabsTrigger>
             <TabsTrigger value="trust">Trust Network</TabsTrigger>
           </TabsList>
+
+          {/* Business Courses Tab */}
+          <TabsContent value="courses" className="space-y-4 mt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-foreground">
+                  Business Setup Courses
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Complete these courses to build a real, functioning business with all necessary documents
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Business Setup Course */}
+              <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-accent">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 rounded-full bg-accent/10">
+                    <Shield className="w-8 h-8 text-accent" />
+                  </div>
+                  {courseProgress.business.completed && (
+                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                      Completed
+                    </span>
+                  )}
+                </div>
+                <h3 className="font-bold text-foreground text-lg mb-2">Business Setup Course</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Learn to structure your business, create mission/vision statements, define your market, and generate legal formation documents.
+                </p>
+                <div className="space-y-2 mb-4">
+                  <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                  <p className="text-xs text-muted-foreground">
+                    <strong>Outputs:</strong> Entity selection, Mission/Vision, Customer profile, Products/Services, Legal documents, Operating Agreement
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-accent">
+                    {courseProgress.business.completed ? `${courseProgress.business.tokens} tokens earned` : "Earn 100+ tokens"}
+                  </span>
+                  <Button 
+                    size="sm" 
+                    className="min-h-[48px] min-w-[100px]"
+                    onClick={() => setActiveCourse("business")}
+                  >
+                    {courseProgress.business.completed ? "Review" : "Start"}
+                  </Button>
+                </div>
+              </Card>
+
+              {/* Financial Management Course */}
+              <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-green-600">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 rounded-full bg-green-600/10">
+                    <DollarSign className="w-8 h-8 text-green-600" />
+                  </div>
+                  {courseProgress.financial.completed && (
+                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                      Completed
+                    </span>
+                  )}
+                </div>
+                <h3 className="font-bold text-foreground text-lg mb-2">Financial Management Course</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Master startup costs, revenue projections, expense management, cash flow, break-even analysis, and funding strategies.
+                </p>
+                <div className="space-y-2 mb-4">
+                  <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                  <p className="text-xs text-muted-foreground">
+                    <strong>Outputs:</strong> Startup costs, Revenue projections, Expense budget, Cash flow, Break-even analysis, Funding plan
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-green-600">
+                    {courseProgress.financial.completed ? `${courseProgress.financial.tokens} tokens earned` : "Earn 100+ tokens"}
+                  </span>
+                  <Button 
+                    size="sm" 
+                    className="min-h-[48px] min-w-[100px]"
+                    onClick={() => setActiveCourse("financial")}
+                  >
+                    {courseProgress.financial.completed ? "Review" : "Start"}
+                  </Button>
+                </div>
+              </Card>
+
+              {/* Entity Operations Course */}
+              <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 rounded-full bg-purple-600/10">
+                    <Users className="w-8 h-8 text-purple-600" />
+                  </div>
+                  {courseProgress.operations.completed && (
+                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                      Completed
+                    </span>
+                  )}
+                </div>
+                <h3 className="font-bold text-foreground text-lg mb-2">Entity Operations Course</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Build organizational structure, SOPs, compliance checklists, contracts, and operations calendars for your business.
+                </p>
+                <div className="space-y-2 mb-4">
+                  <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                  <p className="text-xs text-muted-foreground">
+                    <strong>Outputs:</strong> Org structure, SOPs, Compliance checklist, Contract templates, Operations calendar
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-purple-600">
+                    {courseProgress.operations.completed ? `${courseProgress.operations.tokens} tokens earned` : "Earn 100+ tokens"}
+                  </span>
+                  <Button 
+                    size="sm" 
+                    className="min-h-[48px] min-w-[100px]"
+                    onClick={() => setActiveCourse("operations")}
+                  >
+                    {courseProgress.operations.completed ? "Review" : "Start"}
+                  </Button>
+                </div>
+              </Card>
+            </div>
+
+            {/* Course Benefits */}
+            <Card className="p-6 mt-6 bg-gradient-to-br from-primary/5 to-accent/5">
+              <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                <GraduationCap className="w-5 h-5" />
+                What You'll Get
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <p className="font-semibold text-foreground">Complete Business Plan</p>
+                  <p className="text-sm text-muted-foreground">
+                    A comprehensive document covering your business structure, market, offerings, and strategy.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p className="font-semibold text-foreground">Financial Projections</p>
+                  <p className="text-sm text-muted-foreground">
+                    Startup costs, revenue forecasts, expense budgets, and break-even analysis.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p className="font-semibold text-foreground">Operations Manual</p>
+                  <p className="text-sm text-muted-foreground">
+                    SOPs, compliance checklists, contract templates, and annual calendar.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </TabsContent>
 
           {/* Business Entities Tab */}
           <TabsContent value="entities" className="space-y-4 mt-6">
@@ -353,95 +535,13 @@ export default function Dashboard() {
               <Card className="p-12 text-center">
                 <Shield className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground mb-4">
-                  No business entities yet. Create your first entity to get started.
+                  No business entities yet. Complete the Business Setup Course to create your first entity.
                 </p>
-                <Button className="gap-2">
-                  <Zap className="w-4 h-4" />
-                  Create Your First Entity
+                <Button className="gap-2" onClick={() => setActiveCourse("business")}>
+                  <GraduationCap className="w-4 h-4" />
+                  Start Business Course
                 </Button>
               </Card>
-            )}
-          </TabsContent>
-
-          {/* Simulators Tab */}
-          <TabsContent value="simulators" className="space-y-4 mt-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-foreground">
-                Interactive Simulators
-              </h2>
-              <Button className="gap-2">
-                <Zap className="w-4 h-4" />
-                Start Simulator
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                {
-                  title: "Business Setup Simulator",
-                  description: "Learn how to structure and activate your business entities",
-                  icon: <Shield className="w-8 h-8" />,
-                  turns: 12,
-                },
-                {
-                  title: "Financial Management Simulator",
-                  description: "Master the LuvLedger system and asset allocation",
-                  icon: <DollarSign className="w-8 h-8" />,
-                  turns: 12,
-                },
-                {
-                  title: "Entity Operations Simulator",
-                  description: "Understand multi-level trust and operational workflows",
-                  icon: <Users className="w-8 h-8" />,
-                  turns: 12,
-                },
-              ].map((sim, i) => (
-                <Card key={i} className="p-6 hover:shadow-lg transition-shadow">
-                  <div className="text-accent mb-4">{sim.icon}</div>
-                  <h3 className="font-bold text-foreground mb-2">{sim.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {sim.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">
-                      {sim.turns} turns
-                    </span>
-                    <Button 
-                      size="sm" 
-                      className="min-h-[44px] min-w-[80px]"
-                      onClick={() => startSimulator(
-                        i === 0 ? "business" : i === 1 ? "financial" : "operations",
-                        sim.title
-                      )}
-                    >
-                      Start
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-
-            {overview?.certificatesCount && overview.certificatesCount > 0 && (
-              <div className="mt-6">
-                <h3 className="font-bold text-foreground mb-4">Your Certificates</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {overview.certificates?.map((cert) => (
-                    <Card key={cert.id} className="p-4 border-l-4 border-l-accent">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-semibold text-foreground">
-                            {cert.title}
-                          </h4>
-                          <p className="text-xs text-muted-foreground">
-                            Issued {new Date(cert.issuedAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <FileText className="w-5 h-5 text-accent" />
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
             )}
           </TabsContent>
 
