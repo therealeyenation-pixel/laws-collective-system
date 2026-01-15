@@ -442,3 +442,11 @@
 - [x] Add logo to landing page navigation
 - [x] Update page title and meta description
 - [x] Add favicon to index.html
+
+
+## Phase 34: Fix Persistent Login Loop
+- [x] Deep investigation of authentication flow
+- [x] Check cookie domain and path settings
+- [x] Verify OAuth callback token handling
+- [x] Check useAuth hook behavior
+- [x] Fix authentication persistence - changed sameSite from 'none' to 'lax' for mobile compatibility

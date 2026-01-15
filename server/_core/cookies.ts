@@ -9,16 +9,24 @@ function isIpAddress(host: string) {
 }
 
 function isSecureRequest(req: Request) {
+  // Check direct protocol
   if (req.protocol === "https") return true;
-
+  
+  // Check x-forwarded-proto header (common in proxied environments)
   const forwardedProto = req.headers["x-forwarded-proto"];
-  if (!forwardedProto) return false;
-
-  const protoList = Array.isArray(forwardedProto)
-    ? forwardedProto
-    : forwardedProto.split(",");
-
-  return protoList.some(proto => proto.trim().toLowerCase() === "https");
+  if (forwardedProto) {
+    const protoList = Array.isArray(forwardedProto)
+      ? forwardedProto
+      : forwardedProto.split(",");
+    if (protoList.some(proto => proto.trim().toLowerCase() === "https")) {
+      return true;
+    }
+  }
+  
+  // Check if request came through a secure connection (trust proxy)
+  if (req.secure) return true;
+  
+  return false;
 }
 
 function isLocalhost(req: Request) {
@@ -32,9 +40,9 @@ export function getSessionCookieOptions(
   const isLocal = isLocalhost(req);
   const isSecure = isSecureRequest(req);
   
-  // For production/mobile: use sameSite=none with secure=true
-  // For localhost: use sameSite=lax with secure based on protocol
-  // SameSite=None REQUIRES Secure=true, otherwise cookie is rejected
+  console.log("[Cookie] isLocal:", isLocal, "isSecure:", isSecure, "hostname:", req.hostname, "protocol:", req.protocol);
+  
+  // For localhost development
   if (isLocal) {
     return {
       httpOnly: true,
@@ -44,11 +52,13 @@ export function getSessionCookieOptions(
     };
   }
   
-  // Production: always use secure=true with sameSite=none for cross-site cookies
+  // For production/mobile:
+  // Use sameSite=lax instead of none to avoid third-party cookie issues on mobile
+  // This works because the OAuth callback and API calls are same-site
   return {
     httpOnly: true,
     path: "/",
-    sameSite: "none",
-    secure: true, // Must be true when sameSite is "none"
+    sameSite: "lax",
+    secure: true,
   };
 }
