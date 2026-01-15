@@ -461,3 +461,10 @@
 - [x] Add full-page document editor
 - [x] Improve mobile touch targets (48px min)
 - [x] Add toast notifications for actions
+
+
+## Phase 36: Fix AI Assistants Mobile Layout
+- [ ] Fix mobile layout to show chat when bot is selected
+- [ ] Hide bot list on mobile when chatting
+- [ ] Add back button to return to bot list
+- [ ] Improve touch targets for bot selection
