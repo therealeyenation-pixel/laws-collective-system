@@ -333,3 +333,20 @@
 - [x] Fix Trust System Dashboard (/system) flashing and redirecting to sign in
 - [x] Fix Main Dashboard (/dashboard) flashing and redirecting to sign in
 - [x] Ensure pages stay accessible without authentication loop
+
+
+## Phase 23: Fix Dashboard Data Access
+- [ ] Update companySetup router to allow public read access for getEntities
+- [ ] Update autonomousEngine router to allow public read access for getRecentOperations
+- [ ] Update luv router to allow public read access for getSystemOverview
+- [ ] Ensure dashboards show data without authentication
+
+
+## Phase 24: Custom Notification System
+- [x] Add notifications table to database schema
+- [x] Add notification_preferences table for user settings
+- [x] Create notifications router with CRUD operations
+- [x] Build NotificationCenter UI component
+- [x] Add notification bell icon to dashboard header
+- [x] Integrate notifications with autonomous cycle operations
+- [x] Add notifications for operation approvals/rejections

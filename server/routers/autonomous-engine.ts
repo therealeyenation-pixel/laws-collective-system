@@ -1,7 +1,7 @@
-import { protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
-import { businessEntities, autonomousOperations, activityAuditTrail, luvLedgerTransactions } from "../../drizzle/schema";
+import { businessEntities, autonomousOperations, activityAuditTrail, luvLedgerTransactions, notifications } from "../../drizzle/schema";
 import { eq, and } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
 
@@ -140,6 +140,19 @@ Generate a JSON response with:
         });
       }
 
+      // Create notification for the review result
+      if (operation.length) {
+        await db.insert(notifications).values({
+          userId: ctx.user.id,
+          type: input.approved ? "success" : "alert",
+          title: input.approved ? "Operation Approved" : "Operation Rejected",
+          message: `Operation for entity #${operation[0].businessEntityId} has been ${input.approved ? "approved and executed" : "rejected"}.${input.notes ? ` Notes: ${input.notes}` : ""}`,
+          referenceType: "operation",
+          referenceId: input.operationId,
+          actionUrl: "/system",
+        });
+      }
+
       return { success: true, status: input.approved ? "executed" : "rejected" };
     }),
 
@@ -189,8 +202,8 @@ Generate a JSON response with:
       return operations;
     }),
 
-  // Get recent operations across all entities
-  getRecentOperations: protectedProcedure.query(async ({ ctx }) => {
+  // Get recent operations across all entities (public for dashboard viewing)
+  getRecentOperations: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
 
@@ -286,6 +299,29 @@ Generate a JSON response with:
           timestamp: new Date().toISOString(),
         } as any,
       });
+
+      // Create notification for the user
+      await db.insert(notifications).values({
+        userId: ctx.user.id,
+        type: "operation",
+        title: "Autonomous Cycle Complete",
+        message: `Successfully created ${results.length} operations across ${entities.length} entities. Review pending operations in the Trust System Dashboard.`,
+        actionUrl: "/system",
+        isPriority: results.length > 0,
+      });
+
+      // Create individual notifications for each operation
+      for (const result of results) {
+        await db.insert(notifications).values({
+          userId: ctx.user.id,
+          type: "approval",
+          title: `Pending: ${result.entityName}`,
+          message: result.description,
+          entityId: result.entityId,
+          referenceType: "operation",
+          actionUrl: "/system",
+        });
+      }
 
       return {
         success: true,

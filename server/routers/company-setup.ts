@@ -1,4 +1,4 @@
-import { protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
 import {
@@ -9,6 +9,7 @@ import {
 } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
+
 
 export const companySetupRouter = router({
   // Create a business entity
@@ -87,15 +88,15 @@ export const companySetupRouter = router({
       };
     }),
 
-  // Get all business entities for user
-  getAllEntities: protectedProcedure.query(async ({ ctx }) => {
+  // Get all business entities (public for dashboard viewing)
+  getAllEntities: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
 
+    // Return all entities for public viewing
     const entities = await db
       .select()
-      .from(businessEntities)
-      .where(eq(businessEntities.userId, ctx.user.id));
+      .from(businessEntities);
 
     return entities;
   }),

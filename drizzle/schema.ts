@@ -765,3 +765,58 @@ export const documentAccessLog = mysqlTable("document_access_log", {
 
 export type DocumentAccessLog = typeof documentAccessLog.$inferSelect;
 export type InsertDocumentAccessLog = typeof documentAccessLog.$inferInsert;
+
+
+/**
+ * In-App Notifications - User notifications for system events
+ */
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(), // Recipient user
+  type: mysqlEnum("type", [
+    "system", 
+    "operation", 
+    "token", 
+    "academy", 
+    "document", 
+    "approval",
+    "alert",
+    "success",
+    "info"
+  ]).default("info").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  entityId: int("entityId"), // Related business entity
+  referenceType: varchar("referenceType", { length: 50 }), // e.g., "operation", "document", "course"
+  referenceId: int("referenceId"), // ID of related record
+  actionUrl: varchar("actionUrl", { length: 500 }), // Optional link to action
+  isRead: boolean("isRead").default(false).notNull(),
+  isPriority: boolean("isPriority").default(false).notNull(),
+  metadata: json("metadata"), // Additional data
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  readAt: timestamp("readAt"),
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+
+/**
+ * Notification Preferences - User notification settings
+ */
+export const notificationPreferences = mysqlTable("notification_preferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  emailEnabled: boolean("emailEnabled").default(true).notNull(),
+  pushEnabled: boolean("pushEnabled").default(true).notNull(),
+  operationAlerts: boolean("operationAlerts").default(true).notNull(),
+  tokenAlerts: boolean("tokenAlerts").default(true).notNull(),
+  academyAlerts: boolean("academyAlerts").default(true).notNull(),
+  documentAlerts: boolean("documentAlerts").default(true).notNull(),
+  approvalAlerts: boolean("approvalAlerts").default(true).notNull(),
+  systemAlerts: boolean("systemAlerts").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;

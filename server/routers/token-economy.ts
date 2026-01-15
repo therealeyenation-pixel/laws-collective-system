@@ -1,11 +1,28 @@
-import { protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
-import { tokenAccounts, tokenTransactions, gameSessions, achievements, activityAuditTrail, businessEntities, blockchainRecords } from "../../drizzle/schema";
+import { tokenAccounts, tokenTransactions, gameSessions, achievements, activityAuditTrail, businessEntities, blockchainRecords, luvLedgerAccounts } from "../../drizzle/schema";
 import { eq, and, sql } from "drizzle-orm";
 import crypto from "crypto";
 
 export const tokenEconomyRouter = router({
+  // Get system-wide token totals (public for dashboard viewing)
+  getSystemTokens: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return { totalTokens: 0 };
+
+    // Sum all token balances from LuvLedger accounts
+    const accounts = await db
+      .select()
+      .from(luvLedgerAccounts);
+
+    const totalTokens = accounts.reduce((sum, acc) => {
+      return sum + parseFloat(acc.balance || "0");
+    }, 0);
+
+    return { totalTokens };
+  }),
+
   // Get user token balance
   getBalance: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
