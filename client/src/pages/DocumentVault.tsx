@@ -13,8 +13,12 @@ import {
   Clock,
   Shield,
   Search,
-  Filter
+  Filter,
+  X,
+  Save,
+  ChevronLeft
 } from "lucide-react";
+import { toast } from "sonner";
 
 type DocumentType = "business_plan" | "grant_application" | "financial_statement" | "legal_document" | "contract" | "certificate" | "report" | "template" | "other";
 
@@ -42,11 +46,28 @@ const documentTypeColors: Record<DocumentType, string> = {
   other: "bg-slate-100 text-slate-800",
 };
 
+interface Document {
+  id: number;
+  title: string;
+  description: string | null;
+  documentType: string;
+  content: string | null;
+  status: string;
+  accessLevel: string;
+  version: number;
+  blockchainHash: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export default function DocumentVault() {
-  const [activeTab, setActiveTab] = useState<"documents" | "folders" | "create">("documents");
+  const [activeTab, setActiveTab] = useState<"documents" | "folders">("documents");
   const [selectedType, setSelectedType] = useState<DocumentType | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [viewingDocument, setViewingDocument] = useState<Document | null>(null);
+  const [editingDocument, setEditingDocument] = useState<Document | null>(null);
+  const [editContent, setEditContent] = useState("");
   const [newDocument, setNewDocument] = useState({
     title: "",
     description: "",
@@ -72,12 +93,32 @@ export default function DocumentVault() {
         accessLevel: "owner_only",
       });
       refetchDocs();
+      toast.success("Document created successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to create document");
+    },
+  });
+
+  const updateDocumentMutation = trpc.documentVault.updateDocument.useMutation({
+    onSuccess: () => {
+      setEditingDocument(null);
+      setEditContent("");
+      refetchDocs();
+      toast.success("Document updated successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update document");
     },
   });
 
   const deleteDocumentMutation = trpc.documentVault.deleteDocument.useMutation({
     onSuccess: () => {
       refetchDocs();
+      toast.success("Document deleted");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete document");
     },
   });
 
@@ -85,7 +126,13 @@ export default function DocumentVault() {
     onSuccess: (data) => {
       if (data.count > 0) {
         refetchDocs();
+        toast.success(`Created ${data.count} documents`);
+      } else {
+        toast.info("Documents already exist");
       }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to seed documents");
     },
   });
 
@@ -102,18 +149,180 @@ export default function DocumentVault() {
     createDocumentMutation.mutate(newDocument);
   };
 
+  const handleViewDocument = (doc: Document) => {
+    setViewingDocument(doc);
+  };
+
+  const handleEditDocument = (doc: Document) => {
+    setEditingDocument(doc);
+    setEditContent(doc.content || "");
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingDocument) return;
+    updateDocumentMutation.mutate({
+      documentId: editingDocument.id,
+      content: editContent,
+    });
+  };
+
+  const handleDownloadDocument = (doc: Document) => {
+    const content = doc.content || `# ${doc.title}\n\n${doc.description || "No content available."}`;
+    const blob = new Blob([content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${doc.title.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success("Document downloaded");
+  };
+
+  const handleDeleteDocument = (doc: Document) => {
+    if (confirm(`Are you sure you want to delete "${doc.title}"?`)) {
+      deleteDocumentMutation.mutate({ documentId: doc.id });
+    }
+  };
+
+  // Document Viewer Modal
+  if (viewingDocument) {
+    return (
+      <DashboardLayout>
+        <div className="p-4 md:p-6 min-h-screen bg-gray-50">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <button
+                onClick={() => setViewingDocument(null)}
+                className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <div className="flex-1">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900">{viewingDocument.title}</h1>
+                <p className="text-sm text-gray-600">{viewingDocument.description}</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEditDocument(viewingDocument)}
+                  className="p-3 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
+                >
+                  <Edit className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => handleDownloadDocument(viewingDocument)}
+                  className="p-3 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                >
+                  <Download className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Document Meta */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${documentTypeColors[viewingDocument.documentType as DocumentType]}`}>
+                {documentTypeLabels[viewingDocument.documentType as DocumentType]}
+              </span>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                viewingDocument.status === "final" ? "bg-green-100 text-green-800" :
+                viewingDocument.status === "draft" ? "bg-yellow-100 text-yellow-800" :
+                "bg-gray-100 text-gray-800"
+              }`}>
+                {viewingDocument.status}
+              </span>
+              <span className="flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700">
+                <Lock className="w-4 h-4" />
+                {viewingDocument.accessLevel.replace("_", " ")}
+              </span>
+              {viewingDocument.blockchainHash && (
+                <span className="flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">
+                  <Shield className="w-4 h-4" />
+                  Verified
+                </span>
+              )}
+            </div>
+
+            {/* Document Content */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
+              <div className="prose prose-green max-w-none">
+                {viewingDocument.content ? (
+                  <pre className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
+                    {viewingDocument.content}
+                  </pre>
+                ) : (
+                  <p className="text-gray-500 italic">No content available for this document.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Footer Info */}
+            <div className="mt-6 flex items-center justify-between text-sm text-gray-500">
+              <span>Version {viewingDocument.version}</span>
+              <span>Last updated: {new Date(viewingDocument.updatedAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Document Editor Modal
+  if (editingDocument) {
+    return (
+      <DashboardLayout>
+        <div className="p-4 md:p-6 min-h-screen bg-gray-50">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <button
+                onClick={() => setEditingDocument(null)}
+                className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <div className="flex-1">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900">Editing: {editingDocument.title}</h1>
+                <p className="text-sm text-gray-600">Make changes and save</p>
+              </div>
+              <button
+                onClick={handleSaveEdit}
+                disabled={updateDocumentMutation.isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50"
+              >
+                <Save className="w-5 h-5" />
+                {updateDocumentMutation.isPending ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+
+            {/* Editor */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="w-full h-[60vh] p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm resize-none"
+                placeholder="Enter document content..."
+              />
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
+      <div className="p-4 md:p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Secure Document Vault</h1>
-            <p className="text-gray-600">Private storage for business plans, grants, and sensitive documents</p>
+            <h1 className="text-2xl font-bold text-gray-900">Document Vault</h1>
+            <p className="text-gray-600">Secure storage for business plans and documents</p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition-colors"
+            className="flex items-center justify-center gap-2 bg-green-700 text-white px-4 py-3 rounded-lg hover:bg-green-800 transition-colors min-h-[48px]"
           >
             <Plus className="w-5 h-5" />
             New Document
@@ -177,7 +386,7 @@ export default function DocumentVault() {
               placeholder="Search documents..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -185,7 +394,7 @@ export default function DocumentVault() {
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value as DocumentType | "all")}
-              className="border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="all">All Types</option>
               {Object.entries(documentTypeLabels).map(([key, label]) => (
@@ -227,16 +436,16 @@ export default function DocumentVault() {
             {docsLoading ? (
               <div className="text-center py-12 text-gray-500">Loading documents...</div>
             ) : !documents || documents.length === 0 ? (
-              <div className="text-center py-12">
+              <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
                 <FileText className="w-16 h-16 mx-auto text-gray-300 mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No Documents Yet</h3>
-                <p className="text-gray-500 mb-4">Initialize your vault with business plans and grant templates</p>
+                <p className="text-gray-500 mb-6">Initialize your vault with business plans and grant templates</p>
                 <button
                   onClick={() => seedDocumentsMutation.mutate()}
                   disabled={seedDocumentsMutation.isPending}
-                  className="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50"
+                  className="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50 min-h-[48px]"
                 >
-                  {seedDocumentsMutation.isPending ? "Creating Documents..." : "Initialize Document Vault"}
+                  {seedDocumentsMutation.isPending ? "Creating Documents..." : "Seed Business Plans & Templates"}
                 </button>
               </div>
             ) : filteredDocuments && filteredDocuments.length > 0 ? (
@@ -245,15 +454,18 @@ export default function DocumentVault() {
                   key={doc.id}
                   className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 bg-gray-100 rounded-lg">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                    <div 
+                      className="flex items-start gap-4 flex-1 cursor-pointer"
+                      onClick={() => handleViewDocument(doc as Document)}
+                    >
+                      <div className="p-3 bg-gray-100 rounded-lg shrink-0">
                         <FileText className="w-6 h-6 text-gray-600" />
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{doc.title}</h3>
-                        <p className="text-sm text-gray-600 mt-1">{doc.description || "No description"}</p>
-                        <div className="flex items-center gap-2 mt-2">
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-gray-900 hover:text-green-700">{doc.title}</h3>
+                        <p className="text-sm text-gray-600 mt-1 line-clamp-2">{doc.description || "No description"}</p>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${documentTypeColors[doc.documentType as DocumentType]}`}>
                             {documentTypeLabels[doc.documentType as DocumentType]}
                           </span>
@@ -278,38 +490,38 @@ export default function DocumentVault() {
                           {doc.blockchainHash && (
                             <span className="flex items-center gap-1 text-green-600">
                               <Shield className="w-3 h-3" />
-                              Blockchain verified
+                              Verified
                             </span>
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2 shrink-0">
                       <button 
-                        onClick={() => alert(`View: ${doc.title}`)}
-                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-blue-600 active:text-blue-700 transition-colors touch-manipulation"
-                        aria-label="View document"
+                        onClick={(e) => { e.stopPropagation(); handleViewDocument(doc as Document); }}
+                        className="p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 active:bg-blue-200 transition-colors"
+                        title="View document"
                       >
                         <Eye className="w-5 h-5" />
                       </button>
                       <button 
-                        onClick={() => alert(`Edit: ${doc.title}`)}
-                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-green-600 active:text-green-700 transition-colors touch-manipulation"
-                        aria-label="Edit document"
+                        onClick={(e) => { e.stopPropagation(); handleEditDocument(doc as Document); }}
+                        className="p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-green-50 text-green-600 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors"
+                        title="Edit document"
                       >
                         <Edit className="w-5 h-5" />
                       </button>
                       <button 
-                        onClick={() => alert(`Download: ${doc.title}`)}
-                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-purple-600 active:text-purple-700 transition-colors touch-manipulation"
-                        aria-label="Download document"
+                        onClick={(e) => { e.stopPropagation(); handleDownloadDocument(doc as Document); }}
+                        className="p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors"
+                        title="Download document"
                       >
                         <Download className="w-5 h-5" />
                       </button>
                       <button 
-                        onClick={() => deleteDocumentMutation.mutate({ documentId: doc.id })}
-                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-600 active:text-red-700 transition-colors touch-manipulation"
-                        aria-label="Delete document"
+                        onClick={(e) => { e.stopPropagation(); handleDeleteDocument(doc as Document); }}
+                        className="p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-red-50 text-red-600 rounded-lg hover:bg-red-100 active:bg-red-200 transition-colors"
+                        title="Delete document"
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
@@ -318,17 +530,10 @@ export default function DocumentVault() {
                 </div>
               ))
             ) : (
-              <div className="text-center py-12">
-                <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No documents yet</h3>
-                <p className="text-gray-500 mb-4">Create your first document to get started</p>
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="inline-flex items-center gap-2 bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition-colors"
-                >
-                  <Plus className="w-5 h-5" />
-                  Create Document
-                </button>
+              <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+                <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No matching documents</h3>
+                <p className="text-gray-500">Try adjusting your search or filter</p>
               </div>
             )}
           </div>
@@ -357,7 +562,7 @@ export default function DocumentVault() {
                 </div>
               ))
             ) : (
-              <div className="col-span-full text-center py-12">
+              <div className="col-span-full text-center py-12 bg-white rounded-xl border border-gray-200">
                 <Folder className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No folders yet</h3>
                 <p className="text-gray-500">Organize your documents with folders</p>
@@ -370,9 +575,17 @@ export default function DocumentVault() {
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900">Create New Document</h2>
-                <p className="text-gray-600 text-sm mt-1">Add a new document to your secure vault</p>
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Create New Document</h2>
+                  <p className="text-gray-600 text-sm mt-1">Add a new document to your secure vault</p>
+                </div>
+                <button
+                  onClick={() => setShowCreateModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
               <div className="p-6 space-y-4">
                 <div>
@@ -381,7 +594,7 @@ export default function DocumentVault() {
                     type="text"
                     value={newDocument.title}
                     onChange={(e) => setNewDocument({ ...newDocument, title: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Enter document title"
                   />
                 </div>
@@ -391,7 +604,7 @@ export default function DocumentVault() {
                     type="text"
                     value={newDocument.description}
                     onChange={(e) => setNewDocument({ ...newDocument, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Brief description"
                   />
                 </div>
@@ -401,7 +614,7 @@ export default function DocumentVault() {
                     <select
                       value={newDocument.documentType}
                       onChange={(e) => setNewDocument({ ...newDocument, documentType: e.target.value as DocumentType })}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     >
                       {Object.entries(documentTypeLabels).map(([key, label]) => (
                         <option key={key} value={key}>{label}</option>
@@ -413,7 +626,7 @@ export default function DocumentVault() {
                     <select
                       value={newDocument.accessLevel}
                       onChange={(e) => setNewDocument({ ...newDocument, accessLevel: e.target.value as any })}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                     >
                       <option value="owner_only">Owner Only</option>
                       <option value="entity_members">Entity Members</option>
@@ -427,22 +640,22 @@ export default function DocumentVault() {
                     value={newDocument.content}
                     onChange={(e) => setNewDocument({ ...newDocument, content: e.target.value })}
                     rows={10}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"
-                    placeholder="Enter document content (Markdown supported)"
+                    className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"
+                    placeholder="Enter document content..."
                   />
                 </div>
               </div>
               <div className="p-6 border-t border-gray-100 flex justify-end gap-3">
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+                  className="px-4 py-3 text-gray-600 hover:text-gray-900 transition-colors min-h-[48px]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCreateDocument}
                   disabled={!newDocument.title || createDocumentMutation.isPending}
-                  className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50"
+                  className="px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50 min-h-[48px]"
                 >
                   {createDocumentMutation.isPending ? "Creating..." : "Create Document"}
                 </button>

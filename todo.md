@@ -450,3 +450,14 @@
 - [x] Verify OAuth callback token handling
 - [x] Check useAuth hook behavior
 - [x] Fix authentication persistence - changed sameSite from 'none' to 'lax' for mobile compatibility
+
+
+## Phase 35: Fix Document Vault Buttons
+- [x] Fix view button to display document content properly
+- [x] Fix edit button functionality
+- [x] Fix download button functionality
+- [x] Add proper document content viewer modal
+- [x] Add full-page document viewer
+- [x] Add full-page document editor
+- [x] Improve mobile touch targets (48px min)
+- [x] Add toast notifications for actions
