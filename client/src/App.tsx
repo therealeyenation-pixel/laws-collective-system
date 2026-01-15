@@ -40,7 +40,7 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
           <Shield className="w-16 h-16 mx-auto text-amber-500" />
           <h1 className="text-2xl font-bold">Sign In Required</h1>
           <p className="text-muted-foreground">
-            Please sign in to access the Trust System Dashboard and manage your company entities.
+            Please sign in to access this page and manage your business.
           </p>
           <button
             onClick={() => window.location.href = getLoginUrl()}
@@ -63,15 +63,16 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 }
 
 function Router() {
-  // Public routes: Landing page and Academy
-  // Protected routes: Trust System, Dashboard, Document Vault, Bots, Social Media
+  // Public routes: Landing page, Academy, and Dashboard (for viewing courses)
+  // Protected routes: Trust System, Document Vault, Bots, Social Media
   return (
     <Switch>
       <Route path="/" component={Landing} />
       <Route path="/home" component={Home} />
       <Route path="/academy" component={AcademyDashboard} />
+      {/* Dashboard is now public so users can view and take courses */}
+      <Route path="/dashboard" component={Dashboard} />
       {/* Protected routes - require authentication */}
-      <Route path="/dashboard">{() => <ProtectedRoute component={Dashboard} />}</Route>
       <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} />}</Route>
       <Route path="/bots">{() => <ProtectedRoute component={Bots} />}</Route>
