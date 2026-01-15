@@ -424,3 +424,11 @@
 - [x] Diagnose why login redirects back to landing page
 - [x] Fix authentication redirect after successful login (now redirects to /dashboard)
 - [x] Ensure protected routes work after authentication
+
+
+## Phase 32: Fix Mobile Authentication Loop
+- [x] Diagnose why session cookie not persisting on mobile
+- [x] Check cookie SameSite and Secure settings
+- [x] Fix cookie options for mobile browser compatibility (secure=true required for sameSite=none)
+- [x] Add trust proxy setting for HTTPS detection behind proxies
+- [ ] Test authentication flow on mobile
