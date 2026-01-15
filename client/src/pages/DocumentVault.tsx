@@ -284,19 +284,32 @@ export default function DocumentVault() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                    <div className="flex items-center gap-1">
+                      <button 
+                        onClick={() => alert(`View: ${doc.title}`)}
+                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-blue-600 active:text-blue-700 transition-colors touch-manipulation"
+                        aria-label="View document"
+                      >
                         <Eye className="w-5 h-5" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-green-600 transition-colors">
+                      <button 
+                        onClick={() => alert(`Edit: ${doc.title}`)}
+                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-green-600 active:text-green-700 transition-colors touch-manipulation"
+                        aria-label="Edit document"
+                      >
                         <Edit className="w-5 h-5" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-purple-600 transition-colors">
+                      <button 
+                        onClick={() => alert(`Download: ${doc.title}`)}
+                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-purple-600 active:text-purple-700 transition-colors touch-manipulation"
+                        aria-label="Download document"
+                      >
                         <Download className="w-5 h-5" />
                       </button>
                       <button 
                         onClick={() => deleteDocumentMutation.mutate({ documentId: doc.id })}
-                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-600 active:text-red-700 transition-colors touch-manipulation"
+                        aria-label="Delete document"
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
