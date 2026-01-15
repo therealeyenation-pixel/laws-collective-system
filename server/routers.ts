@@ -26,6 +26,9 @@ import { entityPlatformEngineRouter } from "./routers/entity-platform-engine";
 import { documentVaultRouter } from "./routers/document-vault";
 import { notificationsRouter } from "./routers/notifications";
 import { botsRouter } from "./routers/bots";
+import { socialMediaRouter } from "./routers/social-media";
+import { emailServiceRouter } from "./routers/email-service";
+import { contactRouter } from "./routers/contact";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -53,6 +56,9 @@ export const appRouter = router({
   documentVault: documentVaultRouter,
   notifications: notificationsRouter,
   bots: botsRouter,
+  socialMedia: socialMediaRouter,
+  emailService: emailServiceRouter,
+  contact: contactRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

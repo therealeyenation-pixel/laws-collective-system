@@ -954,3 +954,111 @@ export const scheduledBotTasks = mysqlTable("scheduled_bot_tasks", {
 
 export type ScheduledBotTask = typeof scheduledBotTasks.$inferSelect;
 export type InsertScheduledBotTask = typeof scheduledBotTasks.$inferInsert;
+
+
+/**
+ * Social Media Integrations - Connected social accounts for Outreach Bot
+ */
+export const socialMediaIntegrations = mysqlTable("social_media_integrations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  platform: mysqlEnum("platform", ["twitter", "facebook", "instagram", "linkedin", "tiktok"]).notNull(),
+  accountName: varchar("accountName", { length: 100 }),
+  accountId: varchar("accountId", { length: 100 }),
+  accessToken: text("accessToken"), // Encrypted
+  refreshToken: text("refreshToken"), // Encrypted
+  tokenExpiresAt: timestamp("tokenExpiresAt"),
+  isActive: boolean("isActive").default(true).notNull(),
+  lastPostAt: timestamp("lastPostAt"),
+  metadata: json("metadata"), // Platform-specific data
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SocialMediaIntegration = typeof socialMediaIntegrations.$inferSelect;
+export type InsertSocialMediaIntegration = typeof socialMediaIntegrations.$inferInsert;
+
+/**
+ * Social Media Posts - Scheduled and published posts
+ */
+export const socialMediaPosts = mysqlTable("social_media_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  integrationId: int("integrationId").notNull(),
+  botId: int("botId"), // Which bot generated this
+  content: text("content").notNull(),
+  mediaUrls: json("mediaUrls"), // Array of image/video URLs
+  hashtags: json("hashtags"), // Array of hashtags
+  scheduledFor: timestamp("scheduledFor"),
+  publishedAt: timestamp("publishedAt"),
+  status: mysqlEnum("status", ["draft", "scheduled", "published", "failed"]).default("draft").notNull(),
+  platformPostId: varchar("platformPostId", { length: 100 }), // ID from the platform
+  engagement: json("engagement"), // Likes, shares, comments
+  errorMessage: text("errorMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SocialMediaPost = typeof socialMediaPosts.$inferSelect;
+export type InsertSocialMediaPost = typeof socialMediaPosts.$inferInsert;
+
+/**
+ * Email Templates - Reusable email templates for notifications
+ */
+export const emailTemplates = mysqlTable("email_templates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  subject: varchar("subject", { length: 200 }).notNull(),
+  htmlContent: text("htmlContent").notNull(),
+  textContent: text("textContent"),
+  category: mysqlEnum("category", ["notification", "marketing", "transactional", "newsletter"]).default("notification").notNull(),
+  variables: json("variables"), // Template variables like {{name}}, {{date}}
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmailTemplate = typeof emailTemplates.$inferSelect;
+export type InsertEmailTemplate = typeof emailTemplates.$inferInsert;
+
+/**
+ * Email Sends - Log of sent emails
+ */
+export const emailSends = mysqlTable("email_sends", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  templateId: int("templateId"),
+  botId: int("botId"), // Which bot triggered this
+  recipientEmail: varchar("recipientEmail", { length: 255 }).notNull(),
+  recipientName: varchar("recipientName", { length: 100 }),
+  subject: varchar("subject", { length: 200 }).notNull(),
+  status: mysqlEnum("status", ["pending", "sent", "delivered", "opened", "clicked", "bounced", "failed"]).default("pending").notNull(),
+  externalId: varchar("externalId", { length: 100 }), // ID from email service
+  openedAt: timestamp("openedAt"),
+  clickedAt: timestamp("clickedAt"),
+  errorMessage: text("errorMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EmailSend = typeof emailSends.$inferSelect;
+export type InsertEmailSend = typeof emailSends.$inferInsert;
+
+/**
+ * Contact Form Submissions - From public landing page
+ */
+export const contactSubmissions = mysqlTable("contact_submissions", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  subject: varchar("subject", { length: 200 }),
+  message: text("message").notNull(),
+  source: varchar("source", { length: 50 }).default("landing_page"),
+  status: mysqlEnum("status", ["new", "read", "replied", "archived"]).default("new").notNull(),
+  repliedAt: timestamp("repliedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ContactSubmission = typeof contactSubmissions.$inferSelect;
+export type InsertContactSubmission = typeof contactSubmissions.$inferInsert;

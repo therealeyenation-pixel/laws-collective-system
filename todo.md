@@ -385,3 +385,19 @@
 - [x] Add voice input for bot conversations
 - [x] Add scheduled tasks management UI
 - [x] Add task run/pause controls
+
+
+## Phase 28: Social Media, Email & Public Landing Page
+- [x] Create social media integration framework
+- [x] Add Twitter/X API connection for Outreach Bot
+- [x] Add Meta/Facebook API connection
+- [x] Create social media post scheduling UI
+- [x] Add email service integration (SendGrid/Resend)
+- [x] Create email templates for bot notifications
+- [x] Design public landing page layout
+- [x] Build services showcase section
+- [x] Add testimonials/social proof section
+- [x] Create call-to-action for sign-ups
+- [x] Add contact form
+- [x] Add AI content generation for social posts
+- [x] Add content calendar generation
