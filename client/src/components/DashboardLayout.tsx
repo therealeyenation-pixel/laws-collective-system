@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Flame, FileText } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Flame, FileText, Bot } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -33,6 +33,7 @@ const menuItems = [
   { icon: Shield, label: "Trust System", path: "/system" },
   { icon: Flame, label: "Luv Academy", path: "/academy" },
   { icon: FileText, label: "Document Vault", path: "/vault" },
+  { icon: Bot, label: "AI Assistants", path: "/bots" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

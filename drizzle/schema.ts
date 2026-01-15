@@ -820,3 +820,99 @@ export const notificationPreferences = mysqlTable("notification_preferences", {
 
 export type NotificationPreference = typeof notificationPreferences.$inferSelect;
 export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
+
+
+/**
+ * AI Bots - Intelligent assistants for various system functions
+ */
+export const bots = mysqlTable("bots", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  type: mysqlEnum("type", [
+    "operations",      // Autonomous business operations
+    "support",         // User support and assistance
+    "education",       // Academy tutoring and curriculum
+    "analytics",       // Business intelligence and reporting
+    "guardian",        // Trust governance oversight
+    "finance",         // Financial management and tokens
+    "media",           // Content and narrative generation
+    "custom"           // User-defined bots
+  ]).notNull(),
+  description: text("description"),
+  avatar: varchar("avatar", { length: 500 }), // Avatar image URL
+  systemPrompt: text("systemPrompt").notNull(), // Base personality and instructions
+  capabilities: json("capabilities"), // What the bot can do
+  entityId: int("entityId"), // Associated business entity
+  isActive: boolean("isActive").default(true).notNull(),
+  isPublic: boolean("isPublic").default(false).notNull(), // Available to all users
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Bot = typeof bots.$inferSelect;
+export type InsertBot = typeof bots.$inferInsert;
+
+/**
+ * Bot Conversations - Chat history with bots
+ */
+export const botConversations = mysqlTable("bot_conversations", {
+  id: int("id").autoincrement().primaryKey(),
+  botId: int("botId").notNull(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 255 }),
+  status: mysqlEnum("status", ["active", "archived", "deleted"]).default("active").notNull(),
+  metadata: json("metadata"), // Context, entity references, etc.
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BotConversation = typeof botConversations.$inferSelect;
+export type InsertBotConversation = typeof botConversations.$inferInsert;
+
+/**
+ * Bot Messages - Individual messages in conversations
+ */
+export const botMessages = mysqlTable("bot_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  conversationId: int("conversationId").notNull(),
+  role: mysqlEnum("role", ["user", "assistant", "system"]).notNull(),
+  content: text("content").notNull(),
+  metadata: json("metadata"), // Tool calls, citations, etc.
+  tokenCount: int("tokenCount"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BotMessage = typeof botMessages.$inferSelect;
+export type InsertBotMessage = typeof botMessages.$inferInsert;
+
+/**
+ * Bot Actions - Actions taken by bots (for audit trail)
+ */
+export const botActions = mysqlTable("bot_actions", {
+  id: int("id").autoincrement().primaryKey(),
+  botId: int("botId").notNull(),
+  conversationId: int("conversationId"),
+  userId: int("userId").notNull(),
+  actionType: mysqlEnum("actionType", [
+    "query",           // Information retrieval
+    "create",          // Created something
+    "update",          // Modified something
+    "delete",          // Removed something
+    "approve",         // Approved an operation
+    "reject",          // Rejected an operation
+    "notify",          // Sent notification
+    "analyze",         // Performed analysis
+    "generate",        // Generated content
+    "transfer"         // Token/asset transfer
+  ]).notNull(),
+  targetType: varchar("targetType", { length: 50 }), // What was acted upon
+  targetId: int("targetId"),
+  description: text("description"),
+  result: json("result"),
+  status: mysqlEnum("status", ["pending", "completed", "failed"]).default("completed").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BotAction = typeof botActions.$inferSelect;
+export type InsertBotAction = typeof botActions.$inferInsert;
