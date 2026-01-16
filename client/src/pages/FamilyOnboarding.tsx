@@ -19,9 +19,10 @@ const FAMILY_MEMBERS = [
   { id: "essence", name: "Essence", role: "House Member", departments: ["Design", "IT", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "amandes", name: "Amandes", role: "House Member", departments: ["Media", "IT", "Outreach"], businessEntity: "FreeLife Media", status: "active", credentials: [], boardRole: "Board Member" },
   { id: "craig", name: "Craig", role: "House Member", departments: ["Finance", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
-  { id: "cornelius", name: "Cornelius", role: "House Member", departments: ["Legal", "Justice", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
+  { id: "cornelius", name: "Cornelius", role: "House Member", departments: ["Education", "Justice", "Outreach"], businessEntity: "TBD", status: "pending", credentials: ["Masters in Education", "Masters in Criminal Justice"], boardRole: "Board Member" },
   { id: "contracts-mgr", name: "TBD - Contracts Manager", role: "Department Manager", departments: ["Contracts"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Contracts)" },
   { id: "grants-mgr", name: "TBD - Grants Manager", role: "Department Manager", departments: ["Grants"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Grants)" },
+  { id: "legal-mgr", name: "TBD - Legal Manager", role: "Department Manager", departments: ["Legal"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Legal)" },
   { id: "property-mgr", name: "TBD - Property & Assets Manager", role: "Department Manager", departments: ["Property & Assets Management"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   { id: "realestate-mgr", name: "TBD - Real Estate Manager", role: "Department Manager", departments: ["Real Estate"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   { id: "ops-admin-mgr", name: "TBD - Operations & Administration Manager", role: "Department Manager", departments: ["Operations & Administration"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
@@ -309,7 +310,7 @@ export default function FamilyOnboarding() {
                     { name: "TBD - Health Entity", member: "Amber", focus: "Health, Outreach", status: "pending" },
                     { name: "TBD - Design/IT Entity", member: "Essence", focus: "Design, IT, Outreach", status: "pending" },
                     { name: "TBD - Finance Entity", member: "Craig", focus: "Finance, Outreach", status: "pending" },
-                    { name: "TBD - Legal/Justice Entity", member: "Cornelius", focus: "Legal, Justice, Outreach", status: "pending" },
+                    { name: "TBD - Education/Justice Entity", member: "Cornelius", focus: "Education, Justice, Outreach", status: "pending" },
                   ].map((entity, idx) => (
                     <div key={idx} className="flex items-center justify-between p-4 rounded-lg border">
                       <div className="flex items-center gap-4">

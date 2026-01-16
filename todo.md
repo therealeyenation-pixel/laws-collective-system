@@ -1531,3 +1531,9 @@
 - [x] Update sidebar navigation labels
 - [x] Update page titles and content
 - [x] Remove any other religious/ceremonial language
+
+
+## Phase 70: Department Assignment Update
+
+- [x] Update Cornelius from Legal to Education/Justice
+- [x] Add open Legal department manager position
