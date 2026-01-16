@@ -13,9 +13,9 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import {
-  Flame,
-  Crown,
-  Scroll,
+  Rocket,
+  Building2,
+  FileText,
   Shield,
   Heart,
   Users,
@@ -25,7 +25,6 @@ import {
   Trash2,
   Loader2,
   Sparkles,
-  FileText,
   ExternalLink,
 } from "lucide-react";
 
@@ -78,7 +77,7 @@ export default function GenesisCeremony() {
       });
       setActivationComplete(true);
       setIsActivating(false);
-      toast.success("The Genesis Flame has been lit!");
+      toast.success("Your organization has been successfully activated!");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -88,12 +87,12 @@ export default function GenesisCeremony() {
 
   const addHeir = () => {
     if (!newHeirName || newHeirPercentage <= 0) {
-      toast.error("Please enter heir name and percentage");
+      toast.error("Please enter beneficiary name and percentage");
       return;
     }
     const totalPercentage = heirs.reduce((sum, h) => sum + h.percentage, 0) + newHeirPercentage;
     if (totalPercentage > 100) {
-      toast.error("Total heir percentage cannot exceed 100%");
+      toast.error("Total beneficiary percentage cannot exceed 100%");
       return;
     }
     setHeirs([...heirs, { name: newHeirName, relationship: newHeirRelationship, percentage: newHeirPercentage }]);
@@ -143,7 +142,7 @@ export default function GenesisCeremony() {
                 Access Denied
               </CardTitle>
               <CardDescription>
-                The Genesis Ceremony is only accessible to the system founder.
+                The Getting Started setup is only accessible to the system founder.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -152,7 +151,7 @@ export default function GenesisCeremony() {
     );
   }
 
-  // Check if Genesis already exists
+  // Check if organization already exists
   if (genesisDeclaration.data?.exists) {
     const house = genesisDeclaration.data.house;
     const declaration = genesisDeclaration.data.declaration;
@@ -160,36 +159,36 @@ export default function GenesisCeremony() {
     return (
       <DashboardLayout>
         <div className="container max-w-4xl py-8">
-          {/* Genesis Complete Banner */}
-          <div className="relative mb-8 overflow-hidden rounded-xl bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 border border-amber-500/30">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(251,191,36,0.1),transparent_50%)]" />
+          {/* Setup Complete Banner */}
+          <div className="relative mb-8 overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500/20 via-teal-500/20 to-cyan-500/20 border border-emerald-500/30">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(16,185,129,0.1),transparent_50%)]" />
             <div className="relative p-8 text-center">
-              <Flame className="w-16 h-16 mx-auto mb-4 text-amber-500 animate-pulse" />
-              <h1 className="text-3xl font-bold mb-2">The Genesis Flame Burns Eternal</h1>
+              <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-emerald-500" />
+              <h1 className="text-3xl font-bold mb-2">Organization Successfully Established</h1>
               <p className="text-muted-foreground max-w-xl mx-auto">
-                The LuvOnPurpose Sovereign System was founded on this day. All subsequent Houses trace their lineage to this moment.
+                Your L.A.W.S. Collective organization was founded on this day. All subsequent family branches trace their connection to this foundation.
               </p>
             </div>
           </div>
 
-          {/* Genesis Details */}
+          {/* Organization Details */}
           <div className="grid gap-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Crown className="w-5 h-5 text-amber-500" />
-                  Genesis House Details
+                  <Building2 className="w-5 h-5 text-emerald-500" />
+                  Organization Details
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">House Name</p>
+                    <p className="text-sm text-muted-foreground">Organization Name</p>
                     <p className="font-semibold">{house?.name}</p>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">Genesis RIN</p>
-                    <p className="font-mono font-semibold text-amber-600">{house?.genesisRIN}</p>
+                    <p className="text-sm text-muted-foreground">Registration ID</p>
+                    <p className="font-mono font-semibold text-emerald-600">{house?.genesisRIN}</p>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
                     <p className="text-sm text-muted-foreground">Trust Name</p>
@@ -200,68 +199,45 @@ export default function GenesisCeremony() {
                     <p className="font-semibold capitalize">{house?.trustType}</p>
                   </div>
                 </div>
-
                 <Separator />
-
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Flame Lighting Timestamp</p>
-                  <p className="font-semibold">
-                    {house?.flameLightingTimestamp 
-                      ? new Date(house.flameLightingTimestamp).toLocaleString('en-US', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          timeZoneName: 'short'
-                        })
-                      : 'Unknown'}
+                  <p className="text-sm text-muted-foreground mb-2">Activation Timestamp</p>
+                  <p className="font-mono text-sm">
+                    {house?.flameLightingTimestamp ? new Date(house.flameLightingTimestamp).toLocaleString() : "N/A"}
                   </p>
                 </div>
-
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Genesis Hash</p>
-                  <p className="font-mono text-xs break-all">{house?.genesisHash}</p>
-                </div>
-
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Statement of Purpose</p>
-                  <p className="text-sm whitespace-pre-wrap">{house?.statementOfPurpose}</p>
-                </div>
+                {house?.genesisHash && (
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-2">Verification Hash</p>
+                    <p className="font-mono text-xs break-all">{house.genesisHash}</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
-            {/* Genesis Declaration Document */}
+            {/* Declaration Document */}
             {declaration && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Scroll className="w-5 h-5 text-amber-500" />
-                    Genesis Declaration
+                    <FileText className="w-5 h-5 text-emerald-500" />
+                    Founding Declaration
                   </CardTitle>
-                  <CardDescription>
-                    The founding document of the LuvOnPurpose Sovereign System
-                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-8 h-8 text-amber-500" />
-                      <div>
-                        <p className="font-semibold">{declaration.documentName}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Uploaded: {new Date(declaration.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <Button variant="outline" asChild>
-                      <a href={declaration.s3Url || "#"} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        View Document
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-2">Statement of Purpose</p>
+                    <p className="whitespace-pre-wrap">{house?.statementOfPurpose}</p>
+                  </div>
+                  {declaration.s3Url && (
+                    <Button variant="outline" className="mt-4" asChild>
+                      <a href={declaration.s3Url} target="_blank" rel="noopener noreferrer">
+                        <FileText className="w-4 h-4 mr-2" />
+                        View Full Declaration
+                        <ExternalLink className="w-3 h-3 ml-2" />
                       </a>
                     </Button>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -271,69 +247,61 @@ export default function GenesisCeremony() {
     );
   }
 
-  // Activation Complete Screen
+  // Just activated - show success
   if (activationComplete && activationResult) {
     return (
       <DashboardLayout>
         <div className="container max-w-4xl py-8">
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 border border-amber-500/30">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(251,191,36,0.1),transparent_50%)]" />
-            <div className="relative p-12 text-center">
-              <div className="relative inline-block mb-6">
-                <Flame className="w-24 h-24 text-amber-500 animate-pulse" />
-                <Sparkles className="absolute -top-2 -right-2 w-8 h-8 text-yellow-400 animate-bounce" />
-              </div>
-              
-              <h1 className="text-4xl font-bold mb-4">The Genesis Flame Has Been Lit</h1>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                The LuvOnPurpose Sovereign System is now active. Your House stands as the foundation upon which all future Houses will be built.
-              </p>
-
-              <div className="grid gap-4 max-w-lg mx-auto mb-8">
-                <div className="p-4 bg-background/50 rounded-lg border">
-                  <p className="text-sm text-muted-foreground">Genesis RIN</p>
-                  <p className="font-mono font-bold text-xl text-amber-500">{activationResult.genesisRIN}</p>
-                </div>
-                <div className="p-4 bg-background/50 rounded-lg border">
-                  <p className="text-sm text-muted-foreground">Flame Lighting Timestamp</p>
-                  <p className="font-semibold">
-                    {new Date(activationResult.flameLightingTimestamp).toLocaleString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      timeZoneName: 'short'
-                    })}
-                  </p>
-                </div>
-                <div className="p-4 bg-background/50 rounded-lg border">
-                  <p className="text-sm text-muted-foreground">Genesis Hash</p>
-                  <p className="font-mono text-xs break-all">{activationResult.genesisHash}</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 justify-center">
-                <Button asChild>
-                  <a href={activationResult.declarationUrl} target="_blank" rel="noopener noreferrer">
-                    <Scroll className="w-4 h-4 mr-2" />
-                    View Genesis Declaration
-                  </a>
-                </Button>
-                <Button variant="outline" onClick={() => window.location.href = "/house"}>
-                  <Crown className="w-4 h-4 mr-2" />
-                  Go to House Dashboard
-                </Button>
-              </div>
+          <div className="text-center mb-8">
+            <div className="relative inline-block">
+              <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
+              <CheckCircle2 className="w-24 h-24 text-emerald-500 relative" />
             </div>
           </div>
+          
+          <Card className="border-emerald-500/50 bg-gradient-to-br from-emerald-500/5 to-transparent">
+            <CardContent className="pt-6">
+              <h1 className="text-4xl font-bold mb-4">Your Organization Has Been Activated</h1>
+              <p className="text-muted-foreground mb-8">
+                Congratulations! Your L.A.W.S. Collective organization is now established. Your founding declaration has been recorded and verified.
+              </p>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Registration ID</p>
+                  <p className="font-mono font-bold text-emerald-600">{activationResult.genesisRIN}</p>
+                </div>
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Activation Timestamp</p>
+                  <p className="font-mono text-sm">{new Date(activationResult.flameLightingTimestamp).toLocaleString()}</p>
+                </div>
+              </div>
+              
+              <div className="p-4 bg-muted rounded-lg mb-6">
+                <p className="text-sm text-muted-foreground mb-2">Verification Hash</p>
+                <p className="font-mono text-xs break-all">{activationResult.genesisHash}</p>
+              </div>
+              
+              <div className="flex gap-4">
+                <Button variant="outline" asChild>
+                  <a href={activationResult.declarationUrl} target="_blank" rel="noopener noreferrer">
+                    <FileText className="w-4 h-4 mr-2" />
+                    View Founding Declaration
+                  </a>
+                </Button>
+                <Button onClick={() => window.location.href = "/dashboard"}>
+                  <Building2 className="w-4 h-4 mr-2" />
+                  Go to Dashboard
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </DashboardLayout>
     );
   }
 
-  // Ceremony Steps
+  // Setup Steps
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
 
@@ -342,71 +310,65 @@ export default function GenesisCeremony() {
       <div className="container max-w-4xl py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/20 mb-4">
-            <Flame className="w-8 h-8 text-amber-500" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
+            <Rocket className="w-5 h-5 text-primary" />
+            <span className="text-sm font-medium">Organization Setup</span>
           </div>
-          <h1 className="text-3xl font-bold mb-2">Genesis Ceremony</h1>
+          <h1 className="text-3xl font-bold mb-2">Getting Started</h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Establish the founding House of the LuvOnPurpose Sovereign System. This ceremonial activation creates the root from which all future Houses will grow.
+            Complete these steps to establish your L.A.W.S. Collective organization and begin building multi-generational wealth.
           </p>
         </div>
 
         {/* Progress */}
         <div className="mb-8">
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-muted-foreground">Step {step} of {totalSteps}</span>
-            <span className="font-medium">{Math.round(progress)}% Complete</span>
+            <span>Step {step} of {totalSteps}</span>
+            <span>{Math.round(progress)}% Complete</span>
           </div>
           <Progress value={progress} className="h-2" />
         </div>
 
-        {/* Step 1: House Identity */}
+        {/* Step 1: Organization Identity */}
         {step === 1 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Crown className="w-5 h-5 text-amber-500" />
-                Step 1: House Identity
+                <Building2 className="w-5 h-5 text-primary" />
+                Step 1: Organization Identity
               </CardTitle>
               <CardDescription>
-                Define the identity of your Genesis House and its governing trust.
+                Define the identity of your organization and its governing trust.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="houseName">House Name *</Label>
-                  <Input
-                    id="houseName"
-                    placeholder="e.g., Freeman Family House"
-                    value={houseName}
-                    onChange={(e) => setHouseName(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="founderName">Founder Name *</Label>
-                  <Input
-                    id="founderName"
-                    placeholder="Your full legal name"
-                    value={founderName}
-                    onChange={(e) => setFounderName(e.target.value)}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="houseName">Organization Name *</Label>
+                <Input
+                  id="houseName"
+                  placeholder="e.g., Russell Family Collective"
+                  value={houseName}
+                  onChange={(e) => setHouseName(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  This will be the official name of your family organization.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="trustName">Trust Name *</Label>
+                <Input
+                  id="trustName"
+                  placeholder="e.g., Russell Family Trust"
+                  value={trustName}
+                  onChange={(e) => setTrustName(e.target.value)}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="trustName">Trust Name *</Label>
-                  <Input
-                    id="trustName"
-                    placeholder="e.g., CALEA Freeman Family Trust"
-                    value={trustName}
-                    onChange={(e) => setTrustName(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="trustType">Trust Type</Label>
-                  <Select value={trustType} onValueChange={(v) => setTrustType(v as typeof trustType)}>
+                  <Label htmlFor="trustType">Trust Type *</Label>
+                  <Select value={trustType} onValueChange={(v: any) => setTrustType(v)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -418,23 +380,19 @@ export default function GenesisCeremony() {
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="trustEIN">Trust EIN (if available)</Label>
-                <Input
-                  id="trustEIN"
-                  placeholder="XX-XXXXXXX"
-                  value={trustEIN}
-                  onChange={(e) => setTrustEIN(e.target.value)}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="trustEIN">Trust EIN (Optional)</Label>
+                  <Input
+                    id="trustEIN"
+                    placeholder="XX-XXXXXXX"
+                    value={trustEIN}
+                    onChange={(e) => setTrustEIN(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end">
-                <Button 
-                  onClick={() => setStep(2)}
-                  disabled={!houseName || !trustName || !founderName}
-                >
+                <Button onClick={() => setStep(2)} disabled={!houseName || !trustName}>
                   Continue
                 </Button>
               </div>
@@ -442,48 +400,49 @@ export default function GenesisCeremony() {
           </Card>
         )}
 
-        {/* Step 2: Statement of Purpose */}
+        {/* Step 2: Founder Information */}
         {step === 2 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Scroll className="w-5 h-5 text-amber-500" />
-                Step 2: Statement of Purpose
+                <Users className="w-5 h-5 text-primary" />
+                Step 2: Founder Information
               </CardTitle>
               <CardDescription>
-                Declare the vision and purpose of your House. This statement will be permanently recorded in the Genesis Declaration.
+                Identify the founding member who will lead this organization.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                <p className="text-sm text-amber-800 dark:text-amber-200">
-                  <strong>Guidance:</strong> Your Statement of Purpose should articulate why you are establishing this system, what values guide your House, and what legacy you intend to build for future generations.
-                </p>
+              <div className="space-y-2">
+                <Label htmlFor="founderName">Founder Full Legal Name *</Label>
+                <Input
+                  id="founderName"
+                  placeholder="Enter your full legal name"
+                  value={founderName}
+                  onChange={(e) => setFounderName(e.target.value)}
+                />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="statementOfPurpose">Statement of Purpose *</Label>
-                <Textarea
-                  id="statementOfPurpose"
-                  placeholder="I establish this House for the purpose of..."
-                  value={statementOfPurpose}
-                  onChange={(e) => setStatementOfPurpose(e.target.value)}
-                  rows={8}
-                  className="font-serif"
-                />
-                <p className="text-xs text-muted-foreground">
-                  {statementOfPurpose.length} / 5000 characters
-                </p>
+              <div className="p-4 bg-muted rounded-lg">
+                <div className="flex items-start gap-3">
+                  <Shield className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <p className="font-medium">Founder Responsibilities</p>
+                    <ul className="text-sm text-muted-foreground mt-2 space-y-1">
+                      <li>• Establish and maintain the organization's vision</li>
+                      <li>• Oversee trust administration and compliance</li>
+                      <li>• Guide succession planning for future generations</li>
+                      <li>• Maintain majority voting authority on key decisions</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="flex justify-between">
                 <Button variant="outline" onClick={() => setStep(1)}>
                   Back
                 </Button>
-                <Button 
-                  onClick={() => setStep(3)}
-                  disabled={statementOfPurpose.length < 10}
-                >
+                <Button onClick={() => setStep(3)} disabled={!founderName}>
                   Continue
                 </Button>
               </div>
@@ -491,32 +450,52 @@ export default function GenesisCeremony() {
           </Card>
         )}
 
-        {/* Step 3: Bloodline Designation */}
+        {/* Step 3: Statement of Purpose */}
         {step === 3 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-amber-500" />
-                Step 3: Bloodline Designation (Optional)
+                <FileText className="w-5 h-5 text-primary" />
+                Step 3: Statement of Purpose
               </CardTitle>
               <CardDescription>
-                Designate initial heirs for your House. You can add more heirs later through the House Dashboard.
+                Declare the vision and purpose of your organization. This statement will be permanently recorded in your founding declaration.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Existing heirs */}
-              {heirs.length > 0 && (
-                <div className="space-y-2">
-                  <Label>Designated Heirs</Label>
+              <div className="space-y-2">
+                <Label htmlFor="purpose">Statement of Purpose *</Label>
+                <Textarea
+                  id="purpose"
+                  placeholder="Describe your organization's mission, values, and long-term vision for building multi-generational wealth..."
+                  value={statementOfPurpose}
+                  onChange={(e) => setStatementOfPurpose(e.target.value)}
+                  className="min-h-[200px]"
+                />
+                <p className="text-xs text-muted-foreground">
+                  This statement will guide your organization's decisions and be passed down to future generations.
+                </p>
+              </div>
+
+              {/* Beneficiaries Section */}
+              <Separator />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Beneficiaries (Optional)</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Add family members who will benefit from the trust.
+                    </p>
+                  </div>
+                </div>
+
+                {heirs.length > 0 && (
                   <div className="space-y-2">
                     {heirs.map((heir, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <Heart className="w-4 h-4 text-rose-500" />
-                          <div>
-                            <p className="font-medium">{heir.name}</p>
-                            <p className="text-sm text-muted-foreground capitalize">{heir.relationship}</p>
-                          </div>
+                      <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                        <div>
+                          <p className="font-medium">{heir.name}</p>
+                          <p className="text-sm text-muted-foreground capitalize">{heir.relationship}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <Badge variant="secondary">{heir.percentage}%</Badge>
@@ -527,57 +506,38 @@ export default function GenesisCeremony() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Total allocated: {heirs.reduce((sum, h) => sum + h.percentage, 0)}%
-                  </p>
-                </div>
-              )}
+                )}
 
-              {/* Add heir form */}
-              <div className="p-4 border rounded-lg space-y-4">
-                <Label>Add Heir</Label>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="newHeirName" className="text-xs">Name</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  <Input
+                    placeholder="Name"
+                    value={newHeirName}
+                    onChange={(e) => setNewHeirName(e.target.value)}
+                    className="col-span-2"
+                  />
+                  <Select value={newHeirRelationship} onValueChange={setNewHeirRelationship}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="child">Child</SelectItem>
+                      <SelectItem value="spouse">Spouse</SelectItem>
+                      <SelectItem value="grandchild">Grandchild</SelectItem>
+                      <SelectItem value="sibling">Sibling</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="flex gap-2">
                     <Input
-                      id="newHeirName"
-                      placeholder="Full name"
-                      value={newHeirName}
-                      onChange={(e) => setNewHeirName(e.target.value)}
+                      type="number"
+                      placeholder="%"
+                      value={newHeirPercentage || ""}
+                      onChange={(e) => setNewHeirPercentage(Number(e.target.value))}
+                      className="w-20"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="newHeirRelationship" className="text-xs">Relationship</Label>
-                    <Select value={newHeirRelationship} onValueChange={setNewHeirRelationship}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="child">Child</SelectItem>
-                        <SelectItem value="grandchild">Grandchild</SelectItem>
-                        <SelectItem value="spouse">Spouse</SelectItem>
-                        <SelectItem value="sibling">Sibling</SelectItem>
-                        <SelectItem value="niece_nephew">Niece/Nephew</SelectItem>
-                        <SelectItem value="adopted">Adopted</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="newHeirPercentage" className="text-xs">Percentage</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="newHeirPercentage"
-                        type="number"
-                        min={0}
-                        max={100}
-                        value={newHeirPercentage}
-                        onChange={(e) => setNewHeirPercentage(Number(e.target.value))}
-                      />
-                      <Button onClick={addHeir}>
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <Button variant="outline" size="icon" onClick={addHeir}>
+                      <Plus className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -586,7 +546,7 @@ export default function GenesisCeremony() {
                 <Button variant="outline" onClick={() => setStep(2)}>
                   Back
                 </Button>
-                <Button onClick={() => setStep(4)}>
+                <Button onClick={() => setStep(4)} disabled={!statementOfPurpose}>
                   Continue
                 </Button>
               </div>
@@ -594,94 +554,65 @@ export default function GenesisCeremony() {
           </Card>
         )}
 
-        {/* Step 4: Flame Lighting */}
+        {/* Step 4: Activation */}
         {step === 4 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Flame className="w-5 h-5 text-amber-500" />
-                Step 4: Light the Genesis Flame
+                <Sparkles className="w-5 h-5 text-primary" />
+                Step 4: Activate Your Organization
               </CardTitle>
               <CardDescription>
-                Review your ceremony details and light the flame to activate the Genesis House.
+                Review your setup details and activate your organization.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Review Summary */}
+              {/* Summary */}
               <div className="space-y-4">
                 <div className="p-4 bg-muted rounded-lg">
-                  <h4 className="font-semibold mb-2">House Identity</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">House Name:</span>{" "}
-                      <span className="font-medium">{houseName}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Founder:</span>{" "}
-                      <span className="font-medium">{founderName}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Trust:</span>{" "}
-                      <span className="font-medium">{trustName}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Trust Type:</span>{" "}
-                      <span className="font-medium capitalize">{trustType}</span>
-                    </div>
+                  <p className="text-sm text-muted-foreground">Organization Name</p>
+                  <p className="font-semibold">{houseName}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground">Trust Name</p>
+                    <p className="font-semibold">{trustName}</p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground">Trust Type</p>
+                    <p className="font-semibold capitalize">{trustType}</p>
                   </div>
                 </div>
-
                 <div className="p-4 bg-muted rounded-lg">
-                  <h4 className="font-semibold mb-2">Statement of Purpose</h4>
-                  <p className="text-sm whitespace-pre-wrap">{statementOfPurpose}</p>
+                  <p className="text-sm text-muted-foreground">Founder</p>
+                  <p className="font-semibold">{founderName}</p>
                 </div>
-
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">Statement of Purpose</p>
+                  <p className="text-sm mt-1">{statementOfPurpose}</p>
+                </div>
                 {heirs.length > 0 && (
                   <div className="p-4 bg-muted rounded-lg">
-                    <h4 className="font-semibold mb-2">Designated Heirs ({heirs.length})</h4>
-                    <ul className="text-sm space-y-1">
+                    <p className="text-sm text-muted-foreground mb-2">Beneficiaries</p>
+                    <div className="space-y-1">
                       {heirs.map((heir, i) => (
-                        <li key={i}>
+                        <p key={i} className="text-sm">
                           {heir.name} ({heir.relationship}) - {heir.percentage}%
-                        </li>
+                        </p>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 )}
               </div>
 
-              <Separator />
-
-              {/* What will be created */}
-              <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                <h4 className="font-semibold mb-2 text-amber-800 dark:text-amber-200">
-                  Upon lighting the flame, the following will be created:
-                </h4>
-                <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Genesis House with RIN-GEN-001
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Full token chain activated (MIRROR → CROWN)
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Genesis Declaration document (stored in vault)
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Document Vault with 10 default folders
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" />
-                    6 Community Funds initialized
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" />
-                    All founder scrolls sealed
-                  </li>
+              {/* What happens next */}
+              <div className="p-4 border rounded-lg bg-primary/5">
+                <p className="font-medium mb-2">What happens when you activate:</p>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Your organization will be assigned a unique Registration ID (RIN-GEN-001)</li>
+                  <li>• A founding declaration document will be created and stored in your vault</li>
+                  <li>• Your organization will be verified with a blockchain hash</li>
+                  <li>• You can begin adding family members and managing your wealth system</li>
                 </ul>
               </div>
 
@@ -689,21 +620,20 @@ export default function GenesisCeremony() {
                 <Button variant="outline" onClick={() => setStep(3)}>
                   Back
                 </Button>
-                <Button 
-                  size="lg"
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+                <Button
                   onClick={handleActivation}
                   disabled={isActivating}
+                  className="min-w-[200px]"
                 >
                   {isActivating ? (
                     <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Lighting the Flame...
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Activating...
                     </>
                   ) : (
                     <>
-                      <Flame className="w-5 h-5 mr-2" />
-                      Light the Genesis Flame
+                      <Rocket className="w-5 h-5 mr-2" />
+                      Activate Organization
                     </>
                   )}
                 </Button>

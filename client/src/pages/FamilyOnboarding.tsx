@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Users, UserPlus, Building2, Briefcase, CheckCircle2, Clock, Heart, GraduationCap, Shield } from "lucide-react";
 
 const FAMILY_MEMBERS = [
-  { id: "shanna", name: "Shanna Russell", role: "Source Flame / Matriarch", departments: ["Business"], businessEntity: "Purpose Proposal Group", status: "active", credentials: ["Business Degree", "Government Contracting Experience", "ULC Ordination"], boardRole: "Source Flame + Business Director" },
+  { id: "shanna", name: "Shanna Russell", role: "Founder / Matriarch", departments: ["Business"], businessEntity: "Purpose Proposal Group", status: "active", credentials: ["Business Degree", "Government Contracting Experience", "ULC Ordination"], boardRole: "Founder + Business Director" },
   { id: "amber", name: "Amber", role: "House Member", departments: ["Health", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "essence", name: "Essence", role: "House Member", departments: ["Design", "IT", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "amandes", name: "Amandes", role: "House Member", departments: ["Media", "IT", "Outreach"], businessEntity: "FreeLife Media", status: "active", credentials: [], boardRole: "Board Member" },
@@ -53,7 +53,7 @@ const ONBOARDING_STEPS = [
   { id: 3, name: "Business Entity Link", description: "Connect to business entity or create new" },
   { id: 4, name: "Credentials & Training", description: "Upload certifications, complete training" },
   { id: 5, name: "System Access", description: "Account creation and permissions" },
-  { id: 6, name: "House Covenant", description: "Review and sign house agreement" },
+  { id: 6, name: "Organization Agreement", description: "Review and sign membership agreement" },
 ];
 
 export default function FamilyOnboarding() {
@@ -225,9 +225,9 @@ export default function FamilyOnboarding() {
                         <div>
                           <div className="flex items-center gap-2">
                             <h3 className="font-semibold">{member.name}</h3>
-                            {member.role === "Source Flame / Matriarch" && (
+                            {member.role === "Founder / Matriarch" && (
                               <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20">
-                                <Heart className="w-3 h-3 mr-1" />Source Flame
+                                <Heart className="w-3 h-3 mr-1" />Founder
                               </Badge>
                             )}
                           </div>
@@ -486,7 +486,7 @@ export default function FamilyOnboarding() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <Checkbox id="training1" />
-                          <label htmlFor="training1" className="text-sm">House Covenant Review</label>
+                          <label htmlFor="training1" className="text-sm">Membership Agreement Review</label>
                         </div>
                         <div className="flex items-center gap-2">
                           <Checkbox id="training2" />
@@ -542,7 +542,7 @@ export default function FamilyOnboarding() {
                 {onboardingStep === 6 && (
                   <div className="space-y-4">
                     <div className="p-4 rounded-lg border bg-primary/5">
-                      <h4 className="font-semibold mb-2">House Covenant Agreement</h4>
+                      <h4 className="font-semibold mb-2">Membership Agreement</h4>
                       <p className="text-sm text-muted-foreground mb-4">
                         By completing this onboarding, {selectedMember?.name} agrees to uphold the values and 
                         responsibilities of the House, including maintaining confidentiality, contributing to 
@@ -550,7 +550,7 @@ export default function FamilyOnboarding() {
                       </p>
                       <div className="flex items-center gap-2">
                         <Checkbox id="covenant" />
-                        <label htmlFor="covenant" className="text-sm">I have read and agree to the House Covenant</label>
+                        <label htmlFor="covenant" className="text-sm">I have read and agree to the Membership Agreement</label>
                       </div>
                     </div>
                   </div>

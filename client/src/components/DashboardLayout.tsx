@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Flame, FileText, Bot, Share2, Building2, DollarSign, Home, Crown, PieChart, Gavel } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -31,10 +31,10 @@ import { NotificationCenter } from "./NotificationCenter";
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: Home, label: "House Dashboard", path: "/house" },
-  { icon: Flame, label: "Genesis Ceremony", path: "/genesis" },
-  { icon: Crown, label: "Owner Setup", path: "/owner-setup" },
+  { icon: Rocket, label: "Getting Started", path: "/genesis" },
+  { icon: Settings, label: "Owner Setup", path: "/owner-setup" },
   { icon: Shield, label: "Trust System", path: "/system" },
-  { icon: Flame, label: "Luv Academy", path: "/academy" },
+  { icon: GraduationCap, label: "Learning Center", path: "/academy" },
   { icon: Building2, label: "Foundation", path: "/foundation" },
   { icon: DollarSign, label: "Financial Automation", path: "/financial-automation" },
   { icon: Coins, label: "Banking & Credit", path: "/banking" },

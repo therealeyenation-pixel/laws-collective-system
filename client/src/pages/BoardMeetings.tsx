@@ -50,7 +50,7 @@ import { toast } from "sonner";
 
 // Board members with voting rights
 const BOARD_MEMBERS = [
-  { id: 1, name: "Shanna Russell", role: "Source Flame", department: "Business", hasVote: true, attendance: 100 },
+  { id: 1, name: "Shanna Russell", role: "Founder", department: "Business", hasVote: true, attendance: 100 },
   { id: 2, name: "Amber", role: "Board Member", department: "Health", hasVote: true, attendance: 90 },
   { id: 3, name: "Essence", role: "Board Member", department: "Design, IT", hasVote: true, attendance: 85 },
   { id: 4, name: "Amandes", role: "Board Member", department: "Media", hasVote: true, attendance: 95 },
@@ -542,7 +542,7 @@ export default function BoardMeetings() {
                       <TableRow key={member.id}>
                         <TableCell className="font-medium">{member.name}</TableCell>
                         <TableCell>
-                          <Badge variant={member.role === "Source Flame" ? "default" : "outline"}>
+                          <Badge variant={member.role === "Founder" ? "default" : "outline"}>
                             {member.role}
                           </Badge>
                         </TableCell>
@@ -582,7 +582,7 @@ export default function BoardMeetings() {
                     Governance Rules
                   </h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Source Flame maintains 60% minimum authority (Covenant Majority)</li>
+                    <li>• Founder maintains 60% minimum authority (Majority Control)</li>
                     <li>• All voting members have equal vote weight (1 vote each)</li>
                     <li>• Honorary Advisors may attend and speak but cannot vote</li>
                     <li>• Members must recuse from votes involving their affiliated entities</li>

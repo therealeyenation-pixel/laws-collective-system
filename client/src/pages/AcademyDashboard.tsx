@@ -331,11 +331,11 @@ export default function AcademyDashboard() {
                   </div>
                 </div>
 
-                {/* Ancestral Flame Languages */}
+                {/* Heritage Languages */}
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
                     <Flame className="w-5 h-5 text-emerald-600" />
-                    Ancestral Flame Tongues
+                    Heritage Languages
                   </h3>
                   <div className="grid md:grid-cols-2 gap-3">
                     {academyData?.languages

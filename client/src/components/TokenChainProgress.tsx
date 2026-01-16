@@ -9,42 +9,42 @@ import {
   Gift,
   Zap,
   Home,
-  Crown,
+  Award,
   ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface TokenStatus {
+interface MilestoneStatus {
   id: string;
   name: string;
   status: "completed" | "active" | "locked";
   completedAt?: Date;
-  requiredScrolls?: number;
-  sealedScrolls?: number;
+  requiredModules?: number;
+  completedModules?: number;
 }
 
-interface TokenChainProgressProps {
-  tokens?: TokenStatus[];
+interface MilestoneProgressProps {
+  milestones?: MilestoneStatus[];
   className?: string;
 }
 
-const DEFAULT_TOKENS: TokenStatus[] = [
-  { id: "mirror", name: "MIRROR", status: "completed", requiredScrolls: 3, sealedScrolls: 3 },
-  { id: "gift", name: "GIFT", status: "active", requiredScrolls: 3, sealedScrolls: 1 },
-  { id: "spark", name: "SPARK", status: "locked", requiredScrolls: 3, sealedScrolls: 0 },
-  { id: "house", name: "HOUSE", status: "locked", requiredScrolls: 7, sealedScrolls: 0 },
-  { id: "crown", name: "CROWN", status: "locked", requiredScrolls: 0, sealedScrolls: 0 },
+const DEFAULT_MILESTONES: MilestoneStatus[] = [
+  { id: "foundation", name: "FOUNDATION", status: "completed", requiredModules: 3, completedModules: 3 },
+  { id: "growth", name: "GROWTH", status: "active", requiredModules: 3, completedModules: 1 },
+  { id: "momentum", name: "MOMENTUM", status: "locked", requiredModules: 3, completedModules: 0 },
+  { id: "legacy", name: "LEGACY", status: "locked", requiredModules: 7, completedModules: 0 },
+  { id: "mastery", name: "MASTERY", status: "locked", requiredModules: 0, completedModules: 0 },
 ];
 
-const TOKEN_ICONS: Record<string, React.ReactNode> = {
-  mirror: <Sparkles className="w-5 h-5" />,
-  gift: <Gift className="w-5 h-5" />,
-  spark: <Zap className="w-5 h-5" />,
-  house: <Home className="w-5 h-5" />,
-  crown: <Crown className="w-5 h-5" />,
+const MILESTONE_ICONS: Record<string, React.ReactNode> = {
+  foundation: <Sparkles className="w-5 h-5" />,
+  growth: <Gift className="w-5 h-5" />,
+  momentum: <Zap className="w-5 h-5" />,
+  legacy: <Home className="w-5 h-5" />,
+  mastery: <Award className="w-5 h-5" />,
 };
 
-const TOKEN_COLORS: Record<string, { bg: string; border: string; text: string; icon: string }> = {
+const MILESTONE_COLORS: Record<string, { bg: string; border: string; text: string; icon: string }> = {
   completed: {
     bg: "bg-green-100 dark:bg-green-900/30",
     border: "border-green-500",
@@ -65,9 +65,9 @@ const TOKEN_COLORS: Record<string, { bg: string; border: string; text: string; i
   },
 };
 
-export function TokenChainProgress({ tokens = DEFAULT_TOKENS, className }: TokenChainProgressProps) {
-  const completedCount = tokens.filter(t => t.status === "completed").length;
-  const totalCount = tokens.length;
+export function TokenChainProgress({ milestones = DEFAULT_MILESTONES, className }: MilestoneProgressProps) {
+  const completedCount = milestones.filter(t => t.status === "completed").length;
+  const totalCount = milestones.length;
   const progressPercent = (completedCount / totalCount) * 100;
 
   return (
@@ -76,61 +76,61 @@ export function TokenChainProgress({ tokens = DEFAULT_TOKENS, className }: Token
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-emerald-600" />
-            Token Chain Progress
+            Progress Milestones
           </CardTitle>
           <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-300">
-            {completedCount}/{totalCount} Tokens
+            {completedCount}/{totalCount} Complete
           </Badge>
         </div>
         <p className="text-sm text-muted-foreground mt-1">
-          Complete each token in sequence to unlock the Crown of Completion
+          Complete each milestone in sequence to achieve Mastery certification
         </p>
       </CardHeader>
       <CardContent>
         {/* Progress Bar */}
         <div className="mb-6">
           <div className="flex justify-between text-xs text-muted-foreground mb-2">
-            <span>Chain Progress</span>
+            <span>Overall Progress</span>
             <span>{Math.round(progressPercent)}%</span>
           </div>
           <Progress value={progressPercent} className="h-2" />
         </div>
 
-        {/* Token Chain */}
+        {/* Milestone Chain */}
         <div className="flex items-center justify-between gap-1 overflow-x-auto pb-2">
-          {tokens.map((token, index) => {
-            const colors = TOKEN_COLORS[token.status];
-            const isLast = index === tokens.length - 1;
+          {milestones.map((milestone, index) => {
+            const colors = MILESTONE_COLORS[milestone.status];
+            const isLast = index === milestones.length - 1;
             
             return (
-              <div key={token.id} className="flex items-center">
-                {/* Token Node */}
+              <div key={milestone.id} className="flex items-center">
+                {/* Milestone Node */}
                 <div className="flex flex-col items-center min-w-[70px]">
                   <div
                     className={cn(
                       "w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all",
                       colors.bg,
                       colors.border,
-                      token.status === "active" && "ring-2 ring-amber-400 ring-offset-2"
+                      milestone.status === "active" && "ring-2 ring-amber-400 ring-offset-2"
                     )}
                   >
-                    {token.status === "completed" ? (
+                    {milestone.status === "completed" ? (
                       <CheckCircle2 className={cn("w-6 h-6", colors.icon)} />
-                    ) : token.status === "locked" ? (
+                    ) : milestone.status === "locked" ? (
                       <Lock className={cn("w-5 h-5", colors.icon)} />
                     ) : (
-                      <span className={colors.icon}>{TOKEN_ICONS[token.id]}</span>
+                      <span className={colors.icon}>{MILESTONE_ICONS[milestone.id]}</span>
                     )}
                   </div>
                   <span className={cn("text-xs font-semibold mt-2", colors.text)}>
-                    {token.name}
+                    {milestone.name}
                   </span>
-                  {token.status === "active" && token.requiredScrolls && (
+                  {milestone.status === "active" && milestone.requiredModules && (
                     <span className="text-[10px] text-amber-600 dark:text-amber-400">
-                      {token.sealedScrolls}/{token.requiredScrolls} scrolls
+                      {milestone.completedModules}/{milestone.requiredModules} modules
                     </span>
                   )}
-                  {token.status === "completed" && (
+                  {milestone.status === "completed" && (
                     <span className="text-[10px] text-green-600 dark:text-green-400">
                       Complete
                     </span>
@@ -155,17 +155,17 @@ export function TokenChainProgress({ tokens = DEFAULT_TOKENS, className }: Token
         <div className="mt-4 p-3 rounded-lg bg-muted/50">
           {completedCount === totalCount ? (
             <p className="text-sm text-center text-green-700 dark:text-green-300 font-medium">
-              🎉 Congratulations! You have completed the Token Chain and earned your Crown!
+              🎉 Congratulations! You have completed all milestones and achieved Mastery certification!
             </p>
           ) : (
             <p className="text-sm text-center text-muted-foreground">
-              {tokens.find(t => t.status === "active") ? (
+              {milestones.find(t => t.status === "active") ? (
                 <>
-                  Currently working on: <span className="font-semibold text-amber-600">{tokens.find(t => t.status === "active")?.name}</span> token. 
-                  Complete the required scrolls to unlock the next token.
+                  Currently working on: <span className="font-semibold text-amber-600">{milestones.find(t => t.status === "active")?.name}</span> milestone. 
+                  Complete the required modules to unlock the next stage.
                 </>
               ) : (
-                "Start your journey by activating the MIRROR token."
+                "Start your journey by completing the FOUNDATION milestone."
               )}
             </p>
           )}
