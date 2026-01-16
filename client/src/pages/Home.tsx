@@ -117,7 +117,7 @@ export default function Home() {
               {!isAuthenticated ? (
                 <Button
                   variant="default"
-                  onClick={() => (window.location.href = getLoginUrl())}
+                  onClick={() => (window.location.href = getLoginUrl("/dashboard"))}
                 >
                   Sign In
                 </Button>
@@ -329,10 +329,10 @@ export default function Home() {
             {!isAuthenticated && (
               <Button
                 size="lg"
-                onClick={() => (window.location.href = getLoginUrl())}
+                onClick={() => (window.location.href = getLoginUrl("/dashboard"))}
                 className="gap-2"
               >
-                Sign In
+                Start Your Journey <ArrowRight className="w-4 h-4" />
               </Button>
             )}
           </div>

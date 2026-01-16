@@ -1502,3 +1502,8 @@
 - [ ] Implement meeting notes and minutes
 - [ ] Add voting records (with recusal tracking)
 - [ ] Create decision logging for audit trail
+
+
+## Phase 66: Authentication Redirect Fix
+
+- [x] Fix "Start Your Journey" login loop - should redirect to /dashboard after login, not back to /

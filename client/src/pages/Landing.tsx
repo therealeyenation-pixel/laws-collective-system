@@ -161,7 +161,7 @@ export default function Landing() {
               <a href="#services" className="text-stone-600 hover:text-stone-900 transition">Services</a>
               <a href="#laws" className="text-stone-600 hover:text-stone-900 transition">L.A.W.S.</a>
               <a href="#contact" className="text-stone-600 hover:text-stone-900 transition">Contact</a>
-              <a href={getLoginUrl()}>
+              <a href={getLoginUrl("/dashboard")}>
                 <Button className="bg-green-600 hover:bg-green-700">
                   Get Started
                 </Button>
@@ -185,7 +185,7 @@ export default function Landing() {
                 <a href="#services" className="text-stone-600 hover:text-stone-900">Services</a>
                 <a href="#laws" className="text-stone-600 hover:text-stone-900">L.A.W.S.</a>
                 <a href="#contact" className="text-stone-600 hover:text-stone-900">Contact</a>
-                <a href={getLoginUrl()}>
+                <a href={getLoginUrl("/dashboard")}>
                   <Button className="w-full bg-green-600 hover:bg-green-700">
                     Get Started
                   </Button>
@@ -210,7 +210,7 @@ export default function Landing() {
               build lasting wealth, and create a legacy that spans generations.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <a href={getLoginUrl()}>
+              <a href={getLoginUrl("/dashboard")}>
                 <Button size="lg" className="bg-green-600 hover:bg-green-700 gap-2 w-full sm:w-auto">
                   Start Your Journey
                   <ArrowRight className="w-5 h-5" />
@@ -292,7 +292,7 @@ export default function Landing() {
                     Ongoing support
                   </li>
                 </ul>
-                <a href={getLoginUrl()}>
+                <a href={getLoginUrl("/dashboard")}>
                   <Button size="lg" variant="secondary" className="w-full">
                     Create Your Account
                   </Button>
@@ -478,8 +478,8 @@ export default function Landing() {
             <div>
               <h4 className="font-semibold mb-4">Platform</h4>
               <ul className="space-y-2 text-stone-400">
-                <li><a href={getLoginUrl()} className="hover:text-white transition">Login</a></li>
-                <li><a href={getLoginUrl()} className="hover:text-white transition">Create Account</a></li>
+                <li><a href={getLoginUrl("/dashboard")} className="hover:text-white transition">Login</a></li>
+                <li><a href={getLoginUrl("/dashboard")} className="hover:text-white transition">Create Account</a></li>
                 <li><Link href="/dashboard" className="hover:text-white transition">Dashboard</Link></li>
               </ul>
             </div>
