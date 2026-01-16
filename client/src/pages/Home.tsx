@@ -273,12 +273,12 @@ export default function Home() {
             </Card>
             
             <Card 
-              className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20"
+              className="p-6 cursor-pointer hover:shadow-lg transition-all border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50 to-indigo-50 dark:from-emerald-950/20 dark:to-indigo-950/20"
               onClick={() => (window.location.href = "/vault")}
             >
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                  <FileText className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                <div className="p-3 rounded-full bg-emerald-100 dark:bg-emerald-900">
+                  <FileText className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div className="text-left">
                   <h3 className="font-bold text-foreground">Document Vault</h3>
@@ -321,7 +321,7 @@ export default function Home() {
               size="lg"
               variant="outline"
               onClick={() => (window.location.href = "/vault")}
-              className="gap-2 border-purple-300 text-purple-700 hover:bg-purple-50"
+              className="gap-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50"
             >
               <FileText className="w-5 h-5" />
               Document Vault

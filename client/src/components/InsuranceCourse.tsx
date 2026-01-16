@@ -992,11 +992,11 @@ Timestamp: {{currentDate}}`
     title: "Module 12: Course Completion",
     type: "lesson",
     content: {
-      title: "Insurance Simulator Complete!",
+      title: "Insurance Workshop Complete!",
       sections: [
         {
           heading: "Congratulations!",
-          text: "You've completed the Insurance Simulator course. You now understand both personal and business insurance fundamentals, have assessed your coverage needs, and created a comprehensive insurance portfolio strategy. This knowledge is essential for protecting your family and business assets.",
+          text: "You've completed the Insurance Workshop course. You now understand both personal and business insurance fundamentals, have assessed your coverage needs, and created a comprehensive insurance portfolio strategy. This knowledge is essential for protecting your family and business assets.",
           tips: [
             "Insurance is not a one-time decision—review annually",
             "Life changes (marriage, children, business growth) require coverage updates",
@@ -1244,8 +1244,8 @@ export default function InsuranceCourse({ onExit, onComplete, connectedEntity }:
       </div>
       
       {connectedEntity && (
-        <Card className="p-4 bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
-          <p className="text-sm text-purple-800 dark:text-purple-200">
+        <Card className="p-4 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800">
+          <p className="text-sm text-emerald-800 dark:text-emerald-200">
             <strong>Connected Entity:</strong> {connectedEntity.name} ({connectedEntity.type})
           </p>
         </Card>

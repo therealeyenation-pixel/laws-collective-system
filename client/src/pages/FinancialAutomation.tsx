@@ -186,15 +186,15 @@ export default function FinancialAutomation() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border-purple-200 dark:border-purple-800">
+          <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border-emerald-200 dark:border-emerald-800">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-purple-600" />
+                <Building2 className="w-4 h-4 text-emerald-600" />
                 Root Authority Reserve
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-700 dark:text-purple-400">
+              <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">
                 {formatCurrency(summary?.house?.rootAuthorityReserve)}
               </div>
               <p className="text-xs text-muted-foreground mt-1">60% of 70% non-shareable</p>
@@ -351,7 +351,7 @@ export default function FinancialAutomation() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Gift className="w-5 h-5 text-pink-600" />
+                  <Gift className="w-5 h-5 text-green-600" />
                   Gift/Sale Ratio Enforcement (Scroll 59)
                 </CardTitle>
                 <CardDescription>
@@ -368,7 +368,7 @@ export default function FinancialAutomation() {
                         <p className="text-xs text-muted-foreground">Total Sales</p>
                       </div>
                       <div className="text-center p-4 bg-muted/50 rounded-lg">
-                        <Gift className="w-6 h-6 mx-auto mb-2 text-pink-600" />
+                        <Gift className="w-6 h-6 mx-auto mb-2 text-green-600" />
                         <p className="text-2xl font-bold">{summary.giftSaleRatio.totalGiftsIssued}</p>
                         <p className="text-xs text-muted-foreground">Total Gifts</p>
                       </div>

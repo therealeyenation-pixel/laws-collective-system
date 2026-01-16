@@ -786,14 +786,14 @@ export default function Dashboard() {
             {/* Advanced Courses - Order: Trust, Contracts, Blockchain */}
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                <Home className="w-5 h-5 text-purple-600" />
+                <Home className="w-5 h-5 text-emerald-600" />
                 House Structure & Blockchain Courses
-                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded ml-2">
+                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded ml-2">
                   LuvChain Recorded
                 </span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* 5. Trust Simulator Course */}
+                {/* 5. Trust Workshop Course */}
                 <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-blue-600/10">
@@ -806,7 +806,7 @@ export default function Dashboard() {
                       </span>
                     )}
                   </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Trust Simulator</h3>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Trust Workshop</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Structure trusts, define beneficiaries, configure inheritance splits (60/40, 70/30).
                   </p>
@@ -831,7 +831,7 @@ export default function Dashboard() {
                   </div>
                 </Card>
 
-                {/* 6. Contracts Simulator Course */}
+                {/* 6. Contracts Workshop Course */}
                 <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-indigo-600">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-indigo-600/10">
@@ -844,7 +844,7 @@ export default function Dashboard() {
                       </span>
                     )}
                   </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Contracts Simulator</h3>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Contracts Workshop</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Create service agreements, vendor contracts, NDAs, partnership documents.
                   </p>
@@ -869,12 +869,12 @@ export default function Dashboard() {
                 </Card>
 
                 {/* 7. Blockchain & Crypto Course */}
-                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-emerald-600">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-full bg-purple-600/10">
-                      <Link2 className="w-8 h-8 text-purple-600" />
+                    <div className="p-3 rounded-full bg-emerald-600/10">
+                      <Link2 className="w-8 h-8 text-emerald-600" />
                     </div>
-                    <span className="px-2 py-1 bg-purple-600/20 text-purple-600 text-xs rounded-full font-bold">7</span>
+                    <span className="px-2 py-1 bg-emerald-600/20 text-emerald-600 text-xs rounded-full font-bold">7</span>
                     {courseProgress.blockchain.completed && (
                       <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
                         ✓
@@ -892,7 +892,7 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-purple-600">
+                    <span className="text-sm font-semibold text-emerald-600">
                       {courseProgress.blockchain.completed ? `${courseProgress.blockchain.tokens} LUV` : "100+ LUV"}
                     </span>
                     <Button 
@@ -927,7 +927,7 @@ export default function Dashboard() {
                       </span>
                     )}
                   </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Insurance Simulator</h3>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Insurance Workshop</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Personal & business insurance coverage. Life, health, auto, liability, D&O, cyber.
                   </p>
@@ -952,12 +952,12 @@ export default function Dashboard() {
                 </Card>
 
                 {/* 9. Entity Operations Course */}
-                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-emerald-600">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-full bg-purple-600/10">
-                      <Users className="w-8 h-8 text-purple-600" />
+                    <div className="p-3 rounded-full bg-emerald-600/10">
+                      <Users className="w-8 h-8 text-emerald-600" />
                     </div>
-                    <span className="px-2 py-1 bg-purple-600/20 text-purple-600 text-xs rounded-full font-bold">9</span>
+                    <span className="px-2 py-1 bg-emerald-600/20 text-emerald-600 text-xs rounded-full font-bold">9</span>
                     {courseProgress.operations.completed && (
                       <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
                         ✓
@@ -975,7 +975,7 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-purple-600">
+                    <span className="text-sm font-semibold text-emerald-600">
                       {courseProgress.operations.completed ? `${courseProgress.operations.tokens} LUV` : "100+ LUV"}
                     </span>
                     <Button 
@@ -991,9 +991,9 @@ export default function Dashboard() {
             </div>
 
             {/* Certificate Info */}
-            <Card className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-purple-200 dark:border-purple-800">
+            <Card className="p-4 bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 border-emerald-200 dark:border-emerald-800">
               <div className="flex items-center gap-3">
-                <Coins className="w-6 h-6 text-purple-600" />
+                <Coins className="w-6 h-6 text-emerald-600" />
                 <div>
                   <p className="font-semibold text-foreground">Certificates of Completion</p>
                   <p className="text-sm text-muted-foreground">Each completed course generates a certificate recorded to LuvChain blockchain - immutable proof of your achievements.</p>
@@ -1104,7 +1104,7 @@ export default function Dashboard() {
               LuvLedger - Blockchain Asset Management
             </h2>
 
-            <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10">
+            <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-emerald-500/10">
               <div className="flex items-start gap-4">
                 <Link2 className="w-6 h-6 text-blue-600 mt-1" />
                 <div>
@@ -1142,7 +1142,7 @@ export default function Dashboard() {
                       <span>{courseProgress.operations.tokens} LUV</span>
                     </div>
                     <div className="flex justify-between text-xs">
-                      <span>Trust Simulator</span>
+                      <span>Trust Workshop</span>
                       <span>{courseProgress.trust.tokens} LUV</span>
                     </div>
                     <div className="flex justify-between text-xs">
@@ -1277,11 +1277,11 @@ export default function Dashboard() {
               <Card className="p-12 text-center">
                 <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground mb-4">
-                  No trust relationships established yet. Complete the Trust Simulator to configure your trust structure.
+                  No trust relationships established yet. Complete the Trust Workshop to configure your trust structure.
                 </p>
                 <Button className="gap-2" onClick={() => setActiveCourse("trust")}>
                   <GraduationCap className="w-4 h-4" />
-                  Start Trust Simulator
+                  Start Trust Workshop
                 </Button>
               </Card>
             )}

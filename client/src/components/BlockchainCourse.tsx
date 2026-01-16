@@ -700,7 +700,7 @@ export default function BlockchainCourse({ onComplete, onExit, connectedEntity }
   const renderQuiz = (content: QuizContent) => (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <FileText className="w-8 h-8 text-purple-600" />
+        <FileText className="w-8 h-8 text-emerald-600" />
         <h2 className="text-2xl font-bold text-foreground">Knowledge Check</h2>
       </div>
 
@@ -846,7 +846,7 @@ export default function BlockchainCourse({ onComplete, onExit, connectedEntity }
           <div className="h-6 w-px bg-border" />
           <div className="flex items-center gap-2">
             <Link2 className="w-5 h-5 text-cyan-600" />
-            <span className="font-semibold text-foreground">Blockchain & Crypto Simulator</span>
+            <span className="font-semibold text-foreground">Blockchain & Crypto Workshop</span>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -882,7 +882,7 @@ export default function BlockchainCourse({ onComplete, onExit, connectedEntity }
           </div>
           <span className={`px-2 py-1 rounded text-xs font-semibold ${
             module.type === "lesson" ? "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-200" :
-            module.type === "quiz" ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200" :
+            module.type === "quiz" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200" :
             "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
           }`}>
             {module.type.charAt(0).toUpperCase() + module.type.slice(1)}

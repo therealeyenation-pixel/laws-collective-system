@@ -95,18 +95,18 @@ export default function FoundationDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 border-purple-200 dark:border-purple-800">
+        <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950/20 dark:to-emerald-900/20 border-emerald-200 dark:border-emerald-800">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-purple-700 dark:text-purple-300 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
               <Package className="w-4 h-4" />
               Assets
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-900 dark:text-purple-100">
+            <div className="text-2xl font-bold text-emerald-900 dark:text-emerald-100">
               {summaryLoading ? "..." : summary?.assets?.total ?? 0}
             </div>
-            <p className="text-xs text-purple-600 dark:text-purple-400">
+            <p className="text-xs text-emerald-600 dark:text-emerald-400">
               {summary?.assets?.assigned ?? 0} assigned
             </p>
           </CardContent>

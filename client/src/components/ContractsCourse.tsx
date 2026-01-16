@@ -787,7 +787,7 @@ export default function ContractsCourse({ onExit, onComplete, connectedEntity }:
     content += `### Liability Limitations\n${worksheetData.liabilityLimitations || "[To be completed]"}\n\n`;
     
     content += "---\n\n";
-    content += "*Generated through L.A.W.S. Collective Contracts Simulator*\n";
+    content += "*Generated through L.A.W.S. Collective Contracts Workshop*\n";
     content += "*All records immutably stored on LuvLedger blockchain*\n";
 
     const blob = new Blob([content], { type: "text/markdown" });
@@ -834,7 +834,7 @@ export default function ContractsCourse({ onExit, onComplete, connectedEntity }:
         </Card>
       ))}
 
-      <Card className="p-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
+      <Card className="p-6 bg-gradient-to-br from-indigo-50 to-emerald-50 dark:from-indigo-900/20 dark:to-emerald-900/20">
         <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-green-600" />
           Key Takeaways

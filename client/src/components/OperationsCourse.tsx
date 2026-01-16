@@ -675,15 +675,15 @@ export default function OperationsCourse({ onComplete, onExit }: OperationsCours
         </Card>
       ))}
 
-      <Card className="p-6 bg-purple-500/5 border-purple-500/20">
+      <Card className="p-6 bg-emerald-500/5 border-emerald-500/20">
         <div className="flex items-center gap-2 mb-3">
-          <Target className="w-5 h-5 text-purple-600" />
+          <Target className="w-5 h-5 text-emerald-600" />
           <span className="font-semibold text-foreground">Key Takeaways</span>
         </div>
         <ul className="space-y-2">
           {content.keyTakeaways.map((takeaway, i) => (
             <li key={i} className="flex items-start gap-2 text-muted-foreground">
-              <CheckCircle className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
+              <CheckCircle className="w-4 h-4 text-emerald-600 mt-1 flex-shrink-0" />
               {takeaway}
             </li>
           ))}
@@ -809,7 +809,7 @@ export default function OperationsCourse({ onComplete, onExit }: OperationsCours
       </Card>
 
       {Object.values(operationsData).some((v) => v) && (
-        <Card className="p-6 bg-purple-500/5 border-purple-500/20">
+        <Card className="p-6 bg-emerald-500/5 border-emerald-500/20">
           <h3 className="font-semibold text-foreground mb-3">Preview</h3>
           <pre className="text-sm text-muted-foreground whitespace-pre-wrap font-mono">
             {content.outputTemplate.replace(/\{\{(\w+)\}\}/g, (_, key) => (operationsData as any)[key] || `[${key}]`)}
@@ -831,7 +831,7 @@ export default function OperationsCourse({ onComplete, onExit }: OperationsCours
           <p className="text-sm text-muted-foreground">
             Module {currentModule + 1} of {operationsModules.length}
           </p>
-          <p className="font-bold text-purple-600">{totalTokens} tokens earned</p>
+          <p className="font-bold text-emerald-600">{totalTokens} tokens earned</p>
         </div>
       </div>
 
@@ -843,7 +843,7 @@ export default function OperationsCourse({ onComplete, onExit }: OperationsCours
         </div>
         <div className="w-full bg-secondary rounded-full h-2">
           <div
-            className="bg-purple-600 h-2 rounded-full transition-all duration-300"
+            className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>

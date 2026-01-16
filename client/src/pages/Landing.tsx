@@ -106,7 +106,7 @@ export default function Landing() {
       title: "SELF",
       subtitle: "Purpose & Skills",
       description: "Financial literacy, business readiness, and purposeful growth",
-      color: "bg-rose-100 text-rose-700 border-rose-300",
+      color: "bg-green-100 text-green-700 border-green-300",
     },
   ];
 

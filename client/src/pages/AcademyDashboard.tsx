@@ -39,12 +39,12 @@ const moduleIcons: Record<string, React.ReactNode> = {
 const houseColors: Record<string, string> = {
   "amber": "bg-amber-100 border-amber-300 text-amber-800",
   "emerald": "bg-emerald-100 border-emerald-300 text-emerald-800",
-  "purple": "bg-purple-100 border-purple-300 text-purple-800",
+  "purple": "bg-emerald-100 border-purple-300 text-emerald-800",
 };
 
 const languageCategoryColors: Record<string, string> = {
   "indigenous": "bg-amber-50 border-amber-200",
-  "ancestral_flame": "bg-purple-50 border-purple-200",
+  "ancestral_flame": "bg-emerald-50 border-emerald-200",
   "global_trade": "bg-blue-50 border-blue-200",
 };
 
@@ -132,7 +132,7 @@ export default function AcademyDashboard() {
                     <p className="text-3xl font-bold text-gray-900">{academyData?.stats.totalLanguages || 0}</p>
                   </div>
                   <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-2 text-purple-600 mb-2">
+                    <div className="flex items-center gap-2 text-emerald-600 mb-2">
                       <GraduationCap className="w-5 h-5" />
                       <span className="text-sm font-medium">Courses</span>
                     </div>
@@ -334,7 +334,7 @@ export default function AcademyDashboard() {
                 {/* Ancestral Flame Languages */}
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <Flame className="w-5 h-5 text-purple-600" />
+                    <Flame className="w-5 h-5 text-emerald-600" />
                     Ancestral Flame Tongues
                   </h3>
                   <div className="grid md:grid-cols-2 gap-3">
@@ -350,7 +350,7 @@ export default function AcademyDashboard() {
                             <span className="text-lg">{lang.nativeName}</span>
                           </div>
                           <p className="text-sm text-gray-600 mb-2">{lang.description}</p>
-                          <p className="text-xs text-purple-700 italic">{lang.culturalContext}</p>
+                          <p className="text-xs text-emerald-700 italic">{lang.culturalContext}</p>
                         </div>
                       ))}
                   </div>
@@ -448,7 +448,7 @@ export default function AcademyDashboard() {
 
                 {/* Mastery Courses */}
                 <div>
-                  <h3 className="text-lg font-bold text-purple-800 mb-3 flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-emerald-800 mb-3 flex items-center gap-2">
                     <GraduationCap className="w-5 h-5" />
                     Mastery Courses (House of Mastery)
                   </h3>
@@ -458,15 +458,15 @@ export default function AcademyDashboard() {
                       .map((course) => (
                         <div
                           key={course.id}
-                          className="bg-purple-50 rounded-lg p-4 border border-purple-200 hover:shadow-md transition-shadow"
+                          className="bg-emerald-50 rounded-lg p-4 border border-emerald-200 hover:shadow-md transition-shadow"
                         >
-                          <h4 className="font-bold text-purple-900 mb-1">{course.title}</h4>
-                          <p className="text-sm text-purple-700 mb-3">{course.description}</p>
+                          <h4 className="font-bold text-emerald-900 mb-1">{course.title}</h4>
+                          <p className="text-sm text-emerald-700 mb-3">{course.description}</p>
                           <div className="flex items-center justify-between">
-                            <span className="text-xs bg-purple-200 text-purple-800 px-2 py-1 rounded">
+                            <span className="text-xs bg-emerald-200 text-emerald-800 px-2 py-1 rounded">
                               {course.level}
                             </span>
-                            <span className="flex items-center gap-1 text-purple-700 font-medium">
+                            <span className="flex items-center gap-1 text-emerald-700 font-medium">
                               <Award className="w-4 h-4" />
                               {course.tokensReward} tokens
                             </span>

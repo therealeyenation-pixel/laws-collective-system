@@ -73,7 +73,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       case "academy":
         return <BookOpen className="w-4 h-4 text-green-500" />;
       case "document":
-        return <FileText className="w-4 h-4 text-purple-500" />;
+        return <FileText className="w-4 h-4 text-emerald-500" />;
       case "approval":
         return <CheckCircle className="w-4 h-4 text-emerald-500" />;
       case "alert":

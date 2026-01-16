@@ -42,7 +42,7 @@ import {
 const platformIcons: Record<string, React.ReactNode> = {
   twitter: <Twitter className="w-5 h-5 text-sky-500" />,
   facebook: <Facebook className="w-5 h-5 text-blue-600" />,
-  instagram: <Instagram className="w-5 h-5 text-pink-500" />,
+  instagram: <Instagram className="w-5 h-5 text-green-500" />,
   linkedin: <Linkedin className="w-5 h-5 text-blue-700" />,
   tiktok: <span className="text-lg">🎵</span>,
 };
@@ -50,7 +50,7 @@ const platformIcons: Record<string, React.ReactNode> = {
 const platformColors: Record<string, string> = {
   twitter: "bg-sky-50 border-sky-200",
   facebook: "bg-blue-50 border-blue-200",
-  instagram: "bg-pink-50 border-pink-200",
+  instagram: "bg-green-50 border-green-200",
   linkedin: "bg-blue-50 border-blue-200",
   tiktok: "bg-gray-50 border-gray-200",
 };

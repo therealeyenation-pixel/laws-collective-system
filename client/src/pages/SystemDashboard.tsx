@@ -42,7 +42,7 @@ const entityColors: Record<string, { color: string; borderColor: string }> = {
   trust: { color: "from-amber-500/20 to-amber-600/10", borderColor: "border-l-amber-500" },
   llc: { color: "from-blue-500/20 to-blue-600/10", borderColor: "border-l-blue-500" },
   collective: { color: "from-green-500/20 to-green-600/10", borderColor: "border-l-green-500" },
-  corporation: { color: "from-purple-500/20 to-purple-600/10", borderColor: "border-l-purple-500" },
+  corporation: { color: "from-emerald-500/20 to-emerald-600/10", borderColor: "border-l-emerald-500" },
 };
 
 // Role mapping based on financial structure

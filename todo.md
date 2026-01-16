@@ -844,3 +844,9 @@
 - [x] Implement Autonomous Certificate Generator (Scroll 36)
 - [x] Implement Trusted Credential Routing (Scroll 37)
 - [x] Implement Auto Certificate generation (Scroll 39)
+
+
+## Phase 38: UI Terminology and Color Fixes
+
+- [x] Rename "Simulator" to "Workshop" or "Builder" throughout UI
+- [x] Update pink/purple accent colors (Recorded badge, LUV text, Approval Required) to green palette

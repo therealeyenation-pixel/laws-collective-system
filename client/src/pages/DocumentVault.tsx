@@ -37,7 +37,7 @@ const documentTypeLabels: Record<DocumentType, string> = {
 const documentTypeColors: Record<DocumentType, string> = {
   business_plan: "bg-blue-100 text-blue-800",
   grant_application: "bg-green-100 text-green-800",
-  financial_statement: "bg-purple-100 text-purple-800",
+  financial_statement: "bg-emerald-100 text-emerald-800",
   legal_document: "bg-red-100 text-red-800",
   contract: "bg-orange-100 text-orange-800",
   certificate: "bg-yellow-100 text-yellow-800",
@@ -366,8 +366,8 @@ export default function DocumentVault() {
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Lock className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <Lock className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">{stats?.byType?.business_plan || 0}</p>
@@ -513,7 +513,7 @@ export default function DocumentVault() {
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleDownloadDocument(doc as Document); }}
-                        className="p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors"
+                        className="p-3 min-w-[48px] min-h-[48px] flex items-center justify-center bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 active:bg-emerald-200 transition-colors"
                         title="Download document"
                       >
                         <Download className="w-5 h-5" />
