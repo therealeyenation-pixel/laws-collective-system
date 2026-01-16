@@ -644,3 +644,15 @@
 - [x] Record certificates to LuvChain blockchain
 - [x] Update Dashboard with numbered course progression
 - [x] Add Blockchain & Crypto course (Course 7)
+
+
+## Phase 48: Insurance Simulator & Enhanced Document Generation
+- [x] Create InsuranceCourse component for personal and business coverage
+- [x] Personal insurance: Life, Health, Auto, Home, Disability
+- [x] Business insurance: General Liability, Professional Liability, Property, Workers Comp, D&O
+- [x] Add AI-assisted form completion to all simulators
+- [x] Implement intuitive guided workflows
+- [x] Generate legally sound documents with proper formatting
+- [ ] Implement House structure with CALEA Trust protection
+- [ ] Add generational inheritance logic (60/40, 70/30 splits)
+- [ ] Create living trust templates for each House/generation

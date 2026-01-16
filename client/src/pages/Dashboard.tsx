@@ -33,8 +33,9 @@ import GrantWritingCourse from "@/components/GrantWritingCourse";
 import ContractsCourse from "@/components/ContractsCourse";
 import BusinessPlanCourse from "@/components/BusinessPlanCourse";
 import BlockchainCourse from "@/components/BlockchainCourse";
+import InsuranceCourse from "@/components/InsuranceCourse";
 
-type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "operations" | null;
+type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | null;
 
 interface CourseProgress {
   business: { completed: boolean; tokens: number; data: any };
@@ -44,6 +45,7 @@ interface CourseProgress {
   trust: { completed: boolean; tokens: number; data: any };
   contracts: { completed: boolean; tokens: number; data: any };
   blockchain: { completed: boolean; tokens: number; data: any };
+  insurance: { completed: boolean; tokens: number; data: any };
   operations: { completed: boolean; tokens: number; data: any };
 }
 
@@ -58,6 +60,7 @@ export default function Dashboard() {
     trust: { completed: false, tokens: 0, data: null },
     contracts: { completed: false, tokens: 0, data: null },
     blockchain: { completed: false, tokens: 0, data: null },
+    insurance: { completed: false, tokens: 0, data: null },
     operations: { completed: false, tokens: 0, data: null },
   });
 
@@ -380,6 +383,18 @@ export default function Dashboard() {
     );
   }
 
+  if (activeCourse === "insurance") {
+    return (
+      <DashboardLayout>
+        <InsuranceCourse
+          onComplete={(tokens) => handleCourseComplete("insurance", {}, tokens)}
+          onExit={() => setActiveCourse(null)}
+          connectedEntity={getConnectedEntity()}
+        />
+      </DashboardLayout>
+    );
+  }
+
   const totalTokensEarned = 
     courseProgress.business.tokens + 
     courseProgress.businessplan.tokens +
@@ -388,6 +403,7 @@ export default function Dashboard() {
     courseProgress.trust.tokens +
     courseProgress.contracts.tokens +
     courseProgress.blockchain.tokens +
+    courseProgress.insurance.tokens +
     courseProgress.operations.tokens;
 
   const coursesCompleted = [
@@ -398,6 +414,7 @@ export default function Dashboard() {
     courseProgress.trust.completed,
     courseProgress.contracts.completed,
     courseProgress.blockchain.completed,
+    courseProgress.insurance.completed,
     courseProgress.operations.completed,
   ].filter(Boolean).length;
 
@@ -890,20 +907,57 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Operations Course - Final */}
+            {/* Insurance & Operations Courses */}
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-600" />
-                Operations & Compliance
+                <Shield className="w-5 h-5 text-cyan-600" />
+                Protection & Operations
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* 8. Entity Operations Course */}
+                {/* 8. Insurance Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-cyan-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-cyan-600/10">
+                      <Shield className="w-8 h-8 text-cyan-600" />
+                    </div>
+                    <span className="px-2 py-1 bg-cyan-600/20 text-cyan-600 text-xs rounded-full font-bold">8</span>
+                    {courseProgress.insurance.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Insurance Simulator</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Personal & business insurance coverage. Life, health, auto, liability, D&O, cyber.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">12 Modules</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Insurance portfolio, coverage assessment
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-cyan-600">
+                      {courseProgress.insurance.completed ? `${courseProgress.insurance.tokens} LUV` : "150+ LUV"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[80px]"
+                      onClick={() => setActiveCourse("insurance")}
+                    >
+                      {courseProgress.insurance.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* 9. Entity Operations Course */}
                 <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-purple-600/10">
                       <Users className="w-8 h-8 text-purple-600" />
                     </div>
-                    <span className="px-2 py-1 bg-purple-600/20 text-purple-600 text-xs rounded-full font-bold">8</span>
+                    <span className="px-2 py-1 bg-purple-600/20 text-purple-600 text-xs rounded-full font-bold">9</span>
                     {courseProgress.operations.completed && (
                       <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
                         ✓
