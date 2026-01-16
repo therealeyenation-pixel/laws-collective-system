@@ -26,6 +26,7 @@ const FAMILY_MEMBERS = [
   { id: "property-mgr", name: "TBD - Property & Assets Manager", role: "Department Manager", departments: ["Property & Assets Management", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   { id: "realestate-mgr", name: "TBD - Real Estate Manager", role: "Department Manager", departments: ["Real Estate", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   { id: "ops-admin-mgr", name: "TBD - Operations & Administration Manager", role: "Department Manager", departments: ["Operations & Administration", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
+  { id: "qaqc-mgr", name: "TBD - QA/QC Manager", role: "Department Manager", departments: ["QA/QC", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (QA/QC)" },
   // Strategic Partners
   { id: "sweet-miracles", name: "Twin Sister (Sweet Miracles)", role: "Strategic Partner", departments: ["Outreach", "Justice"], businessEntity: "Sweet Miracles", status: "active", credentials: ["Nonprofit", "Elder Abuse Prevention"], boardRole: "Honorary Advisory Member (Non-Voting)" },
 ];

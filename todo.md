@@ -1542,3 +1542,8 @@
 ## Phase 71: Add Outreach to All Positions
 
 - [x] Add Outreach to all department manager positions
+
+
+## Phase 72: Add QA/QC Position
+
+- [x] Add open QA/QC Department Manager position
