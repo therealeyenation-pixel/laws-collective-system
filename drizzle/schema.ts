@@ -4312,3 +4312,1176 @@ export const restorationCases = mysqlTable("restoration_cases", {
 
 export type RestorationCase = typeof restorationCases.$inferSelect;
 export type InsertRestorationCase = typeof restorationCases.$inferInsert;
+
+
+// ============================================
+// AUTOMATED LIFECYCLE MANAGEMENT SYSTEM
+// ============================================
+
+/**
+ * Lifecycle Events - Tracks ALL events across all entity types
+ * This is the central audit log for cradle-to-grave tracking
+ */
+export const lifecycleEvents = mysqlTable("lifecycle_events", {
+  id: int("id").autoincrement().primaryKey(),
+  // Entity identification
+  entityType: mysqlEnum("entityType", [
+    "house", "business", "property", "worker", "document", 
+    "tax_return", "restoration_case", "ledger_account", "payroll"
+  ]).notNull(),
+  entityId: int("entityId").notNull(),
+  entityName: varchar("entityName", { length: 255 }),
+  // Event details
+  eventType: mysqlEnum("eventType", [
+    "created", "activated", "updated", "deactivated", "archived",
+    "filed", "approved", "rejected", "submitted", "completed",
+    "transferred", "dissolved", "acquired", "sold", "hired", "terminated"
+  ]).notNull(),
+  eventDescription: text("eventDescription"),
+  // Ownership
+  houseId: int("houseId"),
+  userId: int("userId"),
+  // LuvLedger integration
+  luvLedgerTransactionId: int("luvLedgerTransactionId"),
+  blockchainHash: varchar("blockchainHash", { length: 128 }),
+  // Financial impact
+  financialImpact: decimal("financialImpact", { precision: 18, scale: 2 }),
+  impactType: mysqlEnum("impactType", ["income", "expense", "asset", "liability", "neutral"]),
+  // Metadata
+  metadata: json("metadata"),
+  previousState: json("previousState"),
+  newState: json("newState"),
+  // Timestamps
+  eventTimestamp: timestamp("eventTimestamp").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LifecycleEvent = typeof lifecycleEvents.$inferSelect;
+export type InsertLifecycleEvent = typeof lifecycleEvents.$inferInsert;
+
+/**
+ * Filing Workflows - Templates for automated document filing
+ */
+export const filingWorkflows = mysqlTable("filing_workflows", {
+  id: int("id").autoincrement().primaryKey(),
+  // Workflow identification
+  workflowName: varchar("workflowName", { length: 255 }).notNull(),
+  workflowCode: varchar("workflowCode", { length: 50 }).notNull(),
+  description: text("description"),
+  // Categorization
+  filingType: mysqlEnum("filingType", [
+    "state_business", "federal_business", "state_tax", "federal_tax",
+    "property", "employment", "nonprofit", "trust", "trademark", "patent"
+  ]).notNull(),
+  jurisdiction: varchar("jurisdiction", { length: 100 }), // State or "federal"
+  // Requirements
+  requiredDocuments: json("requiredDocuments"), // Array of document types needed
+  prerequisites: json("prerequisites"), // Other workflows that must complete first
+  estimatedDays: int("estimatedDays"),
+  filingFee: decimal("filingFee", { precision: 10, scale: 2 }),
+  // Automation
+  automationLevel: mysqlEnum("automationLevel", ["full", "partial", "manual"]).default("partial"),
+  apiEndpoint: varchar("apiEndpoint", { length: 500 }), // For automated filing
+  // Status
+  isActive: boolean("isActive").default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FilingWorkflow = typeof filingWorkflows.$inferSelect;
+export type InsertFilingWorkflow = typeof filingWorkflows.$inferInsert;
+
+/**
+ * Filing Tasks - Individual filing instances for a house/entity
+ */
+export const filingTasks = mysqlTable("filing_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  // Ownership
+  houseId: int("houseId").notNull(),
+  userId: int("userId").notNull(),
+  // Workflow reference
+  workflowId: int("workflowId").notNull(),
+  // Entity being filed
+  entityType: mysqlEnum("entityType", [
+    "business", "property", "worker", "tax_return", "trademark", "trust"
+  ]).notNull(),
+  entityId: int("entityId"),
+  // Task details
+  taskName: varchar("taskName", { length: 255 }).notNull(),
+  description: text("description"),
+  // Status tracking
+  status: mysqlEnum("status", [
+    "pending", "in_progress", "awaiting_documents", "submitted",
+    "under_review", "approved", "rejected", "completed", "cancelled"
+  ]).default("pending").notNull(),
+  // Dates
+  dueDate: timestamp("dueDate"),
+  submittedAt: timestamp("submittedAt"),
+  completedAt: timestamp("completedAt"),
+  // Filing details
+  confirmationNumber: varchar("confirmationNumber", { length: 100 }),
+  filingReference: varchar("filingReference", { length: 255 }),
+  rejectionReason: text("rejectionReason"),
+  // Documents
+  attachedDocuments: json("attachedDocuments"), // Array of document IDs
+  generatedDocuments: json("generatedDocuments"), // Array of generated form IDs
+  // Financial
+  feePaid: decimal("feePaid", { precision: 10, scale: 2 }),
+  feeTransactionId: int("feeTransactionId"),
+  // Automation
+  automationStatus: mysqlEnum("automationStatus", [
+    "not_started", "preparing", "ready_to_submit", "auto_submitted", "manual_required"
+  ]).default("not_started"),
+  automationLog: json("automationLog"),
+  // LuvLedger
+  ledgerTransactionId: int("ledgerTransactionId"),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FilingTask = typeof filingTasks.$inferSelect;
+export type InsertFilingTask = typeof filingTasks.$inferInsert;
+
+/**
+ * Filing Reminders - Automated reminder system for deadlines
+ */
+export const filingReminders = mysqlTable("filing_reminders", {
+  id: int("id").autoincrement().primaryKey(),
+  // Reference
+  filingTaskId: int("filingTaskId").notNull(),
+  houseId: int("houseId").notNull(),
+  userId: int("userId").notNull(),
+  // Reminder details
+  reminderType: mysqlEnum("reminderType", [
+    "upcoming_deadline", "overdue", "document_needed", "action_required", "status_update"
+  ]).notNull(),
+  message: text("message").notNull(),
+  // Scheduling
+  scheduledFor: timestamp("scheduledFor").notNull(),
+  sentAt: timestamp("sentAt"),
+  // Delivery
+  deliveryMethod: mysqlEnum("deliveryMethod", ["email", "sms", "in_app", "all"]).default("in_app"),
+  delivered: boolean("delivered").default(false),
+  // Status
+  acknowledged: boolean("acknowledged").default(false),
+  acknowledgedAt: timestamp("acknowledgedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FilingReminder = typeof filingReminders.$inferSelect;
+export type InsertFilingReminder = typeof filingReminders.$inferInsert;
+
+/**
+ * Entity Lifecycle Stages - Tracks current stage of each entity
+ */
+export const entityLifecycleStages = mysqlTable("entity_lifecycle_stages", {
+  id: int("id").autoincrement().primaryKey(),
+  // Entity identification
+  entityType: mysqlEnum("entityType", [
+    "house", "business", "property", "worker", "document", 
+    "tax_return", "restoration_case"
+  ]).notNull(),
+  entityId: int("entityId").notNull(),
+  houseId: int("houseId"),
+  // Current stage
+  currentStage: mysqlEnum("currentStage", [
+    // Creation stages
+    "draft", "pending_creation", "created", "pending_activation", "active",
+    // Operation stages
+    "operating", "on_hold", "under_review", "in_compliance",
+    // Transition stages
+    "pending_transfer", "transferring", "pending_sale", "selling",
+    // End stages
+    "pending_dissolution", "dissolving", "dissolved", "archived", "deleted"
+  ]).notNull(),
+  // Stage history
+  previousStage: varchar("previousStage", { length: 50 }),
+  stageEnteredAt: timestamp("stageEnteredAt").defaultNow().notNull(),
+  // Compliance
+  complianceStatus: mysqlEnum("complianceStatus", [
+    "compliant", "pending_review", "action_required", "non_compliant", "exempt"
+  ]).default("compliant"),
+  nextComplianceDate: timestamp("nextComplianceDate"),
+  // Automation
+  automatedTransitions: boolean("automatedTransitions").default(true),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EntityLifecycleStage = typeof entityLifecycleStages.$inferSelect;
+export type InsertEntityLifecycleStage = typeof entityLifecycleStages.$inferInsert;
+
+/**
+ * Automation Rules - Defines triggers and actions for automated processing
+ */
+export const automationRules = mysqlTable("automation_rules", {
+  id: int("id").autoincrement().primaryKey(),
+  // Rule identification
+  ruleName: varchar("ruleName", { length: 255 }).notNull(),
+  ruleCode: varchar("ruleCode", { length: 50 }).notNull(),
+  description: text("description"),
+  // Trigger conditions
+  triggerEntityType: mysqlEnum("triggerEntityType", [
+    "house", "business", "property", "worker", "document", 
+    "tax_return", "restoration_case", "ledger_account", "payroll"
+  ]).notNull(),
+  triggerEvent: mysqlEnum("triggerEvent", [
+    "created", "activated", "updated", "stage_changed", "deadline_approaching",
+    "document_uploaded", "payment_received", "filing_completed"
+  ]).notNull(),
+  triggerConditions: json("triggerConditions"), // Additional conditions
+  // Actions
+  actionType: mysqlEnum("actionType", [
+    "create_filing_task", "send_notification", "log_to_ledger",
+    "update_stage", "generate_document", "schedule_reminder", "api_call"
+  ]).notNull(),
+  actionConfig: json("actionConfig"), // Action-specific configuration
+  // Execution
+  priority: int("priority").default(5),
+  isActive: boolean("isActive").default(true),
+  lastTriggered: timestamp("lastTriggered"),
+  triggerCount: int("triggerCount").default(0),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AutomationRule = typeof automationRules.$inferSelect;
+export type InsertAutomationRule = typeof automationRules.$inferInsert;
+
+/**
+ * Demo Mode Sessions - For test mode visualization
+ */
+export const demoModeSessions = mysqlTable("demo_mode_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  // Session details
+  sessionName: varchar("sessionName", { length: 255 }),
+  scenarioType: mysqlEnum("scenarioType", [
+    "house_activation", "business_creation", "property_acquisition",
+    "worker_onboarding", "tax_filing", "restoration_case", "full_lifecycle"
+  ]).notNull(),
+  // State
+  currentStep: int("currentStep").default(0),
+  totalSteps: int("totalSteps"),
+  stepData: json("stepData"), // Array of step details
+  // Visualization
+  showLedgerEntries: boolean("showLedgerEntries").default(true),
+  showFilingProgress: boolean("showFilingProgress").default(true),
+  animationSpeed: mysqlEnum("animationSpeed", ["slow", "normal", "fast"]).default("normal"),
+  // Status
+  status: mysqlEnum("status", ["active", "paused", "completed", "cancelled"]).default("active"),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DemoModeSession = typeof demoModeSessions.$inferSelect;
+export type InsertDemoModeSession = typeof demoModeSessions.$inferInsert;
+
+
+// ============================================
+// PROFESSIONAL LEGAL DOCUMENT TEMPLATES
+// ============================================
+
+/**
+ * Document Templates - Master list of all legal form templates
+ */
+export const documentTemplates = mysqlTable("document_templates", {
+  id: int("id").autoincrement().primaryKey(),
+  // Template identification
+  templateCode: varchar("templateCode", { length: 50 }).notNull(), // e.g., "IRS_SS4", "STATE_LLC_CA"
+  templateName: varchar("templateName", { length: 255 }).notNull(),
+  description: text("description"),
+  // Categorization
+  category: mysqlEnum("category", [
+    "state_business", "federal_business", "federal_tax", "state_tax",
+    "employment", "property", "trust", "trademark", "general_legal"
+  ]).notNull(),
+  subcategory: varchar("subcategory", { length: 100 }),
+  // Jurisdiction
+  jurisdiction: varchar("jurisdiction", { length: 100 }), // "federal", "CA", "TX", etc.
+  jurisdictionName: varchar("jurisdictionName", { length: 255 }),
+  // Form specifications
+  formNumber: varchar("formNumber", { length: 50 }), // Official form number (e.g., "SS-4", "1040")
+  formRevision: varchar("formRevision", { length: 20 }), // Revision date/version
+  ombNumber: varchar("ombNumber", { length: 20 }), // OMB control number for federal forms
+  // Page specifications
+  pageCount: int("pageCount").default(1),
+  pageSize: mysqlEnum("pageSize", ["letter", "legal", "a4"]).default("letter"),
+  orientation: mysqlEnum("orientation", ["portrait", "landscape"]).default("portrait"),
+  // Margins (in inches)
+  marginTop: decimal("marginTop", { precision: 4, scale: 2 }).default("0.5"),
+  marginBottom: decimal("marginBottom", { precision: 4, scale: 2 }).default("0.5"),
+  marginLeft: decimal("marginLeft", { precision: 4, scale: 2 }).default("0.75"),
+  marginRight: decimal("marginRight", { precision: 4, scale: 2 }).default("0.75"),
+  // Font specifications
+  primaryFont: varchar("primaryFont", { length: 100 }).default("Courier"),
+  fontSize: int("fontSize").default(10),
+  // Template content
+  templateHtml: text("templateHtml"), // HTML template with placeholders
+  templateCss: text("templateCss"), // CSS for styling
+  fieldMappings: json("fieldMappings"), // Maps database fields to form fields
+  // Validation rules
+  validationRules: json("validationRules"),
+  requiredFields: json("requiredFields"),
+  // Filing information
+  filingInstructions: text("filingInstructions"),
+  filingAddress: text("filingAddress"),
+  filingUrl: varchar("filingUrl", { length: 500 }),
+  filingFee: decimal("filingFee", { precision: 10, scale: 2 }),
+  // Status
+  isActive: boolean("isActive").default(true),
+  effectiveDate: timestamp("effectiveDate"),
+  expirationDate: timestamp("expirationDate"),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DocumentTemplate = typeof documentTemplates.$inferSelect;
+export type InsertDocumentTemplate = typeof documentTemplates.$inferInsert;
+
+/**
+ * Generated Documents - Actual documents created from templates
+ */
+export const generatedDocuments = mysqlTable("generated_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  // Ownership
+  houseId: int("houseId").notNull(),
+  userId: int("userId").notNull(),
+  // Template reference
+  templateId: int("templateId").notNull(),
+  templateCode: varchar("templateCode", { length: 50 }).notNull(),
+  // Entity reference
+  entityType: mysqlEnum("entityType", [
+    "business", "property", "worker", "tax_return", "trust", "trademark"
+  ]).notNull(),
+  entityId: int("entityId"),
+  // Document details
+  documentName: varchar("documentName", { length: 255 }).notNull(),
+  documentNumber: varchar("documentNumber", { length: 100 }), // Internal tracking number
+  // Data used to generate
+  formData: json("formData").notNull(), // All field values used
+  // Generated files
+  pdfUrl: varchar("pdfUrl", { length: 500 }),
+  pdfKey: varchar("pdfKey", { length: 255 }),
+  htmlContent: text("htmlContent"),
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "generated", "reviewed", "signed", "filed", "accepted", "rejected"
+  ]).default("draft").notNull(),
+  // Signatures
+  signatureRequired: boolean("signatureRequired").default(false),
+  signedAt: timestamp("signedAt"),
+  signedBy: varchar("signedBy", { length: 255 }),
+  signatureData: text("signatureData"), // Base64 signature image or digital sig
+  // Filing tracking
+  filedAt: timestamp("filedAt"),
+  filingMethod: mysqlEnum("filingMethod", ["mail", "online", "in_person", "fax"]),
+  confirmationNumber: varchar("confirmationNumber", { length: 100 }),
+  acceptedAt: timestamp("acceptedAt"),
+  rejectionReason: text("rejectionReason"),
+  // LuvLedger
+  ledgerTransactionId: int("ledgerTransactionId"),
+  // Timestamps
+  generatedAt: timestamp("generatedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GeneratedDocument = typeof generatedDocuments.$inferSelect;
+export type InsertGeneratedDocument = typeof generatedDocuments.$inferInsert;
+
+/**
+ * Document Field Definitions - Defines all fields for each template
+ */
+export const documentFieldDefinitions = mysqlTable("document_field_definitions", {
+  id: int("id").autoincrement().primaryKey(),
+  templateId: int("templateId").notNull(),
+  // Field identification
+  fieldCode: varchar("fieldCode", { length: 100 }).notNull(),
+  fieldLabel: varchar("fieldLabel", { length: 255 }).notNull(),
+  // Field type
+  fieldType: mysqlEnum("fieldType", [
+    "text", "number", "date", "checkbox", "radio", "select",
+    "ssn", "ein", "phone", "email", "address", "currency", "signature"
+  ]).notNull(),
+  // Position on form (for PDF placement)
+  pageNumber: int("pageNumber").default(1),
+  positionX: decimal("positionX", { precision: 6, scale: 2 }), // inches from left
+  positionY: decimal("positionY", { precision: 6, scale: 2 }), // inches from top
+  width: decimal("width", { precision: 6, scale: 2 }),
+  height: decimal("height", { precision: 6, scale: 2 }),
+  // Formatting
+  fontSize: int("fontSize"),
+  fontWeight: varchar("fontWeight", { length: 20 }),
+  textAlign: mysqlEnum("textAlign", ["left", "center", "right"]).default("left"),
+  maxLength: int("maxLength"),
+  // Data source mapping
+  dataSource: varchar("dataSource", { length: 255 }), // e.g., "business.legalName", "user.ssn"
+  defaultValue: varchar("defaultValue", { length: 500 }),
+  // Validation
+  isRequired: boolean("isRequired").default(false),
+  validationPattern: varchar("validationPattern", { length: 500 }),
+  validationMessage: varchar("validationMessage", { length: 255 }),
+  // Options for select/radio
+  options: json("options"),
+  // Display order
+  displayOrder: int("displayOrder").default(0),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DocumentFieldDefinition = typeof documentFieldDefinitions.$inferSelect;
+export type InsertDocumentFieldDefinition = typeof documentFieldDefinitions.$inferInsert;
+
+
+// ============================================
+// INTERNATIONAL OPERATIONS & MULTI-JURISDICTIONAL
+// ============================================
+
+/**
+ * International Jurisdictions - Countries and their legal frameworks
+ */
+export const internationalJurisdictions = mysqlTable("international_jurisdictions", {
+  id: int("id").autoincrement().primaryKey(),
+  // Jurisdiction identification
+  countryCode: varchar("countryCode", { length: 3 }).notNull(), // ISO 3166-1 alpha-3
+  countryName: varchar("countryName", { length: 255 }).notNull(),
+  region: mysqlEnum("region", [
+    "north_america", "south_america", "europe", "africa", 
+    "asia", "oceania", "caribbean", "middle_east"
+  ]).notNull(),
+  // Legal framework
+  legalSystem: mysqlEnum("legalSystem", [
+    "common_law", "civil_law", "religious_law", "customary_law", "mixed"
+  ]).notNull(),
+  currency: varchar("currency", { length: 3 }).notNull(), // ISO 4217
+  currencyName: varchar("currencyName", { length: 100 }),
+  // Tax information
+  corporateTaxRate: decimal("corporateTaxRate", { precision: 5, scale: 2 }),
+  vatRate: decimal("vatRate", { precision: 5, scale: 2 }),
+  withholdingTaxRate: decimal("withholdingTaxRate", { precision: 5, scale: 2 }),
+  hasTaxTreatyWithUS: boolean("hasTaxTreatyWithUS").default(false),
+  taxTreatyDetails: text("taxTreatyDetails"),
+  // Nonprofit/charity status
+  nonprofitRecognition: boolean("nonprofitRecognition").default(false),
+  charityRegistrationRequired: boolean("charityRegistrationRequired").default(false),
+  charityRegistrationAuthority: varchar("charityRegistrationAuthority", { length: 255 }),
+  // Banking
+  swiftRequired: boolean("swiftRequired").default(true),
+  ibanRequired: boolean("ibanRequired").default(false),
+  // Compliance
+  fatcaParticipant: boolean("fatcaParticipant").default(false),
+  crsParticipant: boolean("crsParticipant").default(false),
+  amlRequirements: text("amlRequirements"),
+  kycRequirements: text("kycRequirements"),
+  // Entity types available
+  availableEntityTypes: json("availableEntityTypes"),
+  // Status
+  isActive: boolean("isActive").default(true),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type InternationalJurisdiction = typeof internationalJurisdictions.$inferSelect;
+export type InsertInternationalJurisdiction = typeof internationalJurisdictions.$inferInsert;
+
+/**
+ * Foreign Entities - International subsidiaries and affiliates
+ */
+export const foreignEntities = mysqlTable("foreign_entities", {
+  id: int("id").autoincrement().primaryKey(),
+  // Ownership
+  houseId: int("houseId").notNull(),
+  parentEntityId: int("parentEntityId"), // US parent entity
+  // Entity identification
+  entityName: varchar("entityName", { length: 255 }).notNull(),
+  tradingName: varchar("tradingName", { length: 255 }),
+  registrationNumber: varchar("registrationNumber", { length: 100 }),
+  taxId: varchar("taxId", { length: 100 }),
+  vatNumber: varchar("vatNumber", { length: 100 }),
+  // Jurisdiction
+  jurisdictionId: int("jurisdictionId").notNull(),
+  countryCode: varchar("countryCode", { length: 3 }).notNull(),
+  // Entity type
+  entityType: mysqlEnum("entityType", [
+    // UK
+    "uk_ltd", "uk_plc", "uk_llp", "uk_cic",
+    // EU
+    "eu_gmbh", "eu_ag", "eu_bv", "eu_sarl", "eu_sas",
+    // Offshore
+    "nevis_llc", "cook_islands_trust", "cayman_exempt",
+    "bvi_bc", "panama_sa", "seychelles_ibc",
+    // Asia
+    "hk_limited", "singapore_pte", "dubai_fze",
+    // Other
+    "foreign_nonprofit", "foreign_branch", "representative_office"
+  ]).notNull(),
+  // Status
+  status: mysqlEnum("status", [
+    "pending_formation", "active", "dormant", "dissolved", "struck_off"
+  ]).default("pending_formation").notNull(),
+  // Dates
+  incorporationDate: timestamp("incorporationDate"),
+  financialYearEnd: varchar("financialYearEnd", { length: 10 }), // MM-DD
+  // Address
+  registeredAddress: text("registeredAddress"),
+  businessAddress: text("businessAddress"),
+  // Officers
+  directors: json("directors"),
+  shareholders: json("shareholders"),
+  secretary: varchar("secretary", { length: 255 }),
+  // Banking
+  bankName: varchar("bankName", { length: 255 }),
+  bankAccountNumber: varchar("bankAccountNumber", { length: 100 }),
+  bankSwiftCode: varchar("bankSwiftCode", { length: 20 }),
+  bankIban: varchar("bankIban", { length: 50 }),
+  // Compliance
+  annualReturnDue: timestamp("annualReturnDue"),
+  lastAnnualReturn: timestamp("lastAnnualReturn"),
+  auditRequired: boolean("auditRequired").default(false),
+  // LuvLedger
+  luvLedgerAccountId: int("luvLedgerAccountId"),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ForeignEntity = typeof foreignEntities.$inferSelect;
+export type InsertForeignEntity = typeof foreignEntities.$inferInsert;
+
+/**
+ * International Trusts - Offshore asset protection trusts
+ */
+export const internationalTrusts = mysqlTable("international_trusts", {
+  id: int("id").autoincrement().primaryKey(),
+  // Ownership
+  houseId: int("houseId").notNull(),
+  // Trust identification
+  trustName: varchar("trustName", { length: 255 }).notNull(),
+  trustType: mysqlEnum("trustType", [
+    "asset_protection", "dynasty", "charitable", "spendthrift",
+    "discretionary", "fixed_interest", "purpose", "hybrid"
+  ]).notNull(),
+  // Jurisdiction
+  jurisdictionId: int("jurisdictionId").notNull(),
+  countryCode: varchar("countryCode", { length: 3 }).notNull(),
+  governingLaw: varchar("governingLaw", { length: 255 }),
+  // Parties
+  settlor: json("settlor"), // Person creating the trust
+  trustees: json("trustees"), // Legal owners
+  protector: json("protector"), // Oversees trustees
+  beneficiaries: json("beneficiaries"),
+  // Trust details
+  trustDeed: text("trustDeed"),
+  letterOfWishes: text("letterOfWishes"),
+  // Assets
+  initialSettlement: decimal("initialSettlement", { precision: 18, scale: 2 }),
+  currentValue: decimal("currentValue", { precision: 18, scale: 2 }),
+  assets: json("assets"),
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "established", "active", "frozen", "terminated"
+  ]).default("draft").notNull(),
+  establishedDate: timestamp("establishedDate"),
+  terminationDate: timestamp("terminationDate"),
+  // Compliance
+  usReportingRequired: boolean("usReportingRequired").default(true),
+  form3520Filed: boolean("form3520Filed").default(false),
+  form3520ADue: timestamp("form3520ADue"),
+  // LuvLedger
+  luvLedgerAccountId: int("luvLedgerAccountId"),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type InternationalTrust = typeof internationalTrusts.$inferSelect;
+export type InsertInternationalTrust = typeof internationalTrusts.$inferInsert;
+
+/**
+ * Tax Treaties - US tax treaty information
+ */
+export const taxTreaties = mysqlTable("tax_treaties", {
+  id: int("id").autoincrement().primaryKey(),
+  countryCode: varchar("countryCode", { length: 3 }).notNull(),
+  countryName: varchar("countryName", { length: 255 }).notNull(),
+  // Treaty details
+  treatyYear: int("treatyYear"),
+  effectiveDate: timestamp("effectiveDate"),
+  // Withholding rates
+  dividendRate: decimal("dividendRate", { precision: 5, scale: 2 }),
+  interestRate: decimal("interestRate", { precision: 5, scale: 2 }),
+  royaltyRate: decimal("royaltyRate", { precision: 5, scale: 2 }),
+  // Special provisions
+  limitationOnBenefits: boolean("limitationOnBenefits").default(false),
+  exchangeOfInformation: boolean("exchangeOfInformation").default(true),
+  arbitrationProvision: boolean("arbitrationProvision").default(false),
+  // Documentation
+  treatyText: text("treatyText"),
+  technicalExplanation: text("technicalExplanation"),
+  // Status
+  isActive: boolean("isActive").default(true),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TaxTreaty = typeof taxTreaties.$inferSelect;
+export type InsertTaxTreaty = typeof taxTreaties.$inferInsert;
+
+/**
+ * International Compliance Filings - FATCA, CRS, FBAR tracking
+ */
+export const internationalComplianceFilings = mysqlTable("international_compliance_filings", {
+  id: int("id").autoincrement().primaryKey(),
+  // Ownership
+  houseId: int("houseId").notNull(),
+  entityId: int("entityId"), // Foreign entity or trust
+  entityType: mysqlEnum("entityType", ["foreign_entity", "international_trust", "foreign_account"]).notNull(),
+  // Filing type
+  filingType: mysqlEnum("filingType", [
+    "fbar", "fatca_8938", "form_3520", "form_3520a", "form_5471",
+    "form_5472", "form_8865", "form_8858", "crs_report"
+  ]).notNull(),
+  // Filing details
+  taxYear: int("taxYear").notNull(),
+  dueDate: timestamp("dueDate").notNull(),
+  extendedDueDate: timestamp("extendedDueDate"),
+  // Status
+  status: mysqlEnum("status", [
+    "not_started", "in_progress", "ready_to_file", "filed", "accepted", "rejected"
+  ]).default("not_started").notNull(),
+  filedDate: timestamp("filedDate"),
+  confirmationNumber: varchar("confirmationNumber", { length: 100 }),
+  // Document
+  documentId: int("documentId"),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type InternationalComplianceFiling = typeof internationalComplianceFilings.$inferSelect;
+export type InsertInternationalComplianceFiling = typeof internationalComplianceFilings.$inferInsert;
+
+/**
+ * Foreign Bank Accounts - For FBAR reporting
+ */
+export const foreignBankAccounts = mysqlTable("foreign_bank_accounts", {
+  id: int("id").autoincrement().primaryKey(),
+  // Ownership
+  houseId: int("houseId").notNull(),
+  userId: int("userId").notNull(),
+  foreignEntityId: int("foreignEntityId"),
+  // Bank details
+  bankName: varchar("bankName", { length: 255 }).notNull(),
+  bankAddress: text("bankAddress"),
+  countryCode: varchar("countryCode", { length: 3 }).notNull(),
+  // Account details
+  accountNumber: varchar("accountNumber", { length: 100 }).notNull(),
+  accountType: mysqlEnum("accountType", [
+    "checking", "savings", "investment", "securities", "other"
+  ]).notNull(),
+  currency: varchar("currency", { length: 3 }).notNull(),
+  // Routing
+  swiftCode: varchar("swiftCode", { length: 20 }),
+  iban: varchar("iban", { length: 50 }),
+  routingNumber: varchar("routingNumber", { length: 50 }),
+  // Balance tracking (for FBAR threshold)
+  maxBalanceThisYear: decimal("maxBalanceThisYear", { precision: 18, scale: 2 }),
+  currentBalance: decimal("currentBalance", { precision: 18, scale: 2 }),
+  lastBalanceUpdate: timestamp("lastBalanceUpdate"),
+  // FBAR
+  fbarReportable: boolean("fbarReportable").default(false),
+  lastFbarYear: int("lastFbarYear"),
+  // Status
+  status: mysqlEnum("status", ["active", "closed", "frozen"]).default("active").notNull(),
+  openedDate: timestamp("openedDate"),
+  closedDate: timestamp("closedDate"),
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ForeignBankAccount = typeof foreignBankAccounts.$inferSelect;
+export type InsertForeignBankAccount = typeof foreignBankAccounts.$inferInsert;
+
+
+// ============================================
+// COMMUNITY SHARE FUND & REVENUE SHARING
+// ============================================
+
+/**
+ * Community Funds - Designated allocation pools from the 40% Community Share
+ * Each House can configure their own allocation percentages
+ */
+export const communityFunds = mysqlTable("community_funds", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  // Fund identification
+  fundName: varchar("fundName", { length: 255 }).notNull(),
+  fundCode: varchar("fundCode", { length: 50 }).notNull(), // e.g., "LAND", "EDU", "EMERGENCY"
+  fundType: mysqlEnum("fundType", [
+    "land_acquisition",      // Land & Property Acquisition
+    "education",             // Education & Scholarship
+    "emergency",             // Emergency Assistance
+    "business_development",  // Business Development
+    "cultural_preservation", // Cultural Preservation
+    "discretionary",         // Discretionary/Voting
+    "custom"                 // Custom fund type
+  ]).notNull(),
+  description: text("description"),
+  // Allocation
+  allocationPercentage: decimal("allocationPercentage", { precision: 5, scale: 2 }).notNull(), // % of 40% community share
+  // Balances
+  currentBalance: decimal("currentBalance", { precision: 18, scale: 2 }).default("0"),
+  totalContributions: decimal("totalContributions", { precision: 18, scale: 2 }).default("0"),
+  totalDisbursements: decimal("totalDisbursements", { precision: 18, scale: 2 }).default("0"),
+  // Rules
+  minimumBalance: decimal("minimumBalance", { precision: 18, scale: 2 }).default("0"),
+  requiresApproval: boolean("requiresApproval").default(true),
+  approvalThreshold: decimal("approvalThreshold", { precision: 18, scale: 2 }), // Amount above which approval needed
+  // Status
+  isActive: boolean("isActive").default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CommunityFund = typeof communityFunds.$inferSelect;
+export type InsertCommunityFund = typeof communityFunds.$inferInsert;
+
+/**
+ * Fund Contributions - Track money flowing INTO community funds
+ */
+export const fundContributions = mysqlTable("fund_contributions", {
+  id: int("id").autoincrement().primaryKey(),
+  fundId: int("fundId").notNull(),
+  houseId: int("houseId").notNull(),
+  // Source
+  sourceType: mysqlEnum("sourceType", [
+    "revenue_share",     // From 70/30 split
+    "direct_donation",   // Direct contribution
+    "grant_allocation",  // From grant funds
+    "investment_return", // Investment returns
+    "transfer_in"        // Transfer from another fund
+  ]).notNull(),
+  sourceEntityType: varchar("sourceEntityType", { length: 50 }), // business, property, etc.
+  sourceEntityId: int("sourceEntityId"),
+  sourceEntityName: varchar("sourceEntityName", { length: 255 }),
+  // Amount
+  grossAmount: decimal("grossAmount", { precision: 18, scale: 2 }).notNull(),
+  netAmount: decimal("netAmount", { precision: 18, scale: 2 }).notNull(), // After any fees
+  currency: varchar("currency", { length: 10 }).default("USD"),
+  // Calculation trail
+  parentTransactionId: int("parentTransactionId"), // Original revenue transaction
+  splitPercentage: decimal("splitPercentage", { precision: 5, scale: 2 }), // % that went to this fund
+  calculationNotes: text("calculationNotes"), // e.g., "30% of $1000 revenue = $300, 40% community = $120, 25% to education = $30"
+  // LuvLedger
+  ledgerTransactionId: int("ledgerTransactionId"),
+  blockchainHash: varchar("blockchainHash", { length: 128 }),
+  // Status
+  status: mysqlEnum("status", ["pending", "confirmed", "reversed"]).default("confirmed"),
+  contributedAt: timestamp("contributedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FundContribution = typeof fundContributions.$inferSelect;
+export type InsertFundContribution = typeof fundContributions.$inferInsert;
+
+/**
+ * Fund Disbursements - Track money flowing OUT of community funds
+ */
+export const fundDisbursements = mysqlTable("fund_disbursements", {
+  id: int("id").autoincrement().primaryKey(),
+  fundId: int("fundId").notNull(),
+  houseId: int("houseId").notNull(),
+  // Purpose
+  purposeType: mysqlEnum("purposeType", [
+    "property_purchase",     // Land/property acquisition
+    "scholarship",           // Education scholarship
+    "tuition_assistance",    // Tuition payment
+    "emergency_grant",       // Emergency assistance
+    "business_loan",         // Business development loan
+    "business_grant",        // Business development grant
+    "cultural_event",        // Cultural preservation event
+    "cultural_project",      // Cultural preservation project
+    "community_vote",        // Discretionary - community voted
+    "administrative",        // Administrative expenses
+    "transfer_out"           // Transfer to another fund
+  ]).notNull(),
+  description: text("description").notNull(),
+  // Recipient
+  recipientType: mysqlEnum("recipientType", [
+    "house_member", "house", "external_entity", "vendor", "institution", "fund"
+  ]).notNull(),
+  recipientId: int("recipientId"),
+  recipientName: varchar("recipientName", { length: 255 }).notNull(),
+  // Amount
+  requestedAmount: decimal("requestedAmount", { precision: 18, scale: 2 }).notNull(),
+  approvedAmount: decimal("approvedAmount", { precision: 18, scale: 2 }),
+  disbursedAmount: decimal("disbursedAmount", { precision: 18, scale: 2 }),
+  currency: varchar("currency", { length: 10 }).default("USD"),
+  // Approval workflow
+  status: mysqlEnum("status", [
+    "draft", "pending_approval", "approved", "rejected", 
+    "processing", "disbursed", "cancelled", "refunded"
+  ]).default("draft").notNull(),
+  requestedBy: int("requestedBy").notNull(),
+  approvedBy: int("approvedBy"),
+  approvalNotes: text("approvalNotes"),
+  rejectionReason: text("rejectionReason"),
+  // Documentation
+  supportingDocuments: json("supportingDocuments"), // Array of document IDs
+  receiptDocuments: json("receiptDocuments"), // Proof of disbursement
+  // LuvLedger
+  ledgerTransactionId: int("ledgerTransactionId"),
+  blockchainHash: varchar("blockchainHash", { length: 128 }),
+  // Dates
+  requestedAt: timestamp("requestedAt").defaultNow().notNull(),
+  approvedAt: timestamp("approvedAt"),
+  disbursedAt: timestamp("disbursedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FundDisbursement = typeof fundDisbursements.$inferSelect;
+export type InsertFundDisbursement = typeof fundDisbursements.$inferInsert;
+
+/**
+ * Revenue Sharing Events - Audit trail for automatic 70/30 splits
+ */
+export const revenueSharingEvents = mysqlTable("revenue_sharing_events", {
+  id: int("id").autoincrement().primaryKey(),
+  // Source entity (the one that earned the revenue)
+  sourceEntityType: mysqlEnum("sourceEntityType", [
+    "business", "property", "service", "grant", "investment", "other"
+  ]).notNull(),
+  sourceEntityId: int("sourceEntityId").notNull(),
+  sourceEntityName: varchar("sourceEntityName", { length: 255 }),
+  sourceHouseId: int("sourceHouseId").notNull(),
+  // Parent House (receives the 30%)
+  parentHouseId: int("parentHouseId").notNull(),
+  parentHouseName: varchar("parentHouseName", { length: 255 }),
+  // Revenue details
+  grossRevenue: decimal("grossRevenue", { precision: 18, scale: 2 }).notNull(),
+  revenueType: mysqlEnum("revenueType", [
+    "sales", "service_fee", "licensing", "royalty", "rental_income",
+    "grant_award", "investment_return", "dividend", "other"
+  ]).notNull(),
+  revenueDescription: text("revenueDescription"),
+  // Split calculation
+  entityRetainedAmount: decimal("entityRetainedAmount", { precision: 18, scale: 2 }).notNull(), // 70%
+  platformFeeAmount: decimal("platformFeeAmount", { precision: 18, scale: 2 }).notNull(), // 30%
+  platformFeePercentage: decimal("platformFeePercentage", { precision: 5, scale: 2 }).default("30.00"),
+  // Platform fee justification (legal requirement)
+  feeJustification: mysqlEnum("feeJustification", [
+    "platform_services",      // LuvLedger, document generation, etc.
+    "administrative_services", // Accounting, compliance, etc.
+    "training_support",        // Education and training provided
+    "technology_infrastructure", // Platform hosting, maintenance
+    "compliance_monitoring",   // Legal and regulatory compliance
+    "combined_services"        // Multiple services
+  ]).default("combined_services"),
+  servicesProvided: json("servicesProvided"), // Array of specific services
+  // House internal split (60/40 on the 30%)
+  reserveAmount: decimal("reserveAmount", { precision: 18, scale: 2 }), // 60% of 30%
+  communityShareAmount: decimal("communityShareAmount", { precision: 18, scale: 2 }), // 40% of 30%
+  // Fund allocations (breakdown of community share)
+  fundAllocations: json("fundAllocations"), // { fundId: amount, ... }
+  // LuvLedger transactions
+  sourceLedgerTransactionId: int("sourceLedgerTransactionId"),
+  parentLedgerTransactionId: int("parentLedgerTransactionId"),
+  blockchainHash: varchar("blockchainHash", { length: 128 }),
+  // Status
+  status: mysqlEnum("status", ["pending", "processed", "failed", "reversed"]).default("pending"),
+  processedAt: timestamp("processedAt"),
+  errorMessage: text("errorMessage"),
+  // Timestamps
+  revenueDate: timestamp("revenueDate").notNull(), // When revenue was earned
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RevenueSharingEvent = typeof revenueSharingEvents.$inferSelect;
+export type InsertRevenueSharingEvent = typeof revenueSharingEvents.$inferInsert;
+
+/**
+ * Platform Services Agreement - Legal documentation for fee justification
+ */
+export const platformServicesAgreements = mysqlTable("platform_services_agreements", {
+  id: int("id").autoincrement().primaryKey(),
+  // Parties
+  parentHouseId: int("parentHouseId").notNull(),
+  subsidiaryEntityType: mysqlEnum("subsidiaryEntityType", [
+    "business", "property", "trust", "nonprofit"
+  ]).notNull(),
+  subsidiaryEntityId: int("subsidiaryEntityId").notNull(),
+  subsidiaryEntityName: varchar("subsidiaryEntityName", { length: 255 }).notNull(),
+  // Agreement details
+  agreementNumber: varchar("agreementNumber", { length: 50 }).notNull(),
+  effectiveDate: timestamp("effectiveDate").notNull(),
+  terminationDate: timestamp("terminationDate"),
+  // Fee structure
+  platformFeePercentage: decimal("platformFeePercentage", { precision: 5, scale: 2 }).default("30.00"),
+  minimumMonthlyFee: decimal("minimumMonthlyFee", { precision: 10, scale: 2 }),
+  maximumMonthlyFee: decimal("maximumMonthlyFee", { precision: 10, scale: 2 }),
+  // Services included
+  servicesIncluded: json("servicesIncluded"), // Array of service descriptions
+  // Legal
+  governingLaw: varchar("governingLaw", { length: 100 }), // State/jurisdiction
+  disputeResolution: mysqlEnum("disputeResolution", [
+    "arbitration", "mediation", "litigation", "internal"
+  ]).default("internal"),
+  // Document
+  documentId: int("documentId"), // Reference to generated document
+  signedDocumentUrl: varchar("signedDocumentUrl", { length: 500 }),
+  // Signatures
+  parentSignedBy: int("parentSignedBy"),
+  parentSignedAt: timestamp("parentSignedAt"),
+  subsidiarySignedBy: int("subsidiarySignedBy"),
+  subsidiarySignedAt: timestamp("subsidiarySignedAt"),
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "pending_signatures", "active", "amended", "terminated", "expired"
+  ]).default("draft"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PlatformServicesAgreement = typeof platformServicesAgreements.$inferSelect;
+export type InsertPlatformServicesAgreement = typeof platformServicesAgreements.$inferInsert;
+
+
+// ============================================
+// HEIR DISTRIBUTION SYSTEM
+// ============================================
+
+/**
+ * House Heirs - Designated beneficiaries with locked distribution percentages
+ * Percentages are locked once established to ensure sustainable generational wealth
+ */
+export const houseHeirs = mysqlTable("house_heirs", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  // Heir identification
+  userId: int("userId"), // If heir is a registered user
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  relationship: mysqlEnum("relationship", [
+    "child", "grandchild", "great_grandchild", "spouse", "sibling",
+    "niece_nephew", "cousin", "adopted", "guardian_ward", "other"
+  ]).notNull(),
+  dateOfBirth: timestamp("dateOfBirth"),
+  // Contact (for non-registered heirs)
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  address: text("address"),
+  // Distribution percentage (LOCKED after establishment)
+  distributionPercentage: decimal("distributionPercentage", { precision: 5, scale: 2 }).notNull(),
+  percentageLocked: boolean("percentageLocked").default(false),
+  percentageLockedAt: timestamp("percentageLockedAt"),
+  percentageLockedBy: int("percentageLockedBy"),
+  // Vesting status
+  vestingStatus: mysqlEnum("vestingStatus", [
+    "not_started", "partial", "fully_vested", "forfeited"
+  ]).default("not_started"),
+  vestedPercentage: decimal("vestedPercentage", { precision: 5, scale: 2 }).default("0"),
+  // Distribution preferences
+  distributionMethod: mysqlEnum("distributionMethod", [
+    "immediate",      // Distribute as earned
+    "accumulate",     // Hold in accumulation account
+    "hybrid"          // Partial immediate, partial accumulate
+  ]).default("accumulate"),
+  accumulationPercentage: decimal("accumulationPercentage", { precision: 5, scale: 2 }).default("100"), // % to accumulate if hybrid
+  // Spendthrift protection
+  spendthriftEnabled: boolean("spendthriftEnabled").default(true),
+  // Status
+  status: mysqlEnum("status", ["active", "suspended", "removed", "deceased"]).default("active"),
+  designatedAt: timestamp("designatedAt").defaultNow().notNull(),
+  designatedBy: int("designatedBy").notNull(),
+  // Legal documentation
+  designationDocumentId: int("designationDocumentId"),
+  // Totals
+  totalDistributed: decimal("totalDistributed", { precision: 18, scale: 2 }).default("0"),
+  totalAccumulated: decimal("totalAccumulated", { precision: 18, scale: 2 }).default("0"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseHeir = typeof houseHeirs.$inferSelect;
+export type InsertHouseHeir = typeof houseHeirs.$inferInsert;
+
+/**
+ * Heir Vesting Schedules - Milestone-based vesting for heir distributions
+ */
+export const heirVestingSchedules = mysqlTable("heir_vesting_schedules", {
+  id: int("id").autoincrement().primaryKey(),
+  heirId: int("heirId").notNull(),
+  houseId: int("houseId").notNull(),
+  // Vesting milestone
+  milestoneType: mysqlEnum("milestoneType", [
+    "age",              // Reach specific age
+    "education",        // Complete education level
+    "house_participation", // Active in House activities
+    "business_completion", // Complete business workshop
+    "time_based",       // Time since designation
+    "custom"            // Custom condition
+  ]).notNull(),
+  // Milestone details
+  milestoneName: varchar("milestoneName", { length: 255 }).notNull(),
+  milestoneDescription: text("milestoneDescription"),
+  // For age-based
+  targetAge: int("targetAge"),
+  // For education-based
+  educationLevel: mysqlEnum("educationLevel", [
+    "high_school", "associates", "bachelors", "masters", "doctorate", "trade_certification"
+  ]),
+  // For time-based
+  vestingMonths: int("vestingMonths"), // Months from designation
+  // Vesting percentage at this milestone
+  vestingPercentage: decimal("vestingPercentage", { precision: 5, scale: 2 }).notNull(),
+  // Status
+  status: mysqlEnum("status", ["pending", "achieved", "waived", "expired"]).default("pending"),
+  achievedAt: timestamp("achievedAt"),
+  verifiedBy: int("verifiedBy"),
+  verificationNotes: text("verificationNotes"),
+  // Order
+  milestoneOrder: int("milestoneOrder").default(1),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type HeirVestingSchedule = typeof heirVestingSchedules.$inferSelect;
+export type InsertHeirVestingSchedule = typeof heirVestingSchedules.$inferInsert;
+
+/**
+ * Heir Distributions - Record of automatic distributions to heirs
+ */
+export const heirDistributions = mysqlTable("heir_distributions", {
+  id: int("id").autoincrement().primaryKey(),
+  heirId: int("heirId").notNull(),
+  houseId: int("houseId").notNull(),
+  // Source
+  sourceType: mysqlEnum("sourceType", [
+    "community_share",    // From 40% community share
+    "direct_gift",        // Direct gift to heir
+    "vesting_release",    // Released from vesting
+    "accumulation_release" // Released from accumulation
+  ]).notNull(),
+  sourceEventId: int("sourceEventId"), // Revenue sharing event ID
+  // Amount calculation
+  grossAmount: decimal("grossAmount", { precision: 18, scale: 2 }).notNull(),
+  heirPercentage: decimal("heirPercentage", { precision: 5, scale: 2 }).notNull(),
+  vestedPercentage: decimal("vestedPercentage", { precision: 5, scale: 2 }).notNull(),
+  netAmount: decimal("netAmount", { precision: 18, scale: 2 }).notNull(), // After vesting adjustment
+  // Distribution vs Accumulation
+  distributedAmount: decimal("distributedAmount", { precision: 18, scale: 2 }).default("0"),
+  accumulatedAmount: decimal("accumulatedAmount", { precision: 18, scale: 2 }).default("0"),
+  // Calculation trail
+  calculationNotes: text("calculationNotes"),
+  // LuvLedger
+  ledgerTransactionId: int("ledgerTransactionId"),
+  blockchainHash: varchar("blockchainHash", { length: 128 }),
+  // Status
+  status: mysqlEnum("status", ["pending", "processed", "held", "released", "reversed"]).default("processed"),
+  processedAt: timestamp("processedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type HeirDistribution = typeof heirDistributions.$inferSelect;
+export type InsertHeirDistribution = typeof heirDistributions.$inferInsert;
+
+/**
+ * Heir Accumulation Accounts - Holds distributions until release conditions met
+ */
+export const heirAccumulationAccounts = mysqlTable("heir_accumulation_accounts", {
+  id: int("id").autoincrement().primaryKey(),
+  heirId: int("heirId").notNull(),
+  houseId: int("houseId").notNull(),
+  // Balance
+  currentBalance: decimal("currentBalance", { precision: 18, scale: 2 }).default("0"),
+  totalDeposits: decimal("totalDeposits", { precision: 18, scale: 2 }).default("0"),
+  totalWithdrawals: decimal("totalWithdrawals", { precision: 18, scale: 2 }).default("0"),
+  totalInterestEarned: decimal("totalInterestEarned", { precision: 18, scale: 2 }).default("0"),
+  // Interest/growth settings
+  interestRate: decimal("interestRate", { precision: 5, scale: 4 }).default("0"), // Annual rate
+  compoundingFrequency: mysqlEnum("compoundingFrequency", [
+    "daily", "monthly", "quarterly", "annually"
+  ]).default("monthly"),
+  lastInterestDate: timestamp("lastInterestDate"),
+  // Release conditions
+  minimumAge: int("minimumAge").default(18),
+  releaseSchedule: mysqlEnum("releaseSchedule", [
+    "lump_sum",         // All at once when conditions met
+    "graduated",        // Percentage at each milestone
+    "monthly",          // Monthly after conditions met
+    "annual"            // Annual after conditions met
+  ]).default("graduated"),
+  // Spendthrift
+  spendthriftProtected: boolean("spendthriftProtected").default(true),
+  // Status
+  status: mysqlEnum("status", ["active", "frozen", "closed"]).default("active"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HeirAccumulationAccount = typeof heirAccumulationAccounts.$inferSelect;
+export type InsertHeirAccumulationAccount = typeof heirAccumulationAccounts.$inferInsert;
+
+/**
+ * Spendthrift Provisions - Creditor protection settings per heir
+ */
+export const spendthriftProvisions = mysqlTable("spendthrift_provisions", {
+  id: int("id").autoincrement().primaryKey(),
+  heirId: int("heirId").notNull(),
+  houseId: int("houseId").notNull(),
+  // Protection level
+  protectionLevel: mysqlEnum("protectionLevel", [
+    "full",       // Complete protection from all creditors
+    "partial",    // Protection with exceptions
+    "none"        // No protection (heir's choice)
+  ]).default("full"),
+  // Exceptions (if partial)
+  allowedExceptions: json("allowedExceptions"), // Array of exception types
+  // Legal documentation
+  provisionDocumentId: int("provisionDocumentId"),
+  governingLaw: varchar("governingLaw", { length: 100 }), // State/jurisdiction
+  // Status
+  status: mysqlEnum("status", ["active", "modified", "waived"]).default("active"),
+  effectiveDate: timestamp("effectiveDate").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SpendthriftProvision = typeof spendthriftProvisions.$inferSelect;
+export type InsertSpendthriftProvision = typeof spendthriftProvisions.$inferInsert;
+
+/**
+ * Heir Distribution Lock - Prevents changes to heir percentages once locked
+ */
+export const heirDistributionLocks = mysqlTable("heir_distribution_locks", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  // Lock status
+  isLocked: boolean("isLocked").default(false),
+  lockedAt: timestamp("lockedAt"),
+  lockedBy: int("lockedBy"),
+  // Lock reason and documentation
+  lockReason: text("lockReason"),
+  lockDocumentId: int("lockDocumentId"),
+  // Total percentage allocated (must equal 100% when locked)
+  totalAllocatedPercentage: decimal("totalAllocatedPercentage", { precision: 5, scale: 2 }),
+  // Unlock conditions (if any)
+  canUnlock: boolean("canUnlock").default(false),
+  unlockConditions: text("unlockConditions"),
+  // History
+  lastModifiedAt: timestamp("lastModifiedAt"),
+  lastModifiedBy: int("lastModifiedBy"),
+  modificationHistory: json("modificationHistory"), // Array of changes before lock
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HeirDistributionLock = typeof heirDistributionLocks.$inferSelect;
+export type InsertHeirDistributionLock = typeof heirDistributionLocks.$inferInsert;

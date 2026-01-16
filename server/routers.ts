@@ -44,6 +44,10 @@ import { houseVaultRouter } from "./routers/house-vault";
 import { payrollRouter } from "./routers/payroll";
 import { taxPrepRouter } from "./routers/tax-prep";
 import { restorationRouter } from "./routers/restoration";
+import { documentGenerationRouter } from "./routers/document-generation";
+import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
+import { communityFundsRouter } from "./routers/community-funds";
+import { heirDistributionRouter } from "./routers/heir-distribution";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -89,6 +93,10 @@ export const appRouter = router({
   payroll: payrollRouter,
   taxPrep: taxPrepRouter,
   restoration: restorationRouter,
+  documents: documentGenerationRouter,
+  lifecycleManager: lifecycleManagerRouter,
+  communityFunds: communityFundsRouter,
+  heirDistribution: heirDistributionRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
