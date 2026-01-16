@@ -63,7 +63,7 @@ interface WorksheetContent {
     label: string;
     type: "text" | "textarea" | "select";
     placeholder?: string;
-    options?: { value: string; label: string; disabled?: boolean; comingSoon?: boolean }[] | string[];
+    options?: { value: string; label: string; disabled?: boolean; requiresApproval?: boolean }[] | string[];
     required?: boolean;
   }[];
   outputTemplate: string;
@@ -190,8 +190,8 @@ const businessSetupModules: CourseModule[] = [
             { value: "S-Corporation", label: "S-Corporation" },
             { value: "Trust", label: "Trust" },
             { value: "Sole Proprietorship", label: "Sole Proprietorship" },
-            { value: "501c3", label: "501(c)(3) Nonprofit", disabled: true, comingSoon: true },
-            { value: "508c1a", label: "508(c)(1)(a) Faith-Based Organization", disabled: true, comingSoon: true },
+            { value: "501c3", label: "501(c)(3) Nonprofit", disabled: true, requiresApproval: true },
+            { value: "508c1a", label: "508(c)(1)(a) Faith-Based Organization", disabled: true, requiresApproval: true },
           ], required: true },
       ],
       outputTemplate: "Entity Selection: {{businessName}} will be structured as a {{entityType}}.",
@@ -810,6 +810,16 @@ export default function BusinessCourse({ onComplete, onExit }: BusinessCoursePro
         </div>
       </div>
 
+      {/* Note about restricted options */}
+      {content.fields.some(f => f.options?.some(opt => typeof opt === 'object' && opt.requiresApproval)) && (
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <p className="text-sm text-amber-800">
+            <span className="font-semibold">Note:</span> Some entity options are not available until certain conditions are met. 
+            Options marked "Approval Required" require completion of the sovereign system training and approval process.
+          </p>
+        </div>
+      )}
+
       <Card className="p-6">
         <div className="space-y-6">
           {content.fields.map((field) => (
@@ -850,7 +860,7 @@ export default function BusinessCourse({ onComplete, onExit }: BusinessCoursePro
                       const value = isObject ? opt.value : opt;
                       const label = isObject ? opt.label : opt;
                       const disabled = isObject ? opt.disabled : false;
-                      const comingSoon = isObject ? opt.comingSoon : false;
+                      const requiresApproval = isObject ? opt.requiresApproval : false;
                       return (
                         <SelectItem 
                           key={value} 
@@ -859,9 +869,9 @@ export default function BusinessCourse({ onComplete, onExit }: BusinessCoursePro
                           className={disabled ? "opacity-50" : ""}
                         >
                           {label}
-                          {comingSoon && (
+                          {requiresApproval && (
                             <span className="ml-2 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">
-                              Coming Soon
+                              Approval Required
                             </span>
                           )}
                         </SelectItem>

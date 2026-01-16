@@ -572,3 +572,8 @@
 - [ ] Add 501(c)(3) entity type to Business Setup Course (disabled, Coming Soon)
 - [ ] Add 508(c)(1)(a) entity type to Business Setup Course (disabled, Coming Soon)
 - [ ] Prepare pricing structure placeholders for future activation
+
+
+## Phase 41: Update Nonprofit Entity Labels
+- [x] Change "Coming Soon" to "Approval Required" with conditions note
+- [x] Add note about conditions for restricted options
