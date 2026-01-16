@@ -237,15 +237,19 @@ export type InsertStudentEnrollment = typeof studentEnrollments.$inferInsert;
 
 
 /**
- * Cryptocurrency Wallets - Store user crypto addresses and balances
+ * Cryptocurrency Wallets - Store user and business entity crypto addresses and balances
+ * Supports LuvChain (our native blockchain) plus external chains
  */
 export const cryptoWallets = mysqlTable("crypto_wallets", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
+  businessEntityId: int("businessEntityId"), // Optional: wallet can belong to a business entity
   walletAddress: varchar("walletAddress", { length: 255 }).notNull().unique(),
-  walletType: mysqlEnum("walletType", ["bitcoin", "ethereum", "solana", "other"]).notNull(),
+  walletType: mysqlEnum("walletType", ["luvchain", "bitcoin", "ethereum", "solana", "other"]).notNull(),
+  walletName: varchar("walletName", { length: 255 }), // Human-readable name
   balance: decimal("balance", { precision: 20, scale: 8 }).default("0").notNull(),
   publicKey: varchar("publicKey", { length: 255 }),
+  privateKeyHash: varchar("privateKeyHash", { length: 255 }), // Encrypted private key reference
   status: mysqlEnum("status", ["active", "inactive", "suspended"]).default("active").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -1062,3 +1066,202 @@ export const contactSubmissions = mysqlTable("contact_submissions", {
 
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 export type InsertContactSubmission = typeof contactSubmissions.$inferInsert;
+
+
+/**
+ * ============================================
+ * LUVCHAIN - Native Blockchain Simulator
+ * ============================================
+ */
+
+/**
+ * LuvChain Blocks - Blockchain block structure
+ */
+export const luvchainBlocks = mysqlTable("luvchain_blocks", {
+  id: int("id").autoincrement().primaryKey(),
+  blockNumber: int("blockNumber").notNull().unique(),
+  blockHash: varchar("blockHash", { length: 66 }).notNull().unique(),
+  previousHash: varchar("previousHash", { length: 66 }).notNull(),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+  nonce: int("nonce").default(0).notNull(),
+  difficulty: int("difficulty").default(1).notNull(),
+  merkleRoot: varchar("merkleRoot", { length: 66 }),
+  transactionCount: int("transactionCount").default(0).notNull(),
+  size: int("size").default(0).notNull(), // Block size in bytes
+  validator: varchar("validator", { length: 255 }), // Who validated/mined this block
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LuvchainBlock = typeof luvchainBlocks.$inferSelect;
+export type InsertLuvchainBlock = typeof luvchainBlocks.$inferInsert;
+
+/**
+ * LuvChain Smart Contracts - Programmable contracts on LuvChain
+ */
+export const luvchainSmartContracts = mysqlTable("luvchain_smart_contracts", {
+  id: int("id").autoincrement().primaryKey(),
+  contractAddress: varchar("contractAddress", { length: 66 }).notNull().unique(),
+  creatorWalletId: int("creatorWalletId").notNull(),
+  contractType: mysqlEnum("contractType", [
+    "certificate",      // Course completion certificates
+    "token_transfer",   // LUV token transfers
+    "trust_distribution", // Trust inheritance splits (60/40, 70/30)
+    "grant_allocation", // Grant fund distribution
+    "entity_creation",  // Business entity formation
+    "escrow",           // Escrow for transactions
+    "subscription",     // Recurring payments
+    "custom"            // User-defined contracts
+  ]).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  code: text("code"), // Contract logic (simplified JSON rules)
+  abi: json("abi"), // Contract interface definition
+  state: json("state"), // Current contract state
+  isActive: boolean("isActive").default(true).notNull(),
+  deployedAt: timestamp("deployedAt").defaultNow().notNull(),
+  lastExecutedAt: timestamp("lastExecutedAt"),
+  executionCount: int("executionCount").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LuvchainSmartContract = typeof luvchainSmartContracts.$inferSelect;
+export type InsertLuvchainSmartContract = typeof luvchainSmartContracts.$inferInsert;
+
+/**
+ * LuvChain Transactions - All transactions on the blockchain
+ */
+export const luvchainTransactions = mysqlTable("luvchain_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  transactionHash: varchar("transactionHash", { length: 66 }).notNull().unique(),
+  blockId: int("blockId"), // Null if pending
+  fromWalletId: int("fromWalletId").notNull(),
+  toWalletId: int("toWalletId"),
+  contractId: int("contractId"), // If interacting with a smart contract
+  transactionType: mysqlEnum("transactionType", [
+    "transfer",         // Token transfer
+    "contract_deploy",  // Deploy smart contract
+    "contract_call",    // Call smart contract function
+    "certificate_mint", // Mint a certificate NFT
+    "entity_register",  // Register business entity
+    "trust_setup",      // Setup trust distribution
+    "grant_disburse",   // Disburse grant funds
+    "reward"            // System reward
+  ]).notNull(),
+  amount: decimal("amount", { precision: 20, scale: 8 }).default("0").notNull(),
+  gasUsed: int("gasUsed").default(0).notNull(),
+  gasFee: decimal("gasFee", { precision: 20, scale: 8 }).default("0").notNull(),
+  data: json("data"), // Transaction payload
+  status: mysqlEnum("status", ["pending", "confirmed", "failed"]).default("pending").notNull(),
+  confirmations: int("confirmations").default(0).notNull(),
+  errorMessage: text("errorMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  confirmedAt: timestamp("confirmedAt"),
+});
+
+export type LuvchainTransaction = typeof luvchainTransactions.$inferSelect;
+export type InsertLuvchainTransaction = typeof luvchainTransactions.$inferInsert;
+
+/**
+ * Course Completion Certificates - NFT-style certificates on LuvChain
+ */
+export const courseCompletionCertificates = mysqlTable("course_completion_certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  walletId: int("walletId").notNull(), // Owner's wallet
+  courseType: mysqlEnum("courseType", [
+    "business_setup",
+    "business_plan",
+    "grant_writing",
+    "financial_literacy",
+    "trust_formation",
+    "contracts",
+    "blockchain_crypto",
+    "operations"
+  ]).notNull(),
+  certificateHash: varchar("certificateHash", { length: 66 }).notNull().unique(),
+  transactionHash: varchar("transactionHash", { length: 66 }).notNull(), // Minting transaction
+  tokenId: int("tokenId").notNull(), // NFT token ID
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  issuerName: varchar("issuerName", { length: 255 }).default("L.A.W.S. Collective").notNull(),
+  recipientName: varchar("recipientName", { length: 255 }).notNull(),
+  completionDate: timestamp("completionDate").notNull(),
+  tokensEarned: int("tokensEarned").default(0).notNull(),
+  courseData: json("courseData"), // Completed worksheets/quiz scores
+  metadata: json("metadata"), // Additional certificate metadata
+  imageUrl: varchar("imageUrl", { length: 500 }), // Certificate image
+  verificationUrl: varchar("verificationUrl", { length: 500 }),
+  isRevoked: boolean("isRevoked").default(false).notNull(),
+  revokedAt: timestamp("revokedAt"),
+  revokedReason: text("revokedReason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CourseCompletionCertificate = typeof courseCompletionCertificates.$inferSelect;
+export type InsertCourseCompletionCertificate = typeof courseCompletionCertificates.$inferInsert;
+
+/**
+ * Trust Distribution Contracts - Smart contracts for inheritance splits
+ */
+export const trustDistributionContracts = mysqlTable("trust_distribution_contracts", {
+  id: int("id").autoincrement().primaryKey(),
+  contractId: int("contractId").notNull(), // Reference to smart contract
+  trustName: varchar("trustName", { length: 255 }).notNull(),
+  trustType: mysqlEnum("trustType", [
+    "revocable",
+    "irrevocable",
+    "family",
+    "asset_protection",
+    "living",
+    "testamentary",
+    "98_trust",
+    "foreign_trust"
+  ]).notNull(),
+  grantorWalletId: int("grantorWalletId").notNull(),
+  splitType: mysqlEnum("splitType", ["60_40", "70_30", "custom"]).notNull(),
+  beneficiaries: json("beneficiaries").notNull(), // Array of {walletId, percentage, name}
+  assets: json("assets"), // Assets held in trust
+  conditions: json("conditions"), // Distribution conditions
+  isActive: boolean("isActive").default(true).notNull(),
+  activatedAt: timestamp("activatedAt"),
+  lastDistributionAt: timestamp("lastDistributionAt"),
+  totalDistributed: decimal("totalDistributed", { precision: 20, scale: 8 }).default("0").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrustDistributionContract = typeof trustDistributionContracts.$inferSelect;
+export type InsertTrustDistributionContract = typeof trustDistributionContracts.$inferInsert;
+
+/**
+ * Course Progress - Track user progress through courses
+ */
+export const courseProgress = mysqlTable("course_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseType: mysqlEnum("courseType", [
+    "business_setup",
+    "business_plan",
+    "grant_writing",
+    "financial_literacy",
+    "trust_formation",
+    "contracts",
+    "blockchain_crypto",
+    "operations"
+  ]).notNull(),
+  currentModule: int("currentModule").default(0).notNull(),
+  totalModules: int("totalModules").notNull(),
+  completedModules: json("completedModules"), // Array of completed module IDs
+  worksheetData: json("worksheetData"), // Saved worksheet responses
+  quizScores: json("quizScores"), // Quiz results per module
+  tokensEarned: int("tokensEarned").default(0).notNull(),
+  status: mysqlEnum("status", ["not_started", "in_progress", "completed"]).default("not_started").notNull(),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  certificateId: int("certificateId"), // Reference to issued certificate
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CourseProgress = typeof courseProgress.$inferSelect;
+export type InsertCourseProgress = typeof courseProgress.$inferInsert;

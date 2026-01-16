@@ -32,17 +32,19 @@ import TrustCourse from "@/components/TrustCourse";
 import GrantWritingCourse from "@/components/GrantWritingCourse";
 import ContractsCourse from "@/components/ContractsCourse";
 import BusinessPlanCourse from "@/components/BusinessPlanCourse";
+import BlockchainCourse from "@/components/BlockchainCourse";
 
-type CourseType = "business" | "financial" | "operations" | "trust" | "grant" | "contracts" | "businessplan" | null;
+type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "operations" | null;
 
 interface CourseProgress {
   business: { completed: boolean; tokens: number; data: any };
-  financial: { completed: boolean; tokens: number; data: any };
-  operations: { completed: boolean; tokens: number; data: any };
-  trust: { completed: boolean; tokens: number; data: any };
-  grant: { completed: boolean; tokens: number; data: any };
-  contracts: { completed: boolean; tokens: number; data: any };
   businessplan: { completed: boolean; tokens: number; data: any };
+  grant: { completed: boolean; tokens: number; data: any };
+  financial: { completed: boolean; tokens: number; data: any };
+  trust: { completed: boolean; tokens: number; data: any };
+  contracts: { completed: boolean; tokens: number; data: any };
+  blockchain: { completed: boolean; tokens: number; data: any };
+  operations: { completed: boolean; tokens: number; data: any };
 }
 
 export default function Dashboard() {
@@ -50,12 +52,13 @@ export default function Dashboard() {
   const [activeCourse, setActiveCourse] = useState<CourseType>(null);
   const [courseProgress, setCourseProgress] = useState<CourseProgress>({
     business: { completed: false, tokens: 0, data: null },
-    financial: { completed: false, tokens: 0, data: null },
-    operations: { completed: false, tokens: 0, data: null },
-    trust: { completed: false, tokens: 0, data: null },
-    grant: { completed: false, tokens: 0, data: null },
-    contracts: { completed: false, tokens: 0, data: null },
     businessplan: { completed: false, tokens: 0, data: null },
+    grant: { completed: false, tokens: 0, data: null },
+    financial: { completed: false, tokens: 0, data: null },
+    trust: { completed: false, tokens: 0, data: null },
+    contracts: { completed: false, tokens: 0, data: null },
+    blockchain: { completed: false, tokens: 0, data: null },
+    operations: { completed: false, tokens: 0, data: null },
   });
 
   const handleCourseComplete = (
@@ -365,23 +368,37 @@ export default function Dashboard() {
     );
   }
 
+  if (activeCourse === "blockchain") {
+    return (
+      <DashboardLayout>
+        <BlockchainCourse
+          onComplete={(tokens) => handleCourseComplete("blockchain", {}, tokens)}
+          onExit={() => setActiveCourse(null)}
+          connectedEntity={getConnectedEntity()}
+        />
+      </DashboardLayout>
+    );
+  }
+
   const totalTokensEarned = 
     courseProgress.business.tokens + 
-    courseProgress.financial.tokens + 
-    courseProgress.operations.tokens +
-    courseProgress.trust.tokens +
+    courseProgress.businessplan.tokens +
     courseProgress.grant.tokens +
+    courseProgress.financial.tokens + 
+    courseProgress.trust.tokens +
     courseProgress.contracts.tokens +
-    courseProgress.businessplan.tokens;
+    courseProgress.blockchain.tokens +
+    courseProgress.operations.tokens;
 
   const coursesCompleted = [
     courseProgress.business.completed,
-    courseProgress.financial.completed,
-    courseProgress.operations.completed,
-    courseProgress.trust.completed,
-    courseProgress.grant.completed,
-    courseProgress.contracts.completed,
     courseProgress.businessplan.completed,
+    courseProgress.grant.completed,
+    courseProgress.financial.completed,
+    courseProgress.trust.completed,
+    courseProgress.contracts.completed,
+    courseProgress.blockchain.completed,
+    courseProgress.operations.completed,
   ].filter(Boolean).length;
 
   return (
@@ -589,42 +606,46 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Foundation Courses */}
+            {/* Foundation Courses - Order: Business, Business Plan, Grant, Financial */}
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Shield className="w-5 h-5 text-accent" />
                 Foundation Courses
+                <span className="text-xs bg-accent/20 text-accent px-2 py-1 rounded ml-2">
+                  Complete in Order
+                </span>
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Business Setup Course */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* 1. Business Setup Course */}
                 <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-accent">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-accent/10">
                       <Shield className="w-8 h-8 text-accent" />
                     </div>
+                    <span className="px-2 py-1 bg-accent/20 text-accent text-xs rounded-full font-bold">1</span>
                     {courseProgress.business.completed && (
                       <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Completed
+                        ✓
                       </span>
                     )}
                   </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Business Setup Course</h3>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Business Setup</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Learn to structure your business, create mission/vision statements, define your market, and generate legal formation documents.
+                    Structure your business, create mission/vision, define market, generate legal documents.
                   </p>
                   <div className="space-y-2 mb-4">
-                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">6 Modules</p>
                     <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Entity selection, Mission/Vision, Customer profile, Products/Services, Legal documents
+                      <strong>Outputs:</strong> Entity, Mission/Vision, Legal docs
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-accent">
-                      {courseProgress.business.completed ? `${courseProgress.business.tokens} tokens earned` : "Earn 100+ tokens"}
+                      {courseProgress.business.completed ? `${courseProgress.business.tokens} LUV` : "100+ LUV"}
                     </span>
                     <Button 
                       size="sm" 
-                      className="min-h-[48px] min-w-[100px]"
+                      className="min-h-[48px] min-w-[80px]"
                       onClick={() => setActiveCourse("business")}
                     >
                       {courseProgress.business.completed ? "Review" : "Start"}
@@ -632,71 +653,280 @@ export default function Dashboard() {
                   </div>
                 </Card>
 
-                {/* Financial Management Course */}
+                {/* 2. Business Plan Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-teal-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-teal-600/10">
+                      <Briefcase className="w-8 h-8 text-teal-600" />
+                    </div>
+                    <span className="px-2 py-1 bg-teal-600/20 text-teal-600 text-xs rounded-full font-bold">2</span>
+                    {courseProgress.businessplan.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Business Plan</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Create comprehensive plan with executive summary, market analysis, financial projections.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Full business plan document
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-teal-600">
+                      {courseProgress.businessplan.completed ? `${courseProgress.businessplan.tokens} LUV` : "100+ LUV"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[80px]"
+                      onClick={() => setActiveCourse("businessplan")}
+                    >
+                      {courseProgress.businessplan.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* 3. Grant Writing Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-amber-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-amber-600/10">
+                      <FileCheck className="w-8 h-8 text-amber-600" />
+                    </div>
+                    <span className="px-2 py-1 bg-amber-600/20 text-amber-600 text-xs rounded-full font-bold">3</span>
+                    {courseProgress.grant.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Grant Writing</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Master grant research, proposal writing, budgeting, and evaluation planning.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Complete grant proposal
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-amber-600">
+                      {courseProgress.grant.completed ? `${courseProgress.grant.tokens} LUV` : "100+ LUV"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[80px]"
+                      onClick={() => setActiveCourse("grant")}
+                    >
+                      {courseProgress.grant.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* 4. Financial Literacy Course */}
                 <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-green-600">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-green-600/10">
                       <DollarSign className="w-8 h-8 text-green-600" />
                     </div>
+                    <span className="px-2 py-1 bg-green-600/20 text-green-600 text-xs rounded-full font-bold">4</span>
                     {courseProgress.financial.completed && (
                       <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Completed
+                        ✓
                       </span>
                     )}
                   </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Financial Management Course</h3>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Financial Literacy</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Master startup costs, revenue projections, expense management, cash flow, break-even analysis, and funding strategies.
+                    Personal & business finance: budgeting, cash flow, taxes, investment basics.
                   </p>
                   <div className="space-y-2 mb-4">
-                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">6 Modules</p>
                     <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Startup costs, Revenue projections, Expense budget, Cash flow, Break-even analysis
+                      <strong>Outputs:</strong> Financial plans & projections
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-green-600">
-                      {courseProgress.financial.completed ? `${courseProgress.financial.tokens} tokens earned` : "Earn 100+ tokens"}
+                      {courseProgress.financial.completed ? `${courseProgress.financial.tokens} LUV` : "100+ LUV"}
                     </span>
                     <Button 
                       size="sm" 
-                      className="min-h-[48px] min-w-[100px]"
+                      className="min-h-[48px] min-w-[80px]"
                       onClick={() => setActiveCourse("financial")}
                     >
                       {courseProgress.financial.completed ? "Review" : "Start"}
                     </Button>
                   </div>
                 </Card>
+              </div>
+            </div>
 
-                {/* Entity Operations Course */}
+            {/* Advanced Courses - Order: Trust, Contracts, Blockchain */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Home className="w-5 h-5 text-purple-600" />
+                House Structure & Blockchain Courses
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded ml-2">
+                  LuvChain Recorded
+                </span>
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* 5. Trust Simulator Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-blue-600/10">
+                      <Lock className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <span className="px-2 py-1 bg-blue-600/20 text-blue-600 text-xs rounded-full font-bold">5</span>
+                    {courseProgress.trust.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Trust Simulator</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Structure trusts, define beneficiaries, configure inheritance splits (60/40, 70/30).
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">4 Modules</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Types:</strong> Revocable, Irrevocable, 98*, Foreign*
+                    </p>
+                    <p className="text-xs text-amber-600">*Approval Required</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-blue-600">
+                      {courseProgress.trust.completed ? `${courseProgress.trust.tokens} LUV` : "100+ LUV"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[80px]"
+                      onClick={() => setActiveCourse("trust")}
+                    >
+                      {courseProgress.trust.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* 6. Contracts Simulator Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-indigo-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-indigo-600/10">
+                      <ScrollText className="w-8 h-8 text-indigo-600" />
+                    </div>
+                    <span className="px-2 py-1 bg-indigo-600/20 text-indigo-600 text-xs rounded-full font-bold">6</span>
+                    {courseProgress.contracts.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Contracts Simulator</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Create service agreements, vendor contracts, NDAs, partnership documents.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">5 Modules</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Legal contract templates
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-indigo-600">
+                      {courseProgress.contracts.completed ? `${courseProgress.contracts.tokens} LUV` : "100+ LUV"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[80px]"
+                      onClick={() => setActiveCourse("contracts")}
+                    >
+                      {courseProgress.contracts.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* 7. Blockchain & Crypto Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-purple-600/10">
+                      <Link2 className="w-8 h-8 text-purple-600" />
+                    </div>
+                    <span className="px-2 py-1 bg-purple-600/20 text-purple-600 text-xs rounded-full font-bold">7</span>
+                    {courseProgress.blockchain.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Blockchain & Crypto</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Learn blockchain, create business wallet, smart contracts, LUV tokens.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Business wallet, Smart contracts
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-purple-600">
+                      {courseProgress.blockchain.completed ? `${courseProgress.blockchain.tokens} LUV` : "100+ LUV"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[80px]"
+                      onClick={() => setActiveCourse("blockchain")}
+                    >
+                      {courseProgress.blockchain.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            {/* Operations Course - Final */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Users className="w-5 h-5 text-purple-600" />
+                Operations & Compliance
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 8. Entity Operations Course */}
                 <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-purple-600/10">
                       <Users className="w-8 h-8 text-purple-600" />
                     </div>
+                    <span className="px-2 py-1 bg-purple-600/20 text-purple-600 text-xs rounded-full font-bold">8</span>
                     {courseProgress.operations.completed && (
                       <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Completed
+                        ✓
                       </span>
                     )}
                   </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Entity Operations Course</h3>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Entity Operations</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Build organizational structure, SOPs, compliance checklists, contracts, and operations calendars for your business.
+                    Build org structure, SOPs, compliance checklists, operations calendars.
                   </p>
                   <div className="space-y-2 mb-4">
-                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">6 Modules</p>
                     <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Org structure, SOPs, Compliance checklist, Contract templates, Operations calendar
+                      <strong>Outputs:</strong> SOPs, Compliance, Operations calendar
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-purple-600">
-                      {courseProgress.operations.completed ? `${courseProgress.operations.tokens} tokens earned` : "Earn 100+ tokens"}
+                      {courseProgress.operations.completed ? `${courseProgress.operations.tokens} LUV` : "100+ LUV"}
                     </span>
                     <Button 
                       size="sm" 
-                      className="min-h-[48px] min-w-[100px]"
+                      className="min-h-[48px] min-w-[80px]"
                       onClick={() => setActiveCourse("operations")}
                     >
                       {courseProgress.operations.completed ? "Review" : "Start"}
@@ -706,164 +936,16 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* House Structure Courses */}
-            <div>
-              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                <Home className="w-5 h-5 text-purple-600" />
-                House Structure Courses
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded ml-2">
-                  LuvLedger Managed
-                </span>
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Trust Simulator Course */}
-                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-full bg-blue-600/10">
-                      <Lock className="w-8 h-8 text-blue-600" />
-                    </div>
-                    {courseProgress.trust.completed && (
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Completed
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Trust Simulator</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Learn trust fundamentals, structure your trust, define beneficiaries, and configure inheritance splits (60/40, 70/30).
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <p className="text-xs text-muted-foreground">4 Modules • Lessons + Quizzes + Worksheets</p>
-                    <p className="text-xs text-muted-foreground">
-                      <strong>Trust Types:</strong> Revocable, Irrevocable, Family, Asset Protection, 98 Trust*, Foreign Trust*
-                    </p>
-                    <p className="text-xs text-amber-600">
-                      *98 and Foreign Trusts require approval
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-blue-600">
-                      {courseProgress.trust.completed ? `${courseProgress.trust.tokens} tokens earned` : "Earn 100+ tokens"}
-                    </span>
-                    <Button 
-                      size="sm" 
-                      className="min-h-[48px] min-w-[100px]"
-                      onClick={() => setActiveCourse("trust")}
-                    >
-                      {courseProgress.trust.completed ? "Review" : "Start"}
-                    </Button>
-                  </div>
-                </Card>
-
-                {/* Contracts Simulator Course */}
-                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-indigo-600">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-full bg-indigo-600/10">
-                      <ScrollText className="w-8 h-8 text-indigo-600" />
-                    </div>
-                    {courseProgress.contracts.completed && (
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Completed
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Contracts Simulator</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Learn contract law basics, create service agreements, vendor contracts, employment agreements, NDAs, and partnership documents.
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <p className="text-xs text-muted-foreground">5 Modules • Lessons + Quizzes + Worksheets</p>
-                    <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Service agreements, Vendor contracts, Employment contracts, NDAs, Partnership agreements
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-indigo-600">
-                      {courseProgress.contracts.completed ? `${courseProgress.contracts.tokens} tokens earned` : "Earn 100+ tokens"}
-                    </span>
-                    <Button 
-                      size="sm" 
-                      className="min-h-[48px] min-w-[100px]"
-                      onClick={() => setActiveCourse("contracts")}
-                    >
-                      {courseProgress.contracts.completed ? "Review" : "Start"}
-                    </Button>
-                  </div>
-                </Card>
-
-                {/* Business Plan Simulator Course */}
-                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-teal-600">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-full bg-teal-600/10">
-                      <Briefcase className="w-8 h-8 text-teal-600" />
-                    </div>
-                    {courseProgress.businessplan.completed && (
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Completed
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Business Plan Simulator</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Create a comprehensive business plan with executive summary, market analysis, competitive analysis, marketing strategy, and financial projections.
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
-                    <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Executive summary, Market analysis, Marketing strategy, Operations plan, Financial projections
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-teal-600">
-                      {courseProgress.businessplan.completed ? `${courseProgress.businessplan.tokens} tokens earned` : "Earn 100+ tokens"}
-                    </span>
-                    <Button 
-                      size="sm" 
-                      className="min-h-[48px] min-w-[100px]"
-                      onClick={() => setActiveCourse("businessplan")}
-                    >
-                      {courseProgress.businessplan.completed ? "Review" : "Start"}
-                    </Button>
-                  </div>
-                </Card>
-
-                {/* Grant Writing Course */}
-                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-amber-600">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-full bg-amber-600/10">
-                      <FileCheck className="w-8 h-8 text-amber-600" />
-                    </div>
-                    {courseProgress.grant.completed && (
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Completed
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-foreground text-lg mb-2">Grant Writing Simulator</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Master grant research, proposal writing, budgeting, and evaluation planning. Generate complete grant proposal drafts.
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
-                    <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Organization profile, Program description, Problem statement, Goals/Objectives, Budget
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-amber-600">
-                      {courseProgress.grant.completed ? `${courseProgress.grant.tokens} tokens earned` : "Earn 100+ tokens"}
-                    </span>
-                    <Button 
-                      size="sm" 
-                      className="min-h-[48px] min-w-[100px]"
-                      onClick={() => setActiveCourse("grant")}
-                    >
-                      {courseProgress.grant.completed ? "Review" : "Start"}
-                    </Button>
-                  </div>
-                </Card>
+            {/* Certificate Info */}
+            <Card className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-purple-200 dark:border-purple-800">
+              <div className="flex items-center gap-3">
+                <Coins className="w-6 h-6 text-purple-600" />
+                <div>
+                  <p className="font-semibold text-foreground">Certificates of Completion</p>
+                  <p className="text-sm text-muted-foreground">Each completed course generates a certificate recorded to LuvChain blockchain - immutable proof of your achievements.</p>
+                </div>
               </div>
-            </div>
+            </Card>
 
             {/* Course Benefits */}
             <Card className="p-6 mt-6 bg-gradient-to-br from-primary/5 to-accent/5">

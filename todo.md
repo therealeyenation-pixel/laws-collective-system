@@ -611,3 +611,36 @@
 - [x] Connect all simulators to LuvLedger
 - [x] Connect all simulators to token blockchain system
 - [x] Integrate token earning with blockchain records
+
+
+## Phase 46: Reorder Simulators & Add Certificates
+- [ ] Reorder simulators: Business → Business Plan → Grant → Financial → Trust → Contracts
+- [ ] Update Financial Simulator to teach both personal and business financial literacy
+- [ ] Create certificate of completion system
+- [ ] Record certificates to blockchain (LuvLedger)
+- [ ] Add certificate download functionality
+- [ ] Display earned certificates in user profile
+
+
+## Phase 47: Blockchain Simulator & Certificate System
+- [ ] Reorder courses: Business → Business Plan → Grant → Financial → Trust → Contracts
+- [ ] Expand Financial course to cover personal AND business financial literacy
+- [ ] Build LuvChain blockchain simulator infrastructure
+- [ ] Create wallet system for each business entity
+- [ ] Implement smart contracts for certificates, transfers, trust distributions
+- [ ] Create certificate generation on course completion
+- [ ] Record certificates to LuvChain with cryptographic hashes
+- [ ] Add Blockchain Simulator course to teach crypto concepts
+- [ ] Create wallet management UI
+- [ ] Display certificates in user profile
+
+
+## Phase 47: Blockchain Simulator & Course Reordering
+- [x] Reorder courses: Business → Business Plan → Grant → Financial → Trust → Contracts → Blockchain → Operations
+- [x] Create BlockchainCourse component with wallet creation and smart contracts
+- [x] Add LuvChain blockchain tables (blocks, smart_contracts, course_certificates)
+- [x] Expand cryptoWallets table for business entity wallets
+- [x] Add certificate generation for course completion
+- [x] Record certificates to LuvChain blockchain
+- [x] Update Dashboard with numbered course progression
+- [x] Add Blockchain & Crypto course (Course 7)
