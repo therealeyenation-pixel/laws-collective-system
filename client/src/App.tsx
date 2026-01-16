@@ -23,6 +23,7 @@ import PositionManagement from "./pages/PositionManagement";
 import FamilyOnboarding from "./pages/FamilyOnboarding";
 import RevenueSharing from "./pages/RevenueSharing";
 import BoardMeetings from "./pages/BoardMeetings";
+import InternationalBusiness from "./pages/InternationalBusiness";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -99,6 +100,7 @@ function Router() {
       <Route path="/family-onboarding">{() => <ProtectedRoute component={FamilyOnboarding} />}</Route>
       <Route path="/revenue-sharing">{() => <ProtectedRoute component={RevenueSharing} />}</Route>
       <Route path="/board-meetings">{() => <ProtectedRoute component={BoardMeetings} />}</Route>
+      <Route path="/international-business">{() => <ProtectedRoute component={InternationalBusiness} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

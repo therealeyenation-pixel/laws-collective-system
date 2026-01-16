@@ -1556,3 +1556,12 @@
 - [ ] Wire Revenue Sharing to real data
 - [ ] Build Member Training Modules
 - [ ] Add Board Meeting Notifications
+
+
+## Phase 74: International Business Capabilities
+
+- [x] Add international business registration checklist and guidance
+- [x] Add multi-currency tracking to LuvLedger
+- [x] Add international compliance documentation templates
+- [x] Add foreign market expansion planning module
+- [x] Create International Business page in dashboard
