@@ -38,6 +38,7 @@ import { giftingSystemRouter } from "./routers/gifting-system";
 import { houseActivationRouter } from "./routers/house-activation";
 import { crownCompletionRouter } from "./routers/crown-completion";
 import { guardianCredentialsRouter } from "./routers/guardian-credentials";
+import { houseLedgerRouter } from "./routers/house-ledger";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -77,6 +78,7 @@ export const appRouter = router({
   houseActivation: houseActivationRouter,
   crownCompletion: crownCompletionRouter,
   guardianCredentials: guardianCredentialsRouter,
+  houseLedger: houseLedgerRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

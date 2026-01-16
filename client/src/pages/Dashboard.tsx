@@ -36,6 +36,7 @@ import BlockchainCourse from "@/components/BlockchainCourse";
 import InsuranceCourse from "@/components/InsuranceCourse";
 import TokenChainProgress from "@/components/TokenChainProgress";
 import DBATrademarkCourse from "@/components/DBATrademarkCourse";
+import PostActivationProgress from "@/components/PostActivationProgress";
 
 type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
@@ -567,6 +568,26 @@ export default function Dashboard() {
             </div>
           </div>
         </Card>
+
+        {/* Post-Activation Progress - Shows after House is activated */}
+        {courseProgress.business.completed && (
+          <PostActivationProgress 
+            onStartCourse={(courseId) => {
+              // Map course IDs to course types
+              const courseMap: Record<string, CourseType> = {
+                trust: "trust",
+                contracts: "contracts",
+                dba: "dba",
+                grants: "grant",
+                blockchain: "blockchain",
+              };
+              const courseType = courseMap[courseId];
+              if (courseType) {
+                setActiveCourse(courseType);
+              }
+            }}
+          />
+        )}
 
         {/* System Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

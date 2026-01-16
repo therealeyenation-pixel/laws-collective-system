@@ -872,3 +872,29 @@
 - [x] Generate DBA filing documents output
 - [x] Generate trademark application draft output
 - [x] Integrate into Dashboard course grid
+
+
+## Phase 41: House-Specific LuvLedger Architecture
+
+- [ ] Add house_ledgers table (each House gets its own ledger)
+- [ ] Add ledger_id foreign key to houses table
+- [ ] Create main_house_ledger table for Root House aggregation
+- [ ] Add ledger_access_logs table for audit trail
+- [ ] Add fraud_flags table for flagging suspicious activity
+- [ ] Implement auto-creation of LuvLedger when House is created
+- [ ] Implement Main House ledger aggregation (read-only summaries)
+- [ ] Add audit access controls (fraud investigation only)
+- [ ] Add fraud detection triggers and alerts
+- [ ] Ensure House owners have full control of their own ledger
+- [ ] Ensure no cross-ledger access except during authorized audit
+
+## Phase 42: House Activation on Business Completion
+
+- [x] Update House activation to trigger when Business Workshop is completed
+- [x] Auto-create House record with user's business entity data
+- [x] Auto-initialize House-specific LuvLedger on House creation
+- [x] Link House LuvLedger to Main House ledger (audit-only access)
+- [x] Create post-activation course tracking (Trust, Contracts, DBA, etc.)
+- [x] Track token progression (MIRROR, GIFT, SPARK) based on post-activation courses
+- [x] Update Dashboard to show House status and post-activation progress
+- [ ] Show LuvLedger balance and transaction summary on Dashboard

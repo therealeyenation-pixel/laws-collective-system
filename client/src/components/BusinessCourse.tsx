@@ -627,6 +627,18 @@ export default function BusinessCourse({ onComplete, onExit }: BusinessCoursePro
   const [showQuizResults, setShowQuizResults] = useState(false);
   const [completedModules, setCompletedModules] = useState<number[]>([]);
 
+  // House activation mutation - triggers when course is completed
+  const activateHouse = trpc.houseLedger.activateHouseOnBusinessCompletion.useMutation({
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(`House activated! Your LuvLedger has been initialized.`);
+      }
+    },
+    onError: (error) => {
+      console.error("House activation error:", error);
+    },
+  });
+
   const module = businessSetupModules[currentModule];
   const progress = ((currentModule + 1) / businessSetupModules.length) * 100;
 
@@ -664,7 +676,12 @@ export default function BusinessCourse({ onComplete, onExit }: BusinessCoursePro
       setQuizAnswers([]);
       setShowQuizResults(false);
     } else {
-      // Course complete
+      // Course complete - Activate House and initialize LuvLedger
+      activateHouse.mutate({
+        businessName: businessData.businessName || "My Business",
+        businessType: businessData.entityType || "LLC",
+        stateOfFormation: "CA", // Default, could be extracted from form
+      });
       onComplete(businessData, totalTokens + 50); // Bonus tokens for completion
     }
   };

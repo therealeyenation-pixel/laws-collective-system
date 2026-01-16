@@ -2745,3 +2745,128 @@ export const giftActivationAttempts = mysqlTable("gift_activation_attempts", {
 export type GiftActivationAttempt = typeof giftActivationAttempts.$inferSelect;
 export type InsertGiftActivationAttempt = typeof giftActivationAttempts.$inferInsert;
 
+
+// ============================================
+// HOUSE-SPECIFIC LUVLEDGER ARCHITECTURE
+// Each House gets its own independent ledger
+// All ledgers tie to Main House ledger for audit only
+// ============================================
+
+// House Ledgers - Each House gets its own LuvLedger upon creation
+export const houseLedgers = mysqlTable("house_ledgers", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  ledgerName: varchar("ledger_name", { length: 255 }).notNull(),
+  ledgerHash: varchar("ledger_hash", { length: 64 }).notNull(),
+  ledgerStatus: mysqlEnum("ledger_status", ["active", "suspended", "archived", "under_audit"]).default("active"),
+  totalBalance: decimal("total_balance", { precision: 18, scale: 2 }).default("0.00"),
+  reserveBalance: decimal("reserve_balance", { precision: 18, scale: 2 }).default("0.00"),
+  circulationBalance: decimal("circulation_balance", { precision: 18, scale: 2 }).default("0.00"),
+  treasuryContribution: decimal("treasury_contribution", { precision: 18, scale: 2 }).default("0.00"),
+  houseRetained: decimal("house_retained", { precision: 18, scale: 2 }).default("0.00"),
+  transactionCount: int("transaction_count").default(0),
+  lastSyncAt: timestamp("last_sync_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+export type HouseLedger = typeof houseLedgers.$inferSelect;
+export type InsertHouseLedger = typeof houseLedgers.$inferInsert;
+
+// Main House Ledger - Aggregates all House ledgers (read-only access)
+export const mainHouseLedger = mysqlTable("main_house_ledger", {
+  id: int("id").primaryKey().autoincrement(),
+  ledgerName: varchar("ledger_name", { length: 255 }).default("Root Authority Ledger"),
+  totalTreasuryBalance: decimal("total_treasury_balance", { precision: 18, scale: 2 }).default("0.00"),
+  totalHousesConnected: int("total_houses_connected").default(0),
+  totalTransactionsProcessed: int("total_transactions_processed").default(0),
+  lastAggregationAt: timestamp("last_aggregation_at"),
+  aggregationHash: varchar("aggregation_hash", { length: 64 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+export type MainHouseLedger = typeof mainHouseLedger.$inferSelect;
+export type InsertMainHouseLedger = typeof mainHouseLedger.$inferInsert;
+
+// House Ledger Transactions - Records all transactions within a House ledger
+export const houseLedgerTransactions = mysqlTable("house_ledger_transactions", {
+  id: int("id").primaryKey().autoincrement(),
+  houseLedgerId: int("house_ledger_id").notNull(),
+  transactionType: mysqlEnum("hl_transaction_type", [
+    "inflow", "outflow", "transfer", "allocation", "distribution",
+    "treasury_contribution", "reserve_deposit", "circulation_withdrawal"
+  ]).notNull(),
+  amount: decimal("amount", { precision: 18, scale: 2 }).notNull(),
+  fromAccount: varchar("from_account", { length: 255 }),
+  toAccount: varchar("to_account", { length: 255 }),
+  description: text("description"),
+  transactionHash: varchar("transaction_hash", { length: 64 }).notNull(),
+  previousHash: varchar("previous_hash", { length: 64 }),
+  verified: boolean("verified").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type HouseLedgerTransaction = typeof houseLedgerTransactions.$inferSelect;
+export type InsertHouseLedgerTransaction = typeof houseLedgerTransactions.$inferInsert;
+
+// Ledger Access Logs - Audit trail for all ledger access
+export const ledgerAccessLogs = mysqlTable("ledger_access_logs", {
+  id: int("id").primaryKey().autoincrement(),
+  houseLedgerId: int("house_ledger_id").notNull(),
+  accessedByUserId: varchar("accessed_by_user_id", { length: 255 }).notNull(),
+  accessType: mysqlEnum("ledger_access_type", ["view", "export", "audit", "fraud_investigation"]).notNull(),
+  accessReason: text("access_reason"),
+  accessApprovedBy: varchar("access_approved_by", { length: 255 }),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  accessGranted: boolean("access_granted").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type LedgerAccessLog = typeof ledgerAccessLogs.$inferSelect;
+export type InsertLedgerAccessLog = typeof ledgerAccessLogs.$inferInsert;
+
+// Fraud Flags - Flags for suspicious activity requiring audit
+export const fraudFlags = mysqlTable("fraud_flags", {
+  id: int("id").primaryKey().autoincrement(),
+  houseLedgerId: int("house_ledger_id").notNull(),
+  flagType: mysqlEnum("fraud_flag_type", [
+    "unusual_transaction_volume", "balance_discrepancy", "unauthorized_access_attempt",
+    "hash_mismatch", "duplicate_transaction", "suspicious_pattern", "manual_report"
+  ]).notNull(),
+  severity: mysqlEnum("fraud_severity", ["low", "medium", "high", "critical"]).default("medium"),
+  description: text("description"),
+  detectedAt: timestamp("detected_at").defaultNow(),
+  investigationStatus: mysqlEnum("fraud_investigation_status", [
+    "pending", "under_review", "resolved_valid", "resolved_fraud", "dismissed"
+  ]).default("pending"),
+  investigatedBy: varchar("investigated_by", { length: 255 }),
+  resolutionNotes: text("resolution_notes"),
+  resolvedAt: timestamp("resolved_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type FraudFlag = typeof fraudFlags.$inferSelect;
+export type InsertFraudFlag = typeof fraudFlags.$inferInsert;
+
+// Audit Requests - Formal requests to access another House's ledger
+export const auditRequests = mysqlTable("audit_requests", {
+  id: int("id").primaryKey().autoincrement(),
+  requestingUserId: varchar("requesting_user_id", { length: 255 }).notNull(),
+  targetHouseLedgerId: int("target_house_ledger_id").notNull(),
+  requestReason: text("request_reason").notNull(),
+  fraudFlagId: int("fraud_flag_id"),
+  requestStatus: mysqlEnum("audit_request_status", [
+    "pending", "approved", "denied", "expired", "completed"
+  ]).default("pending"),
+  approvedBy: varchar("approved_by", { length: 255 }),
+  approvalNotes: text("approval_notes"),
+  accessExpiresAt: timestamp("access_expires_at"),
+  accessStartedAt: timestamp("access_started_at"),
+  accessEndedAt: timestamp("access_ended_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+export type AuditRequest = typeof auditRequests.$inferSelect;
+export type InsertAuditRequest = typeof auditRequests.$inferInsert;
