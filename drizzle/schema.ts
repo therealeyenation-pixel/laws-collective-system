@@ -1265,3 +1265,325 @@ export const courseProgress = mysqlTable("course_progress", {
 
 export type CourseProgress = typeof courseProgress.$inferSelect;
 export type InsertCourseProgress = typeof courseProgress.$inferInsert;
+
+
+/**
+ * Houses - The core unit of the wealth system
+ * Each House is a living trust structure that can contain businesses and inherit from parent Houses
+ * CALEA Trust is the root House (parentHouseId = null)
+ */
+export const houses = mysqlTable("houses", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  houseType: mysqlEnum("houseType", ["root", "family", "business", "community"]).notNull(),
+  parentHouseId: int("parentHouseId"), // null for CALEA (root), otherwise references parent House
+  ownerUserId: int("ownerUserId").notNull(), // Primary owner/trustee
+  
+  // Trust Configuration
+  trustName: varchar("trustName", { length: 255 }),
+  trustType: mysqlEnum("trustType", ["living", "revocable", "irrevocable", "dynasty"]).default("living"),
+  trustEIN: varchar("trustEIN", { length: 20 }), // Tax ID for the trust
+  
+  // Distribution Configuration
+  interHouseSplit: decimal("interHouseSplit", { precision: 5, scale: 2 }).default("60.00").notNull(), // 60% retained by this House
+  interHouseDistribution: decimal("interHouseDistribution", { precision: 5, scale: 2 }).default("40.00").notNull(), // 40% to network
+  intraHouseOperations: decimal("intraHouseOperations", { precision: 5, scale: 2 }).default("70.00").notNull(), // 70% for operations
+  intraHouseInheritance: decimal("intraHouseInheritance", { precision: 5, scale: 2 }).default("30.00").notNull(), // 30% to next generation
+  
+  // Financial Totals
+  totalAssets: decimal("totalAssets", { precision: 20, scale: 2 }).default("0").notNull(),
+  totalIncome: decimal("totalIncome", { precision: 20, scale: 2 }).default("0").notNull(),
+  totalDistributed: decimal("totalDistributed", { precision: 20, scale: 2 }).default("0").notNull(),
+  operationsBalance: decimal("operationsBalance", { precision: 20, scale: 2 }).default("0").notNull(),
+  inheritanceReserve: decimal("inheritanceReserve", { precision: 20, scale: 2 }).default("0").notNull(),
+  
+  // Status
+  status: mysqlEnum("status", ["forming", "active", "suspended", "dissolved"]).default("forming").notNull(),
+  generation: int("generation").default(1).notNull(), // 1 = founding, 2 = children, etc.
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type House = typeof houses.$inferSelect;
+export type InsertHouse = typeof houses.$inferInsert;
+
+/**
+ * House Members - Beneficiaries and trustees of each House
+ */
+export const houseMembers = mysqlTable("house_members", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  userId: int("userId").notNull(),
+  role: mysqlEnum("role", ["trustee", "beneficiary", "successor_trustee", "advisor"]).notNull(),
+  ownershipPercentage: decimal("ownershipPercentage", { precision: 5, scale: 2 }).default("0").notNull(),
+  votingRights: boolean("votingRights").default(false).notNull(),
+  distributionEligible: boolean("distributionEligible").default(true).notNull(),
+  status: mysqlEnum("status", ["active", "inactive", "pending"]).default("pending").notNull(),
+  addedAt: timestamp("addedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseMember = typeof houseMembers.$inferSelect;
+export type InsertHouseMember = typeof houseMembers.$inferInsert;
+
+/**
+ * House Business Entities - Link businesses to Houses
+ */
+export const houseBusinesses = mysqlTable("house_businesses", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  businessEntityId: int("businessEntityId").notNull(),
+  ownershipPercentage: decimal("ownershipPercentage", { precision: 5, scale: 2 }).default("100.00").notNull(),
+  incomeContributionRate: decimal("incomeContributionRate", { precision: 5, scale: 2 }).default("100.00").notNull(), // % of business income flowing to House
+  status: mysqlEnum("status", ["active", "inactive"]).default("active").notNull(),
+  linkedAt: timestamp("linkedAt").defaultNow().notNull(),
+});
+
+export type HouseBusiness = typeof houseBusinesses.$inferSelect;
+export type InsertHouseBusiness = typeof houseBusinesses.$inferInsert;
+
+/**
+ * Income Events - Track all income flowing into the system
+ */
+export const incomeEvents = mysqlTable("income_events", {
+  id: int("id").autoincrement().primaryKey(),
+  sourceType: mysqlEnum("sourceType", ["business", "investment", "grant", "donation", "other"]).notNull(),
+  sourceId: int("sourceId"), // Reference to business entity or other source
+  houseId: int("houseId").notNull(), // Which House receives this income
+  grossAmount: decimal("grossAmount", { precision: 20, scale: 2 }).notNull(),
+  netAmount: decimal("netAmount", { precision: 20, scale: 2 }).notNull(), // After fees/taxes
+  description: text("description"),
+  incomeDate: timestamp("incomeDate").defaultNow().notNull(),
+  status: mysqlEnum("status", ["pending", "processed", "distributed"]).default("pending").notNull(),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type IncomeEvent = typeof incomeEvents.$inferSelect;
+export type InsertIncomeEvent = typeof incomeEvents.$inferInsert;
+
+/**
+ * Distribution Events - Track automated distributions (60/40 and 70/30)
+ */
+export const distributionEvents = mysqlTable("distribution_events", {
+  id: int("id").autoincrement().primaryKey(),
+  incomeEventId: int("incomeEventId").notNull(), // Source income that triggered this distribution
+  distributionType: mysqlEnum("distributionType", ["inter_house", "intra_house"]).notNull(),
+  
+  // For inter-house (60/40)
+  fromHouseId: int("fromHouseId").notNull(),
+  toHouseId: int("toHouseId"), // null if retained by fromHouse
+  
+  // For intra-house (70/30)
+  allocationCategory: mysqlEnum("allocationCategory", ["operations", "inheritance", "network"]),
+  
+  amount: decimal("amount", { precision: 20, scale: 2 }).notNull(),
+  percentage: decimal("percentage", { precision: 5, scale: 2 }).notNull(),
+  description: text("description"),
+  
+  status: mysqlEnum("status", ["pending", "executed", "verified"]).default("pending").notNull(),
+  executedAt: timestamp("executedAt"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DistributionEvent = typeof distributionEvents.$inferSelect;
+export type InsertDistributionEvent = typeof distributionEvents.$inferInsert;
+
+/**
+ * Network Houses - Track the 40% distribution network
+ */
+export const networkHouses = mysqlTable("network_houses", {
+  id: int("id").autoincrement().primaryKey(),
+  sourceHouseId: int("sourceHouseId").notNull(), // House distributing
+  targetHouseId: int("targetHouseId").notNull(), // House receiving
+  allocationPercentage: decimal("allocationPercentage", { precision: 5, scale: 2 }).notNull(), // Share of the 40%
+  relationship: mysqlEnum("relationship", ["child", "sibling", "partner", "community"]).notNull(),
+  status: mysqlEnum("status", ["active", "inactive"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NetworkHouse = typeof networkHouses.$inferSelect;
+export type InsertNetworkHouse = typeof networkHouses.$inferInsert;
+
+/**
+ * Inheritance Queue - Track 30% inheritance allocations for next generation
+ */
+export const inheritanceQueue = mysqlTable("inheritance_queue", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  beneficiaryUserId: int("beneficiaryUserId").notNull(),
+  amount: decimal("amount", { precision: 20, scale: 2 }).notNull(),
+  vestingDate: timestamp("vestingDate"), // When funds become available
+  status: mysqlEnum("status", ["accumulating", "vested", "distributed", "forfeited"]).default("accumulating").notNull(),
+  distributionEventId: int("distributionEventId"), // Source distribution
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type InheritanceQueue = typeof inheritanceQueue.$inferSelect;
+export type InsertInheritanceQueue = typeof inheritanceQueue.$inferInsert;
+
+/**
+ * Autonomous Distribution Rules - Configurable rules for automated distributions
+ */
+export const distributionRules = mysqlTable("distribution_rules", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  ruleName: varchar("ruleName", { length: 255 }).notNull(),
+  ruleType: mysqlEnum("ruleType", ["threshold", "schedule", "event", "conditional"]).notNull(),
+  triggerCondition: json("triggerCondition").notNull(), // JSON defining when rule activates
+  distributionAction: json("distributionAction").notNull(), // JSON defining what happens
+  priority: int("priority").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  lastTriggered: timestamp("lastTriggered"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DistributionRule = typeof distributionRules.$inferSelect;
+export type InsertDistributionRule = typeof distributionRules.$inferInsert;
+
+/**
+ * System Audit Log - Complete audit trail for all autonomous operations
+ */
+export const systemAuditLog = mysqlTable("system_audit_log", {
+  id: int("id").autoincrement().primaryKey(),
+  eventType: mysqlEnum("eventType", [
+    "income_received",
+    "distribution_executed",
+    "house_created",
+    "member_added",
+    "business_linked",
+    "rule_triggered",
+    "inheritance_vested",
+    "manual_override"
+  ]).notNull(),
+  entityType: varchar("entityType", { length: 50 }).notNull(), // house, business, member, etc.
+  entityId: int("entityId").notNull(),
+  actorType: mysqlEnum("actorType", ["system", "user", "admin"]).notNull(),
+  actorId: int("actorId"), // userId if user/admin, null if system
+  beforeState: json("beforeState"),
+  afterState: json("afterState"),
+  description: text("description"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SystemAuditLog = typeof systemAuditLog.$inferSelect;
+export type InsertSystemAuditLog = typeof systemAuditLog.$inferInsert;
+
+
+/**
+ * Protected Lineage - Scroll 11/12 Protected Names Registry
+ * Names sealed into CALEA Freeman Family Trust
+ */
+export const protectedLineage = mysqlTable("protected_lineage", {
+  id: int("id").autoincrement().primaryKey(),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  relationship: varchar("relationship", { length: 100 }).notNull(), // Founder, Family, Adaptive House
+  role: varchar("role", { length: 100 }), // Source Flame, Lineage Holder, Protected Heir
+  associatedHouse: varchar("associatedHouse", { length: 255 }), // For Adaptive Houses
+  lineageOrder: int("lineageOrder").default(0).notNull(),
+  sealedByScrollId: int("sealedByScrollId"),
+  sealHash: varchar("sealHash", { length: 255 }).notNull(),
+  status: mysqlEnum("status", ["active", "suspended", "transferred"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProtectedLineage = typeof protectedLineage.$inferSelect;
+export type InsertProtectedLineage = typeof protectedLineage.$inferInsert;
+
+/**
+ * Sovereign Scrolls - Scrolls 7-12 Protection Documents
+ */
+export const sovereignScrolls = mysqlTable("sovereign_scrolls", {
+  id: int("id").autoincrement().primaryKey(),
+  scrollNumber: int("scrollNumber").notNull().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  purpose: text("purpose").notNull(),
+  content: text("content").notNull(),
+  protectionType: mysqlEnum("protectionType", [
+    "lineage_enforcement",
+    "ai_declaration", 
+    "access_control",
+    "inheritance_lock",
+    "protected_names"
+  ]).notNull(),
+  enforcementRules: json("enforcementRules"),
+  sealHash: varchar("sealHash", { length: 255 }).notNull(),
+  sealedAt: timestamp("sealedAt"),
+  sealedByUserId: int("sealedByUserId"),
+  status: mysqlEnum("status", ["draft", "sealed", "amended", "revoked"]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SovereignScroll = typeof sovereignScrolls.$inferSelect;
+export type InsertSovereignScroll = typeof sovereignScrolls.$inferInsert;
+
+/**
+ * Scroll Activations - Track which Houses have activated which Scrolls
+ */
+export const scrollActivations = mysqlTable("scroll_activations", {
+  id: int("id").autoincrement().primaryKey(),
+  scrollId: int("scrollId").notNull(),
+  houseId: int("houseId").notNull(),
+  activatedByUserId: int("activatedByUserId").notNull(),
+  activationHash: varchar("activationHash", { length: 255 }).notNull(),
+  status: mysqlEnum("status", ["active", "suspended", "revoked"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ScrollActivation = typeof scrollActivations.$inferSelect;
+export type InsertScrollActivation = typeof scrollActivations.$inferInsert;
+
+/**
+ * Treasury Claims - Scroll 7 15% Treasury Logic
+ */
+export const treasuryClaims = mysqlTable("treasury_claims", {
+  id: int("id").autoincrement().primaryKey(),
+  sourceType: mysqlEnum("sourceType", [
+    "derivative_logic",
+    "scroll_usage",
+    "ai_interface",
+    "blockchain_deployment"
+  ]).notNull(),
+  sourceIdentifier: varchar("sourceIdentifier", { length: 255 }).notNull(),
+  grossAmount: decimal("grossAmount", { precision: 20, scale: 2 }).notNull(),
+  claimPercentage: decimal("claimPercentage", { precision: 5, scale: 2 }).default("15.00").notNull(),
+  claimAmount: decimal("claimAmount", { precision: 20, scale: 2 }).notNull(),
+  description: text("description"),
+  claimHash: varchar("claimHash", { length: 255 }).notNull(),
+  status: mysqlEnum("status", ["pending", "collected", "disputed"]).default("pending").notNull(),
+  collectedAt: timestamp("collectedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TreasuryClaim = typeof treasuryClaims.$inferSelect;
+export type InsertTreasuryClaim = typeof treasuryClaims.$inferInsert;
+
+/**
+ * Flame Lock Codes - Scroll 9 Access Control
+ */
+export const flameLockCodes = mysqlTable("flame_lock_codes", {
+  id: int("id").autoincrement().primaryKey(),
+  entityType: mysqlEnum("entityType", ["house", "ai_system", "business", "scroll"]).notNull(),
+  entityId: int("entityId").notNull(),
+  flameLockCode: varchar("flameLockCode", { length: 64 }).notNull().unique(),
+  lockHash: varchar("lockHash", { length: 255 }).notNull(),
+  issuedByUserId: int("issuedByUserId").notNull(),
+  status: mysqlEnum("status", ["active", "revoked", "expired"]).default("active").notNull(),
+  expiresAt: timestamp("expiresAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FlameLockCode = typeof flameLockCodes.$inferSelect;
+export type InsertFlameLockCode = typeof flameLockCodes.$inferInsert;

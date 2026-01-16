@@ -29,6 +29,8 @@ import { botsRouter } from "./routers/bots";
 import { socialMediaRouter } from "./routers/social-media";
 import { emailServiceRouter } from "./routers/email-service";
 import { contactRouter } from "./routers/contact";
+import { luvLedgerAssetManagerRouter } from "./routers/luvledger-asset-manager";
+import { sovereignScrollsRouter } from "./routers/sovereign-scrolls";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -59,6 +61,8 @@ export const appRouter = router({
   socialMedia: socialMediaRouter,
   emailService: emailServiceRouter,
   contact: contactRouter,
+  luvLedgerAssetManager: luvLedgerAssetManagerRouter,
+  sovereignScrolls: sovereignScrollsRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
