@@ -127,6 +127,13 @@
       "when": 1768532967110,
       "tag": "0017_living_energizer",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1768536645135,
+      "tag": "0018_spicy_monster_badoon",
+      "breakpoints": true
     }
   ]
 }

@@ -2166,3 +2166,302 @@ export type Metric = typeof metrics.$inferSelect;
 export type InsertMetric = typeof metrics.$inferInsert;
 
 // Note: departments table defined earlier in schema
+
+
+// ============================================================
+// FINANCIAL AUTOMATION TABLES (Scrolls 54-61)
+// ============================================================
+
+/**
+ * Allocation Pots - Financial buckets for the LuvLedger system
+ * Based on Scroll 55: Allocation Engine Protocol
+ */
+export const allocationPots = mysqlTable("allocation_pots", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  
+  potType: mysqlEnum("potType", [
+    "root_authority_reserve",    // 60% of 70% - non-shareable treasury
+    "circulation_pool",          // 40% of 70% - shareable for operations
+    "house_operational",         // Day-to-day operations
+    "steward_compensation",      // Steward/trustee payments
+    "commercial_operating",      // Business entity operations
+    "future_crown",              // Reserved for next generation
+    "ancestral_treasury"         // 30% inheritance reserve
+  ]).notNull(),
+  
+  balance: decimal("balance", { precision: 20, scale: 8 }).default("0").notNull(),
+  targetPercentage: decimal("targetPercentage", { precision: 5, scale: 2 }).notNull(), // e.g., 60.00 for 60%
+  
+  // Pot rules
+  isShareable: boolean("isShareable").default(false).notNull(),
+  requiresApproval: boolean("requiresApproval").default(true).notNull(),
+  minimumBalance: decimal("minimumBalance", { precision: 20, scale: 8 }).default("0").notNull(),
+  
+  lastSyncAt: timestamp("lastSyncAt"),
+  status: mysqlEnum("potStatus", ["active", "frozen", "depleted"]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AllocationPot = typeof allocationPots.$inferSelect;
+export type InsertAllocationPot = typeof allocationPots.$inferInsert;
+
+/**
+ * Allocation Transactions - Track 70/30 and 60/40 splits
+ * Based on Scroll 55: Allocation Engine Protocol
+ */
+export const allocationTransactions = mysqlTable("allocation_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  sourceHouseId: int("sourceHouseId").notNull(),
+  sourceAccountId: int("sourceAccountId"), // LuvLedger account
+  
+  grossAmount: decimal("grossAmount", { precision: 20, scale: 8 }).notNull(),
+  
+  // 70/30 Split (Treasury vs House)
+  treasuryAmount: decimal("treasuryAmount", { precision: 20, scale: 8 }).notNull(), // 30%
+  houseAmount: decimal("houseAmount", { precision: 20, scale: 8 }).notNull(), // 70%
+  
+  // 60/40 Split of House Amount (Reserve vs Circulation)
+  reserveAmount: decimal("reserveAmount", { precision: 20, scale: 8 }).notNull(), // 60% of 70%
+  circulationAmount: decimal("circulationAmount", { precision: 20, scale: 8 }).notNull(), // 40% of 70%
+  
+  transactionType: mysqlEnum("allocationType", [
+    "income_allocation",
+    "distribution",
+    "inter_house_transfer",
+    "pot_rebalance",
+    "manual_adjustment"
+  ]).notNull(),
+  
+  description: text("description"),
+  referenceId: varchar("referenceId", { length: 255 }), // External reference
+  
+  // Validation
+  validationStatus: mysqlEnum("validationStatus", ["pending", "validated", "failed", "manual_review"]).default("pending").notNull(),
+  validationErrors: json("validationErrors"),
+  
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  processedAt: timestamp("processedAt"),
+});
+
+export type AllocationTransaction = typeof allocationTransactions.$inferSelect;
+export type InsertAllocationTransaction = typeof allocationTransactions.$inferInsert;
+
+/**
+ * Sync Cycles - Scheduled financial reconciliation
+ * Based on Scroll 61: LuvLedger Core Automation Logic
+ */
+export const syncCycles = mysqlTable("sync_cycles", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  cycleType: mysqlEnum("cycleType", [
+    "hourly",
+    "daily",
+    "weekly",
+    "monthly",
+    "quarterly",
+    "annual"
+  ]).notNull(),
+  
+  houseId: int("houseId"), // null for system-wide cycles
+  
+  scheduledAt: timestamp("scheduledAt").notNull(),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  
+  status: mysqlEnum("cycleStatus", [
+    "scheduled",
+    "running",
+    "completed",
+    "failed",
+    "skipped"
+  ]).default("scheduled").notNull(),
+  
+  // Cycle Results
+  transactionsProcessed: int("transactionsProcessed").default(0).notNull(),
+  allocationsCreated: int("allocationsCreated").default(0).notNull(),
+  errorsEncountered: int("errorsEncountered").default(0).notNull(),
+  
+  summary: json("summary"), // Detailed results
+  errorLog: json("errorLog"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SyncCycle = typeof syncCycles.$inferSelect;
+export type InsertSyncCycle = typeof syncCycles.$inferInsert;
+
+/**
+ * Gift/Sale Ratio Tracking - Enforce 1:3 global and 2:1 per-house ratios
+ * Based on Scroll 59: Gift/Sale Ratio Enforcement Logic
+ */
+export const giftSaleRatios = mysqlTable("gift_sale_ratios", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  houseId: int("houseId").notNull(),
+  
+  // Counters
+  totalGiftsIssued: int("totalGiftsIssued").default(0).notNull(),
+  totalSalesCompleted: int("totalSalesCompleted").default(0).notNull(),
+  
+  // Current Ratio Status
+  currentRatio: decimal("currentRatio", { precision: 10, scale: 4 }).default("0").notNull(), // sales/gifts
+  globalRatioTarget: decimal("globalRatioTarget", { precision: 5, scale: 2 }).default("3.00").notNull(), // 1:3 = 3.00
+  houseRatioTarget: decimal("houseRatioTarget", { precision: 5, scale: 2 }).default("2.00").notNull(), // 2:1 = 2.00
+  
+  // Compliance
+  isCompliant: boolean("isCompliant").default(true).notNull(),
+  lastViolationAt: timestamp("lastViolationAt"),
+  violationCount: int("violationCount").default(0).notNull(),
+  
+  // Blocking Status
+  giftingBlocked: boolean("giftingBlocked").default(false).notNull(), // True if ratio violated
+  blockReason: text("blockReason"),
+  
+  lastUpdatedAt: timestamp("lastUpdatedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GiftSaleRatio = typeof giftSaleRatios.$inferSelect;
+export type InsertGiftSaleRatio = typeof giftSaleRatios.$inferInsert;
+
+/**
+ * Economic Health Indicators - System stability monitoring
+ * Based on Scroll 60: System Stability & Economic Health Logic
+ */
+export const economicHealthIndicators = mysqlTable("economic_health_indicators", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  houseId: int("houseId"), // null for system-wide
+  
+  indicatorType: mysqlEnum("indicatorType", [
+    "liquidity_ratio",
+    "allocation_accuracy",
+    "sync_success_rate",
+    "transaction_volume",
+    "pot_balance_health",
+    "gift_sale_compliance",
+    "error_rate"
+  ]).notNull(),
+  
+  currentValue: decimal("currentValue", { precision: 20, scale: 8 }).notNull(),
+  targetValue: decimal("targetValue", { precision: 20, scale: 8 }),
+  thresholdMin: decimal("thresholdMin", { precision: 20, scale: 8 }),
+  thresholdMax: decimal("thresholdMax", { precision: 20, scale: 8 }),
+  
+  status: mysqlEnum("healthStatus", [
+    "healthy",
+    "warning",
+    "critical",
+    "unknown"
+  ]).default("unknown").notNull(),
+  
+  measurementPeriod: mysqlEnum("measurementPeriod", [
+    "hourly",
+    "daily",
+    "weekly",
+    "monthly"
+  ]).notNull(),
+  
+  measuredAt: timestamp("measuredAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EconomicHealthIndicator = typeof economicHealthIndicators.$inferSelect;
+export type InsertEconomicHealthIndicator = typeof economicHealthIndicators.$inferInsert;
+
+/**
+ * Financial Error States - Track and resolve system errors
+ * Based on Scrolls 54-61 error codes (LL-01 to LL-07, AE-01 to AE-04, etc.)
+ */
+export const financialErrors = mysqlTable("financial_errors", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  errorCode: varchar("errorCode", { length: 20 }).notNull(), // e.g., "LL-01", "AE-03", "GSREL-05"
+  errorCategory: mysqlEnum("errorCategory", [
+    "luvledger",        // LL-01 to LL-07
+    "allocation",       // AE-01 to AE-04
+    "gift_sale",        // GSREL-01 to GSREL-06
+    "sync",             // SYNC-01 to SYNC-05
+    "validation",       // VAL-01 to VAL-10
+    "system"            // SYS-01 to SYS-10
+  ]).notNull(),
+  
+  severity: mysqlEnum("errorSeverity", ["info", "warning", "error", "critical"]).notNull(),
+  
+  houseId: int("houseId"),
+  transactionId: int("transactionId"),
+  syncCycleId: int("syncCycleId"),
+  
+  message: text("message").notNull(),
+  details: json("details"),
+  stackTrace: text("stackTrace"),
+  
+  // Resolution
+  status: mysqlEnum("errorStatus", [
+    "open",
+    "acknowledged",
+    "investigating",
+    "resolved",
+    "ignored"
+  ]).default("open").notNull(),
+  
+  resolvedById: int("resolvedById"),
+  resolvedAt: timestamp("resolvedAt"),
+  resolution: text("resolution"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FinancialError = typeof financialErrors.$inferSelect;
+export type InsertFinancialError = typeof financialErrors.$inferInsert;
+
+/**
+ * Inflow Capture - Track all incoming funds before allocation
+ * Based on Scroll 61: LuvLedger Core Automation Logic
+ */
+export const inflowCapture = mysqlTable("inflow_capture", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  houseId: int("houseId").notNull(),
+  sourceType: mysqlEnum("sourceType", [
+    "sale",
+    "gift_received",
+    "investment_return",
+    "grant",
+    "donation",
+    "royalty",
+    "interest",
+    "other"
+  ]).notNull(),
+  
+  grossAmount: decimal("grossAmount", { precision: 20, scale: 8 }).notNull(),
+  currency: varchar("currency", { length: 10 }).default("USD").notNull(),
+  
+  sourceDescription: text("sourceDescription"),
+  externalReference: varchar("externalReference", { length: 255 }),
+  
+  // Processing Status
+  status: mysqlEnum("inflowStatus", [
+    "pending",
+    "validated",
+    "allocated",
+    "failed",
+    "manual_review"
+  ]).default("pending").notNull(),
+  
+  allocationTransactionId: int("allocationTransactionId"), // Link to allocation once processed
+  
+  receivedAt: timestamp("receivedAt").defaultNow().notNull(),
+  processedAt: timestamp("processedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type InflowCapture = typeof inflowCapture.$inferSelect;
+export type InsertInflowCapture = typeof inflowCapture.$inferInsert;

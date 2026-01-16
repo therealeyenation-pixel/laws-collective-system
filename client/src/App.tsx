@@ -12,6 +12,7 @@ import DocumentVault from "./pages/DocumentVault";
 import Bots from "./pages/Bots";
 import SocialMedia from "./pages/SocialMedia";
 import FoundationDashboard from "./pages/FoundationDashboard";
+import FinancialAutomation from "./pages/FinancialAutomation";
 import Landing from "./pages/Landing";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
@@ -79,6 +80,7 @@ function Router() {
       <Route path="/bots">{() => <ProtectedRoute component={Bots} />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} />}</Route>
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} />}</Route>
+      <Route path="/financial-automation">{() => <ProtectedRoute component={FinancialAutomation} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
