@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import SystemDashboard from "./pages/SystemDashboard";
 import AcademyDashboard from "./pages/AcademyDashboard";
 import DocumentVault from "./pages/DocumentVault";
-import Bots from "./pages/Bots";
+import Agents from "./pages/Agents";
 import SocialMedia from "./pages/SocialMedia";
 import FoundationDashboard from "./pages/FoundationDashboard";
 import FinancialAutomation from "./pages/FinancialAutomation";
@@ -66,7 +66,7 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 
 function Router() {
   // Public routes: Landing page, Academy, and Dashboard (for viewing courses)
-  // Protected routes: Trust System, Document Vault, Bots, Social Media
+  // Protected routes: Trust System, Document Vault, Agents, Social Media
   return (
     <Switch>
       <Route path="/" component={Landing} />
@@ -77,7 +77,7 @@ function Router() {
       {/* Protected routes - require authentication */}
       <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} />}</Route>
-      <Route path="/bots">{() => <ProtectedRoute component={Bots} />}</Route>
+      <Route path="/agents">{() => <ProtectedRoute component={Agents} />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} />}</Route>
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} />}</Route>
       <Route path="/financial-automation">{() => <ProtectedRoute component={FinancialAutomation} />}</Route>

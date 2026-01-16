@@ -1,0 +1,739 @@
+import { z } from "zod";
+import { protectedProcedure, router } from "../_core/trpc";
+import { getDb } from "../db";
+import {
+  w2Workers,
+  payrollRuns,
+  houses,
+} from "../../drizzle/schema";
+import { eq, and, desc, sql, gte, lte } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
+
+// ============================================
+// W-2 WORKER MANAGEMENT & PAYROLL
+// Employee management for House businesses
+// ============================================
+
+const PAY_FREQUENCIES = [
+  { value: "weekly", label: "Weekly", periodsPerYear: 52 },
+  { value: "bi_weekly", label: "Bi-Weekly", periodsPerYear: 26 },
+  { value: "semi_monthly", label: "Semi-Monthly", periodsPerYear: 24 },
+  { value: "monthly", label: "Monthly", periodsPerYear: 12 },
+];
+
+const FILING_STATUSES = [
+  { value: "single", label: "Single" },
+  { value: "married_filing_jointly", label: "Married Filing Jointly" },
+  { value: "married_filing_separately", label: "Married Filing Separately" },
+  { value: "head_of_household", label: "Head of Household" },
+  { value: "qualifying_widow", label: "Qualifying Widow(er)" },
+];
+
+const EMPLOYMENT_TYPES = [
+  { value: "full_time", label: "Full-Time" },
+  { value: "part_time", label: "Part-Time" },
+  { value: "seasonal", label: "Seasonal" },
+  { value: "temporary", label: "Temporary" },
+];
+
+// 2024 Federal Tax Brackets (simplified)
+const FEDERAL_TAX_BRACKETS_2024 = {
+  single: [
+    { min: 0, max: 11600, rate: 0.10 },
+    { min: 11600, max: 47150, rate: 0.12 },
+    { min: 47150, max: 100525, rate: 0.22 },
+    { min: 100525, max: 191950, rate: 0.24 },
+    { min: 191950, max: 243725, rate: 0.32 },
+    { min: 243725, max: 609350, rate: 0.35 },
+    { min: 609350, max: Infinity, rate: 0.37 },
+  ],
+  married_filing_jointly: [
+    { min: 0, max: 23200, rate: 0.10 },
+    { min: 23200, max: 94300, rate: 0.12 },
+    { min: 94300, max: 201050, rate: 0.22 },
+    { min: 201050, max: 383900, rate: 0.24 },
+    { min: 383900, max: 487450, rate: 0.32 },
+    { min: 487450, max: 731200, rate: 0.35 },
+    { min: 731200, max: Infinity, rate: 0.37 },
+  ],
+};
+
+// FICA rates 2024
+const FICA_RATES = {
+  socialSecurity: { rate: 0.062, wageBase: 168600 },
+  medicare: { rate: 0.0145, additionalRate: 0.009, additionalThreshold: 200000 },
+};
+
+export const payrollRouter = router({
+  // ============================================
+  // WORKER MANAGEMENT
+  // ============================================
+
+  getWorkers: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+    const userId = ctx.user.id;
+
+    const userHouse = await db
+      .select()
+      .from(houses)
+      .where(eq(houses.ownerUserId, userId))
+      .limit(1);
+
+    if (!userHouse.length) {
+      return { workers: [], summary: null };
+    }
+
+    const workers = await db
+      .select()
+      .from(w2Workers)
+      .where(eq(w2Workers.houseId, userHouse[0].id))
+      .orderBy(w2Workers.lastName, w2Workers.firstName);
+
+    const activeWorkers = workers.filter(w => w.status === "active");
+    const totalPayroll = workers.reduce(
+      (sum, w) => sum + Number(w.payRate || 0) * 2080,
+      0
+    );
+
+    return {
+      workers,
+      summary: {
+        totalWorkers: workers.length,
+        activeWorkers: activeWorkers.length,
+        totalAnnualPayroll: totalPayroll,
+        byType: EMPLOYMENT_TYPES.map(type => ({
+          ...type,
+          count: workers.filter(w => w.employmentType === type.value).length,
+        })),
+      },
+      payFrequencies: PAY_FREQUENCIES,
+      filingStatuses: FILING_STATUSES,
+      employmentTypes: EMPLOYMENT_TYPES,
+    };
+  }),
+
+  getWorker: protectedProcedure
+    .input(z.object({ workerId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      const worker = await db
+        .select()
+        .from(w2Workers)
+        .where(
+          and(
+            eq(w2Workers.id, input.workerId),
+            eq(w2Workers.houseId, userHouse[0].id)
+          )
+        )
+        .limit(1);
+
+      if (!worker.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Worker not found" });
+      }
+
+      // Get payroll history
+      const payrollHistory = await db
+        .select()
+        .from(payrollRuns)
+        .where(eq(payrollRuns.workerId, input.workerId))
+        .orderBy(desc(payrollRuns.createdAt))
+        .limit(12);
+
+      // Tax withholdings and benefits are calculated from payroll records
+      // These tables can be added later for more detailed tracking
+
+      // Calculate YTD totals
+      const currentYear = new Date().getFullYear();
+      const ytdPayroll = payrollHistory.filter(
+        p => new Date(p.createdAt).getFullYear() === currentYear
+      );
+      const ytdGross = ytdPayroll.reduce((sum, p) => sum + Number(p.grossPay), 0);
+      const ytdNet = ytdPayroll.reduce((sum, p) => sum + Number(p.netPay), 0);
+      const ytdFederalTax = ytdPayroll.reduce(
+        (sum, p) => sum + Number(p.federalTax),
+        0
+      );
+      const ytdStateTax = ytdPayroll.reduce(
+        (sum, p) => sum + Number(p.stateTax),
+        0
+      );
+      const ytdSocialSecurity = ytdPayroll.reduce(
+        (sum, p) => sum + Number(p.socialSecurity),
+        0
+      );
+      const ytdMedicare = ytdPayroll.reduce(
+        (sum, p) => sum + Number(p.medicare),
+        0
+      );
+
+      return {
+        worker: worker[0],
+        payrollHistory,
+        withholdings: null, // Calculated from payroll records
+        benefits: [], // Can be added later
+        ytdTotals: {
+          grossPay: ytdGross,
+          netPay: ytdNet,
+          federalTax: ytdFederalTax,
+          stateTax: ytdStateTax,
+          socialSecurity: ytdSocialSecurity,
+          medicare: ytdMedicare,
+          totalTaxes: ytdFederalTax + ytdStateTax + ytdSocialSecurity + ytdMedicare,
+        },
+      };
+    }),
+
+  addWorker: protectedProcedure
+    .input(
+      z.object({
+        firstName: z.string().min(1),
+        lastName: z.string().min(1),
+        email: z.string().email().optional(),
+        phone: z.string().optional(),
+        ssn: z.string().optional(), // Should be encrypted in production
+        dateOfBirth: z.date().optional(),
+        streetAddress: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        zipCode: z.string().optional(),
+        hireDate: z.date(),
+        employmentType: z.enum(["full_time", "part_time", "seasonal", "temporary"]),
+        jobTitle: z.string().min(1),
+        department: z.string().optional(),
+        payFrequency: z.enum(["weekly", "bi_weekly", "semi_monthly", "monthly"]),
+        hourlyRate: z.number().optional(),
+        annualSalary: z.number().optional(),
+        filingStatus: z.enum([
+          "single",
+          "married_filing_jointly",
+          "married_filing_separately",
+          "head_of_household",
+          "qualifying_widow",
+        ]),
+        federalAllowances: z.number().default(0),
+        stateAllowances: z.number().default(0),
+        additionalWithholding: z.number().default(0),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "You must activate your House before adding workers",
+        });
+      }
+
+      // Add worker to database
+      const result = await db.insert(w2Workers).values({
+        houseId: userHouse[0].id,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        phone: input.phone,
+        ssn: input.ssn, // Should encrypt in production
+        address: input.streetAddress,
+        city: input.city,
+        state: input.state,
+        zipCode: input.zipCode,
+        hireDate: input.hireDate,
+        employmentType: input.employmentType,
+        jobTitle: input.jobTitle,
+        department: input.department,
+        payFrequency: input.payFrequency,
+        payRate: (input.hourlyRate || (input.annualSalary ? input.annualSalary / 2080 : 0)).toString(),
+        payType: input.hourlyRate ? "hourly" : "salary",
+        federalFilingStatus: input.filingStatus,
+        federalAllowances: input.federalAllowances,
+        stateAllowances: input.stateAllowances,
+      });
+
+      return {
+        success: true,
+        workerId: result[0].insertId,
+      };
+    }),
+
+  updateWorker: protectedProcedure
+    .input(
+      z.object({
+        workerId: z.number(),
+        email: z.string().email().optional(),
+        phone: z.string().optional(),
+        streetAddress: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        zipCode: z.string().optional(),
+        jobTitle: z.string().optional(),
+        department: z.string().optional(),
+        payFrequency: z.enum(["weekly", "bi_weekly", "semi_monthly", "monthly"]).optional(),
+        hourlyRate: z.number().optional(),
+        annualSalary: z.number().optional(),
+        employmentStatus: z.enum(["active", "inactive", "terminated", "on_leave"]).optional(),
+        terminationDate: z.date().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      const { workerId, ...updateData } = input;
+
+      // Build update object
+      const updates: Record<string, any> = {};
+      if (updateData.email !== undefined) updates.email = updateData.email;
+      if (updateData.phone !== undefined) updates.phone = updateData.phone;
+      if (updateData.streetAddress !== undefined) updates.address = updateData.streetAddress;
+      if (updateData.city !== undefined) updates.city = updateData.city;
+      if (updateData.state !== undefined) updates.state = updateData.state;
+      if (updateData.zipCode !== undefined) updates.zipCode = updateData.zipCode;
+      if (updateData.jobTitle !== undefined) updates.jobTitle = updateData.jobTitle;
+      if (updateData.department !== undefined) updates.department = updateData.department;
+      if (updateData.payFrequency !== undefined) updates.payFrequency = updateData.payFrequency;
+      if (updateData.hourlyRate !== undefined) updates.payRate = updateData.hourlyRate.toString();
+      if (updateData.annualSalary !== undefined) updates.payRate = (updateData.annualSalary / 2080).toString();
+      if (updateData.employmentStatus !== undefined) updates.employmentStatus = updateData.employmentStatus;
+      if (updateData.terminationDate !== undefined) updates.terminationDate = updateData.terminationDate;
+
+      await db
+        .update(w2Workers)
+        .set(updates)
+        .where(
+          and(
+            eq(w2Workers.id, workerId),
+            eq(w2Workers.houseId, userHouse[0].id)
+          )
+        );
+
+      return { success: true };
+    }),
+
+  // ============================================
+  // PAYROLL PROCESSING
+  // ============================================
+
+  calculatePayroll: protectedProcedure
+    .input(
+      z.object({
+        workerId: z.number(),
+        payPeriodStart: z.date(),
+        payPeriodEnd: z.date(),
+        hoursWorked: z.number().optional(),
+        overtimeHours: z.number().default(0),
+        bonusAmount: z.number().default(0),
+        commissionAmount: z.number().default(0),
+        deductions: z.array(z.object({
+          type: z.string(),
+          amount: z.number(),
+        })).default([]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      const worker = await db
+        .select()
+        .from(w2Workers)
+        .where(
+          and(
+            eq(w2Workers.id, input.workerId),
+            eq(w2Workers.houseId, userHouse[0].id)
+          )
+        )
+        .limit(1);
+
+      if (!worker.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Worker not found" });
+      }
+
+      const w = worker[0];
+      const payFrequency = PAY_FREQUENCIES.find(f => f.value === w.payFrequency);
+      const periodsPerYear = payFrequency?.periodsPerYear || 26;
+
+      // Calculate gross pay
+      let regularPay = 0;
+      let overtimePay = 0;
+
+      const payRate = Number(w.payRate);
+      if (w.payType === "hourly" && input.hoursWorked) {
+        regularPay = Math.min(input.hoursWorked, 40) * payRate;
+        overtimePay = input.overtimeHours * payRate * 1.5;
+      } else if (w.payType === "salary") {
+        // payRate stored as hourly equivalent, convert to period pay
+        regularPay = payRate * 2080 / periodsPerYear;
+      }
+
+      const grossPay = regularPay + overtimePay + input.bonusAmount + input.commissionAmount;
+
+      // Calculate annual income for tax brackets
+      const annualizedIncome = grossPay * periodsPerYear;
+
+      // Federal tax withholding (simplified)
+      const filingStatus = w.federalFilingStatus || "single";
+      const brackets = FEDERAL_TAX_BRACKETS_2024[filingStatus as keyof typeof FEDERAL_TAX_BRACKETS_2024] ||
+        FEDERAL_TAX_BRACKETS_2024.single;
+      
+      let federalTax = 0;
+      let remainingIncome = annualizedIncome;
+      for (const bracket of brackets) {
+        if (remainingIncome <= 0) break;
+        const taxableInBracket = Math.min(remainingIncome, bracket.max - bracket.min);
+        federalTax += taxableInBracket * bracket.rate;
+        remainingIncome -= taxableInBracket;
+      }
+      const federalWithholding = federalTax / periodsPerYear;
+
+      // State tax (simplified - 5% flat rate as placeholder)
+      const stateWithholding = grossPay * 0.05;
+
+      // Social Security
+      const socialSecurityWithholding = Math.min(
+        grossPay * FICA_RATES.socialSecurity.rate,
+        (FICA_RATES.socialSecurity.wageBase / periodsPerYear) * FICA_RATES.socialSecurity.rate
+      );
+
+      // Medicare
+      let medicareWithholding = grossPay * FICA_RATES.medicare.rate;
+      if (annualizedIncome > FICA_RATES.medicare.additionalThreshold) {
+        medicareWithholding += grossPay * FICA_RATES.medicare.additionalRate;
+      }
+
+      // Additional withholding
+      const additionalWithholding = 0; // Additional withholding not in current schema
+
+      // Total deductions
+      const totalDeductions = input.deductions.reduce((sum, d) => sum + d.amount, 0);
+
+      // Net pay
+      const totalWithholdings = federalWithholding + stateWithholding + 
+        socialSecurityWithholding + medicareWithholding + additionalWithholding;
+      const netPay = grossPay - totalWithholdings - totalDeductions;
+
+      return {
+        calculation: {
+          regularPay,
+          overtimePay,
+          bonusAmount: input.bonusAmount,
+          commissionAmount: input.commissionAmount,
+          grossPay,
+          federalWithholding,
+          stateWithholding,
+          socialSecurityWithholding,
+          medicareWithholding,
+          additionalWithholding,
+          totalWithholdings,
+          deductions: input.deductions,
+          totalDeductions,
+          netPay,
+        },
+        worker: {
+          id: w.id,
+          name: `${w.firstName} ${w.lastName}`,
+          workerId: w.id,
+        },
+        payPeriod: {
+          start: input.payPeriodStart,
+          end: input.payPeriodEnd,
+        },
+      };
+    }),
+
+  processPayroll: protectedProcedure
+    .input(
+      z.object({
+        workerId: z.number(),
+        payPeriodStart: z.date(),
+        payPeriodEnd: z.date(),
+        payDate: z.date(),
+        hoursWorked: z.number().optional(),
+        overtimeHours: z.number().default(0),
+        regularPay: z.number(),
+        overtimePay: z.number().default(0),
+        bonusAmount: z.number().default(0),
+        commissionAmount: z.number().default(0),
+        grossPay: z.number(),
+        federalWithholding: z.number(),
+        stateWithholding: z.number(),
+        socialSecurityWithholding: z.number(),
+        medicareWithholding: z.number(),
+        additionalWithholding: z.number().default(0),
+        otherDeductions: z.number().default(0),
+        netPay: z.number(),
+        paymentMethod: z.enum(["direct_deposit", "check", "cash"]).default("direct_deposit"),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      const worker = await db
+        .select()
+        .from(w2Workers)
+        .where(
+          and(
+            eq(w2Workers.id, input.workerId),
+            eq(w2Workers.houseId, userHouse[0].id)
+          )
+        )
+        .limit(1);
+
+      if (!worker.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Worker not found" });
+      }
+
+      // Note: payrollRuns requires a payrollPeriodId, so we need to create or find a period first
+      // For now, we'll use a placeholder period ID of 0 - in production, create proper period management
+      const result = await db.insert(payrollRuns).values({
+        payrollPeriodId: 0, // Should be linked to actual payroll period
+        workerId: input.workerId,
+        regularHours: (input.hoursWorked || 0).toString(),
+        overtimeHours: input.overtimeHours.toString(),
+        grossPay: input.grossPay.toString(),
+        federalTax: input.federalWithholding.toString(),
+        stateTax: input.stateWithholding.toString(),
+        localTax: "0",
+        socialSecurity: input.socialSecurityWithholding.toString(),
+        medicare: input.medicareWithholding.toString(),
+        otherDeductions: input.otherDeductions.toString(),
+        netPay: input.netPay.toString(),
+        status: "paid",
+      });
+
+      // Update worker YTD totals
+      await db
+        .update(w2Workers)
+        .set({
+          // YTD totals are calculated from payroll records, not stored on worker
+        })
+        .where(eq(w2Workers.id, input.workerId));
+
+      return {
+        success: true,
+        payrollRecordId: result[0].insertId,
+      };
+    }),
+
+  getPayrollHistory: protectedProcedure
+    .input(
+      z.object({
+        workerId: z.number().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        limit: z.number().default(50),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      // Get workers for this house first, then get their payroll runs
+      const houseWorkers = await db
+        .select({ id: w2Workers.id })
+        .from(w2Workers)
+        .where(eq(w2Workers.houseId, userHouse[0].id));
+      
+      const workerIds = houseWorkers.map(w => w.id);
+      
+      const records = workerIds.length > 0 ? await db
+        .select()
+        .from(payrollRuns)
+        .orderBy(desc(payrollRuns.createdAt))
+        .limit(input.limit) : [];
+
+      // Records already fetched above
+
+      // Calculate summary
+      const totalGross = records.reduce((sum, r) => sum + Number(r.grossPay), 0);
+      const totalNet = records.reduce((sum, r) => sum + Number(r.netPay), 0);
+      const totalTaxes = records.reduce(
+        (sum, r) =>
+          sum +
+          Number(r.federalTax) +
+          Number(r.stateTax) +
+          Number(r.socialSecurity) +
+          Number(r.medicare),
+        0
+      );
+
+      return {
+        records,
+        summary: {
+          totalRecords: records.length,
+          totalGrossPay: totalGross,
+          totalNetPay: totalNet,
+          totalTaxesWithheld: totalTaxes,
+        },
+      };
+    }),
+
+  // ============================================
+  // TAX FORMS
+  // ============================================
+
+  generateW2Preview: protectedProcedure
+    .input(z.object({ workerId: z.number(), taxYear: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      const worker = await db
+        .select()
+        .from(w2Workers)
+        .where(
+          and(
+            eq(w2Workers.id, input.workerId),
+            eq(w2Workers.houseId, userHouse[0].id)
+          )
+        )
+        .limit(1);
+
+      if (!worker.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Worker not found" });
+      }
+
+      const w = worker[0];
+
+      // Get all payroll records for the tax year
+      const startOfYear = new Date(input.taxYear, 0, 1);
+      const endOfYear = new Date(input.taxYear, 11, 31);
+
+      const payrollRunsData = await db
+        .select()
+        .from(payrollRuns)
+        .where(
+          and(
+            eq(payrollRuns.workerId, input.workerId),
+            gte(payrollRuns.createdAt, startOfYear),
+            lte(payrollRuns.createdAt, endOfYear)
+          )
+        );
+
+      // Calculate W-2 box values
+      const box1WagesTips = payrollRunsData.reduce(
+        (sum, r) => sum + Number(r.grossPay),
+        0
+      );
+      const box2FederalTax = payrollRunsData.reduce(
+        (sum, r) => sum + Number(r.federalTax),
+        0
+      );
+      const box3SocialSecurityWages = Math.min(box1WagesTips, FICA_RATES.socialSecurity.wageBase);
+      const box4SocialSecurityTax = payrollRunsData.reduce(
+        (sum, r) => sum + Number(r.socialSecurity),
+        0
+      );
+      const box5MedicareWages = box1WagesTips;
+      const box6MedicareTax = payrollRunsData.reduce(
+        (sum, r) => sum + Number(r.medicare),
+        0
+      );
+      const box17StateTax = payrollRunsData.reduce(
+        (sum, r) => sum + Number(r.stateTax),
+        0
+      );
+
+      return {
+        taxYear: input.taxYear,
+        employee: {
+          name: `${w.firstName} ${w.lastName}`,
+          ssn: w.ssn ? "XXX-XX-" + w.ssn.slice(-4) : "Not on file",
+          address: `${w.address || ""}, ${w.city || ""}, ${w.state || ""} ${w.zipCode || ""}`,
+        },
+        employer: {
+          name: userHouse[0].name,
+          ein: userHouse[0].trustEIN || "Not on file",
+        },
+        boxes: {
+          box1: box1WagesTips,
+          box2: box2FederalTax,
+          box3: box3SocialSecurityWages,
+          box4: box4SocialSecurityTax,
+          box5: box5MedicareWages,
+          box6: box6MedicareTax,
+          box17: box17StateTax,
+          box16: box1WagesTips, // State wages (same as federal for simplicity)
+        },
+      };
+    }),
+});
+
+export type PayrollRouter = typeof payrollRouter;

@@ -898,3 +898,89 @@
 - [x] Track token progression (MIRROR, GIFT, SPARK) based on post-activation courses
 - [x] Update Dashboard to show House status and post-activation progress
 - [ ] Show LuvLedger balance and transaction summary on Dashboard
+
+
+## Phase 43: LuvLedger Dashboard Widget
+
+- [ ] Search and remove any "Bots" references in codebase
+- [ ] Create LuvLedgerWidget component with balance display
+- [ ] Add recent transactions list to widget
+- [ ] Add treasury contribution summary
+- [ ] Integrate widget into Dashboard
+- [ ] Write tests for LuvLedger widget
+
+
+## Phase 44: Bot to Agent Renaming & Future-Proof Architecture
+
+- [x] Rename all "Bot" references to "Agent" in schema
+- [x] Rename bots.ts router to agents.ts
+- [x] Rename Bots.tsx page to Agents.tsx
+- [x] Update App.tsx routes from /bots to /agents
+- [x] Complete database migration (rename tables)
+- [x] Add preloaded agent topics for each agent type (10 topic categories with descriptions)
+- [x] Add suggested question prompts for interactive conversations (6+ prompts per agent)
+- [x] Create modular AI provider interface (OpenAI, Anthropic, Google, Mistral, Ollama, LM Studio, custom)
+- [x] Design crypto payment infrastructure (BTC, ETH, SOL, USDC, USDT, DAI, MATIC, AVAX, DOT, ADA, XRP, XLM, ATOM, LUV)
+- [x] Add multi-currency support for global operations (17 fiat currencies, 14 cryptocurrencies)
+- [x] Add localization/i18n framework for multi-language support (14 languages including African languages)
+- [x] Document metaverse-ready architecture patterns (virtual spaces, digital avatars, NFT backing)
+- [x] Create version-aware component system for auto-updates (system versions, feature flags)
+
+
+## Phase 45: Real Estate Department & Property Management
+
+- [x] Add real_estate_properties table (land, buildings, commercial, residential)
+- [x] Add property_acquisitions table for purchase tracking
+- [x] Add property_valuations table for appraisals and market values
+- [x] Add property_expenses table for maintenance, taxes, insurance
+- [x] Add property_income table for rental income, sales proceeds
+- [x] Add real_estate_agents table for agent relationships
+- [x] Create Real Estate router with CRUD operations
+- [x] Build Real Estate Simulator for property investment training
+- [x] Integrate property transactions with LuvLedger
+- [x] Link to restoration case for land recovery
+
+## Phase 46: House Document Vault
+
+- [x] Add house_document_vaults table (one per House)
+- [x] Add vault_documents table for document storage
+- [x] Add vault_folders table for organization
+- [x] Add vault_access_logs table for audit trail
+- [x] Create Document Vault router with upload/download
+- [x] Build Document Vault UI per House
+- [x] Auto-create vault when House is activated
+- [x] Integrate with S3 for secure file storage
+
+## Phase 47: W-2 Worker Management
+
+- [x] Add w2_workers table for employee records
+- [x] Add worker_compensation table for wages and benefits
+- [x] Add payroll_periods table for pay schedules
+- [x] Add payroll_runs table for payroll processing
+- [x] Add worker_tax_withholdings table for federal/state taxes
+- [x] Create W-2 Worker router with CRUD operations
+- [x] Build payroll processing logic
+- [x] Generate W-2 forms for tax filing
+- [x] Integrate payroll with LuvLedger transactions
+
+## Phase 48: Tax Preparation Tools
+
+- [x] Add tax_years table for annual tax records
+- [x] Add tax_documents table for receipts, forms, statements
+- [x] Add tax_deductions table for categorized deductions
+- [x] Add tax_filings table for submission tracking
+- [x] Add estimated_taxes table for quarterly payments
+- [x] Create Tax Preparation router
+- [x] Build income categorization tools
+- [x] Build deduction tracking and optimization
+- [x] Generate tax summary reports
+- [x] Integrate with LuvLedger for income/expense data
+
+## Phase 49: Restoration Case Management
+
+- [x] Create restoration_cases table for ancestral land claims
+- [x] Create restoration router with case CRUD operations
+- [x] Link properties to restoration cases
+- [x] Track case expenses through LuvLedger
+- [x] Implement case resolution with settlement recording
+- [x] Build case timeline tracking

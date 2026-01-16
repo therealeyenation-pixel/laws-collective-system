@@ -4,6 +4,7 @@ const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 
 function isIpAddress(host: string) {
   // Basic IPv4 check and IPv6 presence detection.
+  if (!host) return false;
   if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) return true;
   return host.includes(":");
 }
@@ -30,7 +31,7 @@ function isSecureRequest(req: Request) {
 }
 
 function isLocalhost(req: Request) {
-  const hostname = req.hostname;
+  const hostname = req.hostname || 'localhost';
   return LOCAL_HOSTS.has(hostname) || isIpAddress(hostname);
 }
 

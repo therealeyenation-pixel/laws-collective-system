@@ -35,7 +35,7 @@ import {
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
 
-const botIcons: Record<string, React.ReactNode> = {
+const agentIcons: Record<string, React.ReactNode> = {
   operations: <Settings className="w-5 h-5" />,
   support: <HelpCircle className="w-5 h-5" />,
   education: <BookOpen className="w-5 h-5" />,
@@ -49,7 +49,7 @@ const botIcons: Record<string, React.ReactNode> = {
   custom: <Sparkles className="w-5 h-5" />,
 };
 
-const botColors: Record<string, string> = {
+const agentColors: Record<string, string> = {
   operations: "bg-blue-500/10 text-blue-500 border-blue-500/20",
   support: "bg-green-500/10 text-green-500 border-green-500/20",
   education: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
@@ -70,8 +70,8 @@ interface Message {
   createdAt: Date;
 }
 
-export default function Bots() {
-  const [selectedBot, setSelectedBot] = useState<number | null>(null);
+export default function Agents() {
+  const [selectedAgent, setSelectedAgent] = useState<number | null>(null);
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -82,27 +82,27 @@ export default function Bots() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
-  const { data: bots, isLoading: botsLoading, refetch: refetchBots } = trpc.bots.getAll.useQuery();
-  const { data: conversations, refetch: refetchConversations } = trpc.bots.getConversations.useQuery(
-    { botId: selectedBot || undefined },
-    { enabled: !!selectedBot }
+  const { data: agents, isLoading: agentsLoading, refetch: refetchAgents } = trpc.agents.getAll.useQuery();
+  const { data: conversations, refetch: refetchConversations } = trpc.agents.getConversations.useQuery(
+    { agentId: selectedAgent || undefined },
+    { enabled: !!selectedAgent }
   );
-  const { data: messageHistory, refetch: refetchMessages } = trpc.bots.getMessages.useQuery(
+  const { data: messageHistory, refetch: refetchMessages } = trpc.agents.getMessages.useQuery(
     { conversationId: conversationId || 0 },
     { enabled: !!conversationId }
   );
 
-  const initializeBots = trpc.bots.initializeSystemBots.useMutation({
+  const initializeAgents = trpc.agents.initializeSystemAgents.useMutation({
     onSuccess: (data) => {
       toast.success(data.message);
-      refetchBots();
+      refetchAgents();
     },
     onError: (error) => {
       toast.error(error.message);
     },
   });
 
-  const startConversation = trpc.bots.startConversation.useMutation({
+  const startConversation = trpc.agents.startConversation.useMutation({
     onSuccess: (data) => {
       setConversationId(data.conversationId);
       setMessages([]);
@@ -114,7 +114,7 @@ export default function Bots() {
     },
   });
 
-  const sendMessage = trpc.bots.chat.useMutation({
+  const sendMessage = trpc.agents.chat.useMutation({
     onSuccess: (data) => {
       setMessages((prev) => [
         ...prev,
@@ -133,7 +133,7 @@ export default function Bots() {
     },
   });
 
-  const deleteConversation = trpc.bots.deleteConversation.useMutation({
+  const deleteConversation = trpc.agents.deleteConversation.useMutation({
     onSuccess: () => {
       toast.success("Conversation deleted");
       setConversationId(null);
@@ -145,9 +145,20 @@ export default function Bots() {
     },
   });
 
-  const { data: scheduledTasks, refetch: refetchTasks } = trpc.bots.getScheduledTasks.useQuery();
+  const { data: scheduledTasks, refetch: refetchTasks } = trpc.agents.getScheduledTasks.useQuery();
   
-  const initializeTasks = trpc.bots.initializeDefaultTasks.useMutation({
+  // Get the selected agent's type for topics and prompts
+  const selectedAgentData = agents?.find((a) => a.id === selectedAgent);
+  const { data: topics } = trpc.agents.getTopics.useQuery(
+    { agentType: selectedAgentData?.type || "custom" },
+    { enabled: !!selectedAgentData }
+  );
+  const { data: prompts } = trpc.agents.getPrompts.useQuery(
+    { agentType: selectedAgentData?.type || "custom" },
+    { enabled: !!selectedAgentData }
+  );
+  
+  const initializeTasks = trpc.agents.initializeDefaultTasks.useMutation({
     onSuccess: (data) => {
       toast.success(data.message);
       refetchTasks();
@@ -157,7 +168,7 @@ export default function Bots() {
     },
   });
 
-  const runTask = trpc.bots.runScheduledTask.useMutation({
+  const runTask = trpc.agents.runScheduledTask.useMutation({
     onSuccess: (data) => {
       toast.success("Task completed");
       refetchTasks();
@@ -167,7 +178,7 @@ export default function Bots() {
     },
   });
 
-  const toggleTask = trpc.bots.toggleScheduledTask.useMutation({
+  const toggleTask = trpc.agents.toggleScheduledTask.useMutation({
     onSuccess: () => {
       refetchTasks();
     },
@@ -234,8 +245,8 @@ export default function Bots() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSelectBot = (botId: number) => {
-    setSelectedBot(botId);
+  const handleSelectAgent = (agentId: number) => {
+    setSelectedAgent(agentId);
     setConversationId(null);
     setMessages([]);
     setShowScheduledTasks(false);
@@ -243,11 +254,11 @@ export default function Bots() {
   };
 
   const handleStartNewConversation = () => {
-    if (!selectedBot) return;
-    const bot = bots?.find((b) => b.id === selectedBot);
+    if (!selectedAgent) return;
+    const agent = agents?.find((b) => b.id === selectedAgent);
     startConversation.mutate({
-      botId: selectedBot,
-      title: `Chat with ${bot?.name || "Bot"}`,
+      agentId: selectedAgent,
+      title: `Chat with ${agent?.name || "Agent"}`,
     });
   };
 
@@ -284,14 +295,12 @@ export default function Bots() {
 
   const handleBackToList = () => {
     setMobileView("list");
-    setSelectedBot(null);
+    setSelectedAgent(null);
     setConversationId(null);
     setShowScheduledTasks(false);
   };
 
-  const selectedBotData = bots?.find((b) => b.id === selectedBot);
-
-  if (botsLoading) {
+  if (agentsLoading) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
@@ -301,8 +310,8 @@ export default function Bots() {
     );
   }
 
-  // No bots yet - show initialization
-  if (!bots || bots.length === 0) {
+  // No agents yet - show initialization
+  if (!agents || agents.length === 0) {
     return (
       <DashboardLayout>
         <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] gap-6 p-4">
@@ -310,36 +319,36 @@ export default function Bots() {
             <Bot className="w-16 h-16 mx-auto text-muted-foreground" />
             <h2 className="text-2xl font-bold">AI Assistants</h2>
             <p className="text-muted-foreground max-w-md">
-              Initialize the AI bot system to get intelligent assistants for operations,
+              Initialize the AI agent system to get intelligent assistants for operations,
               support, education, analytics, governance, finance, and media.
             </p>
           </div>
           <Button
             size="lg"
-            onClick={() => initializeBots.mutate()}
-            disabled={initializeBots.isPending}
+            onClick={() => initializeAgents.mutate()}
+            disabled={initializeAgents.isPending}
             className="gap-2 min-h-[48px]"
           >
-            {initializeBots.isPending ? (
+            {initializeAgents.isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Sparkles className="w-4 h-4" />
             )}
-            Initialize AI Bots
+            Initialize AI Agents
           </Button>
         </div>
       </DashboardLayout>
     );
   }
 
-  // Mobile: Show bot list
+  // Mobile: Show agent list
   const renderBotList = () => (
     <div className="p-4 space-y-2">
       {/* Scheduled Tasks Toggle */}
       <button
         onClick={() => {
           setShowScheduledTasks(true);
-          setSelectedBot(null);
+          setSelectedAgent(null);
           setMobileView("chat");
         }}
         className="w-full flex items-center gap-3 p-4 rounded-xl text-left transition-colors bg-white border border-gray-200 hover:border-amber-300 min-h-[64px]"
@@ -358,23 +367,23 @@ export default function Bots() {
 
       <div className="border-b my-4" />
 
-      {bots.map((bot) => (
+      {agents.map((agent) => (
         <button
-          key={bot.id}
-          onClick={() => handleSelectBot(bot.id)}
+          key={agent.id}
+          onClick={() => handleSelectAgent(agent.id)}
           className="w-full flex items-center gap-3 p-4 rounded-xl text-left transition-colors bg-white border border-gray-200 hover:border-primary/30 min-h-[64px]"
         >
           <div
             className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-              botColors[bot.type]
+              agentColors[agent.type]
             }`}
           >
-            {bot.avatar || botIcons[bot.type]}
+            {agent.avatar || agentIcons[agent.type]}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-medium">{bot.name}</p>
+            <p className="font-medium">{agent.name}</p>
             <p className="text-sm text-muted-foreground capitalize">
-              {bot.type}
+              {agent.type}
             </p>
           </div>
           <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -483,7 +492,7 @@ export default function Bots() {
   // Mobile: Show chat interface
   const renderChat = () => (
     <div className="flex flex-col h-full">
-      {/* Bot Header */}
+      {/* Agent Header */}
       <div className="p-4 border-b bg-white flex items-center gap-3">
         <button
           onClick={handleBackToList}
@@ -493,15 +502,15 @@ export default function Bots() {
         </button>
         <div
           className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-            botColors[selectedBotData?.type || "custom"]
+            agentColors[selectedAgentData?.type || "custom"]
           }`}
         >
-          {selectedBotData?.avatar || botIcons[selectedBotData?.type || "custom"]}
+          {selectedAgentData?.avatar || agentIcons[selectedAgentData?.type || "custom"]}
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="font-semibold truncate">{selectedBotData?.name}</h2>
+          <h2 className="font-semibold truncate">{selectedAgentData?.name}</h2>
           <p className="text-xs text-muted-foreground truncate">
-            {selectedBotData?.description}
+            {selectedAgentData?.description}
           </p>
         </div>
         <Button
@@ -540,30 +549,102 @@ export default function Bots() {
       {/* Chat Messages */}
       <div className="flex-1 overflow-hidden">
         {!conversationId ? (
-          <div className="flex-1 flex items-center justify-center h-full p-4">
-            <div className="text-center space-y-4">
-              <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground" />
-              <p className="text-muted-foreground">
-                Start a new conversation
-              </p>
-              <Button
-                onClick={handleStartNewConversation}
-                disabled={startConversation.isPending}
-                className="gap-2 min-h-[48px]"
-              >
-                <Plus className="w-4 h-4" />
-                Start Chatting
-              </Button>
+          <div className="flex-1 overflow-y-auto h-full p-4">
+            <div className="max-w-2xl mx-auto space-y-6">
+              {/* Welcome Section */}
+              <div className="text-center space-y-2">
+                <div className={`w-16 h-16 rounded-2xl mx-auto flex items-center justify-center ${agentColors[selectedAgentData?.type || "custom"]}`}>
+                  {selectedAgentData?.avatar || agentIcons[selectedAgentData?.type || "custom"]}
+                </div>
+                <h2 className="text-xl font-bold">{selectedAgentData?.name}</h2>
+                <p className="text-muted-foreground text-sm max-w-md mx-auto">
+                  {selectedAgentData?.description}
+                </p>
+              </div>
+
+              {/* Topics Section */}
+              {topics && topics.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Topics to Explore</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {topics.map((topic, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          handleStartNewConversation();
+                          setTimeout(() => setInputMessage(topic.title), 100);
+                        }}
+                        className="flex items-start gap-3 p-3 rounded-xl border bg-white hover:bg-gray-50 hover:border-primary/30 transition-all text-left group"
+                      >
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${agentColors[selectedAgentData?.type || "custom"]}`}>
+                          <Sparkles className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm group-hover:text-primary transition-colors">{topic.title}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{topic.description}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Suggested Prompts Section */}
+              {prompts && prompts.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Try Asking</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {prompts.slice(0, 6).map((prompt, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          handleStartNewConversation();
+                          setTimeout(() => {
+                            setInputMessage(prompt);
+                          }, 100);
+                        }}
+                        className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 hover:border-primary/30 text-sm transition-all hover:shadow-sm"
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Start Button */}
+              <div className="text-center pt-4">
+                <Button
+                  onClick={handleStartNewConversation}
+                  disabled={startConversation.isPending}
+                  size="lg"
+                  className="gap-2 min-h-[48px]"
+                >
+                  <Plus className="w-4 h-4" />
+                  Start New Conversation
+                </Button>
+              </div>
             </div>
           </div>
         ) : (
           <ScrollArea className="h-full p-4">
             <div className="space-y-4">
-              {messages.length === 0 && (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">
-                    Send a message to start the conversation
-                  </p>
+              {messages.length === 0 && prompts && prompts.length > 0 && (
+                <div className="space-y-4 py-4">
+                  <p className="text-center text-muted-foreground text-sm">Try one of these to get started:</p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {prompts.slice(0, 4).map((prompt, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setInputMessage(prompt);
+                        }}
+                        className="px-3 py-2 rounded-full border bg-white hover:bg-gray-50 hover:border-primary/30 text-sm transition-all"
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               {messages.map((msg) => (
@@ -666,18 +747,18 @@ export default function Bots() {
             </div>
           ) : showScheduledTasks ? (
             renderScheduledTasks()
-          ) : selectedBot ? (
+          ) : selectedAgent ? (
             renderChat()
           ) : (
             <div className="h-full flex items-center justify-center">
-              <p className="text-muted-foreground">Select a bot to start</p>
+              <p className="text-muted-foreground">Select a agent to start</p>
             </div>
           )}
         </div>
 
         {/* Desktop View */}
         <div className="hidden md:flex md:flex-1 md:gap-4">
-          {/* Bot Selection Sidebar */}
+          {/* Agent Selection Sidebar */}
           <Card className="w-64 flex-shrink-0 flex flex-col">
             <div className="p-4 border-b">
               <h2 className="font-semibold flex items-center gap-2">
@@ -691,7 +772,7 @@ export default function Bots() {
                 <button
                   onClick={() => {
                     setShowScheduledTasks(true);
-                    setSelectedBot(null);
+                    setSelectedAgent(null);
                   }}
                   className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors mb-2 ${
                     showScheduledTasks
@@ -710,33 +791,33 @@ export default function Bots() {
                   </div>
                 </button>
                 <div className="border-b mb-2" />
-                {bots.map((bot) => (
+                {agents.map((agent) => (
                   <button
-                    key={bot.id}
+                    key={agent.id}
                     onClick={() => {
-                      handleSelectBot(bot.id);
+                      handleSelectAgent(agent.id);
                       setShowScheduledTasks(false);
                     }}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
-                      selectedBot === bot.id && !showScheduledTasks
+                      selectedAgent === agent.id && !showScheduledTasks
                         ? "bg-primary/10 text-primary"
                         : "hover:bg-muted"
                     }`}
                   >
                     <div
                       className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        botColors[bot.type]
+                        agentColors[agent.type]
                       }`}
                     >
-                      {bot.avatar || botIcons[bot.type]}
+                      {agent.avatar || agentIcons[agent.type]}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{bot.name}</p>
+                      <p className="font-medium truncate">{agent.name}</p>
                       <p className="text-xs text-muted-foreground capitalize">
-                        {bot.type}
+                        {agent.type}
                       </p>
                     </div>
-                    {selectedBot === bot.id && !showScheduledTasks && (
+                    {selectedAgent === agent.id && !showScheduledTasks && (
                       <ChevronRight className="w-4 h-4 text-primary" />
                     )}
                   </button>
@@ -753,7 +834,7 @@ export default function Bots() {
                   <div>
                     <h2 className="text-xl font-semibold flex items-center gap-2">
                       <Calendar className="w-5 h-5" />
-                      Scheduled Bot Tasks
+                      Scheduled Agent Tasks
                     </h2>
                     <p className="text-sm text-muted-foreground mt-1">
                       Automated reports and actions that run on schedule
@@ -830,7 +911,7 @@ export default function Bots() {
                   )}
                 </ScrollArea>
               </Card>
-            ) : !selectedBot ? (
+            ) : !selectedAgent ? (
               <Card className="flex-1 flex items-center justify-center">
                 <div className="text-center space-y-4">
                   <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground" />
@@ -842,21 +923,21 @@ export default function Bots() {
               </Card>
             ) : (
               <>
-                {/* Bot Header */}
+                {/* Agent Header */}
                 <Card className="p-4 mb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-12 h-12 rounded-lg flex items-center justify-center text-lg ${
-                          botColors[selectedBotData?.type || "custom"]
+                          agentColors[selectedAgentData?.type || "custom"]
                         }`}
                       >
-                        {selectedBotData?.avatar || botIcons[selectedBotData?.type || "custom"]}
+                        {selectedAgentData?.avatar || agentIcons[selectedAgentData?.type || "custom"]}
                       </div>
                       <div>
-                        <h2 className="font-semibold">{selectedBotData?.name}</h2>
+                        <h2 className="font-semibold">{selectedAgentData?.name}</h2>
                         <p className="text-sm text-muted-foreground">
-                          {selectedBotData?.description}
+                          {selectedAgentData?.description}
                         </p>
                       </div>
                     </div>

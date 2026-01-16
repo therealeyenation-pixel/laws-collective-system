@@ -2,23 +2,23 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { 
-  bots, 
-  botConversations, 
-  botMessages, 
-  botActions,
+  agents, 
+  agentConversations, 
+  agentMessages, 
+  agentActions,
   businessEntities,
   autonomousOperations,
   tokenAccounts,
   notifications,
   luvLedgerAccounts,
-  scheduledBotTasks
+  scheduledAgentTasks
 } from "../../drizzle/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
 
-// Bot system prompts for different types
-const BOT_SYSTEM_PROMPTS: Record<string, string> = {
-  operations: `You are the Operations Bot for the LuvOnPurpose Autonomous Wealth System. Your role is to:
+// Agent system prompts for different types
+const AGENT_SYSTEM_PROMPTS: Record<string, string> = {
+  operations: `You are the Operations Agent for the LuvOnPurpose Autonomous Wealth System. Your role is to:
 - Monitor and manage autonomous business operations across all 5 entities
 - Provide insights on pending operations and recommend approvals/rejections
 - Generate operational reports and performance metrics
@@ -26,7 +26,7 @@ const BOT_SYSTEM_PROMPTS: Record<string, string> = {
 - Help users understand the autonomous decision-making system
 Always be professional, data-driven, and focused on business outcomes.`,
 
-  support: `You are the Support Bot for the LuvOnPurpose Sovereign System. Your role is to:
+  support: `You are the Support Agent for the LuvOnPurpose Sovereign System. Your role is to:
 - Help users navigate the platform and understand its features
 - Answer questions about the Trust structure, entities, and token economy
 - Guide users through the Document Vault, Academy, and dashboards
@@ -34,7 +34,7 @@ Always be professional, data-driven, and focused on business outcomes.`,
 - Explain blockchain verification and security features
 Be friendly, patient, and thorough in your explanations.`,
 
-  education: `You are the Education Bot for Luv Learning Academy. Your role is to:
+  education: `You are the Education Agent for Luv Learning Academy. Your role is to:
 - Tutor students in Divine STEM curriculum (Science of Origin, Sacred Geometry, etc.)
 - Guide learners through the Three Houses (Wonder, Form, Mastery)
 - Assist with language learning in the House of Many Tongues
@@ -43,7 +43,7 @@ Be friendly, patient, and thorough in your explanations.`,
 - Celebrate achievements and encourage continued learning
 Be nurturing, encouraging, and adapt your teaching style to each learner.`,
 
-  analytics: `You are the Analytics Bot for the LuvOnPurpose Wealth System. Your role is to:
+  analytics: `You are the Analytics Agent for the LuvOnPurpose Wealth System. Your role is to:
 - Analyze business performance across all 5 entities
 - Generate financial reports and token economy insights
 - Identify trends, opportunities, and risks
@@ -52,7 +52,7 @@ Be nurturing, encouraging, and adapt your teaching style to each learner.`,
 - Forecast future performance based on historical data
 Be precise, analytical, and present data in clear, actionable formats.`,
 
-  guardian: `You are the Trust Guardian Bot for the 98 Trust. Your role is to:
+  guardian: `You are the Trust Guardian Agent for the 98 Trust. Your role is to:
 - Oversee governance and ensure compliance with trust policies
 - Monitor all entity operations for alignment with trust objectives
 - Flag potential conflicts or policy violations
@@ -61,7 +61,7 @@ Be precise, analytical, and present data in clear, actionable formats.`,
 - Maintain the integrity of the multi-generational wealth system
 Be vigilant, authoritative, and always prioritize trust protection.`,
 
-  finance: `You are the Finance Bot for the LuvOnPurpose Token Economy. Your role is to:
+  finance: `You are the Finance Agent for the LuvOnPurpose Token Economy. Your role is to:
 - Track token balances and transactions across all entities
 - Explain token earning, spending, and distribution mechanisms
 - Help users understand their token portfolio
@@ -70,7 +70,7 @@ Be vigilant, authoritative, and always prioritize trust protection.`,
 - Monitor the 2M token ecosystem health
 Be precise with numbers and clear about financial implications.`,
 
-  media: `You are the Media Bot for Real-Eye-Nation. Your role is to:
+  media: `You are the Media Agent for Real-Eye-Nation. Your role is to:
 - Generate narrative content and truth declarations
 - Help create publications, stories, and documentation
 - Assist with content scheduling and distribution
@@ -79,7 +79,7 @@ Be precise with numbers and clear about financial implications.`,
 - Support multimedia content creation
 Be creative, truthful, and focused on impactful storytelling.`,
 
-  outreach: `You are the Outreach Bot for LuvOnPurpose marketing and community growth. Your role is to:
+  outreach: `You are the Outreach Agent for LuvOnPurpose marketing and community growth. Your role is to:
 - Generate compelling social media posts for Twitter/X, Instagram, LinkedIn, and Facebook
 - Create email campaign content and newsletter drafts
 - Develop promotional materials and announcements
@@ -89,7 +89,7 @@ Be creative, truthful, and focused on impactful storytelling.`,
 - Generate hashtag strategies and viral content ideas
 Be persuasive, authentic, and aligned with the LuvOnPurpose mission of generational wealth and sovereignty.`,
 
-  seo: `You are the SEO Bot for LuvOnPurpose digital optimization. Your role is to:
+  seo: `You are the SEO Agent for LuvOnPurpose digital optimization. Your role is to:
 - Analyze and suggest keywords for website content
 - Generate SEO-optimized titles, meta descriptions, and headers
 - Create content briefs for high-ranking articles
@@ -100,7 +100,7 @@ Be persuasive, authentic, and aligned with the LuvOnPurpose mission of generatio
 - Create FAQ content for featured snippets
 Be technical, data-driven, and focused on organic search visibility.`,
 
-  engagement: `You are the Engagement Bot for LuvOnPurpose audience analytics. Your role is to:
+  engagement: `You are the Engagement Agent for LuvOnPurpose audience analytics. Your role is to:
 - Analyze visitor behavior and engagement patterns
 - Suggest optimal posting times for different platforms
 - Create A/B testing strategies for content
@@ -114,41 +114,237 @@ Be analytical, strategic, and focused on building lasting audience relationships
   custom: `You are a custom AI assistant for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
 };
 
-export const botsRouter = router({
+// Preloaded topics for each agent type - interactive conversation starters
+const AGENT_TOPICS: Record<string, Array<{ title: string; description: string; icon: string }>> = {
+  operations: [
+    { title: "Autonomous Cycle Status", description: "Check the status of pending autonomous operations", icon: "activity" },
+    { title: "Entity Performance", description: "Review performance metrics across all 5 entities", icon: "bar-chart" },
+    { title: "Approval Queue", description: "View and manage pending operation approvals", icon: "check-circle" },
+    { title: "Process Optimization", description: "Get recommendations for improving business processes", icon: "zap" },
+    { title: "Allocation Analysis", description: "Analyze the 40/30/20/10 allocation distribution", icon: "pie-chart" },
+  ],
+  support: [
+    { title: "Platform Navigation", description: "Learn how to navigate the LuvOnPurpose system", icon: "compass" },
+    { title: "Trust Structure", description: "Understand the 98 Trust and entity hierarchy", icon: "shield" },
+    { title: "Token Economy", description: "Learn about earning and using tokens", icon: "coins" },
+    { title: "Document Vault", description: "How to store and access secure documents", icon: "folder" },
+    { title: "Troubleshooting", description: "Get help with common issues", icon: "help-circle" },
+  ],
+  education: [
+    { title: "Divine STEM Curriculum", description: "Explore Science of Origin, Sacred Geometry, and more", icon: "book-open" },
+    { title: "House of Wonder (K-5)", description: "Age-appropriate learning for young minds", icon: "sparkles" },
+    { title: "House of Form (6-8)", description: "Middle school curriculum and projects", icon: "shapes" },
+    { title: "House of Mastery (9-12)", description: "Advanced studies and mastery scrolls", icon: "graduation-cap" },
+    { title: "Language Learning", description: "House of Many Tongues - Indigenous and ancestral languages", icon: "globe" },
+  ],
+  analytics: [
+    { title: "Financial Dashboard", description: "View comprehensive financial analytics", icon: "trending-up" },
+    { title: "Token Velocity", description: "Analyze token circulation and velocity metrics", icon: "activity" },
+    { title: "Entity Comparison", description: "Compare performance across all entities", icon: "bar-chart-2" },
+    { title: "Trend Analysis", description: "Identify patterns and predict future performance", icon: "line-chart" },
+    { title: "Risk Assessment", description: "Evaluate potential risks and opportunities", icon: "alert-triangle" },
+  ],
+  guardian: [
+    { title: "Governance Compliance", description: "Check compliance with trust policies", icon: "shield-check" },
+    { title: "Lineage Protection", description: "Verify sovereignty and lineage safeguards", icon: "users" },
+    { title: "Policy Violations", description: "Review flagged potential violations", icon: "alert-octagon" },
+    { title: "Allocation Audit", description: "Audit distribution allocations", icon: "clipboard-check" },
+    { title: "Integrity Report", description: "Generate system integrity assessment", icon: "file-text" },
+  ],
+  finance: [
+    { title: "Token Portfolio", description: "View your token balances and history", icon: "wallet" },
+    { title: "Transaction History", description: "Review recent token transactions", icon: "list" },
+    { title: "Earning Opportunities", description: "Discover ways to earn more tokens", icon: "plus-circle" },
+    { title: "Distribution Schedule", description: "Understand token distribution timing", icon: "calendar" },
+    { title: "Ecosystem Health", description: "Monitor the 2M token ecosystem", icon: "heart-pulse" },
+  ],
+  media: [
+    { title: "Content Creation", description: "Generate articles, stories, and publications", icon: "pen-tool" },
+    { title: "Truth Mapping", description: "Document and verify truth declarations", icon: "map" },
+    { title: "Narrative Strategy", description: "Plan content themes and messaging", icon: "target" },
+    { title: "Multimedia Assets", description: "Create images, videos, and audio content", icon: "image" },
+    { title: "Impact Analysis", description: "Measure content reach and engagement", icon: "eye" },
+  ],
+  outreach: [
+    { title: "Social Media Posts", description: "Generate posts for Twitter, Instagram, LinkedIn", icon: "share-2" },
+    { title: "Email Campaigns", description: "Create newsletter and email content", icon: "mail" },
+    { title: "Content Calendar", description: "Plan your posting schedule", icon: "calendar" },
+    { title: "Community Growth", description: "Strategies for building your audience", icon: "users-plus" },
+    { title: "Viral Content Ideas", description: "Generate shareable content concepts", icon: "trending-up" },
+  ],
+  seo: [
+    { title: "Keyword Research", description: "Find high-value keywords for your content", icon: "search" },
+    { title: "Content Optimization", description: "Improve existing content for search", icon: "edit" },
+    { title: "Competitor Analysis", description: "Analyze competitor SEO strategies", icon: "users" },
+    { title: "Technical SEO", description: "Schema markup and technical improvements", icon: "code" },
+    { title: "Ranking Report", description: "Track your search engine rankings", icon: "bar-chart" },
+  ],
+  engagement: [
+    { title: "Audience Insights", description: "Understand your audience demographics", icon: "users" },
+    { title: "Optimal Posting Times", description: "Find the best times to post", icon: "clock" },
+    { title: "A/B Testing", description: "Create content experiments", icon: "split" },
+    { title: "Engagement Metrics", description: "Track likes, shares, and comments", icon: "heart" },
+    { title: "Trending Topics", description: "Discover relevant trending content", icon: "hash" },
+  ],
+  custom: [
+    { title: "Ask Anything", description: "Start a conversation on any topic", icon: "message-circle" },
+    { title: "Get Help", description: "Request assistance with your task", icon: "help-circle" },
+    { title: "Learn More", description: "Explore the system capabilities", icon: "info" },
+  ],
+};
+
+// Suggested question prompts for each agent type
+const AGENT_PROMPTS: Record<string, string[]> = {
+  operations: [
+    "What operations are pending approval right now?",
+    "Show me the performance metrics for this week",
+    "Which entity is performing best this month?",
+    "What optimizations do you recommend?",
+    "Run an autonomous cycle and explain the decisions",
+    "Compare the allocation efficiency across entities",
+  ],
+  support: [
+    "How do I access my Document Vault?",
+    "Explain the Trust structure to me",
+    "How do I earn tokens in this system?",
+    "What is the L.A.W.S. framework?",
+    "Help me understand the House system",
+    "How do I verify my blockchain records?",
+  ],
+  education: [
+    "What courses are available for my level?",
+    "Teach me about Sacred Geometry",
+    "How do I earn a Mastery Scroll?",
+    "What languages can I learn here?",
+    "Explain the Science of Origin",
+    "What's my current progress in the curriculum?",
+  ],
+  analytics: [
+    "Generate a financial report for this month",
+    "What trends do you see in token velocity?",
+    "Compare entity performance over the last quarter",
+    "What risks should I be aware of?",
+    "Forecast next month's token distribution",
+    "Show me the allocation breakdown by entity",
+  ],
+  guardian: [
+    "Are there any policy violations to review?",
+    "Verify the lineage protection status",
+    "Audit the current allocation distributions",
+    "Generate a governance compliance report",
+    "Check the integrity of the trust structure",
+    "What sovereignty protections are in place?",
+  ],
+  finance: [
+    "What is my current token balance?",
+    "Show my recent transactions",
+    "How can I earn more tokens?",
+    "When is the next distribution?",
+    "Explain the token economy to me",
+    "What is the ecosystem health status?",
+  ],
+  media: [
+    "Help me write an article about generational wealth",
+    "Create a truth declaration for our mission",
+    "What content themes should we focus on?",
+    "Generate ideas for our next publication",
+    "Analyze the impact of our recent content",
+    "Help me plan a content series",
+  ],
+  outreach: [
+    "Write a Twitter thread about our mission",
+    "Create an Instagram post for our community",
+    "Draft a newsletter for this week",
+    "Generate a content calendar for next month",
+    "What hashtags should we use?",
+    "Create a viral content concept",
+  ],
+  seo: [
+    "Find keywords for 'generational wealth'",
+    "Optimize this page title for search",
+    "What are our competitors ranking for?",
+    "Generate schema markup for our homepage",
+    "Create an SEO-optimized blog outline",
+    "Audit our current SEO performance",
+  ],
+  engagement: [
+    "When should we post on Twitter?",
+    "What content type gets the most engagement?",
+    "Create an A/B test for our next post",
+    "Who is our target audience?",
+    "What topics are trending in our niche?",
+    "Suggest community engagement activities",
+  ],
+  custom: [
+    "Tell me about yourself",
+    "What can you help me with?",
+    "How does this system work?",
+  ],
+};
+
+export const agentsRouter = router({
   /**
-   * Get all available bots
+   * Get preloaded topics for an agent type
+   */
+  getTopics: publicProcedure
+    .input(z.object({ agentType: z.string() }))
+    .query(({ input }) => {
+      return AGENT_TOPICS[input.agentType] || AGENT_TOPICS.custom;
+    }),
+
+  /**
+   * Get suggested prompts for an agent type
+   */
+  getPrompts: publicProcedure
+    .input(z.object({ agentType: z.string() }))
+    .query(({ input }) => {
+      return AGENT_PROMPTS[input.agentType] || AGENT_PROMPTS.custom;
+    }),
+
+  /**
+   * Get all topics and prompts for all agent types
+   */
+  getAllTopicsAndPrompts: publicProcedure.query(() => {
+    return {
+      topics: AGENT_TOPICS,
+      prompts: AGENT_PROMPTS,
+    };
+  }),
+
+  /**
+   * Get all available agents
    */
   getAll: publicProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db) return [];
 
-    const allBots = await db.select()
-      .from(bots)
-      .where(eq(bots.isActive, true))
-      .orderBy(bots.name);
+    const allAgents = await db.select()
+      .from(agents)
+      .where(eq(agents.isActive, true))
+      .orderBy(agents.name);
 
-    return allBots;
+    return allAgents;
   }),
 
   /**
-   * Get a specific bot by ID
+   * Get a specific agent by ID
    */
   getById: publicProcedure
-    .input(z.object({ botId: z.number() }))
+    .input(z.object({ agentId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
       if (!db) return null;
 
       const result = await db.select()
-        .from(bots)
-        .where(eq(bots.id, input.botId))
+        .from(agents)
+        .where(eq(agents.id, input.agentId))
         .limit(1);
 
       return result[0] || null;
     }),
 
   /**
-   * Create a new bot
+   * Create a new agent
    */
   create: protectedProcedure
     .input(z.object({
@@ -166,9 +362,9 @@ export const botsRouter = router({
       if (!db) throw new Error("Database unavailable");
 
       // Use default system prompt if not provided
-      const systemPrompt = input.systemPrompt || BOT_SYSTEM_PROMPTS[input.type] || BOT_SYSTEM_PROMPTS.custom;
+      const systemPrompt = input.systemPrompt || AGENT_SYSTEM_PROMPTS[input.type] || AGENT_SYSTEM_PROMPTS.custom;
 
-      await db.insert(bots).values({
+      await db.insert(agents).values({
         name: input.name,
         type: input.type,
         description: input.description,
@@ -184,11 +380,11 @@ export const botsRouter = router({
     }),
 
   /**
-   * Start a new conversation with a bot
+   * Start a new conversation with an agent
    */
   startConversation: protectedProcedure
     .input(z.object({
-      botId: z.number(),
+      agentId: z.number(),
       title: z.string().optional(),
       metadata: z.record(z.string(), z.any()).optional(),
     }))
@@ -196,8 +392,8 @@ export const botsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      const result = await db.insert(botConversations).values({
-        botId: input.botId,
+      const result = await db.insert(agentConversations).values({
+        agentId: input.agentId,
         userId: ctx.user.id,
         title: input.title || "New Conversation",
         metadata: input.metadata as any,
@@ -210,25 +406,25 @@ export const botsRouter = router({
     }),
 
   /**
-   * Get user's conversations with a bot
+   * Get user's conversations with an agent
    */
   getConversations: protectedProcedure
     .input(z.object({
-      botId: z.number().optional(),
+      agentId: z.number().optional(),
       limit: z.number().default(20),
     }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) return [];
 
-      const conditions = input.botId
-        ? and(eq(botConversations.userId, ctx.user.id), eq(botConversations.botId, input.botId))
-        : eq(botConversations.userId, ctx.user.id);
+      const conditions = input.agentId
+        ? and(eq(agentConversations.userId, ctx.user.id), eq(agentConversations.agentId, input.agentId))
+        : eq(agentConversations.userId, ctx.user.id);
 
       const conversations = await db.select()
-        .from(botConversations)
+        .from(agentConversations)
         .where(conditions)
-        .orderBy(desc(botConversations.updatedAt))
+        .orderBy(desc(agentConversations.updatedAt))
         .limit(input.limit);
 
       return conversations;
@@ -248,26 +444,26 @@ export const botsRouter = router({
 
       // Verify user owns this conversation
       const conv = await db.select()
-        .from(botConversations)
+        .from(agentConversations)
         .where(and(
-          eq(botConversations.id, input.conversationId),
-          eq(botConversations.userId, ctx.user.id)
+          eq(agentConversations.id, input.conversationId),
+          eq(agentConversations.userId, ctx.user.id)
         ))
         .limit(1);
 
       if (!conv.length) return [];
 
       const messages = await db.select()
-        .from(botMessages)
-        .where(eq(botMessages.conversationId, input.conversationId))
-        .orderBy(botMessages.createdAt)
+        .from(agentMessages)
+        .where(eq(agentMessages.conversationId, input.conversationId))
+        .orderBy(agentMessages.createdAt)
         .limit(input.limit);
 
       return messages;
     }),
 
   /**
-   * Send a message to a bot and get a response
+   * Send a message to a agent and get a response
    */
   chat: protectedProcedure
     .input(z.object({
@@ -278,26 +474,26 @@ export const botsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      // Get conversation and bot
+      // Get conversation and agent
       const conv = await db.select()
-        .from(botConversations)
+        .from(agentConversations)
         .where(and(
-          eq(botConversations.id, input.conversationId),
-          eq(botConversations.userId, ctx.user.id)
+          eq(agentConversations.id, input.conversationId),
+          eq(agentConversations.userId, ctx.user.id)
         ))
         .limit(1);
 
       if (!conv.length) throw new Error("Conversation not found");
 
-      const bot = await db.select()
-        .from(bots)
-        .where(eq(bots.id, conv[0].botId))
+      const agent = await db.select()
+        .from(agents)
+        .where(eq(agents.id, conv[0].agentId))
         .limit(1);
 
-      if (!bot.length) throw new Error("Bot not found");
+      if (!agent.length) throw new Error("Agent not found");
 
       // Save user message
-      await db.insert(botMessages).values({
+      await db.insert(agentMessages).values({
         conversationId: input.conversationId,
         role: "user",
         content: input.message,
@@ -305,15 +501,15 @@ export const botsRouter = router({
 
       // Get conversation history for context
       const history = await db.select()
-        .from(botMessages)
-        .where(eq(botMessages.conversationId, input.conversationId))
-        .orderBy(botMessages.createdAt)
+        .from(agentMessages)
+        .where(eq(agentMessages.conversationId, input.conversationId))
+        .orderBy(agentMessages.createdAt)
         .limit(20);
 
-      // Build context based on bot type
+      // Build context based on agent type
       let contextInfo = "";
       
-      if (bot[0].type === "operations" || bot[0].type === "guardian") {
+      if (agent[0].type === "operations" || agent[0].type === "guardian") {
         // Get recent operations for context
         const ops = await db.select()
           .from(autonomousOperations)
@@ -322,7 +518,7 @@ export const botsRouter = router({
         contextInfo = `\n\nRecent Operations:\n${ops.map(o => `- ${o.operationType}: ${o.reasoning} (${o.status})`).join("\n")}`;
       }
 
-      if (bot[0].type === "finance" || bot[0].type === "analytics") {
+      if (agent[0].type === "finance" || agent[0].type === "analytics") {
         // Get token info for context
         const tokens = await db.select()
           .from(tokenAccounts)
@@ -330,7 +526,7 @@ export const botsRouter = router({
         contextInfo = `\n\nToken Accounts:\n${tokens.map(t => `- User ${t.userId}: ${t.tokenBalance} tokens (earned: ${t.totalEarned}, spent: ${t.totalSpent})`).join("\n")}`;
       }
 
-      if (bot[0].type === "operations" || bot[0].type === "analytics" || bot[0].type === "guardian") {
+      if (agent[0].type === "operations" || agent[0].type === "analytics" || agent[0].type === "guardian") {
         // Get entity info
         const entities = await db.select()
           .from(businessEntities)
@@ -340,7 +536,7 @@ export const botsRouter = router({
 
       // Build messages for LLM
       const llmMessages = [
-        { role: "system" as const, content: bot[0].systemPrompt + contextInfo },
+        { role: "system" as const, content: agent[0].systemPrompt + contextInfo },
         ...history.map(m => ({
           role: m.role as "user" | "assistant" | "system",
           content: m.content,
@@ -358,20 +554,20 @@ export const botsRouter = router({
         : "I apologize, but I couldn't generate a response. Please try again.";
 
       // Save assistant message
-      await db.insert(botMessages).values({
+      await db.insert(agentMessages).values({
         conversationId: input.conversationId,
         role: "assistant",
         content: assistantMessage,
       });
 
       // Update conversation timestamp
-      await db.update(botConversations)
+      await db.update(agentConversations)
         .set({ updatedAt: new Date() })
-        .where(eq(botConversations.id, input.conversationId));
+        .where(eq(agentConversations.id, input.conversationId));
 
-      // Log bot action
-      await db.insert(botActions).values({
-        botId: bot[0].id,
+      // Log agent action
+      await db.insert(agentActions).values({
+        agentId: agent[0].id,
         conversationId: input.conversationId,
         userId: ctx.user.id,
         actionType: "query",
@@ -386,35 +582,35 @@ export const botsRouter = router({
     }),
 
   /**
-   * Initialize default system bots
+   * Initialize default system agents
    */
-  initializeSystemBots: protectedProcedure.mutation(async ({ ctx }) => {
+  initializeSystemAgents: protectedProcedure.mutation(async ({ ctx }) => {
     const db = await getDb();
     if (!db) throw new Error("Database unavailable");
 
-    // Check if bots already exist
-    const existingBots = await db.select().from(bots).limit(1);
-    if (existingBots.length > 0) {
-      return { success: true, message: "Bots already initialized" };
+    // Check if agents already exist
+    const existingAgents = await db.select().from(agents).limit(1);
+    if (existingAgents.length > 0) {
+      return { success: true, message: "Agents already initialized" };
     }
 
-    // Create default system bots
-    const defaultBots = [
+    // Create default system agents
+    const defaultAgents = [
       {
-        name: "Operations Bot",
+        name: "Operations Agent",
         type: "operations" as const,
         description: "Manages autonomous business operations across all entities. Monitors pending operations, provides insights, and helps optimize business processes.",
         avatar: "🤖",
-        systemPrompt: BOT_SYSTEM_PROMPTS.operations,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.operations,
         capabilities: ["view_operations", "analyze_performance", "recommend_actions", "generate_reports"],
         isPublic: true,
       },
       {
-        name: "Support Bot",
+        name: "Support Agent",
         type: "support" as const,
         description: "Your friendly guide to the LuvOnPurpose platform. Get help navigating features, understanding the system, and troubleshooting issues.",
         avatar: "💬",
-        systemPrompt: BOT_SYSTEM_PROMPTS.support,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.support,
         capabilities: ["answer_questions", "provide_guidance", "explain_features", "troubleshoot"],
         isPublic: true,
       },
@@ -423,16 +619,16 @@ export const botsRouter = router({
         type: "education" as const,
         description: "Personal tutor for Luv Learning Academy. Get help with Divine STEM subjects, language learning, and track your educational journey.",
         avatar: "📚",
-        systemPrompt: BOT_SYSTEM_PROMPTS.education,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.education,
         capabilities: ["tutor_subjects", "track_progress", "recommend_lessons", "explain_concepts"],
         isPublic: true,
       },
       {
-        name: "Analytics Bot",
+        name: "Analytics Agent",
         type: "analytics" as const,
         description: "Business intelligence assistant. Analyze performance, generate reports, identify trends, and get data-driven insights.",
         avatar: "📊",
-        systemPrompt: BOT_SYSTEM_PROMPTS.analytics,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.analytics,
         capabilities: ["analyze_data", "generate_reports", "identify_trends", "forecast_performance"],
         isPublic: true,
       },
@@ -441,59 +637,59 @@ export const botsRouter = router({
         type: "guardian" as const,
         description: "Governance oversight for the 98 Trust. Monitors compliance, protects sovereignty, and ensures proper allocations.",
         avatar: "🛡️",
-        systemPrompt: BOT_SYSTEM_PROMPTS.guardian,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.guardian,
         capabilities: ["monitor_governance", "verify_compliance", "protect_sovereignty", "audit_operations"],
         isPublic: true,
       },
       {
-        name: "Finance Bot",
+        name: "Finance Agent",
         type: "finance" as const,
         description: "Token economy expert. Track balances, understand transactions, manage allocations, and get financial insights.",
         avatar: "💰",
-        systemPrompt: BOT_SYSTEM_PROMPTS.finance,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.finance,
         capabilities: ["track_tokens", "explain_transactions", "manage_allocations", "financial_insights"],
         isPublic: true,
       },
       {
-        name: "Media Bot",
+        name: "Media Agent",
         type: "media" as const,
         description: "Content creation assistant for Real-Eye-Nation. Generate narratives, create publications, and manage truth documentation.",
         avatar: "🎬",
-        systemPrompt: BOT_SYSTEM_PROMPTS.media,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.media,
         capabilities: ["generate_content", "create_narratives", "schedule_publications", "truth_mapping"],
         isPublic: true,
       },
       {
-        name: "Outreach Bot",
+        name: "Outreach Agent",
         type: "outreach" as const,
         description: "Marketing and community growth assistant. Generate social media posts, email campaigns, and promotional content to expand your reach.",
         avatar: "📢",
-        systemPrompt: BOT_SYSTEM_PROMPTS.outreach,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.outreach,
         capabilities: ["social_media_posts", "email_campaigns", "press_releases", "content_calendar", "hashtag_strategy"],
         isPublic: true,
       },
       {
-        name: "SEO Bot",
+        name: "SEO Agent",
         type: "seo" as const,
         description: "Search engine optimization expert. Improve your website visibility with keyword analysis, meta descriptions, and content optimization.",
         avatar: "🔍",
-        systemPrompt: BOT_SYSTEM_PROMPTS.seo,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.seo,
         capabilities: ["keyword_research", "meta_optimization", "content_audit", "schema_markup", "competitor_analysis"],
         isPublic: true,
       },
       {
-        name: "Engagement Bot",
+        name: "Engagement Agent",
         type: "engagement" as const,
         description: "Audience analytics and engagement strategist. Optimize posting times, track metrics, and build lasting audience relationships.",
         avatar: "📈",
-        systemPrompt: BOT_SYSTEM_PROMPTS.engagement,
+        systemPrompt: AGENT_SYSTEM_PROMPTS.engagement,
         capabilities: ["analytics_tracking", "posting_optimization", "ab_testing", "audience_insights", "trend_identification"],
         isPublic: true,
       },
     ];
 
-    for (const botData of defaultBots) {
-      await db.insert(bots).values({
+    for (const botData of defaultAgents) {
+      await db.insert(agents).values({
         ...botData,
         capabilities: botData.capabilities as any,
         createdBy: ctx.user.id,
@@ -504,39 +700,39 @@ export const botsRouter = router({
     await db.insert(notifications).values({
       userId: ctx.user.id,
       type: "success",
-      title: "AI Bots Initialized",
-      message: `Successfully created ${defaultBots.length} AI assistants: Operations, Support, Academy Tutor, Analytics, Trust Guardian, Finance, and Media bots.`,
-      actionUrl: "/bots",
+      title: "AI Agents Initialized",
+      message: `Successfully created ${defaultAgents.length} AI assistants: Operations, Support, Academy Tutor, Analytics, Trust Guardian, Finance, and Media agents.`,
+      actionUrl: "/agents",
       isPriority: true,
     });
 
     return { 
       success: true, 
-      message: `Created ${defaultBots.length} system bots`,
-      bots: defaultBots.map(b => b.name),
+      message: `Created ${defaultAgents.length} system agents`,
+      agents: defaultAgents.map(b => b.name),
     };
   }),
 
   /**
-   * Get bot action history
+   * Get agent action history
    */
   getActions: protectedProcedure
     .input(z.object({
-      botId: z.number().optional(),
+      agentId: z.number().optional(),
       limit: z.number().default(50),
     }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) return [];
 
-      const conditions = input.botId
-        ? and(eq(botActions.userId, ctx.user.id), eq(botActions.botId, input.botId))
-        : eq(botActions.userId, ctx.user.id);
+      const conditions = input.agentId
+        ? and(eq(agentActions.userId, ctx.user.id), eq(agentActions.agentId, input.agentId))
+        : eq(agentActions.userId, ctx.user.id);
 
       const actions = await db.select()
-        .from(botActions)
+        .from(agentActions)
         .where(conditions)
-        .orderBy(desc(botActions.createdAt))
+        .orderBy(desc(agentActions.createdAt))
         .limit(input.limit);
 
       return actions;
@@ -553,45 +749,45 @@ export const botsRouter = router({
 
       // Verify ownership
       const conv = await db.select()
-        .from(botConversations)
+        .from(agentConversations)
         .where(and(
-          eq(botConversations.id, input.conversationId),
-          eq(botConversations.userId, ctx.user.id)
+          eq(agentConversations.id, input.conversationId),
+          eq(agentConversations.userId, ctx.user.id)
         ))
         .limit(1);
 
       if (!conv.length) throw new Error("Conversation not found");
 
       // Delete messages first
-      await db.delete(botMessages)
-        .where(eq(botMessages.conversationId, input.conversationId));
+      await db.delete(agentMessages)
+        .where(eq(agentMessages.conversationId, input.conversationId));
 
       // Delete conversation
-      await db.delete(botConversations)
-        .where(eq(botConversations.id, input.conversationId));
+      await db.delete(agentConversations)
+        .where(eq(agentConversations.id, input.conversationId));
 
       return { success: true };
     }),
 
   /**
-   * Get scheduled tasks for a bot or all bots
+   * Get scheduled tasks for a agent or all agents
    */
   getScheduledTasks: protectedProcedure
     .input(z.object({
-      botId: z.number().optional(),
+      agentId: z.number().optional(),
     }).optional())
     .query(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) return [];
 
-      const conditions = input?.botId
-        ? and(eq(scheduledBotTasks.createdBy, ctx.user.id), eq(scheduledBotTasks.botId, input.botId))
-        : eq(scheduledBotTasks.createdBy, ctx.user.id);
+      const conditions = input?.agentId
+        ? and(eq(scheduledAgentTasks.createdBy, ctx.user.id), eq(scheduledAgentTasks.agentId, input.agentId))
+        : eq(scheduledAgentTasks.createdBy, ctx.user.id);
 
       const tasks = await db.select()
-        .from(scheduledBotTasks)
+        .from(scheduledAgentTasks)
         .where(conditions)
-        .orderBy(desc(scheduledBotTasks.createdAt));
+        .orderBy(desc(scheduledAgentTasks.createdAt));
 
       return tasks;
     }),
@@ -601,7 +797,7 @@ export const botsRouter = router({
    */
   createScheduledTask: protectedProcedure
     .input(z.object({
-      botId: z.number(),
+      agentId: z.number(),
       name: z.string().min(1).max(100),
       description: z.string().optional(),
       taskType: z.enum([
@@ -626,8 +822,8 @@ export const botsRouter = router({
       // Calculate next run time based on schedule
       const now = new Date();
       
-      await db.insert(scheduledBotTasks).values({
-        botId: input.botId,
+      await db.insert(scheduledAgentTasks).values({
+        agentId: input.agentId,
         name: input.name,
         description: input.description,
         taskType: input.taskType,
@@ -653,11 +849,11 @@ export const botsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      await db.update(scheduledBotTasks)
+      await db.update(scheduledAgentTasks)
         .set({ isActive: input.isActive })
         .where(and(
-          eq(scheduledBotTasks.id, input.taskId),
-          eq(scheduledBotTasks.createdBy, ctx.user.id)
+          eq(scheduledAgentTasks.id, input.taskId),
+          eq(scheduledAgentTasks.createdBy, ctx.user.id)
         ));
 
       return { success: true };
@@ -672,10 +868,10 @@ export const botsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      await db.delete(scheduledBotTasks)
+      await db.delete(scheduledAgentTasks)
         .where(and(
-          eq(scheduledBotTasks.id, input.taskId),
-          eq(scheduledBotTasks.createdBy, ctx.user.id)
+          eq(scheduledAgentTasks.id, input.taskId),
+          eq(scheduledAgentTasks.createdBy, ctx.user.id)
         ));
 
       return { success: true };
@@ -692,22 +888,22 @@ export const botsRouter = router({
 
       // Get the task
       const [task] = await db.select()
-        .from(scheduledBotTasks)
+        .from(scheduledAgentTasks)
         .where(and(
-          eq(scheduledBotTasks.id, input.taskId),
-          eq(scheduledBotTasks.createdBy, ctx.user.id)
+          eq(scheduledAgentTasks.id, input.taskId),
+          eq(scheduledAgentTasks.createdBy, ctx.user.id)
         ))
         .limit(1);
 
       if (!task) throw new Error("Task not found");
 
-      // Get the bot
-      const [bot] = await db.select()
-        .from(bots)
-        .where(eq(bots.id, task.botId))
+      // Get the agent
+      const [agentRecord] = await db.select()
+        .from(agents)
+        .where(eq(agents.id, task.agentId))
         .limit(1);
 
-      if (!bot) throw new Error("Bot not found");
+      if (!agentRecord) throw new Error("Agent not found");
 
       // Get context data based on task type
       let contextData = "";
@@ -733,7 +929,7 @@ export const botsRouter = router({
       // Run the task using LLM
       const response = await invokeLLM({
         messages: [
-          { role: "system", content: bot.systemPrompt },
+          { role: "system", content: agentRecord.systemPrompt },
           { role: "user", content: `${task.prompt}\n\nContext:\n${contextData}\n\nPlease provide a comprehensive response for this ${task.taskType.replace("_", " ")}.` }
         ],
       });
@@ -749,12 +945,12 @@ export const botsRouter = router({
         result: result.substring(0, 1000), // Truncate for storage
       });
 
-      await db.update(scheduledBotTasks)
+      await db.update(scheduledAgentTasks)
         .set({
           lastRunAt: new Date(),
           resultHistory: resultHistory as any,
         })
-        .where(eq(scheduledBotTasks.id, input.taskId));
+        .where(eq(scheduledAgentTasks.id, input.taskId));
 
       // Create notification if enabled
       if (task.notifyOnComplete) {
@@ -763,13 +959,13 @@ export const botsRouter = router({
           type: "info",
           title: `Scheduled Task Complete: ${task.name}`,
           message: result.substring(0, 200) + (result.length > 200 ? "..." : ""),
-          actionUrl: "/bots",
+          actionUrl: "/agents",
         });
       }
 
       // Log the action
-      await db.insert(botActions).values({
-        botId: task.botId,
+      await db.insert(agentActions).values({
+        agentId: task.agentId,
         userId: ctx.user.id,
         actionType: "analyze",
         targetType: "scheduled_task",
@@ -783,7 +979,7 @@ export const botsRouter = router({
     }),
 
   /**
-   * Initialize default scheduled tasks for system bots
+   * Initialize default scheduled tasks for system agents
    */
   initializeDefaultTasks: protectedProcedure.mutation(async ({ ctx }) => {
     const db = await getDb();
@@ -791,21 +987,21 @@ export const botsRouter = router({
 
     // Check if tasks already exist
     const existingTasks = await db.select()
-      .from(scheduledBotTasks)
-      .where(eq(scheduledBotTasks.createdBy, ctx.user.id))
+      .from(scheduledAgentTasks)
+      .where(eq(scheduledAgentTasks.createdBy, ctx.user.id))
       .limit(1);
 
     if (existingTasks.length > 0) {
       return { success: true, message: "Tasks already initialized" };
     }
 
-    // Get system bots
-    const systemBots = await db.select().from(bots);
-    const botMap = new Map(systemBots.map(b => [b.type, b.id]));
+    // Get system agents
+    const systemAgents = await db.select().from(agents);
+    const botMap = new Map(systemAgents.map(b => [b.type, b.id]));
 
     const defaultTasks = [
       {
-        botId: botMap.get("operations"),
+        agentId: botMap.get("operations"),
         name: "Daily Operations Report",
         description: "Generate a daily summary of all autonomous operations",
         taskType: "daily_report" as const,
@@ -813,7 +1009,7 @@ export const botsRouter = router({
         schedule: "0 9 * * *", // 9 AM daily
       },
       {
-        botId: botMap.get("analytics"),
+        agentId: botMap.get("analytics"),
         name: "Weekly Performance Audit",
         description: "Weekly analysis of business performance across all entities",
         taskType: "weekly_audit" as const,
@@ -821,7 +1017,7 @@ export const botsRouter = router({
         schedule: "0 10 * * 1", // 10 AM every Monday
       },
       {
-        botId: botMap.get("finance"),
+        agentId: botMap.get("finance"),
         name: "Token Economy Report",
         description: "Daily token balance and transaction summary",
         taskType: "token_report" as const,
@@ -829,7 +1025,7 @@ export const botsRouter = router({
         schedule: "0 8 * * *", // 8 AM daily
       },
       {
-        botId: botMap.get("guardian"),
+        agentId: botMap.get("guardian"),
         name: "Monthly Governance Review",
         description: "Monthly compliance and governance analysis",
         taskType: "monthly_analysis" as const,
@@ -837,7 +1033,7 @@ export const botsRouter = router({
         schedule: "0 9 1 * *", // 9 AM on 1st of each month
       },
       {
-        botId: botMap.get("outreach"),
+        agentId: botMap.get("outreach"),
         name: "Content Calendar Update",
         description: "Generate weekly social media content suggestions",
         taskType: "content_schedule" as const,
@@ -845,7 +1041,7 @@ export const botsRouter = router({
         schedule: "0 8 * * 0", // 8 AM every Sunday
       },
       {
-        botId: botMap.get("seo"),
+        agentId: botMap.get("seo"),
         name: "SEO Health Check",
         description: "Weekly SEO audit and recommendations",
         taskType: "seo_audit" as const,
@@ -853,7 +1049,7 @@ export const botsRouter = router({
         schedule: "0 7 * * 2", // 7 AM every Tuesday
       },
       {
-        botId: botMap.get("engagement"),
+        agentId: botMap.get("engagement"),
         name: "Engagement Metrics Review",
         description: "Daily engagement analysis and optimization tips",
         taskType: "engagement_check" as const,
@@ -864,9 +1060,9 @@ export const botsRouter = router({
 
     let created = 0;
     for (const task of defaultTasks) {
-      if (task.botId) {
-        await db.insert(scheduledBotTasks).values({
-          botId: task.botId,
+      if (task.agentId) {
+        await db.insert(scheduledAgentTasks).values({
+          agentId: task.agentId,
           name: task.name,
           description: task.description,
           taskType: task.taskType,

@@ -5,7 +5,7 @@ import {
   emailTemplates,
   emailSends,
   notifications,
-  bots
+  agents
 } from "../../drizzle/schema";
 import { eq, desc, and } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
@@ -313,10 +313,10 @@ HTML:
         <li><strong>Luv Academy</strong> - Educational courses and certifications</li>
         <li><strong>Trust System</strong> - Manage your sovereign entities</li>
         <li><strong>Document Vault</strong> - Secure storage for important documents</li>
-        <li><strong>AI Assistants</strong> - Get help from our intelligent bots</li>
+        <li><strong>AI Assistants</strong> - Get help from our intelligent agents</li>
       </ul>
       <a href="{{loginUrl}}" class="button">Access Your Dashboard</a>
-      <p>If you have any questions, our Support Bot is available 24/7 to assist you.</p>
+      <p>If you have any questions, our Support Agent is available 24/7 to assist you.</p>
       <p>Welcome to the family,<br>The LuvOnPurpose Team</p>
     </div>
     <div class="footer">
@@ -372,8 +372,8 @@ HTML:
         variables: ["weekDate", "highlights", "academyNews", "communityNews", "upcomingEvents"],
       },
       {
-        name: "Bot Report Notification",
-        subject: "{{botName}} Report Ready - {{reportType}}",
+        name: "Agent Report Notification",
+        subject: "{{agentName}} Report Ready - {{reportType}}",
         category: "notification" as const,
         htmlContent: `
 <!DOCTYPE html>
@@ -391,7 +391,7 @@ HTML:
 <body>
   <div class="container">
     <div class="header">
-      <h2>🤖 {{botName}}</h2>
+      <h2>🤖 {{agentName}}</h2>
       <p>{{reportType}} Report</p>
     </div>
     <div class="content">
@@ -405,7 +405,7 @@ HTML:
   </div>
 </body>
 </html>`,
-        variables: ["botName", "reportType", "reportSummary", "dashboardUrl"],
+        variables: ["agentName", "reportType", "reportSummary", "dashboardUrl"],
       },
     ];
 

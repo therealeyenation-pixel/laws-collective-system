@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, boolean, bigint } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -827,9 +827,9 @@ export type InsertNotificationPreference = typeof notificationPreferences.$infer
 
 
 /**
- * AI Bots - Intelligent assistants for various system functions
+ * AI Agents - Intelligent assistants for various system functions
  */
-export const bots = mysqlTable("bots", {
+export const agents = mysqlTable("agents", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
   type: mysqlEnum("type", [
@@ -843,12 +843,12 @@ export const bots = mysqlTable("bots", {
     "outreach",        // Marketing and social media outreach
     "seo",             // Search engine optimization
     "engagement",      // Audience analytics and engagement
-    "custom"           // User-defined bots
+    "custom"           // User-defined agents
   ]).notNull(),
   description: text("description"),
   avatar: varchar("avatar", { length: 500 }), // Avatar image URL
   systemPrompt: text("systemPrompt").notNull(), // Base personality and instructions
-  capabilities: json("capabilities"), // What the bot can do
+  capabilities: json("capabilities"), // What the agent can do
   entityId: int("entityId"), // Associated business entity
   isActive: boolean("isActive").default(true).notNull(),
   isPublic: boolean("isPublic").default(false).notNull(), // Available to all users
@@ -857,15 +857,15 @@ export const bots = mysqlTable("bots", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
-export type Bot = typeof bots.$inferSelect;
-export type InsertBot = typeof bots.$inferInsert;
+export type Agent = typeof agents.$inferSelect;
+export type InsertAgent = typeof agents.$inferInsert;
 
 /**
- * Bot Conversations - Chat history with bots
+ * Agent Conversations - Chat history with agents
  */
-export const botConversations = mysqlTable("bot_conversations", {
+export const agentConversations = mysqlTable("agent_conversations", {
   id: int("id").autoincrement().primaryKey(),
-  botId: int("botId").notNull(),
+  agentId: int("agentId").notNull(),
   userId: int("userId").notNull(),
   title: varchar("title", { length: 255 }),
   status: mysqlEnum("status", ["active", "archived", "deleted"]).default("active").notNull(),
@@ -874,13 +874,13 @@ export const botConversations = mysqlTable("bot_conversations", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
-export type BotConversation = typeof botConversations.$inferSelect;
-export type InsertBotConversation = typeof botConversations.$inferInsert;
+export type AgentConversation = typeof agentConversations.$inferSelect;
+export type InsertAgentConversation = typeof agentConversations.$inferInsert;
 
 /**
- * Bot Messages - Individual messages in conversations
+ * Agent Messages - Individual messages in conversations
  */
-export const botMessages = mysqlTable("bot_messages", {
+export const agentMessages = mysqlTable("agent_messages", {
   id: int("id").autoincrement().primaryKey(),
   conversationId: int("conversationId").notNull(),
   role: mysqlEnum("role", ["user", "assistant", "system"]).notNull(),
@@ -890,15 +890,15 @@ export const botMessages = mysqlTable("bot_messages", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
-export type BotMessage = typeof botMessages.$inferSelect;
-export type InsertBotMessage = typeof botMessages.$inferInsert;
+export type AgentMessage = typeof agentMessages.$inferSelect;
+export type InsertAgentMessage = typeof agentMessages.$inferInsert;
 
 /**
- * Bot Actions - Actions taken by bots (for audit trail)
+ * Agent Actions - Actions taken by bots (for audit trail)
  */
-export const botActions = mysqlTable("bot_actions", {
+export const agentActions = mysqlTable("agent_actions", {
   id: int("id").autoincrement().primaryKey(),
-  botId: int("botId").notNull(),
+  agentId: int("agentId").notNull(),
   conversationId: int("conversationId"),
   userId: int("userId").notNull(),
   actionType: mysqlEnum("actionType", [
@@ -921,16 +921,16 @@ export const botActions = mysqlTable("bot_actions", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
-export type BotAction = typeof botActions.$inferSelect;
-export type InsertBotAction = typeof botActions.$inferInsert;
+export type AgentAction = typeof agentActions.$inferSelect;
+export type InsertAgentAction = typeof agentActions.$inferInsert;
 
 
 /**
- * Scheduled Bot Tasks - Automated recurring bot actions
+ * Scheduled Agent Tasks - Automated recurring agent actions
  */
-export const scheduledBotTasks = mysqlTable("scheduled_bot_tasks", {
+export const scheduledAgentTasks = mysqlTable("scheduled_agent_tasks", {
   id: int("id").autoincrement().primaryKey(),
-  botId: int("botId").notNull(),
+  agentId: int("agentId").notNull(),
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description"),
   taskType: mysqlEnum("taskType", [
@@ -944,7 +944,7 @@ export const scheduledBotTasks = mysqlTable("scheduled_bot_tasks", {
     "operation_review",  // Review pending operations
     "custom"             // Custom scheduled task
   ]).notNull(),
-  prompt: text("prompt").notNull(), // What the bot should do
+  prompt: text("prompt").notNull(), // What the agent should do
   schedule: varchar("schedule", { length: 50 }).notNull(), // Cron expression or interval
   lastRunAt: timestamp("lastRunAt"),
   nextRunAt: timestamp("nextRunAt"),
@@ -956,12 +956,12 @@ export const scheduledBotTasks = mysqlTable("scheduled_bot_tasks", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
-export type ScheduledBotTask = typeof scheduledBotTasks.$inferSelect;
-export type InsertScheduledBotTask = typeof scheduledBotTasks.$inferInsert;
+export type ScheduledAgentTask = typeof scheduledAgentTasks.$inferSelect;
+export type InsertScheduledAgentTask = typeof scheduledAgentTasks.$inferInsert;
 
 
 /**
- * Social Media Integrations - Connected social accounts for Outreach Bot
+ * Social Media Integrations - Connected social accounts for Outreach Agent
  */
 export const socialMediaIntegrations = mysqlTable("social_media_integrations", {
   id: int("id").autoincrement().primaryKey(),
@@ -989,7 +989,7 @@ export const socialMediaPosts = mysqlTable("social_media_posts", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   integrationId: int("integrationId").notNull(),
-  botId: int("botId"), // Which bot generated this
+  agentId: int("agentId"), // Which agent generated this
   content: text("content").notNull(),
   mediaUrls: json("mediaUrls"), // Array of image/video URLs
   hashtags: json("hashtags"), // Array of hashtags
@@ -1033,7 +1033,7 @@ export const emailSends = mysqlTable("email_sends", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   templateId: int("templateId"),
-  botId: int("botId"), // Which bot triggered this
+  agentId: int("agentId"), // Which agent triggered this
   recipientEmail: varchar("recipientEmail", { length: 255 }).notNull(),
   recipientName: varchar("recipientName", { length: 100 }),
   subject: varchar("subject", { length: 200 }).notNull(),
@@ -2870,3 +2870,1445 @@ export const auditRequests = mysqlTable("audit_requests", {
 
 export type AuditRequest = typeof auditRequests.$inferSelect;
 export type InsertAuditRequest = typeof auditRequests.$inferInsert;
+
+
+// ============================================
+// CRYPTO PAYMENT INFRASTRUCTURE
+// Multi-chain, globally operable payment system
+// ============================================
+
+/**
+ * Supported Blockchain Networks
+ * Expandable to support any new blockchain
+ */
+export const blockchainNetworks = mysqlTable("blockchain_networks", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Network identification
+  networkCode: varchar("network_code", { length: 50 }).notNull().unique(), // e.g., "ETH", "BTC", "SOL"
+  networkName: varchar("network_name", { length: 255 }).notNull(),
+  chainId: varchar("chain_id", { length: 100 }), // For EVM chains
+  
+  // Network type
+  networkType: mysqlEnum("network_type", [
+    "mainnet", "testnet", "devnet", "private"
+  ]).default("mainnet").notNull(),
+  
+  // Protocol type
+  protocolType: mysqlEnum("protocol_type", [
+    "bitcoin", "ethereum", "solana", "cosmos", "polkadot", "cardano", 
+    "ripple", "stellar", "tron", "avalanche", "polygon", "arbitrum",
+    "optimism", "base", "luvchain", "custom"
+  ]).notNull(),
+  
+  // Network configuration
+  rpcEndpoint: varchar("rpc_endpoint", { length: 500 }),
+  wsEndpoint: varchar("ws_endpoint", { length: 500 }),
+  explorerUrl: varchar("explorer_url", { length: 500 }),
+  
+  // Native currency
+  nativeCurrency: varchar("native_currency", { length: 50 }).notNull(),
+  nativeCurrencyDecimals: int("native_currency_decimals").default(18).notNull(),
+  nativeCurrencySymbol: varchar("native_currency_symbol", { length: 20 }).notNull(),
+  
+  // Fee configuration
+  averageBlockTime: int("average_block_time"), // seconds
+  confirmationsRequired: int("confirmations_required").default(1).notNull(),
+  
+  // Status
+  isActive: boolean("is_active").default(true).notNull(),
+  isTestnet: boolean("is_testnet").default(false).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlockchainNetwork = typeof blockchainNetworks.$inferSelect;
+export type InsertBlockchainNetwork = typeof blockchainNetworks.$inferInsert;
+
+/**
+ * Supported Tokens/Currencies
+ * Includes native coins, stablecoins, and custom tokens
+ */
+export const supportedTokens = mysqlTable("supported_tokens", {
+  id: int("id").primaryKey().autoincrement(),
+  networkId: int("network_id").notNull(),
+  
+  // Token identification
+  tokenSymbol: varchar("token_symbol", { length: 50 }).notNull(),
+  tokenName: varchar("token_name", { length: 255 }).notNull(),
+  contractAddress: varchar("contract_address", { length: 255 }), // null for native coins
+  
+  // Token type
+  tokenType: mysqlEnum("token_type", [
+    "native", "erc20", "erc721", "erc1155", "spl", "bep20", 
+    "trc20", "stablecoin", "wrapped", "luvtoken", "custom"
+  ]).notNull(),
+  
+  // Token properties
+  decimals: int("decimals").default(18).notNull(),
+  logoUrl: varchar("logo_url", { length: 500 }),
+  
+  // Stablecoin properties
+  isStablecoin: boolean("is_stablecoin").default(false).notNull(),
+  peggedTo: varchar("pegged_to", { length: 10 }), // e.g., "USD", "EUR"
+  
+  // Pricing
+  currentPriceUsd: decimal("current_price_usd", { precision: 20, scale: 8 }),
+  priceLastUpdatedAt: timestamp("price_last_updated_at"),
+  
+  // Status
+  isActive: boolean("is_active").default(true).notNull(),
+  isReceivable: boolean("is_receivable").default(true).notNull(),
+  isSendable: boolean("is_sendable").default(true).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SupportedToken = typeof supportedTokens.$inferSelect;
+export type InsertSupportedToken = typeof supportedTokens.$inferInsert;
+
+/**
+ * Multi-Chain Wallets
+ * Each user/house can have wallets on multiple chains
+ */
+export const multiChainWallets = mysqlTable("multi_chain_wallets", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Owner
+  userId: int("user_id"),
+  houseId: int("house_id"),
+  businessEntityId: int("business_entity_id"),
+  
+  // Network
+  networkId: int("network_id").notNull(),
+  
+  // Wallet details
+  walletAddress: varchar("wallet_address", { length: 255 }).notNull(),
+  walletLabel: varchar("wallet_label", { length: 255 }),
+  
+  // Wallet type
+  walletType: mysqlEnum("wallet_type", [
+    "hot", "cold", "custodial", "non_custodial", "multisig", "smart_contract"
+  ]).default("hot").notNull(),
+  
+  // Security
+  publicKey: text("public_key"),
+  encryptedPrivateKey: text("encrypted_private_key"), // Encrypted with user's master key
+  keyDerivationPath: varchar("key_derivation_path", { length: 100 }),
+  
+  // Multisig configuration
+  isMultisig: boolean("is_multisig").default(false).notNull(),
+  requiredSignatures: int("required_signatures"),
+  totalSigners: int("total_signers"),
+  signerAddresses: json("signer_addresses").$type<string[]>(),
+  
+  // Status
+  status: mysqlEnum("wallet_status", ["active", "frozen", "archived", "compromised"]).default("active").notNull(),
+  
+  // Verification
+  isVerified: boolean("is_verified").default(false).notNull(),
+  verifiedAt: timestamp("verified_at"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MultiChainWallet = typeof multiChainWallets.$inferSelect;
+export type InsertMultiChainWallet = typeof multiChainWallets.$inferInsert;
+
+/**
+ * Wallet Balances
+ * Track balances for each token in each wallet
+ */
+export const walletBalances = mysqlTable("wallet_balances", {
+  id: int("id").primaryKey().autoincrement(),
+  walletId: int("wallet_id").notNull(),
+  tokenId: int("token_id").notNull(),
+  
+  // Balance
+  balance: decimal("balance", { precision: 36, scale: 18 }).default("0").notNull(),
+  balanceUsd: decimal("balance_usd", { precision: 20, scale: 2 }),
+  
+  // Pending
+  pendingIncoming: decimal("pending_incoming", { precision: 36, scale: 18 }).default("0").notNull(),
+  pendingOutgoing: decimal("pending_outgoing", { precision: 36, scale: 18 }).default("0").notNull(),
+  
+  // Last sync
+  lastSyncedAt: timestamp("last_synced_at"),
+  lastSyncBlockNumber: varchar("last_sync_block_number", { length: 100 }),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WalletBalance = typeof walletBalances.$inferSelect;
+export type InsertWalletBalance = typeof walletBalances.$inferInsert;
+
+/**
+ * Multi-Chain Crypto Transactions
+ * All incoming and outgoing crypto transactions across all chains
+ */
+export const multiChainCryptoTransactions = mysqlTable("multi_chain_crypto_transactions", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Transaction identification
+  transactionHash: varchar("transaction_hash", { length: 255 }).notNull(),
+  networkId: int("network_id").notNull(),
+  tokenId: int("token_id").notNull(),
+  
+  // Direction
+  transactionType: mysqlEnum("crypto_tx_type", [
+    "incoming", "outgoing", "internal", "swap", "bridge", "stake", "unstake"
+  ]).notNull(),
+  
+  // Parties
+  fromWalletId: int("from_wallet_id"),
+  toWalletId: int("to_wallet_id"),
+  fromAddress: varchar("from_address", { length: 255 }).notNull(),
+  toAddress: varchar("to_address", { length: 255 }).notNull(),
+  
+  // Amount
+  amount: decimal("amount", { precision: 36, scale: 18 }).notNull(),
+  amountUsd: decimal("amount_usd", { precision: 20, scale: 2 }),
+  exchangeRateAtTime: decimal("exchange_rate_at_time", { precision: 20, scale: 8 }),
+  
+  // Fees
+  gasFee: decimal("gas_fee", { precision: 36, scale: 18 }),
+  gasFeeUsd: decimal("gas_fee_usd", { precision: 20, scale: 2 }),
+  
+  // Block info
+  blockNumber: varchar("block_number", { length: 100 }),
+  blockTimestamp: timestamp("block_timestamp"),
+  confirmations: int("confirmations").default(0).notNull(),
+  
+  // Status
+  status: mysqlEnum("crypto_tx_status", [
+    "pending", "confirming", "confirmed", "failed", "cancelled", "replaced"
+  ]).default("pending").notNull(),
+  
+  // Metadata
+  memo: text("memo"),
+  metadata: json("metadata"),
+  
+  // Integration with LuvLedger
+  luvLedgerTransactionId: int("luv_ledger_transaction_id"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MultiChainCryptoTransaction = typeof multiChainCryptoTransactions.$inferSelect;
+export type InsertMultiChainCryptoTransaction = typeof multiChainCryptoTransactions.$inferInsert;
+
+/**
+ * Payment Requests
+ * Generate payment requests with QR codes
+ */
+export const paymentRequests = mysqlTable("payment_requests", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Request identification
+  requestCode: varchar("request_code", { length: 100 }).notNull().unique(),
+  
+  // Recipient
+  recipientWalletId: int("recipient_wallet_id").notNull(),
+  recipientUserId: int("recipient_user_id"),
+  recipientHouseId: int("recipient_house_id"),
+  
+  // Amount
+  requestedAmount: decimal("requested_amount", { precision: 36, scale: 18 }).notNull(),
+  requestedTokenId: int("requested_token_id").notNull(),
+  requestedAmountUsd: decimal("requested_amount_usd", { precision: 20, scale: 2 }),
+  
+  // Flexibility
+  allowPartialPayment: boolean("allow_partial_payment").default(false).notNull(),
+  allowAnyToken: boolean("allow_any_token").default(false).notNull(),
+  acceptedTokenIds: json("accepted_token_ids").$type<number[]>(),
+  
+  // Payment details
+  description: text("description"),
+  invoiceNumber: varchar("invoice_number", { length: 100 }),
+  
+  // Expiration
+  expiresAt: timestamp("expires_at"),
+  
+  // Status
+  status: mysqlEnum("payment_request_status", [
+    "pending", "partial", "completed", "expired", "cancelled"
+  ]).default("pending").notNull(),
+  
+  // Received
+  totalReceivedAmount: decimal("total_received_amount", { precision: 36, scale: 18 }).default("0").notNull(),
+  totalReceivedUsd: decimal("total_received_usd", { precision: 20, scale: 2 }).default("0").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PaymentRequest = typeof paymentRequests.$inferSelect;
+export type InsertPaymentRequest = typeof paymentRequests.$inferInsert;
+
+/**
+ * Payment Request Fulfillments
+ * Track individual payments against a request
+ */
+export const paymentFulfillments = mysqlTable("payment_fulfillments", {
+  id: int("id").primaryKey().autoincrement(),
+  paymentRequestId: int("payment_request_id").notNull(),
+  cryptoTransactionId: int("crypto_transaction_id").notNull(),
+  
+  // Amount applied
+  amountApplied: decimal("amount_applied", { precision: 36, scale: 18 }).notNull(),
+  amountAppliedUsd: decimal("amount_applied_usd", { precision: 20, scale: 2 }),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type PaymentFulfillment = typeof paymentFulfillments.$inferSelect;
+export type InsertPaymentFulfillment = typeof paymentFulfillments.$inferInsert;
+
+/**
+ * Currency Exchange Rates
+ * Track exchange rates for all supported currencies
+ */
+export const exchangeRates = mysqlTable("exchange_rates", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Currency pair
+  baseCurrency: varchar("base_currency", { length: 20 }).notNull(),
+  quoteCurrency: varchar("quote_currency", { length: 20 }).notNull(),
+  
+  // Rate
+  rate: decimal("rate", { precision: 30, scale: 15 }).notNull(),
+  
+  // Source
+  source: varchar("source", { length: 100 }).notNull(), // e.g., "coingecko", "binance"
+  
+  // Timestamp
+  recordedAt: timestamp("recorded_at").defaultNow().notNull(),
+});
+
+export type ExchangeRate = typeof exchangeRates.$inferSelect;
+export type InsertExchangeRate = typeof exchangeRates.$inferInsert;
+
+// ============================================
+// GLOBAL OPERATIONS & LOCALIZATION
+// ============================================
+
+/**
+ * Supported Locales
+ * Languages and regional settings
+ */
+export const supportedLocales = mysqlTable("supported_locales", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Locale identification
+  localeCode: varchar("locale_code", { length: 10 }).notNull().unique(), // e.g., "en-US", "es-MX"
+  languageCode: varchar("language_code", { length: 5 }).notNull(), // e.g., "en", "es"
+  countryCode: varchar("country_code", { length: 5 }), // e.g., "US", "MX"
+  
+  // Display
+  displayName: varchar("display_name", { length: 100 }).notNull(),
+  nativeName: varchar("native_name", { length: 100 }).notNull(),
+  
+  // Formatting
+  dateFormat: varchar("date_format", { length: 50 }).default("YYYY-MM-DD").notNull(),
+  timeFormat: varchar("time_format", { length: 50 }).default("HH:mm:ss").notNull(),
+  numberFormat: varchar("number_format", { length: 50 }).default("1,234.56").notNull(),
+  
+  // Currency
+  defaultCurrencyCode: varchar("default_currency_code", { length: 10 }).default("USD").notNull(),
+  currencySymbol: varchar("currency_symbol", { length: 10 }).default("$").notNull(),
+  currencySymbolPosition: mysqlEnum("currency_position", ["before", "after"]).default("before").notNull(),
+  
+  // Status
+  isActive: boolean("is_active").default(true).notNull(),
+  isDefault: boolean("is_default").default(false).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SupportedLocale = typeof supportedLocales.$inferSelect;
+export type InsertSupportedLocale = typeof supportedLocales.$inferInsert;
+
+/**
+ * Jurisdictions
+ * Legal and regulatory jurisdictions
+ */
+export const jurisdictions = mysqlTable("jurisdictions", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Jurisdiction identification
+  jurisdictionCode: varchar("jurisdiction_code", { length: 20 }).notNull().unique(),
+  jurisdictionName: varchar("jurisdiction_name", { length: 255 }).notNull(),
+  jurisdictionType: mysqlEnum("jurisdiction_type", [
+    "country", "state", "province", "territory", "region", "city", "special_zone"
+  ]).notNull(),
+  
+  // Parent jurisdiction
+  parentJurisdictionId: int("parent_jurisdiction_id"),
+  
+  // Regulatory info
+  cryptoLegalStatus: mysqlEnum("crypto_legal_status", [
+    "legal", "restricted", "prohibited", "unregulated", "unknown"
+  ]).default("unknown").notNull(),
+  
+  kycRequired: boolean("kyc_required").default(false).notNull(),
+  amlRequired: boolean("aml_required").default(false).notNull(),
+  
+  // Tax info
+  taxTreatyCountries: json("tax_treaty_countries").$type<string[]>(),
+  vatRate: decimal("vat_rate", { precision: 5, scale: 2 }),
+  
+  // Timezone
+  defaultTimezone: varchar("default_timezone", { length: 100 }),
+  
+  // Status
+  isOperational: boolean("is_operational").default(true).notNull(),
+  restrictionNotes: text("restriction_notes"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Jurisdiction = typeof jurisdictions.$inferSelect;
+export type InsertJurisdiction = typeof jurisdictions.$inferInsert;
+
+/**
+ * User Preferences
+ * User-specific localization and settings
+ */
+export const userPreferences = mysqlTable("user_preferences", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("user_id").notNull().unique(),
+  
+  // Localization
+  localeId: int("locale_id"),
+  timezone: varchar("timezone", { length: 100 }).default("UTC").notNull(),
+  
+  // Display preferences
+  preferredCurrency: varchar("preferred_currency", { length: 10 }).default("USD").notNull(),
+  preferredCryptoDisplay: mysqlEnum("crypto_display", ["symbol", "name", "both"]).default("symbol").notNull(),
+  
+  // Notification preferences
+  emailNotifications: boolean("email_notifications").default(true).notNull(),
+  pushNotifications: boolean("push_notifications").default(true).notNull(),
+  smsNotifications: boolean("sms_notifications").default(false).notNull(),
+  
+  // Privacy
+  showBalances: boolean("show_balances").default(true).notNull(),
+  publicProfile: boolean("public_profile").default(false).notNull(),
+  
+  // AI preferences
+  preferredAiProvider: varchar("preferred_ai_provider", { length: 50 }),
+  aiResponseStyle: mysqlEnum("ai_response_style", ["concise", "detailed", "conversational"]).default("detailed").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserPreference = typeof userPreferences.$inferSelect;
+export type InsertUserPreference = typeof userPreferences.$inferInsert;
+
+// ============================================
+// SYSTEM VERSION & AUTO-UPDATE TRACKING
+// ============================================
+
+/**
+ * System Versions
+ * Track system versions and updates
+ */
+export const systemVersions = mysqlTable("system_versions", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Version info
+  versionNumber: varchar("version_number", { length: 50 }).notNull(),
+  versionName: varchar("version_name", { length: 255 }),
+  
+  // Component
+  componentType: mysqlEnum("component_type", [
+    "core", "ai_provider", "blockchain_network", "payment_processor",
+    "localization", "security", "ui", "api"
+  ]).notNull(),
+  componentName: varchar("component_name", { length: 255 }).notNull(),
+  
+  // Release info
+  releaseNotes: text("release_notes"),
+  breakingChanges: json("breaking_changes").$type<string[]>(),
+  
+  // Status
+  status: mysqlEnum("version_status", [
+    "development", "beta", "stable", "deprecated", "retired"
+  ]).default("development").notNull(),
+  
+  // Dates
+  releasedAt: timestamp("released_at"),
+  deprecatedAt: timestamp("deprecated_at"),
+  retiredAt: timestamp("retired_at"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type SystemVersion = typeof systemVersions.$inferSelect;
+export type InsertSystemVersion = typeof systemVersions.$inferInsert;
+
+/**
+ * Feature Flags
+ * Control feature rollout and A/B testing
+ */
+export const featureFlags = mysqlTable("feature_flags", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Flag identification
+  flagKey: varchar("flag_key", { length: 100 }).notNull().unique(),
+  flagName: varchar("flag_name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Targeting
+  isGlobal: boolean("is_global").default(true).notNull(),
+  enabledForUsers: json("enabled_for_users").$type<number[]>(),
+  enabledForHouses: json("enabled_for_houses").$type<number[]>(),
+  enabledPercentage: int("enabled_percentage").default(100).notNull(),
+  
+  // Status
+  isEnabled: boolean("is_enabled").default(false).notNull(),
+  
+  // Metadata
+  category: varchar("category", { length: 100 }),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FeatureFlag = typeof featureFlags.$inferSelect;
+export type InsertFeatureFlag = typeof featureFlags.$inferInsert;
+
+// ============================================
+// METAVERSE READINESS (Future-Proof)
+// ============================================
+
+/**
+ * Virtual Spaces
+ * Metaverse locations and spaces
+ */
+export const virtualSpaces = mysqlTable("virtual_spaces", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Space identification
+  spaceCode: varchar("space_code", { length: 100 }).notNull().unique(),
+  spaceName: varchar("space_name", { length: 255 }).notNull(),
+  
+  // Platform
+  platform: mysqlEnum("metaverse_platform", [
+    "custom", "decentraland", "sandbox", "spatial", "horizon", "vr_chat", "other"
+  ]).default("custom").notNull(),
+  
+  // Location
+  coordinates: json("coordinates").$type<{x: number, y: number, z: number}>(),
+  worldId: varchar("world_id", { length: 255 }),
+  
+  // Owner
+  ownerHouseId: int("owner_house_id"),
+  ownerUserId: int("owner_user_id"),
+  
+  // Properties
+  capacity: int("capacity"),
+  isPublic: boolean("is_public").default(true).notNull(),
+  
+  // Status
+  status: mysqlEnum("space_status", ["active", "under_construction", "archived"]).default("under_construction").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VirtualSpace = typeof virtualSpaces.$inferSelect;
+export type InsertVirtualSpace = typeof virtualSpaces.$inferInsert;
+
+/**
+ * Digital Avatars
+ * User avatars for metaverse representation
+ */
+export const digitalAvatars = mysqlTable("digital_avatars", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("user_id").notNull(),
+  
+  // Avatar identification
+  avatarName: varchar("avatar_name", { length: 255 }).notNull(),
+  
+  // Avatar assets
+  modelUrl: varchar("model_url", { length: 500 }),
+  thumbnailUrl: varchar("thumbnail_url", { length: 500 }),
+  
+  // Customization
+  customization: json("customization").$type<Record<string, any>>(),
+  
+  // NFT backing (optional)
+  nftTokenId: varchar("nft_token_id", { length: 255 }),
+  nftContractAddress: varchar("nft_contract_address", { length: 255 }),
+  nftNetworkId: int("nft_network_id"),
+  
+  // Status
+  isDefault: boolean("is_default").default(false).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DigitalAvatar = typeof digitalAvatars.$inferSelect;
+export type InsertDigitalAvatar = typeof digitalAvatars.$inferInsert;
+
+
+// ============================================
+// REAL ESTATE DEPARTMENT & PROPERTY MANAGEMENT
+// Land acquisition, property management, restoration case integration
+// ============================================
+
+/**
+ * Real Estate Properties
+ * Track all land and property holdings
+ */
+export const realEstateProperties = mysqlTable("real_estate_properties", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Ownership
+  houseId: int("house_id").notNull(),
+  userId: int("user_id").notNull(),
+  businessEntityId: int("business_entity_id"),
+  
+  // Property identification
+  propertyCode: varchar("property_code", { length: 50 }).notNull().unique(),
+  propertyName: varchar("property_name", { length: 255 }).notNull(),
+  
+  // Property type
+  propertyType: mysqlEnum("property_type", [
+    "land", "residential", "commercial", "industrial", "agricultural",
+    "mixed_use", "vacant_lot", "ancestral", "restoration"
+  ]).notNull(),
+  
+  // Location
+  streetAddress: varchar("street_address", { length: 500 }),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 100 }),
+  zipCode: varchar("zip_code", { length: 20 }),
+  county: varchar("county", { length: 100 }),
+  country: varchar("country", { length: 100 }).default("USA").notNull(),
+  
+  // Legal description
+  parcelNumber: varchar("parcel_number", { length: 100 }),
+  legalDescription: text("legal_description"),
+  deedReference: varchar("deed_reference", { length: 255 }),
+  
+  // Property details
+  acreage: decimal("acreage", { precision: 10, scale: 4 }),
+  squareFeet: int("square_feet"),
+  yearBuilt: int("year_built"),
+  bedrooms: int("bedrooms"),
+  bathrooms: decimal("bathrooms", { precision: 3, scale: 1 }),
+  
+  // Valuation
+  purchasePrice: decimal("purchase_price", { precision: 18, scale: 2 }),
+  purchaseDate: timestamp("purchase_date"),
+  currentMarketValue: decimal("current_market_value", { precision: 18, scale: 2 }),
+  lastAppraisalDate: timestamp("last_appraisal_date"),
+  assessedValue: decimal("assessed_value", { precision: 18, scale: 2 }),
+  
+  // Restoration case link
+  isRestorationProperty: boolean("is_restoration_property").default(false).notNull(),
+  restorationCaseId: int("restoration_case_id"),
+  ancestralClaimStatus: mysqlEnum("ancestral_claim_status", [
+    "none", "researching", "documented", "filed", "pending", "approved", "denied"
+  ]).default("none"),
+  
+  // Status
+  ownershipStatus: mysqlEnum("ownership_status", [
+    "owned", "under_contract", "pending_closing", "leased", "sold", "foreclosed"
+  ]).default("owned").notNull(),
+  
+  // Metadata
+  notes: text("notes"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RealEstateProperty = typeof realEstateProperties.$inferSelect;
+export type InsertRealEstateProperty = typeof realEstateProperties.$inferInsert;
+
+/**
+ * Property Acquisitions
+ * Track property purchase process
+ */
+export const propertyAcquisitions = mysqlTable("property_acquisitions", {
+  id: int("id").primaryKey().autoincrement(),
+  propertyId: int("property_id").notNull(),
+  houseId: int("house_id").notNull(),
+  
+  // Acquisition details
+  acquisitionType: mysqlEnum("acquisition_type", [
+    "purchase", "inheritance", "gift", "restoration_claim", "tax_sale", "auction"
+  ]).notNull(),
+  
+  // Financial
+  offerPrice: decimal("offer_price", { precision: 18, scale: 2 }),
+  acceptedPrice: decimal("accepted_price", { precision: 18, scale: 2 }),
+  closingCosts: decimal("closing_costs", { precision: 18, scale: 2 }),
+  downPayment: decimal("down_payment", { precision: 18, scale: 2 }),
+  financedAmount: decimal("financed_amount", { precision: 18, scale: 2 }),
+  
+  // Timeline
+  offerDate: timestamp("offer_date"),
+  acceptanceDate: timestamp("acceptance_date"),
+  inspectionDate: timestamp("inspection_date"),
+  closingDate: timestamp("closing_date"),
+  
+  // Parties
+  sellerName: varchar("seller_name", { length: 255 }),
+  sellerContact: varchar("seller_contact", { length: 255 }),
+  realEstateAgentId: int("real_estate_agent_id"),
+  titleCompany: varchar("title_company", { length: 255 }),
+  lenderId: int("lender_id"),
+  
+  // Status
+  status: mysqlEnum("acquisition_status", [
+    "prospecting", "offer_submitted", "under_contract", "inspection",
+    "financing", "closing", "completed", "cancelled", "withdrawn"
+  ]).default("prospecting").notNull(),
+  
+  // LuvLedger integration
+  luvLedgerTransactionId: int("luv_ledger_transaction_id"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyAcquisition = typeof propertyAcquisitions.$inferSelect;
+export type InsertPropertyAcquisition = typeof propertyAcquisitions.$inferInsert;
+
+/**
+ * Property Valuations
+ * Track appraisals and market value changes
+ */
+export const propertyValuations = mysqlTable("property_valuations", {
+  id: int("id").primaryKey().autoincrement(),
+  propertyId: int("property_id").notNull(),
+  
+  // Valuation details
+  valuationType: mysqlEnum("valuation_type", [
+    "appraisal", "cma", "tax_assessment", "broker_opinion", "self_assessment"
+  ]).notNull(),
+  
+  valuationAmount: decimal("valuation_amount", { precision: 18, scale: 2 }).notNull(),
+  valuationDate: timestamp("valuation_date").notNull(),
+  
+  // Appraiser info
+  appraiserName: varchar("appraiser_name", { length: 255 }),
+  appraiserLicense: varchar("appraiser_license", { length: 100 }),
+  appraiserCompany: varchar("appraiser_company", { length: 255 }),
+  
+  // Supporting data
+  comparableSales: json("comparable_sales").$type<Array<{address: string, price: number, date: string}>>(),
+  notes: text("notes"),
+  documentUrl: varchar("document_url", { length: 500 }),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type PropertyValuation = typeof propertyValuations.$inferSelect;
+export type InsertPropertyValuation = typeof propertyValuations.$inferInsert;
+
+/**
+ * Property Expenses
+ * Track all property-related expenses
+ */
+export const propertyExpenses = mysqlTable("property_expenses", {
+  id: int("id").primaryKey().autoincrement(),
+  propertyId: int("property_id").notNull(),
+  houseId: int("house_id").notNull(),
+  
+  // Expense details
+  expenseType: mysqlEnum("property_expense_type", [
+    "property_tax", "insurance", "maintenance", "repairs", "utilities",
+    "hoa_fees", "management_fees", "legal_fees", "mortgage_payment",
+    "improvements", "landscaping", "security", "other"
+  ]).notNull(),
+  
+  description: varchar("description", { length: 500 }).notNull(),
+  amount: decimal("amount", { precision: 18, scale: 2 }).notNull(),
+  expenseDate: timestamp("expense_date").notNull(),
+  
+  // Recurring
+  isRecurring: boolean("is_recurring").default(false).notNull(),
+  recurringFrequency: mysqlEnum("recurring_frequency", [
+    "monthly", "quarterly", "semi_annual", "annual"
+  ]),
+  
+  // Vendor
+  vendorName: varchar("vendor_name", { length: 255 }),
+  vendorContact: varchar("vendor_contact", { length: 255 }),
+  
+  // Tax deductible
+  isTaxDeductible: boolean("is_tax_deductible").default(false).notNull(),
+  taxCategory: varchar("tax_category", { length: 100 }),
+  
+  // LuvLedger integration
+  luvLedgerTransactionId: int("luv_ledger_transaction_id"),
+  
+  // Receipt
+  receiptUrl: varchar("receipt_url", { length: 500 }),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type PropertyExpense = typeof propertyExpenses.$inferSelect;
+export type InsertPropertyExpense = typeof propertyExpenses.$inferInsert;
+
+/**
+ * Property Income
+ * Track rental income and other property revenue
+ */
+export const propertyIncome = mysqlTable("property_income", {
+  id: int("id").primaryKey().autoincrement(),
+  propertyId: int("property_id").notNull(),
+  houseId: int("house_id").notNull(),
+  
+  // Income details
+  incomeType: mysqlEnum("property_income_type", [
+    "rent", "lease", "sale_proceeds", "insurance_claim", "tax_refund",
+    "security_deposit", "late_fees", "parking", "laundry", "other"
+  ]).notNull(),
+  
+  description: varchar("description", { length: 500 }).notNull(),
+  amount: decimal("amount", { precision: 18, scale: 2 }).notNull(),
+  incomeDate: timestamp("income_date").notNull(),
+  
+  // Tenant info (for rental income)
+  tenantName: varchar("tenant_name", { length: 255 }),
+  leaseStartDate: timestamp("lease_start_date"),
+  leaseEndDate: timestamp("lease_end_date"),
+  
+  // LuvLedger integration
+  luvLedgerTransactionId: int("luv_ledger_transaction_id"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type PropertyIncome = typeof propertyIncome.$inferSelect;
+export type InsertPropertyIncome = typeof propertyIncome.$inferInsert;
+
+/**
+ * Real Estate Agents
+ * Track agent relationships
+ */
+export const realEstateAgents = mysqlTable("real_estate_agents", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  
+  // Agent info
+  agentName: varchar("agent_name", { length: 255 }).notNull(),
+  agentLicense: varchar("agent_license", { length: 100 }),
+  brokerageName: varchar("brokerage_name", { length: 255 }),
+  
+  // Contact
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  
+  // Specialization
+  specialization: mysqlEnum("agent_specialization", [
+    "residential", "commercial", "land", "investment", "luxury", "foreclosure"
+  ]),
+  
+  // Relationship
+  relationshipType: mysqlEnum("agent_relationship", [
+    "buyers_agent", "sellers_agent", "dual_agent", "referral"
+  ]).notNull(),
+  
+  // Performance
+  transactionsCompleted: int("transactions_completed").default(0),
+  rating: decimal("rating", { precision: 3, scale: 2 }),
+  
+  isActive: boolean("is_active").default(true).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RealEstateAgent = typeof realEstateAgents.$inferSelect;
+export type InsertRealEstateAgent = typeof realEstateAgents.$inferInsert;
+
+// ============================================
+// HOUSE DOCUMENT VAULT
+// Secure document storage per House
+// ============================================
+
+/**
+ * House Document Vaults
+ * Each House gets its own secure document vault
+ */
+export const houseDocumentVaults = mysqlTable("house_document_vaults", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull().unique(),
+  
+  // Vault info
+  vaultName: varchar("vault_name", { length: 255 }).notNull(),
+  vaultHash: varchar("vault_hash", { length: 64 }).notNull(),
+  
+  // Storage stats
+  totalDocuments: int("total_documents").default(0).notNull(),
+  totalStorageBytes: bigint("total_storage_bytes", { mode: "number" }).default(0).notNull(),
+  storageQuotaBytes: bigint("storage_quota_bytes", { mode: "number" }).default(10737418240).notNull(), // 10GB default
+  
+  // Encryption
+  encryptionEnabled: boolean("encryption_enabled").default(true).notNull(),
+  encryptionKeyHash: varchar("encryption_key_hash", { length: 64 }),
+  
+  // Status
+  status: mysqlEnum("vault_status", ["active", "locked", "archived"]).default("active").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseDocumentVault = typeof houseDocumentVaults.$inferSelect;
+export type InsertHouseDocumentVault = typeof houseDocumentVaults.$inferInsert;
+
+/**
+ * Vault Folders
+ * Organize documents within vault
+ */
+export const vaultFolders = mysqlTable("vault_folders", {
+  id: int("id").primaryKey().autoincrement(),
+  vaultId: int("vault_id").notNull(),
+  parentFolderId: int("parent_folder_id"),
+  
+  // Folder info
+  folderName: varchar("folder_name", { length: 255 }).notNull(),
+  folderPath: varchar("folder_path", { length: 1000 }).notNull(),
+  
+  // Metadata
+  documentCount: int("document_count").default(0).notNull(),
+  
+  // Permissions
+  isPrivate: boolean("is_private").default(false).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VaultFolder = typeof vaultFolders.$inferSelect;
+export type InsertVaultFolder = typeof vaultFolders.$inferInsert;
+
+/**
+ * Vault Documents
+ * Individual documents stored in vault
+ */
+export const vaultDocuments = mysqlTable("vault_documents", {
+  id: int("id").primaryKey().autoincrement(),
+  vaultId: int("vault_id").notNull(),
+  folderId: int("folder_id"),
+  
+  // Document info
+  documentName: varchar("document_name", { length: 500 }).notNull(),
+  documentType: mysqlEnum("document_type", [
+    "legal", "financial", "tax", "insurance", "property", "identity",
+    "contract", "certificate", "receipt", "correspondence", "other"
+  ]).notNull(),
+  
+  // File info
+  fileName: varchar("file_name", { length: 500 }).notNull(),
+  fileSize: int("file_size").notNull(),
+  mimeType: varchar("mime_type", { length: 100 }).notNull(),
+  fileHash: varchar("file_hash", { length: 64 }).notNull(),
+  
+  // Storage
+  s3Key: varchar("s3_key", { length: 500 }).notNull(),
+  s3Url: varchar("s3_url", { length: 1000 }),
+  
+  // Metadata
+  description: text("description"),
+  tags: json("tags").$type<string[]>(),
+  
+  // Versioning
+  version: int("version").default(1).notNull(),
+  previousVersionId: int("previous_version_id"),
+  
+  // Expiration
+  expirationDate: timestamp("expiration_date"),
+  
+  // Uploaded by
+  uploadedByUserId: int("uploaded_by_user_id").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VaultDocument = typeof vaultDocuments.$inferSelect;
+export type InsertVaultDocument = typeof vaultDocuments.$inferInsert;
+
+/**
+ * Vault Access Logs
+ * Audit trail for document access
+ */
+export const vaultAccessLogs = mysqlTable("vault_access_logs", {
+  id: int("id").primaryKey().autoincrement(),
+  vaultId: int("vault_id").notNull(),
+  documentId: int("document_id"),
+  
+  // Access info
+  accessType: mysqlEnum("vault_access_type", [
+    "view", "download", "upload", "delete", "share", "print"
+  ]).notNull(),
+  
+  accessedByUserId: int("accessed_by_user_id").notNull(),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: varchar("user_agent", { length: 500 }),
+  
+  // Result
+  accessGranted: boolean("access_granted").default(true).notNull(),
+  denialReason: varchar("denial_reason", { length: 255 }),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type VaultAccessLog = typeof vaultAccessLogs.$inferSelect;
+export type InsertVaultAccessLog = typeof vaultAccessLogs.$inferInsert;
+
+// ============================================
+// W-2 WORKER MANAGEMENT & PAYROLL
+// Employee management and payroll processing
+// ============================================
+
+/**
+ * W-2 Workers
+ * Employee records for each House/Business
+ */
+export const w2Workers = mysqlTable("w2_workers", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  businessEntityId: int("business_entity_id"),
+  
+  // Personal info
+  firstName: varchar("first_name", { length: 100 }).notNull(),
+  lastName: varchar("last_name", { length: 100 }).notNull(),
+  middleName: varchar("middle_name", { length: 100 }),
+  
+  // Contact
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  address: varchar("address", { length: 500 }),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 50 }),
+  zipCode: varchar("zip_code", { length: 20 }),
+  
+  // Tax info
+  ssn: varchar("ssn_encrypted", { length: 255 }), // Encrypted
+  federalFilingStatus: mysqlEnum("federal_filing_status", [
+    "single", "married_filing_jointly", "married_filing_separately",
+    "head_of_household", "qualifying_widow"
+  ]).default("single").notNull(),
+  federalAllowances: int("federal_allowances").default(0).notNull(),
+  stateFilingStatus: varchar("state_filing_status", { length: 50 }),
+  stateAllowances: int("state_allowances").default(0),
+  
+  // Employment
+  employmentType: mysqlEnum("employment_type", [
+    "full_time", "part_time", "seasonal", "temporary"
+  ]).default("full_time").notNull(),
+  department: varchar("department", { length: 100 }),
+  jobTitle: varchar("job_title", { length: 255 }),
+  hireDate: timestamp("hire_date").notNull(),
+  terminationDate: timestamp("termination_date"),
+  
+  // Compensation
+  payType: mysqlEnum("pay_type", ["hourly", "salary", "commission"]).default("hourly").notNull(),
+  payRate: decimal("pay_rate", { precision: 18, scale: 2 }).notNull(),
+  payFrequency: mysqlEnum("pay_frequency", [
+    "weekly", "bi_weekly", "semi_monthly", "monthly"
+  ]).default("bi_weekly").notNull(),
+  
+  // Direct deposit
+  directDepositEnabled: boolean("direct_deposit_enabled").default(false).notNull(),
+  bankRoutingNumber: varchar("bank_routing_encrypted", { length: 255 }),
+  bankAccountNumber: varchar("bank_account_encrypted", { length: 255 }),
+  
+  // Status
+  status: mysqlEnum("worker_status", ["active", "on_leave", "terminated"]).default("active").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type W2Worker = typeof w2Workers.$inferSelect;
+export type InsertW2Worker = typeof w2Workers.$inferInsert;
+
+/**
+ * Payroll Periods
+ * Define pay periods for payroll processing
+ */
+export const payrollPeriods = mysqlTable("payroll_periods", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  businessEntityId: int("business_entity_id"),
+  
+  // Period info
+  periodStartDate: timestamp("period_start_date").notNull(),
+  periodEndDate: timestamp("period_end_date").notNull(),
+  payDate: timestamp("pay_date").notNull(),
+  
+  // Status
+  status: mysqlEnum("payroll_period_status", [
+    "open", "processing", "approved", "paid", "closed"
+  ]).default("open").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PayrollPeriod = typeof payrollPeriods.$inferSelect;
+export type InsertPayrollPeriod = typeof payrollPeriods.$inferInsert;
+
+/**
+ * Payroll Runs
+ * Individual payroll processing runs
+ */
+export const payrollRuns = mysqlTable("payroll_runs", {
+  id: int("id").primaryKey().autoincrement(),
+  payrollPeriodId: int("payroll_period_id").notNull(),
+  workerId: int("worker_id").notNull(),
+  
+  // Hours/Earnings
+  regularHours: decimal("regular_hours", { precision: 10, scale: 2 }).default("0").notNull(),
+  overtimeHours: decimal("overtime_hours", { precision: 10, scale: 2 }).default("0").notNull(),
+  grossPay: decimal("gross_pay", { precision: 18, scale: 2 }).notNull(),
+  
+  // Deductions
+  federalTax: decimal("federal_tax", { precision: 18, scale: 2 }).default("0").notNull(),
+  stateTax: decimal("state_tax", { precision: 18, scale: 2 }).default("0").notNull(),
+  localTax: decimal("local_tax", { precision: 18, scale: 2 }).default("0").notNull(),
+  socialSecurity: decimal("social_security", { precision: 18, scale: 2 }).default("0").notNull(),
+  medicare: decimal("medicare", { precision: 18, scale: 2 }).default("0").notNull(),
+  otherDeductions: decimal("other_deductions", { precision: 18, scale: 2 }).default("0").notNull(),
+  
+  // Net pay
+  netPay: decimal("net_pay", { precision: 18, scale: 2 }).notNull(),
+  
+  // LuvLedger integration
+  luvLedgerTransactionId: int("luv_ledger_transaction_id"),
+  
+  // Status
+  status: mysqlEnum("payroll_run_status", [
+    "pending", "calculated", "approved", "paid", "voided"
+  ]).default("pending").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PayrollRun = typeof payrollRuns.$inferSelect;
+export type InsertPayrollRun = typeof payrollRuns.$inferInsert;
+
+/**
+ * Worker Tax Withholdings
+ * Track YTD tax withholdings for W-2 generation
+ */
+export const workerTaxWithholdings = mysqlTable("worker_tax_withholdings", {
+  id: int("id").primaryKey().autoincrement(),
+  workerId: int("worker_id").notNull(),
+  taxYear: int("tax_year").notNull(),
+  
+  // YTD totals
+  ytdGrossPay: decimal("ytd_gross_pay", { precision: 18, scale: 2 }).default("0").notNull(),
+  ytdFederalTax: decimal("ytd_federal_tax", { precision: 18, scale: 2 }).default("0").notNull(),
+  ytdStateTax: decimal("ytd_state_tax", { precision: 18, scale: 2 }).default("0").notNull(),
+  ytdLocalTax: decimal("ytd_local_tax", { precision: 18, scale: 2 }).default("0").notNull(),
+  ytdSocialSecurity: decimal("ytd_social_security", { precision: 18, scale: 2 }).default("0").notNull(),
+  ytdMedicare: decimal("ytd_medicare", { precision: 18, scale: 2 }).default("0").notNull(),
+  
+  // W-2 generation
+  w2Generated: boolean("w2_generated").default(false).notNull(),
+  w2GeneratedAt: timestamp("w2_generated_at"),
+  w2DocumentId: int("w2_document_id"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WorkerTaxWithholding = typeof workerTaxWithholdings.$inferSelect;
+export type InsertWorkerTaxWithholding = typeof workerTaxWithholdings.$inferInsert;
+
+// ============================================
+// TAX PREPARATION TOOLS
+// Income tracking, deductions, and tax filing
+// ============================================
+
+/**
+ * Tax Years
+ * Annual tax records for each House
+ */
+export const taxYears = mysqlTable("tax_years", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  userId: int("user_id").notNull(),
+  
+  // Year info
+  taxYear: int("tax_year").notNull(),
+  
+  // Filing status
+  filingStatus: mysqlEnum("tax_filing_status", [
+    "single", "married_filing_jointly", "married_filing_separately",
+    "head_of_household", "qualifying_widow"
+  ]).notNull(),
+  
+  // Income summary
+  totalIncome: decimal("total_income", { precision: 18, scale: 2 }).default("0").notNull(),
+  adjustedGrossIncome: decimal("adjusted_gross_income", { precision: 18, scale: 2 }).default("0").notNull(),
+  taxableIncome: decimal("taxable_income", { precision: 18, scale: 2 }).default("0").notNull(),
+  
+  // Deductions
+  standardDeduction: decimal("standard_deduction", { precision: 18, scale: 2 }).default("0").notNull(),
+  itemizedDeductions: decimal("itemized_deductions", { precision: 18, scale: 2 }).default("0").notNull(),
+  useItemized: boolean("use_itemized").default(false).notNull(),
+  
+  // Tax calculation
+  totalTaxLiability: decimal("total_tax_liability", { precision: 18, scale: 2 }).default("0").notNull(),
+  totalTaxPaid: decimal("total_tax_paid", { precision: 18, scale: 2 }).default("0").notNull(),
+  refundOrOwed: decimal("refund_or_owed", { precision: 18, scale: 2 }).default("0").notNull(),
+  
+  // Status
+  status: mysqlEnum("tax_year_status", [
+    "in_progress", "ready_to_file", "filed", "accepted", "rejected", "amended"
+  ]).default("in_progress").notNull(),
+  
+  filedAt: timestamp("filed_at"),
+  acceptedAt: timestamp("accepted_at"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TaxYear = typeof taxYears.$inferSelect;
+export type InsertTaxYear = typeof taxYears.$inferInsert;
+
+/**
+ * Tax Documents
+ * Store tax-related documents (W-2s, 1099s, receipts)
+ */
+export const taxDocuments = mysqlTable("tax_documents", {
+  id: int("id").primaryKey().autoincrement(),
+  taxYearId: int("tax_year_id").notNull(),
+  houseId: int("house_id").notNull(),
+  
+  // Document type
+  documentType: mysqlEnum("tax_document_type", [
+    "w2", "1099_misc", "1099_nec", "1099_int", "1099_div", "1099_b",
+    "1098", "receipt", "invoice", "bank_statement", "other"
+  ]).notNull(),
+  
+  documentName: varchar("document_name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Source
+  issuerName: varchar("issuer_name", { length: 255 }),
+  issuerEin: varchar("issuer_ein", { length: 20 }),
+  
+  // Amounts
+  reportedAmount: decimal("reported_amount", { precision: 18, scale: 2 }),
+  taxWithheld: decimal("tax_withheld", { precision: 18, scale: 2 }),
+  
+  // Storage
+  vaultDocumentId: int("vault_document_id"),
+  
+  // Status
+  isVerified: boolean("is_verified").default(false).notNull(),
+  verifiedAt: timestamp("verified_at"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type TaxDocument = typeof taxDocuments.$inferSelect;
+export type InsertTaxDocument = typeof taxDocuments.$inferInsert;
+
+/**
+ * Tax Deductions
+ * Track deductible expenses by category
+ */
+export const taxDeductions = mysqlTable("tax_deductions", {
+  id: int("id").primaryKey().autoincrement(),
+  taxYearId: int("tax_year_id").notNull(),
+  houseId: int("house_id").notNull(),
+  
+  // Deduction category
+  category: mysqlEnum("deduction_category", [
+    "mortgage_interest", "property_tax", "state_local_tax", "charitable",
+    "medical", "business_expense", "home_office", "education",
+    "retirement_contribution", "health_savings", "child_care", "other"
+  ]).notNull(),
+  
+  description: varchar("description", { length: 500 }).notNull(),
+  amount: decimal("amount", { precision: 18, scale: 2 }).notNull(),
+  deductionDate: timestamp("deduction_date").notNull(),
+  
+  // Supporting document
+  receiptUrl: varchar("receipt_url", { length: 500 }),
+  vaultDocumentId: int("vault_document_id"),
+  
+  // Verification
+  isVerified: boolean("is_verified").default(false).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type TaxDeduction = typeof taxDeductions.$inferSelect;
+export type InsertTaxDeduction = typeof taxDeductions.$inferInsert;
+
+/**
+ * Tax Filings
+ * Track tax return submissions
+ */
+export const taxFilings = mysqlTable("tax_filings", {
+  id: int("id").primaryKey().autoincrement(),
+  taxYearId: int("tax_year_id").notNull(),
+  houseId: int("house_id").notNull(),
+  
+  // Filing type
+  filingType: mysqlEnum("tax_filing_type", [
+    "federal", "state", "local", "amended_federal", "amended_state"
+  ]).notNull(),
+  
+  // Form info
+  formNumber: varchar("form_number", { length: 50 }).notNull(), // e.g., "1040", "1040-SR"
+  
+  // Submission
+  submittedAt: timestamp("submitted_at"),
+  submissionMethod: mysqlEnum("submission_method", [
+    "e_file", "mail", "in_person"
+  ]),
+  confirmationNumber: varchar("confirmation_number", { length: 100 }),
+  
+  // Status
+  status: mysqlEnum("filing_status", [
+    "draft", "submitted", "accepted", "rejected", "processing"
+  ]).default("draft").notNull(),
+  
+  rejectionReason: text("rejection_reason"),
+  
+  // Document
+  filingDocumentId: int("filing_document_id"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TaxFiling = typeof taxFilings.$inferSelect;
+export type InsertTaxFiling = typeof taxFilings.$inferInsert;
+
+/**
+ * Estimated Taxes
+ * Track quarterly estimated tax payments
+ */
+export const estimatedTaxes = mysqlTable("estimated_taxes", {
+  id: int("id").primaryKey().autoincrement(),
+  taxYearId: int("tax_year_id").notNull(),
+  houseId: int("house_id").notNull(),
+  
+  // Quarter
+  quarter: mysqlEnum("tax_quarter", ["q1", "q2", "q3", "q4"]).notNull(),
+  dueDate: timestamp("due_date").notNull(),
+  
+  // Amounts
+  estimatedAmount: decimal("estimated_amount", { precision: 18, scale: 2 }).notNull(),
+  paidAmount: decimal("paid_amount", { precision: 18, scale: 2 }).default("0").notNull(),
+  
+  // Payment
+  paidAt: timestamp("paid_at"),
+  paymentMethod: varchar("payment_method", { length: 100 }),
+  confirmationNumber: varchar("confirmation_number", { length: 100 }),
+  
+  // LuvLedger integration
+  luvLedgerTransactionId: int("luv_ledger_transaction_id"),
+  
+  // Status
+  status: mysqlEnum("estimated_tax_status", [
+    "pending", "paid", "partial", "overdue"
+  ]).default("pending").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EstimatedTax = typeof estimatedTaxes.$inferSelect;
+export type InsertEstimatedTax = typeof estimatedTaxes.$inferInsert;
+
+// ============================================
+// RESTORATION CASE MANAGEMENT
+// Track land/property restoration claims
+// ============================================
+
+/**
+ * Restoration Cases
+ * Track ancestral land and property restoration claims
+ */
+export const restorationCases = mysqlTable("restoration_cases", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  userId: int("user_id").notNull(),
+  
+  // Case identification
+  caseNumber: varchar("case_number", { length: 100 }).notNull().unique(),
+  caseName: varchar("case_name", { length: 255 }).notNull(),
+  
+  // Claim type
+  claimType: mysqlEnum("restoration_claim_type", [
+    "ancestral_land", "property_theft", "deed_fraud", "tax_sale_reversal",
+    "inheritance_dispute", "boundary_dispute", "title_clearing", "other"
+  ]).notNull(),
+  
+  // Property details
+  propertyDescription: text("property_description"),
+  originalOwner: varchar("original_owner", { length: 255 }),
+  claimantRelationship: varchar("claimant_relationship", { length: 255 }),
+  
+  // Location
+  propertyAddress: varchar("property_address", { length: 500 }),
+  county: varchar("county", { length: 100 }),
+  state: varchar("state", { length: 50 }),
+  parcelNumbers: json("parcel_numbers").$type<string[]>(),
+  
+  // Timeline
+  originalOwnershipDate: timestamp("original_ownership_date"),
+  dispossessionDate: timestamp("dispossession_date"),
+  claimFiledDate: timestamp("claim_filed_date"),
+  
+  // Legal
+  attorneyName: varchar("attorney_name", { length: 255 }),
+  attorneyContact: varchar("attorney_contact", { length: 255 }),
+  courtCaseNumber: varchar("court_case_number", { length: 100 }),
+  jurisdiction: varchar("jurisdiction", { length: 255 }),
+  
+  // Evidence
+  evidenceDocumentIds: json("evidence_document_ids").$type<number[]>(),
+  
+  // Financial
+  estimatedValue: decimal("estimated_value", { precision: 18, scale: 2 }),
+  legalFees: decimal("legal_fees", { precision: 18, scale: 2 }).default("0"),
+  
+  // Status
+  status: mysqlEnum("restoration_case_status", [
+    "research", "documenting", "filed", "pending_review", "hearing_scheduled",
+    "in_litigation", "settled", "won", "lost", "appealing", "closed"
+  ]).default("research").notNull(),
+  
+  // Outcome
+  outcomeNotes: text("outcome_notes"),
+  restoredPropertyId: int("restored_property_id"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RestorationCase = typeof restorationCases.$inferSelect;
+export type InsertRestorationCase = typeof restorationCases.$inferInsert;

@@ -5,7 +5,7 @@ import {
   socialMediaIntegrations,
   socialMediaPosts,
   notifications,
-  bots
+  agents
 } from "../../drizzle/schema";
 import { eq, desc, and } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
@@ -199,10 +199,10 @@ export const socialMediaRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      // Get Outreach Bot
-      const [outreachBot] = await db.select()
-        .from(bots)
-        .where(eq(bots.type, "outreach"))
+      // Get Outreach Agent
+      const [outreachAgent] = await db.select()
+        .from(agents)
+        .where(eq(agents.type, "outreach"))
         .limit(1);
 
       const platformLimits: Record<string, number> = {
@@ -228,7 +228,7 @@ Return the post content only, no explanations.`;
 
       const response = await invokeLLM({
         messages: [
-          { role: "system", content: outreachBot?.systemPrompt || "You are a social media marketing expert." },
+          { role: "system", content: outreachAgent?.systemPrompt || "You are a social media marketing expert." },
           { role: "user", content: prompt }
         ],
       });
@@ -263,9 +263,9 @@ Return the post content only, no explanations.`;
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      const [outreachBot] = await db.select()
-        .from(bots)
-        .where(eq(bots.type, "outreach"))
+      const [outreachAgent] = await db.select()
+        .from(agents)
+        .where(eq(agents.type, "outreach"))
         .limit(1);
 
       const prompt = `Create a 7-day social media content calendar for LuvOnPurpose.
@@ -299,7 +299,7 @@ Format as JSON array with structure:
 
       const response = await invokeLLM({
         messages: [
-          { role: "system", content: outreachBot?.systemPrompt || "You are a social media marketing expert." },
+          { role: "system", content: outreachAgent?.systemPrompt || "You are a social media marketing expert." },
           { role: "user", content: prompt }
         ],
       });

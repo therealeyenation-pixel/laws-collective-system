@@ -25,7 +25,7 @@ import { entityMediaEngineRouter } from "./routers/entity-media-engine";
 import { entityPlatformEngineRouter } from "./routers/entity-platform-engine";
 import { documentVaultRouter } from "./routers/document-vault";
 import { notificationsRouter } from "./routers/notifications";
-import { botsRouter } from "./routers/bots";
+import { agentsRouter } from "./routers/agents";
 import { socialMediaRouter } from "./routers/social-media";
 import { emailServiceRouter } from "./routers/email-service";
 import { contactRouter } from "./routers/contact";
@@ -39,6 +39,11 @@ import { houseActivationRouter } from "./routers/house-activation";
 import { crownCompletionRouter } from "./routers/crown-completion";
 import { guardianCredentialsRouter } from "./routers/guardian-credentials";
 import { houseLedgerRouter } from "./routers/house-ledger";
+import { realEstateRouter } from "./routers/real-estate";
+import { houseVaultRouter } from "./routers/house-vault";
+import { payrollRouter } from "./routers/payroll";
+import { taxPrepRouter } from "./routers/tax-prep";
+import { restorationRouter } from "./routers/restoration";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -65,7 +70,7 @@ export const appRouter = router({
   entityPlatform: entityPlatformEngineRouter,
   documentVault: documentVaultRouter,
   notifications: notificationsRouter,
-  bots: botsRouter,
+  agents: agentsRouter,
   socialMedia: socialMediaRouter,
   emailService: emailServiceRouter,
   contact: contactRouter,
@@ -79,6 +84,11 @@ export const appRouter = router({
   crownCompletion: crownCompletionRouter,
   guardianCredentials: guardianCredentialsRouter,
   houseLedger: houseLedgerRouter,
+  realEstate: realEstateRouter,
+  houseVault: houseVaultRouter,
+  payroll: payrollRouter,
+  taxPrep: taxPrepRouter,
+  restoration: restorationRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
