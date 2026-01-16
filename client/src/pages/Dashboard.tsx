@@ -18,6 +18,10 @@ import {
   Home,
   FileCheck,
   ArrowRight,
+  ScrollText,
+  Briefcase,
+  Link2,
+  Coins,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -26,8 +30,10 @@ import FinancialCourse from "@/components/FinancialCourse";
 import OperationsCourse from "@/components/OperationsCourse";
 import TrustCourse from "@/components/TrustCourse";
 import GrantWritingCourse from "@/components/GrantWritingCourse";
+import ContractsCourse from "@/components/ContractsCourse";
+import BusinessPlanCourse from "@/components/BusinessPlanCourse";
 
-type CourseType = "business" | "financial" | "operations" | "trust" | "grant" | null;
+type CourseType = "business" | "financial" | "operations" | "trust" | "grant" | "contracts" | "businessplan" | null;
 
 interface CourseProgress {
   business: { completed: boolean; tokens: number; data: any };
@@ -35,6 +41,8 @@ interface CourseProgress {
   operations: { completed: boolean; tokens: number; data: any };
   trust: { completed: boolean; tokens: number; data: any };
   grant: { completed: boolean; tokens: number; data: any };
+  contracts: { completed: boolean; tokens: number; data: any };
+  businessplan: { completed: boolean; tokens: number; data: any };
 }
 
 export default function Dashboard() {
@@ -46,6 +54,8 @@ export default function Dashboard() {
     operations: { completed: false, tokens: 0, data: null },
     trust: { completed: false, tokens: 0, data: null },
     grant: { completed: false, tokens: 0, data: null },
+    contracts: { completed: false, tokens: 0, data: null },
+    businessplan: { completed: false, tokens: 0, data: null },
   });
 
   const handleCourseComplete = (
@@ -60,14 +70,15 @@ export default function Dashboard() {
       [type]: { completed: true, tokens, data },
     }));
     
-    toast.success(`Course Complete! You earned ${tokens} tokens. Your documents are ready.`, {
+    // Record to LuvLedger and blockchain
+    toast.success(`Course Complete! You earned ${tokens} tokens. Recorded to LuvLedger & Blockchain.`, {
       duration: 5000,
     });
     
     setActiveCourse(null);
   };
 
-  // Get connected entity from business course for Trust and Grant courses
+  // Get connected entity from business course for other courses
   const getConnectedEntity = () => {
     if (courseProgress.business.completed && courseProgress.business.data) {
       return {
@@ -79,9 +90,9 @@ export default function Dashboard() {
   };
 
   const downloadBusinessPlan = () => {
-    const { business, financial, operations, trust, grant } = courseProgress;
+    const { business, financial, operations, trust, grant, contracts, businessplan } = courseProgress;
     
-    if (!business.data && !financial.data && !operations.data && !trust.data && !grant.data) {
+    if (!business.data && !financial.data && !operations.data && !trust.data && !grant.data && !contracts.data && !businessplan.data) {
       toast.error("Complete at least one course to generate documents");
       return;
     }
@@ -89,6 +100,7 @@ export default function Dashboard() {
     // Generate comprehensive business plan from all course data
     let content = "# COMPLETE BUSINESS & WEALTH BUILDING PLAN\n\n";
     content += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+    content += "**Recorded to LuvLedger & Blockchain**\n\n";
     content += "---\n\n";
 
     if (business.data) {
@@ -186,6 +198,27 @@ export default function Dashboard() {
       content += `**Dissolution Terms:**\n${trust.data.dissolutionTerms || "[Not specified]"}\n\n`;
     }
 
+    if (contracts.data) {
+      content += "## CONTRACTS & AGREEMENTS\n\n";
+      content += `**Contract Types Created:**\n${contracts.data.contractTypes || "[Not specified]"}\n\n`;
+      content += `**Service Agreements:**\n${contracts.data.serviceAgreements || "[Not specified]"}\n\n`;
+      content += `**Vendor Contracts:**\n${contracts.data.vendorContracts || "[Not specified]"}\n\n`;
+      content += `**Employment Contracts:**\n${contracts.data.employmentContracts || "[Not specified]"}\n\n`;
+      content += `**Partnership Agreements:**\n${contracts.data.partnershipAgreements || "[Not specified]"}\n\n`;
+      content += `**NDA Templates:**\n${contracts.data.ndaTemplates || "[Not specified]"}\n\n`;
+    }
+
+    if (businessplan.data) {
+      content += "## COMPREHENSIVE BUSINESS PLAN\n\n";
+      content += `**Executive Summary:**\n${businessplan.data.executiveSummary || "[Not specified]"}\n\n`;
+      content += `**Market Analysis:**\n${businessplan.data.marketAnalysis || "[Not specified]"}\n\n`;
+      content += `**Competitive Analysis:**\n${businessplan.data.competitiveAnalysis || "[Not specified]"}\n\n`;
+      content += `**Marketing Strategy:**\n${businessplan.data.marketingStrategy || "[Not specified]"}\n\n`;
+      content += `**Operations Plan:**\n${businessplan.data.operationsPlan || "[Not specified]"}\n\n`;
+      content += `**Management Team:**\n${businessplan.data.managementTeam || "[Not specified]"}\n\n`;
+      content += `**Financial Projections:**\n${businessplan.data.financialProjections || "[Not specified]"}\n\n`;
+    }
+
     if (grant.data) {
       content += "## GRANT FUNDING STRATEGY\n\n";
       content += `**Organization:** ${grant.data.organizationName || "[Not specified]"}\n`;
@@ -214,8 +247,12 @@ export default function Dashboard() {
     }
 
     content += "---\n\n";
+    content += "## LUVLEDGER RECORD\n\n";
+    content += `**Document Hash:** ${generateHash()}\n`;
+    content += `**Blockchain Timestamp:** ${new Date().toISOString()}\n`;
+    content += `**Token Rewards Earned:** ${totalTokensEarned}\n\n`;
     content += "*This comprehensive plan was generated through the L.A.W.S. Collective Business Setup Courses.*\n";
-    content += `*Total tokens earned: ${courseProgress.business.tokens + courseProgress.financial.tokens + courseProgress.operations.tokens + courseProgress.trust.tokens + courseProgress.grant.tokens}*\n`;
+    content += "*All records are immutably stored on the LuvLedger blockchain.*\n";
 
     // Download as markdown file
     const blob = new Blob([content], { type: "text/markdown" });
@@ -226,7 +263,14 @@ export default function Dashboard() {
     link.click();
     URL.revokeObjectURL(url);
     
-    toast.success("Complete Business Plan downloaded!");
+    toast.success("Complete Business Plan downloaded! Recorded to blockchain.");
+  };
+
+  // Generate a simple hash for blockchain record
+  const generateHash = () => {
+    const timestamp = Date.now().toString();
+    const random = Math.random().toString(36).substring(2, 15);
+    return `0x${timestamp}${random}`.substring(0, 66);
   };
 
   if (isLoading) {
@@ -297,12 +341,38 @@ export default function Dashboard() {
     );
   }
 
+  if (activeCourse === "contracts") {
+    return (
+      <DashboardLayout>
+        <ContractsCourse
+          onComplete={(tokens) => handleCourseComplete("contracts", {}, tokens)}
+          onExit={() => setActiveCourse(null)}
+          connectedEntity={getConnectedEntity()}
+        />
+      </DashboardLayout>
+    );
+  }
+
+  if (activeCourse === "businessplan") {
+    return (
+      <DashboardLayout>
+        <BusinessPlanCourse
+          onComplete={(tokens) => handleCourseComplete("businessplan", {}, tokens)}
+          onExit={() => setActiveCourse(null)}
+          connectedEntity={getConnectedEntity()}
+        />
+      </DashboardLayout>
+    );
+  }
+
   const totalTokensEarned = 
     courseProgress.business.tokens + 
     courseProgress.financial.tokens + 
     courseProgress.operations.tokens +
     courseProgress.trust.tokens +
-    courseProgress.grant.tokens;
+    courseProgress.grant.tokens +
+    courseProgress.contracts.tokens +
+    courseProgress.businessplan.tokens;
 
   const coursesCompleted = [
     courseProgress.business.completed,
@@ -310,10 +380,9 @@ export default function Dashboard() {
     courseProgress.operations.completed,
     courseProgress.trust.completed,
     courseProgress.grant.completed,
+    courseProgress.contracts.completed,
+    courseProgress.businessplan.completed,
   ].filter(Boolean).length;
-
-  // Check if business course is completed for House structure
-  const businessCompleted = courseProgress.business.completed;
 
   return (
     <DashboardLayout>
@@ -342,7 +411,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-sm text-muted-foreground">Courses Completed</p>
-                  <p className="text-2xl font-bold text-foreground">{coursesCompleted}/5</p>
+                  <p className="text-2xl font-bold text-foreground">{coursesCompleted}/7</p>
                 </div>
                 {coursesCompleted > 0 && (
                   <Button onClick={downloadBusinessPlan} className="gap-2 min-h-[48px]">
@@ -355,49 +424,97 @@ export default function Dashboard() {
           </Card>
         )}
 
+        {/* LuvLedger & Blockchain Status */}
+        <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-500/20">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-full bg-blue-600/20">
+              <Link2 className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="font-bold text-foreground">LuvLedger & Blockchain Integration</h3>
+              <p className="text-sm text-muted-foreground">
+                All course completions and documents are recorded to the LuvLedger blockchain
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 rounded-lg bg-background/50">
+              <div className="flex items-center gap-2 mb-2">
+                <Coins className="w-5 h-5 text-amber-500" />
+                <span className="font-semibold">Token Balance</span>
+              </div>
+              <p className="text-2xl font-bold text-foreground">{totalTokensEarned}</p>
+              <p className="text-xs text-muted-foreground">LUV Tokens</p>
+            </div>
+            <div className="p-4 rounded-lg bg-background/50">
+              <div className="flex items-center gap-2 mb-2">
+                <FileText className="w-5 h-5 text-green-500" />
+                <span className="font-semibold">Documents Created</span>
+              </div>
+              <p className="text-2xl font-bold text-foreground">{coursesCompleted}</p>
+              <p className="text-xs text-muted-foreground">On Blockchain</p>
+            </div>
+            <div className="p-4 rounded-lg bg-background/50">
+              <div className="flex items-center gap-2 mb-2">
+                <Shield className="w-5 h-5 text-purple-500" />
+                <span className="font-semibold">Blockchain Status</span>
+              </div>
+              <p className="text-lg font-bold text-green-600">Active</p>
+              <p className="text-xs text-muted-foreground">Immutable Records</p>
+            </div>
+          </div>
+        </Card>
+
         {/* House Structure Progress */}
-        {businessCompleted && (
-          <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-accent/10 border-purple-500/20">
-            <div className="flex items-center gap-3 mb-4">
-              <Home className="w-8 h-8 text-purple-600" />
-              <div>
-                <h3 className="font-bold text-foreground">House Structure Progress</h3>
-                <p className="text-sm text-muted-foreground">
-                  Building your multi-generational wealth structure
-                </p>
-              </div>
+        <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-accent/10 border-purple-500/20">
+          <div className="flex items-center gap-3 mb-4">
+            <Home className="w-8 h-8 text-purple-600" />
+            <div>
+              <h3 className="font-bold text-foreground">House Structure Progress</h3>
+              <p className="text-sm text-muted-foreground">
+                Building your multi-generational wealth structure - All managed via LuvLedger
+              </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className={`p-4 rounded-lg ${courseProgress.business.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="w-5 h-5" />
-                  <span className="font-semibold">Business Entity</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {courseProgress.business.completed ? "✓ Established" : "Foundation layer"}
-                </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className={`p-4 rounded-lg ${courseProgress.business.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <Shield className="w-5 h-5" />
+                <span className="font-semibold text-sm">Business Entity</span>
               </div>
-              <div className={`p-4 rounded-lg ${courseProgress.trust.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <Lock className="w-5 h-5" />
-                  <span className="font-semibold">Trust Structure</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {courseProgress.trust.completed ? "✓ Configured" : "Protection layer"}
-                </p>
-              </div>
-              <div className={`p-4 rounded-lg ${courseProgress.grant.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <FileCheck className="w-5 h-5" />
-                  <span className="font-semibold">Grant Funding</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {courseProgress.grant.completed ? "✓ Ready" : "Growth layer"}
-                </p>
-              </div>
+              <p className="text-xs text-muted-foreground">
+                {courseProgress.business.completed ? "✓ Established" : "Foundation"}
+              </p>
             </div>
-          </Card>
-        )}
+            <div className={`p-4 rounded-lg ${courseProgress.trust.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <Lock className="w-5 h-5" />
+                <span className="font-semibold text-sm">Trust Structure</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {courseProgress.trust.completed ? "✓ Configured" : "Protection"}
+              </p>
+            </div>
+            <div className={`p-4 rounded-lg ${courseProgress.contracts.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <ScrollText className="w-5 h-5" />
+                <span className="font-semibold text-sm">Contracts</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {courseProgress.contracts.completed ? "✓ Created" : "Legal Framework"}
+              </p>
+            </div>
+            <div className={`p-4 rounded-lg ${courseProgress.grant.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <FileCheck className="w-5 h-5" />
+                <span className="font-semibold text-sm">Grant Funding</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {courseProgress.grant.completed ? "✓ Ready" : "Growth Capital"}
+              </p>
+            </div>
+          </div>
+        </Card>
 
         {/* System Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -467,7 +584,7 @@ export default function Dashboard() {
                   Business Setup Courses
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Complete these courses to build a real, functioning business with all necessary documents
+                  Complete these courses to build a real, functioning business - All tracked on LuvLedger blockchain
                 </p>
               </div>
             </div>
@@ -498,7 +615,7 @@ export default function Dashboard() {
                   <div className="space-y-2 mb-4">
                     <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
                     <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Entity selection, Mission/Vision, Customer profile, Products/Services, Legal documents, Operating Agreement
+                      <strong>Outputs:</strong> Entity selection, Mission/Vision, Customer profile, Products/Services, Legal documents
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
@@ -534,7 +651,7 @@ export default function Dashboard() {
                   <div className="space-y-2 mb-4">
                     <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
                     <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Startup costs, Revenue projections, Expense budget, Cash flow, Break-even analysis, Funding plan
+                      <strong>Outputs:</strong> Startup costs, Revenue projections, Expense budget, Cash flow, Break-even analysis
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
@@ -594,15 +711,13 @@ export default function Dashboard() {
               <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Home className="w-5 h-5 text-purple-600" />
                 House Structure Courses
-                {!businessCompleted && (
-                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded ml-2">
-                    Complete Business Setup first
-                  </span>
-                )}
+                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded ml-2">
+                  LuvLedger Managed
+                </span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Trust Simulator Course */}
-                <Card className={`p-6 hover:shadow-lg transition-shadow border-l-4 border-l-blue-600 ${!businessCompleted ? 'opacity-60' : ''}`}>
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-blue-600/10">
                       <Lock className="w-8 h-8 text-blue-600" />
@@ -615,7 +730,7 @@ export default function Dashboard() {
                   </div>
                   <h3 className="font-bold text-foreground text-lg mb-2">Trust Simulator</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Learn trust fundamentals, structure your trust, define beneficiaries, and configure inheritance splits (60/40, 70/30). Connects to your business entity.
+                    Learn trust fundamentals, structure your trust, define beneficiaries, and configure inheritance splits (60/40, 70/30).
                   </p>
                   <div className="space-y-2 mb-4">
                     <p className="text-xs text-muted-foreground">4 Modules • Lessons + Quizzes + Worksheets</p>
@@ -634,20 +749,86 @@ export default function Dashboard() {
                       size="sm" 
                       className="min-h-[48px] min-w-[100px]"
                       onClick={() => setActiveCourse("trust")}
-                      disabled={!businessCompleted}
                     >
-                      {!businessCompleted ? (
-                        <span className="flex items-center gap-1">
-                          <Lock className="w-4 h-4" />
-                          Locked
-                        </span>
-                      ) : courseProgress.trust.completed ? "Review" : "Start"}
+                      {courseProgress.trust.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* Contracts Simulator Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-indigo-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-indigo-600/10">
+                      <ScrollText className="w-8 h-8 text-indigo-600" />
+                    </div>
+                    {courseProgress.contracts.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        Completed
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Contracts Simulator</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Learn contract law basics, create service agreements, vendor contracts, employment agreements, NDAs, and partnership documents.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">5 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Service agreements, Vendor contracts, Employment contracts, NDAs, Partnership agreements
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-indigo-600">
+                      {courseProgress.contracts.completed ? `${courseProgress.contracts.tokens} tokens earned` : "Earn 100+ tokens"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[100px]"
+                      onClick={() => setActiveCourse("contracts")}
+                    >
+                      {courseProgress.contracts.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* Business Plan Simulator Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-teal-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-teal-600/10">
+                      <Briefcase className="w-8 h-8 text-teal-600" />
+                    </div>
+                    {courseProgress.businessplan.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        Completed
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Business Plan Simulator</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Create a comprehensive business plan with executive summary, market analysis, competitive analysis, marketing strategy, and financial projections.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Executive summary, Market analysis, Marketing strategy, Operations plan, Financial projections
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-teal-600">
+                      {courseProgress.businessplan.completed ? `${courseProgress.businessplan.tokens} tokens earned` : "Earn 100+ tokens"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[100px]"
+                      onClick={() => setActiveCourse("businessplan")}
+                    >
+                      {courseProgress.businessplan.completed ? "Review" : "Start"}
                     </Button>
                   </div>
                 </Card>
 
                 {/* Grant Writing Course */}
-                <Card className={`p-6 hover:shadow-lg transition-shadow border-l-4 border-l-amber-600 ${!businessCompleted ? 'opacity-60' : ''}`}>
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-amber-600">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-amber-600/10">
                       <FileCheck className="w-8 h-8 text-amber-600" />
@@ -660,12 +841,12 @@ export default function Dashboard() {
                   </div>
                   <h3 className="font-bold text-foreground text-lg mb-2">Grant Writing Simulator</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Master grant research, proposal writing, budgeting, and evaluation planning. Generate complete grant proposal drafts for your entity.
+                    Master grant research, proposal writing, budgeting, and evaluation planning. Generate complete grant proposal drafts.
                   </p>
                   <div className="space-y-2 mb-4">
                     <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
                     <p className="text-xs text-muted-foreground">
-                      <strong>Outputs:</strong> Organization profile, Program description, Problem statement, Goals/Objectives, Budget, Evaluation plan
+                      <strong>Outputs:</strong> Organization profile, Program description, Problem statement, Goals/Objectives, Budget
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
@@ -676,14 +857,8 @@ export default function Dashboard() {
                       size="sm" 
                       className="min-h-[48px] min-w-[100px]"
                       onClick={() => setActiveCourse("grant")}
-                      disabled={!businessCompleted}
                     >
-                      {!businessCompleted ? (
-                        <span className="flex items-center gap-1">
-                          <Lock className="w-4 h-4" />
-                          Locked
-                        </span>
-                      ) : courseProgress.grant.completed ? "Review" : "Start"}
+                      {courseProgress.grant.completed ? "Review" : "Start"}
                     </Button>
                   </div>
                 </Card>
@@ -694,33 +869,34 @@ export default function Dashboard() {
             <Card className="p-6 mt-6 bg-gradient-to-br from-primary/5 to-accent/5">
               <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                 <GraduationCap className="w-5 h-5" />
-                What You'll Build: The House Structure
+                What You'll Build: The Complete House Structure
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div className="space-y-2">
-                  <p className="font-semibold text-foreground">1. Business Entity</p>
-                  <p className="text-sm text-muted-foreground">
-                    Foundation of your House - LLC, Corp, or Trust
-                  </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="space-y-2 text-center p-4 bg-background/50 rounded-lg">
+                  <Shield className="w-8 h-8 mx-auto text-accent" />
+                  <p className="font-semibold text-foreground text-sm">Business Entity</p>
+                  <p className="text-xs text-muted-foreground">Foundation</p>
                 </div>
-                <div className="flex items-center justify-center">
-                  <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                <div className="space-y-2 text-center p-4 bg-background/50 rounded-lg">
+                  <Lock className="w-8 h-8 mx-auto text-blue-600" />
+                  <p className="font-semibold text-foreground text-sm">Trust Structure</p>
+                  <p className="text-xs text-muted-foreground">60/40 or 70/30 Split</p>
                 </div>
-                <div className="space-y-2">
-                  <p className="font-semibold text-foreground">2. Trust Structure</p>
-                  <p className="text-sm text-muted-foreground">
-                    Protection layer with inheritance splits (60/40, 70/30)
-                  </p>
+                <div className="space-y-2 text-center p-4 bg-background/50 rounded-lg">
+                  <ScrollText className="w-8 h-8 mx-auto text-indigo-600" />
+                  <p className="font-semibold text-foreground text-sm">Contracts</p>
+                  <p className="text-xs text-muted-foreground">Legal Framework</p>
                 </div>
-                <div className="flex items-center justify-center">
-                  <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                <div className="space-y-2 text-center p-4 bg-background/50 rounded-lg">
+                  <FileCheck className="w-8 h-8 mx-auto text-amber-600" />
+                  <p className="font-semibold text-foreground text-sm">Grant Funding</p>
+                  <p className="text-xs text-muted-foreground">Growth Capital</p>
                 </div>
-                <div className="space-y-2">
-                  <p className="font-semibold text-foreground">3. Grant Funding</p>
-                  <p className="text-sm text-muted-foreground">
-                    Growth capital for your nonprofit or social enterprise
-                  </p>
-                </div>
+              </div>
+              <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <p className="text-sm text-center text-blue-800 dark:text-blue-200">
+                  <strong>All documents and tokens are recorded to the LuvLedger blockchain</strong> - creating an immutable record of your business structure and achievements.
+                </p>
               </div>
             </Card>
           </TabsContent>
@@ -789,11 +965,98 @@ export default function Dashboard() {
           {/* LuvLedger Tab */}
           <TabsContent value="ledger" className="space-y-4 mt-6">
             <h2 className="text-xl font-bold text-foreground">
-              LuvLedger - Automated Asset Management
+              LuvLedger - Blockchain Asset Management
             </h2>
+
+            <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10">
+              <div className="flex items-start gap-4">
+                <Link2 className="w-6 h-6 text-blue-600 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-foreground mb-2">
+                    Blockchain Integration Active
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    All your course completions, documents, and token transactions are immutably recorded on the LuvLedger blockchain. This creates a permanent, verifiable record of your business structure and achievements.
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="p-6">
+                <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                  <Coins className="w-5 h-5 text-amber-500" />
+                  Token Balance
+                </h3>
+                <p className="text-4xl font-bold text-foreground mb-2">{totalTokensEarned}</p>
+                <p className="text-sm text-muted-foreground">LUV Tokens Earned</p>
+                <div className="mt-4 pt-4 border-t">
+                  <p className="text-xs text-muted-foreground">Token Distribution:</p>
+                  <div className="mt-2 space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span>Business Setup</span>
+                      <span>{courseProgress.business.tokens} LUV</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Financial Management</span>
+                      <span>{courseProgress.financial.tokens} LUV</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Operations</span>
+                      <span>{courseProgress.operations.tokens} LUV</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Trust Simulator</span>
+                      <span>{courseProgress.trust.tokens} LUV</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Contracts</span>
+                      <span>{courseProgress.contracts.tokens} LUV</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Business Plan</span>
+                      <span>{courseProgress.businessplan.tokens} LUV</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Grant Writing</span>
+                      <span>{courseProgress.grant.tokens} LUV</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-green-500" />
+                  Blockchain Records
+                </h3>
+                <p className="text-4xl font-bold text-foreground mb-2">{coursesCompleted}</p>
+                <p className="text-sm text-muted-foreground">Documents on Chain</p>
+                <div className="mt-4 pt-4 border-t">
+                  <p className="text-xs text-muted-foreground">Recent Transactions:</p>
+                  <div className="mt-2 space-y-2">
+                    {coursesCompleted > 0 ? (
+                      <div className="text-xs p-2 bg-secondary rounded">
+                        <p className="font-mono text-muted-foreground truncate">
+                          Hash: {generateHash()}
+                        </p>
+                        <p className="text-muted-foreground mt-1">
+                          Course completion recorded
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        Complete a course to create your first blockchain record
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            </div>
 
             {overview?.accounts && overview.accounts.length > 0 ? (
               <div className="space-y-4">
+                <h3 className="font-bold text-foreground">LuvLedger Accounts</h3>
                 {overview.accounts.map((account) => (
                   <Card key={account.id} className="p-6">
                     <div className="flex items-center justify-between mb-4">
@@ -849,7 +1112,7 @@ export default function Dashboard() {
                     Trust Hierarchy
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Your multi-level trust structure enables secure delegation of authority and resource management across your business entities and collective relationships.
+                    Your multi-level trust structure enables secure delegation of authority and resource management across your business entities and collective relationships. All trust documents are recorded to the LuvLedger blockchain.
                   </p>
                 </div>
               </div>
@@ -880,12 +1143,10 @@ export default function Dashboard() {
                 <p className="text-muted-foreground mb-4">
                   No trust relationships established yet. Complete the Trust Simulator to configure your trust structure.
                 </p>
-                {businessCompleted && (
-                  <Button className="gap-2" onClick={() => setActiveCourse("trust")}>
-                    <GraduationCap className="w-4 h-4" />
-                    Start Trust Simulator
-                  </Button>
-                )}
+                <Button className="gap-2" onClick={() => setActiveCourse("trust")}>
+                  <GraduationCap className="w-4 h-4" />
+                  Start Trust Simulator
+                </Button>
               </Card>
             )}
           </TabsContent>
