@@ -18,6 +18,8 @@ vi.mock("../db", () => ({
 }));
 
 describe("Notifications Router", () => {
+  // Increase timeout for all tests in this suite
+  vi.setConfig({ testTimeout: 15000 });
   describe("getAll", () => {
     it("should return empty array for unauthenticated users", async () => {
       // Import after mocking

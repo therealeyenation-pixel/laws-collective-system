@@ -1436,3 +1436,39 @@
 - [ ] Activation checklist dashboard
 - [ ] Block activation until requirements met
 
+
+
+## Phase 63: Governance Structure & Conflict of Interest Separation
+
+### 63.1: Department Role Assignments
+- [ ] Update Shanna's role to Business Department only (remove Contracts/Grants)
+- [ ] Add TBD position for Contracts Manager (Board Member)
+- [ ] Add TBD position for Grants Manager (Board Member)
+- [ ] Implement Board Member roles for all Department Managers
+- [ ] Add recusal rules for Source Flame on contract/grant approvals
+
+### 63.2: Family Business Entity Structure
+| Family Member | Department(s) | Business Entity | Board Role |
+|--------------|---------------|-----------------|------------|
+| Shanna | Business | Purpose Proposal Group | Source Flame + Business Director |
+| Amber | Health, Outreach | TBD Health Entity | Board Member |
+| Essence | Design, IT, Outreach | TBD Design/Tech Entity | Board Member |
+| Amandes | Media, IT, Outreach | FreeLife Media | Board Member |
+| Craig | Finance, Outreach | TBD Finance Entity | Board Member |
+| Cornelius | Legal, Justice, Outreach | TBD Legal/Justice Entity | Board Member |
+| TBD | Contracts | TBD | Board Member (Contracts) |
+| TBD | Grants | TBD | Board Member (Grants) |
+
+### 63.3: UI Updates
+- [ ] Update FamilyOnboarding page with correct department assignments
+- [ ] Fix PositionManagement TypeScript errors
+- [ ] Add App routes for new pages (BankingCredit, BusinessFormation, PositionManagement, FamilyOnboarding)
+
+
+## Phase 64: Strategic Partner Integration
+
+### 64.1: Sweet Miracles NPO
+- [x] Add Sweet Miracles, NPO as Strategic Outreach Partner
+- [x] Add twin sister as Honorary Advisory Board Member (Non-Voting)
+- [x] Link to Outreach + Justice departments
+- [x] Document 70/30 revenue share structure for joint programs

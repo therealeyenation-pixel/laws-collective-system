@@ -17,6 +17,10 @@ import HouseDashboard from "./pages/HouseDashboard";
 import OwnerHouseSetup from "./pages/OwnerHouseSetup";
 import GenesisCeremony from "./pages/GenesisCeremony";
 import Landing from "./pages/Landing";
+import BankingCredit from "./pages/BankingCredit";
+import BusinessFormation from "./pages/BusinessFormation";
+import PositionManagement from "./pages/PositionManagement";
+import FamilyOnboarding from "./pages/FamilyOnboarding";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -87,6 +91,10 @@ function Router() {
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} />}</Route>
       <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} />}</Route>
       <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} />}</Route>
+      <Route path="/banking">{() => <ProtectedRoute component={BankingCredit} />}</Route>
+      <Route path="/business-formation">{() => <ProtectedRoute component={BusinessFormation} />}</Route>
+      <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} />}</Route>
+      <Route path="/family-onboarding">{() => <ProtectedRoute component={FamilyOnboarding} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
