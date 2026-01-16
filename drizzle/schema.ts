@@ -2465,3 +2465,283 @@ export const inflowCapture = mysqlTable("inflow_capture", {
 
 export type InflowCapture = typeof inflowCapture.$inferSelect;
 export type InsertInflowCapture = typeof inflowCapture.$inferInsert;
+
+
+// ============================================
+// TOKEN CHAIN LOGIC (Scrolls 16, 31-35)
+// ============================================
+
+/**
+ * Token Trigger Chain State (Scroll 16)
+ * Tracks the MIRROR → GIFT → SPARK → HOUSE sequence
+ */
+export const tokenChainStates = mysqlTable("token_chain_states", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  
+  // Current position in chain
+  currentTokenIndex: int("currentTokenIndex").default(0).notNull(), // 0=none, 1=MIRROR, 2=GIFT, 3=SPARK, 4=HOUSE
+  activatedTokens: json("activatedTokens").$type<string[]>(),
+  
+  // Token activation timestamps
+  mirrorActivatedAt: timestamp("mirrorActivatedAt"),
+  giftActivatedAt: timestamp("giftActivatedAt"),
+  sparkActivatedAt: timestamp("sparkActivatedAt"),
+  houseActivatedAt: timestamp("houseActivatedAt"),
+  
+  // Scroll requirements tracking
+  mirrorScrollsSealed: json("mirrorScrollsSealed").$type<number[]>(), // Scrolls 07, 14, 33
+  giftScrollsSealed: json("giftScrollsSealed").$type<number[]>(), // Scrolls 16, 25, 26
+  sparkScrollsSealed: json("sparkScrollsSealed").$type<number[]>(), // Scrolls 27, 28, 29
+  houseScrollsSealed: json("houseScrollsSealed").$type<number[]>(), // Scrolls 30-36, 50
+  
+  // Chain status
+  chainStatus: mysqlEnum("chainStatus", ["pending", "in_progress", "completed", "blocked"])
+    .default("pending").notNull(),
+  blockReason: text("blockReason"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TokenChainState = typeof tokenChainStates.$inferSelect;
+export type InsertTokenChainState = typeof tokenChainStates.$inferInsert;
+
+/**
+ * Token Lock States (Scroll 31 - Mirror Token Lock Clause)
+ */
+export const tokenLocks = mysqlTable("token_locks", {
+  id: int("id").autoincrement().primaryKey(),
+  tokenId: int("tokenId").notNull(),
+  tokenType: mysqlEnum("tokenType", ["mirror", "gift", "spark", "house", "crown"]).notNull(),
+  houseId: int("houseId").notNull(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  
+  // Lock configuration
+  lockType: mysqlEnum("lockType", ["time_based", "scroll_based", "lineage_based", "manual"]).notNull(),
+  lockDurationDays: int("lockDurationDays"),
+  lockStartedAt: timestamp("lockStartedAt").defaultNow().notNull(),
+  lockExpiresAt: timestamp("lockExpiresAt"),
+  
+  // Required scrolls for unlock
+  requiredScrolls: json("requiredScrolls").$type<number[]>(),
+  sealedScrolls: json("sealedScrolls").$type<number[]>(),
+  
+  // Lineage verification for unlock
+  requiresLineageVerification: boolean("requiresLineageVerification").default(false),
+  lineageVerifiedAt: timestamp("lineageVerifiedAt"),
+  lineageVerifiedBy: varchar("lineageVerifiedBy", { length: 255 }),
+  
+  // Lock status
+  lockStatus: mysqlEnum("lockStatus", ["active", "unlocked", "expired", "violated"])
+    .default("active").notNull(),
+  unlockedAt: timestamp("unlockedAt"),
+  unlockReason: text("unlockReason"),
+  
+  // Violation tracking
+  violationCount: int("violationCount").default(0).notNull(),
+  lastViolationAt: timestamp("lastViolationAt"),
+  violationDetails: json("violationDetails").$type<Array<{timestamp: string, reason: string}>>(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TokenLock = typeof tokenLocks.$inferSelect;
+export type InsertTokenLock = typeof tokenLocks.$inferInsert;
+
+/**
+ * Token Expansion States (Scroll 33 - Mirror Token Expansion Clause)
+ */
+export const tokenExpansions = mysqlTable("token_expansions", {
+  id: int("id").autoincrement().primaryKey(),
+  sourceTokenId: int("sourceTokenId").notNull(),
+  sourceHouseId: int("sourceHouseId").notNull(),
+  sourceUserId: varchar("sourceUserId", { length: 255 }).notNull(),
+  
+  // Expansion target
+  targetHouseId: int("targetHouseId"),
+  targetUserId: varchar("targetUserId", { length: 255 }),
+  expansionType: mysqlEnum("expansionType", ["bloodline", "mirrored", "adaptive"]).notNull(),
+  
+  // Expansion requirements
+  requiredScrollsComplete: boolean("requiredScrollsComplete").default(false).notNull(),
+  requiredTimeElapsed: boolean("requiredTimeElapsed").default(false).notNull(),
+  minimumDaysRequired: int("minimumDaysRequired").default(365),
+  
+  // Approval workflow
+  expansionStatus: mysqlEnum("expansionStatus", ["pending", "approved", "rejected", "completed", "frozen"])
+    .default("pending").notNull(),
+  approvedBy: varchar("approvedBy", { length: 255 }),
+  approvedAt: timestamp("approvedAt"),
+  rejectionReason: text("rejectionReason"),
+  
+  // Enforcement (Scroll 34)
+  enforcementActive: boolean("enforcementActive").default(true).notNull(),
+  enforcementViolations: int("enforcementViolations").default(0).notNull(),
+  frozenAt: timestamp("frozenAt"),
+  freezeReason: text("freezeReason"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TokenExpansion = typeof tokenExpansions.$inferSelect;
+export type InsertTokenExpansion = typeof tokenExpansions.$inferInsert;
+
+/**
+ * Token Activation Attempts (audit trail)
+ */
+export const tokenActivationAttempts = mysqlTable("token_activation_attempts", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  
+  // Attempt details
+  tokenType: mysqlEnum("attemptTokenType", ["mirror", "gift", "spark", "house", "crown"]).notNull(),
+  attemptStatus: mysqlEnum("attemptStatus", ["approved", "denied", "pending"]).notNull(),
+  
+  // Validation results
+  expectedToken: varchar("expectedToken", { length: 50 }),
+  scrollsRequired: json("scrollsRequired").$type<number[]>(),
+  scrollsSealed: json("scrollsSealed").$type<number[]>(),
+  scrollsMissing: json("scrollsMissing").$type<number[]>(),
+  
+  // Result
+  resultMessage: text("resultMessage"),
+  currentChain: json("currentChain").$type<string[]>(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TokenActivationAttempt = typeof tokenActivationAttempts.$inferSelect;
+export type InsertTokenActivationAttempt = typeof tokenActivationAttempts.$inferInsert;
+
+/**
+ * Scroll Seal Status (tracks which scrolls are sealed for each user)
+ */
+export const scrollSealStatus = mysqlTable("scroll_seal_status", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  houseId: int("houseId").notNull(),
+  scrollNumber: int("scrollNumber").notNull(),
+  scrollTitle: varchar("scrollTitle", { length: 255 }),
+  
+  // Seal status
+  isSealed: boolean("isSealed").default(false).notNull(),
+  sealedAt: timestamp("sealedAt"),
+  sealedBy: varchar("sealedBy", { length: 255 }),
+  
+  // Seal verification
+  sealHash: varchar("sealHash", { length: 64 }), // SHA256 hash
+  verificationMethod: mysqlEnum("verificationMethod", ["manual", "automatic", "gpt_audit", "course_completion"])
+    .default("manual"),
+  
+  // Associated course/module if applicable
+  courseId: int("courseId"),
+  moduleId: int("moduleId"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ScrollSealStatus = typeof scrollSealStatus.$inferSelect;
+export type InsertScrollSealStatus = typeof scrollSealStatus.$inferInsert;
+
+
+// ============================================
+// GIFTING SYSTEM (Scrolls 25-26)
+// ============================================
+
+/**
+ * Gift Tokens (Scroll 25 - Gifting System Logic)
+ * Three types: Mirror Gift (bloodline), Adaptive Gift (trusted non-blood), Locked Gift (time-delayed)
+ */
+export const giftTokens = mysqlTable("gift_tokens", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Source (giver)
+  sourceUserId: varchar("sourceUserId", { length: 255 }).notNull(),
+  sourceHouseId: int("sourceHouseId").notNull(),
+  
+  // Target (recipient)
+  targetUserId: varchar("targetUserId", { length: 255 }),
+  targetHouseId: int("targetHouseId"),
+  targetEmail: varchar("targetEmail", { length: 255 }), // For pending gifts
+  targetName: varchar("targetName", { length: 255 }),
+  
+  // Gift type
+  giftType: mysqlEnum("giftType", ["mirror", "adaptive", "locked"]).notNull(),
+  
+  // Gift details
+  giftValue: decimal("giftValue", { precision: 20, scale: 8 }),
+  giftDescription: text("giftDescription"),
+  giftMessage: text("giftMessage"),
+  
+  // Activation requirements
+  requiresAnniversary: boolean("requiresAnniversary").default(false),
+  anniversaryDate: timestamp("anniversaryDate"),
+  requiresStewardshipScrolls: boolean("requiresStewardshipScrolls").default(false),
+  requiredScrolls: json("requiredScrolls").$type<number[]>(),
+  
+  // Lock configuration (for Locked Gift type)
+  lockDurationDays: int("lockDurationDays"),
+  lockExpiresAt: timestamp("lockExpiresAt"),
+  
+  // Lineage verification (for Mirror Gift type)
+  requiresLineageVerification: boolean("requiresLineageVerification").default(false),
+  lineageVerified: boolean("lineageVerified").default(false),
+  lineageVerifiedAt: timestamp("lineageVerifiedAt"),
+  lineageVerifiedBy: varchar("lineageVerifiedBy", { length: 255 }),
+  
+  // Gift status
+  giftStatus: mysqlEnum("giftStatus", [
+    "pending",
+    "awaiting_activation",
+    "activated",
+    "claimed",
+    "expired",
+    "revoked"
+  ]).default("pending").notNull(),
+  
+  // Activation tracking
+  activatedAt: timestamp("activatedAt"),
+  claimedAt: timestamp("claimedAt"),
+  revokedAt: timestamp("revokedAt"),
+  revokeReason: text("revokeReason"),
+  
+  // Hash for verification
+  giftHash: varchar("giftHash", { length: 64 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GiftToken = typeof giftTokens.$inferSelect;
+export type InsertGiftToken = typeof giftTokens.$inferInsert;
+
+/**
+ * Gift Activation Attempts (audit trail)
+ */
+export const giftActivationAttempts = mysqlTable("gift_activation_attempts", {
+  id: int("id").autoincrement().primaryKey(),
+  giftId: int("giftId").notNull(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  
+  attemptStatus: mysqlEnum("giftAttemptStatus", ["approved", "denied", "pending"]).notNull(),
+  
+  // Validation results
+  anniversaryMet: boolean("anniversaryMet"),
+  scrollsComplete: boolean("scrollsComplete"),
+  lineageVerified: boolean("lineageVerified"),
+  lockExpired: boolean("lockExpired"),
+  
+  resultMessage: text("resultMessage"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GiftActivationAttempt = typeof giftActivationAttempts.$inferSelect;
+export type InsertGiftActivationAttempt = typeof giftActivationAttempts.$inferInsert;
+

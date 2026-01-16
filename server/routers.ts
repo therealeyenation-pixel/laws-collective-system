@@ -33,6 +33,11 @@ import { luvLedgerAssetManagerRouter } from "./routers/luvledger-asset-manager";
 import { sovereignScrollsRouter } from "./routers/sovereign-scrolls";
 import { foundationLayerRouter } from "./routers/foundation-layer";
 import { luvledgerAutomationRouter } from "./routers/luvledger-automation";
+import { tokenChainRouter } from "./routers/token-chain";
+import { giftingSystemRouter } from "./routers/gifting-system";
+import { houseActivationRouter } from "./routers/house-activation";
+import { crownCompletionRouter } from "./routers/crown-completion";
+import { guardianCredentialsRouter } from "./routers/guardian-credentials";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -67,6 +72,11 @@ export const appRouter = router({
   sovereignScrolls: sovereignScrollsRouter,
   foundationLayer: foundationLayerRouter,
   luvledgerAutomation: luvledgerAutomationRouter,
+  tokenChain: tokenChainRouter,
+  giftingSystem: giftingSystemRouter,
+  houseActivation: houseActivationRouter,
+  crownCompletion: crownCompletionRouter,
+  guardianCredentials: guardianCredentialsRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

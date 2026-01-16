@@ -134,6 +134,27 @@
       "when": 1768536645135,
       "tag": "0018_spicy_monster_badoon",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1768537296538,
+      "tag": "0019_tan_tiger_shark",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1768537350002,
+      "tag": "0020_great_silk_fever",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1768537747239,
+      "tag": "0021_foamy_saracen",
+      "breakpoints": true
     }
   ]
 }
