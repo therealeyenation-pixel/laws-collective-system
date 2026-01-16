@@ -330,11 +330,13 @@ export default function InternationalBusiness() {
 
         {/* Main Tabs */}
         <Tabs defaultValue="registration" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="registration">Registration</TabsTrigger>
-            <TabsTrigger value="currencies">Multi-Currency</TabsTrigger>
+            <TabsTrigger value="currencies">Currencies</TabsTrigger>
+            <TabsTrigger value="treaties">Tax Treaties</TabsTrigger>
+            <TabsTrigger value="partners">Partners</TabsTrigger>
             <TabsTrigger value="compliance">Compliance</TabsTrigger>
-            <TabsTrigger value="expansion">Expansion Plan</TabsTrigger>
+            <TabsTrigger value="expansion">Expansion</TabsTrigger>
           </TabsList>
 
           {/* Registration Tab */}
@@ -494,6 +496,293 @@ export default function InternationalBusiness() {
                     <h4 className="font-semibold">Multi-currency Reports</h4>
                     <p className="text-sm text-muted-foreground">Financial reports in any currency</p>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Tax Treaties Tab */}
+          <TabsContent value="treaties" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Scale className="w-5 h-5" />
+                  US Tax Treaty Database
+                </CardTitle>
+                <CardDescription>
+                  Tax treaties between the United States and other countries that may reduce withholding rates and provide tax benefits
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    { country: "Jamaica", flag: "🇯🇲", dividends: "15%", interest: "12.5%", royalties: "10%", status: "Active", notes: "Reduced rates for qualified dividends; special provisions for offshore trusts" },
+                    { country: "United Kingdom", flag: "🇬🇧", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Zero withholding on interest and royalties; pension provisions" },
+                    { country: "Canada", flag: "🇨🇦", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Zero withholding on interest; reduced rates for substantial holdings" },
+                    { country: "Germany", flag: "🇩🇪", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Comprehensive treaty with extensive provisions" },
+                    { country: "France", flag: "🇫🇷", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Zero withholding on most payments" },
+                    { country: "Netherlands", flag: "🇳🇱", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Favorable holding company provisions" },
+                    { country: "Ireland", flag: "🇮🇪", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Popular for tech companies; IP provisions" },
+                    { country: "Switzerland", flag: "🇨🇭", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Banking secrecy provisions modified" },
+                    { country: "Japan", flag: "🇯🇵", dividends: "10%", interest: "0%", royalties: "0%", status: "Active", notes: "Lower dividend rate; extensive provisions" },
+                    { country: "Australia", flag: "🇦🇺", dividends: "15%", interest: "10%", royalties: "5%", status: "Active", notes: "Franking credit provisions" },
+                    { country: "Mexico", flag: "🇲🇽", dividends: "10%", interest: "15%", royalties: "10%", status: "Active", notes: "NAFTA/USMCA related provisions" },
+                    { country: "India", flag: "🇮🇳", dividends: "15%", interest: "15%", royalties: "15%", status: "Active", notes: "Technical services provisions" },
+                    { country: "China", flag: "🇨🇳", dividends: "10%", interest: "10%", royalties: "10%", status: "Active", notes: "Reduced rates across all categories" },
+                    { country: "South Africa", flag: "🇿🇦", dividends: "15%", interest: "0%", royalties: "0%", status: "Active", notes: "Zero withholding on interest and royalties" },
+                    { country: "Nigeria", flag: "🇳🇬", dividends: "15%", interest: "15%", royalties: "15%", status: "No Treaty", notes: "No tax treaty - standard US withholding applies (30%)" },
+                    { country: "Ghana", flag: "🇬🇭", dividends: "15%", interest: "15%", royalties: "15%", status: "No Treaty", notes: "No tax treaty - standard US withholding applies (30%)" },
+                    { country: "Kenya", flag: "🇰🇪", dividends: "15%", interest: "15%", royalties: "15%", status: "No Treaty", notes: "No tax treaty - standard US withholding applies (30%)" },
+                    { country: "Trinidad & Tobago", flag: "🇹🇹", dividends: "25%", interest: "15%", royalties: "15%", status: "Active", notes: "Caribbean region treaty" },
+                    { country: "Barbados", flag: "🇧🇧", dividends: "15%", interest: "5%", royalties: "5%", status: "Active", notes: "Favorable rates for Caribbean operations" },
+                  ].map((treaty, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-4 rounded-lg border ${
+                        treaty.status === "Active" 
+                          ? "border-green-200 bg-green-50" 
+                          : "border-amber-200 bg-amber-50"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{treaty.flag}</span>
+                          <div>
+                            <h4 className="font-semibold">{treaty.country}</h4>
+                            <Badge 
+                              variant={treaty.status === "Active" ? "default" : "secondary"}
+                              className={treaty.status === "Active" ? "bg-green-600" : "bg-amber-600"}
+                            >
+                              {treaty.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 mb-3">
+                        <div className="text-center p-2 bg-white rounded border">
+                          <p className="text-xs text-muted-foreground">Dividends</p>
+                          <p className="font-bold text-lg">{treaty.dividends}</p>
+                        </div>
+                        <div className="text-center p-2 bg-white rounded border">
+                          <p className="text-xs text-muted-foreground">Interest</p>
+                          <p className="font-bold text-lg">{treaty.interest}</p>
+                        </div>
+                        <div className="text-center p-2 bg-white rounded border">
+                          <p className="text-xs text-muted-foreground">Royalties</p>
+                          <p className="font-bold text-lg">{treaty.royalties}</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{treaty.notes}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <BookOpen className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-blue-900">Jamaica Trust Benefits</h4>
+                      <p className="text-sm text-blue-800">
+                        Your Jamaica 98 trust may qualify for reduced withholding rates under the US-Jamaica tax treaty. 
+                        The treaty provides for 15% withholding on dividends (vs. 30% standard) and 12.5% on interest. 
+                        Consult with a qualified international tax advisor to ensure proper treaty benefit claims.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Treaty Claim Forms
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Form W-8BEN</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Certificate of Foreign Status for individuals claiming treaty benefits
+                    </p>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <ExternalLink className="w-4 h-4" />
+                      IRS Form
+                    </Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Form W-8BEN-E</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Certificate of Foreign Status for entities claiming treaty benefits
+                    </p>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <ExternalLink className="w-4 h-4" />
+                      IRS Form
+                    </Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Form 8833</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Treaty-Based Return Position Disclosure
+                    </p>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <ExternalLink className="w-4 h-4" />
+                      IRS Form
+                    </Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-semibold mb-2">Form 1042-S</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Foreign Person's US Source Income Subject to Withholding
+                    </p>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <ExternalLink className="w-4 h-4" />
+                      IRS Form
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Partners Tab */}
+          <TabsContent value="partners" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Briefcase className="w-5 h-5" />
+                  International Partner Directory
+                </CardTitle>
+                <CardDescription>
+                  Vetted service providers for international business operations by region
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Caribbean Partners */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <span>🌴</span> Caribbean Region
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {[
+                        { name: "Jamaica Corporate Registry", type: "Government", services: ["Business Registration", "Company Search", "Annual Filings"], location: "Kingston, Jamaica", contact: "Companies Office of Jamaica" },
+                        { name: "Caribbean Law Firms Network", type: "Legal", services: ["Corporate Law", "Trust Administration", "Real Estate"], location: "Multiple Locations", contact: "Regional Network" },
+                        { name: "NCB Capital Markets", type: "Banking", services: ["Business Banking", "Investment Services", "Trade Finance"], location: "Jamaica", contact: "Corporate Banking Division" },
+                        { name: "KPMG Caribbean", type: "Accounting", services: ["Audit", "Tax Advisory", "Consulting"], location: "Regional Offices", contact: "Caribbean Practice" },
+                      ].map((partner, idx) => (
+                        <div key={idx} className="p-4 border rounded-lg hover:border-primary/50 transition-colors">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="font-semibold">{partner.name}</h4>
+                            <Badge variant="outline">{partner.type}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{partner.location}</p>
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {partner.services.map((service, sIdx) => (
+                              <Badge key={sIdx} variant="secondary" className="text-xs">{service}</Badge>
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{partner.contact}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Africa Partners */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <span>🌍</span> Africa Region
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {[
+                        { name: "Bowmans Africa", type: "Legal", services: ["Corporate Law", "M&A", "Banking & Finance"], location: "Pan-African", contact: "Multiple Offices" },
+                        { name: "Deloitte Africa", type: "Accounting", services: ["Audit", "Tax", "Consulting", "Advisory"], location: "Pan-African", contact: "Regional Offices" },
+                        { name: "Standard Bank", type: "Banking", services: ["Corporate Banking", "Trade Finance", "FX Services"], location: "Pan-African", contact: "Corporate & Investment Banking" },
+                        { name: "African Development Bank", type: "Development", services: ["Project Finance", "Trade Finance", "Guarantees"], location: "Abidjan, Ivory Coast", contact: "Private Sector Operations" },
+                      ].map((partner, idx) => (
+                        <div key={idx} className="p-4 border rounded-lg hover:border-primary/50 transition-colors">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="font-semibold">{partner.name}</h4>
+                            <Badge variant="outline">{partner.type}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{partner.location}</p>
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {partner.services.map((service, sIdx) => (
+                              <Badge key={sIdx} variant="secondary" className="text-xs">{service}</Badge>
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{partner.contact}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Europe Partners */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <span>🇪🇺</span> Europe Region
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {[
+                        { name: "Baker McKenzie", type: "Legal", services: ["Corporate Law", "Tax", "M&A", "IP"], location: "Global", contact: "European Offices" },
+                        { name: "PwC Europe", type: "Accounting", services: ["Audit", "Tax", "Consulting", "Deals"], location: "Pan-European", contact: "Regional Network" },
+                        { name: "HSBC Europe", type: "Banking", services: ["Corporate Banking", "Trade Finance", "Treasury"], location: "Pan-European", contact: "Commercial Banking" },
+                        { name: "EU Business Register", type: "Government", services: ["Company Registration", "VAT Registration", "Compliance"], location: "Brussels", contact: "Business Europa" },
+                      ].map((partner, idx) => (
+                        <div key={idx} className="p-4 border rounded-lg hover:border-primary/50 transition-colors">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="font-semibold">{partner.name}</h4>
+                            <Badge variant="outline">{partner.type}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{partner.location}</p>
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {partner.services.map((service, sIdx) => (
+                              <Badge key={sIdx} variant="secondary" className="text-xs">{service}</Badge>
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{partner.contact}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* North America Partners */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <span>🇺🇸</span> North America
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {[
+                        { name: "US Commercial Service", type: "Government", services: ["Export Assistance", "Market Research", "Trade Missions"], location: "Washington DC", contact: "Trade.gov" },
+                        { name: "Export-Import Bank", type: "Finance", services: ["Export Credit", "Working Capital", "Insurance"], location: "Washington DC", contact: "EXIM Bank" },
+                        { name: "SCORE Mentors", type: "Advisory", services: ["Business Mentoring", "Export Planning", "Strategy"], location: "Nationwide", contact: "Free Mentoring" },
+                        { name: "Small Business Administration", type: "Government", services: ["Loans", "Grants", "Export Programs"], location: "Nationwide", contact: "SBA.gov" },
+                      ].map((partner, idx) => (
+                        <div key={idx} className="p-4 border rounded-lg hover:border-primary/50 transition-colors">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="font-semibold">{partner.name}</h4>
+                            <Badge variant="outline">{partner.type}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{partner.location}</p>
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {partner.services.map((service, sIdx) => (
+                              <Badge key={sIdx} variant="secondary" className="text-xs">{service}</Badge>
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{partner.contact}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 p-4 bg-muted rounded-lg">
+                  <h4 className="font-semibold mb-2">Need a Specific Partner?</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Contact the L.A.W.S. Collective team for personalized referrals to vetted service providers in your target market.
+                  </p>
                 </div>
               </CardContent>
             </Card>

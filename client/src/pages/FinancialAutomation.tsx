@@ -24,10 +24,41 @@ import {
   Crown,
   Users,
   BarChart3,
+  Globe2,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+// Supported currencies with exchange rates (relative to USD)
+const CURRENCIES = [
+  { code: "USD", symbol: "$", name: "US Dollar", rate: 1 },
+  { code: "EUR", symbol: "€", name: "Euro", rate: 0.92 },
+  { code: "GBP", symbol: "£", name: "British Pound", rate: 0.79 },
+  { code: "CAD", symbol: "C$", name: "Canadian Dollar", rate: 1.36 },
+  { code: "MXN", symbol: "MX$", name: "Mexican Peso", rate: 17.15 },
+  { code: "JMD", symbol: "J$", name: "Jamaican Dollar", rate: 155.50 },
+  { code: "TTD", symbol: "TT$", name: "Trinidad Dollar", rate: 6.78 },
+  { code: "BBD", symbol: "Bds$", name: "Barbados Dollar", rate: 2.00 },
+  { code: "XCD", symbol: "EC$", name: "East Caribbean Dollar", rate: 2.70 },
+  { code: "BSD", symbol: "B$", name: "Bahamian Dollar", rate: 1.00 },
+  { code: "NGN", symbol: "₦", name: "Nigerian Naira", rate: 1550.00 },
+  { code: "GHS", symbol: "GH₵", name: "Ghanaian Cedi", rate: 15.50 },
+  { code: "KES", symbol: "KSh", name: "Kenyan Shilling", rate: 153.00 },
+  { code: "ZAR", symbol: "R", name: "South African Rand", rate: 18.50 },
+  { code: "JPY", symbol: "¥", name: "Japanese Yen", rate: 149.50 },
+  { code: "CNY", symbol: "¥", name: "Chinese Yuan", rate: 7.24 },
+  { code: "INR", symbol: "₹", name: "Indian Rupee", rate: 83.50 },
+  { code: "AUD", symbol: "A$", name: "Australian Dollar", rate: 1.53 },
+];
 
 export default function FinancialAutomation() {
   const [selectedHouseId, setSelectedHouseId] = useState<number>(1);
+  const [selectedCurrency, setSelectedCurrency] = useState<string>("USD");
 
   // Fetch financial summary
   const { data: summary, isLoading: summaryLoading, refetch: refetchSummary } = 
@@ -80,7 +111,14 @@ export default function FinancialAutomation() {
   const formatCurrency = (value: string | number | undefined) => {
     if (!value) return "$0.00";
     const num = typeof value === "string" ? parseFloat(value) : value;
-    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(num);
+    const currency = CURRENCIES.find(c => c.code === selectedCurrency) || CURRENCIES[0];
+    const convertedValue = num * currency.rate;
+    return new Intl.NumberFormat("en-US", { 
+      style: "currency", 
+      currency: selectedCurrency,
+      minimumFractionDigits: selectedCurrency === "JPY" ? 0 : 2,
+      maximumFractionDigits: selectedCurrency === "JPY" ? 0 : 2,
+    }).format(convertedValue);
   };
 
   const formatPercentage = (value: string | number | undefined) => {
@@ -117,7 +155,20 @@ export default function FinancialAutomation() {
               LuvLedger allocation engine with 70/30 treasury split and 60/40 house-level distribution
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+              <SelectTrigger className="w-[140px]">
+                <Globe2 className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Currency" />
+              </SelectTrigger>
+              <SelectContent>
+                {CURRENCIES.map((currency) => (
+                  <SelectItem key={currency.code} value={currency.code}>
+                    {currency.symbol} {currency.code}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button
               variant="outline"
               size="sm"
