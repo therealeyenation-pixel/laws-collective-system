@@ -26,7 +26,7 @@ const FAMILY_MEMBERS = [
   { id: "realestate-mgr", name: "TBD - Real Estate Manager", role: "Department Manager", departments: ["Real Estate"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   { id: "ops-admin-mgr", name: "TBD - Operations & Administration Manager", role: "Department Manager", departments: ["Operations & Administration"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   // Strategic Partners
-  { id: "sweet-miracles", name: "Twin Sister (Sweet Miracles, NPO)", role: "Strategic Partner", departments: ["Outreach", "Justice"], businessEntity: "Sweet Miracles, NPO", status: "active", credentials: ["501(c)(3) Nonprofit", "Elder Abuse Prevention"], boardRole: "Honorary Advisory Member (Non-Voting)" },
+  { id: "sweet-miracles", name: "Twin Sister (Sweet Miracles)", role: "Strategic Partner", departments: ["Outreach", "Justice"], businessEntity: "Sweet Miracles", status: "active", credentials: ["Nonprofit", "Elder Abuse Prevention"], boardRole: "Honorary Advisory Member (Non-Voting)" },
 ];
 
 const DEPARTMENTS = [

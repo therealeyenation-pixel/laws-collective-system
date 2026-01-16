@@ -59,7 +59,7 @@ const INTERNAL_SPLIT = {
 
 // Partner revenue shares
 const PARTNER_SPLITS: Record<string, { partner: number; luvonpurpose: number; description: string }> = {
-  "sweet_miracles": { partner: 30, luvonpurpose: 70, description: "Sweet Miracles NPO - Outreach Partnership" },
+  "sweet_miracles": { partner: 30, luvonpurpose: 70, description: "Sweet Miracles - Outreach Partnership" },
   "standard": { partner: 0, luvonpurpose: 100, description: "Standard internal operations" },
 };
 
@@ -76,7 +76,7 @@ const MOCK_REVENUE_STREAMS = [
 const MOCK_DISTRIBUTIONS = [
   { id: 1, recipient: "Root House (Trust)", amount: 5880, type: "root_allocation", date: "2026-01-15", status: "completed" },
   { id: 2, recipient: "Circulation Pool", amount: 3920, type: "circulation", date: "2026-01-15", status: "completed" },
-  { id: 3, recipient: "Sweet Miracles NPO", amount: 1500, type: "partner_share", date: "2026-01-15", status: "completed" },
+  { id: 3, recipient: "Sweet Miracles", amount: 1500, type: "partner_share", date: "2026-01-15", status: "completed" },
   { id: 4, recipient: "Platform Fee (HuBaRu)", amount: 2940, type: "platform_fee", date: "2026-01-15", status: "completed" },
 ];
 
