@@ -459,10 +459,10 @@ export default function Dashboard() {
         )}
 
         {/* LuvLedger & Blockchain Status */}
-        <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-500/20">
+        <Card className="p-6 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-500/20">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-full bg-blue-600/20">
-              <Link2 className="w-6 h-6 text-blue-600" />
+            <div className="p-2 rounded-full bg-emerald-600/20">
+              <Link2 className="w-6 h-6 text-emerald-600" />
             </div>
             <div>
               <h3 className="font-bold text-foreground">LuvLedger & Blockchain Integration</h3>
@@ -490,7 +490,7 @@ export default function Dashboard() {
             </div>
             <div className="p-4 rounded-lg bg-background/50">
               <div className="flex items-center gap-2 mb-2">
-                <Shield className="w-5 h-5 text-purple-500" />
+                <Shield className="w-5 h-5 text-emerald-600" />
                 <span className="font-semibold">Blockchain Status</span>
               </div>
               <p className="text-lg font-bold text-green-600">Active</p>
@@ -500,9 +500,9 @@ export default function Dashboard() {
         </Card>
 
         {/* House Structure Progress */}
-        <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-accent/10 border-purple-500/20">
+        <Card className="p-6 bg-gradient-to-br from-stone-100 to-green-50 dark:from-stone-900/30 dark:to-green-900/20 border-green-200 dark:border-green-800">
           <div className="flex items-center gap-3 mb-4">
-            <Home className="w-8 h-8 text-purple-600" />
+            <Home className="w-8 h-8 text-green-700" />
             <div>
               <h3 className="font-bold text-foreground">House Structure Progress</h3>
               <p className="text-sm text-muted-foreground">
@@ -588,7 +588,7 @@ export default function Dashboard() {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-purple-500/5 to-purple-500/10">
+          <Card className="p-6 bg-gradient-to-br from-teal-500/5 to-teal-500/10">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Trust Relationships</p>
@@ -596,7 +596,7 @@ export default function Dashboard() {
                   {overview?.trustRelationshipsCount || 0}
                 </p>
               </div>
-              <Users className="w-8 h-8 text-purple-600" />
+              <Users className="w-8 h-8 text-teal-600" />
             </div>
           </Card>
         </div>

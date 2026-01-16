@@ -775,3 +775,10 @@
 - [x] Integrate foundation router into main routers.ts
 - [x] Push database schema changes
 
+
+
+## Phase 31: Dashboard Color Scheme Fix
+- [x] Remove purple/pink background from House Structure Progress card
+- [x] Use cohesive green-based or neutral color palette throughout Dashboard
+- [x] Seed sample data for Foundation Layer
+
