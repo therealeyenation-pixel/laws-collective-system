@@ -5493,3 +5493,485 @@ export const heirDistributionLocks = mysqlTable("heir_distribution_locks", {
 
 export type HeirDistributionLock = typeof heirDistributionLocks.$inferSelect;
 export type InsertHeirDistributionLock = typeof heirDistributionLocks.$inferInsert;
+
+
+// ============================================
+// POSITION MANAGEMENT & EMPLOYMENT SYSTEM
+// ============================================
+
+/**
+ * Business Positions - Define positions available in each business entity
+ */
+export const businessPositions = mysqlTable("business_positions", {
+  id: int("id").autoincrement().primaryKey(),
+  // Entity this position belongs to
+  businessEntityId: int("businessEntityId").notNull(),
+  houseId: int("houseId").notNull(),
+  
+  // Position details
+  title: varchar("title", { length: 255 }).notNull(),
+  department: varchar("department", { length: 100 }),
+  description: text("description"),
+  responsibilities: json("responsibilities"), // Array of duty descriptions
+  
+  // Classification (critical for legal compliance)
+  classificationType: mysqlEnum("classificationType", [
+    "w2_employee",      // Regular employee - salary/hourly
+    "w2_officer",       // Corporate officer - must be W-2
+    "1099_contractor",  // Independent contractor
+    "k1_member",        // LLC member - receives K-1
+    "volunteer",        // Unpaid position
+    "board_member"      // Board/director position
+  ]).notNull(),
+  
+  // Employment type (for W-2)
+  employmentType: mysqlEnum("employmentType", [
+    "full_time",        // 40+ hours/week
+    "part_time",        // Less than 40 hours/week
+    "seasonal",         // Temporary/seasonal
+    "temporary"         // Fixed term
+  ]),
+  
+  // Exemption status (for overtime)
+  exemptionStatus: mysqlEnum("exemptionStatus", [
+    "exempt",           // Salary, no overtime
+    "non_exempt"        // Hourly, overtime eligible
+  ]).default("non_exempt"),
+  
+  // Compensation structure
+  compensationType: mysqlEnum("compensationType", [
+    "salary",           // Fixed annual amount
+    "hourly",           // Per hour rate
+    "commission",       // Sales-based
+    "fee",              // Per project (contractors)
+    "guaranteed_payment", // LLC member guaranteed payment
+    "profit_share",     // K-1 profit distribution
+    "stipend",          // Fixed periodic amount (board)
+    "unpaid"            // Volunteer
+  ]).notNull(),
+  
+  // Pay rates
+  salaryAmount: decimal("salaryAmount", { precision: 12, scale: 2 }),
+  hourlyRate: decimal("hourlyRate", { precision: 8, scale: 2 }),
+  commissionRate: decimal("commissionRate", { precision: 5, scale: 2 }),
+  
+  // Pay schedule
+  payFrequency: mysqlEnum("payFrequency", [
+    "weekly", "biweekly", "semimonthly", "monthly", "per_project"
+  ]).default("biweekly"),
+  
+  // Benefits eligibility
+  benefitsEligible: boolean("benefitsEligible").default(false),
+  
+  // Requirements
+  requiresBackgroundCheck: boolean("requiresBackgroundCheck").default(false),
+  requiresCourseCompletion: boolean("requiresCourseCompletion").default(false),
+  requiredCourseId: int("requiredCourseId"),
+  
+  // Linked simulator (if position manages a training simulator)
+  linkedSimulatorId: int("linkedSimulatorId"),
+  
+  // Status
+  status: mysqlEnum("status", ["open", "filled", "closed"]).default("open"),
+  maxHolders: int("maxHolders").default(1), // How many can hold this position
+  currentHolders: int("currentHolders").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BusinessPosition = typeof businessPositions.$inferSelect;
+export type InsertBusinessPosition = typeof businessPositions.$inferInsert;
+
+/**
+ * Position Holders - People assigned to positions
+ */
+export const positionHolders = mysqlTable("position_holders", {
+  id: int("id").autoincrement().primaryKey(),
+  positionId: int("positionId").notNull(),
+  
+  // Person holding position
+  userId: int("userId"), // If registered user
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  address: text("address"),
+  ssn: varchar("ssn", { length: 11 }), // Encrypted - needed for tax docs
+  dateOfBirth: timestamp("dateOfBirth"),
+  
+  // Relationship to house owner
+  relationshipType: mysqlEnum("relationshipType", [
+    "family_blood",     // Blood relative
+    "family_marriage",  // Married into family
+    "family_adopted",   // Adopted family
+    "close_friend",     // Trusted non-family
+    "business_partner", // External business relationship
+    "employee"          // No personal relationship
+  ]).notNull(),
+  specificRelationship: varchar("specificRelationship", { length: 100 }), // e.g., "daughter", "brother-in-law"
+  
+  // Employment dates
+  startDate: timestamp("startDate").notNull(),
+  endDate: timestamp("endDate"),
+  terminationReason: text("terminationReason"),
+  
+  // Actual compensation (may differ from position default)
+  actualSalary: decimal("actualSalary", { precision: 12, scale: 2 }),
+  actualHourlyRate: decimal("actualHourlyRate", { precision: 8, scale: 2 }),
+  
+  // Tax withholding elections (from W-4)
+  federalFilingStatus: mysqlEnum("federalFilingStatus", [
+    "single", "married_filing_jointly", "married_filing_separately", "head_of_household"
+  ]),
+  federalAllowances: int("federalAllowances").default(0),
+  additionalWithholding: decimal("additionalWithholding", { precision: 8, scale: 2 }).default("0"),
+  stateFilingStatus: varchar("stateFilingStatus", { length: 50 }),
+  stateAllowances: int("stateAllowances").default(0),
+  
+  // Direct deposit
+  bankName: varchar("bankName", { length: 100 }),
+  bankRoutingNumber: varchar("bankRoutingNumber", { length: 9 }),
+  bankAccountNumber: varchar("bankAccountNumber", { length: 20 }), // Encrypted
+  accountType: mysqlEnum("accountType", ["checking", "savings"]),
+  
+  // Onboarding status
+  onboardingComplete: boolean("onboardingComplete").default(false),
+  onboardingCompletedAt: timestamp("onboardingCompletedAt"),
+  
+  // Documents signed
+  employmentAgreementSigned: boolean("employmentAgreementSigned").default(false),
+  w4Signed: boolean("w4Signed").default(false),
+  i9Signed: boolean("i9Signed").default(false),
+  w9Signed: boolean("w9Signed").default(false), // For contractors
+  directDepositSigned: boolean("directDepositSigned").default(false),
+  handbookAcknowledged: boolean("handbookAcknowledged").default(false),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "pending_onboarding", "active", "on_leave", "terminated", "resigned"
+  ]).default("pending_onboarding"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PositionHolder = typeof positionHolders.$inferSelect;
+export type InsertPositionHolder = typeof positionHolders.$inferInsert;
+
+/**
+ * Employment Documents - Generated legal documents
+ */
+export const employmentDocuments = mysqlTable("employment_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  positionHolderId: int("positionHolderId").notNull(),
+  positionId: int("positionId").notNull(),
+  houseId: int("houseId").notNull(),
+  
+  // Document type
+  documentType: mysqlEnum("documentType", [
+    "offer_letter",
+    "employment_agreement",
+    "contractor_agreement",
+    "w4_form",
+    "i9_form",
+    "w9_form",
+    "job_description",
+    "direct_deposit_form",
+    "handbook_acknowledgment",
+    "confidentiality_agreement",
+    "non_compete_agreement",
+    "operating_agreement_amendment",
+    "membership_certificate",
+    "board_resolution",
+    "background_check_authorization",
+    "termination_letter",
+    "resignation_letter"
+  ]).notNull(),
+  
+  // Document details
+  documentName: varchar("documentName", { length: 255 }).notNull(),
+  documentVersion: int("documentVersion").default(1),
+  
+  // Storage
+  vaultDocumentId: int("vaultDocumentId"), // Reference to vault storage
+  s3Url: varchar("s3Url", { length: 500 }),
+  
+  // Signature status
+  requiresSignature: boolean("requiresSignature").default(true),
+  signedAt: timestamp("signedAt"),
+  signedByUserId: int("signedByUserId"),
+  signatureHash: varchar("signatureHash", { length: 64 }),
+  
+  // Witness (if required)
+  witnessRequired: boolean("witnessRequired").default(false),
+  witnessName: varchar("witnessName", { length: 255 }),
+  witnessSignedAt: timestamp("witnessSignedAt"),
+  
+  // Effective dates
+  effectiveDate: timestamp("effectiveDate"),
+  expirationDate: timestamp("expirationDate"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "pending_signature", "signed", "expired", "superseded", "voided"
+  ]).default("draft"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmploymentDocument = typeof employmentDocuments.$inferSelect;
+export type InsertEmploymentDocument = typeof employmentDocuments.$inferInsert;
+
+/**
+ * Payroll Records - Track all compensation payments
+ */
+export const payrollRecords = mysqlTable("payroll_records", {
+  id: int("id").autoincrement().primaryKey(),
+  positionHolderId: int("positionHolderId").notNull(),
+  positionId: int("positionId").notNull(),
+  businessEntityId: int("businessEntityId").notNull(),
+  houseId: int("houseId").notNull(),
+  
+  // Pay period
+  payPeriodStart: timestamp("payPeriodStart").notNull(),
+  payPeriodEnd: timestamp("payPeriodEnd").notNull(),
+  payDate: timestamp("payDate").notNull(),
+  
+  // Hours (for hourly employees)
+  regularHours: decimal("regularHours", { precision: 6, scale: 2 }).default("0"),
+  overtimeHours: decimal("overtimeHours", { precision: 6, scale: 2 }).default("0"),
+  
+  // Gross pay
+  grossPay: decimal("grossPay", { precision: 12, scale: 2 }).notNull(),
+  regularPay: decimal("regularPay", { precision: 12, scale: 2 }).default("0"),
+  overtimePay: decimal("overtimePay", { precision: 12, scale: 2 }).default("0"),
+  bonusPay: decimal("bonusPay", { precision: 12, scale: 2 }).default("0"),
+  commissionPay: decimal("commissionPay", { precision: 12, scale: 2 }).default("0"),
+  
+  // Tax withholdings
+  federalIncomeTax: decimal("federalIncomeTax", { precision: 10, scale: 2 }).default("0"),
+  stateIncomeTax: decimal("stateIncomeTax", { precision: 10, scale: 2 }).default("0"),
+  localIncomeTax: decimal("localIncomeTax", { precision: 10, scale: 2 }).default("0"),
+  socialSecurityTax: decimal("socialSecurityTax", { precision: 10, scale: 2 }).default("0"),
+  medicareTax: decimal("medicareTax", { precision: 10, scale: 2 }).default("0"),
+  
+  // Deductions
+  healthInsurance: decimal("healthInsurance", { precision: 10, scale: 2 }).default("0"),
+  retirement401k: decimal("retirement401k", { precision: 10, scale: 2 }).default("0"),
+  otherDeductions: decimal("otherDeductions", { precision: 10, scale: 2 }).default("0"),
+  deductionDetails: json("deductionDetails"), // Breakdown of other deductions
+  
+  // Net pay
+  totalDeductions: decimal("totalDeductions", { precision: 12, scale: 2 }).notNull(),
+  netPay: decimal("netPay", { precision: 12, scale: 2 }).notNull(),
+  
+  // Payment method
+  paymentMethod: mysqlEnum("paymentMethod", [
+    "direct_deposit", "check", "cash"
+  ]).default("direct_deposit"),
+  checkNumber: varchar("checkNumber", { length: 20 }),
+  
+  // Employer taxes (not deducted from employee)
+  employerSocialSecurity: decimal("employerSocialSecurity", { precision: 10, scale: 2 }).default("0"),
+  employerMedicare: decimal("employerMedicare", { precision: 10, scale: 2 }).default("0"),
+  employerFuta: decimal("employerFuta", { precision: 10, scale: 2 }).default("0"),
+  employerSuta: decimal("employerSuta", { precision: 10, scale: 2 }).default("0"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "pending", "processed", "paid", "voided", "adjusted"
+  ]).default("pending"),
+  processedAt: timestamp("processedAt"),
+  
+  // Audit
+  createdBy: int("createdBy"),
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PayrollRecord = typeof payrollRecords.$inferSelect;
+export type InsertPayrollRecord = typeof payrollRecords.$inferInsert;
+
+/**
+ * Employer Tax Forms - Annual tax forms generated by employer (W-2, 1099, K-1)
+ */
+export const employerTaxForms = mysqlTable("employer_tax_forms", {
+  id: int("id").autoincrement().primaryKey(),
+  positionHolderId: int("positionHolderId").notNull(),
+  businessEntityId: int("businessEntityId").notNull(),
+  houseId: int("houseId").notNull(),
+  
+  // Tax year
+  taxYear: int("taxYear").notNull(),
+  
+  // Document type
+  documentType: mysqlEnum("documentType", [
+    "w2",           // Employee wages
+    "1099_nec",     // Non-employee compensation (contractors)
+    "1099_misc",    // Miscellaneous income (trustee fees, etc.)
+    "k1_1065",      // Partnership/LLC member income
+    "k1_1120s"      // S-Corp shareholder income
+  ]).notNull(),
+  
+  // Recipient info
+  recipientName: varchar("recipientName", { length: 255 }).notNull(),
+  recipientSSN: varchar("recipientSSN", { length: 11 }), // Encrypted
+  recipientAddress: text("recipientAddress"),
+  
+  // Payer info
+  payerName: varchar("payerName", { length: 255 }).notNull(),
+  payerEIN: varchar("payerEIN", { length: 10 }).notNull(),
+  payerAddress: text("payerAddress"),
+  
+  // W-2 specific fields
+  wagesBox1: decimal("wagesBox1", { precision: 12, scale: 2 }),
+  federalWithheldBox2: decimal("federalWithheldBox2", { precision: 12, scale: 2 }),
+  socialSecurityWagesBox3: decimal("socialSecurityWagesBox3", { precision: 12, scale: 2 }),
+  socialSecurityWithheldBox4: decimal("socialSecurityWithheldBox4", { precision: 12, scale: 2 }),
+  medicareWagesBox5: decimal("medicareWagesBox5", { precision: 12, scale: 2 }),
+  medicareWithheldBox6: decimal("medicareWithheldBox6", { precision: 12, scale: 2 }),
+  stateWagesBox16: decimal("stateWagesBox16", { precision: 12, scale: 2 }),
+  stateWithheldBox17: decimal("stateWithheldBox17", { precision: 12, scale: 2 }),
+  stateCode: varchar("stateCode", { length: 2 }),
+  
+  // 1099 specific fields
+  nonemployeeCompensation: decimal("nonemployeeCompensation", { precision: 12, scale: 2 }),
+  
+  // K-1 specific fields
+  ordinaryIncome: decimal("ordinaryIncome", { precision: 12, scale: 2 }),
+  guaranteedPayments: decimal("guaranteedPayments", { precision: 12, scale: 2 }),
+  capitalGains: decimal("capitalGains", { precision: 12, scale: 2 }),
+  distributionsReceived: decimal("distributionsReceived", { precision: 12, scale: 2 }),
+  
+  // Document storage
+  vaultDocumentId: int("vaultDocumentId"),
+  s3Url: varchar("s3Url", { length: 500 }),
+  
+  // Filing status
+  filedWithIRS: boolean("filedWithIRS").default(false),
+  filedAt: timestamp("filedAt"),
+  irsConfirmationNumber: varchar("irsConfirmationNumber", { length: 50 }),
+  
+  // Delivery
+  deliveredToRecipient: boolean("deliveredToRecipient").default(false),
+  deliveredAt: timestamp("deliveredAt"),
+  deliveryMethod: mysqlEnum("deliveryMethod", ["mail", "email", "portal"]),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "generated", "filed", "corrected", "voided"
+  ]).default("draft"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmployerTaxForm = typeof employerTaxForms.$inferSelect;
+export type InsertEmployerTaxForm = typeof employerTaxForms.$inferInsert;
+
+/**
+ * Compliance Tasks - Track filing deadlines and requirements
+ */
+export const complianceTasks = mysqlTable("compliance_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  businessEntityId: int("businessEntityId"),
+  houseId: int("houseId").notNull(),
+  positionHolderId: int("positionHolderId"),
+  
+  // Task details
+  taskType: mysqlEnum("taskType", [
+    "payroll_tax_deposit",    // 941 deposits
+    "quarterly_941",          // Quarterly payroll tax return
+    "annual_940",             // Annual FUTA return
+    "w2_filing",              // W-2 filing deadline
+    "1099_filing",            // 1099 filing deadline
+    "k1_filing",              // K-1 filing deadline
+    "state_tax_deposit",      // State payroll taxes
+    "state_quarterly",        // State quarterly return
+    "annual_report",          // State annual report
+    "business_license",       // Business license renewal
+    "i9_reverification",      // I-9 document reverification
+    "workers_comp_audit",     // Workers comp audit
+    "benefits_enrollment",    // Open enrollment period
+    "performance_review",     // Employee review
+    "custom"
+  ]).notNull(),
+  
+  taskName: varchar("taskName", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Deadlines
+  dueDate: timestamp("dueDate").notNull(),
+  reminderDate: timestamp("reminderDate"),
+  
+  // Recurrence
+  isRecurring: boolean("isRecurring").default(false),
+  recurrencePattern: mysqlEnum("recurrencePattern", [
+    "weekly", "biweekly", "monthly", "quarterly", "annually"
+  ]),
+  
+  // Assignment
+  assignedToUserId: int("assignedToUserId"),
+  
+  // Completion
+  completedAt: timestamp("completedAt"),
+  completedByUserId: int("completedByUserId"),
+  completionNotes: text("completionNotes"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "upcoming", "due_soon", "overdue", "completed", "skipped"
+  ]).default("upcoming"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ComplianceTask = typeof complianceTasks.$inferSelect;
+export type InsertComplianceTask = typeof complianceTasks.$inferInsert;
+
+/**
+ * YTD Totals - Year-to-date accumulation for tax calculations
+ */
+export const ytdTotals = mysqlTable("ytd_totals", {
+  id: int("id").autoincrement().primaryKey(),
+  positionHolderId: int("positionHolderId").notNull(),
+  taxYear: int("taxYear").notNull(),
+  
+  // Gross earnings
+  ytdGrossPay: decimal("ytdGrossPay", { precision: 12, scale: 2 }).default("0"),
+  ytdRegularPay: decimal("ytdRegularPay", { precision: 12, scale: 2 }).default("0"),
+  ytdOvertimePay: decimal("ytdOvertimePay", { precision: 12, scale: 2 }).default("0"),
+  ytdBonusPay: decimal("ytdBonusPay", { precision: 12, scale: 2 }).default("0"),
+  
+  // Tax withholdings
+  ytdFederalTax: decimal("ytdFederalTax", { precision: 12, scale: 2 }).default("0"),
+  ytdStateTax: decimal("ytdStateTax", { precision: 12, scale: 2 }).default("0"),
+  ytdSocialSecurity: decimal("ytdSocialSecurity", { precision: 12, scale: 2 }).default("0"),
+  ytdMedicare: decimal("ytdMedicare", { precision: 12, scale: 2 }).default("0"),
+  
+  // Deductions
+  ytdHealthInsurance: decimal("ytdHealthInsurance", { precision: 12, scale: 2 }).default("0"),
+  ytdRetirement: decimal("ytdRetirement", { precision: 12, scale: 2 }).default("0"),
+  ytdOtherDeductions: decimal("ytdOtherDeductions", { precision: 12, scale: 2 }).default("0"),
+  
+  // Net
+  ytdNetPay: decimal("ytdNetPay", { precision: 12, scale: 2 }).default("0"),
+  
+  // Hours
+  ytdRegularHours: decimal("ytdRegularHours", { precision: 8, scale: 2 }).default("0"),
+  ytdOvertimeHours: decimal("ytdOvertimeHours", { precision: 8, scale: 2 }).default("0"),
+  
+  // Last updated
+  lastPayrollRecordId: int("lastPayrollRecordId"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type YtdTotal = typeof ytdTotals.$inferSelect;
+export type InsertYtdTotal = typeof ytdTotals.$inferInsert;

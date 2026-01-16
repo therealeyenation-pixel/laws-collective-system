@@ -1286,3 +1286,153 @@
 - [x] Include all ceremony details (founder, purpose, heirs, timestamp)
 - [x] Store in House Vault with blockchain verification
 - [x] Provide download/view link after activation
+
+
+## Phase 58: Family Business Position System
+
+### 58.1: Database Schema (COMPLETE)
+- [x] Create business_positions table (position definitions per entity)
+- [x] Create position_holders table (people assigned to positions)
+- [x] Create employment_documents table (generated legal docs)
+- [x] Create payroll_records table (compensation tracking)
+- [x] Create employer_tax_forms table (W-2, 1099, K-1 generation)
+- [x] Create compliance_tasks table (filing deadlines)
+- [x] Create ytd_totals table (year-to-date accumulation)
+- [x] Push schema to database
+
+### 58.2: Position Management Router (W-2 Employee Path) (COMPLETE)
+- [x] createPosition - Define position in entity (title, type, compensation structure)
+- [x] assignEmployee - Assign family/friend to position as W-2 employee
+- [x] updatePosition - Modify position details
+- [x] terminateEmployee - End assignment (termination/resignation)
+- [x] getPositionsByEntity - List all positions in a business
+- [x] getPositionsByPerson - List all positions held by a person
+- [x] generateEmploymentDocuments - Create employment agreement, W-4, I-9, job description
+- [x] signDocument - Mark documents as signed
+- [x] getOnboardingStatus - Track onboarding progress
+- [x] recordPayroll - Record payroll entries with tax calculations
+- [x] getPayrollHistory - Get payroll history and YTD totals
+- [x] generateW2 - Generate W-2 tax forms
+- [x] getDashboard - Employment dashboard overview
+
+### 58.2b: B2B Contracting Router (1099 Path) (COMPLETE)
+- [x] createServiceAgreement - Contract between two business entities
+- [x] getAgreementsByBusiness - Get all agreements for a business (as client or contractor)
+- [x] getAgreement - Get single agreement with payments and invoices
+- [x] terminateAgreement - End contract with optional final payment
+- [x] recordContractPayment - Track payments with automatic platform fee calculation
+- [x] generateInvoice - Create invoices for service agreements
+- [x] generate1099NEC - Create year-end 1099-NEC for contractor businesses
+- [x] getDashboard - B2B contracting overview with totals
+
+### 58.2c: Employee-to-Owner Transition (COMPLETE)
+- [x] initiateTransition - Start process with milestone tracking
+- [x] updateWorkshopProgress - Track Business Workshop enrollment and completion
+- [x] completeMilestone - Mark individual milestones as done
+- [x] linkNewBusiness - Connect newly formed business entity
+- [x] executeTermination - Process final paycheck and termination docs
+- [x] createContractorAgreement - Set up B2B service agreement
+- [x] finalizeTransition - Complete the transition process
+- [x] getDashboard - Transition overview with progress tracking
+- [x] getTransitions - List all transition plans
+- [x] getTransition - Get single transition details
+
+### 58.2d: Inter-Company Contracting (COMPLETE)
+- [x] createContract - Contract between two family businesses with approval workflow
+- [x] approveContract - Dual-party approval system
+- [x] getContractsByBusiness - Get all contracts for a business
+- [x] getContract - Get single contract with payments and invoices
+- [x] generateInvoice - Create invoices with automatic platform fee calculation
+- [x] recordPayment - Track payments with 70/30 split applied
+- [x] getInterCompanyLedger - Full transaction ledger with filtering
+- [x] reconcileAccounts - Balance inter-company accounts
+- [x] terminateContract - End contracts with settlement tracking
+- [x] getDashboard - Inter-company overview with totals
+
+### 58.3: Employment Document Generation (COMPLETE - in router)
+- [x] Generate Offer Letter template
+- [x] Generate Employment Agreement template
+- [x] Generate Independent Contractor Agreement template
+- [x] Generate W-4 form (pre-filled)
+- [x] Generate I-9 form
+- [x] Generate Job Description template
+- [x] Generate Operating Agreement Amendment (for members)
+- [x] Store generated documents in House Vault
+
+### 58.4: Payroll & Tax Document System (COMPLETE - in router)
+- [x] Record payroll entries (salary, hourly, contractor fees)
+- [x] Calculate tax withholdings (federal, state, FICA)
+- [x] Generate W-2 forms (annual)
+- [x] Generate 1099-NEC forms (annual)
+- [ ] Generate K-1 schedules (for members) - PENDING
+- [x] Track payment history
+
+### 58.5: Position Management UI
+- [ ] Position dashboard showing all positions across entities
+- [ ] Add Position form (entity, title, type, compensation)
+- [ ] Assign Position flow (select person, generate docs)
+- [ ] Onboarding checklist (documents to sign)
+- [ ] Payroll entry interface
+- [ ] Tax document center
+
+### 58.6: Compliance Tracking
+- [ ] Compliance calendar with filing deadlines
+- [ ] Automated reminders for upcoming deadlines
+- [ ] Track document expiration (I-9 reverification, etc.)
+- [ ] Annual report filing reminders
+
+
+## Phase 59: Business Formation Verification & Banking/Credit
+
+### 59.1: Business Formation Verification Router (COMPLETE)
+- [x] State-specific filing checklists (all 50 states + DC)
+- [x] Entity type templates (LLC, Corp, Trust, Collective)
+- [x] Filing step tracking with dependencies
+- [x] Document upload verification per step
+- [x] E-filing vs paper filing indicators by state
+- [x] Confirmation number tracking
+- [x] Filing fee tracking (state-specific)
+- [x] Progress percentage calculation
+- [x] Completion gates for House activation
+- [x] Step skip for conditional items
+- [x] Document verification workflow
+
+### 59.2: Digital Signature Module (COMPLETE)
+- [x] Signature request creation with multiple signers
+- [x] Multi-party signing workflow with order enforcement
+- [ ] Signature capture (typed, drawn, uploaded)
+- [ ] Signature hash generation
+- [ ] Timestamp recording
+- [ ] Witness signature support
+- [x] Signed document storage with verification hash
+- [x] SHA-256 verification hash generation
+- [x] Complete signature audit trail
+- [x] Witness signature support
+- [x] Notarization tracking
+- [x] Signature verification endpoint
+- [x] Document verification endpoint
+- [x] Decline signature workflow
+- [x] Expiration handling
+
+### 59.3: Banking & Credit Building Router (COMPLETE)
+- [x] Business bank account setup workflow
+- [x] Account type tracking (Operating, Reserve, Tax Escrow, Payroll, Trust Treasury)
+- [x] D-U-N-S Number application tracking
+- [x] Business phone/address verification
+- [x] Net-30/60/90 vendor account tracking with recommended vendors
+- [x] Business credit card tracking (secured/unsecured)
+- [x] Line of credit tracking
+- [x] Credit score tracking (D&B Paydex, Experian Intelliscore, Equifax Business)
+- [x] Account balance tracking
+- [x] Credit limit tracking
+- [x] 16-step credit building program
+- [x] House activation requirements check
+
+### 59.4: House Activation Integration
+- [ ] Formation completion gate
+- [ ] Banking setup completion gate
+- [ ] Credit foundation gate (optional)
+- [ ] All documents signed gate
+- [ ] Activation checklist dashboard
+- [ ] Block activation until requirements met
+
