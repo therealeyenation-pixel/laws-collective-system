@@ -432,6 +432,116 @@ export const businessFormationRouter = router({
     }),
 
   /**
+   * Create placeholder business entities for department managers
+   * These are entities that need to be formed to support department operations
+   */
+  createDepartmentEntities: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const [userHouse] = await db.select().from(houses).where(eq(houses.ownerUserId, ctx.user.id)).limit(1);
+      if (!userHouse) throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+
+      // Department manager entities to be created
+      const departmentEntities = [
+        {
+          name: "Amber's Health & Wellness LLC",
+          entityType: "llc" as const,
+          state: "GA",
+          department: "Health",
+          manager: "Amber",
+          status: "pending_formation" as const,
+          description: "Health and wellness services, community outreach programs",
+        },
+        {
+          name: "Essence Design & Technology LLC",
+          entityType: "llc" as const,
+          state: "GA",
+          department: "Design, IT",
+          manager: "Essence",
+          status: "pending_formation" as const,
+          description: "Design services, IT support, technology solutions",
+        },
+        {
+          name: "Craig's Financial Services LLC",
+          entityType: "llc" as const,
+          state: "GA",
+          department: "Finance",
+          manager: "Craig",
+          status: "pending_formation" as const,
+          description: "Financial management, bookkeeping, treasury operations",
+        },
+        {
+          name: "Cornelius Justice & Legal Services LLC",
+          entityType: "llc" as const,
+          state: "GA",
+          department: "Legal, Justice",
+          manager: "Cornelius",
+          status: "pending_formation" as const,
+          description: "Legal services, justice advocacy, reentry support",
+        },
+      ];
+
+      const created = [];
+      for (const entity of departmentEntities) {
+        // Check if entity already exists
+        const [existing] = await db.select().from(businessEntities)
+          .where(eq(businessEntities.name, entity.name)).limit(1);
+        
+        if (!existing) {
+          await db.insert(businessEntities).values({
+            userId: ctx.user.id,
+            name: entity.name,
+            entityType: entity.entityType,
+            status: "draft",
+            description: entity.description,
+          });
+          created.push({ name: entity.name, department: entity.department, manager: entity.manager });
+        }
+      }
+
+      return {
+        success: true,
+        created: created.length,
+        entities: departmentEntities.map(e => ({
+          name: e.name,
+          department: e.department,
+          manager: e.manager,
+          status: e.status,
+          description: e.description,
+        })),
+        message: `${created.length} department entities queued for formation`,
+      };
+    }),
+
+  /**
+   * Get department entities status
+   */
+  getDepartmentEntities: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+    const entities = await db.select().from(businessEntities).where(eq(businessEntities.userId, ctx.user.id));
+    
+    // Map entities to department info
+    const departmentMap: Record<string, { department: string; manager: string }> = {
+      "Amber's Health & Wellness LLC": { department: "Health", manager: "Amber" },
+      "Essence Design & Technology LLC": { department: "Design, IT", manager: "Essence" },
+      "Craig's Financial Services LLC": { department: "Finance", manager: "Craig" },
+      "Cornelius Justice & Legal Services LLC": { department: "Legal, Justice", manager: "Cornelius" },
+      "Purpose Proposal Group LLC": { department: "Business", manager: "Shanna" },
+      "FreeLife Media LLC": { department: "Media, IT", manager: "Amandes" },
+    };
+
+    return entities.map(e => ({
+      ...e,
+      department: departmentMap[e.name]?.department || "General",
+      manager: departmentMap[e.name]?.manager || "TBD",
+    }));
+  }),
+
+  /**
    * Get formation dashboard
    */
   getDashboard: protectedProcedure.query(async ({ ctx }) => {

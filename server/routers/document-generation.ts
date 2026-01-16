@@ -266,6 +266,46 @@ const CONTRACT_TEMPLATES = {
     pageSize: "letter" as const,
     requiredFields: ["requestorName", "fundName", "amount", "purpose", "recipientInfo", "justification"],
   },
+  STRATEGIC_PARTNERSHIP_AGREEMENT: {
+    templateCode: "CONTRACT_STRATEGIC_PARTNER",
+    templateName: "Strategic Partnership Agreement",
+    category: "general_legal" as const,
+    description: "Agreement for strategic partnerships with external organizations",
+    pageSize: "letter" as const,
+    requiredFields: ["partnerOrg", "luvOnPurposeEntity", "partnershipScope", "revenueSplit", "term", "departments", "boardStatus", "governingLaw"],
+  },
+  REVENUE_SHARE_AGREEMENT: {
+    templateCode: "CONTRACT_REVENUE_SHARE",
+    templateName: "Revenue Sharing Agreement",
+    category: "general_legal" as const,
+    description: "Agreement defining revenue sharing between parties for joint programs",
+    pageSize: "letter" as const,
+    requiredFields: ["partyA", "partyB", "revenueSource", "splitPercentage", "paymentTerms", "reportingRequirements", "term"],
+  },
+  CONFLICT_OF_INTEREST_DISCLOSURE: {
+    templateCode: "FORM_COI_DISCLOSURE",
+    templateName: "Conflict of Interest Disclosure Form",
+    category: "general_legal" as const,
+    description: "Disclosure form for board members and managers to declare potential conflicts",
+    pageSize: "letter" as const,
+    requiredFields: ["discloserName", "position", "relatedParties", "natureOfConflict", "mitigationPlan", "signatureDate"],
+  },
+  MUTUAL_NDA: {
+    templateCode: "CONTRACT_MUTUAL_NDA",
+    templateName: "Mutual Non-Disclosure Agreement",
+    category: "general_legal" as const,
+    description: "Two-way confidentiality agreement where both parties share and protect information",
+    pageSize: "letter" as const,
+    requiredFields: ["partyA", "partyB", "confidentialInfoA", "confidentialInfoB", "term", "exclusions", "returnOfMaterials"],
+  },
+  HONORARY_BOARD_APPOINTMENT: {
+    templateCode: "CERT_HONORARY_BOARD",
+    templateName: "Honorary Board Appointment Certificate",
+    category: "certificate" as const,
+    description: "Certificate appointing an honorary advisory board member (non-voting)",
+    pageSize: "letter" as const,
+    requiredFields: ["appointeeName", "appointeeOrg", "appointingEntity", "advisoryRole", "departments", "effectiveDate", "limitations"],
+  },
 };
 
 // Funding Templates
