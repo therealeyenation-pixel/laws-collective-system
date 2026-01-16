@@ -1313,6 +1313,14 @@ export const houses = mysqlTable("houses", {
   status: mysqlEnum("status", ["forming", "active", "suspended", "dissolved"]).default("forming").notNull(),
   generation: int("generation").default(1).notNull(), // 1 = founding, 2 = children, etc.
   
+  // Genesis House Fields (for the founding Root House)
+  isGenesis: boolean("isGenesis").default(false), // True only for the first House
+  genesisRIN: varchar("genesisRIN", { length: 50 }), // Special RIN format: RIN-GEN-001
+  genesisHash: varchar("genesisHash", { length: 255 }), // Hash of ceremony data
+  statementOfPurpose: text("statementOfPurpose"), // Founder's vision statement
+  flameLightingTimestamp: timestamp("flameLightingTimestamp"), // Ceremonial activation moment
+  genesisDeclarationDocId: int("genesisDeclarationDocId"), // Reference to vault document
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

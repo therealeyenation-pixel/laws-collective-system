@@ -49,6 +49,7 @@ import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
 import { houseDashboardRouter } from "./routers/house-dashboard";
+import { ownerHouseSetupRouter } from "./routers/owner-house-setup";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -99,6 +100,7 @@ export const appRouter = router({
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   houseDashboard: houseDashboardRouter,
+  ownerHouseSetup: ownerHouseSetupRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

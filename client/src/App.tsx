@@ -14,6 +14,8 @@ import SocialMedia from "./pages/SocialMedia";
 import FoundationDashboard from "./pages/FoundationDashboard";
 import FinancialAutomation from "./pages/FinancialAutomation";
 import HouseDashboard from "./pages/HouseDashboard";
+import OwnerHouseSetup from "./pages/OwnerHouseSetup";
+import GenesisCeremony from "./pages/GenesisCeremony";
 import Landing from "./pages/Landing";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
@@ -83,6 +85,8 @@ function Router() {
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} />}</Route>
       <Route path="/financial-automation">{() => <ProtectedRoute component={FinancialAutomation} />}</Route>
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} />}</Route>
+      <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} />}</Route>
+      <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

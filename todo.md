@@ -1207,3 +1207,82 @@
 - [ ] Track document downloads and exports
 - [ ] Monitor for unusual access patterns
 - [ ] Create compliance reports for data access
+
+
+## Phase 56: Agents Page Fix & Owner House Setup
+
+### 56.1: Fix /bots (Agents) Page 404 Error (COMPLETE)
+- [x] Debug why /bots route returns 404 - DashboardLayout used /bots but App.tsx uses /agents
+- [x] Check App.tsx for route registration - Route exists at /agents
+- [x] Check if Agents.tsx page component exists - Yes, exists
+- [x] Fix routing issue - Changed DashboardLayout nav path from /bots to /agents
+
+### 56.2: Owner House Setup (Existing Businesses) (COMPLETE)
+- [x] Create owner bypass for House activation (already has businesses/trust)
+- [x] Allow owner to import existing business entities
+- [x] Created owner-house-setup router with full CRUD operations
+- [x] Created OwnerHouseSetup page with 4 tabs (House, Businesses, Heirs, Documents)
+- [x] Added route /owner-setup to App.tsx
+- [x] Added Owner Setup and House Dashboard to sidebar navigation
+- [ ] Create document upload interface for existing trust documents
+- [ ] Link existing businesses to House structure
+- [ ] Set up 70/30 split configuration for existing entities
+
+### 56.3: Pre-Public Access Configuration
+- [ ] Implement bloodline/mirrored house access logic
+- [ ] Payment gateway integration for public access (future)
+- [ ] Family member invitation system through owner's House
+
+
+## Phase 57: Genesis Mode - Ceremonial House Activation
+
+### 57.1: Genesis Mode Backend
+- [ ] Add Genesis House activation procedure to owner-house-setup router
+- [ ] Create unique RIN format for Genesis House (RIN-GEN-001)
+- [ ] Add ceremony data fields (statement of purpose, flame lighting timestamp)
+- [ ] Generate Genesis hash from ceremony data
+- [ ] Mark House as "genesis" type with special status
+
+### 57.2: Genesis Declaration Document
+- [ ] Create Genesis Declaration document template
+- [ ] Include: Statement of Purpose, Trust Declaration, Heir Designations
+- [ ] Auto-generate PDF with ceremonial formatting
+- [ ] Store in House Vault as founding record
+- [ ] Add blockchain hash for permanent verification
+
+### 57.3: Genesis Ceremony UI
+- [ ] Add Genesis Mode toggle to Owner Setup page
+- [ ] Create multi-step ceremony wizard
+- [ ] Step 1: Statement of Purpose input
+- [ ] Step 2: Trust Declaration confirmation
+- [ ] Step 3: Heir Designation ceremony
+- [ ] Step 4: Flame Lighting (activation button with timestamp)
+- [ ] Display Genesis Declaration preview before finalization
+
+
+## Phase 57: Genesis Mode (COMPLETE)
+
+### 57.1: Genesis Mode Backend
+- [x] Add Genesis fields to houses table (isGenesis, genesisRIN, genesisHash, flameLightingTimestamp, statementOfPurpose, founderName)
+- [x] Create activateGenesisHouse procedure with ceremonial data
+- [x] Create getGenesisDeclaration procedure to check existing Genesis
+- [x] Generate Genesis Declaration document and store in vault
+- [x] Auto-seal all founder scrolls
+- [x] Create full token chain activation (MIRROR → CROWN)
+
+### 57.2: Genesis Ceremony UI
+- [x] Create GenesisCeremony.tsx page with 4-step ceremony flow
+- [x] Step 1: House Identity (name, founder, trust details)
+- [x] Step 2: Statement of Purpose (permanent record)
+- [x] Step 3: Bloodline Designation (optional heirs)
+- [x] Step 4: Flame Lighting (review and activate)
+- [x] Add route /genesis to App.tsx
+- [x] Add Genesis Ceremony to sidebar navigation
+- [x] Display existing Genesis details if already activated
+- [x] Activation complete screen with Genesis RIN and hash
+
+### 57.3: Genesis Declaration Document
+- [x] Generate formal Genesis Declaration document
+- [x] Include all ceremony details (founder, purpose, heirs, timestamp)
+- [x] Store in House Vault with blockchain verification
+- [x] Provide download/view link after activation
