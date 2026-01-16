@@ -15,19 +15,26 @@ import {
   GraduationCap,
   Trophy,
   Download,
+  Home,
+  FileCheck,
+  ArrowRight,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import BusinessCourse from "@/components/BusinessCourse";
 import FinancialCourse from "@/components/FinancialCourse";
 import OperationsCourse from "@/components/OperationsCourse";
+import TrustCourse from "@/components/TrustCourse";
+import GrantWritingCourse from "@/components/GrantWritingCourse";
 
-type CourseType = "business" | "financial" | "operations" | null;
+type CourseType = "business" | "financial" | "operations" | "trust" | "grant" | null;
 
 interface CourseProgress {
   business: { completed: boolean; tokens: number; data: any };
   financial: { completed: boolean; tokens: number; data: any };
   operations: { completed: boolean; tokens: number; data: any };
+  trust: { completed: boolean; tokens: number; data: any };
+  grant: { completed: boolean; tokens: number; data: any };
 }
 
 export default function Dashboard() {
@@ -37,6 +44,8 @@ export default function Dashboard() {
     business: { completed: false, tokens: 0, data: null },
     financial: { completed: false, tokens: 0, data: null },
     operations: { completed: false, tokens: 0, data: null },
+    trust: { completed: false, tokens: 0, data: null },
+    grant: { completed: false, tokens: 0, data: null },
   });
 
   const handleCourseComplete = (
@@ -58,16 +67,27 @@ export default function Dashboard() {
     setActiveCourse(null);
   };
 
+  // Get connected entity from business course for Trust and Grant courses
+  const getConnectedEntity = () => {
+    if (courseProgress.business.completed && courseProgress.business.data) {
+      return {
+        name: courseProgress.business.data.businessName || "Your Business",
+        type: courseProgress.business.data.entityType || "LLC",
+      };
+    }
+    return undefined;
+  };
+
   const downloadBusinessPlan = () => {
-    const { business, financial, operations } = courseProgress;
+    const { business, financial, operations, trust, grant } = courseProgress;
     
-    if (!business.data && !financial.data && !operations.data) {
+    if (!business.data && !financial.data && !operations.data && !trust.data && !grant.data) {
       toast.error("Complete at least one course to generate documents");
       return;
     }
 
     // Generate comprehensive business plan from all course data
-    let content = "# BUSINESS PLAN\n\n";
+    let content = "# COMPLETE BUSINESS & WEALTH BUILDING PLAN\n\n";
     content += `Generated: ${new Date().toLocaleDateString()}\n\n`;
     content += "---\n\n";
 
@@ -98,56 +118,40 @@ export default function Dashboard() {
     }
 
     if (financial.data) {
-      content += "---\n\n## FINANCIAL PLAN\n\n";
+      content += "## FINANCIAL PLAN\n\n";
       content += "### Startup Costs\n";
-      content += `- Equipment & Technology: $${financial.data.equipmentCosts || "0"}\n`;
-      content += `- Initial Inventory: $${financial.data.inventoryCosts || "0"}\n`;
-      content += `- Legal & Professional: $${financial.data.legalFees || "0"}\n`;
-      content += `- Licenses & Permits: $${financial.data.licensingFees || "0"}\n`;
-      content += `- Initial Marketing: $${financial.data.marketingBudget || "0"}\n`;
-      content += `- Operating Reserve: $${financial.data.operatingReserve || "0"}\n\n`;
+      content += `**One-Time Costs:**\n${financial.data.oneTimeCosts || "[Not specified]"}\n\n`;
+      content += `**Initial Inventory:**\n${financial.data.initialInventory || "[Not specified]"}\n\n`;
+      content += `**Legal/Professional Fees:**\n${financial.data.legalFees || "[Not specified]"}\n\n`;
+      content += `**Total Startup Budget:** ${financial.data.totalStartupBudget || "[Not specified]"}\n\n`;
       content += "### Revenue Projections\n";
-      content += `- Monthly Product Revenue: $${financial.data.productRevenue || "0"}\n`;
-      content += `- Monthly Service Revenue: $${financial.data.serviceRevenue || "0"}\n`;
-      content += `- Year 1 Total: $${financial.data.yearOneRevenue || "0"}\n`;
-      content += `- Year 2 Total: $${financial.data.yearTwoRevenue || "0"}\n`;
-      content += `- Year 3 Total: $${financial.data.yearThreeRevenue || "0"}\n\n`;
-      content += "### Monthly Operating Expenses\n";
-      content += `- Rent/Mortgage: $${financial.data.rent || "0"}\n`;
-      content += `- Utilities: $${financial.data.utilities || "0"}\n`;
-      content += `- Salaries & Wages: $${financial.data.salaries || "0"}\n`;
-      content += `- Insurance: $${financial.data.insurance || "0"}\n`;
-      content += `- Marketing: $${financial.data.marketing || "0"}\n`;
-      content += `- Supplies: $${financial.data.supplies || "0"}\n\n`;
-      content += "### Cash Flow\n";
-      content += `- Opening Balance: $${financial.data.openingBalance || "0"}\n`;
-      content += `- Monthly Inflow: $${financial.data.monthlyInflow || "0"}\n`;
-      content += `- Monthly Outflow: $${financial.data.monthlyOutflow || "0"}\n\n`;
-      content += "### Break-Even Analysis\n";
-      content += `- Fixed Costs: $${financial.data.fixedCosts || "0"}/month\n`;
-      content += `- Price per Unit: $${financial.data.pricePerUnit || "0"}\n`;
-      content += `- Variable Cost per Unit: $${financial.data.variableCostPerUnit || "0"}\n\n`;
-      content += "### Funding Plan\n";
-      content += `- Owner Investment: $${financial.data.ownerInvestment || "0"}\n`;
-      content += `- Loans: $${financial.data.loans || "0"}\n`;
-      content += `- Grants: $${financial.data.grants || "0"}\n`;
-      content += `- Investors: $${financial.data.investors || "0"}\n\n`;
+      content += `**Revenue Streams:**\n${financial.data.revenueStreams || "[Not specified]"}\n\n`;
+      content += `**Pricing Model:**\n${financial.data.pricingModel || "[Not specified]"}\n\n`;
+      content += `**Sales Forecast:**\n${financial.data.salesForecast || "[Not specified]"}\n\n`;
+      content += "### Expense Budget\n";
+      content += `**Fixed Costs:**\n${financial.data.fixedCosts || "[Not specified]"}\n\n`;
+      content += `**Variable Costs:**\n${financial.data.variableCosts || "[Not specified]"}\n\n`;
+      content += `**Personnel Costs:**\n${financial.data.personnelCosts || "[Not specified]"}\n\n`;
+      content += "### Cash Flow & Break-Even\n";
+      content += `**Cash Flow Projection:**\n${financial.data.cashFlowProjection || "[Not specified]"}\n\n`;
+      content += `**Break-Even Analysis:**\n${financial.data.breakEvenAnalysis || "[Not specified]"}\n\n`;
+      content += "### Funding Strategy\n";
+      content += `**Funding Sources:**\n${financial.data.fundingSources || "[Not specified]"}\n\n`;
+      content += `**Use of Funds:**\n${financial.data.useOfFunds || "[Not specified]"}\n\n`;
     }
 
     if (operations.data) {
-      content += "---\n\n## OPERATIONS MANUAL\n\n";
+      content += "## OPERATIONS PLAN\n\n";
       content += "### Organizational Structure\n";
-      content += `**Structure Type:** ${operations.data.orgStructure || "[Not specified]"}\n\n`;
-      content += `**Key Roles:**\n${operations.data.roles || "[Not specified]"}\n\n`;
+      content += `**Org Chart:**\n${operations.data.orgChart || "[Not specified]"}\n\n`;
+      content += `**Key Roles:**\n${operations.data.keyRoles || "[Not specified]"}\n\n`;
       content += `**Responsibilities:**\n${operations.data.responsibilities || "[Not specified]"}\n\n`;
-      content += `**Reporting Lines:**\n${operations.data.reportingLines || "[Not specified]"}\n\n`;
       content += "### Standard Operating Procedures\n";
-      content += `**Core Procedures:**\n${operations.data.coreProcedures || "[Not specified]"}\n\n`;
+      content += `**Core Processes:**\n${operations.data.coreProcesses || "[Not specified]"}\n\n`;
       content += `**Quality Standards:**\n${operations.data.qualityStandards || "[Not specified]"}\n\n`;
       content += `**Customer Service:**\n${operations.data.customerService || "[Not specified]"}\n\n`;
-      content += "### Compliance Requirements\n";
-      content += `**Required Licenses:**\n${operations.data.requiredLicenses || "[Not specified]"}\n\n`;
-      content += `**Required Permits:**\n${operations.data.permits || "[Not specified]"}\n\n`;
+      content += "### Compliance & Legal\n";
+      content += `**Licenses Required:**\n${operations.data.licensesRequired || "[Not specified]"}\n\n`;
       content += `**Insurance Coverage:**\n${operations.data.insuranceTypes || "[Not specified]"}\n\n`;
       content += `**Regulatory Bodies:**\n${operations.data.regulatoryBodies || "[Not specified]"}\n\n`;
       content += "### Contracts & Agreements\n";
@@ -161,20 +165,68 @@ export default function Dashboard() {
       content += `**Review Schedule:**\n${operations.data.reviewSchedule || "[Not specified]"}\n\n`;
     }
 
+    if (trust.data) {
+      content += "## TRUST & HOUSE STRUCTURE\n\n";
+      content += `**Trust Name:** ${trust.data.trustName || "[Not specified]"}\n\n`;
+      content += `**Trust Type:** ${trust.data.trustType || "[Not specified]"}\n\n`;
+      content += `**Connected Entity:** ${trust.data.connectedEntity || "[Not specified]"}\n\n`;
+      content += "### Trust Parties\n";
+      content += `**Grantor:** ${trust.data.grantor || "[Not specified]"}\n`;
+      content += `**Primary Trustee:** ${trust.data.trustee || "[Not specified]"}\n`;
+      content += `**Successor Trustee:** ${trust.data.successorTrustee || "[Not specified]"}\n\n`;
+      content += `**Beneficiaries:**\n${trust.data.beneficiaries || "[Not specified]"}\n\n`;
+      content += `**Inheritance Split:** ${trust.data.inheritanceSplit || "[Not specified]"}\n\n`;
+      content += "### Trust Assets & Purpose\n";
+      content += `**Asset Types:**\n${trust.data.assetTypes || "[Not specified]"}\n\n`;
+      content += `**Primary Purpose:** ${trust.data.trustPurpose || "[Not specified]"}\n\n`;
+      content += `**Distribution Schedule:**\n${trust.data.distributionSchedule || "[Not specified]"}\n\n`;
+      content += "### Trust Terms\n";
+      content += `**Revocability:**\n${trust.data.revocabilityTerms || "[Not specified]"}\n\n`;
+      content += `**Amendment Process:**\n${trust.data.amendmentProcess || "[Not specified]"}\n\n`;
+      content += `**Dissolution Terms:**\n${trust.data.dissolutionTerms || "[Not specified]"}\n\n`;
+    }
+
+    if (grant.data) {
+      content += "## GRANT FUNDING STRATEGY\n\n";
+      content += `**Organization:** ${grant.data.organizationName || "[Not specified]"}\n`;
+      content += `**Entity Type:** ${grant.data.entityType || "[Not specified]"}\n`;
+      content += `**EIN:** ${grant.data.ein || "[Not specified]"}\n\n`;
+      content += `**Mission Statement:**\n${grant.data.missionStatement || "[Not specified]"}\n\n`;
+      content += "### Program Information\n";
+      content += `**Program Name:** ${grant.data.programName || "[Not specified]"}\n`;
+      content += `**Target Population:** ${grant.data.targetPopulation || "[Not specified]"}\n`;
+      content += `**Service Area:** ${grant.data.geographicArea || "[Not specified]"}\n\n`;
+      content += `**Program Description:**\n${grant.data.programDescription || "[Not specified]"}\n\n`;
+      content += "### Problem & Solution\n";
+      content += `**Problem Statement:**\n${grant.data.problemStatement || "[Not specified]"}\n\n`;
+      content += `**Proposed Solution:**\n${grant.data.proposedSolution || "[Not specified]"}\n\n`;
+      content += "### Goals & Objectives\n";
+      content += `**Goals:**\n${grant.data.goals || "[Not specified]"}\n\n`;
+      content += `**Objectives:**\n${grant.data.objectives || "[Not specified]"}\n\n`;
+      content += `**Activities:**\n${grant.data.activities || "[Not specified]"}\n\n`;
+      content += `**Timeline:**\n${grant.data.timeline || "[Not specified]"}\n\n`;
+      content += "### Evaluation & Budget\n";
+      content += `**Evaluation Plan:**\n${grant.data.evaluationPlan || "[Not specified]"}\n\n`;
+      content += `**Personnel Budget:**\n${grant.data.personnelBudget || "[Not specified]"}\n\n`;
+      content += `**Operating Budget:**\n${grant.data.operatingBudget || "[Not specified]"}\n\n`;
+      content += `**Total Request:** ${grant.data.totalBudget || "[Not specified]"}\n\n`;
+      content += `**Sustainability Plan:**\n${grant.data.sustainability || "[Not specified]"}\n\n`;
+    }
+
     content += "---\n\n";
-    content += "*This business plan was generated through the L.A.W.S. Collective Business Setup Course.*\n";
-    content += `*Total tokens earned: ${courseProgress.business.tokens + courseProgress.financial.tokens + courseProgress.operations.tokens}*\n`;
+    content += "*This comprehensive plan was generated through the L.A.W.S. Collective Business Setup Courses.*\n";
+    content += `*Total tokens earned: ${courseProgress.business.tokens + courseProgress.financial.tokens + courseProgress.operations.tokens + courseProgress.trust.tokens + courseProgress.grant.tokens}*\n`;
 
     // Download as markdown file
     const blob = new Blob([content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `business-plan-${new Date().toISOString().split("T")[0]}.md`;
+    link.download = `complete-business-plan-${new Date().toISOString().split("T")[0]}.md`;
     link.click();
     URL.revokeObjectURL(url);
     
-    toast.success("Business Plan downloaded!");
+    toast.success("Complete Business Plan downloaded!");
   };
 
   if (isLoading) {
@@ -187,7 +239,7 @@ export default function Dashboard() {
     );
   }
 
-  // Active course view
+  // Active course views
   if (activeCourse === "business") {
     return (
       <DashboardLayout>
@@ -221,16 +273,47 @@ export default function Dashboard() {
     );
   }
 
+  if (activeCourse === "trust") {
+    return (
+      <DashboardLayout>
+        <TrustCourse
+          onComplete={(tokens) => handleCourseComplete("trust", {}, tokens)}
+          onExit={() => setActiveCourse(null)}
+          connectedEntity={getConnectedEntity()}
+        />
+      </DashboardLayout>
+    );
+  }
+
+  if (activeCourse === "grant") {
+    return (
+      <DashboardLayout>
+        <GrantWritingCourse
+          onComplete={(tokens) => handleCourseComplete("grant", {}, tokens)}
+          onExit={() => setActiveCourse(null)}
+          connectedEntity={getConnectedEntity()}
+        />
+      </DashboardLayout>
+    );
+  }
+
   const totalTokensEarned = 
     courseProgress.business.tokens + 
     courseProgress.financial.tokens + 
-    courseProgress.operations.tokens;
+    courseProgress.operations.tokens +
+    courseProgress.trust.tokens +
+    courseProgress.grant.tokens;
 
   const coursesCompleted = [
     courseProgress.business.completed,
     courseProgress.financial.completed,
     courseProgress.operations.completed,
+    courseProgress.trust.completed,
+    courseProgress.grant.completed,
   ].filter(Boolean).length;
+
+  // Check if business course is completed for House structure
+  const businessCompleted = courseProgress.business.completed;
 
   return (
     <DashboardLayout>
@@ -259,14 +342,58 @@ export default function Dashboard() {
               <div className="flex items-center gap-4">
                 <div className="text-right">
                   <p className="text-sm text-muted-foreground">Courses Completed</p>
-                  <p className="text-2xl font-bold text-foreground">{coursesCompleted}/3</p>
+                  <p className="text-2xl font-bold text-foreground">{coursesCompleted}/5</p>
                 </div>
                 {coursesCompleted > 0 && (
                   <Button onClick={downloadBusinessPlan} className="gap-2 min-h-[48px]">
                     <Download className="w-4 h-4" />
-                    Download Business Plan
+                    Download Complete Plan
                   </Button>
                 )}
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* House Structure Progress */}
+        {businessCompleted && (
+          <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-accent/10 border-purple-500/20">
+            <div className="flex items-center gap-3 mb-4">
+              <Home className="w-8 h-8 text-purple-600" />
+              <div>
+                <h3 className="font-bold text-foreground">House Structure Progress</h3>
+                <p className="text-sm text-muted-foreground">
+                  Building your multi-generational wealth structure
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className={`p-4 rounded-lg ${courseProgress.business.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="w-5 h-5" />
+                  <span className="font-semibold">Business Entity</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {courseProgress.business.completed ? "✓ Established" : "Foundation layer"}
+                </p>
+              </div>
+              <div className={`p-4 rounded-lg ${courseProgress.trust.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <Lock className="w-5 h-5" />
+                  <span className="font-semibold">Trust Structure</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {courseProgress.trust.completed ? "✓ Configured" : "Protection layer"}
+                </p>
+              </div>
+              <div className={`p-4 rounded-lg ${courseProgress.grant.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileCheck className="w-5 h-5" />
+                  <span className="font-semibold">Grant Funding</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {courseProgress.grant.completed ? "✓ Ready" : "Growth layer"}
+                </p>
               </div>
             </div>
           </Card>
@@ -333,7 +460,7 @@ export default function Dashboard() {
           </TabsList>
 
           {/* Business Courses Tab */}
-          <TabsContent value="courses" className="space-y-4 mt-6">
+          <TabsContent value="courses" className="space-y-6 mt-6">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-bold text-foreground">
@@ -345,139 +472,253 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Business Setup Course */}
-              <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-accent">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 rounded-full bg-accent/10">
-                    <Shield className="w-8 h-8 text-accent" />
+            {/* Foundation Courses */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-accent" />
+                Foundation Courses
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Business Setup Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-accent">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-accent/10">
+                      <Shield className="w-8 h-8 text-accent" />
+                    </div>
+                    {courseProgress.business.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        Completed
+                      </span>
+                    )}
                   </div>
-                  {courseProgress.business.completed && (
-                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                      Completed
-                    </span>
-                  )}
-                </div>
-                <h3 className="font-bold text-foreground text-lg mb-2">Business Setup Course</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Learn to structure your business, create mission/vision statements, define your market, and generate legal formation documents.
-                </p>
-                <div className="space-y-2 mb-4">
-                  <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
-                  <p className="text-xs text-muted-foreground">
-                    <strong>Outputs:</strong> Entity selection, Mission/Vision, Customer profile, Products/Services, Legal documents, Operating Agreement
+                  <h3 className="font-bold text-foreground text-lg mb-2">Business Setup Course</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Learn to structure your business, create mission/vision statements, define your market, and generate legal formation documents.
                   </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-accent">
-                    {courseProgress.business.completed ? `${courseProgress.business.tokens} tokens earned` : "Earn 100+ tokens"}
-                  </span>
-                  <Button 
-                    size="sm" 
-                    className="min-h-[48px] min-w-[100px]"
-                    onClick={() => setActiveCourse("business")}
-                  >
-                    {courseProgress.business.completed ? "Review" : "Start"}
-                  </Button>
-                </div>
-              </Card>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Entity selection, Mission/Vision, Customer profile, Products/Services, Legal documents, Operating Agreement
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-accent">
+                      {courseProgress.business.completed ? `${courseProgress.business.tokens} tokens earned` : "Earn 100+ tokens"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[100px]"
+                      onClick={() => setActiveCourse("business")}
+                    >
+                      {courseProgress.business.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
 
-              {/* Financial Management Course */}
-              <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-green-600">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 rounded-full bg-green-600/10">
-                    <DollarSign className="w-8 h-8 text-green-600" />
+                {/* Financial Management Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-green-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-green-600/10">
+                      <DollarSign className="w-8 h-8 text-green-600" />
+                    </div>
+                    {courseProgress.financial.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        Completed
+                      </span>
+                    )}
                   </div>
-                  {courseProgress.financial.completed && (
-                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                      Completed
-                    </span>
-                  )}
-                </div>
-                <h3 className="font-bold text-foreground text-lg mb-2">Financial Management Course</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Master startup costs, revenue projections, expense management, cash flow, break-even analysis, and funding strategies.
-                </p>
-                <div className="space-y-2 mb-4">
-                  <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
-                  <p className="text-xs text-muted-foreground">
-                    <strong>Outputs:</strong> Startup costs, Revenue projections, Expense budget, Cash flow, Break-even analysis, Funding plan
+                  <h3 className="font-bold text-foreground text-lg mb-2">Financial Management Course</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Master startup costs, revenue projections, expense management, cash flow, break-even analysis, and funding strategies.
                   </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-green-600">
-                    {courseProgress.financial.completed ? `${courseProgress.financial.tokens} tokens earned` : "Earn 100+ tokens"}
-                  </span>
-                  <Button 
-                    size="sm" 
-                    className="min-h-[48px] min-w-[100px]"
-                    onClick={() => setActiveCourse("financial")}
-                  >
-                    {courseProgress.financial.completed ? "Review" : "Start"}
-                  </Button>
-                </div>
-              </Card>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Startup costs, Revenue projections, Expense budget, Cash flow, Break-even analysis, Funding plan
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-green-600">
+                      {courseProgress.financial.completed ? `${courseProgress.financial.tokens} tokens earned` : "Earn 100+ tokens"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[100px]"
+                      onClick={() => setActiveCourse("financial")}
+                    >
+                      {courseProgress.financial.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
 
-              {/* Entity Operations Course */}
-              <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 rounded-full bg-purple-600/10">
-                    <Users className="w-8 h-8 text-purple-600" />
+                {/* Entity Operations Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-purple-600/10">
+                      <Users className="w-8 h-8 text-purple-600" />
+                    </div>
+                    {courseProgress.operations.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        Completed
+                      </span>
+                    )}
                   </div>
-                  {courseProgress.operations.completed && (
-                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
-                      Completed
-                    </span>
-                  )}
-                </div>
-                <h3 className="font-bold text-foreground text-lg mb-2">Entity Operations Course</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Build organizational structure, SOPs, compliance checklists, contracts, and operations calendars for your business.
-                </p>
-                <div className="space-y-2 mb-4">
-                  <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
-                  <p className="text-xs text-muted-foreground">
-                    <strong>Outputs:</strong> Org structure, SOPs, Compliance checklist, Contract templates, Operations calendar
+                  <h3 className="font-bold text-foreground text-lg mb-2">Entity Operations Course</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Build organizational structure, SOPs, compliance checklists, contracts, and operations calendars for your business.
                   </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-purple-600">
-                    {courseProgress.operations.completed ? `${courseProgress.operations.tokens} tokens earned` : "Earn 100+ tokens"}
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Org structure, SOPs, Compliance checklist, Contract templates, Operations calendar
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-purple-600">
+                      {courseProgress.operations.completed ? `${courseProgress.operations.tokens} tokens earned` : "Earn 100+ tokens"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[100px]"
+                      onClick={() => setActiveCourse("operations")}
+                    >
+                      {courseProgress.operations.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            {/* House Structure Courses */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Home className="w-5 h-5 text-purple-600" />
+                House Structure Courses
+                {!businessCompleted && (
+                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded ml-2">
+                    Complete Business Setup first
                   </span>
-                  <Button 
-                    size="sm" 
-                    className="min-h-[48px] min-w-[100px]"
-                    onClick={() => setActiveCourse("operations")}
-                  >
-                    {courseProgress.operations.completed ? "Review" : "Start"}
-                  </Button>
-                </div>
-              </Card>
+                )}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Trust Simulator Course */}
+                <Card className={`p-6 hover:shadow-lg transition-shadow border-l-4 border-l-blue-600 ${!businessCompleted ? 'opacity-60' : ''}`}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-blue-600/10">
+                      <Lock className="w-8 h-8 text-blue-600" />
+                    </div>
+                    {courseProgress.trust.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        Completed
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Trust Simulator</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Learn trust fundamentals, structure your trust, define beneficiaries, and configure inheritance splits (60/40, 70/30). Connects to your business entity.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">4 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Trust Types:</strong> Revocable, Irrevocable, Family, Asset Protection, 98 Trust*, Foreign Trust*
+                    </p>
+                    <p className="text-xs text-amber-600">
+                      *98 and Foreign Trusts require approval
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-blue-600">
+                      {courseProgress.trust.completed ? `${courseProgress.trust.tokens} tokens earned` : "Earn 100+ tokens"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[100px]"
+                      onClick={() => setActiveCourse("trust")}
+                      disabled={!businessCompleted}
+                    >
+                      {!businessCompleted ? (
+                        <span className="flex items-center gap-1">
+                          <Lock className="w-4 h-4" />
+                          Locked
+                        </span>
+                      ) : courseProgress.trust.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* Grant Writing Course */}
+                <Card className={`p-6 hover:shadow-lg transition-shadow border-l-4 border-l-amber-600 ${!businessCompleted ? 'opacity-60' : ''}`}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-amber-600/10">
+                      <FileCheck className="w-8 h-8 text-amber-600" />
+                    </div>
+                    {courseProgress.grant.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        Completed
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">Grant Writing Simulator</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Master grant research, proposal writing, budgeting, and evaluation planning. Generate complete grant proposal drafts for your entity.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules • Lessons + Quizzes + Worksheets</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> Organization profile, Program description, Problem statement, Goals/Objectives, Budget, Evaluation plan
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-amber-600">
+                      {courseProgress.grant.completed ? `${courseProgress.grant.tokens} tokens earned` : "Earn 100+ tokens"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[100px]"
+                      onClick={() => setActiveCourse("grant")}
+                      disabled={!businessCompleted}
+                    >
+                      {!businessCompleted ? (
+                        <span className="flex items-center gap-1">
+                          <Lock className="w-4 h-4" />
+                          Locked
+                        </span>
+                      ) : courseProgress.grant.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+              </div>
             </div>
 
             {/* Course Benefits */}
             <Card className="p-6 mt-6 bg-gradient-to-br from-primary/5 to-accent/5">
               <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                 <GraduationCap className="w-5 h-5" />
-                What You'll Get
+                What You'll Build: The House Structure
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div className="space-y-2">
-                  <p className="font-semibold text-foreground">Complete Business Plan</p>
+                  <p className="font-semibold text-foreground">1. Business Entity</p>
                   <p className="text-sm text-muted-foreground">
-                    A comprehensive document covering your business structure, market, offerings, and strategy.
+                    Foundation of your House - LLC, Corp, or Trust
                   </p>
                 </div>
-                <div className="space-y-2">
-                  <p className="font-semibold text-foreground">Financial Projections</p>
-                  <p className="text-sm text-muted-foreground">
-                    Startup costs, revenue forecasts, expense budgets, and break-even analysis.
-                  </p>
+                <div className="flex items-center justify-center">
+                  <ArrowRight className="w-6 h-6 text-muted-foreground" />
                 </div>
                 <div className="space-y-2">
-                  <p className="font-semibold text-foreground">Operations Manual</p>
+                  <p className="font-semibold text-foreground">2. Trust Structure</p>
                   <p className="text-sm text-muted-foreground">
-                    SOPs, compliance checklists, contract templates, and annual calendar.
+                    Protection layer with inheritance splits (60/40, 70/30)
+                  </p>
+                </div>
+                <div className="flex items-center justify-center">
+                  <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <div className="space-y-2">
+                  <p className="font-semibold text-foreground">3. Grant Funding</p>
+                  <p className="text-sm text-muted-foreground">
+                    Growth capital for your nonprofit or social enterprise
                   </p>
                 </div>
               </div>
@@ -636,9 +877,15 @@ export default function Dashboard() {
             ) : (
               <Card className="p-12 text-center">
                 <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  No trust relationships established yet.
+                <p className="text-muted-foreground mb-4">
+                  No trust relationships established yet. Complete the Trust Simulator to configure your trust structure.
                 </p>
+                {businessCompleted && (
+                  <Button className="gap-2" onClick={() => setActiveCourse("trust")}>
+                    <GraduationCap className="w-4 h-4" />
+                    Start Trust Simulator
+                  </Button>
+                )}
               </Card>
             )}
           </TabsContent>

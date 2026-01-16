@@ -569,11 +569,35 @@
 
 
 ## Phase 40: Add Nonprofit Entity Types
-- [ ] Add 501(c)(3) entity type to Business Setup Course (disabled, Coming Soon)
-- [ ] Add 508(c)(1)(a) entity type to Business Setup Course (disabled, Coming Soon)
-- [ ] Prepare pricing structure placeholders for future activation
+- [x] Add 501(c)(3) entity type to Business Setup Course (disabled, Approval Required)
+- [x] Add 508(c)(1)(a) entity type to Business Setup Course (disabled, Approval Required)
+- [x] Prepare pricing structure placeholders for future activation
 
 
 ## Phase 41: Update Nonprofit Entity Labels
 - [x] Change "Coming Soon" to "Approval Required" with conditions note
 - [x] Add note about conditions for restricted options
+
+
+## Phase 42: Trust Simulator Course
+- [x] Create TrustCourse component with different trust types
+- [x] Add trust types: Revocable, Irrevocable, Living Trust, Testamentary, Family, Asset Protection
+- [x] Add 98 Trust type (Approval Required)
+- [x] Add Foreign Trust type (Approval Required)
+- [x] Connect to Business Simulator entity selection
+- [x] Include lessons on trust formation, management, and inheritance
+- [x] Add worksheets for trust document generation
+
+## Phase 43: Grant Writing Simulator Course
+- [x] Create GrantWritingCourse component
+- [x] Connect to established entity from Business Simulator
+- [x] Include lessons on grant research, proposal writing, budgeting
+- [x] Add worksheets for grant proposal generation
+- [x] Include grant tracking and submission guidance
+
+## Phase 44: House Structure Integration
+- [x] Create House data model for inheritance structure
+- [x] Implement 60/40 split configuration
+- [x] Implement 70/30 split configuration
+- [x] Connect Business, Trust, and Grant simulators to House
+- [x] Build closed-loop system foundation for first House (Russell family)
