@@ -44,7 +44,7 @@ const menuItems = [
   { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing" },
   { icon: Gavel, label: "Board Meetings", path: "/board-meetings" },
   { icon: FileText, label: "Document Vault", path: "/vault" },
-  { icon: Bot, label: "AI Assistants", path: "/agents" },
+  { icon: Bot, label: "Agents", path: "/agents" },
   { icon: Share2, label: "Social Media", path: "/social-media" },
 ];
 

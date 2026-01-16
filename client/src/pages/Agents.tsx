@@ -317,9 +317,9 @@ export default function Agents() {
         <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)] gap-6 p-4">
           <div className="text-center space-y-4">
             <Bot className="w-16 h-16 mx-auto text-muted-foreground" />
-            <h2 className="text-2xl font-bold">AI Assistants</h2>
+            <h2 className="text-2xl font-bold">Agents</h2>
             <p className="text-muted-foreground max-w-md">
-              Initialize the AI agent system to get intelligent assistants for operations,
+              Initialize the agent system to get intelligent agents for operations,
               support, education, analytics, governance, finance, and media.
             </p>
           </div>
@@ -334,7 +334,7 @@ export default function Agents() {
             ) : (
               <Sparkles className="w-4 h-4" />
             )}
-            Initialize AI Agents
+            Initialize Agents
           </Button>
         </div>
       </DashboardLayout>
@@ -740,7 +740,7 @@ export default function Agents() {
               <div className="p-4 border-b bg-white">
                 <h1 className="text-2xl font-bold flex items-center gap-2">
                   <Bot className="w-6 h-6" />
-                  AI Assistants
+                  Agents
                 </h1>
               </div>
               {renderBotList()}
@@ -751,7 +751,7 @@ export default function Agents() {
             renderChat()
           ) : (
             <div className="h-full flex items-center justify-center">
-              <p className="text-muted-foreground">Select a agent to start</p>
+              <p className="text-muted-foreground">Select an agent to start</p>
             </div>
           )}
         </div>
@@ -763,7 +763,7 @@ export default function Agents() {
             <div className="p-4 border-b">
               <h2 className="font-semibold flex items-center gap-2">
                 <Bot className="w-4 h-4" />
-                AI Assistants
+                Agents
               </h2>
             </div>
             <ScrollArea className="flex-1">
@@ -915,9 +915,9 @@ export default function Agents() {
               <Card className="flex-1 flex items-center justify-center">
                 <div className="text-center space-y-4">
                   <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground" />
-                  <h3 className="text-lg font-medium">Select a Bot</h3>
+                  <h3 className="text-lg font-medium">Select an Agent</h3>
                   <p className="text-muted-foreground max-w-sm">
-                    Choose an AI assistant from the sidebar to start chatting
+                    Choose an agent from the sidebar to start chatting
                   </p>
                 </div>
               </Card>

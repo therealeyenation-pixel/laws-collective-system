@@ -1507,3 +1507,10 @@
 ## Phase 66: Authentication Redirect Fix
 
 - [x] Fix "Start Your Journey" login loop - should redirect to /dashboard after login, not back to /
+
+
+## Phase 67: Agents Page Fix
+
+- [x] Rename "AI Assistants" to "Agents" throughout the UI
+- [x] Fix missing agents table in database schema
+- [x] Ensure Initialize Agents button works correctly
