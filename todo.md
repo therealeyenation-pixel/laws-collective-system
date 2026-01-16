@@ -1547,3 +1547,12 @@
 ## Phase 72: Add QA/QC Position
 
 - [x] Add open QA/QC Department Manager position
+
+
+## Phase 73: Owner Setup & Next Steps
+
+- [x] Fix Owner Setup access denied issue - allow owner to access (added admin role check)
+- [x] Add simulators to Academy/Learning Center page
+- [ ] Wire Revenue Sharing to real data
+- [ ] Build Member Training Modules
+- [ ] Add Board Meeting Notifications

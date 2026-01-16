@@ -19,10 +19,14 @@ import {
   Pen,
   Briefcase,
   Music,
-  Languages
+  Languages,
+  Shield,
+  FileText,
+  DollarSign
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-type TabType = "overview" | "houses" | "modules" | "languages" | "courses";
+type TabType = "overview" | "houses" | "modules" | "languages" | "courses" | "simulators";
 
 const moduleIcons: Record<string, React.ReactNode> = {
   "science-origin-observation": <TreePine className="w-5 h-5" />,
@@ -59,6 +63,7 @@ export default function AcademyDashboard() {
     { id: "modules" as TabType, label: "Divine STEM", icon: <BookOpen className="w-4 h-4" /> },
     { id: "languages" as TabType, label: "Languages", icon: <Globe2 className="w-4 h-4" /> },
     { id: "courses" as TabType, label: "Courses", icon: <GraduationCap className="w-4 h-4" /> },
+    { id: "simulators" as TabType, label: "Simulators", icon: <Calculator className="w-4 h-4" /> },
   ];
 
   return (
@@ -473,6 +478,249 @@ export default function AcademyDashboard() {
                           </div>
                         </div>
                       ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Simulators Tab */}
+            {activeTab === "simulators" && (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+                  <h2 className="text-xl font-bold text-blue-900 mb-2 flex items-center gap-2">
+                    <Calculator className="w-6 h-6" />
+                    Business Simulators
+                  </h2>
+                  <p className="text-blue-800">
+                    Interactive simulations to practice real-world business scenarios. 
+                    Complete simulators to earn LUV tokens and unlock advanced features.
+                  </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Trust Formation Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-emerald-100 rounded-xl">
+                        <Shield className="w-6 h-6 text-emerald-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Trust Formation</h3>
+                        <p className="text-sm text-gray-500">12 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Learn to create and manage family trusts, asset protection strategies, and estate planning.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        500 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Business Plan Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-blue-100 rounded-xl">
+                        <Briefcase className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Business Planning</h3>
+                        <p className="text-sm text-gray-500">10 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Create comprehensive business plans, financial projections, and market analysis.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-blue-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        400 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Grant Writing Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-purple-100 rounded-xl">
+                        <Scroll className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Grant Writing</h3>
+                        <p className="text-sm text-gray-500">8 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Master grant research, proposal writing, and funding strategies for nonprofits.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-purple-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        450 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Contracts Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-amber-100 rounded-xl">
+                        <FileText className="w-6 h-6 text-amber-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Contracts & Agreements</h3>
+                        <p className="text-sm text-gray-500">10 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Learn contract law basics, negotiation tactics, and agreement templates.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-amber-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        400 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Insurance Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-red-100 rounded-xl">
+                        <Shield className="w-6 h-6 text-red-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Insurance Planning</h3>
+                        <p className="text-sm text-gray-500">12 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Understand insurance types, coverage analysis, and risk management strategies.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-red-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        500 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Blockchain Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-indigo-100 rounded-xl">
+                        <Code className="w-6 h-6 text-indigo-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Blockchain & Web3</h3>
+                        <p className="text-sm text-gray-500">10 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Explore blockchain technology, smart contracts, and decentralized finance.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-indigo-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        550 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* DBA & Trademark Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-teal-100 rounded-xl">
+                        <Briefcase className="w-6 h-6 text-teal-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">DBA & Trademark</h3>
+                        <p className="text-sm text-gray-500">6 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Register business names, file trademarks, and protect your brand identity.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-teal-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        300 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Financial Literacy Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-green-100 rounded-xl">
+                        <DollarSign className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Financial Literacy</h3>
+                        <p className="text-sm text-gray-500">15 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Build budgets, understand investments, and master personal finance fundamentals.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-green-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        600 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Operations Simulator */}
+                  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-3 bg-orange-100 rounded-xl">
+                        <Wrench className="w-6 h-6 text-orange-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">Business Operations</h3>
+                        <p className="text-sm text-gray-500">10 modules</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Learn operational management, process optimization, and team coordination.
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-orange-600 font-medium">
+                        <Award className="w-4 h-4" />
+                        400 tokens
+                      </span>
+                      <Button size="sm" variant="outline" onClick={() => window.location.href = "/getting-started"}>
+                        Start
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

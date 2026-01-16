@@ -28,8 +28,10 @@ import { ENV } from "../_core/env";
 // ============================================
 
 // Check if user is the system owner
-function isOwner(userId: string): boolean {
-  return userId === ENV.ownerOpenId;
+// Uses OWNER_OPEN_ID env var, but also allows admin role users
+function isOwner(userId: string, userRole?: string): boolean {
+  // Check if user matches the owner OpenID OR has admin role
+  return userId === ENV.ownerOpenId || userRole === 'admin';
 }
 
 // Generate Registry ID Number (RIN) for house
@@ -222,7 +224,13 @@ export const ownerHouseSetupRouter = router({
   // Check if current user is the system owner
   checkOwnerStatus: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.openId;
-    const ownerStatus = isOwner(userId);
+    const userRole = ctx.user.role;
+    const ownerStatus = isOwner(userId, userRole);
+    
+    console.log("[Owner Check] User OpenID:", userId);
+    console.log("[Owner Check] User Role:", userRole);
+    console.log("[Owner Check] ENV Owner OpenID:", ENV.ownerOpenId);
+    console.log("[Owner Check] Is Owner:", ownerStatus);
     
     return {
       isOwner: ownerStatus,
@@ -237,7 +245,8 @@ export const ownerHouseSetupRouter = router({
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
     const userId = ctx.user.openId;
-    if (!isOwner(userId)) {
+    const userRole = ctx.user.role;
+    if (!isOwner(userId, userRole)) {
       throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can access this" });
     }
 
@@ -306,7 +315,8 @@ export const ownerHouseSetupRouter = router({
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       const userId = ctx.user.openId;
-      if (!isOwner(userId)) {
+      const userRole = ctx.user.role;
+      if (!isOwner(userId, userRole)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can use this bypass" });
       }
 
@@ -465,7 +475,8 @@ export const ownerHouseSetupRouter = router({
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       const userId = ctx.user.openId;
-      if (!isOwner(userId)) {
+      const userRole = ctx.user.role;
+      if (!isOwner(userId, userRole)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can import businesses" });
       }
 
@@ -553,7 +564,8 @@ export const ownerHouseSetupRouter = router({
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       const userId = ctx.user.openId;
-      if (!isOwner(userId)) {
+      const userRole = ctx.user.role;
+      if (!isOwner(userId, userRole)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can add heirs" });
       }
 
@@ -611,7 +623,8 @@ export const ownerHouseSetupRouter = router({
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       const userId = ctx.user.openId;
-      if (!isOwner(userId)) {
+      const userRole = ctx.user.role;
+      if (!isOwner(userId, userRole)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can update House configuration" });
       }
 
@@ -677,12 +690,13 @@ export const ownerHouseSetupRouter = router({
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
-    const userId = ctx.user.openId;
-    if (!isOwner(userId)) {
+  const userId = ctx.user.openId;
+    const userRole = ctx.user.role;
+    if (!isOwner(userId, userRole)) {
       throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can access this" });
     }
 
-    // Get all businesses owned by the user that aren't already linked to a house
+    // Check for existing Genesis Housee user that aren't already linked to a house
     const allBusinesses = await db
       .select()
       .from(businessEntities)
@@ -739,7 +753,8 @@ export const ownerHouseSetupRouter = router({
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       const userId = ctx.user.openId;
-      if (!isOwner(userId)) {
+      const userRole = ctx.user.role;
+      if (!isOwner(userId, userRole)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can activate the Genesis House" });
       }
 
@@ -986,7 +1001,8 @@ export const ownerHouseSetupRouter = router({
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
     const userId = ctx.user.openId;
-    if (!isOwner(userId)) {
+    const userRole = ctx.user.role;
+    if (!isOwner(userId, userRole)) {
       throw new TRPCError({ code: "FORBIDDEN", message: "Only the system owner can access the Genesis Declaration" });
     }
 
