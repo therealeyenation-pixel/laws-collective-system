@@ -566,3 +566,9 @@
 ## Phase 39: Fix Login Redirect Loop
 - [x] Fix login redirect loop on protected pages
 - [x] Ensure authentication state persists correctly
+
+
+## Phase 40: Add Nonprofit Entity Types
+- [ ] Add 501(c)(3) entity type to Business Setup Course (disabled, Coming Soon)
+- [ ] Add 508(c)(1)(a) entity type to Business Setup Course (disabled, Coming Soon)
+- [ ] Prepare pricing structure placeholders for future activation

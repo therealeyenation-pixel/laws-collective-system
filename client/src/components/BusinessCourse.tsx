@@ -63,7 +63,7 @@ interface WorksheetContent {
     label: string;
     type: "text" | "textarea" | "select";
     placeholder?: string;
-    options?: string[];
+    options?: { value: string; label: string; disabled?: boolean; comingSoon?: boolean }[] | string[];
     required?: boolean;
   }[];
   outputTemplate: string;
@@ -184,7 +184,15 @@ const businessSetupModules: CourseModule[] = [
       description: "Based on what you've learned, let's determine the best entity type for your business.",
       fields: [
         { id: "businessName", label: "Business Name", type: "text", placeholder: "Enter your business name", required: true },
-        { id: "entityType", label: "Entity Type", type: "select", options: ["LLC", "Corporation", "S-Corporation", "Nonprofit 501(c)(3)", "Nonprofit 508(c)(1)(a)", "Trust", "Sole Proprietorship"], required: true },
+        { id: "entityType", label: "Entity Type", type: "select", options: [
+            { value: "LLC", label: "LLC" },
+            { value: "Corporation", label: "Corporation" },
+            { value: "S-Corporation", label: "S-Corporation" },
+            { value: "Trust", label: "Trust" },
+            { value: "Sole Proprietorship", label: "Sole Proprietorship" },
+            { value: "501c3", label: "501(c)(3) Nonprofit", disabled: true, comingSoon: true },
+            { value: "508c1a", label: "508(c)(1)(a) Faith-Based Organization", disabled: true, comingSoon: true },
+          ], required: true },
       ],
       outputTemplate: "Entity Selection: {{businessName}} will be structured as a {{entityType}}.",
     } as WorksheetContent,
@@ -837,11 +845,28 @@ export default function BusinessCourse({ onComplete, onExit }: BusinessCoursePro
                     <SelectValue placeholder="Select an option" />
                   </SelectTrigger>
                   <SelectContent>
-                    {field.options?.map((opt) => (
-                      <SelectItem key={opt} value={opt}>
-                        {opt}
-                      </SelectItem>
-                    ))}
+                    {field.options?.map((opt) => {
+                      const isObject = typeof opt === 'object';
+                      const value = isObject ? opt.value : opt;
+                      const label = isObject ? opt.label : opt;
+                      const disabled = isObject ? opt.disabled : false;
+                      const comingSoon = isObject ? opt.comingSoon : false;
+                      return (
+                        <SelectItem 
+                          key={value} 
+                          value={value}
+                          disabled={disabled}
+                          className={disabled ? "opacity-50" : ""}
+                        >
+                          {label}
+                          {comingSoon && (
+                            <span className="ml-2 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">
+                              Coming Soon
+                            </span>
+                          )}
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               )}
