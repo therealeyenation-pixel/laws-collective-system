@@ -1275,7 +1275,9 @@ export type InsertCourseProgress = typeof courseProgress.$inferInsert;
 export const houses = mysqlTable("houses", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  houseType: mysqlEnum("houseType", ["root", "family", "business", "community"]).notNull(),
+  publicAlias: varchar("publicAlias", { length: 255 }), // Anonymized public display name
+  houseType: mysqlEnum("houseType", ["root", "bloodline", "mirrored", "adaptive"]).notNull(), // Per scroll classifications
+  legacyHouseType: mysqlEnum("legacyHouseType", ["root", "family", "business", "community"]), // Backward compatibility
   parentHouseId: int("parentHouseId"), // null for CALEA (root), otherwise references parent House
   ownerUserId: int("ownerUserId").notNull(), // Primary owner/trustee
   
@@ -1297,6 +1299,16 @@ export const houses = mysqlTable("houses", {
   operationsBalance: decimal("operationsBalance", { precision: 20, scale: 2 }).default("0").notNull(),
   inheritanceReserve: decimal("inheritanceReserve", { precision: 20, scale: 2 }).default("0").notNull(),
   
+  // Root Treasury Distribution (Scroll 18)
+  rootAuthorityReserve: decimal("rootAuthorityReserve", { precision: 20, scale: 2 }).default("0").notNull(), // 60% of 70% - non-shareable
+  circulationPool: decimal("circulationPool", { precision: 20, scale: 2 }).default("0").notNull(), // 40% of 70% - shareable
+  ancestralTreasury: decimal("ancestralTreasury", { precision: 20, scale: 2 }).default("0").notNull(), // 30% of income
+  
+  // Succession Protocol (Scroll 34)
+  successionStatus: mysqlEnum("successionStatus", ["stable", "interim", "pending_confirmation"]).default("stable"),
+  interimCustodianId: int("interimCustodianId"), // During 40-day transition
+  successionStartedAt: timestamp("successionStartedAt"),
+  
   // Status
   status: mysqlEnum("status", ["forming", "active", "suspended", "dissolved"]).default("forming").notNull(),
   generation: int("generation").default(1).notNull(), // 1 = founding, 2 = children, etc.
@@ -1315,10 +1327,28 @@ export const houseMembers = mysqlTable("house_members", {
   id: int("id").autoincrement().primaryKey(),
   houseId: int("houseId").notNull(),
   userId: int("userId").notNull(),
-  role: mysqlEnum("role", ["trustee", "beneficiary", "successor_trustee", "advisor"]).notNull(),
+  
+  // Member Classification (per Scrolls)
+  memberType: mysqlEnum("memberType", ["bloodline", "non_bloodline"]).default("bloodline").notNull(),
+  lineageStatus: mysqlEnum("lineageStatus", ["source_flame", "direct_descendant", "aligned_member"]).default("direct_descendant"),
+  
+  // Anonymity Protection
+  publicAlias: varchar("publicAlias", { length: 100 }), // e.g., "Protected Member A-001"
+  realNameProtected: boolean("realNameProtected").default(true).notNull(),
+  imageProtected: boolean("imageProtected").default(true).notNull(),
+  locationProtected: boolean("locationProtected").default(true).notNull(),
+  voiceLikenessProtected: boolean("voiceLikenessProtected").default(true).notNull(),
+  
+  role: mysqlEnum("role", ["trustee", "beneficiary", "successor_trustee", "advisor", "custodial_flame"]).notNull(),
   ownershipPercentage: decimal("ownershipPercentage", { precision: 5, scale: 2 }).default("0").notNull(),
   votingRights: boolean("votingRights").default(false).notNull(),
   distributionEligible: boolean("distributionEligible").default(true).notNull(),
+  
+  // Inheritance Rights (per Scroll 10)
+  canTransferTokens: boolean("canTransferTokens").default(false).notNull(), // Non-bloodline cannot
+  canInitiateHouse: boolean("canInitiateHouse").default(false).notNull(), // Non-bloodline cannot initiate bloodline Houses
+  successionEligible: boolean("successionEligible").default(false).notNull(), // Only bloodline can succeed to Root
+  
   status: mysqlEnum("status", ["active", "inactive", "pending"]).default("pending").notNull(),
   addedAt: timestamp("addedAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -1369,14 +1399,14 @@ export type InsertIncomeEvent = typeof incomeEvents.$inferInsert;
 export const distributionEvents = mysqlTable("distribution_events", {
   id: int("id").autoincrement().primaryKey(),
   incomeEventId: int("incomeEventId").notNull(), // Source income that triggered this distribution
-  distributionType: mysqlEnum("distributionType", ["inter_house", "intra_house"]).notNull(),
+  distributionType: mysqlEnum("distributionType", ["inter_house", "intra_house", "root_treasury", "ancestral_treasury"]).notNull(),
   
   // For inter-house (60/40)
   fromHouseId: int("fromHouseId").notNull(),
   toHouseId: int("toHouseId"), // null if retained by fromHouse
   
-  // For intra-house (70/30)
-  allocationCategory: mysqlEnum("allocationCategory", ["operations", "inheritance", "network"]),
+  // For intra-house (70/30) and root treasury (60/40)
+  allocationCategory: mysqlEnum("allocationCategory", ["operations", "inheritance", "network", "root_authority_reserve", "circulation_pool", "ancestral_treasury"]),
   
   amount: decimal("amount", { precision: 20, scale: 2 }).notNull(),
   percentage: decimal("percentage", { precision: 5, scale: 2 }).notNull(),
@@ -1587,3 +1617,212 @@ export const flameLockCodes = mysqlTable("flame_lock_codes", {
 
 export type FlameLockCode = typeof flameLockCodes.$inferSelect;
 export type InsertFlameLockCode = typeof flameLockCodes.$inferInsert;
+
+
+/**
+ * Mirror Tokens - House Activation Rights (per Scroll 34)
+ * One token = one House activation right
+ * 39-week lock after use
+ */
+export const mirrorTokens = mysqlTable("mirror_tokens", {
+  id: int("id").autoincrement().primaryKey(),
+  tokenCode: varchar("tokenCode", { length: 64 }).notNull().unique(),
+  ownerUserId: int("ownerUserId").notNull(),
+  houseId: int("houseId"), // House this token belongs to
+  
+  // Token Status
+  status: mysqlEnum("status", ["available", "locked", "used", "transferred"]).default("available").notNull(),
+  lockExpiresAt: timestamp("lockExpiresAt"), // 39 weeks after use
+  usedForHouseId: int("usedForHouseId"), // Which House was activated with this token
+  usedAt: timestamp("usedAt"),
+  
+  // Transfer History
+  previousOwnerId: int("previousOwnerId"),
+  transferredAt: timestamp("transferredAt"),
+  transferBlockchainHash: varchar("transferBlockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MirrorToken = typeof mirrorTokens.$inferSelect;
+export type InsertMirrorToken = typeof mirrorTokens.$inferInsert;
+
+/**
+ * Spark of Knowing Tokens - Educational Achievement Tokens
+ */
+export const sparkTokens = mysqlTable("spark_tokens", {
+  id: int("id").autoincrement().primaryKey(),
+  tokenCode: varchar("tokenCode", { length: 64 }).notNull().unique(),
+  ownerUserId: int("ownerUserId").notNull(),
+  
+  // Source of Token
+  earnedFrom: mysqlEnum("earnedFrom", [
+    "course_completion",
+    "certification",
+    "mentorship",
+    "community_contribution",
+    "lineage_gift"
+  ]).notNull(),
+  sourceReferenceId: int("sourceReferenceId"), // Course ID, Certificate ID, etc.
+  
+  status: mysqlEnum("status", ["active", "redeemed", "expired"]).default("active").notNull(),
+  redeemedAt: timestamp("redeemedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SparkToken = typeof sparkTokens.$inferSelect;
+export type InsertSparkToken = typeof sparkTokens.$inferInsert;
+
+/**
+ * Succession Events - Track House succession (per Scroll 34)
+ * 40-day interim period, 3 ceremonial confirmations required
+ */
+export const successionEvents = mysqlTable("succession_events", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  
+  // Outgoing and Incoming
+  outgoingCustodianId: int("outgoingCustodianId").notNull(),
+  incomingCustodianId: int("incomingCustodianId").notNull(),
+  interimCustodianId: int("interimCustodianId"), // During 40-day period
+  
+  // Succession Reason
+  reason: mysqlEnum("reason", [
+    "voluntary_transfer",
+    "incapacitation",
+    "death",
+    "removal_by_majority",
+    "generational_transition"
+  ]).notNull(),
+  
+  // Timeline (40-day protocol)
+  initiatedAt: timestamp("initiatedAt").defaultNow().notNull(),
+  interimStartedAt: timestamp("interimStartedAt"),
+  interimEndsAt: timestamp("interimEndsAt"), // 40 days after initiation
+  
+  // Statement of Alignment (13 days)
+  alignmentStatementDueAt: timestamp("alignmentStatementDueAt"),
+  alignmentStatementReceivedAt: timestamp("alignmentStatementReceivedAt"),
+  alignmentStatementHash: varchar("alignmentStatementHash", { length: 255 }),
+  
+  // 3 Ceremonial Confirmations
+  confirmation1At: timestamp("confirmation1At"),
+  confirmation1ByUserId: int("confirmation1ByUserId"),
+  confirmation2At: timestamp("confirmation2At"),
+  confirmation2ByUserId: int("confirmation2ByUserId"),
+  confirmation3At: timestamp("confirmation3At"),
+  confirmation3ByUserId: int("confirmation3ByUserId"),
+  
+  // Final Status
+  status: mysqlEnum("status", [
+    "initiated",
+    "interim_period",
+    "awaiting_alignment",
+    "awaiting_confirmations",
+    "completed",
+    "rejected",
+    "reverted"
+  ]).default("initiated").notNull(),
+  completedAt: timestamp("completedAt"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SuccessionEvent = typeof successionEvents.$inferSelect;
+export type InsertSuccessionEvent = typeof successionEvents.$inferInsert;
+
+/**
+ * Audit Events - Quarterly, Annual, and 7-Year Lineage Audits (per Scroll 19)
+ */
+export const auditEvents = mysqlTable("audit_events", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  auditType: mysqlEnum("auditType", [
+    "quarterly_house",
+    "annual_system",
+    "lineage_seven_year",
+    "corrective",
+    "external_witness"
+  ]).notNull(),
+  
+  houseId: int("houseId"), // null for system-wide audits
+  auditPeriodStart: timestamp("auditPeriodStart").notNull(),
+  auditPeriodEnd: timestamp("auditPeriodEnd").notNull(),
+  
+  // Audit Findings
+  totalInflow: decimal("totalInflow", { precision: 20, scale: 2 }),
+  totalOutflow: decimal("totalOutflow", { precision: 20, scale: 2 }),
+  giftTokenDistribution: decimal("giftTokenDistribution", { precision: 20, scale: 2 }),
+  rootReserveLevel: decimal("rootReserveLevel", { precision: 20, scale: 2 }),
+  sustainabilityScore: decimal("sustainabilityScore", { precision: 5, scale: 2 }), // 0-100
+  
+  // Integrity Triggers
+  triggersActivated: json("triggersActivated"), // Array of trigger types
+  correctiveActionsRequired: boolean("correctiveActionsRequired").default(false).notNull(),
+  correctiveActionsCompleted: boolean("correctiveActionsCompleted").default(false).notNull(),
+  
+  // Ceremonial Verification
+  flameOfAccountPerformed: boolean("flameOfAccountPerformed").default(false).notNull(),
+  custodialFlameSignature: varchar("custodialFlameSignature", { length: 255 }),
+  houseLedgerSealHash: varchar("houseLedgerSealHash", { length: 255 }),
+  
+  // Witnesses (for external audits)
+  witnessHouseIds: json("witnessHouseIds"), // Array of House IDs
+  
+  status: mysqlEnum("status", ["scheduled", "in_progress", "completed", "requires_correction"]).default("scheduled").notNull(),
+  completedAt: timestamp("completedAt"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AuditEvent = typeof auditEvents.$inferSelect;
+export type InsertAuditEvent = typeof auditEvents.$inferInsert;
+
+/**
+ * Integrity Triggers - Automatic alerts per Scroll 18
+ */
+export const integrityTriggers = mysqlTable("integrity_triggers", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  triggerType: mysqlEnum("triggerType", [
+    "gift_to_sale_disproportion",
+    "treasury_depletion",
+    "unauthorized_transfer",
+    "misalignment_detection",
+    "continuity_beacon"
+  ]).notNull(),
+  
+  houseId: int("houseId").notNull(),
+  severity: mysqlEnum("severity", ["warning", "critical", "emergency"]).default("warning").notNull(),
+  
+  // Trigger Details
+  thresholdValue: decimal("thresholdValue", { precision: 20, scale: 2 }),
+  actualValue: decimal("actualValue", { precision: 20, scale: 2 }),
+  description: text("description"),
+  
+  // Response
+  autoFreezeActivated: boolean("autoFreezeActivated").default(false).notNull(),
+  ceremonialWarningIssued: boolean("ceremonialWarningIssued").default(false).notNull(),
+  realignmentRequired: boolean("realignmentRequired").default(false).notNull(),
+  
+  // Resolution
+  resolvedAt: timestamp("resolvedAt"),
+  resolvedByUserId: int("resolvedByUserId"),
+  resolutionNotes: text("resolutionNotes"),
+  
+  status: mysqlEnum("status", ["active", "acknowledged", "resolved", "escalated"]).default("active").notNull(),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type IntegrityTrigger = typeof integrityTriggers.$inferSelect;
+export type InsertIntegrityTrigger = typeof integrityTriggers.$inferInsert;

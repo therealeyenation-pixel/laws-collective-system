@@ -98,13 +98,68 @@ async function executeDistribution(incomeEventId: number, houseId: number, amoun
   const intraHouseOperations = parseFloat(house.intraHouseOperations);
   const intraHouseInheritance = parseFloat(house.intraHouseInheritance);
   
-  // STEP 1: Inter-House Distribution (60/40)
-  const retainedAmount = amount * (interHouseSplit / 100);
-  const networkAmount = amount * (interHouseDistribution / 100);
+  // STEP 1: Root Distribution (70/30 per Scroll 18)
+  // 70% goes to Root Treasury, 30% to Ancestral Treasury Wallet
+  const rootTreasuryAmount = amount * 0.70;
+  const ancestralTreasuryAmount = amount * 0.30;
   
-  // Record retained amount
+  // STEP 2: Internal Division of 70% Root Treasury (60/40 per Scroll 18)
+  // 60% → Root Authority Reserve (non-shareable)
+  // 40% → Circulation Pool (shareable for token rewards, system expansion)
+  const rootAuthorityReserve = rootTreasuryAmount * 0.60;
+  const circulationPool = rootTreasuryAmount * 0.40;
+  
+  // Inter-House Distribution from Circulation Pool
+  const retainedAmount = circulationPool * (interHouseSplit / 100);
+  const networkAmount = circulationPool * (interHouseDistribution / 100);
+  
+  // Record Root Authority Reserve (non-shareable 60% of 70%)
+  const rootReserveHash = await recordToBlockchain("allocation_change", houseId, {
+    type: "root_authority_reserve",
+    amount: rootAuthorityReserve,
+    percentage: 42, // 60% of 70%
+    description: "Non-shareable Root Authority Reserve",
+  });
+  
+  await db.insert(distributionEvents).values({
+    incomeEventId,
+    distributionType: "root_treasury",
+    fromHouseId: houseId,
+    toHouseId: houseId,
+    allocationCategory: "root_authority_reserve",
+    amount: String(rootAuthorityReserve),
+    percentage: "42",
+    description: "Root Authority Reserve (60% of 70% Root Treasury) - Non-shareable",
+    status: "executed",
+    executedAt: new Date(),
+    blockchainHash: rootReserveHash,
+  });
+  
+  // Record Ancestral Treasury (30%)
+  const ancestralHash = await recordToBlockchain("allocation_change", houseId, {
+    type: "ancestral_treasury",
+    amount: ancestralTreasuryAmount,
+    percentage: 30,
+    description: "Ancestral Treasury Wallet",
+  });
+  
+  await db.insert(distributionEvents).values({
+    incomeEventId,
+    distributionType: "ancestral_treasury",
+    fromHouseId: houseId,
+    toHouseId: houseId,
+    allocationCategory: "ancestral_treasury",
+    amount: String(ancestralTreasuryAmount),
+    percentage: "30",
+    description: "Ancestral Treasury Wallet (30% of income)",
+    status: "executed",
+    executedAt: new Date(),
+    blockchainHash: ancestralHash,
+  });
+  
+  // Record Circulation Pool retained amount
   const retainedHash = await recordToBlockchain("allocation_change", houseId, {
-    type: "inter_house_retained",
+    type: "circulation_pool_retained",
     amount: retainedAmount,
     percentage: interHouseSplit,
   });
@@ -296,7 +351,7 @@ export const luvLedgerAssetManagerRouter = router({
   createHouse: protectedProcedure
     .input(z.object({
       name: z.string().min(1),
-      houseType: z.enum(["root", "family", "business", "community"]),
+      houseType: z.enum(["root", "bloodline", "mirrored", "adaptive"]),
       parentHouseId: z.number().nullable().optional(),
       trustName: z.string().optional(),
       trustType: z.enum(["living", "revocable", "irrevocable", "dynasty"]).optional(),

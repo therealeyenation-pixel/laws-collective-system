@@ -694,3 +694,31 @@
   - [x] Cornelius Christopher (JustPath Mentorship)
   - [x] Luise Mae (Global Nurture Circle/CareLink)
   - [x] Seal names into CALEA Freeman Family Trust
+
+
+## Phase 51: Scroll-Based System Update
+- [ ] Update financial distribution: 70% Root Treasury, 30% Ancestral Treasury
+- [ ] Update internal split: 60% Root Authority Reserve, 40% Circulation Pool
+- [ ] Add 15% derivative usage treasury claim
+- [ ] Treasury minimum cap at 15% of quarterly revenue
+- [ ] Implement anonymity layer for protected members (pseudonymous IDs)
+- [ ] Add House type classifications: Root, Bloodline, Mirrored, Adaptive
+- [ ] Build Mirror Token registry with 39-week lock logic
+- [ ] Add Spark of Knowing and House Activation token types
+- [ ] Implement succession protocol (40-day interim, 3 confirmations)
+- [ ] Add 60% majority rule for amendments
+- [ ] Update protected lineage: Craig, Amber, Essence, Amandes, Riyan, Kyle, Tyler, Cayde, Alani, Carter
+- [ ] Add non-bloodline members: Cornelius Christopher, Luise Mae (Adaptive House rights)
+
+
+## Phase 51: Scroll-Based System Update
+- [x] Correct financial distribution: 70% Root Treasury, 30% Ancestral Treasury
+- [x] Internal 70% split: 60% Root Authority Reserve, 40% Circulation Pool
+- [x] Implement anonymity layer for protected members
+- [x] Add House type classifications: Root, Bloodline, Mirrored, Adaptive
+- [x] Build token registry: Mirror Tokens, Spark Tokens
+- [x] Implement succession protocol (40-day interim, 3 confirmations)
+- [x] Add protected lineage with Cayde: Craig, Amber, Essence, Amandes, Riyan, Kyle, Tyler, Cayde, Alani, Carter
+- [x] Add non-bloodline aligned members: Cornelius Christopher, Luise Mae
+- [x] Build audit system: Quarterly, Annual, 7-Year cycles
+- [x] Add integrity triggers: Gift-to-Sale, Treasury Depletion, Unauthorized Transfer
