@@ -1826,3 +1826,343 @@ export const integrityTriggers = mysqlTable("integrity_triggers", {
 
 export type IntegrityTrigger = typeof integrityTriggers.$inferSelect;
 export type InsertIntegrityTrigger = typeof integrityTriggers.$inferInsert;
+
+
+// ============================================================================
+// FOUNDATION LAYER - Core Operational Entities
+// ============================================================================
+
+/**
+ * Request - Equipment, Service, Vehicle requests with approval workflow
+ */
+export const requests = mysqlTable("requests", {
+  id: int("id").autoincrement().primaryKey(),
+  requesterId: int("requesterId").notNull(),
+  departmentId: int("departmentId"),
+  
+  category: mysqlEnum("category", [
+    "equipment",
+    "software", 
+    "vehicle",
+    "service",
+    "facility",
+    "training"
+  ]).notNull(),
+  
+  itemSpec: varchar("itemSpec", { length: 500 }).notNull(),
+  quantity: int("quantity").default(1).notNull(),
+  justification: text("justification").notNull(),
+  costEstimate: decimal("costEstimate", { precision: 20, scale: 2 }),
+  neededBy: timestamp("neededBy"),
+  
+  status: mysqlEnum("status", [
+    "draft",
+    "pending_manager",
+    "pending_finance",
+    "pending_executive",
+    "approved",
+    "fulfilled",
+    "closed",
+    "rejected"
+  ]).default("draft").notNull(),
+  
+  blockchainRef: varchar("blockchainRef", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Request = typeof requests.$inferSelect;
+export type InsertRequest = typeof requests.$inferInsert;
+
+/**
+ * Approval - Multi-stage approval workflow with on-chain signatures
+ */
+export const approvals = mysqlTable("approvals", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  approverId: int("approverId").notNull(),
+  
+  stage: mysqlEnum("stage", [
+    "manager",
+    "finance",
+    "executive",
+    "board"
+  ]).notNull(),
+  
+  decision: mysqlEnum("decision", [
+    "pending",
+    "approve",
+    "reject",
+    "override",
+    "defer"
+  ]).default("pending").notNull(),
+  
+  comment: text("comment"),
+  decidedAt: timestamp("decidedAt"),
+  signatureHash: varchar("signatureHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Approval = typeof approvals.$inferSelect;
+export type InsertApproval = typeof approvals.$inferInsert;
+
+/**
+ * Asset - Equipment, vehicles, licenses with ownership tracking
+ */
+export const assets = mysqlTable("assets", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  assetType: mysqlEnum("assetType", [
+    "laptop",
+    "server",
+    "monitor",
+    "sat_phone",
+    "hotspot",
+    "vehicle",
+    "pod",
+    "license",
+    "furniture",
+    "other"
+  ]).notNull(),
+  
+  makeModel: varchar("makeModel", { length: 255 }),
+  serialOrVin: varchar("serialOrVin", { length: 255 }),
+  
+  ownerEntity: mysqlEnum("ownerEntity", [
+    "trust",
+    "business",
+    "academy",
+    "subsidiary"
+  ]).default("trust").notNull(),
+  
+  ownerEntityId: int("ownerEntityId"),
+  assignedToUserId: int("assignedToUserId"),
+  assignedToSiteId: int("assignedToSiteId"),
+  assignedAt: timestamp("assignedAt"),
+  
+  purchaseDate: timestamp("purchaseDate"),
+  purchasePrice: decimal("purchasePrice", { precision: 20, scale: 2 }),
+  warrantyExpiry: timestamp("warrantyExpiry"),
+  maintenanceIntervalDays: int("maintenanceIntervalDays"),
+  lastMaintenanceDate: timestamp("lastMaintenanceDate"),
+  
+  status: mysqlEnum("assetStatus", [
+    "in_stock",
+    "assigned",
+    "maintenance",
+    "retired",
+    "disposed"
+  ]).default("in_stock").notNull(),
+  
+  ledgerRef: varchar("ledgerRef", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Asset = typeof assets.$inferSelect;
+export type InsertAsset = typeof assets.$inferInsert;
+
+// Note: certificates table defined earlier in schema with course completion tracking
+
+/**
+ * Parcel/Land - Real property tracking with ownership
+ */
+export const parcels = mysqlTable("parcels", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  addressLegalDesc: text("addressLegalDesc").notNull(),
+  parcelNumber: varchar("parcelNumber", { length: 100 }),
+  
+  acquisitionDate: timestamp("acquisitionDate"),
+  acquisitionPrice: decimal("acquisitionPrice", { precision: 20, scale: 2 }),
+  currentValue: decimal("currentValue", { precision: 20, scale: 2 }),
+  
+  useType: mysqlEnum("useType", [
+    "hub",
+    "academy",
+    "community",
+    "storage",
+    "agricultural",
+    "residential",
+    "commercial",
+    "mixed"
+  ]).notNull(),
+  
+  improvements: text("improvements"),
+  acreage: decimal("acreage", { precision: 10, scale: 4 }),
+  
+  ownershipEntity: mysqlEnum("parcelOwnership", [
+    "trust",
+    "subsidiary",
+    "house"
+  ]).default("trust").notNull(),
+  
+  ownershipEntityId: int("ownershipEntityId"),
+  
+  ledgerRef: varchar("ledgerRef", { length: 255 }),
+  status: mysqlEnum("parcelStatus", ["active", "pending_sale", "sold", "transferred"]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Parcel = typeof parcels.$inferSelect;
+export type InsertParcel = typeof parcels.$inferInsert;
+
+/**
+ * Risk Register - Risk identification, assessment, and mitigation tracking
+ */
+export const risks = mysqlTable("risks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  
+  category: mysqlEnum("riskCategory", [
+    "financial",
+    "operational",
+    "legal",
+    "compliance",
+    "reputational",
+    "strategic",
+    "technology",
+    "security"
+  ]).notNull(),
+  
+  likelihood: mysqlEnum("likelihood", [
+    "rare",
+    "unlikely",
+    "possible",
+    "likely",
+    "almost_certain"
+  ]).notNull(),
+  
+  impact: mysqlEnum("impact", [
+    "insignificant",
+    "minor",
+    "moderate",
+    "major",
+    "catastrophic"
+  ]).notNull(),
+  
+  riskScore: int("riskScore"),
+  
+  mitigationStrategy: text("mitigationStrategy"),
+  mitigationStatus: mysqlEnum("mitigationStatus", [
+    "not_started",
+    "in_progress",
+    "implemented",
+    "monitoring"
+  ]).default("not_started").notNull(),
+  
+  ownerId: int("ownerId"),
+  reviewDate: timestamp("reviewDate"),
+  
+  status: mysqlEnum("riskStatus", ["open", "mitigated", "accepted", "closed"]).default("open").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Risk = typeof risks.$inferSelect;
+export type InsertRisk = typeof risks.$inferInsert;
+
+/**
+ * Incidents - Incident response and tracking
+ */
+export const incidents = mysqlTable("incidents", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  
+  incidentType: mysqlEnum("incidentType", [
+    "security_breach",
+    "data_loss",
+    "system_outage",
+    "compliance_violation",
+    "financial_irregularity",
+    "safety_incident",
+    "other"
+  ]).notNull(),
+  
+  severity: mysqlEnum("incidentSeverity", [
+    "low",
+    "medium",
+    "high",
+    "critical"
+  ]).notNull(),
+  
+  reportedById: int("reportedById").notNull(),
+  reportedAt: timestamp("reportedAt").defaultNow().notNull(),
+  
+  assignedToId: int("assignedToId"),
+  
+  rootCause: text("rootCause"),
+  resolution: text("resolution"),
+  resolvedAt: timestamp("resolvedAt"),
+  
+  preventiveMeasures: text("preventiveMeasures"),
+  
+  status: mysqlEnum("incidentStatus", [
+    "reported",
+    "investigating",
+    "resolved",
+    "closed"
+  ]).default("reported").notNull(),
+  
+  ledgerRef: varchar("ledgerRef", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Incident = typeof incidents.$inferSelect;
+export type InsertIncident = typeof incidents.$inferInsert;
+
+/**
+ * Metrics - KPIs and performance tracking for M&E
+ */
+export const metrics = mysqlTable("metrics", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  category: mysqlEnum("metricCategory", [
+    "financial",
+    "operational",
+    "program",
+    "hr",
+    "compliance",
+    "impact"
+  ]).notNull(),
+  
+  targetValue: decimal("targetValue", { precision: 20, scale: 4 }),
+  actualValue: decimal("actualValue", { precision: 20, scale: 4 }),
+  unit: varchar("unit", { length: 50 }),
+  
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd").notNull(),
+  
+  departmentId: int("departmentId"),
+  programId: int("programId"),
+  
+  status: mysqlEnum("metricStatus", [
+    "on_track",
+    "at_risk",
+    "off_track",
+    "achieved"
+  ]).default("on_track").notNull(),
+  
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Metric = typeof metrics.$inferSelect;
+export type InsertMetric = typeof metrics.$inferInsert;
+
+// Note: departments table defined earlier in schema

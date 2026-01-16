@@ -120,6 +120,13 @@
       "when": 1768532165318,
       "tag": "0016_silly_adam_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1768532967110,
+      "tag": "0017_living_energizer",
+      "breakpoints": true
     }
   ]
 }
