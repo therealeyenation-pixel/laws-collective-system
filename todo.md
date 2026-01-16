@@ -850,3 +850,25 @@
 
 - [x] Rename "Simulator" to "Workshop" or "Builder" throughout UI
 - [x] Update pink/purple accent colors (Recorded badge, LUV text, Approval Required) to green palette
+
+
+## Phase 39: Token Chain Progress UI
+
+- [x] Create TokenChainProgress component with visual token sequence
+- [x] Show MIRROR → GIFT → SPARK → HOUSE → CROWN progression
+- [x] Display completed/active/locked states for each token
+- [x] Integrate into Dashboard
+
+
+## Phase 40: DBA/Trademark Workshop
+
+- [x] Create DBATrademarkCourse component with 6 modules
+- [x] Module 1: DBA Basics (what, when, state requirements)
+- [x] Module 2: Name Search (availability check, conflicts)
+- [x] Module 3: DBA Filing (generate documents, fees)
+- [x] Module 4: Trademark Fundamentals (TM vs R, classes)
+- [x] Module 5: Trademark Search (USPTO simulation)
+- [x] Module 6: Trademark Application (Intent-to-Use, specimen)
+- [x] Generate DBA filing documents output
+- [x] Generate trademark application draft output
+- [x] Integrate into Dashboard course grid

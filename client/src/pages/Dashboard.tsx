@@ -34,8 +34,10 @@ import ContractsCourse from "@/components/ContractsCourse";
 import BusinessPlanCourse from "@/components/BusinessPlanCourse";
 import BlockchainCourse from "@/components/BlockchainCourse";
 import InsuranceCourse from "@/components/InsuranceCourse";
+import TokenChainProgress from "@/components/TokenChainProgress";
+import DBATrademarkCourse from "@/components/DBATrademarkCourse";
 
-type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | null;
+type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
 interface CourseProgress {
   business: { completed: boolean; tokens: number; data: any };
@@ -47,6 +49,7 @@ interface CourseProgress {
   blockchain: { completed: boolean; tokens: number; data: any };
   insurance: { completed: boolean; tokens: number; data: any };
   operations: { completed: boolean; tokens: number; data: any };
+  dba: { completed: boolean; tokens: number; data: any };
 }
 
 export default function Dashboard() {
@@ -62,6 +65,7 @@ export default function Dashboard() {
     blockchain: { completed: false, tokens: 0, data: null },
     insurance: { completed: false, tokens: 0, data: null },
     operations: { completed: false, tokens: 0, data: null },
+    dba: { completed: false, tokens: 0, data: null },
   });
 
   const handleCourseComplete = (
@@ -395,6 +399,18 @@ export default function Dashboard() {
     );
   }
 
+  if (activeCourse === "dba") {
+    return (
+      <DashboardLayout>
+        <DBATrademarkCourse
+          onComplete={(data, tokens) => handleCourseComplete("dba", data, tokens)}
+          onClose={() => setActiveCourse(null)}
+          connectedEntity={getConnectedEntity()}
+        />
+      </DashboardLayout>
+    );
+  }
+
   const totalTokensEarned = 
     courseProgress.business.tokens + 
     courseProgress.businessplan.tokens +
@@ -404,7 +420,8 @@ export default function Dashboard() {
     courseProgress.contracts.tokens +
     courseProgress.blockchain.tokens +
     courseProgress.insurance.tokens +
-    courseProgress.operations.tokens;
+    courseProgress.operations.tokens +
+    courseProgress.dba.tokens;
 
   const coursesCompleted = [
     courseProgress.business.completed,
@@ -416,6 +433,7 @@ export default function Dashboard() {
     courseProgress.blockchain.completed,
     courseProgress.insurance.completed,
     courseProgress.operations.completed,
+    courseProgress.dba.completed,
   ].filter(Boolean).length;
 
   return (
@@ -612,6 +630,9 @@ export default function Dashboard() {
 
           {/* Business Courses Tab */}
           <TabsContent value="courses" className="space-y-6 mt-6">
+            {/* Token Chain Progress */}
+            <TokenChainProgress className="mb-6" />
+
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-bold text-foreground">
@@ -984,6 +1005,43 @@ export default function Dashboard() {
                       onClick={() => setActiveCourse("operations")}
                     >
                       {courseProgress.operations.completed ? "Review" : "Start"}
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* 10. DBA/Trademark Course */}
+                <Card className="p-6 hover:shadow-lg transition-shadow border-l-4 border-l-amber-600">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 rounded-full bg-amber-600/10">
+                      <FileText className="w-8 h-8 text-amber-600" />
+                    </div>
+                    <span className="px-2 py-1 bg-amber-600/20 text-amber-600 text-xs rounded-full font-bold">10</span>
+                    {courseProgress.dba.completed && (
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 text-xs rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg mb-2">DBA & Trademark Workshop</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Register trade names, search availability, file trademarks, protect your brand.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-muted-foreground">6 Modules</p>
+                    <p className="text-xs text-muted-foreground">
+                      <strong>Outputs:</strong> DBA filing docs, trademark application
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-amber-600">
+                      {courseProgress.dba.completed ? `${courseProgress.dba.tokens} LUV` : "100+ LUV"}
+                    </span>
+                    <Button 
+                      size="sm" 
+                      className="min-h-[48px] min-w-[80px]"
+                      onClick={() => setActiveCourse("dba")}
+                    >
+                      {courseProgress.dba.completed ? "Review" : "Start"}
                     </Button>
                   </div>
                 </Card>
