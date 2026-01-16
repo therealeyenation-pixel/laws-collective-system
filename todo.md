@@ -1537,3 +1537,8 @@
 
 - [x] Update Cornelius from Legal to Education/Justice
 - [x] Add open Legal department manager position
+
+
+## Phase 71: Add Outreach to All Positions
+
+- [x] Add Outreach to all department manager positions

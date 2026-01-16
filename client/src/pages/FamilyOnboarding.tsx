@@ -14,18 +14,18 @@ import { toast } from "sonner";
 import { Users, UserPlus, Building2, Briefcase, CheckCircle2, Clock, Heart, GraduationCap, Shield } from "lucide-react";
 
 const FAMILY_MEMBERS = [
-  { id: "shanna", name: "Shanna Russell", role: "Founder / Matriarch", departments: ["Business"], businessEntity: "Purpose Proposal Group", status: "active", credentials: ["Business Degree", "Government Contracting Experience", "ULC Ordination"], boardRole: "Founder + Business Director" },
+  { id: "shanna", name: "Shanna Russell", role: "Founder / Matriarch", departments: ["Business", "Outreach"], businessEntity: "Purpose Proposal Group", status: "active", credentials: ["Business Degree", "Government Contracting Experience", "ULC Ordination"], boardRole: "Founder + Business Director" },
   { id: "amber", name: "Amber", role: "House Member", departments: ["Health", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "essence", name: "Essence", role: "House Member", departments: ["Design", "IT", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "amandes", name: "Amandes", role: "House Member", departments: ["Media", "IT", "Outreach"], businessEntity: "FreeLife Media", status: "active", credentials: [], boardRole: "Board Member" },
   { id: "craig", name: "Craig", role: "House Member", departments: ["Finance", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "cornelius", name: "Cornelius", role: "House Member", departments: ["Education", "Justice", "Outreach"], businessEntity: "TBD", status: "pending", credentials: ["Masters in Education", "Masters in Criminal Justice"], boardRole: "Board Member" },
-  { id: "contracts-mgr", name: "TBD - Contracts Manager", role: "Department Manager", departments: ["Contracts"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Contracts)" },
-  { id: "grants-mgr", name: "TBD - Grants Manager", role: "Department Manager", departments: ["Grants"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Grants)" },
-  { id: "legal-mgr", name: "TBD - Legal Manager", role: "Department Manager", departments: ["Legal"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Legal)" },
-  { id: "property-mgr", name: "TBD - Property & Assets Manager", role: "Department Manager", departments: ["Property & Assets Management"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
-  { id: "realestate-mgr", name: "TBD - Real Estate Manager", role: "Department Manager", departments: ["Real Estate"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
-  { id: "ops-admin-mgr", name: "TBD - Operations & Administration Manager", role: "Department Manager", departments: ["Operations & Administration"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
+  { id: "contracts-mgr", name: "TBD - Contracts Manager", role: "Department Manager", departments: ["Contracts", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Contracts)" },
+  { id: "grants-mgr", name: "TBD - Grants Manager", role: "Department Manager", departments: ["Grants", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Grants)" },
+  { id: "legal-mgr", name: "TBD - Legal Manager", role: "Department Manager", departments: ["Legal", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Legal)" },
+  { id: "property-mgr", name: "TBD - Property & Assets Manager", role: "Department Manager", departments: ["Property & Assets Management", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
+  { id: "realestate-mgr", name: "TBD - Real Estate Manager", role: "Department Manager", departments: ["Real Estate", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
+  { id: "ops-admin-mgr", name: "TBD - Operations & Administration Manager", role: "Department Manager", departments: ["Operations & Administration", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   // Strategic Partners
   { id: "sweet-miracles", name: "Twin Sister (Sweet Miracles)", role: "Strategic Partner", departments: ["Outreach", "Justice"], businessEntity: "Sweet Miracles", status: "active", credentials: ["Nonprofit", "Elder Abuse Prevention"], boardRole: "Honorary Advisory Member (Non-Voting)" },
 ];
