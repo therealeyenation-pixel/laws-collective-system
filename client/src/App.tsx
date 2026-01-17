@@ -38,6 +38,7 @@ import TrustGovernance from "@/pages/TrustGovernance";
 import HRManagement from "@/pages/HRManagement";
 import Careers from "@/pages/Careers";
 import GettingStarted from "@/pages/GettingStarted";
+import SystemOverview from "@/pages/SystemOverview";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -93,8 +94,8 @@ function Router() {
   // Protected routes: Trust System, Document Vault, Agents, Social Media
   return (
     <Switch>
-      <Route path="/" component={Landing} />
-      <Route path="/home" component={Home} />
+      <Route path="/" component={Home} />
+      <Route path="/system-overview" component={SystemOverview} />
       <Route path="/academy" component={AcademyDashboard} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/careers" component={Careers} />

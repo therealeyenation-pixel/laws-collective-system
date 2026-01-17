@@ -416,7 +416,7 @@ export default function Careers() {
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2026 Calea Freeman Family Trust. Building Multi-Generational Wealth Through Purpose & Community.
+              © 2026 LuvOnPurpose Family Enterprise. Building Multi-Generational Wealth Through Purpose & Community.
             </p>
             <div className="flex gap-4">
               <Link href="/">

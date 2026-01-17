@@ -2247,3 +2247,52 @@
 - [x] Add Executive Director position for Temple/508 ($55,000 - $75,000)
 - [x] Create organizational structure JSON with reporting hierarchy
 - [x] Update public and internal job descriptions with executive positions
+
+
+## Phase 42: Founder Income Structure and Ledger Tracking
+
+### Documentation
+- [ ] Create formal Founder Income Structure document
+- [ ] Document Trust distribution mechanisms
+- [ ] Document LLC member distribution rules
+- [ ] Document token economy earnings for Founder
+- [ ] Document consulting/contractor fee structure
+- [ ] Document IP licensing arrangements
+- [ ] Document grant-funded stipend options
+
+### LuvLedger Integration
+- [ ] Add Founder income categories to ledger
+- [ ] Track Trust distributions
+- [ ] Track LLC distributions by entity
+- [ ] Track token earnings
+- [ ] Track contractor payments
+- [ ] Track royalty/licensing income
+- [ ] Generate Founder income reports
+
+
+## Phase 43: Contract Management Rates and Landing Page Restructure
+
+### Contract Management Rates
+- [x] Update Founder Income Structure with contract management as separate service
+- [x] Set rates: $175 - $350/hour, $1,500 - $10,000 project-based
+
+### Landing Page Restructure
+- [x] Move current Home.tsx content to SystemOverview.tsx at /system-overview
+- [x] Create new marketing landing page at /
+- [x] Hero section with value proposition
+- [x] Who We Serve section
+- [x] 4 Entities overview (exclude trust)
+- [x] L.A.W.S. Framework brief
+- [x] How It Works section
+- [x] Call to Action section
+
+### Trust Privacy
+- [x] Remove trust from public-facing pages
+- [x] Show only 4 entities publicly (EntityGrants filtered)
+- [x] Keep trust in internal/authenticated areas only
+- [x] Updated Careers page footer
+
+### Navigation Updates
+- [x] Add System Overview to sidebar navigation
+- [x] Update routes in App.tsx
+- [x] Update all internal links to /system-overview

@@ -116,7 +116,8 @@ export default function EntityGrants() {
     );
   }
 
-  const entityKeys = Object.keys(grantData.entities);
+  // Filter out trust from public view - only show 4 entities
+  const entityKeys = Object.keys(grantData.entities).filter(key => key !== "calea_freeman_trust");
   const currentEntity = grantData.entities[selectedEntity];
 
   return (
@@ -135,12 +136,11 @@ export default function EntityGrants() {
 
       {/* Entity Tabs */}
       <Tabs value={selectedEntity} onValueChange={setSelectedEntity}>
-        <TabsList className="grid grid-cols-5 w-full">
+        <TabsList className="grid grid-cols-4 w-full">
           <TabsTrigger value="luvonpurpose_temple" className="text-xs">Temple/508</TabsTrigger>
           <TabsTrigger value="laws_collective" className="text-xs">L.A.W.S.</TabsTrigger>
           <TabsTrigger value="real_eye_nation" className="text-xs">Real-Eye</TabsTrigger>
           <TabsTrigger value="luvonpurpose_aws" className="text-xs">LAWS, LLC</TabsTrigger>
-          <TabsTrigger value="calea_freeman_trust" className="text-xs">Trust</TabsTrigger>
         </TabsList>
 
         {entityKeys.map((entityKey) => {

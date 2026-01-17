@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, boolean, bigint } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, boolean, bigint, date } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -6669,3 +6669,207 @@ export const careerInterestSubmissions = mysqlTable("career_interest_submissions
 
 export type CareerInterestSubmission = typeof careerInterestSubmissions.$inferSelect;
 export type InsertCareerInterestSubmission = typeof careerInterestSubmissions.$inferInsert;
+
+
+/**
+ * Founder Income Streams - Track all income sources for Founder/Matriarch
+ */
+export const founderIncomeStreams = mysqlTable("founder_income_streams", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Income Classification
+  incomeType: mysqlEnum("incomeType", [
+    "trust_distribution",
+    "llc_distribution_laws_collective",
+    "llc_distribution_laws_llc",
+    "llc_distribution_real_eye",
+    "token_earnings",
+    "consulting_fees",
+    "ip_royalties",
+    "grant_stipend"
+  ]).notNull(),
+  
+  // Source Details
+  sourceEntity: varchar("sourceEntity", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Financial Details
+  amount: decimal("amount", { precision: 18, scale: 2 }).notNull(),
+  currency: varchar("currency", { length: 3 }).default("USD").notNull(),
+  
+  // Period
+  periodStart: date("periodStart"),
+  periodEnd: date("periodEnd"),
+  
+  // Tax Information
+  taxCategory: mysqlEnum("taxCategory", [
+    "trust_income",
+    "pass_through_k1",
+    "self_employment",
+    "royalty_income",
+    "w2_wages",
+    "1099_contractor"
+  ]),
+  taxYear: int("taxYear"),
+  
+  // Documentation
+  documentationRef: varchar("documentationRef", { length: 255 }),
+  invoiceNumber: varchar("invoiceNumber", { length: 50 }),
+  
+  // Status
+  status: mysqlEnum("status", ["projected", "pending", "received", "reconciled"]).default("pending").notNull(),
+  receivedAt: timestamp("receivedAt"),
+  
+  // Ledger Integration
+  ledgerTransactionId: int("ledgerTransactionId"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FounderIncomeStream = typeof founderIncomeStreams.$inferSelect;
+export type InsertFounderIncomeStream = typeof founderIncomeStreams.$inferInsert;
+
+/**
+ * Founder Token Earnings - Detailed token activity tracking
+ */
+export const founderTokenEarnings = mysqlTable("founder_token_earnings", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Token Details
+  tokenType: mysqlEnum("tokenType", ["MIRROR", "GIFT", "SPARK", "HOUSE", "CROWN"]).notNull(),
+  amount: int("amount").notNull(),
+  
+  // Activity
+  activityType: varchar("activityType", { length: 100 }).notNull(),
+  activityDescription: text("activityDescription"),
+  
+  // Conversion
+  converted: boolean("converted").default(false).notNull(),
+  conversionDate: timestamp("conversionDate"),
+  cashValue: decimal("cashValue", { precision: 18, scale: 2 }),
+  conversionRate: decimal("conversionRate", { precision: 10, scale: 4 }),
+  
+  // Ledger Integration
+  incomeStreamId: int("incomeStreamId"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  earnedAt: timestamp("earnedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type FounderTokenEarning = typeof founderTokenEarnings.$inferSelect;
+export type InsertFounderTokenEarning = typeof founderTokenEarnings.$inferInsert;
+
+/**
+ * Founder Consulting Engagements - Track contractor work
+ */
+export const founderConsultingEngagements = mysqlTable("founder_consulting_engagements", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Client Entity
+  clientEntity: varchar("clientEntity", { length: 255 }).notNull(),
+  
+  // Service Details
+  serviceType: mysqlEnum("serviceType", [
+    "strategic_advisory",
+    "training_delivery",
+    "grant_consulting",
+    "community_engagement",
+    "curriculum_development",
+    "other"
+  ]).notNull(),
+  serviceDescription: text("serviceDescription"),
+  
+  // Billing
+  billingType: mysqlEnum("billingType", ["hourly", "project", "retainer", "per_event"]).notNull(),
+  hourlyRate: decimal("hourlyRate", { precision: 10, scale: 2 }),
+  projectFee: decimal("projectFee", { precision: 10, scale: 2 }),
+  hoursWorked: decimal("hoursWorked", { precision: 8, scale: 2 }),
+  
+  // Invoice
+  invoiceNumber: varchar("invoiceNumber", { length: 50 }),
+  invoiceDate: date("invoiceDate"),
+  dueDate: date("dueDate"),
+  totalAmount: decimal("totalAmount", { precision: 18, scale: 2 }).notNull(),
+  
+  // Status
+  status: mysqlEnum("status", ["draft", "invoiced", "paid", "overdue", "cancelled"]).default("draft").notNull(),
+  paidAt: timestamp("paidAt"),
+  
+  // Ledger Integration
+  incomeStreamId: int("incomeStreamId"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FounderConsultingEngagement = typeof founderConsultingEngagements.$inferSelect;
+export type InsertFounderConsultingEngagement = typeof founderConsultingEngagements.$inferInsert;
+
+/**
+ * Founder IP Licenses - Track intellectual property licensing
+ */
+export const founderIpLicenses = mysqlTable("founder_ip_licenses", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // IP Asset
+  ipType: mysqlEnum("ipType", ["curriculum", "brand_trademark", "systems_processes", "content", "other"]).notNull(),
+  ipName: varchar("ipName", { length: 255 }).notNull(),
+  ipDescription: text("ipDescription"),
+  
+  // Licensee
+  licenseeEntity: varchar("licenseeEntity", { length: 255 }).notNull(),
+  
+  // License Terms
+  licenseType: mysqlEnum("licenseType", ["exclusive", "non_exclusive", "limited"]).notNull(),
+  startDate: date("startDate").notNull(),
+  endDate: date("endDate"),
+  autoRenew: boolean("autoRenew").default(false),
+  
+  // Royalty Structure
+  royaltyType: mysqlEnum("royaltyType", ["flat_annual", "per_use", "percentage", "per_student"]).notNull(),
+  royaltyRate: decimal("royaltyRate", { precision: 10, scale: 4 }),
+  flatFee: decimal("flatFee", { precision: 18, scale: 2 }),
+  
+  // Status
+  status: mysqlEnum("status", ["active", "expired", "terminated", "pending"]).default("pending").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FounderIpLicense = typeof founderIpLicenses.$inferSelect;
+export type InsertFounderIpLicense = typeof founderIpLicenses.$inferInsert;
+
+/**
+ * Founder Income Summary - Aggregated view for reporting
+ */
+export const founderIncomeSummary = mysqlTable("founder_income_summary", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Period
+  year: int("year").notNull(),
+  quarter: int("quarter"), // 1-4, null for annual
+  month: int("month"), // 1-12, null for quarterly/annual
+  
+  // Totals by Category
+  trustDistributions: decimal("trustDistributions", { precision: 18, scale: 2 }).default("0"),
+  llcDistributions: decimal("llcDistributions", { precision: 18, scale: 2 }).default("0"),
+  tokenEarnings: decimal("tokenEarnings", { precision: 18, scale: 2 }).default("0"),
+  consultingFees: decimal("consultingFees", { precision: 18, scale: 2 }).default("0"),
+  ipRoyalties: decimal("ipRoyalties", { precision: 18, scale: 2 }).default("0"),
+  grantStipends: decimal("grantStipends", { precision: 18, scale: 2 }).default("0"),
+  
+  // Grand Total
+  totalIncome: decimal("totalIncome", { precision: 18, scale: 2 }).default("0"),
+  
+  // Tax Estimates
+  estimatedSelfEmploymentTax: decimal("estimatedSelfEmploymentTax", { precision: 18, scale: 2 }),
+  estimatedIncomeTax: decimal("estimatedIncomeTax", { precision: 18, scale: 2 }),
+  
+  // Status
+  status: mysqlEnum("status", ["projected", "actual", "reconciled"]).default("projected").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FounderIncomeSummary = typeof founderIncomeSummary.$inferSelect;
+export type InsertFounderIncomeSummary = typeof founderIncomeSummary.$inferInsert;
