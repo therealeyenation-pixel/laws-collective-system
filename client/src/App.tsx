@@ -28,6 +28,7 @@ import BusinessSimulator from "./pages/BusinessSimulator";
 import GrantManagement from "./pages/GrantManagement";
 import GrantSimulator from "./pages/GrantSimulator";
 import BusinessPlanSimulator from "./pages/BusinessPlanSimulator";
+import BusinessPlanUpload from "./pages/BusinessPlanUpload";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -109,6 +110,7 @@ function Router() {
       <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} />}</Route>
       <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} />}</Route>
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} />}</Route>
+      <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

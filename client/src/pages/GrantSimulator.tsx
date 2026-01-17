@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,10 @@ import {
   AlertCircle,
   Info,
   Heart,
+  Loader2,
 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 const availableGrants = [
   {
@@ -157,10 +160,48 @@ const initialData: ApplicationData = {
 export default function GrantSimulator() {
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState<ApplicationData>(initialData);
+  const [autoPopulated, setAutoPopulated] = useState(false);
 
   const selectedGrant = availableGrants.find(g => g.id === data.selectedGrant);
   const selectedEntity = entities.find(e => e.id === data.selectedEntity);
   const progress = ((currentStep - 1) / (steps.length - 1)) * 100;
+
+  // Fetch business plan data when entity is selected
+  const { data: businessPlanData, isLoading: isLoadingPlan } = trpc.businessPlan.getSummaryForGrant.useQuery(
+    { entityName: selectedEntity?.name || "" },
+    { enabled: !!selectedEntity?.name && !autoPopulated }
+  );
+
+  // Auto-populate when business plan data is loaded
+  useEffect(() => {
+    if (businessPlanData && !autoPopulated) {
+      setData(prev => ({
+        ...prev,
+        orgDescription: businessPlanData.organizationDescription || prev.orgDescription,
+        missionStatement: businessPlanData.missionStatement || prev.missionStatement,
+        yearFounded: businessPlanData.yearFounded?.toString() || prev.yearFounded,
+        teamSize: getTeamSizeCategory(businessPlanData.teamSize),
+        needStatement: businessPlanData.fundingPurpose || prev.needStatement,
+        targetPopulation: businessPlanData.communityBenefit || prev.targetPopulation,
+      }));
+      setAutoPopulated(true);
+      toast.success("Auto-populated from your Business Plan!");
+    }
+  }, [businessPlanData, autoPopulated]);
+
+  // Reset auto-populate flag when entity changes
+  useEffect(() => {
+    setAutoPopulated(false);
+  }, [data.selectedEntity]);
+
+  // Helper to convert team size number to category
+  function getTeamSizeCategory(size: number | null | undefined): string {
+    if (!size) return "";
+    if (size === 1) return "solo";
+    if (size <= 5) return "2-5";
+    if (size <= 10) return "6-10";
+    return "11-50";
+  }
 
   const canProceed = () => {
     switch (currentStep) {

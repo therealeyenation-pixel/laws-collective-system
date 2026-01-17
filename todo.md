@@ -1725,3 +1725,34 @@
 - [x] Step 8: Review & Complete with Certificate
 - [x] Add completion certificate with Training Manager (Cornelius) signature
 - [x] Add Business Plan Simulator to navigation menu
+
+
+## Phase 86: Connect Simulators to Real Document Creation
+
+- [ ] Create backend tRPC procedure to save business plans from simulator
+- [ ] Save completed business plans to business_plans table
+- [ ] Generate PDF/document and store in Document Vault
+- [ ] Update Business Plan Simulator completion to call save procedure
+- [ ] Create procedure to fetch business plan by entity ID
+- [ ] Update Grant Simulator to fetch saved business plan data
+- [ ] Auto-populate Grant Simulator fields from business plan
+- [ ] Test: Complete Business Plan Simulator → Verify saved in Document Vault
+- [ ] Test: Start Grant Simulator → Verify fields auto-populated
+
+
+## Phase 87: Document Upload & AI Parser
+
+- [ ] Create document upload endpoint with S3 storage
+- [ ] Build AI parser to extract business plan fields from uploaded documents
+- [ ] Extract: mission, vision, description, products/services, target market, financials
+- [ ] Create Document Parser UI in Document Vault
+- [ ] Allow selecting entity to associate with uploaded business plan
+- [ ] Store extracted data in business_plans table
+- [x] Connect parsed data to Grant Simulator auto-populate
+- [x] Create BusinessPlanUpload page UI
+- [x] Add entity selection dropdown with existing entities
+- [x] Add file upload and text paste options
+- [x] Display extracted data with field labels
+- [x] Save extracted data to database via AI parsing
+- [x] Add route and navigation for Business Plan Upload
+- [ ] Test complete upload → parse → auto-populate flow

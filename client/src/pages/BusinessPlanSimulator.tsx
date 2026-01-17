@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import CompletionCertificate from "@/components/CompletionCertificate";
+import { trpc } from "@/lib/trpc";
 
 // Steps in the Business Plan Simulator
 const STEPS = [
@@ -162,9 +163,50 @@ export default function BusinessPlanSimulator() {
     }
   };
 
+  const saveMutation = trpc.businessPlan.save.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.updated ? "Business Plan updated!" : "Business Plan saved!");
+      setShowCertificate(true);
+    },
+    onError: (error) => {
+      toast.error("Failed to save business plan: " + error.message);
+    },
+  });
+
   const handleComplete = () => {
-    toast.success("Business Plan completed! Certificate generated.");
-    setShowCertificate(true);
+    // Get selected team members' names
+    const keyPersonnel = formData.selectedTeamMembers.map(id => {
+      const member = TEAM_MEMBERS.find(m => m.id === id);
+      return member ? { name: member.name, role: member.role, bio: "" } : null;
+    }).filter(Boolean) as { name: string; role: string; bio: string }[];
+
+    // Save to database
+    saveMutation.mutate({
+      entityName: formData.entityName,
+      entityType: formData.entityType as "llc" | "corporation" | "trust" | "nonprofit_508" | "nonprofit_501c3" | "collective" | "sole_proprietorship",
+      yearFounded: parseInt(formData.yearFounded) || new Date().getFullYear(),
+      missionStatement: formData.missionStatement,
+      visionStatement: formData.visionStatement,
+      organizationDescription: formData.organizationDescription,
+      productsServices: formData.productsServices,
+      uniqueValueProposition: formData.uniqueValueProposition,
+      targetMarket: formData.targetMarket,
+      marketSize: formData.marketSize,
+      competitiveAdvantage: formData.competitiveAdvantage,
+      teamSize: parseInt(formData.teamSize) || formData.selectedTeamMembers.length,
+      teamDescription: formData.teamDescription,
+      keyPersonnel,
+      startupCosts: formData.startupCosts,
+      monthlyOperatingCosts: formData.monthlyOperatingCosts,
+      projectedRevenueYear1: formData.projectedRevenueYear1,
+      projectedRevenueYear2: formData.projectedRevenueYear2,
+      projectedRevenueYear3: formData.projectedRevenueYear3,
+      breakEvenTimeline: formData.breakEvenTimeline,
+      fundingNeeded: formData.fundingNeeded,
+      fundingPurpose: formData.fundingPurpose,
+      socialImpact: formData.socialImpact || undefined,
+      communityBenefit: formData.communityBenefit || undefined,
+    });
   };
 
   const isNonprofit = formData.entityType === "nonprofit_508" || formData.entityType === "nonprofit_501c3";
