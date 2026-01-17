@@ -539,6 +539,52 @@
         "membershipDues": 200
       },
       "justification": "Staff serve dual roles as outreach representatives and organizational ambassadors, requiring professional appearance for community events, partner meetings, and media appearances."
+    },
+    "softwareSubscriptions": {
+      "name": "Software Subscriptions Package",
+      "description": "Essential software tools for remote work productivity",
+      "includes": [
+        "Productivity suite (Google Workspace or Microsoft 365)",
+        "Communication tools (Slack, Zoom, or equivalent)",
+        "Project management platform (Asana, Monday, Notion)",
+        "Role-specific software as needed",
+        "Security and VPN services"
+      ],
+      "grantBudgetCategory": "Other Direct Costs / Supplies",
+      "annualEstimate": {
+        "productivitySuite": { "low": 150, "high": 300 },
+        "communicationTools": { "low": 100, "high": 200 },
+        "projectManagement": { "low": 100, "high": 200 },
+        "roleSpecific": {
+          "standard": { "low": 100, "high": 200 },
+          "creative": { "low": 400, "high": 600, "note": "Adobe Creative Cloud for media roles" },
+          "finance": { "low": 200, "high": 400, "note": "QuickBooks or accounting software" }
+        },
+        "securityVPN": { "low": 50, "high": 100 }
+      },
+      "totalPerEmployee": { "low": 500, "high": 1500, "note": "Varies by role requirements" }
+    },
+    "systemMaintenance": {
+      "name": "System Maintenance & IT Infrastructure",
+      "description": "Organizational-level IT infrastructure costs (NOT per-employee)",
+      "budgetLevel": "organizational",
+      "includes": [
+        "Cloud hosting and infrastructure",
+        "Backup and disaster recovery services",
+        "IT support and helpdesk contract",
+        "Domain, SSL, and email services",
+        "Security monitoring and updates"
+      ],
+      "grantBudgetCategory": "Other Direct Costs / Contractual",
+      "annualEstimateOrganizational": {
+        "cloudHosting": { "low": 1200, "high": 3600 },
+        "backupServices": { "low": 600, "high": 1800 },
+        "itSupportContract": { "low": 2400, "high": 6000 },
+        "domainEmailSSL": { "low": 300, "high": 600 },
+        "securityMonitoring": { "low": 600, "high": 1200 }
+      },
+      "totalOrganizational": { "low": 5100, "high": 13200 },
+      "note": "Budget as single organizational line item, not per-employee. Can also be included in indirect costs if organization has negotiated indirect rate."
     }
   },
   "grantBudgetSummary": {
@@ -572,14 +618,53 @@
       "brandedMaterials": {
         "annual": 300,
         "description": "Organization-branded apparel and promotional items"
-      }
+      },
+      "softwareSubscriptions": {
+        "low": 500,
+        "high": 1500,
+        "description": "Productivity suite, communication, project management, role-specific tools, security"
+      },
+      "softwareSubscriptionsNote": "Software subscriptions are per-employee costs"
     },
     "totalPerEmployeeRange": {
-      "minimumFirstYear": 5150,
-      "maximumFirstYear": 10850,
-      "minimumOngoing": 2400,
-      "maximumOngoing": 8100,
-      "note": "First year includes one-time equipment and setup costs"
+      "minimumFirstYear": 5650,
+      "maximumFirstYear": 12350,
+      "minimumOngoing": 2900,
+      "maximumOngoing": 9600,
+      "note": "First year includes one-time equipment and setup costs. Does NOT include organizational IT infrastructure."
+    },
+    "organizationalCosts": {
+      "systemMaintenance": {
+        "low": 5100,
+        "high": 13200,
+        "description": "Cloud hosting, backup, IT support contract, domain/email, security monitoring - budgeted at organizational level, not per-employee"
+      }
+    },
+    "categoryBreakdown": {
+      "personnelCostsFringe": {
+        "items": ["Utilities stipend", "Equipment provision", "Home office setup", "Travel reimbursement"],
+        "lowEstimate": 2650,
+        "highEstimate": 8550,
+        "level": "per-employee"
+      },
+      "personnelCostsSupplies": {
+        "items": ["Wardrobe budget", "Branded materials"],
+        "lowEstimate": 800,
+        "highEstimate": 1300,
+        "level": "per-employee"
+      },
+      "otherDirectCostsPerEmployee": {
+        "items": ["Software subscriptions"],
+        "lowEstimate": 500,
+        "highEstimate": 1500,
+        "level": "per-employee"
+      },
+      "otherDirectCostsOrganizational": {
+        "items": ["System maintenance", "IT infrastructure"],
+        "lowEstimate": 5100,
+        "highEstimate": 13200,
+        "level": "organizational (single line item)"
+      }
     }
   },
   "salaryRangeSummary": {

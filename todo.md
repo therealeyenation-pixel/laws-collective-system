@@ -2220,3 +2220,13 @@
 - [x] Grant budget summary with per-employee cost estimates
 - [x] Update Careers page with new benefits
 - [x] Update HR Management with new benefits packages
+
+## Phase 40: Software Subscriptions and System Maintenance
+
+### Grant Budget Line Items
+- [x] Add software subscriptions package to benefits (per-employee: $500-1,500/year)
+- [x] Add system maintenance allocation to benefits (organizational: $5,100-13,200/year)
+- [x] Update grant budget summary with new line items and category breakdown
+- [x] Update public job descriptions
+- [x] Update HR Management page
+- [x] Clarified: System maintenance is organizational-level cost, not per-employee

@@ -114,6 +114,36 @@ const BENEFITS_PACKAGES = [
     annualCost: "$1,000 - $1,500",
     applicableTo: ["HR Department Lead", "Outreach Coordinator", "Content Creator", "Community Programs Coordinator", "Operations Manager"]
   },
+  { 
+    id: "software-subscriptions", 
+    name: "Software Subscriptions Package", 
+    description: "Essential software tools for remote work productivity",
+    benefits: [
+      "Productivity suite (Google Workspace or Microsoft 365)",
+      "Communication tools (Slack, Zoom)",
+      "Project management platform (Asana, Monday, Notion)",
+      "Role-specific software as needed",
+      "Security and VPN services"
+    ],
+    grantCategory: "Other Direct Costs / Supplies",
+    annualCost: "$500 - $1,500 (varies by role)"
+  },
+  { 
+    id: "system-maintenance", 
+    name: "System Maintenance & IT Infrastructure", 
+    description: "Organizational-level IT costs (NOT per-employee)",
+    benefits: [
+      "Cloud hosting and infrastructure",
+      "Backup and disaster recovery services",
+      "IT support and helpdesk contract",
+      "Domain, SSL, and email services",
+      "Security monitoring and updates"
+    ],
+    grantCategory: "Other Direct Costs / Contractual",
+    annualCost: "$5,100 - $13,200 (organizational total)",
+    budgetLevel: "organizational",
+    notes: "Budget as single organizational line item, not per-employee. Can also be included in indirect costs if organization has negotiated indirect rate."
+  },
 ];
 
 interface OfferLetter {

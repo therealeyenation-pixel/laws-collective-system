@@ -275,6 +275,19 @@ All positions include:
 - Home office setup allowance
 - Travel reimbursement for required in-person events
 
+**Software & Technology:**
+- Productivity suite (Google Workspace or Microsoft 365)
+- Communication tools (Slack, Zoom)
+- Project management platform access
+- Role-specific software as needed
+- Security and VPN services
+
+**System Support (Organizational):**
+- IT helpdesk and technical support
+- Cloud storage and backup services
+- Security monitoring
+- Infrastructure maintained at business level
+
 **Public-Facing Roles Also Include:**
 - Annual professional wardrobe budget
 - Branded apparel and materials
