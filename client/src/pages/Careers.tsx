@@ -41,6 +41,39 @@ import { Link } from "wouter";
 
 const POSITIONS = [
   // ============================================
+  // TIER 1: FAMILY MANAGER POSITIONS (Filled)
+  // ============================================
+  { 
+    id: "finance-manager", 
+    title: "Finance Manager", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Finance",
+    type: "Full-Time",
+    location: "Hybrid",
+    salaryRange: "$85,000 - $115,000",
+    description: "Lead all financial operations across the organization including budgeting, accounting, financial reporting, grant financial management, and cash flow optimization. Ensure financial compliance and support strategic decision-making with accurate financial data.",
+    requirements: ["5+ years financial management", "Accounting/bookkeeping proficiency", "Grant financial management", "QuickBooks/financial software expertise"],
+    category: "finance",
+    tier: "tier1_family",
+    hiringStatus: "Filled - Family (Craig)"
+  },
+  { 
+    id: "education-manager", 
+    title: "Education Manager", 
+    entity: "508-LuvOnPurpose Academy and Outreach",
+    entityShort: "508 Academy",
+    department: "Education",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$85,000 - $115,000",
+    description: "Lead all educational programming and curriculum development for the Academy. Oversee course creation, instructor coordination, student progress tracking, and ensure educational content aligns with organizational values and community needs.",
+    requirements: ["5+ years education/training management", "Curriculum development experience", "Learning management systems", "Community education background"],
+    category: "education",
+    tier: "tier1_family",
+    hiringStatus: "Filled - Family (Cornelius)"
+  },
+  // ============================================
   // TIER 3: OPEN MANAGER POSITIONS (Future Hiring)
   // ============================================
   { 
@@ -471,6 +504,7 @@ const HIRING_STATUSES = [
 const CATEGORIES = [
   { id: "all", label: "All Positions", count: POSITIONS.length },
   { id: "operations", label: "Operations", count: POSITIONS.filter(p => p.category === "operations").length },
+  { id: "finance", label: "Finance", count: POSITIONS.filter(p => p.category === "finance" || p.department === "Finance").length },
   { id: "project_controls", label: "Project Controls", count: POSITIONS.filter(p => p.category === "project_controls").length },
   { id: "contracts", label: "Contracts", count: POSITIONS.filter(p => p.category === "contracts").length },
   { id: "community", label: "Community", count: POSITIONS.filter(p => p.category === "community").length },

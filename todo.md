@@ -2821,7 +2821,7 @@
 - [x] Add Project Controls to sidebar navigation
 - [x] Create projectControls router with CRUD operations
 - [x] Write tests for Project Controls (36 tests, 170 total tests pass)
-- [ ] Save checkpoint
+- [x] Save checkpoint (version: 8e111594)
 
 
 ## Phase 50: Legal Structure & Function Diagnostic
@@ -2835,3 +2835,23 @@
 - [ ] Run all unit tests
 - [ ] Test database operations and routers
 - [ ] Generate diagnostic report
+
+
+## Phase 49c: Fix Family Manager Names
+- [x] Update Craig Freeman to Craig Russell (CFO - Finance)
+- [x] Update Cornelius Johnson to Cornelius Christopher (CEO-Ed - Education)
+- [x] Fix entity assignments for all family managers (was showing "Unknown Entity")
+- [x] Verify all 6 family managers have correct names and entities in employee directory
+- [ ] Verify Careers page shows all family positions as "Filled - Family"
+- [ ] Save checkpoint
+
+
+## Phase 49d: Fix Family Manager Titles
+- [x] Update Craig Russell title from "Chief Financial Officer" to "Finance Manager"
+- [x] Update Cornelius Christopher title from "Chief Education Officer" to "Education Manager"
+- [x] Add Finance Manager position to Careers page as "Filled - Family (Craig)"
+- [x] Add Education Manager position to Careers page as "Filled - Family (Cornelius)"
+- [x] Add Finance category to Careers page filters
+- [x] Verify all 5 department manager family positions show correctly on Careers page
+  (Shanna as CEO/Matriarch is not a job posting - she's in Employee Directory)
+- [ ] Save checkpoint
