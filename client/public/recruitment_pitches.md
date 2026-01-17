@@ -17,7 +17,77 @@
 
 ---
 
-### 1. PURCHASING DEPARTMENT LEAD
+### 1. HR DEPARTMENT LEAD
+**Entity:** The L.A.W.S. Collective, LLC  
+**Reports To:** Trust Governance  
+**Collaborates With:** All Entities, Academy (Cornelius), Outreach
+
+#### The Pitch:
+
+> **"Build the team that builds the legacy."**
+>
+> Every great organization needs someone who finds the right people, brings them in, and sets them up for success. That's you.
+>
+> As HR Lead, you'll:
+> - **Recruit talent** - identify candidates, deliver pitches, track interest
+> - **Coordinate with Outreach** - turn community connections into team members
+> - **Run onboarding** - intake forms, system profiles, welcome process
+> - **Assign training paths** - match roles to Academy certifications
+> - **Track performance** - monitor progress, celebrate wins, address gaps
+> - **Build culture** - employee relations, conflict resolution, team building
+>
+> You're not just hiring—you're building a family enterprise. Every person you bring in becomes a stakeholder in generational wealth.
+>
+> **What we offer:**
+> - Ownership stake in The L.A.W.S. Collective, LLC
+> - Leadership of your own department
+> - All Academy certifications (free)
+> - Direct impact on organizational growth
+>
+> **What we need:**
+> - People person who can spot talent
+> - Organized and detail-oriented
+> - Good communicator across personality types
+> - Believes in developing people, not just filling seats
+
+---
+
+### 2. QA/QC DEPARTMENT LEAD
+**Entity:** The L.A.W.S. Collective, LLC  
+**Reports To:** Trust Governance  
+**Collaborates With:** All Entities, Grant Management, Purchasing
+
+#### The Pitch:
+
+> **"Set the standard. Hold the line."**
+>
+> Five entities. Multiple departments. Dozens of deliverables. Someone needs to ensure everything meets the standard—that's you.
+>
+> As QA/QC Lead, you'll:
+> - **Define quality standards** - what "good" looks like for each entity
+> - **Review deliverables** - ensure work output meets standards before delivery
+> - **Create policies & procedures** - document how things should be done
+> - **Ensure compliance** - grant requirements, entity policies, legal obligations
+> - **Conduct audits** - internal reviews, preparation for external audits
+> - **Drive improvement** - identify inefficiencies, recommend solutions
+>
+> When grants require compliance reports, you'll have the documentation. When auditors ask questions, you'll have answers. You're the reason the organization runs clean.
+>
+> **What we offer:**
+> - Ownership stake in The L.A.W.S. Collective, LLC
+> - Leadership of your own department
+> - Process design authority
+> - Critical role in grant success
+>
+> **What we need:**
+> - Detail-oriented and systematic thinker
+> - Comfortable creating documentation
+> - Can give constructive feedback diplomatically
+> - Understands (or willing to learn) compliance requirements
+
+---
+
+### 3. PURCHASING DEPARTMENT LEAD
 **Entity:** The L.A.W.S. Collective, LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** Finance (Craig), Proposal Workshop, Outreach (Temple)
@@ -50,7 +120,7 @@
 
 ---
 
-### 2. OPERATIONS MANAGER
+### 4. OPERATIONS MANAGER
 **Entity:** LuvOnPurpose Autonomous Wealth System LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** All Departments
@@ -84,7 +154,7 @@
 
 ---
 
-### 3. OUTREACH COORDINATOR
+### 5. OUTREACH COORDINATOR
 **Entity:** LuvOnPurpose Outreach Temple and Academy Society, Inc.  
 **Reports To:** Trust Governance  
 **Collaborates With:** Purchasing, Media (Amandes), Education (Cornelius)
@@ -118,7 +188,7 @@
 
 ---
 
-### 4. CONTENT CREATOR / MEDIA ASSISTANT
+### 6. CONTENT CREATOR / MEDIA ASSISTANT
 **Entity:** Real-Eye-Nation LLC  
 **Reports To:** Amandes (Media Lead)  
 **Collaborates With:** Design (Essence), Outreach
@@ -152,7 +222,7 @@
 
 ---
 
-### 5. ACADEMY INSTRUCTOR / CURRICULUM DEVELOPER
+### 7. ACADEMY INSTRUCTOR / CURRICULUM DEVELOPER
 **Entity:** LuvOnPurpose Outreach Temple and Academy Society, Inc.  
 **Reports To:** Cornelius (Education Manager)  
 **Collaborates With:** All Entities (curriculum serves everyone)
@@ -186,7 +256,7 @@
 
 ---
 
-### 6. GRANT WRITER / PROPOSAL SPECIALIST
+### 8. GRANT WRITER / PROPOSAL SPECIALIST
 **Entity:** The L.A.W.S. Collective, LLC (serving all entities)  
 **Reports To:** Trust Governance  
 **Collaborates With:** Purchasing, Finance (Craig), All Entity Leads
@@ -220,7 +290,7 @@
 
 ---
 
-### 7. TECHNOLOGY / PLATFORM ADMINISTRATOR
+### 9. TECHNOLOGY / PLATFORM ADMINISTRATOR
 **Entity:** LuvOnPurpose Autonomous Wealth System LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** All Departments (platform serves everyone)
@@ -254,7 +324,7 @@
 
 ---
 
-### 8. COMMUNITY PROGRAMS COORDINATOR
+### 10. COMMUNITY PROGRAMS COORDINATOR
 **Entity:** The L.A.W.S. Collective, LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** Outreach, Education (Cornelius), Temple

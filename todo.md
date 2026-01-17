@@ -2044,3 +2044,64 @@
 - **Outreach (Temple)** - Event supplies, materials, venue coordination
 - **Grant Execution** - Ensure grant funds spent per approved budget
 
+
+
+## Phase 34: HR Department (The L.A.W.S. Collective, LLC)
+
+### Department Structure
+- [ ] Create HR Department under The L.A.W.S. Collective, LLC
+- [ ] Department Lead: TBD
+
+### HR Functions
+- [ ] Recruitment - finding candidates, pitching opportunities, tracking interest
+- [ ] Outreach Coordination - connecting recruitment to community outreach
+- [ ] Onboarding - intake forms, system profile creation, welcome process
+- [ ] Training Assignment - matching roles to Academy certification paths
+- [ ] Performance Tracking - monitoring progress, certifications, contributions
+- [ ] Employee Relations - support, conflict resolution, culture building
+
+## Phase 35: QA/QC Department (The L.A.W.S. Collective, LLC)
+
+### Department Structure
+- [ ] Create QA/QC Department under The L.A.W.S. Collective, LLC (separate from HR)
+- [ ] Department Lead: TBD
+
+### QA/QC Functions
+- [ ] Quality Assurance - standards for deliverables across all entities
+- [ ] Quality Control - reviewing work output, ensuring consistency
+- [ ] Policies & Procedures - creating, documenting, maintaining SOPs
+- [ ] Compliance - ensuring grant requirements and entity policies are followed
+- [ ] Auditing - internal reviews, preparation for external audits
+- [ ] Process Improvement - identifying inefficiencies, recommending solutions
+
+### HR System Integration
+- [ ] Create employees table (employee_id, name, role, department, entity, hire_date, status)
+- [ ] Create intake_forms table (form_id, employee_id, personal_info, emergency_contact, documents)
+- [ ] Create training_assignments table (assignment_id, employee_id, course_id, due_date, status)
+- [ ] Create performance_reviews table (review_id, employee_id, reviewer_id, period, ratings, notes)
+- [ ] Build HR Dashboard UI
+- [ ] Create intake form workflow
+- [ ] Integrate with Academy for training path assignment
+- [ ] Link employee activities to LuvLedger
+
+### HR Connections
+- **Outreach** - HR handles recruitment pipeline from Outreach events
+- **Academy** - Training assignments flow to Academy for delivery
+- **All Entities** - HR serves all five entities for people management
+
+### QA/QC System Integration
+- [ ] Create policies table (policy_id, title, category, content, version, effective_date)
+- [ ] Create procedures table (procedure_id, policy_id, title, steps, owner, last_reviewed)
+- [ ] Create qa_reviews table (review_id, entity_id, deliverable, reviewer_id, score, notes)
+- [ ] Create audit_log table (audit_id, entity_id, area, findings, recommendations, date)
+- [ ] Build QA/QC Dashboard UI
+- [ ] Create policy management interface
+- [ ] Create audit workflow
+- [ ] Link compliance tracking to LuvLedger
+
+### QA/QC Connections
+- **All Entities** - QA/QC reviews work across all five entities
+- **Trust Governance** - Policies align with Trust governance requirements
+- **Grant Management** - Ensures grant compliance requirements are met
+- **Purchasing** - Reviews vendor quality and procurement compliance
+
