@@ -1,0 +1,605 @@
+{
+  "metadata": {
+    "classification": "INTERNAL USE ONLY - HR DEPARTMENT",
+    "lastUpdated": "2026-01-17",
+    "approvedBy": "Shanna Russell, Founder/Matriarch/Trustee"
+  },
+  "positions": [
+    {
+      "id": "hr-lead",
+      "title": "HR Department Lead",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Human Resources",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote with occasional in-person events",
+      "salaryRange": {
+        "min": 55000,
+        "max": 75000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$55,000 - $75,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "tokenMetrics": "Recruitment and retention metrics",
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "All certifications provided at no cost",
+        "governanceVoice": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "3+ years in HR, recruiting, or people management",
+        "skills": ["Interpersonal communication", "HR systems", "Employment law basics"],
+        "preferred": ["HR certification (PHR, SHRM-CP)", "Startup experience", "Remote team management"]
+      },
+      "description": "The HR Department Lead builds and maintains the human capital infrastructure across all five subsidiary entities. This role oversees talent acquisition, onboarding, training coordination, performance management, and employee relations.",
+      "responsibilities": [
+        "Develop and execute recruitment strategies",
+        "Design and manage comprehensive onboarding programs",
+        "Coordinate training paths with Academy leadership",
+        "Implement performance evaluation frameworks",
+        "Serve as first point of contact for workplace concerns",
+        "Maintain HR records and ensure compliance",
+        "Support benefits administration"
+      ]
+    },
+    {
+      "id": "qaqc-lead",
+      "title": "QA/QC Department Lead",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Quality Assurance / Quality Control",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote with periodic on-site reviews",
+      "salaryRange": {
+        "min": 50000,
+        "max": 70000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$50,000 - $70,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "tokenMetrics": "Compliance and quality metrics",
+        "performanceBonus": "Tied to grant compliance success",
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "All certifications provided at no cost",
+        "processDesignAuthority": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "3+ years in quality assurance, compliance, or process management",
+        "skills": ["Documentation", "Technical writing", "Systematic thinking"],
+        "preferred": ["Quality certification (Six Sigma, ISO, ASQ)", "Grant compliance experience"]
+      },
+      "description": "The QA/QC Department Lead establishes and maintains quality standards across all subsidiary entities. This role ensures deliverables meet organizational standards and grant compliance requirements are satisfied.",
+      "responsibilities": [
+        "Define quality criteria and acceptance standards",
+        "Review work outputs before delivery",
+        "Develop and maintain Standard Operating Procedures",
+        "Ensure adherence to grant requirements",
+        "Lead continuous improvement initiatives",
+        "Conduct regular audits and assessments",
+        "Train staff on quality procedures"
+      ]
+    },
+    {
+      "id": "purchasing-lead",
+      "title": "Purchasing Department Lead",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Purchasing",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote with vendor site visits as needed",
+      "salaryRange": {
+        "min": 48000,
+        "max": 65000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$48,000 - $65,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Financial Literacy, Business Operations",
+        "governanceVoice": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "2+ years in purchasing, procurement, or supply chain",
+        "skills": ["Negotiation", "Vendor management", "Spreadsheets", "Accounting basics"],
+        "preferred": ["Purchasing certification (CPM, CPSM)", "Grant-funded purchasing experience"]
+      },
+      "description": "The Purchasing Department Lead manages procurement operations across all subsidiary entities. This role handles vendor relationships, cost control, inventory tracking, and grant compliance for purchasing activities.",
+      "responsibilities": [
+        "Identify, evaluate, and select vendors",
+        "Negotiate contracts and pricing",
+        "Provide cost estimates for grant proposals",
+        "Maintain inventory tracking system",
+        "Ensure purchases comply with grant requirements",
+        "Process purchase orders",
+        "Report purchasing metrics and cost savings"
+      ]
+    },
+    {
+      "id": "operations-manager",
+      "title": "Operations Manager",
+      "entity": "LuvOnPurpose Autonomous Wealth System LLC",
+      "department": "Operations",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 60000,
+        "max": 85000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$60,000 - $85,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "LuvOnPurpose Autonomous Wealth System LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Full certification pathway",
+        "technologyAccess": "Cutting-edge autonomous business technology",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "3+ years in operations, project management, or coordination",
+        "skills": ["Organization", "Multitasking", "Communication", "Problem-solving"],
+        "preferred": ["PMP or CAPM certification", "AI/automation systems experience"]
+      },
+      "description": "The Operations Manager ensures smooth day-to-day operations across all subsidiary entities. This role coordinates workflows, monitors business systems, identifies bottlenecks, and provides support to team members.",
+      "responsibilities": [
+        "Coordinate workflows between entities",
+        "Monitor business systems for performance",
+        "Identify and resolve operational bottlenecks",
+        "Provide administrative support to team members",
+        "Track operational KPIs and report to leadership",
+        "Manage cross-functional projects",
+        "Maintain operational documentation"
+      ]
+    },
+    {
+      "id": "outreach-coordinator",
+      "title": "Outreach Coordinator",
+      "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "department": "Community Outreach",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Hybrid",
+      "salaryRange": {
+        "min": 42000,
+        "max": 58000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$42,000 - $58,000 annually"
+      },
+      "compensation": {
+        "type": "role_based",
+        "organizationType": "508(c)(1)(a) spiritual organization",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Community development certification",
+        "communityImpact": true,
+        "eventPlanningExperience": true
+      },
+      "requirements": {
+        "experience": "2+ years in community outreach, event planning, or nonprofit work",
+        "skills": ["Interpersonal", "Organization", "Public speaking"],
+        "preferred": ["Faith-based organization experience", "Bilingual abilities"]
+      },
+      "description": "The Outreach Coordinator connects the organization with the broader community through events, partnerships, and relationship building. This role plans community events, builds partner relationships, and coordinates volunteers.",
+      "responsibilities": [
+        "Plan and execute community events",
+        "Build relationships with community organizations",
+        "Recruit and manage volunteers",
+        "Track program participation and outcomes",
+        "Coordinate with Media team on event promotion",
+        "Represent organization at community gatherings",
+        "Support grant-funded community initiatives"
+      ]
+    },
+    {
+      "id": "content-creator",
+      "title": "Content Creator / Media Assistant",
+      "entity": "Real-Eye-Nation LLC",
+      "department": "Media Production",
+      "reportsTo": "Amandes (Media Lead)",
+      "classification": "Part-Time to Full-Time",
+      "location": "Remote with on-location shoots",
+      "salaryRange": {
+        "min": 35000,
+        "max": 55000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$35,000 - $55,000 annually (full-time equivalent)"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "Real-Eye-Nation LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "portfolioBuilding": true,
+        "blockchainTraining": "NFT media training",
+        "creativeFreedoom": "Within brand guidelines",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "Portfolio required",
+        "skills": ["Photography", "Videography", "Video editing", "Social media"],
+        "preferred": ["Professional editing software", "Documentary experience"]
+      },
+      "description": "The Content Creator supports the media production mission by creating social media content, documenting events, editing videos, and writing copy for marketing materials.",
+      "responsibilities": [
+        "Create engaging social media content",
+        "Document events and programs through photo/video",
+        "Edit videos for tutorials and promotional content",
+        "Write copy for posts, emails, and marketing materials",
+        "Support digital asset creation",
+        "Manage content calendar",
+        "Support live streaming and virtual events"
+      ]
+    },
+    {
+      "id": "academy-instructor",
+      "title": "Academy Instructor / Curriculum Developer",
+      "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "department": "Education",
+      "reportsTo": "Cornelius (Education/Training Manager)",
+      "classification": "Part-Time to Full-Time",
+      "location": "Remote with occasional in-person",
+      "salaryRange": {
+        "min": 40000,
+        "max": 65000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$40,000 - $65,000 annually (full-time equivalent)"
+      },
+      "compensation": {
+        "type": "token_based",
+        "tokenEarnings": true,
+        "tokenMetrics": "Courses taught",
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "All certifications provided at no cost",
+        "teachingExperience": true,
+        "curriculumDevelopment": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "Expertise in at least one subject area",
+        "skills": ["Teaching", "Patience", "Communication"],
+        "preferred": ["Teaching certification", "LMS experience", "Adult education"]
+      },
+      "description": "The Academy Instructor delivers educational content and develops new courses for the LuvOnPurpose Academy. This role teaches courses, creates curriculum, develops assessments, and tracks student progress.",
+      "responsibilities": [
+        "Deliver courses in assigned subject areas",
+        "Design new courses based on organizational needs",
+        "Create assessments and track student progress",
+        "Issue certificates upon completion",
+        "Continuously improve based on feedback",
+        "Provide student support and mentorship",
+        "Participate in curriculum planning"
+      ]
+    },
+    {
+      "id": "grant-writer",
+      "title": "Grant Writer / Proposal Specialist",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Grants & Proposals",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 50000,
+        "max": 72000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$50,000 - $72,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake_plus_performance",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "performanceBonus": "Percentage of grants won",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "portfolioBuilding": "Successful applications",
+        "grantSimulatorTraining": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "2+ years in grant writing or proposal development",
+        "skills": ["Writing", "Attention to detail", "Research", "Deadline management"],
+        "preferred": ["Grant Professional Certified (GPC)", "Federal grants experience"]
+      },
+      "description": "The Grant Writer identifies funding opportunities and writes compelling proposals to secure grants for all subsidiary entities. This role researches opportunities, develops narratives, creates budgets, and manages deadlines.",
+      "responsibilities": [
+        "Research grant opportunities matched to each entity",
+        "Write compelling narratives and proposals",
+        "Develop budgets with Purchasing and Finance",
+        "Manage multiple concurrent applications",
+        "Track outcomes and prepare progress reports",
+        "Manage grant calendar and deadlines",
+        "Coordinate with program staff for requirements"
+      ]
+    },
+    {
+      "id": "platform-admin",
+      "title": "Platform Administrator",
+      "entity": "LuvOnPurpose Autonomous Wealth System LLC",
+      "department": "Technology",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 55000,
+        "max": 80000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$55,000 - $80,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "LuvOnPurpose Autonomous Wealth System LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "emergingTechExperience": "AI and blockchain systems",
+        "continuousLearning": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "2+ years in IT administration or technical support",
+        "skills": ["Technology", "Problem-solving", "Security", "User support"],
+        "preferred": ["Web application administration", "Blockchain experience", "Technical certifications"]
+      },
+      "description": "The Platform Administrator maintains and improves the technology infrastructure of the organization. This role monitors system health, manages user accounts, implements new features, and ensures security.",
+      "responsibilities": [
+        "Monitor platform health and performance",
+        "Create and manage user accounts",
+        "Implement new features as platform grows",
+        "Ensure security of sensitive data",
+        "Train users on platform features",
+        "Document technical procedures",
+        "Provide technical support to team"
+      ]
+    },
+    {
+      "id": "programs-coordinator",
+      "title": "Community Programs Coordinator",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Community Programs",
+      "reportsTo": "Trust Governance (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Hybrid",
+      "salaryRange": {
+        "min": 45000,
+        "max": 60000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$45,000 - $60,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Full certification pathway",
+        "communityLeadership": true,
+        "programDesignExperience": true
+      },
+      "requirements": {
+        "experience": "2+ years in program management or community development",
+        "skills": ["Organization", "Cultural sensitivity", "Communication"],
+        "preferred": ["Re-entry or youth development experience", "Grant reporting familiarity"]
+      },
+      "description": "The Community Programs Coordinator develops and manages programs based on the L.A.W.S. framework (Land, Air, Water, Self) that help community members reconnect with their roots, gain knowledge, find balance, and discover purpose.",
+      "responsibilities": [
+        "Design programs based on L.A.W.S. principles",
+        "Recruit and manage program participants",
+        "Coordinate with partner organizations",
+        "Track outcomes for grant reporting",
+        "Build community among program alumni",
+        "Manage program budgets",
+        "Build relationships with community partners"
+      ]
+    }
+  ],
+  "benefitsPackages": {
+    "standard": {
+      "name": "Standard Benefits Package",
+      "description": "For full-time team members",
+      "includes": [
+        "Ownership stake in assigned entity",
+        "All Academy certifications at no cost",
+        "Token earnings based on role metrics",
+        "Flexible work schedule",
+        "Voice in Trust governance decisions",
+        "Professional development opportunities"
+      ]
+    },
+    "partTime": {
+      "name": "Part-Time Benefits Package",
+      "description": "For part-time team members",
+      "includes": [
+        "Pro-rated ownership stake",
+        "Academy certifications at no cost",
+        "Token earnings based on contribution",
+        "Flexible scheduling"
+      ]
+    },
+    "grantCompliant": {
+      "name": "Grant-Compliant Benefits Package",
+      "description": "For positions funded by grants requiring traditional benefits",
+      "includes": [
+        "Health insurance stipend",
+        "Retirement contribution matching",
+        "Paid time off",
+        "Professional development allowance",
+        "All standard benefits"
+      ],
+      "notes": "Specific benefits vary by grant requirements"
+    },
+    "remoteWorkSupport": {
+      "name": "Remote Work Support Package",
+      "description": "Grant-allowable support for remote positions",
+      "includes": [
+        "Monthly utilities stipend ($75-150/month for internet and electricity)",
+        "Equipment provision (laptop, phone, software licenses)",
+        "Home office setup allowance (one-time $500-1,000)",
+        "Variable travel reimbursement (mileage, lodging, per diem for required travel)"
+      ],
+      "grantBudgetCategory": "Personnel Costs / Fringe Benefits",
+      "annualEstimate": {
+        "utilitiesMin": 900,
+        "utilitiesMax": 1800,
+        "equipmentOneTime": 2000,
+        "homeOfficeOneTime": 750,
+        "travelVariable": "Based on role requirements"
+      }
+    },
+    "outreachProfessional": {
+      "name": "Outreach & Professional Appearance Package",
+      "description": "For public-facing and outreach positions that serve as organizational representatives",
+      "includes": [
+        "Annual professional wardrobe budget ($500-1,000/year)",
+        "Branded apparel and materials provided",
+        "Event attendance allowance",
+        "Networking and professional membership dues"
+      ],
+      "applicablePositions": [
+        "HR Department Lead",
+        "Outreach Coordinator",
+        "Content Creator / Media Assistant",
+        "Community Programs Coordinator",
+        "Operations Manager"
+      ],
+      "grantBudgetCategory": "Personnel Costs / Supplies",
+      "annualEstimate": {
+        "wardrobeMin": 500,
+        "wardrobeMax": 1000,
+        "brandedMaterials": 300,
+        "membershipDues": 200
+      },
+      "justification": "Staff serve dual roles as outreach representatives and organizational ambassadors, requiring professional appearance for community events, partner meetings, and media appearances."
+    }
+  },
+  "grantBudgetSummary": {
+    "description": "Estimated annual costs per employee for grant budgeting purposes",
+    "perEmployeeEstimates": {
+      "utilitiesStipend": {
+        "low": 900,
+        "high": 1800,
+        "description": "Monthly internet and electricity support for remote work"
+      },
+      "equipmentProvision": {
+        "oneTime": 2000,
+        "replacement": 500,
+        "description": "Laptop, phone, software licenses - one-time with annual maintenance"
+      },
+      "homeOfficeSetup": {
+        "oneTime": 750,
+        "description": "Desk, chair, monitor, peripherals"
+      },
+      "travelReimbursement": {
+        "lowTravel": 500,
+        "moderateTravel": 2000,
+        "highTravel": 5000,
+        "description": "Variable based on role - mileage at federal rate, lodging, per diem"
+      },
+      "wardrobeBudget": {
+        "low": 500,
+        "high": 1000,
+        "description": "Professional attire for public-facing roles"
+      },
+      "brandedMaterials": {
+        "annual": 300,
+        "description": "Organization-branded apparel and promotional items"
+      }
+    },
+    "totalPerEmployeeRange": {
+      "minimumFirstYear": 5150,
+      "maximumFirstYear": 10850,
+      "minimumOngoing": 2400,
+      "maximumOngoing": 8100,
+      "note": "First year includes one-time equipment and setup costs"
+    }
+  },
+  "salaryRangeSummary": {
+    "totalPositions": 10,
+    "rangeOverview": [
+      {"position": "Operations Manager", "range": "$60,000 - $85,000"},
+      {"position": "Platform Administrator", "range": "$55,000 - $80,000"},
+      {"position": "HR Department Lead", "range": "$55,000 - $75,000"},
+      {"position": "Grant Writer", "range": "$50,000 - $72,000"},
+      {"position": "QA/QC Department Lead", "range": "$50,000 - $70,000"},
+      {"position": "Purchasing Department Lead", "range": "$48,000 - $65,000"},
+      {"position": "Academy Instructor", "range": "$40,000 - $65,000"},
+      {"position": "Community Programs Coordinator", "range": "$45,000 - $60,000"},
+      {"position": "Outreach Coordinator", "range": "$42,000 - $58,000"},
+      {"position": "Content Creator", "range": "$35,000 - $55,000"}
+    ],
+    "totalAnnualBudgetRange": {
+      "minimum": 485000,
+      "maximum": 685000,
+      "note": "Full staffing of all 10 positions"
+    }
+  }
+}

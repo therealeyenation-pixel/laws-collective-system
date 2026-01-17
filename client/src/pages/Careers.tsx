@@ -1,0 +1,551 @@
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
+import { 
+  Building2, 
+  MapPin, 
+  Clock, 
+  Briefcase,
+  Heart,
+  Users,
+  GraduationCap,
+  CheckCircle2,
+  ArrowRight,
+  Send,
+  FileText,
+  Upload,
+  Sparkles,
+  Target,
+  Globe,
+  DollarSign,
+  Wifi,
+  Laptop,
+  Shirt
+} from "lucide-react";
+import { Link } from "wouter";
+
+const POSITIONS = [
+  { 
+    id: "hr-lead", 
+    title: "HR Department Lead", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Human Resources",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$55,000 - $75,000",
+    description: "Build and maintain the human capital infrastructure across all five subsidiary entities. Oversee talent acquisition, onboarding, training coordination, performance management, and employee relations.",
+    requirements: ["3+ years HR experience", "Strong interpersonal skills", "HR systems proficiency", "Employment law knowledge"],
+    category: "operations"
+  },
+  { 
+    id: "qaqc-lead", 
+    title: "QA/QC Department Lead", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Quality Assurance",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$50,000 - $70,000",
+    description: "Establish and maintain quality standards across all subsidiary entities. Ensure deliverables meet organizational standards and grant compliance requirements are satisfied.",
+    requirements: ["3+ years QA/compliance experience", "Strong attention to detail", "Technical writing skills", "Process documentation"],
+    category: "operations"
+  },
+  { 
+    id: "purchasing-lead", 
+    title: "Purchasing Department Lead", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Purchasing",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$48,000 - $65,000",
+    description: "Manage procurement operations across all subsidiary entities. Handle vendor relationships, cost control, inventory tracking, and grant compliance for purchasing activities.",
+    requirements: ["2+ years purchasing experience", "Negotiation skills", "Spreadsheet proficiency", "Basic accounting knowledge"],
+    category: "operations"
+  },
+  { 
+    id: "operations-manager", 
+    title: "Operations Manager", 
+    entity: "LuvOnPurpose Autonomous Wealth System LLC",
+    entityShort: "LAWS LLC",
+    department: "Operations",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$60,000 - $85,000",
+    description: "Ensure smooth day-to-day operations across all subsidiary entities. Coordinate workflows, monitor business systems, identify bottlenecks, and provide support to team members.",
+    requirements: ["3+ years operations experience", "Strong organizational skills", "Excellent communication", "Problem-solving mindset"],
+    category: "operations"
+  },
+  { 
+    id: "outreach-coordinator", 
+    title: "Outreach Coordinator", 
+    entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+    entityShort: "Temple/508",
+    department: "Community Outreach",
+    type: "Full-Time",
+    location: "Hybrid",
+    salaryRange: "$42,000 - $58,000",
+    description: "Connect the organization with the broader community through events, partnerships, and relationship building. Plan community events, build partner relationships, and coordinate volunteers.",
+    requirements: ["2+ years outreach experience", "Strong interpersonal skills", "Event planning ability", "Public speaking comfort"],
+    category: "community"
+  },
+  { 
+    id: "content-creator", 
+    title: "Content Creator / Media Assistant", 
+    entity: "Real-Eye-Nation LLC",
+    entityShort: "Real-Eye",
+    department: "Media Production",
+    type: "Part-Time to Full-Time",
+    location: "Remote + On-location",
+    salaryRange: "$35,000 - $55,000",
+    description: "Support the media production mission by creating social media content, documenting events, editing videos, and writing copy for marketing materials.",
+    requirements: ["Portfolio required", "Photography/videography skills", "Video editing ability", "Social media knowledge"],
+    category: "media"
+  },
+  { 
+    id: "academy-instructor", 
+    title: "Academy Instructor / Curriculum Developer", 
+    entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+    entityShort: "Temple/508",
+    department: "Education",
+    type: "Part-Time to Full-Time",
+    location: "Remote + Occasional In-Person",
+    salaryRange: "$40,000 - $65,000",
+    description: "Deliver educational content and develop new courses for the LuvOnPurpose Academy. Teach courses, create curriculum, develop assessments, and track student progress.",
+    requirements: ["Subject matter expertise", "Teaching experience", "Clear communication", "Online teaching comfort"],
+    category: "education"
+  },
+  { 
+    id: "grant-writer", 
+    title: "Grant Writer / Proposal Specialist", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Grants & Proposals",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$50,000 - $72,000",
+    description: "Identify funding opportunities and write compelling proposals to secure grants for all subsidiary entities. Research opportunities, develop narratives, create budgets, and manage deadlines.",
+    requirements: ["2+ years grant writing", "Strong writing skills", "Deadline management", "Research abilities"],
+    category: "operations"
+  },
+  { 
+    id: "platform-admin", 
+    title: "Platform Administrator", 
+    entity: "LuvOnPurpose Autonomous Wealth System LLC",
+    entityShort: "LAWS LLC",
+    department: "Technology",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$55,000 - $80,000",
+    description: "Maintain and improve the technology infrastructure of the organization. Monitor system health, manage user accounts, implement new features, and ensure security.",
+    requirements: ["2+ years IT administration", "Tech-savvy", "Security-conscious", "User support patience"],
+    category: "technology"
+  },
+  { 
+    id: "programs-coordinator", 
+    title: "Community Programs Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Community Programs",
+    type: "Full-Time",
+    location: "Hybrid",
+    salaryRange: "$45,000 - $60,000",
+    description: "Develop and manage programs based on the L.A.W.S. framework (Land, Air, Water, Self) that help community members reconnect with their roots, gain knowledge, find balance, and discover purpose.",
+    requirements: ["2+ years program management", "Community development passion", "Organizational skills", "Cultural sensitivity"],
+    category: "community"
+  },
+];
+
+const CATEGORIES = [
+  { id: "all", label: "All Positions", count: POSITIONS.length },
+  { id: "operations", label: "Operations", count: POSITIONS.filter(p => p.category === "operations").length },
+  { id: "community", label: "Community", count: POSITIONS.filter(p => p.category === "community").length },
+  { id: "education", label: "Education", count: POSITIONS.filter(p => p.category === "education").length },
+  { id: "media", label: "Media", count: POSITIONS.filter(p => p.category === "media").length },
+  { id: "technology", label: "Technology", count: POSITIONS.filter(p => p.category === "technology").length },
+];
+
+const BENEFITS = [
+  { icon: Heart, title: "Ownership Stake", description: "Become a true stakeholder in the organization you help build" },
+  { icon: GraduationCap, title: "Free Certifications", description: "Access to all Academy courses and certifications at no cost" },
+  { icon: Clock, title: "Flexible Schedule", description: "Work arrangements that fit your life and responsibilities" },
+  { icon: Users, title: "Governance Voice", description: "Participate in decisions that shape the organization's future" },
+  { icon: Target, title: "Purpose-Driven Work", description: "Make a real impact on families and communities" },
+  { icon: Globe, title: "Remote-First", description: "Work from anywhere with occasional in-person gatherings" },
+  { icon: Wifi, title: "Utilities Stipend", description: "Monthly support for internet and electricity costs" },
+  { icon: Laptop, title: "Equipment Provided", description: "Laptop, phone, and software licenses included" },
+  { icon: Shirt, title: "Wardrobe Budget", description: "Professional appearance allowance for public-facing roles" },
+];
+
+export default function Careers() {
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showApplyDialog, setShowApplyDialog] = useState(false);
+  const [selectedPosition, setSelectedPosition] = useState<typeof POSITIONS[0] | null>(null);
+  const [application, setApplication] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    currentRole: "",
+    yearsExperience: "",
+    relevantSkills: "",
+    whyInterested: ""
+  });
+
+  const filteredPositions = selectedCategory === "all" 
+    ? POSITIONS 
+    : POSITIONS.filter(p => p.category === selectedCategory);
+
+  const handleApply = (position: typeof POSITIONS[0]) => {
+    setSelectedPosition(position);
+    setShowApplyDialog(true);
+  };
+
+  const handleSubmitApplication = () => {
+    if (!application.firstName || !application.lastName || !application.email) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    // In production, this would submit to the backend
+    toast.success("Application submitted! We'll be in touch soon.");
+    setShowApplyDialog(false);
+    setApplication({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      currentRole: "",
+      yearsExperience: "",
+      relevantSkills: "",
+      whyInterested: ""
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+        <div className="container max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/">
+              <a className="flex items-center gap-2">
+                <Sparkles className="w-6 h-6 text-primary" />
+                <span className="font-bold text-lg">LuvOnPurpose</span>
+              </a>
+            </Link>
+            <nav className="hidden md:flex items-center gap-6">
+              <Link href="/">
+                <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">Home</a>
+              </Link>
+              <Link href="/academy">
+                <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">Academy</a>
+              </Link>
+              <Link href="/pricing">
+                <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">Services</a>
+              </Link>
+              <span className="text-sm font-medium text-primary">Careers</span>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="py-16 md:py-24">
+        <div className="container max-w-7xl mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto">
+            <Badge className="mb-4">We're Hiring</Badge>
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              Join Our Mission to Build
+              <span className="text-primary"> Generational Wealth</span>
+            </h1>
+            <p className="text-lg text-muted-foreground mb-8">
+              We're building something different—a family enterprise focused on community development, 
+              education, and creating lasting prosperity. Join us and become a true stakeholder in our shared success.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button size="lg" onClick={() => document.getElementById('positions')?.scrollIntoView({ behavior: 'smooth' })}>
+                View Open Positions
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/getting-started">
+                  <a>Learn About Us</a>
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center mb-12">Why Join LuvOnPurpose?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {BENEFITS.map((benefit, idx) => (
+              <Card key={idx} className="border-0 shadow-sm">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-primary/10 rounded-lg">
+                      <benefit.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{benefit.title}</h3>
+                      <p className="text-sm text-muted-foreground">{benefit.description}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Positions Section */}
+      <section id="positions" className="py-16">
+        <div className="container max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center mb-4">Open Positions</h2>
+          <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+            We're looking for passionate individuals who believe in family, community, and building something that lasts.
+          </p>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {CATEGORIES.map((cat) => (
+              <Button
+                key={cat.id}
+                variant={selectedCategory === cat.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(cat.id)}
+              >
+                {cat.label} ({cat.count})
+              </Button>
+            ))}
+          </div>
+
+          {/* Position Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {filteredPositions.map((position) => (
+              <Card key={position.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-lg">{position.title}</CardTitle>
+                      <CardDescription className="flex items-center gap-2 mt-1">
+                        <Building2 className="w-4 h-4" />
+                        {position.entity}
+                      </CardDescription>
+                    </div>
+                    <Badge variant="outline">{position.entityShort}</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">{position.description}</p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <Badge variant="secondary" className="text-xs">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {position.type}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      <MapPin className="w-3 h-3 mr-1" />
+                      {position.location}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      <Briefcase className="w-3 h-3 mr-1" />
+                      {position.department}
+                    </Badge>
+                    <Badge variant="default" className="text-xs bg-green-600 hover:bg-green-700">
+                      <DollarSign className="w-3 h-3 mr-1" />
+                      {position.salaryRange}
+                    </Badge>
+                  </div>
+
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-muted-foreground mb-2">Requirements:</p>
+                    <ul className="text-xs text-muted-foreground space-y-1">
+                      {position.requirements.slice(0, 3).map((req, idx) => (
+                        <li key={idx} className="flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-green-500" />
+                          {req}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Button className="w-full" onClick={() => handleApply(position)}>
+                    Express Interest
+                    <Send className="w-4 h-4 ml-2" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary/5">
+        <div className="container max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold mb-4">Don't See the Right Fit?</h2>
+          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            We're always looking for talented individuals who share our vision. 
+            Send us your information and we'll keep you in mind for future opportunities.
+          </p>
+          <Button variant="outline" size="lg" onClick={() => {
+            setSelectedPosition(null);
+            setShowApplyDialog(true);
+          }}>
+            <FileText className="w-4 h-4 mr-2" />
+            Submit General Interest
+          </Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 border-t border-border">
+        <div className="container max-w-7xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">
+              © 2026 Calea Freeman Family Trust. Building Multi-Generational Wealth Through Purpose & Community.
+            </p>
+            <div className="flex gap-4">
+              <Link href="/">
+                <a className="text-sm text-muted-foreground hover:text-foreground">Home</a>
+              </Link>
+              <Link href="/academy">
+                <a className="text-sm text-muted-foreground hover:text-foreground">Academy</a>
+              </Link>
+              <Link href="/pricing">
+                <a className="text-sm text-muted-foreground hover:text-foreground">Services</a>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* Apply Dialog */}
+      <Dialog open={showApplyDialog} onOpenChange={setShowApplyDialog}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedPosition ? `Apply for ${selectedPosition.title}` : "Express Interest"}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedPosition 
+                ? `Submit your interest for the ${selectedPosition.title} position at ${selectedPosition.entity}.`
+                : "Tell us about yourself and we'll keep you in mind for future opportunities."
+              }
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name *</Label>
+                <Input
+                  id="firstName"
+                  placeholder="Your first name"
+                  value={application.firstName}
+                  onChange={(e) => setApplication({ ...application, firstName: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name *</Label>
+                <Input
+                  id="lastName"
+                  placeholder="Your last name"
+                  value={application.lastName}
+                  onChange={(e) => setApplication({ ...application, lastName: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={application.email}
+                  onChange={(e) => setApplication({ ...application, email: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="(555) 555-5555"
+                  value={application.phone}
+                  onChange={(e) => setApplication({ ...application, phone: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="currentRole">Current Role</Label>
+                <Input
+                  id="currentRole"
+                  placeholder="Your current job title"
+                  value={application.currentRole}
+                  onChange={(e) => setApplication({ ...application, currentRole: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="yearsExperience">Years of Experience</Label>
+                <Input
+                  id="yearsExperience"
+                  placeholder="e.g., 5 years"
+                  value={application.yearsExperience}
+                  onChange={(e) => setApplication({ ...application, yearsExperience: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="relevantSkills">Relevant Skills</Label>
+              <Textarea
+                id="relevantSkills"
+                placeholder="List your relevant skills and experience..."
+                value={application.relevantSkills}
+                onChange={(e) => setApplication({ ...application, relevantSkills: e.target.value })}
+                rows={3}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="whyInterested">Why are you interested?</Label>
+              <Textarea
+                id="whyInterested"
+                placeholder="Tell us why you're interested in joining LuvOnPurpose..."
+                value={application.whyInterested}
+                onChange={(e) => setApplication({ ...application, whyInterested: e.target.value })}
+                rows={3}
+              />
+            </div>
+            <div className="p-4 bg-muted rounded-lg">
+              <p className="text-sm text-muted-foreground">
+                <strong>Note:</strong> You can also upload your resume and cover letter after submitting this form. 
+                Our HR team will review your submission and reach out if there's a good fit.
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowApplyDialog(false)}>Cancel</Button>
+            <Button onClick={handleSubmitApplication}>
+              <Send className="w-4 h-4 mr-2" />
+              Submit Interest
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

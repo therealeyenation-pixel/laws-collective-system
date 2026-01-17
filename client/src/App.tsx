@@ -35,6 +35,8 @@ import ProposalSimulator from "./pages/ProposalSimulator";
 import RFPGenerator from "@/pages/RFPGenerator";
 import BusinessSetupWizard from "@/pages/BusinessSetupWizard";
 import TrustGovernance from "@/pages/TrustGovernance";
+import HRManagement from "@/pages/HRManagement";
+import Careers from "@/pages/Careers";
 import GettingStarted from "@/pages/GettingStarted";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
@@ -95,6 +97,7 @@ function Router() {
       <Route path="/home" component={Home} />
       <Route path="/academy" component={AcademyDashboard} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/careers" component={Careers} />
       {/* Dashboard is now public so users can view and take courses */}
       <Route path="/dashboard" component={Dashboard} />
       {/* Protected routes - require authentication */}
@@ -125,6 +128,7 @@ function Router() {
       <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} />}</Route>
       <Route path="/business-setup" component={BusinessSetupWizard} />
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} />}</Route>
+      <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

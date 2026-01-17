@@ -2161,3 +2161,62 @@
 - [ ] Media Lead (Amandes) - job description
 - [ ] Operations Support (Amber) - job description
 
+
+## Phase 38: Naming Fix and Feature Additions
+
+### Naming Fix
+- [ ] Fix AWS LLC to LAWS LLC in Position Management page
+- [ ] Fix any other AWS references to proper entity names
+
+### Document Upload Feature
+- [ ] Add file upload component to intake form Step 5
+- [ ] Support ID document upload
+- [ ] Support resume upload
+- [ ] Support certifications upload
+- [ ] Store files in S3 storage
+
+### User Profiles Database
+- [ ] Create user_profiles table in database schema
+- [ ] Add fields for all intake form data
+- [ ] Link profiles to user accounts
+- [ ] Create tRPC procedures for profile CRUD
+- [ ] Auto-populate other forms from profile data
+
+### Public Careers Page
+- [ ] Create Careers/Join Us page component
+- [ ] Display all 10 job descriptions
+- [ ] Add interest submission form
+- [ ] Make page publicly accessible (no auth required)
+- [ ] Add navigation link to landing page
+
+
+### Privacy & HR Features
+- [ ] Remove sensitive financial details from public job descriptions (60/40, 70/30, ownership stakes, tokens)
+- [ ] Create internal-only version of job descriptions with full compensation details
+- [ ] Add offer letter generation system
+- [ ] Add benefits package management for HR
+- [ ] Connect benefits packages to grant requirements
+- [ ] Create HR dashboard for managing offers and benefits
+
+
+
+## Phase 39: Salary Ranges and Job Description Documentation
+
+### Salary Ranges
+- [x] Add salary ranges to all 10 open positions
+- [x] Update public job descriptions markdown
+- [x] Update internal job descriptions JSON
+- [x] Update Careers page with salary display
+- [x] Update HR Management page with salary info
+
+### Documentation Consistency
+- [x] Ensure all positions have complete descriptions
+- [x] Standardize job description format across all documents
+- [ ] Create printable/downloadable job description format
+
+### Grant-Allowable Benefits (Added)
+- [x] Remote Work Support Package (utilities stipend, equipment, home office setup, travel)
+- [x] Outreach & Professional Appearance Package (wardrobe budget, branded materials, membership dues)
+- [x] Grant budget summary with per-employee cost estimates
+- [x] Update Careers page with new benefits
+- [x] Update HR Management with new benefits packages

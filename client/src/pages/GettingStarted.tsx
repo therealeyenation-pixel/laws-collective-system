@@ -66,6 +66,11 @@ interface PersonalProfile {
   emergencyName: string;
   emergencyRelationship: string;
   emergencyPhone: string;
+  
+  // Documents
+  resumeFile: File | null;
+  idFile: File | null;
+  certificationsFile: File | null;
 }
 
 const SKILLS_OPTIONS = [
@@ -140,6 +145,9 @@ export default function GettingStarted() {
     emergencyName: "",
     emergencyRelationship: "",
     emergencyPhone: "",
+    resumeFile: null,
+    idFile: null,
+    certificationsFile: null,
   });
 
   const updateProfile = (field: keyof PersonalProfile, value: any) => {
@@ -710,6 +718,84 @@ export default function GettingStarted() {
                       value={profile.emergencyPhone}
                       onChange={(e) => updateProfile("emergencyPhone", e.target.value)}
                     />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Document Upload Section */}
+              <div className="p-4 bg-muted rounded-lg">
+                <p className="text-sm font-medium mb-4 flex items-center gap-2">
+                  <Upload className="w-4 h-4" />
+                  Documents (Optional)
+                </p>
+                <p className="text-xs text-muted-foreground mb-4">
+                  Upload supporting documents to strengthen your profile. These will be securely stored and only accessible to HR.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="resumeFile">Resume/CV</Label>
+                    <div className="relative">
+                      <Input
+                        id="resumeFile"
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        className="cursor-pointer"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          updateProfile("resumeFile", file);
+                        }}
+                      />
+                    </div>
+                    {profile.resumeFile && (
+                      <p className="text-xs text-green-600 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        {profile.resumeFile.name}
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="idFile">Government ID</Label>
+                    <div className="relative">
+                      <Input
+                        id="idFile"
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        className="cursor-pointer"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          updateProfile("idFile", file);
+                        }}
+                      />
+                    </div>
+                    {profile.idFile && (
+                      <p className="text-xs text-green-600 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        {profile.idFile.name}
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="certificationsFile">Certifications</Label>
+                    <div className="relative">
+                      <Input
+                        id="certificationsFile"
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        className="cursor-pointer"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          updateProfile("certificationsFile", file);
+                        }}
+                      />
+                    </div>
+                    {profile.certificationsFile && (
+                      <p className="text-xs text-green-600 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" />
+                        {profile.certificationsFile.name}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

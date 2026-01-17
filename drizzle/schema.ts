@@ -6561,3 +6561,111 @@ export const customerSubscriptions = mysqlTable("customer_subscriptions", {
 
 export type CustomerSubscription = typeof customerSubscriptions.$inferSelect;
 export type InsertCustomerSubscription = typeof customerSubscriptions.$inferInsert;
+
+
+/**
+ * ============================================
+ * USER PROFILES - Personal Intake Form Data
+ * ============================================
+ */
+
+/**
+ * User Profiles - Complete personal information from intake form
+ */
+export const userProfiles = mysqlTable("user_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(), // Link to users table
+  
+  // Personal Information
+  firstName: varchar("firstName", { length: 100 }).notNull(),
+  lastName: varchar("lastName", { length: 100 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  address: varchar("address", { length: 255 }),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 50 }),
+  zip: varchar("zip", { length: 20 }),
+  dateOfBirth: varchar("dateOfBirth", { length: 20 }),
+  
+  // Background & Skills
+  highestEducation: mysqlEnum("highestEducation", [
+    "high-school", "some-college", "associates", "bachelors", "masters", "doctorate"
+  ]),
+  fieldOfStudy: varchar("fieldOfStudy", { length: 100 }),
+  currentOccupation: varchar("currentOccupation", { length: 100 }),
+  yearsExperience: mysqlEnum("yearsExperience", ["0-2", "3-5", "6-10", "11-20", "20+"]),
+  skills: json("skills"), // Array of skill strings
+  certifications: text("certifications"),
+  
+  // Goals & Assessment
+  primaryGoal: mysqlEnum("primaryGoal", [
+    "start-business", "employment", "education", "community", "grants", "wealth-building"
+  ]),
+  secondaryGoals: json("secondaryGoals"), // Array of goal IDs
+  timeline: mysqlEnum("timeline", ["immediate", "1-3-months", "3-6-months", "6-12-months", "1-year-plus"]),
+  
+  // Interests & Availability
+  departmentInterests: json("departmentInterests"), // Array of department IDs
+  availability: mysqlEnum("availability", ["full-time", "part-time", "volunteer", "consulting"]),
+  
+  // Emergency Contact
+  emergencyName: varchar("emergencyName", { length: 100 }),
+  emergencyRelationship: varchar("emergencyRelationship", { length: 50 }),
+  emergencyPhone: varchar("emergencyPhone", { length: 20 }),
+  
+  // Documents (S3 URLs)
+  idDocumentUrl: varchar("idDocumentUrl", { length: 500 }),
+  resumeUrl: varchar("resumeUrl", { length: 500 }),
+  certificationsDocUrl: varchar("certificationsDocUrl", { length: 500 }),
+  
+  // Status
+  profileStatus: mysqlEnum("profileStatus", ["draft", "complete", "verified"]).default("draft").notNull(),
+  completedAt: timestamp("completedAt"),
+  verifiedAt: timestamp("verifiedAt"),
+  verifiedBy: int("verifiedBy"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserProfile = typeof userProfiles.$inferSelect;
+export type InsertUserProfile = typeof userProfiles.$inferInsert;
+
+/**
+ * Career Interest Submissions - External applicants expressing interest in positions
+ */
+export const careerInterestSubmissions = mysqlTable("career_interest_submissions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Contact Information
+  firstName: varchar("firstName", { length: 100 }).notNull(),
+  lastName: varchar("lastName", { length: 100 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  
+  // Position Interest
+  positionId: varchar("positionId", { length: 50 }).notNull(), // e.g., "hr-lead", "operations-manager"
+  positionTitle: varchar("positionTitle", { length: 100 }).notNull(),
+  entityName: varchar("entityName", { length: 255 }).notNull(),
+  
+  // Background
+  currentRole: varchar("currentRole", { length: 100 }),
+  yearsExperience: varchar("yearsExperience", { length: 20 }),
+  relevantSkills: text("relevantSkills"),
+  whyInterested: text("whyInterested"),
+  
+  // Documents (S3 URLs)
+  resumeUrl: varchar("resumeUrl", { length: 500 }),
+  coverLetterUrl: varchar("coverLetterUrl", { length: 500 }),
+  
+  // Status
+  status: mysqlEnum("status", ["new", "reviewed", "contacted", "interviewing", "hired", "declined"]).default("new").notNull(),
+  reviewedBy: int("reviewedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CareerInterestSubmission = typeof careerInterestSubmissions.$inferSelect;
+export type InsertCareerInterestSubmission = typeof careerInterestSubmissions.$inferInsert;

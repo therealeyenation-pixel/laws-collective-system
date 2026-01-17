@@ -139,7 +139,7 @@ export default function EntityGrants() {
           <TabsTrigger value="luvonpurpose_temple" className="text-xs">Temple/508</TabsTrigger>
           <TabsTrigger value="laws_collective" className="text-xs">L.A.W.S.</TabsTrigger>
           <TabsTrigger value="real_eye_nation" className="text-xs">Real-Eye</TabsTrigger>
-          <TabsTrigger value="luvonpurpose_aws" className="text-xs">AWS LLC</TabsTrigger>
+          <TabsTrigger value="luvonpurpose_aws" className="text-xs">LAWS LLC</TabsTrigger>
           <TabsTrigger value="calea_freeman_trust" className="text-xs">Trust</TabsTrigger>
         </TabsList>
 

@@ -46,6 +46,7 @@ const menuItems = [
   { icon: Building2, label: "Business Formation", path: "/business-formation" },
   { icon: Users, label: "Position Management", path: "/positions" },
   { icon: Users, label: "Family Onboarding", path: "/family-onboarding" },
+  { icon: Users, label: "HR Management", path: "/hr-management" },
   { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing" },
   { icon: Gavel, label: "Board Meetings", path: "/board-meetings" },
   { icon: Globe2, label: "International Business", path: "/international-business" },
