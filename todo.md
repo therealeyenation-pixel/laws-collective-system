@@ -2012,3 +2012,35 @@
 - **Essence (Design)** - Support: Token visual identity, NFT artwork, wallet UI
 - **Amandes (Media)** - Support: Token documentation, tutorials, LEGACY event coverage
 
+
+
+## Phase 33: Purchasing Department
+
+### Department Setup
+- [ ] Create Purchasing department under The L.A.W.S. Collective, LLC
+- [ ] Assign department lead: TBD (pending recruitment)
+- [ ] Define service agreements with Temple, Real-Eye-Nation, LuvOnPurpose AWS
+- [ ] Set up cost allocation per 40/30/20/10 split
+
+### Core Functions
+- [ ] Vendor Management - approved vendor list, contracts, performance tracking
+- [ ] Procurement - source materials, equipment, services for all entities
+- [ ] Budget Support - provide quotes for Proposal Workshop and grant applications
+- [ ] Compliance - ensure purchases follow grant requirements and entity policies
+- [ ] Cost Tracking - log all purchases in LuvLedger for audit trail
+- [ ] Inventory - track assets acquired across entities
+
+### System Integration
+- [ ] Create purchasing_requests table (request_id, entity_id, vendor, items, amount, status, approved_by)
+- [ ] Create vendors table (vendor_id, name, category, contact, rating, contracts)
+- [ ] Create inventory table (item_id, entity_id, description, purchase_date, value, location)
+- [ ] Build Purchasing Dashboard UI
+- [ ] Integrate with Proposal Workshop for budget quotes
+- [ ] Integrate with Outreach for event/program supplies
+- [ ] Link all transactions to LuvLedger
+
+### Connections
+- **Proposal Workshop** - Real-time cost data for accurate proposal budgets
+- **Outreach (Temple)** - Event supplies, materials, venue coordination
+- **Grant Execution** - Ensure grant funds spent per approved budget
+
