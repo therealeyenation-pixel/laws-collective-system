@@ -1,10 +1,66 @@
 {
   "metadata": {
     "lastUpdated": "2026-01-17",
-    "version": "1.0",
+    "version": "2.0",
     "managedBy": "HR Department",
     "applicationEmail": "careers@lawscollective.org",
     "applicationPortal": "https://lawscollective.org/careers"
+  },
+  "hiringStructure": {
+    "description": "LuvOnPurpose uses a family-based management hierarchy. Manager positions are filled by family members or identified candidates, while Operations Coordinator positions are the primary external hires.",
+    "tiers": {
+      "tier1_familyManagers": {
+        "description": "Family members confirmed in management roles - NOT open for external hiring",
+        "positions": [
+          {"title": "CEO/Matriarch", "holder": "Shanna Russell", "department": "Executive"},
+          {"title": "CFO", "holder": "Craig", "department": "Finance"},
+          {"title": "CEO-Ed", "holder": "Cornelius", "department": "Education"},
+          {"title": "Media Manager/Creative Director", "holder": "Amandes", "department": "Media"},
+          {"title": "Design Manager/Design Lead", "holder": "Essence", "department": "Design"},
+          {"title": "Health Manager", "holder": "Amber", "department": "Health"}
+        ]
+      },
+      "tier2_identifiedCandidates": {
+        "description": "Candidates identified but not yet approached (pending funding) - NOT actively recruiting",
+        "positions": [
+          {"title": "Purchasing Manager", "department": "Purchasing"},
+          {"title": "Real Estate Manager", "department": "Real Estate"},
+          {"title": "Property Manager", "department": "Property"},
+          {"title": "Contracts Manager", "department": "Contracts"}
+        ]
+      },
+      "tier3_openManagers": {
+        "description": "Manager positions truly open for recruitment (future hiring)",
+        "positions": [
+          {"title": "COO", "priority": "High"},
+          {"title": "Executive Director", "priority": "High"},
+          {"title": "Operations Manager", "priority": "High"},
+          {"title": "HR Manager", "priority": "High"},
+          {"title": "QA/QC Manager", "priority": "Medium"},
+          {"title": "Legal/Compliance Manager", "priority": "High"},
+          {"title": "Platform Administrator", "priority": "Medium"},
+          {"title": "Grant Writer", "priority": "High"}
+        ]
+      },
+      "tier4_operationsCoordinators": {
+        "description": "Primary external hire positions - selected by department Managers",
+        "hiringNote": "These are the main positions we actively recruit for. Each Coordinator is selected by their department Manager.",
+        "readyToHire": [
+          {"title": "Education Operations Coordinator", "reportsTo": "Cornelius (CEO-Ed)"},
+          {"title": "Health Operations Coordinator", "reportsTo": "Amber (Health Manager)"},
+          {"title": "Design Operations Coordinator", "reportsTo": "Essence (Design Manager)"},
+          {"title": "Media Operations Coordinator", "reportsTo": "Amandes (Media Manager)"},
+          {"title": "Finance Operations Coordinator", "reportsTo": "Craig (CFO)"}
+        ],
+        "pendingManager": [
+          {"title": "HR Operations Coordinator", "reportsTo": "HR Manager (Open)"},
+          {"title": "QA/QC Operations Coordinator", "reportsTo": "QA/QC Manager (Open)"},
+          {"title": "Purchasing Operations Coordinator", "reportsTo": "Purchasing Manager (Candidate Identified)"},
+          {"title": "Operations Operations Coordinator", "reportsTo": "Operations Manager (Open)"},
+          {"title": "Contracts Operations Coordinator", "reportsTo": "Contracts Manager (Candidate Identified)"}
+        ]
+      }
+    }
   },
   "companyOverview": {
     "name": "The L.A.W.S. Collective, LLC",

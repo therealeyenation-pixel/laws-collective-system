@@ -288,6 +288,42 @@
             ],
             "reportsTo": "COO",
             "salaryRange": "$80,000 - $110,000"
+          },
+          {
+            "title": "Project Controls Manager",
+            "currentHolder": "Candidate Identified",
+            "tier": 2,
+            "hiringStatus": "candidate_identified",
+            "responsibilities": [
+              "Project scheduling and milestone tracking",
+              "Budget and cost control across all entities",
+              "Change order management and documentation",
+              "Progress reporting and KPI development",
+              "Risk identification and mitigation planning",
+              "Earned value analysis for grants and contracts",
+              "Resource allocation optimization",
+              "Project documentation and controls standards"
+            ],
+            "reportsTo": "COO",
+            "directReports": ["Project Controls Operations Coordinator"],
+            "salaryRange": "$90,000 - $120,000"
+          },
+          {
+            "title": "Project Controls Operations Coordinator",
+            "currentHolder": "Open Position",
+            "tier": 4,
+            "hiringStatus": "selected_by_manager",
+            "responsibilities": [
+              "Project schedule updates and maintenance",
+              "Cost tracking and variance reporting",
+              "Change order processing and logging",
+              "Meeting minutes and action item tracking",
+              "Document control and filing",
+              "Progress report compilation",
+              "Risk register maintenance"
+            ],
+            "reportsTo": "Project Controls Manager",
+            "salaryRange": "$68,000 - $88,000"
           }
         ]
       },
@@ -416,13 +452,72 @@
     ]
   },
   "currentTeam": {
+    "familyManagers": {
+      "description": "Tier 1: Family members confirmed in management roles",
+      "members": [
+        {"name": "Shanna Russell", "title": "Matriarch/CEO", "department": "Executive/Business", "entity": "Trust/L.A.W.S. Collective", "status": "Active"},
+        {"name": "Craig", "title": "CFO", "department": "Finance", "entity": "L.A.W.S. Collective", "status": "Active"},
+        {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "department": "Education", "entity": "L.A.W.S. Collective (cross-entity)", "status": "Active"},
+        {"name": "Amandes", "title": "Media Manager/Creative Director", "department": "Media", "entity": "Real-Eye-Nation", "status": "Active"},
+        {"name": "Essence", "title": "Design Manager/Design Lead", "department": "Design", "entity": "Real-Eye-Nation", "status": "Active"},
+        {"name": "Amber", "title": "Health Manager", "department": "Health", "entity": "L.A.W.S. Collective", "status": "Active"}
+      ]
+    },
+    "identifiedCandidates": {
+      "description": "Tier 2: Candidates identified but not yet approached (pending funding)",
+      "positions": [
+        {"title": "Purchasing Manager", "department": "Purchasing", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$80,000 - $110,000"},
+        {"title": "Real Estate Manager", "department": "Real Estate", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$85,000 - $115,000"},
+        {"title": "Property Manager", "department": "Property", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$75,000 - $100,000"},
+        {"title": "Contracts Manager", "department": "Contracts", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$95,000 - $130,000"}
+      ]
+    },
+    "openManagerPositions": {
+      "description": "Tier 3: Manager positions truly open for recruitment",
+      "positions": [
+        {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$125,000 - $165,000", "status": "Open"},
+        {"title": "Executive Director", "entity": "Temple/508", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"},
+        {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"},
+        {"title": "HR Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"},
+        {"title": "QA/QC Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$85,000 - $115,000", "status": "Open"},
+        {"title": "Legal/Compliance Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000", "status": "Open"},
+        {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$95,000 - $130,000", "status": "Open"},
+        {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"}
+      ]
+    },
+    "operationsCoordinators": {
+      "description": "Tier 4: Operations Coordinator positions - selected by department Managers, primary external hires",
+      "hiringNote": "Each Operations Coordinator is selected by their respective department Manager once the Manager position is filled",
+      "positions": [
+        {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "HR Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
+        {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "QA/QC Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
+        {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Purchasing Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
+        {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "reportsTo": "Operations Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
+        {"title": "Education Operations Coordinator", "entity": "Temple/508", "reportsTo": "CEO-Ed (Cornelius)", "salaryRange": "$68,000 - $88,000", "status": "Ready to Hire"},
+        {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Health Manager (Amber)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
+        {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Contracts Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager"},
+        {"title": "Design Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Design Manager (Essence)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
+        {"title": "Media Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Media Manager (Amandes)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
+        {"title": "Finance Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "CFO (Craig)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"}
+      ]
+    },
+    "staffPositions": {
+      "description": "Additional staff positions",
+      "positions": [
+        {"title": "Lead Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$68,000 - $88,000"},
+        {"title": "Outreach Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$42,000 - $58,000"},
+        {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$35,000 - $55,000"},
+        {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low", "salaryRange": "$40,000 - $65,000"},
+        {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$80,000 - $110,000"}
+      ]
+    },
     "filled": [
       {"name": "Shanna Russell", "title": "Matriarch/CEO", "entity": "Trust/L.A.W.S. Collective"},
       {"name": "Craig", "title": "CFO", "entity": "L.A.W.S. Collective"},
       {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "entity": "L.A.W.S. Collective (cross-entity)"},
-      {"name": "Amandes", "title": "Creative Director", "entity": "Real-Eye-Nation"},
-      {"name": "Essence", "title": "Design Lead", "entity": "Real-Eye-Nation"},
-      {"name": "Amber", "title": "Operations Support", "entity": "L.A.W.S. Collective"}
+      {"name": "Amandes", "title": "Media Manager/Creative Director", "entity": "Real-Eye-Nation"},
+      {"name": "Essence", "title": "Design Manager/Design Lead", "entity": "Real-Eye-Nation"},
+      {"name": "Amber", "title": "Health Manager", "entity": "L.A.W.S. Collective"}
     ],
     "openPositions": [
       {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$125,000 - $165,000"},
@@ -461,15 +556,38 @@
     },
     "level2": {
       "title": "Executive Leadership",
-      "positions": ["Matriarch/CEO (Shanna Russell)"]
+      "positions": ["Matriarch/CEO (Shanna Russell) - FAMILY"]
     },
     "level3": {
       "title": "C-Suite",
-      "positions": ["COO (Open)", "CFO (Craig)", "CEO-Ed (Cornelius)", "Executive Director - Temple (Open)", "Creative Director (Amandes)"]
+      "positions": [
+        "COO (Open)",
+        "CFO (Craig) - FAMILY",
+        "CEO-Ed (Cornelius) - FAMILY",
+        "Executive Director - Temple (Open)",
+        "Creative Director/Media Manager (Amandes) - FAMILY"
+      ]
     },
     "level4": {
-      "title": "Managers",
-      "positions": ["Operations Manager", "HR Manager", "QA/QC Manager", "Purchasing Manager", "Health Manager", "Procurement Manager", "Contracts Manager", "Platform Administrator", "Grant Writer", "Design Lead (Essence)"]
+      "title": "Department Managers",
+      "familyFilled": [
+        "Health Manager (Amber) - FAMILY",
+        "Design Manager (Essence) - FAMILY"
+      ],
+      "candidateIdentified": [
+        "Purchasing Manager - CANDIDATE IDENTIFIED",
+        "Real Estate Manager - CANDIDATE IDENTIFIED",
+        "Property Manager - CANDIDATE IDENTIFIED",
+        "Contracts Manager - CANDIDATE IDENTIFIED"
+      ],
+      "open": [
+        "Operations Manager (Open)",
+        "HR Manager (Open)",
+        "QA/QC Manager (Open)",
+        "Legal/Compliance Manager (Open)",
+        "Platform Administrator (Open)",
+        "Grant Writer (Open)"
+      ]
     },
     "level5": {
       "title": "Lead",
@@ -480,6 +598,20 @@
       "positions": ["Outreach Coordinator", "Content Creator", "Academy Instructors", "Community Programs Coordinator"]
     },
     "level7": {
-      "title": "Operations Coordinator",
-      "positions": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator", "Contracts Operations Coordinator"]
+      "title": "Operations Coordinators",
+      "hiringNote": "Selected by respective department Manager",
+      "readyToHire": [
+        "Education Operations Coordinator (reports to Cornelius)",
+        "Health Operations Coordinator (reports to Amber)",
+        "Design Operations Coordinator (reports to Essence)",
+        "Media Operations Coordinator (reports to Amandes)",
+        "Finance Operations Coordinator (reports to Craig)"
+      ],
+      "pendingManager": [
+        "HR Operations Coordinator",
+        "QA/QC Operations Coordinator",
+        "Purchasing Operations Coordinator",
+        "Operations Operations Coordinator",
+        "Contracts Operations Coordinator"
+      ]
     }

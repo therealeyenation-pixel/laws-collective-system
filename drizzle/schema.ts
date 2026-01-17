@@ -7305,3 +7305,261 @@ export const onboardingTaskProgress = mysqlTable("onboarding_task_progress", {
 
 export type OnboardingTaskProgress = typeof onboardingTaskProgress.$inferSelect;
 export type InsertOnboardingTaskProgress = typeof onboardingTaskProgress.$inferInsert;
+
+
+/**
+ * Operating Procedures and Instruction Manuals
+ * SOPs, policies, guides, and training materials for the organization
+ */
+export const operatingProcedures = mysqlTable("operating_procedures", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  documentNumber: varchar("documentNumber", { length: 50 }), // e.g., SOP-HR-001
+  category: mysqlEnum("category", [
+    "sop",           // Standard Operating Procedure
+    "manual",        // Instruction Manual
+    "policy",        // Policy Document
+    "guide",         // How-To Guide
+    "training",      // Training Material
+    "checklist",     // Process Checklist
+    "template",      // Document Template
+    "form"           // Required Form
+  ]).notNull(),
+  department: varchar("department", { length: 100 }), // Which department this applies to
+  entityId: int("entityId"), // Which entity this applies to (null = all)
+  positionId: varchar("positionId", { length: 100 }), // Which position this applies to
+  version: varchar("version", { length: 20 }).notNull().default("1.0"),
+  status: mysqlEnum("status", [
+    "draft",
+    "review",
+    "approved",
+    "archived",
+    "superseded"
+  ]).default("draft").notNull(),
+  content: text("content"), // Markdown content
+  fileUrl: varchar("fileUrl", { length: 500 }), // Link to uploaded document
+  effectiveDate: timestamp("effectiveDate"),
+  reviewDate: timestamp("reviewDate"),
+  expirationDate: timestamp("expirationDate"),
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  createdBy: int("createdBy").notNull(),
+  tags: json("tags"), // Array of tags for searchability
+  relatedProcedures: json("relatedProcedures"), // Array of related procedure IDs
+  revisionHistory: json("revisionHistory"), // Track changes
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OperatingProcedure = typeof operatingProcedures.$inferSelect;
+export type InsertOperatingProcedure = typeof operatingProcedures.$inferInsert;
+
+/**
+ * Procedure Acknowledgments - Track who has read/acknowledged procedures
+ */
+export const procedureAcknowledgments = mysqlTable("procedure_acknowledgments", {
+  id: int("id").autoincrement().primaryKey(),
+  procedureId: int("procedureId").notNull(),
+  userId: int("userId").notNull(),
+  acknowledgedAt: timestamp("acknowledgedAt").defaultNow().notNull(),
+  version: varchar("version", { length: 20 }).notNull(), // Version they acknowledged
+  signature: varchar("signature", { length: 255 }), // Digital signature if required
+  notes: text("notes"),
+});
+
+export type ProcedureAcknowledgment = typeof procedureAcknowledgments.$inferSelect;
+export type InsertProcedureAcknowledgment = typeof procedureAcknowledgments.$inferInsert;
+
+/**
+ * Procedure Categories - Organize procedures by functional area
+ */
+export const procedureCategories = mysqlTable("procedure_categories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  parentId: int("parentId"), // For nested categories
+  sortOrder: int("sortOrder").default(0).notNull(),
+  icon: varchar("icon", { length: 50 }), // Icon name for UI
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProcedureCategory = typeof procedureCategories.$inferSelect;
+export type InsertProcedureCategory = typeof procedureCategories.$inferInsert;
+
+
+// ============================================
+// PROJECT CONTROLS TABLES
+// ============================================
+
+/**
+ * Projects - Master list of all projects across entities
+ */
+export const projects = mysqlTable("projects", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  code: varchar("code", { length: 50 }).notNull(),
+  description: text("description"),
+  entityId: int("entityId"),
+  projectType: varchar("projectType", { length: 50 }).notNull(),
+  status: varchar("status", { length: 50 }).notNull().default("planning"),
+  priority: varchar("priority", { length: 20 }).default("medium"),
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  actualStartDate: timestamp("actualStartDate"),
+  actualEndDate: timestamp("actualEndDate"),
+  budget: decimal("budget", { precision: 15, scale: 2 }),
+  actualCost: decimal("actualCost", { precision: 15, scale: 2 }).default("0"),
+  percentComplete: int("percentComplete").default(0),
+  projectManagerId: int("projectManagerId"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = typeof projects.$inferInsert;
+
+/**
+ * Project Milestones - Key deliverables and checkpoints
+ */
+export const projectMilestones = mysqlTable("project_milestones", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  plannedDate: timestamp("plannedDate").notNull(),
+  actualDate: timestamp("actualDate"),
+  status: varchar("status", { length: 50 }).notNull().default("pending"),
+  weight: int("weight").default(1),
+  deliverables: text("deliverables"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectMilestone = typeof projectMilestones.$inferSelect;
+export type InsertProjectMilestone = typeof projectMilestones.$inferInsert;
+
+/**
+ * Project Tasks - Gantt chart items and work breakdown
+ */
+export const projectTasks = mysqlTable("project_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  milestoneId: int("milestoneId"),
+  parentTaskId: int("parentTaskId"),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  assigneeId: int("assigneeId"),
+  plannedStart: timestamp("plannedStart"),
+  plannedEnd: timestamp("plannedEnd"),
+  actualStart: timestamp("actualStart"),
+  actualEnd: timestamp("actualEnd"),
+  duration: int("duration"),
+  percentComplete: int("percentComplete").default(0),
+  status: varchar("status", { length: 50 }).notNull().default("not_started"),
+  priority: varchar("priority", { length: 20 }).default("medium"),
+  dependencies: text("dependencies"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectTask = typeof projectTasks.$inferSelect;
+export type InsertProjectTask = typeof projectTasks.$inferInsert;
+
+/**
+ * Project Budget Items - Cost breakdown and tracking
+ */
+export const projectBudgetItems = mysqlTable("project_budget_items", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  description: varchar("description", { length: 255 }).notNull(),
+  plannedAmount: decimal("plannedAmount", { precision: 15, scale: 2 }).notNull(),
+  actualAmount: decimal("actualAmount", { precision: 15, scale: 2 }).default("0"),
+  variance: decimal("variance", { precision: 15, scale: 2 }).default("0"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectBudgetItem = typeof projectBudgetItems.$inferSelect;
+export type InsertProjectBudgetItem = typeof projectBudgetItems.$inferInsert;
+
+/**
+ * Change Orders - Scope, schedule, and budget changes
+ */
+export const changeOrders = mysqlTable("change_orders", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  changeNumber: varchar("changeNumber", { length: 50 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  reason: text("reason").notNull(),
+  impactType: varchar("impactType", { length: 50 }).notNull(),
+  scheduleImpactDays: int("scheduleImpactDays").default(0),
+  costImpact: decimal("costImpact", { precision: 15, scale: 2 }).default("0"),
+  status: varchar("status", { length: 50 }).notNull().default("draft"),
+  requestedBy: int("requestedBy"),
+  approvedBy: int("approvedBy"),
+  requestedDate: timestamp("requestedDate").defaultNow(),
+  approvedDate: timestamp("approvedDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ChangeOrder = typeof changeOrders.$inferSelect;
+export type InsertChangeOrder = typeof changeOrders.$inferInsert;
+
+/**
+ * Project Risks - Risk register and mitigation tracking
+ */
+export const projectRisks = mysqlTable("project_risks", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  riskNumber: varchar("riskNumber", { length: 50 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  probability: varchar("probability", { length: 20 }).notNull(),
+  impact: varchar("impact", { length: 20 }).notNull(),
+  riskScore: int("riskScore"),
+  status: varchar("status", { length: 50 }).notNull().default("open"),
+  mitigationPlan: text("mitigationPlan"),
+  contingencyPlan: text("contingencyPlan"),
+  ownerId: int("ownerId"),
+  identifiedDate: timestamp("identifiedDate").defaultNow(),
+  closedDate: timestamp("closedDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectRisk = typeof projectRisks.$inferSelect;
+export type InsertProjectRisk = typeof projectRisks.$inferInsert;
+
+/**
+ * Project Status Reports - Progress reporting and earned value
+ */
+export const projectStatusReports = mysqlTable("project_status_reports", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  reportDate: timestamp("reportDate").notNull(),
+  reportPeriod: varchar("reportPeriod", { length: 50 }).notNull(),
+  overallStatus: varchar("overallStatus", { length: 20 }).notNull(),
+  scheduleStatus: varchar("scheduleStatus", { length: 20 }).notNull(),
+  budgetStatus: varchar("budgetStatus", { length: 20 }).notNull(),
+  scopeStatus: varchar("scopeStatus", { length: 20 }).notNull(),
+  accomplishments: text("accomplishments"),
+  plannedActivities: text("plannedActivities"),
+  issues: text("issues"),
+  decisions: text("decisions"),
+  earnedValue: decimal("earnedValue", { precision: 15, scale: 2 }),
+  plannedValue: decimal("plannedValue", { precision: 15, scale: 2 }),
+  actualCost: decimal("actualCost", { precision: 15, scale: 2 }),
+  cpi: decimal("cpi", { precision: 5, scale: 2 }),
+  spi: decimal("spi", { precision: 5, scale: 2 }),
+  preparedBy: int("preparedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProjectStatusReport = typeof projectStatusReports.$inferSelect;
+export type InsertProjectStatusReport = typeof projectStatusReports.$inferInsert;

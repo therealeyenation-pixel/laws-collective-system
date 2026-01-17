@@ -2725,3 +2725,113 @@
 - [x] Create Onboarding page with task management
 - [x] Seed default onboarding checklist with 24 items
 - [x] Write tests for new functionality (15 tests for onboarding router)
+
+
+## Phase 49: Operating Procedures, Family Positions, Reviews & Time-Off
+
+### Family Manager Positions
+- [ ] Map family-based management structure (House Managers, Family Coordinators)
+- [ ] Add Family House Manager positions to job postings
+- [ ] Add Family Coordinator positions
+- [ ] Add Legacy Steward positions
+- [ ] Create family position hierarchy in organizational structure
+
+### Operating Procedures & Manuals
+- [ ] Create SOPs database table
+- [ ] Build Operating Procedures page with CRUD
+- [ ] Add instruction manual templates
+- [ ] Link SOPs to departments and positions
+- [ ] Add SOP versioning and approval workflow
+
+### Performance Reviews
+- [ ] Create performance reviews database table
+- [ ] Build performance review form with competencies
+- [ ] Add manager review workflow
+- [ ] Create self-assessment component
+- [ ] Add review history and tracking
+
+### Time-Off Requests
+- [ ] Create time-off requests database table
+- [ ] Build time-off request form in My Profile
+- [ ] Add manager approval workflow
+- [ ] Create PTO balance tracking
+- [ ] Add calendar view for team availability
+
+### Department-Specific Onboarding
+- [ ] Create Technology department checklist
+- [ ] Create Legal department checklist
+- [ ] Create Finance department checklist
+- [ ] Create Executive onboarding checklist
+
+### Additional Job Positions
+- [ ] Review and expand open positions across all entities
+- [ ] Add missing department positions
+- [ ] Ensure all 5 entities have appropriate positions
+
+
+## Phase 49 (Revised): Family-Based Management Hierarchy Restructure
+
+### Family Manager Assignments (Tier 1 - Confirmed & Active)
+- [x] Update Shanna Russell as CEO/Matriarch (Business/Executive)
+- [x] Update Craig as CFO (Finance)
+- [x] Update Cornelius as CEO-Ed (Education)
+- [x] Update Amandes as Creative Director (Media)
+- [x] Update Essence as Design Lead (Design)
+- [x] Update Amber as Health Manager (Health)
+
+### Identified Candidates (Tier 2 - Not Yet Approached)
+- [x] Mark Purchasing Manager as "Candidate Identified"
+- [x] Mark Real Estate Manager as "Candidate Identified"
+- [x] Mark Property Manager as "Candidate Identified"
+- [x] Mark Contracts Manager as "Candidate Identified"
+
+### Open Manager Positions (Tier 3 - Truly Open)
+- [x] Mark QA/QC Manager as open
+- [x] Mark Legal/Compliance Manager as open
+- [x] Mark HR Manager as open
+- [x] Mark Operations Manager as open
+
+### Operations Coordinators (Tier 4 - Selected by Managers)
+- [x] Update job postings to show Coordinators are primary external hires
+- [x] Add note that Coordinators are selected by department Managers
+
+### System Updates
+- [x] Update organizational_structure.json with correct tiers
+- [x] Update job_postings.json to reflect hiring structure
+- [ ] Update internal_job_descriptions.json with family assignments
+- [x] Update Employee Directory with family managers as employees (Amber, Amandes, Essence added)
+- [x] Update Careers page to show correct position hierarchy
+- [x] Add hiring status badges to all positions
+- [x] Add hiring status filter to Careers page
+- [x] Update Apply buttons based on position status
+
+
+## Phase 49b: Project Controls Department
+- [x] Fix failing procedures test (all 134 tests pass)
+- [x] Add Project Controls department to organizational structure
+- [x] Add Project Controls Manager job posting (Tier 2 - candidate identified)
+- [x] Add Project Controls Operations Coordinator job posting (Tier 4)
+- [x] Add Project Controls category to Careers page filters
+- [x] Create Project Controls module/page with:
+  - [x] Project dashboard with milestones
+  - [x] Budget vs actual tracking
+  - [x] Change order management
+  - [x] Risk management
+  - [x] Progress reporting and KPIs
+- [x] Add Project Controls to sidebar navigation
+- [x] Create projectControls router with CRUD operations
+- [x] Write tests for Project Controls (36 tests, 170 total tests pass)
+- [ ] Save checkpoint
+
+
+## Phase 50: Legal Structure & Function Diagnostic
+- [ ] Verify all 5 business entities are properly configured
+- [ ] Confirm Trust governance structure
+- [ ] Validate department-to-entity mappings
+- [ ] Check position tier consistency across all sources
+- [ ] Verify family member assignments (Shanna, Craig, Cornelius, Amandes, Essence, Amber)
+- [ ] Verify UI layout consistency across all pages
+- [ ] Check navigation and sidebar structure
+- [ ] Run all unit tests
+- [ ] Test database operations and routers
+- [ ] Generate diagnostic report

@@ -33,7 +33,16 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 
+// Position Tiers:
+// tier1_family: Family members confirmed in roles - NOT open for external hiring
+// tier2_identified: Candidates identified but not yet approached - NOT actively recruiting  
+// tier3_open: Manager positions truly open for recruitment (future hiring)
+// tier4_coordinator: Primary external hire positions - selected by department Managers
+
 const POSITIONS = [
+  // ============================================
+  // TIER 3: OPEN MANAGER POSITIONS (Future Hiring)
+  // ============================================
   { 
     id: "hr-lead", 
     title: "HR Manager", 
@@ -45,7 +54,9 @@ const POSITIONS = [
     salaryRange: "$85,000 - $115,000",
     description: "Build and maintain the human capital infrastructure across all five subsidiary entities. Oversee talent acquisition, onboarding, training coordination, performance management, and employee relations.",
     requirements: ["3+ years HR experience", "Strong interpersonal skills", "HR systems proficiency", "Employment law knowledge"],
-    category: "operations"
+    category: "operations",
+    tier: "tier3_open",
+    hiringStatus: "Future Hiring"
   },
   { 
     id: "qaqc-lead", 
@@ -58,8 +69,13 @@ const POSITIONS = [
     salaryRange: "$85,000 - $115,000",
     description: "Establish and maintain quality standards across all subsidiary entities. Ensure deliverables meet organizational standards and grant compliance requirements are satisfied.",
     requirements: ["3+ years QA/compliance experience", "Strong attention to detail", "Technical writing skills", "Process documentation"],
-    category: "operations"
+    category: "operations",
+    tier: "tier3_open",
+    hiringStatus: "Future Hiring"
   },
+  // ============================================
+  // TIER 2: IDENTIFIED CANDIDATES (Pending Funding)
+  // ============================================
   { 
     id: "purchasing-lead", 
     title: "Purchasing Manager", 
@@ -71,7 +87,9 @@ const POSITIONS = [
     salaryRange: "$80,000 - $110,000",
     description: "Manage procurement operations across all subsidiary entities. Handle vendor relationships, cost control, inventory tracking, and grant compliance for purchasing activities.",
     requirements: ["2+ years purchasing experience", "Negotiation skills", "Spreadsheet proficiency", "Basic accounting knowledge"],
-    category: "operations"
+    category: "operations",
+    tier: "tier2_identified",
+    hiringStatus: "Candidate Identified"
   },
   { 
     id: "operations-manager", 
@@ -84,8 +102,14 @@ const POSITIONS = [
     salaryRange: "$85,000 - $115,000",
     description: "Ensure smooth day-to-day operations across all subsidiary entities. Coordinate workflows, monitor business systems, identify bottlenecks, and provide support to team members.",
     requirements: ["3+ years operations experience", "Strong organizational skills", "Excellent communication", "Problem-solving mindset"],
-    category: "operations"
+    category: "operations",
+    tier: "tier3_open",
+    hiringStatus: "Future Hiring"
   },
+  // ============================================
+  // TIER 4: OPERATIONS COORDINATORS (Primary External Hires)
+  // Selected by respective department Managers
+  // ============================================
   { 
     id: "outreach-coordinator", 
     title: "Outreach Coordinator", 
@@ -97,7 +121,9 @@ const POSITIONS = [
     salaryRange: "$65,000 - $85,000",
     description: "Connect the organization with the broader community through events, partnerships, and relationship building. Plan community events, build partner relationships, and coordinate volunteers.",
     requirements: ["2+ years outreach experience", "Strong interpersonal skills", "Event planning ability", "Public speaking comfort"],
-    category: "community"
+    category: "community",
+    tier: "tier4_coordinator",
+    hiringStatus: "Actively Recruiting"
   },
   { 
     id: "content-creator", 
@@ -110,7 +136,9 @@ const POSITIONS = [
     salaryRange: "$35,000 - $55,000",
     description: "Support the media production mission by creating social media content, documenting events, editing videos, and writing copy for marketing materials.",
     requirements: ["Portfolio required", "Photography/videography skills", "Video editing ability", "Social media knowledge"],
-    category: "media"
+    category: "media",
+    tier: "tier4_coordinator",
+    hiringStatus: "Actively Recruiting"
   },
   { 
     id: "academy-instructor", 
@@ -123,7 +151,9 @@ const POSITIONS = [
     salaryRange: "$75,000 - $100,000",
     description: "Deliver educational content and develop new courses for the LuvOnPurpose Academy. Teach courses, create curriculum, develop assessments, and track student progress.",
     requirements: ["Subject matter expertise", "Teaching experience", "Clear communication", "Online teaching comfort"],
-    category: "education"
+    category: "education",
+    tier: "tier4_coordinator",
+    hiringStatus: "Actively Recruiting"
   },
   { 
     id: "grant-writer", 
@@ -136,7 +166,9 @@ const POSITIONS = [
     salaryRange: "$85,000 - $115,000",
     description: "Identify funding opportunities and write compelling proposals to secure grants for all subsidiary entities. Research opportunities, develop narratives, create budgets, and manage deadlines.",
     requirements: ["2+ years grant writing", "Strong writing skills", "Deadline management", "Research abilities"],
-    category: "operations"
+    category: "operations",
+    tier: "tier3_open",
+    hiringStatus: "Future Hiring"
   },
   { 
     id: "platform-admin", 
@@ -149,7 +181,9 @@ const POSITIONS = [
     salaryRange: "$95,000 - $130,000",
     description: "Maintain and improve the technology infrastructure of the organization. Monitor system health, manage user accounts, implement new features, and ensure security.",
     requirements: ["2+ years IT administration", "Tech-savvy", "Security-conscious", "User support patience"],
-    category: "technology"
+    category: "technology",
+    tier: "tier3_open",
+    hiringStatus: "Future Hiring"
   },
   { 
     id: "programs-coordinator", 
@@ -162,7 +196,9 @@ const POSITIONS = [
     salaryRange: "$80,000 - $110,000",
     description: "Develop and manage programs based on the L.A.W.S. framework (Land, Air, Water, Self) that help community members reconnect with their roots, gain knowledge, find balance, and discover purpose.",
     requirements: ["2+ years program management", "Community development passion", "Organizational skills", "Cultural sensitivity"],
-    category: "community"
+    category: "community",
+    tier: "tier4_coordinator",
+    hiringStatus: "Actively Recruiting"
   },
   { 
     id: "lead-ops-coordinator", 
@@ -175,7 +211,9 @@ const POSITIONS = [
     salaryRange: "$68,000 - $88,000",
     description: "Oversee all department Operations Coordinator staff across the organization. Serve as the primary support to the executive team while supervising HR, QA/QC, Purchasing, Operations, and Education Operations Coordinator staff.",
     requirements: ["3+ years operations/admin leadership", "Team leadership experience", "Process management skills", "Remote team coordination"],
-    category: "operations"
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Actively Recruiting"
   },
   { 
     id: "ops-coordinator-hr", 
@@ -188,7 +226,9 @@ const POSITIONS = [
     salaryRange: "$52,000 - $68,000",
     description: "Provide day-to-day administrative assistance to the HR Department. Handle scheduling, document management, candidate coordination, and employee record maintenance.",
     requirements: ["1+ years admin/HR support", "Organization skills", "Microsoft Office/Google Workspace", "Data entry proficiency"],
-    category: "operations"
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
   },
   { 
     id: "ops-coordinator-qaqc", 
@@ -201,7 +241,9 @@ const POSITIONS = [
     salaryRange: "$52,000 - $68,000",
     description: "Assist the Quality Department with documentation, tracking, and compliance activities. Maintain quality records, track audit findings, and support process improvement initiatives.",
     requirements: ["1+ years admin/quality support", "Attention to detail", "Documentation skills", "Process tracking"],
-    category: "operations"
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
   },
   { 
     id: "ops-coordinator-purchasing", 
@@ -214,7 +256,9 @@ const POSITIONS = [
     salaryRange: "$52,000 - $68,000",
     description: "Assist with procurement operations including order processing, vendor communications, and inventory tracking. Ensure accurate records and timely processing of purchases.",
     requirements: ["1+ years admin/purchasing support", "Data entry skills", "Vendor communication", "Invoice processing"],
-    category: "operations"
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
   },
   { 
     id: "ops-coordinator-operations", 
@@ -227,7 +271,9 @@ const POSITIONS = [
     salaryRange: "$52,000 - $68,000",
     description: "Provide day-to-day assistance to the Operations team. Handle scheduling, project tracking, communications, and general administrative tasks to keep operations running smoothly.",
     requirements: ["1+ years admin/operations support", "Organization skills", "Multitasking ability", "Project tracking"],
-    category: "operations"
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
   },
   { 
     id: "ops-coordinator-education", 
@@ -253,7 +299,9 @@ const POSITIONS = [
     salaryRange: "$85,000 - $115,000",
     description: "Lead community health and wellness initiatives within the L.A.W.S. framework (WATER pillar - Healing & Balance). Develop health programs, coordinate with healthcare partners, and ensure community members have access to quality health resources and support.",
     requirements: ["5+ years health/wellness management", "Healthcare program development", "Community health experience", "Team leadership skills"],
-    category: "health"
+    category: "health",
+    tier: "tier1_family",
+    hiringStatus: "Filled - Family (Amber)"
   },
   { 
     id: "procurement-manager", 
@@ -266,7 +314,9 @@ const POSITIONS = [
     salaryRange: "$95,000 - $130,000",
     description: "Lead strategic procurement operations across all subsidiary entities. Develop vendor relationships, negotiate contracts, implement cost-saving initiatives, and ensure compliance with grant requirements and organizational policies.",
     requirements: ["5+ years procurement/supply chain management", "Contract negotiation skills", "Vendor management experience", "Professional certification preferred (CPM, CPSM)"],
-    category: "operations"
+    category: "operations",
+    tier: "tier2_identified",
+    hiringStatus: "Candidate Identified"
   },
   { 
     id: "ops-coordinator-health", 
@@ -279,7 +329,9 @@ const POSITIONS = [
     salaryRange: "$55,000 - $72,000",
     description: "Support community wellness initiatives within the L.A.W.S. framework (WATER pillar - Healing & Balance). Coordinate health programs, track wellness metrics, and help community members access health resources.",
     requirements: ["1+ years health/wellness coordination", "Organization skills", "Compassionate approach", "Health resource knowledge"],
-    category: "health"
+    category: "health",
+    tier: "tier4_coordinator",
+    hiringStatus: "Ready to Hire (reports to Amber)"
   },
   { 
     id: "contracts-manager", 
@@ -292,7 +344,9 @@ const POSITIONS = [
     salaryRange: "$95,000 - $130,000",
     description: "Oversee all contract administration, negotiations, and compliance across our family of entities. Draft, review, and negotiate contracts while ensuring legal compliance and protecting organizational interests.",
     requirements: ["5+ years contract management", "Contract law knowledge", "Negotiation skills", "Professional certification preferred"],
-    category: "operations"
+    category: "operations",
+    tier: "tier2_identified",
+    hiringStatus: "Candidate Identified"
   },
   { 
     id: "ops-coordinator-contracts", 
@@ -305,7 +359,9 @@ const POSITIONS = [
     salaryRange: "$52,000 - $72,000",
     description: "Support the contract management function with document management, compliance tracking, and administrative tasks. Maintain contract files, track deadlines, and coordinate approvals.",
     requirements: ["2+ years admin/legal support", "Organization skills", "Document management", "Confidentiality handling"],
-    category: "operations"
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
   },
   { 
     id: "design-manager", 
@@ -318,7 +374,9 @@ const POSITIONS = [
     salaryRange: "$85,000 - $115,000",
     description: "Lead all visual design and branding initiatives across our organization. Establish brand identity, create design systems, and ensure visual consistency across all entities, marketing materials, and digital platforms.",
     requirements: ["5+ years graphic design/brand management", "Adobe Creative Suite proficiency", "Strong portfolio", "Team leadership experience"],
-    category: "design"
+    category: "design",
+    tier: "tier1_family",
+    hiringStatus: "Filled - Family (Essence)"
   },
   { 
     id: "ops-coordinator-design", 
@@ -331,7 +389,9 @@ const POSITIONS = [
     salaryRange: "$52,000 - $72,000",
     description: "Support the design function with design production, asset management, and coordination of creative projects across all organizational entities.",
     requirements: ["2+ years graphic design", "Adobe Creative Suite proficiency", "File organization skills", "Multi-project management"],
-    category: "design"
+    category: "design",
+    tier: "tier4_coordinator",
+    hiringStatus: "Ready to Hire (reports to Essence)"
   },
   { 
     id: "media-manager", 
@@ -344,7 +404,9 @@ const POSITIONS = [
     salaryRange: "$85,000 - $115,000",
     description: "Lead all media production and content creation initiatives. Oversee video production, podcasts, social media content, and ensure consistent messaging across all media channels.",
     requirements: ["5+ years media/video production", "Video editing proficiency", "Strong portfolio/reel", "Content team management"],
-    category: "media"
+    category: "media",
+    tier: "tier1_family",
+    hiringStatus: "Filled - Family (Amandes)"
   },
   { 
     id: "ops-coordinator-media", 
@@ -357,13 +419,59 @@ const POSITIONS = [
     salaryRange: "$52,000 - $72,000",
     description: "Support media production with video editing, social media management, and coordination of media projects across all platforms.",
     requirements: ["2+ years video/content creation", "Video editing software proficiency", "Social media management", "Project coordination"],
-    category: "media"
+    category: "media",
+    tier: "tier4_coordinator",
+    hiringStatus: "Ready to Hire (reports to Amandes)"
   },
+  // ============================================
+  // PROJECT CONTROLS DEPARTMENT
+  // ============================================
+  { 
+    id: "project-controls-manager", 
+    title: "Project Controls Manager", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Project Controls",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$90,000 - $120,000",
+    description: "Lead project scheduling, cost control, and progress reporting across all subsidiary entities. Develop and maintain master schedules, perform earned value analysis for grants and contracts, manage change orders, and implement risk mitigation strategies. Ensure all projects stay on track, within budget, and meet deliverable requirements.",
+    requirements: ["5+ years project controls/scheduling experience", "Primavera P6 or MS Project proficiency", "Earned value management knowledge", "Cost control and budgeting experience", "PMP or similar certification preferred"],
+    category: "project_controls",
+    tier: "tier2_identified",
+    hiringStatus: "Candidate Identified"
+  },
+  { 
+    id: "ops-coordinator-project-controls", 
+    title: "Project Controls Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Project Controls",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$68,000 - $88,000",
+    description: "Support the Project Controls function with schedule updates, cost tracking, change order processing, and progress report compilation. Maintain project documentation, track action items, and assist with risk register maintenance.",
+    requirements: ["2+ years project coordination/admin", "Scheduling software familiarity", "Excel/spreadsheet proficiency", "Document control experience", "Attention to detail"],
+    category: "project_controls",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
+  },
+];
+
+// Add hiring status filter categories
+const HIRING_STATUSES = [
+  { id: "all", label: "All Positions" },
+  { id: "actively_recruiting", label: "Actively Recruiting", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Actively") || p.hiringStatus?.includes("Ready to Hire") },
+  { id: "future_hiring", label: "Future Hiring", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Future Hiring" },
+  { id: "pending_manager", label: "Pending Manager", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Pending Manager" },
+  { id: "filled_family", label: "Filled (Family)", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Filled") },
+  { id: "candidate_identified", label: "Candidate Identified", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Candidate Identified" },
 ];
 
 const CATEGORIES = [
   { id: "all", label: "All Positions", count: POSITIONS.length },
   { id: "operations", label: "Operations", count: POSITIONS.filter(p => p.category === "operations").length },
+  { id: "project_controls", label: "Project Controls", count: POSITIONS.filter(p => p.category === "project_controls").length },
   { id: "contracts", label: "Contracts", count: POSITIONS.filter(p => p.category === "contracts").length },
   { id: "community", label: "Community", count: POSITIONS.filter(p => p.category === "community").length },
   { id: "education", label: "Education", count: POSITIONS.filter(p => p.category === "education").length },
@@ -390,6 +498,7 @@ const ALLOWED_FILE_TYPES = ['application/pdf', 'application/msword', 'applicatio
 
 export default function Careers() {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedHiringStatus, setSelectedHiringStatus] = useState("all");
   const [showApplyDialog, setShowApplyDialog] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<typeof POSITIONS[0] | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -420,9 +529,12 @@ export default function Careers() {
     }
   });
 
-  const filteredPositions = selectedCategory === "all" 
-    ? POSITIONS 
-    : POSITIONS.filter(p => p.category === selectedCategory);
+  const filteredPositions = POSITIONS.filter(p => {
+    const categoryMatch = selectedCategory === "all" || p.category === selectedCategory;
+    const statusFilter = HIRING_STATUSES.find(s => s.id === selectedHiringStatus);
+    const statusMatch = selectedHiringStatus === "all" || (statusFilter?.filter && statusFilter.filter(p));
+    return categoryMatch && statusMatch;
+  });
 
   const handleApply = (position: typeof POSITIONS[0]) => {
     setSelectedPosition(position);
@@ -605,24 +717,49 @@ export default function Careers() {
       {/* Positions Section */}
       <section id="positions" className="py-16">
         <div className="container max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-4">Open Positions</h2>
+          <h2 className="text-2xl font-bold text-center mb-4">Position Directory</h2>
           <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-            We're looking for passionate individuals who believe in family, community, and building something that lasts.
+            Our family-based management structure means Manager positions are filled by family members, while Operations Coordinator roles are our primary external hires.
           </p>
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {CATEGORIES.map((cat) => (
-              <Button
-                key={cat.id}
-                variant={selectedCategory === cat.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(cat.id)}
-              >
-                {cat.label} ({cat.count})
-              </Button>
-            ))}
+          {/* Hiring Status Filter */}
+          <div className="mb-6">
+            <p className="text-sm text-center text-muted-foreground mb-2">Filter by Hiring Status:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {HIRING_STATUSES.map((status) => (
+                <Button
+                  key={status.id}
+                  variant={selectedHiringStatus === status.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedHiringStatus(status.id)}
+                >
+                  {status.label}
+                </Button>
+              ))}
+            </div>
           </div>
+
+          {/* Category Filter */}
+          <div className="mb-4">
+            <p className="text-sm text-center text-muted-foreground mb-2">Filter by Department:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {CATEGORIES.map((cat) => (
+                <Button
+                  key={cat.id}
+                  variant={selectedCategory === cat.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(cat.id)}
+                >
+                  {cat.label} ({cat.count})
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Results count */}
+          <p className="text-center text-sm text-muted-foreground mb-8">
+            Showing {filteredPositions.length} of {POSITIONS.length} positions
+          </p>
 
           {/* Position Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -637,7 +774,19 @@ export default function Careers() {
                         {position.entity}
                       </CardDescription>
                     </div>
-                    <Badge variant="outline">{position.entityShort}</Badge>
+                    <div className="flex flex-col gap-1 items-end">
+                      <Badge variant="outline">{position.entityShort}</Badge>
+                      {position.hiringStatus && (
+                        <Badge 
+                          variant={position.hiringStatus.includes("Actively") || position.hiringStatus.includes("Ready") ? "default" : 
+                                   position.hiringStatus.includes("Filled") ? "secondary" : "outline"}
+                          className={`text-xs ${position.hiringStatus.includes("Actively") || position.hiringStatus.includes("Ready") ? "bg-green-600" : 
+                                      position.hiringStatus.includes("Filled") ? "bg-purple-600 text-white" : ""}`}
+                        >
+                          {position.hiringStatus}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -674,10 +823,36 @@ export default function Careers() {
                     </ul>
                   </div>
 
-                  <Button className="w-full" onClick={() => handleApply(position)}>
-                    Apply Now
-                    <Send className="w-4 h-4 ml-2" />
-                  </Button>
+                  {position.hiringStatus?.includes("Filled") ? (
+                    <Button className="w-full" variant="secondary" disabled>
+                      Position Filled
+                    </Button>
+                  ) : position.hiringStatus === "Candidate Identified" ? (
+                    <Button className="w-full" variant="outline" disabled>
+                      Candidate Identified - Not Recruiting
+                    </Button>
+                  ) : position.hiringStatus === "Future Hiring" ? (
+                    <Button className="w-full" variant="outline" onClick={() => {
+                      setSelectedPosition(null);
+                      setShowApplyDialog(true);
+                    }}>
+                      Express Interest
+                      <Send className="w-4 h-4 ml-2" />
+                    </Button>
+                  ) : position.hiringStatus === "Pending Manager" ? (
+                    <Button className="w-full" variant="outline" onClick={() => {
+                      setSelectedPosition(null);
+                      setShowApplyDialog(true);
+                    }}>
+                      Express Interest (Pending Manager)
+                      <Send className="w-4 h-4 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button className="w-full" onClick={() => handleApply(position)}>
+                      Apply Now
+                      <Send className="w-4 h-4 ml-2" />
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
