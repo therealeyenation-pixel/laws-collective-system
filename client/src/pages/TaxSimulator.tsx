@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -33,6 +33,9 @@ import {
   Bell,
   ChevronRight,
   Info,
+  Trash2,
+  File,
+  Loader2,
 } from "lucide-react";
 
 type FilingStatus = "single" | "married_filing_jointly" | "married_filing_separately" | "head_of_household";
@@ -71,6 +74,11 @@ export default function TaxSimulator() {
   const [withholdings, setWithholdings] = useState(0);
   const [estimatedPayments, setEstimatedPayments] = useState(0);
 
+  // File upload state
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [selectedDocType, setSelectedDocType] = useState<string>("w2");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // API calls
   const taxReturnsQuery = trpc.taxPrep.getTaxReturns.useQuery();
   const taxDeadlinesQuery = trpc.taxPrep.getTaxDeadlines.useQuery({ taxYear: selectedYear });
@@ -90,6 +98,70 @@ export default function TaxSimulator() {
       toast.error(error.message);
     },
   });
+
+  // Tax documents query and mutations
+  const taxDocumentsQuery = trpc.taxPrep.getTaxDocumentsByYear.useQuery(
+    { taxYear: selectedYear },
+    { enabled: !!selectedYear }
+  );
+
+  const uploadDocumentMutation = trpc.taxPrep.uploadTaxDocument.useMutation({
+    onSuccess: () => {
+      toast.success("Document uploaded successfully");
+      taxDocumentsQuery.refetch();
+      setUploadingFile(false);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setUploadingFile(false);
+    },
+  });
+
+  const deleteDocumentMutation = trpc.taxPrep.deleteTaxDocument.useMutation({
+    onSuccess: () => {
+      toast.success("Document deleted");
+      taxDocumentsQuery.refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // Handle file upload
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size must be less than 10MB");
+      return;
+    }
+
+    setUploadingFile(true);
+
+    try {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64Content = (e.target?.result as string).split(",")[1];
+        await uploadDocumentMutation.mutateAsync({
+          taxYear: selectedYear,
+          documentType: selectedDocType as any,
+          fileName: file.name,
+          fileSize: file.size,
+          mimeType: file.type,
+          fileContent: base64Content,
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      setUploadingFile(false);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   // Standard deductions for 2024
   const standardDeductions: Record<FilingStatus, number> = {
@@ -781,19 +853,119 @@ export default function TaxSimulator() {
                   Upload Tax Documents
                 </CardTitle>
                 <CardDescription>
-                  Upload W-2s, 1099s, and other tax documents from Document Vault
+                  Upload W-2s, 1099s, receipts, and other tax documents for {selectedYear}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                  <Upload className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground mb-2">
-                    Drag and drop files here, or click to browse
-                  </p>
-                  <Button variant="outline">
-                    Select from Document Vault
-                  </Button>
+              <CardContent className="space-y-4">
+                {/* Document Type Selection */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <Label>Document Type</Label>
+                    <Select value={selectedDocType} onValueChange={setSelectedDocType}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select document type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="w2">W-2 (Wage Statement)</SelectItem>
+                        <SelectItem value="1099_nec">1099-NEC (Contractor)</SelectItem>
+                        <SelectItem value="1099_misc">1099-MISC (Miscellaneous)</SelectItem>
+                        <SelectItem value="1099_int">1099-INT (Interest)</SelectItem>
+                        <SelectItem value="1099_div">1099-DIV (Dividends)</SelectItem>
+                        <SelectItem value="1099_b">1099-B (Brokerage)</SelectItem>
+                        <SelectItem value="1098">1098 (Mortgage Interest)</SelectItem>
+                        <SelectItem value="receipt">Receipt</SelectItem>
+                        <SelectItem value="invoice">Invoice</SelectItem>
+                        <SelectItem value="bank_statement">Bank Statement</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-end">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      accept=".pdf,.jpg,.jpeg,.png,.gif,.doc,.docx"
+                      className="hidden"
+                    />
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingFile}
+                      className="gap-2"
+                    >
+                      {uploadingFile ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-4 h-4" />
+                          Upload Document
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
+
+                {/* Uploaded Documents List */}
+                <div className="border rounded-lg">
+                  <div className="p-3 border-b bg-secondary/30">
+                    <h4 className="font-medium">Uploaded Documents for {selectedYear}</h4>
+                  </div>
+                  <div className="divide-y">
+                    {taxDocumentsQuery.isLoading ? (
+                      <div className="p-4 text-center text-muted-foreground">
+                        <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2" />
+                        Loading documents...
+                      </div>
+                    ) : taxDocumentsQuery.data?.documents && taxDocumentsQuery.data.documents.length > 0 ? (
+                      taxDocumentsQuery.data.documents.map((doc: any) => (
+                        <div key={doc.id} className="flex items-center justify-between p-3 hover:bg-secondary/30">
+                          <div className="flex items-center gap-3">
+                            <File className="w-5 h-5 text-muted-foreground" />
+                            <div>
+                              <p className="font-medium text-sm">{doc.documentName}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {doc.documentType.replace(/_/g, "-").toUpperCase()} • 
+                                {new Date(doc.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {doc.isVerified && (
+                              <Badge variant="secondary" className="gap-1">
+                                <CheckCircle2 className="w-3 h-3" />
+                                Verified
+                              </Badge>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteDocumentMutation.mutate({ documentId: doc.id })}
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-8 text-center text-muted-foreground">
+                        <Upload className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                        <p>No documents uploaded for {selectedYear}</p>
+                        <p className="text-xs mt-1">Upload W-2s, 1099s, and receipts above</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <Alert>
+                  <Info className="w-4 h-4" />
+                  <AlertTitle>Accepted Formats</AlertTitle>
+                  <AlertDescription>
+                    PDF, JPG, PNG, DOC, DOCX • Maximum file size: 10MB
+                  </AlertDescription>
+                </Alert>
               </CardContent>
             </Card>
           </TabsContent>

@@ -33,11 +33,18 @@ export const businessEntities = mysqlTable("business_entities", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   name: varchar("name", { length: 255 }).notNull(),
-  entityType: mysqlEnum("entityType", ["trust", "llc", "corporation", "collective"]).notNull(),
+  entityType: mysqlEnum("entityType", ["trust", "llc", "corporation", "collective", "508c1a"]).notNull(),
   status: mysqlEnum("status", ["draft", "active", "paused", "archived"]).default("draft").notNull(),
   trustLevel: int("trustLevel").default(1).notNull(),
   description: text("description"),
   financialStructure: json("financialStructure"),
+  // Entity registration details
+  ein: varchar("ein", { length: 20 }), // Federal EIN
+  stateOfFormation: varchar("stateOfFormation", { length: 50 }),
+  stateEntityId: varchar("stateEntityId", { length: 50 }),
+  formationDate: timestamp("formationDate"),
+  registeredAddress: text("registeredAddress"),
+  physicalAddress: text("physicalAddress"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -6873,3 +6880,116 @@ export const founderIncomeSummary = mysqlTable("founder_income_summary", {
 });
 export type FounderIncomeSummary = typeof founderIncomeSummary.$inferSelect;
 export type InsertFounderIncomeSummary = typeof founderIncomeSummary.$inferInsert;
+
+
+/**
+ * Training Modules - Configurable training content for agents and simulators
+ * Managers can create custom Q&A sets for interactive training
+ */
+export const trainingModules = mysqlTable("training_modules", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  agentType: varchar("agentType", { length: 64 }), // Links to agent type (operations, support, education, etc.)
+  simulatorType: varchar("simulatorType", { length: 64 }), // Links to simulator (business, grant, tax, proposal)
+  difficulty: mysqlEnum("difficulty", ["beginner", "intermediate", "advanced"]).default("beginner").notNull(),
+  estimatedMinutes: int("estimatedMinutes").default(30),
+  passingScore: int("passingScore").default(70), // Percentage required to pass
+  isActive: boolean("isActive").default(true).notNull(),
+  isPublic: boolean("isPublic").default(true).notNull(),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type TrainingModule = typeof trainingModules.$inferSelect;
+export type InsertTrainingModule = typeof trainingModules.$inferInsert;
+
+/**
+ * Training Topics - Sections within a training module
+ */
+export const trainingTopics = mysqlTable("training_topics", {
+  id: int("id").autoincrement().primaryKey(),
+  moduleId: int("moduleId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type TrainingTopic = typeof trainingTopics.$inferSelect;
+export type InsertTrainingTopic = typeof trainingTopics.$inferInsert;
+
+/**
+ * Training Questions - Individual questions within a topic
+ */
+export const trainingQuestions = mysqlTable("training_questions", {
+  id: int("id").autoincrement().primaryKey(),
+  topicId: int("topicId").notNull(),
+  questionText: text("questionText").notNull(),
+  questionType: mysqlEnum("questionType", ["multiple_choice", "true_false", "open_ended", "fill_blank"]).default("multiple_choice").notNull(),
+  difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard"]).default("medium").notNull(),
+  points: int("points").default(10).notNull(),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  explanation: text("explanation"), // Shown after answering
+  hint: text("hint"), // Optional hint for the user
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type TrainingQuestion = typeof trainingQuestions.$inferSelect;
+export type InsertTrainingQuestion = typeof trainingQuestions.$inferInsert;
+
+/**
+ * Training Answers - Answer options for questions
+ */
+export const trainingAnswers = mysqlTable("training_answers", {
+  id: int("id").autoincrement().primaryKey(),
+  questionId: int("questionId").notNull(),
+  answerText: text("answerText").notNull(),
+  isCorrect: boolean("isCorrect").default(false).notNull(),
+  feedback: text("feedback"), // Feedback shown when this answer is selected
+  orderIndex: int("orderIndex").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type TrainingAnswer = typeof trainingAnswers.$inferSelect;
+export type InsertTrainingAnswer = typeof trainingAnswers.$inferInsert;
+
+/**
+ * Training Sessions - User's attempt at a training module
+ */
+export const trainingSessions = mysqlTable("training_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  moduleId: int("moduleId").notNull(),
+  agentConversationId: int("agentConversationId"), // Links to agent conversation if done via agent
+  status: mysqlEnum("status", ["in_progress", "completed", "abandoned"]).default("in_progress").notNull(),
+  currentTopicId: int("currentTopicId"),
+  currentQuestionId: int("currentQuestionId"),
+  totalQuestions: int("totalQuestions").default(0).notNull(),
+  answeredQuestions: int("answeredQuestions").default(0).notNull(),
+  correctAnswers: int("correctAnswers").default(0).notNull(),
+  score: int("score").default(0).notNull(), // Percentage score
+  totalPoints: int("totalPoints").default(0).notNull(),
+  earnedPoints: int("earnedPoints").default(0).notNull(),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+export type TrainingSession = typeof trainingSessions.$inferSelect;
+export type InsertTrainingSession = typeof trainingSessions.$inferInsert;
+
+/**
+ * Training Responses - User's answers to individual questions
+ */
+export const trainingResponses = mysqlTable("training_responses", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  questionId: int("questionId").notNull(),
+  answerId: int("answerId"), // For multiple choice/true-false
+  userAnswer: text("userAnswer"), // For open-ended questions
+  isCorrect: boolean("isCorrect").default(false).notNull(),
+  pointsEarned: int("pointsEarned").default(0).notNull(),
+  timeSpentSeconds: int("timeSpentSeconds"),
+  answeredAt: timestamp("answeredAt").defaultNow().notNull(),
+});
+export type TrainingResponse = typeof trainingResponses.$inferSelect;
+export type InsertTrainingResponse = typeof trainingResponses.$inferInsert;
+

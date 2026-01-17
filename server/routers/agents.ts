@@ -11,7 +11,12 @@ import {
   tokenAccounts,
   notifications,
   luvLedgerAccounts,
-  scheduledAgentTasks
+  scheduledAgentTasks,
+  trainingModules,
+  trainingTopics,
+  trainingQuestions,
+  trainingAnswers,
+  trainingSessions
 } from "../../drizzle/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
@@ -1077,4 +1082,189 @@ export const agentsRouter = router({
 
     return { success: true, message: `Created ${created} scheduled tasks` };
   }),
+
+  // ============================================
+  // TRAINING MODE INTEGRATION
+  // ============================================
+
+  /**
+   * Get training modules available for an agent type
+   */
+  getTrainingModules: protectedProcedure
+    .input(z.object({
+      agentType: z.string(),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const modules = await db.select()
+        .from(trainingModules)
+        .where(and(
+          eq(trainingModules.agentType, input.agentType),
+          eq(trainingModules.isActive, true),
+          eq(trainingModules.isPublic, true)
+        ));
+
+      return modules;
+    }),
+
+  /**
+   * Start a training session through an agent conversation
+   */
+  startTrainingSession: protectedProcedure
+    .input(z.object({
+      agentId: z.number(),
+      moduleId: z.number(),
+      conversationId: z.number().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Get the module
+      const [module] = await db.select()
+        .from(trainingModules)
+        .where(eq(trainingModules.id, input.moduleId));
+
+      if (!module) throw new Error("Training module not found");
+
+      // Get topics and count questions
+      const topics = await db.select()
+        .from(trainingTopics)
+        .where(eq(trainingTopics.moduleId, input.moduleId));
+
+      let totalQuestions = 0;
+      let totalPoints = 0;
+      let firstTopicId: number | null = null;
+      let firstQuestionId: number | null = null;
+
+      for (const topic of topics) {
+        const questions = await db.select()
+          .from(trainingQuestions)
+          .where(eq(trainingQuestions.topicId, topic.id));
+        totalQuestions += questions.length;
+        totalPoints += questions.reduce((sum, q) => sum + q.points, 0);
+
+        if (!firstTopicId && questions.length > 0) {
+          firstTopicId = topic.id;
+          firstQuestionId = questions[0].id;
+        }
+      }
+
+      // Create or use existing conversation
+      let conversationId = input.conversationId;
+      if (!conversationId) {
+        const convResult = await db.insert(agentConversations).values({
+          agentId: input.agentId,
+          userId: ctx.user.id,
+          title: `Training: ${module.name}`,
+          metadata: { trainingMode: true, moduleId: input.moduleId } as any,
+        });
+        conversationId = convResult[0].insertId;
+      }
+
+      // Create training session
+      const sessionResult = await db.insert(trainingSessions).values({
+        userId: ctx.user.id,
+        moduleId: input.moduleId,
+        agentConversationId: conversationId,
+        totalQuestions,
+        totalPoints,
+        currentTopicId: firstTopicId,
+        currentQuestionId: firstQuestionId,
+      });
+
+      // Get first question
+      let firstQuestion = null;
+      if (firstQuestionId) {
+        const [q] = await db.select()
+          .from(trainingQuestions)
+          .where(eq(trainingQuestions.id, firstQuestionId));
+        
+        if (q) {
+          const answers = await db.select({
+            id: trainingAnswers.id,
+            answerText: trainingAnswers.answerText,
+            orderIndex: trainingAnswers.orderIndex,
+          }).from(trainingAnswers)
+            .where(eq(trainingAnswers.questionId, q.id));
+          
+          firstQuestion = { ...q, answers };
+        }
+      }
+
+      // Add welcome message to conversation
+      await db.insert(agentMessages).values({
+        conversationId,
+        role: "assistant",
+        content: `Welcome to the training module: **${module.name}**\n\n${module.description || ""}\n\nThis module has ${totalQuestions} questions. You need ${module.passingScore}% to pass.\n\nLet's begin!\n\n---\n\n**Question 1:**\n${firstQuestion?.questionText || "No questions available."}`,
+        metadata: { 
+          trainingMode: true, 
+          sessionId: sessionResult[0].insertId,
+          questionId: firstQuestionId,
+        } as any,
+      });
+
+      return {
+        success: true,
+        sessionId: sessionResult[0].insertId,
+        conversationId,
+        module,
+        totalQuestions,
+        totalPoints,
+        firstQuestion,
+      };
+    }),
+
+  /**
+   * Get current training session state for a conversation
+   */
+  getTrainingSession: protectedProcedure
+    .input(z.object({
+      conversationId: z.number(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const [session] = await db.select()
+        .from(trainingSessions)
+        .where(and(
+          eq(trainingSessions.agentConversationId, input.conversationId),
+          eq(trainingSessions.userId, ctx.user.id)
+        ));
+
+      if (!session) return null;
+
+      // Get module info
+      const [module] = await db.select()
+        .from(trainingModules)
+        .where(eq(trainingModules.id, session.moduleId));
+
+      // Get current question if any
+      let currentQuestion = null;
+      if (session.currentQuestionId) {
+        const [q] = await db.select()
+          .from(trainingQuestions)
+          .where(eq(trainingQuestions.id, session.currentQuestionId));
+        
+        if (q) {
+          const answers = await db.select({
+            id: trainingAnswers.id,
+            answerText: trainingAnswers.answerText,
+            orderIndex: trainingAnswers.orderIndex,
+          }).from(trainingAnswers)
+            .where(eq(trainingAnswers.questionId, q.id));
+          
+          currentQuestion = { ...q, answers };
+        }
+      }
+
+      return {
+        ...session,
+        module,
+        currentQuestion,
+      };
+    }),
 });

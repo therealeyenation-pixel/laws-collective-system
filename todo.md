@@ -2405,3 +2405,79 @@
 - [x] Add route protection for owner-only pages (minRole="owner")
 - [x] Show Access Denied page for unauthorized users
 - [x] Renamed Dashboard to Business Dashboard, House Dashboard to My House
+
+
+## Phase 28: Agent Training Content Management System
+
+### Phase 28.1: Database Schema for Training Content
+- [ ] Create training_modules table (id, name, description, agent_type, simulator_type, created_by)
+- [ ] Create training_topics table (id, module_id, name, description, order)
+- [ ] Create training_questions table (id, topic_id, question_text, question_type, difficulty, points)
+- [ ] Create training_answers table (id, question_id, answer_text, is_correct, feedback)
+- [ ] Create training_sessions table (id, user_id, module_id, score, completed_at)
+- [ ] Create training_responses table (id, session_id, question_id, user_answer, is_correct)
+- [ ] Push schema to database
+
+### Phase 28.2: Server API for Training Content
+- [ ] Create training router with CRUD operations for modules
+- [ ] Add CRUD operations for topics within modules
+- [ ] Add CRUD operations for questions within topics
+- [ ] Add CRUD operations for answers within questions
+- [ ] Create session management for training sessions
+- [ ] Add scoring and progress tracking logic
+- [ ] Implement admin-only access for content management
+
+### Phase 28.3: Admin UI for Training Content Management
+- [ ] Create Training Content Management page (admin only)
+- [ ] Build module list and create/edit forms
+- [ ] Build topic management within modules
+- [ ] Build question management with answer options
+- [ ] Add question type support (multiple choice, true/false, open-ended)
+- [ ] Add difficulty level and point assignment
+- [ ] Add preview functionality for training modules
+
+### Phase 28.4: Integration with Agents and Simulators
+- [ ] Link training modules to specific agents by type
+- [ ] Integrate training content into agent chat interface
+- [ ] Add "Training Mode" toggle for agents
+- [ ] Create interactive Q&A flow in agent conversations
+- [ ] Track user responses and provide feedback
+- [ ] Calculate scores and completion status
+- [ ] Link to existing simulators (Business, Grant, Tax, Proposal)
+
+### Phase 28.5: User Training Experience
+- [ ] Create training session start/resume flow
+- [ ] Display questions with answer options
+- [ ] Show immediate feedback on answers
+- [ ] Track progress through topics
+- [ ] Display final score and certificate option
+- [ ] Save training history to user profile
+
+### Phase 28.6: Fix Agents Page Authentication
+- [ ] Fix agents page 500 errors on Start Chatting
+- [ ] Ensure proper session handling for protected routes
+- [ ] Test agent conversations work end-to-end
+
+
+
+## Phase 30: Workshop File Upload Feature
+- [x] Add file upload to Tax Simulator for tax documents
+- [ ] Add file upload to Grant Simulator for grant applications
+- [ ] Add file upload to Business Plan Simulator for business documents
+- [ ] Add file upload to Proposal Simulator for RFP documents
+- [ ] Create reusable file upload component for workshops
+- [x] Store uploaded files in S3 with user association
+- [x] Display uploaded files list with download/delete options
+
+## Phase 31: Entity EIN Management
+- [x] Add EIN field to business_entities table
+- [x] Add stateOfFormation, stateEntityId, formationDate fields
+- [x] Insert LAWS, LLC entity (EIN pending)
+- [x] Insert The L.A.W.S. Collective, LLC (EIN: 39-3122993)
+- [x] Insert Real-Eye-Nation LLC (EIN: 84-4976416)
+- [x] Insert LuvOnPurpose Outreach Temple and Academy Society (EIN pending)
+- [x] Create 508(c)(1)(A) EIN application guide
+
+## Phase 32: Agent Session Refresh
+- [x] Add Refresh Session button to user dropdown
+- [x] Implement session refresh functionality in useAuth hook

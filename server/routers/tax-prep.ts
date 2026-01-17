@@ -12,6 +12,8 @@ import {
 } from "../../drizzle/schema";
 import { eq, and, desc, gte, lte, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { storagePut, storageGet } from "../storage";
+import crypto from "crypto";
 
 // ============================================
 // TAX PREPARATION TOOLS
@@ -727,6 +729,198 @@ export const taxPrepRouter = router({
           ],
         },
       };
+    }),
+
+  // ============================================
+  // TAX DOCUMENT UPLOAD
+  // ============================================
+
+  uploadTaxDocument: protectedProcedure
+    .input(
+      z.object({
+        taxYear: z.number(),
+        documentType: z.enum([
+          "w2",
+          "1099_nec",
+          "1099_misc",
+          "1099_int",
+          "1099_div",
+          "1099_b",
+          "1098",
+          "receipt",
+          "invoice",
+          "bank_statement",
+          "other",
+        ]),
+        fileName: z.string().min(1),
+        fileSize: z.number().positive().max(10 * 1024 * 1024), // 10MB max
+        mimeType: z.string().min(1),
+        fileContent: z.string(), // Base64 encoded
+        description: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "You must activate your House before uploading tax documents",
+        });
+      }
+
+      // Decode and upload to S3
+      const fileBuffer = Buffer.from(input.fileContent, "base64");
+      const fileHash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
+      const s3Key = `tax-documents/${userHouse[0].id}/${input.taxYear}/${fileHash}-${input.fileName}`;
+
+      const { url: s3Url } = await storagePut(s3Key, fileBuffer, input.mimeType);
+
+      // First, get or create tax year record
+      let taxYearRecord = await db
+        .select()
+        .from(taxYears)
+        .where(
+          and(
+            eq(taxYears.houseId, userHouse[0].id),
+            eq(taxYears.taxYear, input.taxYear)
+          )
+        )
+        .limit(1);
+
+      let taxYearId: number;
+      if (!taxYearRecord.length) {
+        const newTaxYear = await db.insert(taxYears).values({
+          houseId: userHouse[0].id,
+          userId: userId,
+          taxYear: input.taxYear,
+          filingStatus: "single",
+          status: "in_progress",
+        });
+        taxYearId = newTaxYear[0].insertId;
+      } else {
+        taxYearId = taxYearRecord[0].id;
+      }
+
+      // Create document record
+      const result = await db.insert(taxDocuments).values({
+        taxYearId: taxYearId,
+        houseId: userHouse[0].id,
+        documentType: input.documentType,
+        documentName: input.fileName,
+        description: input.description,
+      });
+
+      return {
+        success: true,
+        documentId: result[0].insertId,
+        fileUrl: s3Url,
+      };
+    }),
+
+  getTaxDocumentsByYear: protectedProcedure
+    .input(
+      z.object({
+        taxYear: z.number(),
+        documentType: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        return { documents: [] };
+      }
+
+      // Get tax year record
+      const taxYearRecord = await db
+        .select()
+        .from(taxYears)
+        .where(
+          and(
+            eq(taxYears.houseId, userHouse[0].id),
+            eq(taxYears.taxYear, input.taxYear)
+          )
+        )
+        .limit(1);
+
+      if (!taxYearRecord.length) {
+        return { documents: [] };
+      }
+
+      const conditions = [
+        eq(taxDocuments.taxYearId, taxYearRecord[0].id),
+      ];
+
+      if (input.documentType) {
+        conditions.push(eq(taxDocuments.documentType, input.documentType as any));
+      }
+
+      const documents = await db
+        .select()
+        .from(taxDocuments)
+        .where(and(...conditions))
+        .orderBy(desc(taxDocuments.createdAt));
+
+      return { documents };
+    }),
+
+  deleteTaxDocument: protectedProcedure
+    .input(
+      z.object({
+        documentId: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      // Verify ownership
+      const [doc] = await db
+        .select()
+        .from(taxDocuments)
+        .where(
+          and(
+            eq(taxDocuments.id, input.documentId),
+            eq(taxDocuments.houseId, userHouse[0].id)
+          )
+        )
+        .limit(1);
+
+      if (!doc) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Document not found" });
+      }
+
+      await db.delete(taxDocuments).where(eq(taxDocuments.id, input.documentId));
+
+      return { success: true };
     }),
 });
 

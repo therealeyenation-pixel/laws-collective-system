@@ -85,11 +85,11 @@ export default function Agents() {
   const { data: agents, isLoading: agentsLoading, refetch: refetchAgents } = trpc.agents.getAll.useQuery();
   const { data: conversations, refetch: refetchConversations } = trpc.agents.getConversations.useQuery(
     { agentId: selectedAgent || undefined },
-    { enabled: !!selectedAgent }
+    { enabled: !!selectedAgent, retry: false }
   );
   const { data: messageHistory, refetch: refetchMessages } = trpc.agents.getMessages.useQuery(
     { conversationId: conversationId || 0 },
-    { enabled: !!conversationId }
+    { enabled: !!conversationId, retry: false }
   );
 
   const initializeAgents = trpc.agents.initializeSystemAgents.useMutation({
@@ -145,7 +145,9 @@ export default function Agents() {
     },
   });
 
-  const { data: scheduledTasks, refetch: refetchTasks } = trpc.agents.getScheduledTasks.useQuery();
+  const { data: scheduledTasks, refetch: refetchTasks } = trpc.agents.getScheduledTasks.useQuery(undefined, {
+    retry: false,
+  });
   
   // Get the selected agent's type for topics and prompts
   const selectedAgentData = agents?.find((a) => a.id === selectedAgent);

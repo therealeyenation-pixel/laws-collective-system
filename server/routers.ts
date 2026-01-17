@@ -61,6 +61,7 @@ import { exchangeRatesRouter } from "./routers/exchange-rates";
 import { grantManagementRouter } from "./routers/grant-management";
 import { businessPlanRouter } from "./routers/business-plan";
 import { businessPlanParserRouter } from "./routers/business-plan-parser";
+import { trainingRouter } from "./routers/training";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -123,6 +124,7 @@ export const appRouter = router({
   grantManagement: grantManagementRouter,
   businessPlan: businessPlanRouter,
   businessPlanParser: businessPlanParserRouter,
+  training: trainingRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

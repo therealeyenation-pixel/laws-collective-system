@@ -35,6 +35,7 @@ import ProposalSimulator from "./pages/ProposalSimulator";
 import RFPGenerator from "@/pages/RFPGenerator";
 import BusinessSetupWizard from "@/pages/BusinessSetupWizard";
 import TrustGovernance from "@/pages/TrustGovernance";
+import TrainingContentManager from "@/pages/TrainingContentManager";
 import HRManagement from "@/pages/HRManagement";
 import Careers from "@/pages/Careers";
 import GettingStarted from "@/pages/GettingStarted";
@@ -175,6 +176,7 @@ function Router() {
       <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} minRole="owner" />}</Route>
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
+      <Route path="/training-content">{() => <ProtectedRoute component={TrainingContentManager} minRole="admin" />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
