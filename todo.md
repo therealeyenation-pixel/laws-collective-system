@@ -2658,3 +2658,13 @@
 - [x] Add Procurement Manager to organizational structure
 - [x] Update Agents page UI to display new department agents (HR, QA/QC, Purchasing, Health)
 - [x] Add agent icons and colors for new departments
+
+
+## Phase 44: Contracts Positions and Dashboards
+- [x] Create Contracts Manager position ($95,000 - $130,000)
+- [x] Create Contracts Operations Coordinator position ($52,000 - $72,000)
+- [x] Add positions to job descriptions and organizational structure
+- [x] Create HR Dashboard (application tracking, employee data, onboarding status)
+- [x] Create Operations Dashboard (cross-department metrics, task tracking)
+- [x] Create Executive Dashboard (high-level KPIs across all entities)
+- [x] Add dashboard navigation to sidebar

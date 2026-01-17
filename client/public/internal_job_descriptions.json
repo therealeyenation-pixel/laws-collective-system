@@ -736,6 +736,59 @@
       "directReports": ["Purchasing Manager"],
       "priority": "High",
       "status": "Open"
+    },
+    {
+      "id": "contracts-manager",
+      "title": "Contracts Manager",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Contracts",
+      "reportsTo": "COO / CEO",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 95000,
+        "max": 130000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$95,000 - $130,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Contract management and legal certifications",
+        "governanceVoice": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "7+ years in contract administration, contract management, or legal operations",
+        "skills": ["Contract drafting", "Negotiation", "Legal compliance", "Risk assessment", "Vendor management"],
+        "preferred": ["CCCM, CFCM, or paralegal certification", "Federal/grant contract experience", "Multi-entity contract management"]
+      },
+      "description": "The Contracts Manager leads contract administration and management across all subsidiary entities. This senior role handles contract drafting, review, negotiation, compliance monitoring, and risk management for all organizational agreements.",
+      "responsibilities": [
+        "Draft, review, and negotiate contracts across all entities",
+        "Manage vendor and supplier contract lifecycle",
+        "Ensure grant contract compliance and reporting",
+        "Administer employment agreements and HR contracts",
+        "Handle lease, property, and real estate contracts",
+        "Develop contract templates and standard terms",
+        "Monitor contract performance and renewals",
+        "Assess and mitigate contractual risks",
+        "Coordinate with legal counsel on complex agreements",
+        "Supervise Contracts Operations Coordinator",
+        "Maintain contract database and documentation",
+        "Report contract metrics and compliance status to leadership"
+      ],
+      "directReports": ["Contracts Operations Coordinator"],
+      "priority": "High",
+      "status": "Open"
     }
   ],
   "leadPositions": [
@@ -785,7 +838,7 @@
         "Train and onboard new Operations Coordinator staff",
         "Ensure consistent quality and efficiency across all support functions"
       ],
-      "directReports": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator"],
+      "directReports": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator", "Contracts Operations Coordinator"],
       "priority": "High",
       "status": "Open"
     }
@@ -1042,6 +1095,49 @@
         "Prepare health program reports and metrics",
         "Assist with health education content development",
         "Support the WATER pillar healing programs"
+      ]
+    },
+    {
+      "id": "contracts-ops-coordinator",
+      "title": "Contracts Operations Coordinator",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Contracts",
+      "reportsTo": "Contracts Manager",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 52000,
+        "max": 72000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$52,000 - $72,000 annually"
+      },
+      "compensation": {
+        "type": "role_based",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "All Academy certifications at no cost",
+        "careerGrowth": "Path to Contracts Manager",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "2+ years in contract administration, legal support, or paralegal work",
+        "skills": ["Contract administration", "Document management", "Attention to detail", "Database management", "Communication"],
+        "preferred": ["Paralegal certificate", "Contract management certification", "Legal software experience"]
+      },
+      "description": "The Contracts Operations Coordinator supports the Contracts Manager in administering and managing contracts across all organizational entities. This role handles contract documentation, tracking, compliance monitoring, and administrative support for the contracts function.",
+      "responsibilities": [
+        "Maintain contract database and filing systems",
+        "Track contract milestones, renewals, and expirations",
+        "Prepare contract documents and amendments",
+        "Coordinate contract signatures and execution",
+        "Monitor contract compliance requirements",
+        "Process contract-related invoices and payments",
+        "Compile contract reports and metrics",
+        "Support vendor onboarding documentation",
+        "Assist with contract research and due diligence",
+        "Coordinate with departments on contract needs"
       ]
     }
   ],

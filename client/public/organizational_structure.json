@@ -393,7 +393,13 @@
         "name": "Procurement",
         "lead": "Procurement Manager",
         "servesEntities": ["All"],
-        "functions": ["Strategic Sourcing", "Contract Management", "Vendor Relations", "Compliance"]
+        "functions": ["Strategic Sourcing", "Vendor Selection", "Vendor Relations", "Purchasing Compliance"]
+      },
+      {
+        "name": "Contracts",
+        "lead": "Contracts Manager",
+        "servesEntities": ["All"],
+        "functions": ["Contract Drafting", "Negotiation", "Compliance Monitoring", "Risk Management"]
       }
     ]
   },
@@ -427,7 +433,9 @@
       {"title": "Education Operations Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
       {"title": "Health Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000"},
       {"title": "Procurement Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000"},
-      {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"}
+      {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"},
+      {"title": "Contracts Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000"},
+      {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"}
     ]
   },
   "reportingStructure": {
@@ -445,7 +453,7 @@
     },
     "level4": {
       "title": "Managers",
-      "positions": ["Operations Manager", "HR Manager", "QA/QC Manager", "Purchasing Manager", "Health Manager", "Procurement Manager", "Platform Administrator", "Grant Writer", "Design Lead (Essence)"]
+      "positions": ["Operations Manager", "HR Manager", "QA/QC Manager", "Purchasing Manager", "Health Manager", "Procurement Manager", "Contracts Manager", "Platform Administrator", "Grant Writer", "Design Lead (Essence)"]
     },
     "level5": {
       "title": "Lead",
@@ -457,5 +465,5 @@
     },
     "level7": {
       "title": "Operations Coordinator",
-      "positions": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator"]
+      "positions": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator", "Contracts Operations Coordinator"]
     }
