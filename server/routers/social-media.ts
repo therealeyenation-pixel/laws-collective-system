@@ -322,6 +322,123 @@ Format as JSON array with structure:
     }),
 
   /**
+   * Create video marketing campaign for distribution across platforms
+   */
+  createVideoCampaign: protectedProcedure
+    .input(z.object({
+      videoUrl: z.string(),
+      title: z.string(),
+      description: z.string(),
+      platforms: z.array(z.enum(["twitter", "facebook", "instagram", "linkedin", "tiktok"])),
+      scheduleDays: z.number().min(1).max(30).default(7),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Get user's integrations for selected platforms
+      const integrations = await db.select()
+        .from(socialMediaIntegrations)
+        .where(eq(socialMediaIntegrations.userId, ctx.user.id));
+
+      const platformIntegrations = integrations.filter(i => 
+        input.platforms.includes(i.platform as any)
+      );
+
+      if (platformIntegrations.length === 0) {
+        throw new Error("No connected accounts for selected platforms. Please connect your social media accounts first.");
+      }
+
+      // Generate platform-specific captions using AI
+      const [outreachAgent] = await db.select()
+        .from(agents)
+        .where(eq(agents.type, "outreach"))
+        .limit(1);
+
+      const campaignPosts = [];
+
+      for (const integration of platformIntegrations) {
+        // Generate optimized caption for each platform
+        const captionPrompt = `Create an engaging caption for a promotional video about L.A.W.S. Collective on ${integration.platform}.
+
+Video Title: ${input.title}
+Video Description: ${input.description}
+
+L.A.W.S. Collective helps families build multi-generational wealth through:
+- Land reconnection and stability
+- Air (education and knowledge)
+- Water (healing and balance)
+- Self (purpose and skills)
+
+Requirements:
+- Optimized for ${integration.platform}'s algorithm
+- Include 3-5 relevant hashtags
+- Include a call-to-action
+- Engaging and shareable
+- Under 280 characters for Twitter, 500 for Facebook, 2200 for Instagram
+
+Return only the caption text.`;
+
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: outreachAgent?.systemPrompt || "You are a social media marketing expert specializing in video content." },
+            { role: "user", content: captionPrompt }
+          ],
+        });
+
+        const caption = typeof response.choices[0].message.content === "string"
+          ? response.choices[0].message.content.trim()
+          : JSON.stringify(response.choices[0].message.content);
+
+        // Extract hashtags
+        const hashtagRegex = /#\w+/g;
+        const hashtags = caption.match(hashtagRegex) || [];
+
+        // Schedule posts across the campaign period
+        const postsPerPlatform = Math.ceil(input.scheduleDays / 3); // Post every 3 days per platform
+        
+        for (let i = 0; i < postsPerPlatform; i++) {
+          const scheduledDate = new Date();
+          scheduledDate.setDate(scheduledDate.getDate() + (i * 3));
+          scheduledDate.setHours(9 + (i % 3) * 4, 0, 0, 0); // Vary posting times: 9am, 1pm, 5pm
+
+          await db.insert(socialMediaPosts).values({
+            userId: ctx.user.id,
+            integrationId: integration.id,
+            content: caption,
+            mediaUrls: [input.videoUrl] as any,
+            hashtags: hashtags as any,
+            scheduledFor: scheduledDate,
+            status: "scheduled",
+          });
+
+          campaignPosts.push({
+            platform: integration.platform,
+            accountName: integration.accountName,
+            scheduledFor: scheduledDate,
+            caption: caption.substring(0, 100) + "...",
+          });
+        }
+      }
+
+      // Create notification
+      await db.insert(notifications).values({
+        userId: ctx.user.id,
+        type: "success",
+        title: "Video Campaign Created",
+        message: `Created ${campaignPosts.length} scheduled posts across ${platformIntegrations.length} platforms`,
+        actionUrl: "/social-media",
+      });
+
+      return {
+        success: true,
+        totalPosts: campaignPosts.length,
+        platforms: platformIntegrations.map(i => i.platform),
+        posts: campaignPosts,
+      };
+    }),
+
+  /**
    * Simulate publishing a post (in production, this would call actual APIs)
    */
   publishPost: protectedProcedure

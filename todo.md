@@ -1810,3 +1810,9 @@
 - [x] Bulk 1099 generation for year-end
 - [x] Missing W-9 alerts in Tax Simulator
 - [x] Contractor payment summary by year
+- [x] Create AI-generated promotional video for L.A.W.S. Collective
+- [x] Integrate video into landing page hero section
+- [x] Configure bot distribution for social media marketing
+- [x] Create AI-generated promotional video for L.A.W.S. Collective
+- [x] Integrate video into landing page hero section
+- [x] Configure bot distribution for social media marketing

@@ -150,8 +150,56 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="container max-w-7xl mx-auto px-4 py-12">
-        {/* L.A.W.S. Framework - Public Section */}
+        {/* Promotional Video Section */}
         <section className="mb-12">
+          <Card className="p-0 overflow-hidden bg-gradient-to-br from-green-900 to-emerald-900 border-green-700">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+              <div className="p-8 lg:p-12 flex flex-col justify-center">
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+                  Build Multi-Generational Wealth Through Purpose & Community
+                </h2>
+                <p className="text-green-100 mb-6 text-lg">
+                  Join thousands of families creating lasting legacies through our sovereign wealth system. L.A.W.S. Collective provides the framework, tools, and community to transform your family's financial future.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Button 
+                    size="lg" 
+                    className="bg-white text-green-900 hover:bg-green-50"
+                    onClick={() => (window.location.href = getLoginUrl("/dashboard"))}
+                  >
+                    Start Your Journey
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-white text-white hover:bg-white/10"
+                    onClick={() => document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    Learn More
+                  </Button>
+                </div>
+              </div>
+              <div className="relative aspect-video lg:aspect-auto">
+                <video 
+                  className="w-full h-full object-cover"
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                  poster="/video_reference.png"
+                >
+                  <source src="/promo_video.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-900/50 to-transparent lg:hidden" />
+              </div>
+            </div>
+          </Card>
+        </section>
+
+        {/* L.A.W.S. Framework - Public Section */}
+        <section id="learn-more" className="mb-12">
           <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
             <h2 className="text-2xl font-bold text-foreground mb-4">
               L.A.W.S. Collective Framework
