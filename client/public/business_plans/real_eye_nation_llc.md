@@ -117,7 +117,7 @@ Real-Eye-Nation operates with a lean team structure, leveraging the broader LuvO
 | Founder/Creative Director | Vision, strategy, and creative oversight | LaShanna Russell |
 | Media Production Support | Content creation and editing | Family members (training in progress) |
 | Education Liaison | Coordination with LuvOnPurpose Outreach Temple and Academy Society, Inc. | Cornelius (Education/Training Manager) |
-| Administrative Support | Operations and scheduling | Shared with LuvOnPurpose LLC |
+| Operations & Support | Operations and scheduling | Shared with LuvOnPurpose LLC |
 
 ---
 

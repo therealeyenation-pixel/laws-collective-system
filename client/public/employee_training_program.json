@@ -54,7 +54,7 @@
         "name": "Orientation Week",
         "timing": "Days 1-5",
         "description": "Foundation building and organizational introduction",
-        "responsible": "HR Department + Department Lead",
+        "responsible": "HR Department + Manager",
         "activities": [
           {
             "day": 1,
@@ -119,7 +119,7 @@
         "name": "Department Training",
         "timing": "Weeks 2-4",
         "description": "Role-specific skill development",
-        "responsible": "Department Lead + CETO",
+        "responsible": "Manager + CETO",
         "structure": "See departmentTraining section for specific tracks"
       },
       {
@@ -127,7 +127,7 @@
         "name": "Integration Period",
         "timing": "Days 30-90",
         "description": "Full integration with ongoing support",
-        "responsible": "Department Lead + HR",
+        "responsible": "Manager + HR",
         "milestones": [
           {
             "day": 30,
@@ -289,7 +289,7 @@
     "tracks": {
       "hrDepartment": {
         "name": "Human Resources Training Track",
-        "positions": ["HR Department Lead", "HR Administrative Support"],
+        "positions": ["HR Manager", "HR Operations & Support"],
         "duration": "40 hours over 3 weeks",
         "modules": [
           {
@@ -365,7 +365,7 @@
       },
       "qaqcDepartment": {
         "name": "Quality Assurance/Quality Control Training Track",
-        "positions": ["QA/QC Department Lead", "QA/QC Administrative Support"],
+        "positions": ["QA/QC Manager", "QA/QC Operations & Support"],
         "duration": "36 hours over 3 weeks",
         "modules": [
           {
@@ -434,7 +434,7 @@
       },
       "purchasingDepartment": {
         "name": "Purchasing Department Training Track",
-        "positions": ["Purchasing Department Lead", "Purchasing Administrative Support"],
+        "positions": ["Purchasing Manager", "Purchasing Operations & Support"],
         "duration": "32 hours over 3 weeks",
         "modules": [
           {
@@ -503,7 +503,7 @@
       },
       "operationsDepartment": {
         "name": "Operations Department Training Track",
-        "positions": ["Operations Manager", "Operations Administrative Support"],
+        "positions": ["Operations Manager", "Operations Operations & Support"],
         "duration": "36 hours over 3 weeks",
         "modules": [
           {
@@ -572,7 +572,7 @@
       },
       "educationDepartment": {
         "name": "Education Department Training Track",
-        "positions": ["Academy Instructor", "Education Administrative Support"],
+        "positions": ["Academy Instructor", "Education Operations & Support"],
         "duration": "40 hours over 3 weeks",
         "modules": [
           {
@@ -649,8 +649,8 @@
     }
   },
   "leadershipTraining": {
-    "description": "Additional training for Department Leads and above",
-    "applicableTo": ["Executive", "Department Lead"],
+    "description": "Additional training for Managers and above",
+    "applicableTo": ["Executive", "Manager"],
     "modules": [
       {
         "id": "LDR-001",

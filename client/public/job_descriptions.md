@@ -72,16 +72,16 @@ The Executive Director provides overall leadership for the 508(c)(1)(a) faith-ba
 
 ---
 
-## Department Lead Positions
+## Manager Positions
 
-### 1. HR Department Lead
+### 1. HR Manager
 
 **Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Remote with occasional in-person events  
 **Type:** Full-Time  
 **Salary Range:** $55,000 - $75,000 annually
 
-The HR Department Lead builds and maintains the human capital infrastructure across all five subsidiary entities. This role oversees talent acquisition, onboarding, training coordination, performance management, and employee relations.
+The HR Manager builds and maintains the human capital infrastructure across all five subsidiary entities. This role oversees talent acquisition, onboarding, training coordination, performance management, and employee relations.
 
 **Key Responsibilities:**
 - Develop and execute recruitment strategies
@@ -98,14 +98,14 @@ The HR Department Lead builds and maintains the human capital infrastructure acr
 
 ---
 
-### 2. QA/QC Department Lead
+### 2. QA/QC Manager
 
 **Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Remote with periodic on-site reviews  
 **Type:** Full-Time  
 **Salary Range:** $50,000 - $70,000 annually
 
-The QA/QC Department Lead establishes and maintains quality standards across all subsidiary entities. This role ensures deliverables meet organizational standards and grant compliance requirements are satisfied.
+The QA/QC Manager establishes and maintains quality standards across all subsidiary entities. This role ensures deliverables meet organizational standards and grant compliance requirements are satisfied.
 
 **Key Responsibilities:**
 - Define quality criteria and acceptance standards
@@ -122,14 +122,14 @@ The QA/QC Department Lead establishes and maintains quality standards across all
 
 ---
 
-### 3. Purchasing Department Lead
+### 3. Purchasing Manager
 
 **Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Remote with vendor site visits as needed  
 **Type:** Full-Time  
 **Salary Range:** $48,000 - $65,000 annually
 
-The Purchasing Department Lead manages procurement operations across all subsidiary entities. This role handles vendor relationships, cost control, inventory tracking, and grant compliance for purchasing activities.
+The Purchasing Manager manages procurement operations across all subsidiary entities. This role handles vendor relationships, cost control, inventory tracking, and grant compliance for purchasing activities.
 
 **Key Responsibilities:**
 - Identify, evaluate, and select vendors

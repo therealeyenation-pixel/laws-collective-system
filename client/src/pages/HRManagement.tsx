@@ -37,9 +37,9 @@ import {
 
 // Position data from internal job descriptions
 const POSITIONS = [
-  { id: "hr-lead", title: "HR Department Lead", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources" },
-  { id: "qaqc-lead", title: "QA/QC Department Lead", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance" },
-  { id: "purchasing-lead", title: "Purchasing Department Lead", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing" },
+  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources" },
+  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance" },
+  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing" },
   { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations" },
   { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach" },
   { id: "content-creator", title: "Content Creator / Media Assistant", entity: "Real-Eye-Nation LLC", department: "Media Production" },
@@ -112,7 +112,7 @@ const BENEFITS_PACKAGES = [
     ],
     grantCategory: "Personnel Costs / Supplies",
     annualCost: "$1,000 - $1,500",
-    applicableTo: ["HR Department Lead", "Outreach Coordinator", "Content Creator", "Community Programs Coordinator", "Operations Manager"]
+    applicableTo: ["HR Manager", "Outreach Coordinator", "Content Creator", "Community Programs Coordinator", "Operations Manager"]
   },
   { 
     id: "software-subscriptions", 

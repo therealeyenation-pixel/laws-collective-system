@@ -33,7 +33,7 @@
       "hiringAuthority": "Matriarch/CEO with Board input"
     },
     "departmentLead": {
-      "name": "Department Lead",
+      "name": "Manager",
       "positions": ["HR Lead", "QA/QC Lead", "Purchasing Lead", "Operations Manager", "Platform Administrator", "Grant Writer"],
       "salaryRange": "$48,000 - $85,000",
       "hiringAuthority": "COO or Matriarch/CEO"
@@ -42,13 +42,13 @@
       "name": "Staff",
       "positions": ["Outreach Coordinator", "Content Creator", "Academy Instructor", "Community Programs Coordinator"],
       "salaryRange": "$35,000 - $65,000",
-      "hiringAuthority": "Department Lead with COO approval"
+      "hiringAuthority": "Manager with COO approval"
     },
     "adminSupport": {
-      "name": "Administrative Support",
+      "name": "Operations & Support",
       "positions": ["HR Admin Support", "QA/QC Admin Support", "Purchasing Admin Support", "Operations Admin Support", "Education Admin Support"],
       "salaryRange": "$35,000 - $48,000",
-      "hiringAuthority": "Department Lead with HR approval"
+      "hiringAuthority": "Manager with HR approval"
     }
   },
   "hiringStages": {
@@ -78,7 +78,7 @@
           "minimumApplications": "3 qualified candidates before proceeding"
         },
         "staff": {
-          "additionalReview": "Department Lead reviews shortlist",
+          "additionalReview": "Manager reviews shortlist",
           "minimumApplications": "3 qualified candidates before proceeding"
         },
         "adminSupport": {
@@ -119,7 +119,7 @@
           "additionalFocus": "Management experience, department-specific knowledge"
         },
         "staff": {
-          "conductor": "HR Lead or Department Lead",
+          "conductor": "HR Lead or Manager",
           "duration": "15-20 minutes",
           "additionalFocus": "Role-specific skills, team fit"
         },
@@ -170,7 +170,7 @@
           "panelSize": "3-4 members",
           "panelComposition": [
             {"role": "Chair", "member": "COO or Matriarch/CEO", "focus": "Leadership capability, organizational fit"},
-            {"role": "Member", "member": "Peer Department Lead or C-Suite", "focus": "Cross-functional collaboration"},
+            {"role": "Member", "member": "Peer Manager or C-Suite", "focus": "Cross-functional collaboration"},
             {"role": "Member", "member": "Team member from department (if available)", "focus": "Team dynamics"},
             {"role": "HR Observer", "member": "HR Lead", "focus": "Process compliance, cultural fit"}
           ],
@@ -183,7 +183,7 @@
           "duration": "45 minutes",
           "panelSize": "2-3 members",
           "panelComposition": [
-            {"role": "Chair", "member": "Department Lead", "focus": "Role fit, skills assessment"},
+            {"role": "Chair", "member": "Manager", "focus": "Role fit, skills assessment"},
             {"role": "Member", "member": "Team peer or cross-functional partner", "focus": "Team dynamics, collaboration"},
             {"role": "HR Observer", "member": "HR representative", "focus": "Process compliance"}
           ],
@@ -195,7 +195,7 @@
           "duration": "30-45 minutes",
           "panelSize": "2 members",
           "panelComposition": [
-            {"role": "Chair", "member": "Department Lead (direct supervisor)", "focus": "Role fit, skills assessment"},
+            {"role": "Chair", "member": "Manager (direct supervisor)", "focus": "Role fit, skills assessment"},
             {"role": "Member", "member": "HR representative", "focus": "Cultural fit, process compliance"}
           ],
           "additionalComponents": [
@@ -227,7 +227,7 @@
         "staff": {
           "required": "Recommended",
           "assessments": [
-            {"type": "Skills Demo", "description": "Demonstration of role-specific skills", "evaluators": "Department Lead"},
+            {"type": "Skills Demo", "description": "Demonstration of role-specific skills", "evaluators": "Manager"},
             {"type": "References", "description": "2 professional references", "conductedBy": "HR"}
           ]
         },
@@ -267,8 +267,8 @@
       "approvalChain": {
         "executive": ["Panel recommendation", "Matriarch/CEO approval", "Board notification"],
         "departmentLead": ["Panel recommendation", "COO approval", "Matriarch/CEO notification"],
-        "staff": ["Panel recommendation", "Department Lead approval", "COO notification"],
-        "adminSupport": ["Panel recommendation", "Department Lead approval", "HR confirmation"]
+        "staff": ["Panel recommendation", "Manager approval", "COO notification"],
+        "adminSupport": ["Panel recommendation", "Manager approval", "HR confirmation"]
       }
     },
     "stage6": {

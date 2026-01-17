@@ -34,7 +34,7 @@ import { Link } from "wouter";
 const POSITIONS = [
   { 
     id: "hr-lead", 
-    title: "HR Department Lead", 
+    title: "HR Manager", 
     entity: "The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Human Resources",
@@ -47,7 +47,7 @@ const POSITIONS = [
   },
   { 
     id: "qaqc-lead", 
-    title: "QA/QC Department Lead", 
+    title: "QA/QC Manager", 
     entity: "The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Quality Assurance",
@@ -60,7 +60,7 @@ const POSITIONS = [
   },
   { 
     id: "purchasing-lead", 
-    title: "Purchasing Department Lead", 
+    title: "Purchasing Manager", 
     entity: "The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Purchasing",
@@ -161,6 +161,84 @@ const POSITIONS = [
     description: "Develop and manage programs based on the L.A.W.S. framework (Land, Air, Water, Self) that help community members reconnect with their roots, gain knowledge, find balance, and discover purpose.",
     requirements: ["2+ years program management", "Community development passion", "Organizational skills", "Cultural sensitivity"],
     category: "community"
+  },
+  { 
+    id: "lead-ops-support", 
+    title: "Lead Operations & Support", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Operations",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$52,000 - $68,000",
+    description: "Oversee all department Operations & Support staff across the organization. Serve as the primary support to the executive team while supervising HR, QA/QC, Purchasing, Operations, and Education Operations & Support staff.",
+    requirements: ["3+ years operations/admin leadership", "Team leadership experience", "Process management skills", "Remote team coordination"],
+    category: "operations"
+  },
+  { 
+    id: "ops-support-hr", 
+    title: "HR Operations & Support", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Human Resources",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$35,000 - $48,000",
+    description: "Provide day-to-day administrative assistance to the HR Department. Handle scheduling, document management, candidate coordination, and employee record maintenance.",
+    requirements: ["1+ years admin/HR support", "Organization skills", "Microsoft Office/Google Workspace", "Data entry proficiency"],
+    category: "operations"
+  },
+  { 
+    id: "ops-support-qaqc", 
+    title: "QA/QC Operations & Support", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Quality Assurance",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$35,000 - $48,000",
+    description: "Assist the Quality Department with documentation, tracking, and compliance activities. Maintain quality records, track audit findings, and support process improvement initiatives.",
+    requirements: ["1+ years admin/quality support", "Attention to detail", "Documentation skills", "Process tracking"],
+    category: "operations"
+  },
+  { 
+    id: "ops-support-purchasing", 
+    title: "Purchasing Operations & Support", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Purchasing",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$35,000 - $48,000",
+    description: "Assist with procurement operations including order processing, vendor communications, and inventory tracking. Ensure accurate records and timely processing of purchases.",
+    requirements: ["1+ years admin/purchasing support", "Data entry skills", "Vendor communication", "Invoice processing"],
+    category: "operations"
+  },
+  { 
+    id: "ops-support-operations", 
+    title: "Operations Operations & Support", 
+    entity: "LuvOnPurpose Autonomous Wealth System LLC",
+    entityShort: "LAWS LLC",
+    department: "Operations",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$35,000 - $48,000",
+    description: "Provide day-to-day assistance to the Operations team. Handle scheduling, project tracking, communications, and general administrative tasks to keep operations running smoothly.",
+    requirements: ["1+ years admin/operations support", "Organization skills", "Multitasking ability", "Project tracking"],
+    category: "operations"
+  },
+  { 
+    id: "ops-support-education", 
+    title: "Education Operations & Support", 
+    entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+    entityShort: "Temple/508",
+    department: "Education",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$35,000 - $48,000",
+    description: "Assist the Academy with student services, course administration, and certification processing. Ensure smooth operations of educational programs and excellent student experience.",
+    requirements: ["1+ years admin/education support", "Student communication skills", "LMS navigation", "Record keeping"],
+    category: "education"
   },
 ];
 

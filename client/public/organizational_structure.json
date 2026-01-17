@@ -75,7 +75,7 @@
           "Legal/Justice advisory support (Criminal Justice expertise)"
         ],
         "reportsTo": "Matriarch/CEO",
-        "directReports": ["Academy Instructors", "Education Administrative Support"],
+        "directReports": ["Academy Instructors", "Education Operations & Support"],
         "salaryRange": "$130,000 - $150,000",
         "additionalStipends": [
           {"role": "Justice/Legal Advisor", "amount": "$10,000", "description": "Advisory support leveraging Criminal Justice expertise"}
@@ -110,7 +110,7 @@
             "notes": "Required for nonprofit credibility with funders"
           },
           {
-            "title": "Education Administrative Support",
+            "title": "Education Operations & Support",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Student enrollment and registration processing",
@@ -151,11 +151,11 @@
               "Quality assurance for deliverables"
             ],
             "reportsTo": "COO",
-            "directReports": ["Operations Administrative Support"],
+            "directReports": ["Operations Operations & Support"],
             "salaryRange": "$60,000 - $85,000"
           },
           {
-            "title": "Operations Administrative Support",
+            "title": "Operations Operations & Support",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Meeting scheduling and calendar coordination",
@@ -187,7 +187,7 @@
         "abbreviation": "L.A.W.S.",
         "positions": [
           {
-            "title": "HR Department Lead",
+            "title": "HR Manager",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Recruitment and talent acquisition",
@@ -197,11 +197,11 @@
               "Performance management"
             ],
             "reportsTo": "COO",
-            "directReports": ["HR Administrative Support"],
+            "directReports": ["HR Operations & Support"],
             "salaryRange": "$55,000 - $75,000"
           },
           {
-            "title": "HR Administrative Support",
+            "title": "HR Operations & Support",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Interview scheduling and candidate coordination",
@@ -210,11 +210,11 @@
               "Training tracking",
               "HR reports and metrics"
             ],
-            "reportsTo": "HR Department Lead",
+            "reportsTo": "HR Manager",
             "salaryRange": "$35,000 - $48,000"
           },
           {
-            "title": "QA/QC Department Lead",
+            "title": "QA/QC Manager",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Quality standards development",
@@ -223,11 +223,11 @@
               "Internal audits"
             ],
             "reportsTo": "COO",
-            "directReports": ["QA/QC Administrative Support"],
+            "directReports": ["QA/QC Operations & Support"],
             "salaryRange": "$50,000 - $70,000"
           },
           {
-            "title": "QA/QC Administrative Support",
+            "title": "QA/QC Operations & Support",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Quality documentation maintenance",
@@ -236,11 +236,11 @@
               "Metrics compilation",
               "Document control"
             ],
-            "reportsTo": "QA/QC Department Lead",
+            "reportsTo": "QA/QC Manager",
             "salaryRange": "$35,000 - $48,000"
           },
           {
-            "title": "Purchasing Department Lead",
+            "title": "Purchasing Manager",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Vendor management",
@@ -249,11 +249,11 @@
               "Asset tracking"
             ],
             "reportsTo": "COO",
-            "directReports": ["Purchasing Administrative Support"],
+            "directReports": ["Purchasing Operations & Support"],
             "salaryRange": "$48,000 - $65,000"
           },
           {
-            "title": "Purchasing Administrative Support",
+            "title": "Purchasing Operations & Support",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Purchase order processing",
@@ -262,7 +262,7 @@
               "Invoice matching",
               "Purchasing reports"
             ],
-            "reportsTo": "Purchasing Department Lead",
+            "reportsTo": "Purchasing Manager",
             "salaryRange": "$35,000 - $48,000"
           },
           {
@@ -355,19 +355,19 @@
     "departments": [
       {
         "name": "Human Resources",
-        "lead": "HR Department Lead",
+        "lead": "HR Manager",
         "servesEntities": ["All"],
         "functions": ["Recruitment", "Onboarding", "Training", "Benefits", "Employee Relations"]
       },
       {
         "name": "Quality Assurance",
-        "lead": "QA/QC Department Lead",
+        "lead": "QA/QC Manager",
         "servesEntities": ["All"],
         "functions": ["Standards", "Compliance", "Documentation", "Audits"]
       },
       {
         "name": "Purchasing",
-        "lead": "Purchasing Department Lead",
+        "lead": "Purchasing Manager",
         "servesEntities": ["All"],
         "functions": ["Procurement", "Vendor Management", "Inventory", "Cost Data"]
       },
@@ -398,20 +398,21 @@
       {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$70,000 - $95,000"},
       {"title": "Executive Director", "entity": "Temple/508", "priority": "High", "salaryRange": "$55,000 - $75,000"},
       {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High", "salaryRange": "$60,000 - $85,000"},
-      {"title": "HR Department Lead", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$55,000 - $75,000"},
+      {"title": "HR Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$55,000 - $75,000"},
       {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$55,000 - $80,000"},
       {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$50,000 - $72,000"},
-      {"title": "QA/QC Department Lead", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$50,000 - $70,000"},
-      {"title": "Purchasing Department Lead", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$48,000 - $65,000"},
+      {"title": "QA/QC Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$50,000 - $70,000"},
+      {"title": "Purchasing Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$48,000 - $65,000"},
       {"title": "Outreach Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$42,000 - $58,000"},
       {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$35,000 - $55,000"},
       {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low", "salaryRange": "$40,000 - $65,000"},
       {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$45,000 - $60,000"},
-      {"title": "HR Administrative Support", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
-      {"title": "QA/QC Administrative Support", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Purchasing Administrative Support", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Operations Administrative Support", "entity": "LAWS, LLC", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Education Administrative Support", "entity": "Temple/508", "priority": "Low", "salaryRange": "$35,000 - $48,000"}
+      {"title": "Lead Operations & Support", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$52,000 - $68,000"},
+      {"title": "HR Operations & Support", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "QA/QC Operations & Support", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Purchasing Operations & Support", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Operations Operations & Support", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Education Operations & Support", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$35,000 - $48,000"}
     ]
   },
   "reportingStructure": {
@@ -428,16 +429,18 @@
       "positions": ["COO (Open)", "CFO (Craig)", "CETO (Cornelius)", "Executive Director - Temple (Open)", "Creative Director (Amandes)"]
     },
     "level4": {
-      "title": "Department Leads",
-      "positions": ["Operations Manager", "HR Lead", "QA/QC Lead", "Purchasing Lead", "Platform Admin", "Grant Writer", "Design Lead (Essence)"]
+      "title": "Managers",
+      "positions": ["Operations Manager", "HR Manager", "QA/QC Manager", "Purchasing Manager", "Platform Administrator", "Grant Writer", "Design Lead (Essence)"]
     },
     "level5": {
-      "title": "Staff",
-      "positions": ["Outreach Coordinator", "Content Creator", "Academy Instructors", "Community Programs Coordinator", "Operations Support (Amber)"]
+      "title": "Lead",
+      "positions": ["Lead Operations & Support"]
     },
     "level6": {
-      "title": "Administrative Support",
-      "positions": ["HR Admin Support", "QA/QC Admin Support", "Purchasing Admin Support", "Operations Admin Support", "Education Admin Support"]
+      "title": "Staff",
+      "positions": ["Outreach Coordinator", "Content Creator", "Academy Instructors", "Community Programs Coordinator"]
+    },
+    "level7": {
+      "title": "Operations & Support",
+      "positions": ["HR Operations & Support", "QA/QC Operations & Support", "Purchasing Operations & Support", "Operations Operations & Support", "Education Operations & Support"]
     }
-  }
-}

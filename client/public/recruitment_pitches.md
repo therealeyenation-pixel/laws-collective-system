@@ -9,7 +9,7 @@
 | Cornelius | Education/Training Manager | Education, Justice Advisor | Temple/Academy |
 | Amber | House Member | Operations Support | Onboarding |
 | Essence | House Member | Creative/Design Support | Onboarding |
-| Amandes | House Member | Media/Administrative Support | Real-Eye-Nation |
+| Amandes | House Member | Media/Operations & Support | Real-Eye-Nation |
 
 ---
 

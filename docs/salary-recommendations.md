@@ -128,14 +128,14 @@ Based on current market data from BLS, Glassdoor, Salary.com, Indeed, and nonpro
 | **Operations Manager** | $65,000 | $80,000 | $95,000 |
 | **Program Managers** | $60,000 | $72,500 | $85,000 |
 
-### Administrative Support Positions
+### Operations & Support Positions
 | Position | Entry Range | Mid Range | Senior Range |
 |----------|-------------|-----------|--------------|
-| **HR Administrative Support** | $35,000 | $41,500 | $48,000 |
-| **QA/QC Administrative Support** | $35,000 | $41,500 | $48,000 |
-| **Purchasing Administrative Support** | $35,000 | $41,500 | $48,000 |
-| **Operations Administrative Support** | $35,000 | $41,500 | $48,000 |
-| **Education Administrative Support** | $35,000 | $41,500 | $48,000 |
+| **HR Operations & Support** | $35,000 | $41,500 | $48,000 |
+| **QA/QC Operations & Support** | $35,000 | $41,500 | $48,000 |
+| **Purchasing Operations & Support** | $35,000 | $41,500 | $48,000 |
+| **Operations Operations & Support** | $35,000 | $41,500 | $48,000 |
+| **Education Operations & Support** | $35,000 | $41,500 | $48,000 |
 
 ---
 
@@ -209,7 +209,7 @@ Stipend assignments are reviewed annually or when role responsibilities change.
 
 ## Updated Total Compensation Summary
 
-With the addition of the CETO role and Administrative Support positions, the updated annual payroll estimates are:
+With the addition of the CETO role and Operations & Support positions, the updated annual payroll estimates are:
 
 ### Filled Positions (Current Team)
 | Position | Holder | Estimated Salary |
@@ -225,9 +225,9 @@ With the addition of the CETO role and Administrative Support positions, the upd
 | Category | Count | Low Estimate | High Estimate |
 |----------|-------|--------------|---------------|
 | Executive (COO, ED) | 2 | $125,000 | $170,000 |
-| Department Leads | 5 | $253,000 | $362,000 |
+| Managers | 5 | $253,000 | $362,000 |
 | Staff Positions | 5 | $197,000 | $293,000 |
-| Administrative Support | 5 | $175,000 | $240,000 |
+| Operations & Support | 5 | $175,000 | $240,000 |
 | **Total Open Positions** | **17** | **$750,000** | **$1,065,000** |
 
-**Note:** Administrative Support positions are designed as entry-level roles with clear career paths to Department Lead positions, supporting both organizational needs and employee development.
+**Note:** Operations & Support positions are designed as entry-level roles with clear career paths to Manager positions, supporting both organizational needs and employee development.

@@ -2050,7 +2050,7 @@
 
 ### Department Structure
 - [ ] Create HR Department under The L.A.W.S. Collective, LLC
-- [ ] Department Lead: TBD
+- [ ] Manager: TBD
 
 ### HR Functions
 - [ ] Recruitment - finding candidates, pitching opportunities, tracking interest
@@ -2064,7 +2064,7 @@
 
 ### Department Structure
 - [ ] Create QA/QC Department under The L.A.W.S. Collective, LLC (separate from HR)
-- [ ] Department Lead: TBD
+- [ ] Manager: TBD
 
 ### QA/QC Functions
 - [ ] Quality Assurance - standards for deliverables across all entities
@@ -2133,10 +2133,10 @@
 
 ## Phase 37: Formal Job Descriptions
 
-### Department Leads (The L.A.W.S. Collective, LLC)
-- [x] HR Department Lead - full job description
-- [x] QA/QC Department Lead - full job description
-- [x] Purchasing Department Lead - full job description
+### Managers (The L.A.W.S. Collective, LLC)
+- [x] HR Manager - full job description
+- [x] QA/QC Manager - full job description
+- [x] Purchasing Manager - full job description
 
 ### Operations (LuvOnPurpose Autonomous Wealth System LLC)
 - [x] Operations Manager - full job description
@@ -2554,7 +2554,7 @@
 - [x] Set CETO salary range at $130,000 - $150,000
 - [x] Add stipend structure language for cross-entity additional duties
 - [x] Define stipend ranges ($5,000 - $15,000 per additional role)
-- [x] Create Department Administrative Support position template
+- [x] Create Department Operations & Support position template
 - [x] Add Admin Support for HR Department
 - [x] Add Admin Support for QA/QC Department
 - [x] Add Admin Support for Purchasing Department
@@ -2570,8 +2570,8 @@
 - [x] Define interview stages (application review, phone screen, panel interview, final decision)
 - [x] Establish panel interview requirements (who participates, roles)
 - [x] Create interview questions for Executive positions
-- [x] Create interview questions for Department Lead positions
-- [x] Create interview questions for Administrative Support positions
+- [x] Create interview questions for Manager positions
+- [x] Create interview questions for Operations & Support positions
 - [x] Define scoring rubric for candidate evaluation
 - [x] Create offer and onboarding workflow
 - [x] Create job postings for Admin Support positions (5 positions)
@@ -2584,3 +2584,14 @@
 
 - [x] Create detailed course descriptions for all training modules
 - [x] Add course catalog to workshop/academy pages
+
+
+## Phase 38: Position Naming and Structure Updates
+- [x] Rename "Administrative Support" to "Operations & Support" in all files
+- [x] Change "Department Lead" titles to "Manager" throughout
+- [x] Create Lead Operations & Support position (supervises all Ops & Support staff, supports executives)
+- [x] Update organizational structure with correct hierarchy (Executive > Manager > Lead > Staff > Operations & Support)
+- [x] Add Operations & Support positions to Open Positions/Careers page UI
+- [x] Update job postings with new naming convention
+- [x] Update hiring process documentation with new titles
+- [x] Update training program with new position names

@@ -340,7 +340,7 @@
           "assessment": "Leadership action plan + peer feedback",
           "certification": "L.A.W.S. Leadership Certificate",
           "required": true,
-          "requiredFor": ["Department Leads", "Executives"]
+          "requiredFor": ["Managers", "Executives"]
         },
         {
           "courseId": "LEAD-102",
@@ -367,7 +367,7 @@
           "assessment": "Remote team management plan",
           "certification": "Included in L.A.W.S. Leadership Certificate",
           "required": true,
-          "requiredFor": ["Department Leads", "Executives"]
+          "requiredFor": ["Managers", "Executives"]
         },
         {
           "courseId": "LEAD-103",
@@ -394,7 +394,7 @@
           "assessment": "Coaching demonstration + peer evaluation",
           "certification": "Included in L.A.W.S. Leadership Certificate",
           "required": true,
-          "requiredFor": ["Department Leads", "Executives"]
+          "requiredFor": ["Managers", "Executives"]
         },
         {
           "courseId": "LEAD-201",
@@ -422,7 +422,7 @@
           "certification": "Advanced Leadership Certificate",
           "required": false,
           "recommended": true,
-          "recommendedFor": ["Executives", "Senior Department Leads"]
+          "recommendedFor": ["Executives", "Senior Managers"]
         },
         {
           "courseId": "LEAD-202",
@@ -449,7 +449,7 @@
           "assessment": "Create a sample department budget",
           "certification": "Included in Advanced Leadership Certificate",
           "required": true,
-          "requiredFor": ["Department Leads", "Executives"]
+          "requiredFor": ["Managers", "Executives"]
         }
       ]
     },
@@ -819,7 +819,7 @@
       {
         "pathName": "L.A.W.S. Leadership",
         "requiredCourses": ["LEAD-101", "LEAD-102", "LEAD-103"],
-        "description": "Required for Department Leads and Executives"
+        "description": "Required for Managers and Executives"
       },
       {
         "pathName": "Advanced Leadership",
