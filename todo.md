@@ -1909,3 +1909,64 @@
 - [x] Create entity document upload interface
 - [x] Upload and link formation documents (Articles of Organization, EIN letters)
 - [x] Add document viewing from Entity Management page
+
+
+## Grant Opportunities by Entity (January 2026)
+- [x] Research grant opportunities applicable to each entity type
+- [x] Assign grants to specific entities - no duplicates allowed
+- [x] Temple/508: Community education, re-entry, facility grants
+- [x] L.A.W.S. Collective LLC: Business development, workforce training grants
+- [x] Real-Eye-Nation LLC: Media, arts, documentary grants
+- [x] LuvOnPurpose Autonomous Wealth System LLC: Technology, innovation grants
+- [x] Calea Freeman Family Trust: Family foundation, legacy grants (Trust is GRANT-MAKER not recipient)
+- [x] Update each business plan with grant-ready sections
+- [x] Create entity-specific grant opportunity component in Grant Management
+- [x] Integrate business plans into grant application auto-fill system
+- [x] Store finalized business plans in Document Vault for data access
+
+
+## Phase 31: Entity Wallet System (Crypto Simulator Completion)
+
+### Phase 31.1: Wallet Infrastructure
+- [ ] Create entity_wallets table (wallet address, entity_id, wallet_type, created_at)
+- [ ] Create wallet_transactions table (from_wallet, to_wallet, amount, token_type, tx_hash, status)
+- [ ] Create entity_nfts table (nft_id, entity_id, token_uri, metadata, minted_at)
+- [ ] Link wallets to LuvLedger accounts
+- [ ] Implement wallet isolation (each entity sees only their wallet)
+
+### Phase 31.2: Wallet Generation
+- [ ] Generate wallet addresses at crypto simulator completion
+- [ ] Create Trust master/treasury wallet with oversight capability
+- [ ] Create entity-specific wallets for each subsidiary
+- [ ] Implement initial token allocation (40/30/20/10 split)
+- [ ] Store wallet keys securely (encrypted)
+
+### Phase 31.3: Wallet Operations
+- [ ] Implement send crypto between entity wallets
+- [ ] Implement receive crypto from external sources
+- [ ] Create inter-entity transfer following allocation policy
+- [ ] Build transaction history per wallet
+- [ ] Implement transaction verification via LuvLedger
+
+### Phase 31.4: NFT Capabilities
+- [ ] Implement NFT minting per entity
+- [ ] Academy: Completion certificate NFTs
+- [ ] L.A.W.S. Collective: Membership NFTs
+- [ ] Real-Eye-Nation: Content/media ownership NFTs
+- [ ] LuvOnPurpose AWS: Platform access NFTs
+- [ ] Trust: Governance/voting NFTs
+
+### Phase 31.5: Wallet UI
+- [ ] Create wallet dashboard per entity
+- [ ] Build send/receive interface
+- [ ] Display transaction history
+- [ ] Show NFT gallery per entity
+- [ ] Trust oversight view (all wallets, read-only)
+
+### Phase 31.6: Crypto Simulator Integration
+- [ ] Add wallet setup as final step of crypto course
+- [ ] Generate wallets on course completion
+- [ ] Issue completion certificate as NFT
+- [ ] Distribute initial token allocation
+- [ ] Link to LuvLedger for immutable record
+

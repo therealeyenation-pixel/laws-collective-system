@@ -1,0 +1,419 @@
+{
+  "lastUpdated": "2026-01-17",
+  "entities": {
+    "luvonpurpose_temple": {
+      "entityName": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "entityType": "508(c)(1)(A) Nonprofit",
+      "ein": "Pending",
+      "state": "Georgia",
+      "grantCategories": ["Faith-Based", "Community Education", "Re-Entry", "Workforce Development", "Facility/Property"],
+      "grants": [
+        {
+          "id": "temple-001",
+          "name": "Adkins Family Foundation Grants",
+          "funder": "Adkins Family Foundation",
+          "amount": "Unspecified",
+          "deadline": "Rolling",
+          "focus": "Faith-based mission, at-risk children, inner-city communities",
+          "eligibility": "501(c)(3) or 508(c)(1)(A) organizations",
+          "url": "https://www.instrumentl.com/browse-grants/faith-based-grants",
+          "fitScore": 95,
+          "notes": "Strong alignment with L.A.W.S. framework and community education mission"
+        },
+        {
+          "id": "temple-002",
+          "name": "National Fund for Sacred Places",
+          "funder": "Partners for Sacred Places / National Trust",
+          "amount": "$50,000 - $250,000",
+          "deadline": "Annual cycle",
+          "focus": "Historic houses of worship, community engagement",
+          "eligibility": "Religious organizations with community service programs",
+          "url": "https://fundforsacredplaces.org",
+          "fitScore": 90,
+          "notes": "Perfect for acquiring/renovating Temple facility"
+        },
+        {
+          "id": "temple-003",
+          "name": "DOL Reentry Employment Opportunities",
+          "funder": "U.S. Department of Labor",
+          "amount": "Varies ($100K-$500K typical)",
+          "deadline": "Annual solicitation",
+          "focus": "Re-entry workforce development, faith-based environments",
+          "eligibility": "Faith and community-based organizations",
+          "url": "https://www.dol.gov/agencies/eta/reentry",
+          "fitScore": 92,
+          "notes": "Directly supports re-entry programming through Academy"
+        },
+        {
+          "id": "temple-004",
+          "name": "Second Chance Act Grants",
+          "funder": "Bureau of Justice Assistance",
+          "amount": "$250,000 - $1,000,000",
+          "deadline": "Annual solicitation",
+          "focus": "Reentry services, youth offender programs",
+          "eligibility": "Nonprofits, faith-based organizations",
+          "url": "https://bja.ojp.gov/funding/opportunities",
+          "fitScore": 88,
+          "notes": "Large-scale funding for comprehensive re-entry programs"
+        },
+        {
+          "id": "temple-005",
+          "name": "Versafund Catalyst Grant",
+          "funder": "Versacare Foundation",
+          "amount": "$2,500 - $10,000",
+          "deadline": "Rolling",
+          "focus": "Faith-based organizations, education, social justice",
+          "eligibility": "Faith-based nonprofits serving underserved communities",
+          "url": "https://www.versacare.org",
+          "fitScore": 85,
+          "notes": "Good starter grant for program development"
+        },
+        {
+          "id": "temple-006",
+          "name": "W.K. Kellogg Foundation Grants",
+          "funder": "W.K. Kellogg Foundation",
+          "amount": "Varies ($50K-$500K)",
+          "deadline": "Rolling",
+          "focus": "Racial equity, education, family economic success",
+          "eligibility": "Nonprofits with community impact",
+          "url": "https://www.wkkf.org/grantseekers",
+          "fitScore": 90,
+          "notes": "Strong alignment with generational wealth and family support mission"
+        },
+        {
+          "id": "temple-007",
+          "name": "High Foundation Opportunity Grants",
+          "funder": "High Foundation",
+          "amount": "Varies",
+          "deadline": "Rolling",
+          "focus": "Generational wealth-building, education, workforce development, re-entry",
+          "eligibility": "Nonprofits in focus areas",
+          "url": "https://www.highfoundation.org/grant-program",
+          "fitScore": 95,
+          "notes": "Perfect mission alignment - covers all L.A.W.S. pillars"
+        },
+        {
+          "id": "temple-008",
+          "name": "George Family Foundation Spirituality Grants",
+          "funder": "George Family Foundation",
+          "amount": "Varies",
+          "deadline": "Rolling",
+          "focus": "Spirituality and inner life programs",
+          "eligibility": "Organizations with spiritual/contemplative programs",
+          "url": "https://www.instrumentl.com/browse-grants/faith-based-grants",
+          "fitScore": 88,
+          "notes": "Supports spiritual nature of Temple programming"
+        }
+      ]
+    },
+    "laws_collective": {
+      "entityName": "The L.A.W.S. Collective, LLC",
+      "entityType": "Limited Liability Company",
+      "ein": "39-3122993",
+      "state": "Delaware",
+      "grantCategories": ["Business Development", "Workforce Training", "Community Economic Development"],
+      "grants": [
+        {
+          "id": "laws-001",
+          "name": "NAACP Powershift Entrepreneur Grant",
+          "funder": "NAACP",
+          "amount": "$25,000",
+          "deadline": "Annual cycle",
+          "focus": "Black entrepreneurs, business growth",
+          "eligibility": "Black-owned businesses",
+          "url": "https://naacp.org/find-resources/grants",
+          "fitScore": 90,
+          "notes": "Strong fit for collective business model"
+        },
+        {
+          "id": "laws-002",
+          "name": "SBA Community Navigator Grants",
+          "funder": "U.S. Small Business Administration",
+          "amount": "$50,000 - $500,000",
+          "deadline": "Annual solicitation",
+          "focus": "Small business support, underserved communities",
+          "eligibility": "Organizations providing business assistance",
+          "url": "https://www.sba.gov/funding-programs/grants/grants-community-organizations",
+          "fitScore": 85,
+          "notes": "Supports collective's business education mission"
+        },
+        {
+          "id": "laws-003",
+          "name": "MBDA Business Center Grants",
+          "funder": "Minority Business Development Agency",
+          "amount": "Varies ($100K-$1M)",
+          "deadline": "Annual solicitation",
+          "focus": "Minority business development, technical assistance",
+          "eligibility": "Organizations serving minority businesses",
+          "url": "https://www.mbda.gov/financial-resources/grants",
+          "fitScore": 88,
+          "notes": "Could establish collective as MBDA business center"
+        },
+        {
+          "id": "laws-004",
+          "name": "Breva Thrive Grant",
+          "funder": "Breva",
+          "amount": "$5,000",
+          "deadline": "Quarterly (Q1 opens Jan 1, 2026)",
+          "focus": "Community impact businesses",
+          "eligibility": "Revenue-generating businesses with community impact",
+          "url": "https://www.breva.co",
+          "fitScore": 82,
+          "notes": "Good for operational funding"
+        },
+        {
+          "id": "laws-005",
+          "name": "National Association Self-Employed Growth Grant",
+          "funder": "NASE",
+          "amount": "Up to $4,000",
+          "deadline": "Quarterly (April, July, October, January)",
+          "focus": "Small business growth",
+          "eligibility": "NASE members",
+          "url": "https://www.nase.org",
+          "fitScore": 78,
+          "notes": "Requires NASE membership"
+        },
+        {
+          "id": "laws-006",
+          "name": "Amazon 1 Million Black Businesses",
+          "funder": "Amazon",
+          "amount": "Resources + potential funding",
+          "deadline": "Rolling",
+          "focus": "Black business growth, e-commerce",
+          "eligibility": "Certified Black-owned businesses",
+          "url": "https://www.amazon.com/b?node=21241107011",
+          "fitScore": 80,
+          "notes": "Resource hub with funding opportunities"
+        }
+      ]
+    },
+    "real_eye_nation": {
+      "entityName": "Real-Eye-Nation LLC",
+      "entityType": "Limited Liability Company",
+      "ein": "84-4976416",
+      "state": "Georgia",
+      "grantCategories": ["Documentary/Film", "Media Production", "Arts & Culture", "Storytelling"],
+      "grants": [
+        {
+          "id": "ren-001",
+          "name": "Sundance Documentary Fund",
+          "funder": "Sundance Institute",
+          "amount": "$25,000 - $75,000",
+          "deadline": "Annual cycles",
+          "focus": "Independent documentary filmmaking",
+          "eligibility": "Independent filmmakers",
+          "url": "https://www.sundance.org/programs/documentary-film",
+          "fitScore": 92,
+          "notes": "Perfect for heritage/legacy documentary projects"
+        },
+        {
+          "id": "ren-002",
+          "name": "IDA Fiscal Sponsorship & Grants",
+          "funder": "International Documentary Association",
+          "amount": "Varies",
+          "deadline": "Rolling",
+          "focus": "Documentary film production",
+          "eligibility": "Documentary filmmakers",
+          "url": "https://www.documentary.org/funding",
+          "fitScore": 88,
+          "notes": "Fiscal sponsorship enables grant access"
+        },
+        {
+          "id": "ren-003",
+          "name": "MacArthur Foundation Journalism & Media",
+          "funder": "MacArthur Foundation",
+          "amount": "Varies ($50K-$500K)",
+          "deadline": "By invitation/LOI",
+          "focus": "Just and inclusive narratives, media production",
+          "eligibility": "Media organizations with social impact",
+          "url": "https://www.macfound.org/programs/journalism-media",
+          "fitScore": 85,
+          "notes": "Supports narrative change work"
+        },
+        {
+          "id": "ren-004",
+          "name": "NEA Grants for Arts Projects",
+          "funder": "National Endowment for the Arts",
+          "amount": "$10,000 - $100,000",
+          "deadline": "Annual cycles",
+          "focus": "Arts projects including media arts",
+          "eligibility": "Nonprofits and tax-exempt organizations",
+          "url": "https://www.arts.gov/grants/grants-for-arts-projects",
+          "fitScore": 80,
+          "notes": "May need fiscal sponsor or partner with Temple"
+        },
+        {
+          "id": "ren-005",
+          "name": "Firelight Media Programs",
+          "funder": "Firelight Media",
+          "amount": "Varies + mentorship",
+          "deadline": "Annual cycles",
+          "focus": "Documentary filmmakers of color",
+          "eligibility": "BIPOC filmmakers",
+          "url": "https://www.firelightmedia.tv/programs",
+          "fitScore": 90,
+          "notes": "Strong fit for heritage storytelling"
+        },
+        {
+          "id": "ren-006",
+          "name": "Creative Capital Award",
+          "funder": "Creative Capital",
+          "amount": "Up to $50,000",
+          "deadline": "Annual cycle",
+          "focus": "Innovative artistic projects",
+          "eligibility": "Individual artists",
+          "url": "https://creative-capital.org/creative-capital-award",
+          "fitScore": 82,
+          "notes": "Supports innovative media projects"
+        },
+        {
+          "id": "ren-007",
+          "name": "Open Society Foundations Media Grants",
+          "funder": "Open Society Foundations",
+          "amount": "Varies",
+          "deadline": "Rolling",
+          "focus": "Social justice storytelling, media production",
+          "eligibility": "Organizations working on social justice",
+          "url": "https://www.opensocietyfoundations.org",
+          "fitScore": 85,
+          "notes": "Supports justice-focused media work"
+        }
+      ]
+    },
+    "luvonpurpose_aws": {
+      "entityName": "LuvOnPurpose Autonomous Wealth System LLC",
+      "entityType": "Limited Liability Company",
+      "ein": "Pending",
+      "state": "Delaware",
+      "grantCategories": ["Technology", "Innovation", "Financial Technology", "Platform Development"],
+      "grants": [
+        {
+          "id": "aws-001",
+          "name": "SBIR/STTR Program",
+          "funder": "Various Federal Agencies",
+          "amount": "$50,000 - $1,000,000+",
+          "deadline": "Multiple cycles annually",
+          "focus": "Technology innovation, R&D",
+          "eligibility": "Small businesses with tech focus",
+          "url": "https://www.sbir.gov",
+          "fitScore": 85,
+          "notes": "Requires EIN - apply after obtaining"
+        },
+        {
+          "id": "aws-002",
+          "name": "Black Ambition Prize",
+          "funder": "Pharrell Williams / Black Ambition",
+          "amount": "$20,000 - $1,000,000",
+          "deadline": "Annual cycle",
+          "focus": "Tech, AI, consumer products by Black founders",
+          "eligibility": "Early-stage companies with underserved founders",
+          "url": "https://www.blackambition.com",
+          "fitScore": 92,
+          "notes": "Perfect fit for platform technology"
+        },
+        {
+          "id": "aws-003",
+          "name": "Google for Startups Black Founders Fund",
+          "funder": "Google",
+          "amount": "$100,000 - $200,000",
+          "deadline": "Annual cycle",
+          "focus": "Black-led tech startups",
+          "eligibility": "Black-founded tech companies",
+          "url": "https://startup.google.com/blackfoundersfund",
+          "fitScore": 90,
+          "notes": "Non-dilutive funding for tech platform"
+        },
+        {
+          "id": "aws-004",
+          "name": "Comcast RISE",
+          "funder": "Comcast",
+          "amount": "$10,000 + services",
+          "deadline": "Rolling",
+          "focus": "Small business technology, marketing",
+          "eligibility": "Small businesses in eligible areas",
+          "url": "https://www.comcastrise.com",
+          "fitScore": 78,
+          "notes": "Good for tech infrastructure support"
+        },
+        {
+          "id": "aws-005",
+          "name": "Hello Alice Small Business Grants",
+          "funder": "Hello Alice / Various Partners",
+          "amount": "$5,000 - $25,000",
+          "deadline": "Multiple cycles",
+          "focus": "Diverse small businesses, technology",
+          "eligibility": "Small businesses, various categories",
+          "url": "https://www.helloalice.com/grants",
+          "fitScore": 82,
+          "notes": "Multiple grant opportunities through platform"
+        },
+        {
+          "id": "aws-006",
+          "name": "Jobber Grants",
+          "funder": "Jobber",
+          "amount": "$25,000",
+          "deadline": "Quarterly",
+          "focus": "Service businesses, technology adoption",
+          "eligibility": "Home service businesses",
+          "url": "https://getjobber.com/grants",
+          "fitScore": 75,
+          "notes": "If platform serves service businesses"
+        }
+      ]
+    },
+    "calea_freeman_trust": {
+      "entityName": "Calea Freeman Family Trust",
+      "entityType": "Grantor Trust",
+      "ein": "98-6109577",
+      "state": "Jamaica",
+      "grantCategories": ["Family Foundation", "Legacy Planning", "Scholarship"],
+      "grants": [
+        {
+          "id": "trust-001",
+          "name": "Note: Trust as Grant MAKER not Recipient",
+          "funder": "N/A",
+          "amount": "N/A",
+          "deadline": "N/A",
+          "focus": "The Trust is positioned to MAKE grants, not receive them",
+          "eligibility": "N/A",
+          "url": "",
+          "fitScore": 0,
+          "notes": "Trust should establish grant-making program for family and community"
+        }
+      ],
+      "grantMakingOpportunities": [
+        {
+          "id": "trust-gm-001",
+          "name": "Family Education Scholarships",
+          "description": "Fund Academy certification for family members",
+          "suggestedAmount": "$1,000 - $5,000 per recipient",
+          "frequency": "Annual"
+        },
+        {
+          "id": "trust-gm-002",
+          "name": "Community Impact Micro-Grants",
+          "description": "Small grants to community members through Temple",
+          "suggestedAmount": "$500 - $2,500",
+          "frequency": "Quarterly"
+        },
+        {
+          "id": "trust-gm-003",
+          "name": "Subsidiary Entity Seed Funding",
+          "description": "Capitalize new initiatives within entity structure",
+          "suggestedAmount": "Per allocation policy",
+          "frequency": "As needed"
+        }
+      ]
+    }
+  },
+  "applicationStrategy": {
+    "rule": "One entity per grant - no duplicate applications",
+    "priorityOrder": [
+      "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "The L.A.W.S. Collective, LLC",
+      "Real-Eye-Nation LLC",
+      "LuvOnPurpose Autonomous Wealth System LLC"
+    ],
+    "reasoning": "Temple has broadest eligibility as 508(c)(1)(A), followed by LLCs with EINs. Trust is grant-maker not recipient."
+  }
+}
