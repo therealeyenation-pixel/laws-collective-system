@@ -6347,3 +6347,217 @@ export const simulatorCompletions = mysqlTable("simulator_completions", {
 
 export type SimulatorCompletion = typeof simulatorCompletions.$inferSelect;
 export type InsertSimulatorCompletion = typeof simulatorCompletions.$inferInsert;
+
+
+// ============================================
+// ENTITY-BASED REVENUE STREAM SEPARATION
+// Products → Real-Eye-Nation LLC
+// Services → LuvOnPurpose LLC
+// Training → 508 Academy & Outreach
+// ============================================
+
+/**
+ * Service Categories - Define what each entity offers
+ */
+export const serviceCategories = mysqlTable("service_categories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  categoryType: mysqlEnum("categoryType", [
+    "product",    // Software, SaaS, Platform access (Real-Eye-Nation)
+    "service",    // Professional services (LuvOnPurpose)
+    "training"    // Education, courses, coaching (508 Academy)
+  ]).notNull(),
+  // Owning entity
+  owningEntityId: int("owningEntityId").notNull(), // References businessEntities
+  owningEntityName: varchar("owningEntityName", { length: 255 }).notNull(),
+  // Pricing
+  basePrice: decimal("basePrice", { precision: 10, scale: 2 }),
+  pricingModel: mysqlEnum("pricingModel", [
+    "one_time", "subscription", "per_use", "hourly", "project_based", "tiered"
+  ]).default("one_time"),
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ServiceCategory = typeof serviceCategories.$inferSelect;
+export type InsertServiceCategory = typeof serviceCategories.$inferInsert;
+
+/**
+ * Service Offerings - Specific products/services available
+ */
+export const serviceOfferings = mysqlTable("service_offerings", {
+  id: int("id").autoincrement().primaryKey(),
+  categoryId: int("categoryId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull(),
+  description: text("description"),
+  // Pricing
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  pricingUnit: varchar("pricingUnit", { length: 50 }), // "per month", "per project", "per hour"
+  // Features
+  features: json("features"), // Array of feature strings
+  // Delivery
+  deliveryMethod: mysqlEnum("deliveryMethod", [
+    "platform_access", "document", "consultation", "workshop", "course", "custom"
+  ]).notNull(),
+  estimatedDeliveryDays: int("estimatedDeliveryDays"),
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  isFeatured: boolean("isFeatured").default(false),
+  sortOrder: int("sortOrder").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ServiceOffering = typeof serviceOfferings.$inferSelect;
+export type InsertServiceOffering = typeof serviceOfferings.$inferInsert;
+
+/**
+ * House Service Permissions - Control which houses can offer services independently
+ */
+export const houseServicePermissions = mysqlTable("house_service_permissions", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  // Permission type
+  permissionType: mysqlEnum("permissionType", [
+    "founding_house",  // Full rights to offer all services
+    "heir",            // Inherited rights to offer services
+    "licensed",        // Licensed to offer specific services
+    "consumer_only"    // Can only purchase, not resell
+  ]).notNull(),
+  // Specific permissions
+  canOfferProducts: boolean("canOfferProducts").default(false).notNull(),
+  canOfferServices: boolean("canOfferServices").default(false).notNull(),
+  canOfferTraining: boolean("canOfferTraining").default(false).notNull(),
+  canResell: boolean("canResell").default(false).notNull(),
+  canWhiteLabel: boolean("canWhiteLabel").default(false).notNull(),
+  // Revenue sharing (if licensed)
+  revenueSharePercentage: decimal("revenueSharePercentage", { precision: 5, scale: 2 }).default("0"),
+  // Restrictions
+  restrictedCategories: json("restrictedCategories"), // Array of category IDs they cannot access
+  // Grant details (if heir or licensed)
+  grantedBy: int("grantedBy"), // User who granted permission
+  grantedAt: timestamp("grantedAt"),
+  expiresAt: timestamp("expiresAt"),
+  // Status
+  status: mysqlEnum("status", ["active", "suspended", "revoked", "expired"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseServicePermission = typeof houseServicePermissions.$inferSelect;
+export type InsertHouseServicePermission = typeof houseServicePermissions.$inferInsert;
+
+/**
+ * Service Orders - Track purchases of services
+ */
+export const serviceOrders = mysqlTable("service_orders", {
+  id: int("id").autoincrement().primaryKey(),
+  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
+  // Customer
+  customerId: int("customerId").notNull(), // User ID
+  customerHouseId: int("customerHouseId"), // House ID if internal
+  customerName: varchar("customerName", { length: 255 }),
+  customerEmail: varchar("customerEmail", { length: 255 }),
+  // Service
+  serviceOfferingId: int("serviceOfferingId").notNull(),
+  serviceCategoryId: int("serviceCategoryId").notNull(),
+  // Fulfilling entity
+  fulfillingEntityId: int("fulfillingEntityId").notNull(),
+  fulfillingEntityName: varchar("fulfillingEntityName", { length: 255 }),
+  // Pricing
+  quantity: int("quantity").default(1).notNull(),
+  unitPrice: decimal("unitPrice", { precision: 10, scale: 2 }).notNull(),
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  discount: decimal("discount", { precision: 10, scale: 2 }).default("0"),
+  tax: decimal("tax", { precision: 10, scale: 2 }).default("0"),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  // Revenue split (if reseller involved)
+  resellerId: int("resellerId"),
+  resellerCommission: decimal("resellerCommission", { precision: 10, scale: 2 }).default("0"),
+  // Payment
+  paymentStatus: mysqlEnum("paymentStatus", [
+    "pending", "paid", "refunded", "failed", "cancelled"
+  ]).default("pending").notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }),
+  paidAt: timestamp("paidAt"),
+  // Fulfillment
+  fulfillmentStatus: mysqlEnum("fulfillmentStatus", [
+    "pending", "in_progress", "completed", "cancelled"
+  ]).default("pending").notNull(),
+  fulfilledAt: timestamp("fulfilledAt"),
+  // Notes
+  customerNotes: text("customerNotes"),
+  internalNotes: text("internalNotes"),
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "submitted", "processing", "completed", "cancelled", "refunded"
+  ]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ServiceOrder = typeof serviceOrders.$inferSelect;
+export type InsertServiceOrder = typeof serviceOrders.$inferInsert;
+
+/**
+ * Subscription Plans - For recurring product access
+ */
+export const subscriptionPlans = mysqlTable("subscription_plans", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  // Owning entity (Real-Eye-Nation for products)
+  owningEntityId: int("owningEntityId").notNull(),
+  // Pricing
+  tier: mysqlEnum("tier", ["starter", "professional", "enterprise", "custom"]).notNull(),
+  monthlyPrice: decimal("monthlyPrice", { precision: 10, scale: 2 }).notNull(),
+  annualPrice: decimal("annualPrice", { precision: 10, scale: 2 }),
+  // Features
+  features: json("features"), // Array of feature strings
+  limits: json("limits"), // { users: 5, storage: "10GB", etc. }
+  // Included services
+  includedServiceIds: json("includedServiceIds"), // Array of service offering IDs
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  isFeatured: boolean("isFeatured").default(false),
+  sortOrder: int("sortOrder").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
+export type InsertSubscriptionPlan = typeof subscriptionPlans.$inferInsert;
+
+/**
+ * Customer Subscriptions - Active subscriptions
+ */
+export const customerSubscriptions = mysqlTable("customer_subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  customerId: int("customerId").notNull(),
+  customerHouseId: int("customerHouseId"),
+  planId: int("planId").notNull(),
+  // Billing
+  billingCycle: mysqlEnum("billingCycle", ["monthly", "annual"]).default("monthly").notNull(),
+  currentPrice: decimal("currentPrice", { precision: 10, scale: 2 }).notNull(),
+  nextBillingDate: timestamp("nextBillingDate"),
+  // Status
+  status: mysqlEnum("status", [
+    "active", "past_due", "cancelled", "paused", "trial"
+  ]).default("active").notNull(),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  cancelledAt: timestamp("cancelledAt"),
+  pausedAt: timestamp("pausedAt"),
+  // Trial
+  trialEndsAt: timestamp("trialEndsAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CustomerSubscription = typeof customerSubscriptions.$inferSelect;
+export type InsertCustomerSubscription = typeof customerSubscriptions.$inferInsert;

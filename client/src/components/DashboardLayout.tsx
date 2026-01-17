@@ -53,6 +53,10 @@ const menuItems = [
   { icon: FileText, label: "Document Vault", path: "/vault" },
   { icon: Bot, label: "Agents", path: "/agents" },
   { icon: Share2, label: "Social Media", path: "/social-media" },
+  { icon: DollarSign, label: "Pricing", path: "/pricing" },
+  { icon: FileText, label: "Proposal Simulator", path: "/proposal-simulator" },
+  { icon: FileText, label: "RFP Generator", path: "/rfp-generator" },
+  { icon: Building2, label: "Business Setup", path: "/business-setup" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

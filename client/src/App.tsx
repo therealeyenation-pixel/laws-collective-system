@@ -30,6 +30,10 @@ import GrantSimulator from "./pages/GrantSimulator";
 import BusinessPlanSimulator from "./pages/BusinessPlanSimulator";
 import BusinessPlanUpload from "./pages/BusinessPlanUpload";
 import TaxSimulator from "./pages/TaxSimulator";
+import Pricing from "./pages/Pricing";
+import ProposalSimulator from "./pages/ProposalSimulator";
+import RFPGenerator from "@/pages/RFPGenerator";
+import BusinessSetupWizard from "@/pages/BusinessSetupWizard";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -88,6 +92,7 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/home" component={Home} />
       <Route path="/academy" component={AcademyDashboard} />
+      <Route path="/pricing" component={Pricing} />
       {/* Dashboard is now public so users can view and take courses */}
       <Route path="/dashboard" component={Dashboard} />
       {/* Protected routes - require authentication */}
@@ -113,6 +118,9 @@ function Router() {
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} />}</Route>
       <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} />}</Route>
       <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} />}</Route>
+      <Route path="/proposal-simulator">{() => <ProtectedRoute component={ProposalSimulator} />}</Route>
+      <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} />}</Route>
+      <Route path="/business-setup" component={BusinessSetupWizard} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

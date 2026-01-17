@@ -1816,3 +1816,44 @@
 - [x] Create AI-generated promotional video for L.A.W.S. Collective
 - [x] Integrate video into landing page hero section
 - [x] Configure bot distribution for social media marketing
+- [x] Create family presentation explaining system credibility and sustainability
+- [x] Address common skeptical questions about the wealth system
+- [x] Include legal structure, financial projections, and risk analysis
+- [ ] Create video clip explaining LAND pillar (Reconnection & Stability)
+- [ ] Create video clip explaining AIR pillar (Education & Knowledge)
+- [ ] Create video clip explaining WATER pillar (Healing & Balance)
+- [ ] Create video clip explaining SELF pillar (Purpose & Skills)
+- [ ] Create video explaining how the L.A.W.S. Collective system works
+- [ ] Create video showing the family wealth building process
+- [x] Create Pricing Structure page with subscription tiers (Basic, Professional, Enterprise)
+- [x] Define individual service packages (Grant Writing, Proposal Development, Contract Management)
+- [x] Build Proposal Simulator/Generator for Commercial proposals
+- [x] Build Proposal Simulator/Generator for Government proposals
+- [x] Build RFP Response Generator
+- [x] Build Business Setup Wizard (separate from Trust structure)
+- [ ] Build Contract Generator
+- [x] Create Services landing page for marketing individual services
+- [x] Add pricing to navigation menu
+
+## Entity-Based Revenue Stream Separation
+- [x] Assign Products (Platform/SaaS) to The L.A.W.S. Collective, LLC
+- [x] Assign Services (Grant writing, Proposals, Contracts) to LuvOnPurpose Autonomous Wealth System LLC
+- [x] Assign Training/Education to 508 Academy & Outreach
+- [x] Create house permissions system (Founding House + Heirs can offer services independently)
+- [x] Restrict other houses from independently offering services
+- [ ] Update Pricing page to show entity assignments for each offering
+- [ ] Implement access controls in simulators based on house permissions
+
+## Entity Revenue Stream Assignments (Confirmed)
+- [x] The L.A.W.S. Collective, LLC (Delaware) → Products (Platform/SaaS subscriptions)
+- [x] LuvOnPurpose Autonomous Wealth System LLC (Delaware) → Services (Grant writing, proposals, contracts, consulting)
+- [x] 508 Academy & Outreach → Training (Courses, workshops, coaching)
+- [x] Real-Eye-Nation LLC (Georgia) → Media/Content Production
+- [x] Calea Freeman Family Trust → Asset protection, holdings
+
+## Implementation Tasks
+- [ ] Update Pricing page with correct entity names
+- [ ] Update business_plans database with correct entity information
+- [ ] Implement employee-service assignment (family members as W-2 under LuvOnPurpose AWS)
+- [ ] Implement inter-entity contracting (LuvOnPurpose contracts with 508 Academy)
+- [ ] Build Business Setup Wizard
