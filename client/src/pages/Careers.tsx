@@ -237,9 +237,12 @@ export default function Careers() {
         <div className="container max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
-              <a className="flex items-center gap-2">
+              <a className="flex items-center gap-3">
                 <Sparkles className="w-6 h-6 text-primary" />
-                <span className="font-bold text-lg">LuvOnPurpose</span>
+                <div>
+                  <span className="font-bold text-foreground">The L.A.W.S. Collective, LLC</span>
+                  <span className="text-xs text-muted-foreground block">Land • Air • Water • Self</span>
+                </div>
               </a>
             </Link>
             <nav className="hidden md:flex items-center gap-6">

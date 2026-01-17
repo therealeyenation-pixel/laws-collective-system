@@ -141,11 +141,14 @@ export default function Contact() {
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-2">
                 <ArrowLeft className="w-4 h-4" />
-                Back to Home
+                Back
               </Button>
             </Link>
-            <h1 className="text-lg font-bold text-foreground">Contact Us</h1>
-            <div className="w-24" /> {/* Spacer for centering */}
+            <div className="text-center">
+              <h1 className="text-lg font-bold text-foreground">The L.A.W.S. Collective, LLC</h1>
+              <p className="text-xs text-muted-foreground">Land • Air • Water • Self</p>
+            </div>
+            <div className="w-16" /> {/* Spacer for centering */}
           </div>
         </div>
       </header>

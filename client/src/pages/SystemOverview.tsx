@@ -106,11 +106,14 @@ export default function SystemOverview() {
         <div className="container max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
+              <p className="text-sm font-medium text-primary mb-1">
+                The L.A.W.S. Collective, LLC presents
+              </p>
               <h1 className="text-3xl font-bold text-foreground">
-                LuvOnPurpose Sovereign System
+                LuvOnPurpose Autonomous Wealth System
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Multi-Generational Wealth Architecture
+                <span className="font-semibold">L</span>uvOnPurpose <span className="font-semibold">A</span>utonomous <span className="font-semibold">W</span>ealth <span className="font-semibold">S</span>ystem • Multi-Generational Wealth Architecture
               </p>
             </div>
             <div className="flex gap-2">
