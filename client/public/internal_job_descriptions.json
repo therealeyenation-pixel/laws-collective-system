@@ -128,8 +128,55 @@
         "Banking and investment relationships"
       ],
       "directReports": ["Grant Writer", "Bookkeeper (future)"]
+    },
+    {
+      "id": "ceto",
+      "title": "Chief Education & Training Officer",
+      "abbreviation": "CETO",
+      "currentHolder": "Cornelius",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "crossEntityScope": ["LuvOnPurpose Outreach Temple and Academy Society, Inc.", "LuvOnPurpose Autonomous Wealth System LLC", "Real-Eye-Nation LLC", "The L.A.W.S. Collective, LLC"],
+      "salaryRange": {
+        "min": 130000,
+        "max": 150000,
+        "displayText": "$130,000 - $150,000 annually"
+      },
+      "description": "The Chief Education & Training Officer provides strategic leadership for all education, training, and professional development initiatives across all subsidiary entities. This executive role oversees curriculum development, instructor management, certification programs, and educational partnerships while leveraging expertise in both education and criminal justice.",
+      "responsibilities": [
+        "Strategic oversight of all education and training programs across entities",
+        "Academy curriculum development and quality assurance",
+        "Instructor recruitment, training, and management",
+        "Certification program design and administration",
+        "Educational partnership development",
+        "L.A.W.S. AIR Pillar (Education) leadership",
+        "Training program development for LAWS, LLC platform",
+        "Education liaison coordination with Real-Eye-Nation media",
+        "Legal/Justice advisory support (Criminal Justice expertise)",
+        "Student progress tracking and outcome measurement",
+        "Grant compliance for education-related funding"
+      ],
+      "qualifications": {
+        "education": ["Master's in Education", "Master's in Criminal Justice"],
+        "experience": "5+ years in education leadership or training management",
+        "skills": ["Curriculum development", "Instructor management", "Program evaluation", "Educational technology"]
+      },
+      "directReports": ["Academy Instructors", "Education Administrative Support"],
+      "additionalStipends": [
+        {"role": "Justice/Legal Advisor", "amount": 10000, "description": "Advisory support leveraging Criminal Justice expertise"}
+      ]
     }
   ],
+  "stipendPolicy": {
+    "description": "Stipends are additional compensation provided to employees who take on duties beyond their primary role. Stipends are separate from base salary and may be adjusted based on workload and organizational needs.",
+    "eligibility": "Any employee may receive stipends for additional cross-entity or specialized duties approved by leadership.",
+    "ranges": [
+      {"category": "Minor Additional Duties", "range": "$2,500 - $5,000", "examples": "Committee participation, special projects, mentoring"},
+      {"category": "Moderate Cross-Entity Work", "range": "$5,000 - $10,000", "examples": "Pillar leadership, liaison roles, advisory functions"},
+      {"category": "Significant Additional Responsibilities", "range": "$10,000 - $15,000", "examples": "Department oversight, specialized expertise, executive advisory"}
+    ],
+    "paymentSchedule": "Stipends are paid monthly as part of regular payroll or quarterly based on agreement.",
+    "reviewFrequency": "Stipend assignments are reviewed annually or when role responsibilities change."
+  },
   "positions": [
     {
       "id": "hr-lead",
@@ -585,6 +632,218 @@
         "Build community among program alumni",
         "Manage program budgets",
         "Build relationships with community partners"
+      ]
+    }
+  ],
+  "administrativeSupportPositions": [
+    {
+      "id": "admin-support-hr",
+      "title": "HR Administrative Support",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Human Resources",
+      "reportsTo": "HR Department Lead",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 35000,
+        "max": 48000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$35,000 - $48,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "HR and administrative certifications",
+        "careerGrowth": "Path to HR Lead position",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "1+ years in administrative or HR support role",
+        "skills": ["Organization", "Communication", "Microsoft Office/Google Workspace", "Data entry"],
+        "preferred": ["HR coursework or certification", "HRIS experience"]
+      },
+      "description": "The HR Administrative Support provides day-to-day administrative assistance to the HR Department. This role handles scheduling, document management, candidate coordination, and employee record maintenance.",
+      "responsibilities": [
+        "Schedule interviews and coordinate candidate communications",
+        "Maintain employee files and HR documentation",
+        "Process onboarding paperwork for new hires",
+        "Track training completion and certifications",
+        "Prepare HR reports and metrics",
+        "Respond to routine HR inquiries",
+        "Support benefits administration tasks",
+        "Coordinate HR events and meetings"
+      ]
+    },
+    {
+      "id": "admin-support-qaqc",
+      "title": "QA/QC Administrative Support",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Quality Assurance / Quality Control",
+      "reportsTo": "QA/QC Department Lead",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 35000,
+        "max": 48000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$35,000 - $48,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "Quality management certifications",
+        "careerGrowth": "Path to QA/QC Lead position",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "1+ years in administrative or quality support role",
+        "skills": ["Attention to detail", "Documentation", "Spreadsheets", "Process tracking"],
+        "preferred": ["Quality assurance coursework", "ISO or Six Sigma exposure"]
+      },
+      "description": "The QA/QC Administrative Support assists the Quality Department with documentation, tracking, and compliance activities. This role maintains quality records, tracks audit findings, and supports process improvement initiatives.",
+      "responsibilities": [
+        "Maintain quality documentation and SOPs",
+        "Track audit findings and corrective actions",
+        "Schedule quality reviews and inspections",
+        "Compile quality metrics and reports",
+        "Coordinate document control activities",
+        "Support internal audit preparation",
+        "Track grant compliance requirements",
+        "Assist with process documentation updates"
+      ]
+    },
+    {
+      "id": "admin-support-purchasing",
+      "title": "Purchasing Administrative Support",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Purchasing",
+      "reportsTo": "Purchasing Department Lead",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 35000,
+        "max": 48000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$35,000 - $48,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "Procurement and financial certifications",
+        "careerGrowth": "Path to Purchasing Lead position",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "1+ years in administrative, purchasing, or accounting support",
+        "skills": ["Data entry", "Spreadsheets", "Vendor communication", "Invoice processing"],
+        "preferred": ["Accounting coursework", "Procurement software experience"]
+      },
+      "description": "The Purchasing Administrative Support assists with procurement operations including order processing, vendor communications, and inventory tracking. This role ensures accurate records and timely processing of purchases.",
+      "responsibilities": [
+        "Process purchase orders and requisitions",
+        "Communicate with vendors on orders and deliveries",
+        "Maintain vendor files and contact information",
+        "Track inventory levels and reorder points",
+        "Match invoices to purchase orders",
+        "Compile purchasing reports and metrics",
+        "Maintain grant-compliant purchasing documentation",
+        "Coordinate with Finance on payment processing"
+      ]
+    },
+    {
+      "id": "admin-support-operations",
+      "title": "Operations Administrative Support",
+      "entity": "LuvOnPurpose Autonomous Wealth System LLC",
+      "department": "Operations",
+      "reportsTo": "Operations Manager",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 35000,
+        "max": 48000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$35,000 - $48,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "LuvOnPurpose Autonomous Wealth System LLC",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "Operations and project management certifications",
+        "careerGrowth": "Path to Operations Manager position",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "1+ years in administrative or operations support",
+        "skills": ["Organization", "Multitasking", "Communication", "Project tracking"],
+        "preferred": ["Project management coursework", "CRM or operations software experience"]
+      },
+      "description": "The Operations Administrative Support provides day-to-day assistance to the Operations team. This role handles scheduling, project tracking, communications, and general administrative tasks to keep operations running smoothly.",
+      "responsibilities": [
+        "Schedule meetings and coordinate calendars",
+        "Track project milestones and deadlines",
+        "Prepare operational reports and summaries",
+        "Maintain operational documentation",
+        "Coordinate cross-department communications",
+        "Process routine operational requests",
+        "Support team members with administrative tasks",
+        "Manage shared files and resources"
+      ]
+    },
+    {
+      "id": "admin-support-education",
+      "title": "Education Administrative Support",
+      "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "department": "Education",
+      "reportsTo": "Chief Education & Training Officer (Cornelius)",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 35000,
+        "max": 48000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$35,000 - $48,000 annually"
+      },
+      "compensation": {
+        "type": "role_based",
+        "organizationType": "508(c)(1)(a) spiritual organization",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "All Academy certifications at no cost",
+        "careerGrowth": "Path to Academy Instructor or Education Coordinator",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "1+ years in administrative or education support",
+        "skills": ["Organization", "Student communication", "LMS navigation", "Record keeping"],
+        "preferred": ["Education background", "LMS administration experience"]
+      },
+      "description": "The Education Administrative Support assists the Academy with student services, course administration, and certification processing. This role ensures smooth operations of educational programs and excellent student experience.",
+      "responsibilities": [
+        "Process student enrollments and registrations",
+        "Track student progress and completion",
+        "Issue certificates upon course completion",
+        "Respond to student inquiries and support requests",
+        "Maintain student records and transcripts",
+        "Coordinate instructor schedules",
+        "Prepare education reports and metrics",
+        "Support curriculum updates and course launches"
       ]
     }
   ],

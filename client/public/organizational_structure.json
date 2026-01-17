@@ -57,6 +57,33 @@
         "reportsTo": "Matriarch/CEO",
         "directReports": ["Grant Writer", "Bookkeeper (future)"],
         "salaryRange": "$65,000 - $90,000"
+      },
+      {
+        "title": "CETO",
+        "fullTitle": "Chief Education & Training Officer",
+        "currentHolder": "Cornelius",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "crossEntityScope": ["Temple/Academy", "LAWS, LLC", "Real-Eye-Nation", "L.A.W.S. Collective"],
+        "responsibilities": [
+          "Strategic oversight of all education and training programs",
+          "Academy curriculum development and quality assurance",
+          "Instructor recruitment, training, and management",
+          "Certification program design and administration",
+          "L.A.W.S. AIR Pillar (Education) leadership",
+          "Training program development for LAWS, LLC platform",
+          "Education liaison coordination with Real-Eye-Nation",
+          "Legal/Justice advisory support (Criminal Justice expertise)"
+        ],
+        "reportsTo": "Matriarch/CEO",
+        "directReports": ["Academy Instructors", "Education Administrative Support"],
+        "salaryRange": "$130,000 - $150,000",
+        "additionalStipends": [
+          {"role": "Justice/Legal Advisor", "amount": "$10,000", "description": "Advisory support leveraging Criminal Justice expertise"}
+        ],
+        "qualifications": {
+          "education": ["Master's in Education", "Master's in Criminal Justice"],
+          "experience": "5+ years in education leadership"
+        }
       }
     ]
   },
@@ -83,16 +110,17 @@
             "notes": "Required for nonprofit credibility with funders"
           },
           {
-            "title": "Education Director",
-            "currentHolder": "Cornelius",
+            "title": "Education Administrative Support",
+            "currentHolder": "Open Position",
             "responsibilities": [
-              "Academy curriculum development and delivery",
-              "Instructor management and training",
-              "Student progress tracking and certification",
-              "Educational partnerships"
+              "Student enrollment and registration processing",
+              "Student progress tracking and records",
+              "Certificate issuance",
+              "Instructor schedule coordination",
+              "Student support and inquiries"
             ],
-            "reportsTo": "Executive Director",
-            "directReports": ["Academy Instructors"]
+            "reportsTo": "CETO (Cornelius)",
+            "salaryRange": "$35,000 - $48,000"
           },
           {
             "title": "Outreach Coordinator",
@@ -123,7 +151,21 @@
               "Quality assurance for deliverables"
             ],
             "reportsTo": "COO",
+            "directReports": ["Operations Administrative Support"],
             "salaryRange": "$60,000 - $85,000"
+          },
+          {
+            "title": "Operations Administrative Support",
+            "currentHolder": "Open Position",
+            "responsibilities": [
+              "Meeting scheduling and calendar coordination",
+              "Project milestone tracking",
+              "Operational reports preparation",
+              "Documentation maintenance",
+              "Cross-department communications"
+            ],
+            "reportsTo": "Operations Manager",
+            "salaryRange": "$35,000 - $48,000"
           },
           {
             "title": "Platform Administrator",
@@ -155,7 +197,21 @@
               "Performance management"
             ],
             "reportsTo": "COO",
+            "directReports": ["HR Administrative Support"],
             "salaryRange": "$55,000 - $75,000"
+          },
+          {
+            "title": "HR Administrative Support",
+            "currentHolder": "Open Position",
+            "responsibilities": [
+              "Interview scheduling and candidate coordination",
+              "Employee file maintenance",
+              "Onboarding paperwork processing",
+              "Training tracking",
+              "HR reports and metrics"
+            ],
+            "reportsTo": "HR Department Lead",
+            "salaryRange": "$35,000 - $48,000"
           },
           {
             "title": "QA/QC Department Lead",
@@ -167,7 +223,21 @@
               "Internal audits"
             ],
             "reportsTo": "COO",
+            "directReports": ["QA/QC Administrative Support"],
             "salaryRange": "$50,000 - $70,000"
+          },
+          {
+            "title": "QA/QC Administrative Support",
+            "currentHolder": "Open Position",
+            "responsibilities": [
+              "Quality documentation maintenance",
+              "Audit tracking and corrective actions",
+              "Quality review scheduling",
+              "Metrics compilation",
+              "Document control"
+            ],
+            "reportsTo": "QA/QC Department Lead",
+            "salaryRange": "$35,000 - $48,000"
           },
           {
             "title": "Purchasing Department Lead",
@@ -179,7 +249,21 @@
               "Asset tracking"
             ],
             "reportsTo": "COO",
+            "directReports": ["Purchasing Administrative Support"],
             "salaryRange": "$48,000 - $65,000"
+          },
+          {
+            "title": "Purchasing Administrative Support",
+            "currentHolder": "Open Position",
+            "responsibilities": [
+              "Purchase order processing",
+              "Vendor communications",
+              "Inventory tracking",
+              "Invoice matching",
+              "Purchasing reports"
+            ],
+            "reportsTo": "Purchasing Department Lead",
+            "salaryRange": "$35,000 - $48,000"
           },
           {
             "title": "Grant Writer",
@@ -305,24 +389,29 @@
     "filled": [
       {"name": "Shanna Russell", "title": "Matriarch/CEO", "entity": "Trust/L.A.W.S. Collective"},
       {"name": "Craig", "title": "CFO", "entity": "L.A.W.S. Collective"},
-      {"name": "Cornelius", "title": "Education Director", "entity": "Temple/Academy"},
+      {"name": "Cornelius", "title": "Chief Education & Training Officer (CETO)", "entity": "L.A.W.S. Collective (cross-entity)"},
       {"name": "Amandes", "title": "Creative Director", "entity": "Real-Eye-Nation"},
       {"name": "Essence", "title": "Design Lead", "entity": "Real-Eye-Nation"},
       {"name": "Amber", "title": "Operations Support", "entity": "L.A.W.S. Collective"}
     ],
     "openPositions": [
-      {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High"},
-      {"title": "Executive Director", "entity": "Temple/508", "priority": "High"},
-      {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High"},
-      {"title": "HR Department Lead", "entity": "L.A.W.S. Collective", "priority": "High"},
-      {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium"},
-      {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High"},
-      {"title": "QA/QC Department Lead", "entity": "L.A.W.S. Collective", "priority": "Medium"},
-      {"title": "Purchasing Department Lead", "entity": "L.A.W.S. Collective", "priority": "Medium"},
-      {"title": "Outreach Coordinator", "entity": "Temple/508", "priority": "Medium"},
-      {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium"},
-      {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low"},
-      {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low"}
+      {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$70,000 - $95,000"},
+      {"title": "Executive Director", "entity": "Temple/508", "priority": "High", "salaryRange": "$55,000 - $75,000"},
+      {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High", "salaryRange": "$60,000 - $85,000"},
+      {"title": "HR Department Lead", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$55,000 - $75,000"},
+      {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$55,000 - $80,000"},
+      {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$50,000 - $72,000"},
+      {"title": "QA/QC Department Lead", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$50,000 - $70,000"},
+      {"title": "Purchasing Department Lead", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$48,000 - $65,000"},
+      {"title": "Outreach Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$42,000 - $58,000"},
+      {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$35,000 - $55,000"},
+      {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low", "salaryRange": "$40,000 - $65,000"},
+      {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$45,000 - $60,000"},
+      {"title": "HR Administrative Support", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
+      {"title": "QA/QC Administrative Support", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Purchasing Administrative Support", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Operations Administrative Support", "entity": "LAWS, LLC", "priority": "Low", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Education Administrative Support", "entity": "Temple/508", "priority": "Low", "salaryRange": "$35,000 - $48,000"}
     ]
   },
   "reportingStructure": {
@@ -336,15 +425,19 @@
     },
     "level3": {
       "title": "C-Suite",
-      "positions": ["COO (Open)", "CFO (Craig)", "Executive Director - Temple (Open)", "Creative Director (Amandes)"]
+      "positions": ["COO (Open)", "CFO (Craig)", "CETO (Cornelius)", "Executive Director - Temple (Open)", "Creative Director (Amandes)"]
     },
     "level4": {
       "title": "Department Leads",
-      "positions": ["Operations Manager", "HR Lead", "QA/QC Lead", "Purchasing Lead", "Platform Admin", "Education Director (Cornelius)", "Grant Writer", "Design Lead (Essence)"]
+      "positions": ["Operations Manager", "HR Lead", "QA/QC Lead", "Purchasing Lead", "Platform Admin", "Grant Writer", "Design Lead (Essence)"]
     },
     "level5": {
       "title": "Staff",
       "positions": ["Outreach Coordinator", "Content Creator", "Academy Instructors", "Community Programs Coordinator", "Operations Support (Amber)"]
+    },
+    "level6": {
+      "title": "Administrative Support",
+      "positions": ["HR Admin Support", "QA/QC Admin Support", "Purchasing Admin Support", "Operations Admin Support", "Education Admin Support"]
     }
   }
 }

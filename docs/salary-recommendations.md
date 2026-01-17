@@ -32,14 +32,18 @@ Based on current market data from BLS, Glassdoor, Salary.com, Indeed, and nonpro
 
 ## Director-Level Positions
 
-### Education/Training Director (Academy)
+### Chief Education & Training Officer (CETO)
 **Market Data:**
+- Chief Learning Officer: $180,000 - $280,000
+- VP of Education/Training: $150,000 - $220,000
 - Training and Development Manager (BLS median): $127,090
 - Director of Training (Glassdoor): $147,113
-- Education Director: $73,000 - $140,000
 
-**Recommended Range:** $85,000 - $125,000
-**Justification:** Given the requirement for advanced degrees (Masters in Education, Masters in Criminal Justice), this range reflects the specialized expertise needed. Cornelius's dual master's degrees warrant compensation at the higher end.
+**Recommended Range:** $130,000 - $150,000
+**Justification:** This C-suite position provides strategic oversight of all education and training across four entities. Cornelius's dual master's degrees (Education + Criminal Justice) and cross-entity responsibilities justify executive-level compensation. The range is competitive for a multi-entity education executive while remaining sustainable.
+
+**Additional Stipends:**
+- Justice/Legal Advisor: $10,000 annually (leveraging Criminal Justice expertise)
 
 ---
 
@@ -102,17 +106,36 @@ Based on current market data from BLS, Glassdoor, Salary.com, Indeed, and nonpro
 
 ## Salary Structure Summary Table
 
+### Executive & C-Suite Positions
 | Position | Entry Range | Mid Range | Senior Range |
 |----------|-------------|-----------|--------------|
 | **CFO/Financial Controller** | $95,000 | $120,000 | $145,000 |
+| **CETO (Chief Education & Training Officer)** | $130,000 | $140,000 | $150,000 |
 | **Executive Director (L.A.W.S.)** | $110,000 | $137,500 | $165,000 |
-| **Education/Training Director** | $85,000 | $105,000 | $125,000 |
+| **COO** | $70,000 | $82,500 | $95,000 |
+
+### Director-Level Positions
+| Position | Entry Range | Mid Range | Senior Range |
+|----------|-------------|-----------|--------------|
 | **LLC Formation Director** | $80,000 | $100,000 | $120,000 |
 | **Trust Systems Director** | $80,000 | $100,000 | $120,000 |
 | **Marketing Director** | $75,000 | $92,500 | $110,000 |
 | **Technology Director** | $80,000 | $97,500 | $115,000 |
+
+### Manager-Level Positions
+| Position | Entry Range | Mid Range | Senior Range |
+|----------|-------------|-----------|--------------|
 | **Operations Manager** | $65,000 | $80,000 | $95,000 |
 | **Program Managers** | $60,000 | $72,500 | $85,000 |
+
+### Administrative Support Positions
+| Position | Entry Range | Mid Range | Senior Range |
+|----------|-------------|-----------|--------------|
+| **HR Administrative Support** | $35,000 | $41,500 | $48,000 |
+| **QA/QC Administrative Support** | $35,000 | $41,500 | $48,000 |
+| **Purchasing Administrative Support** | $35,000 | $41,500 | $48,000 |
+| **Operations Administrative Support** | $35,000 | $41,500 | $48,000 |
+| **Education Administrative Support** | $35,000 | $41,500 | $48,000 |
 
 ---
 
@@ -157,3 +180,54 @@ For a multi-entity nonprofit structure, these salaries can be funded through:
 - Indeed Salary Data - 36-month averages
 - Candid 2024 Nonprofit Compensation Report
 - Georgia Department of Administrative Services - 2024 Salary Structure
+
+
+---
+
+## Stipend Policy
+
+Stipends are additional compensation provided to employees who take on duties beyond their primary role. Stipends are separate from base salary and may be adjusted based on workload and organizational needs.
+
+### Eligibility
+Any employee may receive stipends for additional cross-entity or specialized duties approved by leadership.
+
+### Stipend Ranges
+
+| Category | Range | Examples |
+|----------|-------|----------|
+| **Minor Additional Duties** | $2,500 - $5,000 | Committee participation, special projects, mentoring |
+| **Moderate Cross-Entity Work** | $5,000 - $10,000 | Pillar leadership, liaison roles, advisory functions |
+| **Significant Additional Responsibilities** | $10,000 - $15,000 | Department oversight, specialized expertise, executive advisory |
+
+### Payment Schedule
+Stipends are paid monthly as part of regular payroll or quarterly based on agreement.
+
+### Review Frequency
+Stipend assignments are reviewed annually or when role responsibilities change.
+
+---
+
+## Updated Total Compensation Summary
+
+With the addition of the CETO role and Administrative Support positions, the updated annual payroll estimates are:
+
+### Filled Positions (Current Team)
+| Position | Holder | Estimated Salary |
+|----------|--------|------------------|
+| Matriarch/CEO | Shanna Russell | N/A (Owner) |
+| CFO | Craig | $65,000 - $90,000 |
+| CETO | Cornelius | $130,000 - $150,000 + $10,000 stipend |
+| Creative Director | Amandes | TBD |
+| Design Lead | Essence | TBD |
+| Operations Support | Amber | TBD |
+
+### Open Positions Budget (17 positions)
+| Category | Count | Low Estimate | High Estimate |
+|----------|-------|--------------|---------------|
+| Executive (COO, ED) | 2 | $125,000 | $170,000 |
+| Department Leads | 5 | $253,000 | $362,000 |
+| Staff Positions | 5 | $197,000 | $293,000 |
+| Administrative Support | 5 | $175,000 | $240,000 |
+| **Total Open Positions** | **17** | **$750,000** | **$1,065,000** |
+
+**Note:** Administrative Support positions are designed as entry-level roles with clear career paths to Department Lead positions, supporting both organizational needs and employee development.

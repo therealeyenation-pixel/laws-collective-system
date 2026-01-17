@@ -2547,3 +2547,19 @@
 - [x] Update offer letter header to use employing LLC only
 - [x] Remove "subsidiary of Trust" language from public documents
 - [x] Ensure Trust name only appears in internal/confidential documents
+
+
+## Phase 36: Position Structure Updates
+- [x] Create Chief Education & Training Officer (CETO) role for Cornelius
+- [x] Set CETO salary range at $130,000 - $150,000
+- [x] Add stipend structure language for cross-entity additional duties
+- [x] Define stipend ranges ($5,000 - $15,000 per additional role)
+- [x] Create Department Administrative Support position template
+- [x] Add Admin Support for HR Department
+- [x] Add Admin Support for QA/QC Department
+- [x] Add Admin Support for Purchasing Department
+- [x] Add Admin Support for Operations Department
+- [x] Add Admin Support for Education/Academy Department
+- [x] Set Admin Support salary ranges ($35,000 - $48,000)
+- [x] Update organizational structure with new positions
+- [x] Update salary recommendations document
