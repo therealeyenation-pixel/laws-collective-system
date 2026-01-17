@@ -530,39 +530,39 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className={`p-4 rounded-lg ${courseProgress.business.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+            <div className={`p-4 rounded-lg ${courseProgress.business.completed ? 'bg-green-100 dark:bg-green-900/30 text-green-900 dark:text-green-100' : 'bg-green-700 text-white'}`}>
               <div className="flex items-center gap-2 mb-2">
                 <Shield className="w-5 h-5" />
                 <span className="font-semibold text-sm">Business Entity</span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs opacity-80">
                 {courseProgress.business.completed ? "✓ Established" : "Foundation"}
               </p>
             </div>
-            <div className={`p-4 rounded-lg ${courseProgress.trust.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+            <div className={`p-4 rounded-lg ${courseProgress.trust.completed ? 'bg-green-100 dark:bg-green-900/30 text-green-900 dark:text-green-100' : 'bg-green-700 text-white'}`}>
               <div className="flex items-center gap-2 mb-2">
                 <Lock className="w-5 h-5" />
                 <span className="font-semibold text-sm">Trust Structure</span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs opacity-80">
                 {courseProgress.trust.completed ? "✓ Configured" : "Protection"}
               </p>
             </div>
-            <div className={`p-4 rounded-lg ${courseProgress.contracts.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+            <div className={`p-4 rounded-lg ${courseProgress.contracts.completed ? 'bg-green-100 dark:bg-green-900/30 text-green-900 dark:text-green-100' : 'bg-green-700 text-white'}`}>
               <div className="flex items-center gap-2 mb-2">
                 <ScrollText className="w-5 h-5" />
                 <span className="font-semibold text-sm">Contracts</span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs opacity-80">
                 {courseProgress.contracts.completed ? "✓ Created" : "Legal Framework"}
               </p>
             </div>
-            <div className={`p-4 rounded-lg ${courseProgress.grant.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+            <div className={`p-4 rounded-lg ${courseProgress.grant.completed ? 'bg-green-100 dark:bg-green-900/30 text-green-900 dark:text-green-100' : 'bg-green-700 text-white'}`}>
               <div className="flex items-center gap-2 mb-2">
                 <FileCheck className="w-5 h-5" />
                 <span className="font-semibold text-sm">Grant Funding</span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs opacity-80">
                 {courseProgress.grant.completed ? "✓ Ready" : "Growth Capital"}
               </p>
             </div>

@@ -1789,3 +1789,4 @@
 - [x] Auto-populate Problem Description field in Need Statement step from business plan data
 - [x] Add employee salary/personnel line items to Grant Simulator budget section
 - [x] Add business formation and startup costs categories to Grant Simulator budget section
+- [x] Fix pink/low-contrast text on Dashboard House Structure Progress cards
