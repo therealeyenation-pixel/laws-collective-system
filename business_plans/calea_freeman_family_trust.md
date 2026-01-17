@@ -1,11 +1,15 @@
 # Calea Freeman Family Trust Business Plan
 
 **Entity Information**
-- Legal Name: Calea Freeman Family Trust
+- Legal Name: Calea Freeman Family Trust (The Calea Trust)
 - EIN: 98-6109577
-- Entity Type: Irrevocable Family Trust
-- Formation Status: EIN Obtained - Formal Establishment Pending
-- Trustee: [To be designated]
+- Entity Type: 98 Grantor Trust (Foreign Trust)
+- Formation Date: March 4, 2019
+- Formation Status: Active
+- Jurisdiction: Jamaica
+- Foreign Address: 99 Great George St, Savanna la Mar, Westmoreland, Jamaica
+- Mailing Address: 2302 Parklake Dr NE SU3 #808, Atlanta, GA 30345
+- Trustee: LaShanna Russell
 - Beneficiaries: Freeman Family Members
 
 ---
@@ -16,7 +20,7 @@ The Calea Freeman Family Trust serves as the sovereign governance entity and ult
 
 Unlike traditional family trusts focused solely on asset protection, the Calea Freeman Family Trust operates as an active governance body that oversees a network of purpose-driven businesses. The Trust's mission extends beyond wealth preservation to include family unity, cultural preservation, and community impact.
 
-The Trust derives income from ownership distributions from subsidiary entities (Real-Eye-Nation LLC, LuvOnPurpose LLC, The L.A.W.S. Collective LLC, LuvOnPurpose Outreach Temple and Academy Society, Inc.) and manages these funds according to established allocation policies that balance current needs with long-term wealth building.
+The Trust derives income from ownership distributions from subsidiary entities (Real-Eye-Nation LLC, LuvOnPurpose Autonomous Wealth System LLC, The L.A.W.S. Collective, LLC, LuvOnPurpose Outreach Temple and Academy Society, Inc.) and manages these funds according to established allocation policies that balance current needs with long-term wealth building.
 
 ---
 

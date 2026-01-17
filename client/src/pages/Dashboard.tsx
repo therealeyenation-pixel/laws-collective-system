@@ -262,7 +262,7 @@ export default function Dashboard() {
     content += `**Document Hash:** ${generateHash()}\n`;
     content += `**Blockchain Timestamp:** ${new Date().toISOString()}\n`;
     content += `**Token Rewards Earned:** ${totalTokensEarned}\n\n`;
-    content += "*This comprehensive plan was generated through the L.A.W.S. Collective Business Setup Courses.*\n";
+    content += "*This comprehensive plan was generated through The L.A.W.S. Collective, LLC Business Setup Courses.*\n";
     content += "*All records are immutably stored on the LuvLedger blockchain.*\n";
 
     // Download as markdown file
@@ -443,7 +443,7 @@ export default function Dashboard() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground">
-            L.A.W.S. Collective Dashboard
+            The L.A.W.S. Collective, LLC Dashboard
           </h1>
           <p className="text-muted-foreground mt-2">
             Your personal gateway to building a real, functioning business through guided courses

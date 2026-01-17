@@ -33,7 +33,7 @@ const SIMULATOR_MANAGERS: Record<string, { name: string; title: string }> = {
   llc: { name: "LaShanna Russell", title: "LLC Formation Director" },
   trust: { name: "LaShanna Russell", title: "Trust Systems Director" },
   nonprofit: { name: "LaShanna Russell", title: "LuvOnPurpose Academy Director" },
-  collective: { name: "LaShanna Russell", title: "L.A.W.S. Collective Director" },
+  collective: { name: "LaShanna Russell", title: "The L.A.W.S. Collective, LLC Director" },
 };
 
 // Entity types with descriptions

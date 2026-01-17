@@ -114,7 +114,7 @@ export default function Landing() {
     {
       name: "Community Leader",
       role: "Founding Member",
-      quote: "L.A.W.S. Collective helped us structure our family's future and create a legacy that will last for generations.",
+      quote: "The L.A.W.S. Collective, LLC helped us structure our family's future and create a legacy that will last for generations.",
       rating: 5,
     },
     {
@@ -149,7 +149,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="L.A.W.S. Collective" className="h-10 w-10" />
+              <img src="/logo.png" alt="The L.A.W.S. Collective, LLC" className="h-10 w-10" />
               <span className="text-xl font-bold text-stone-900">
                 L.A.W.S.<span className="text-green-600"> Collective</span>
               </span>
@@ -276,7 +276,7 @@ export default function Landing() {
               <Card className="p-8 bg-gradient-to-br from-green-600 to-green-700 text-white">
                 <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
                 <p className="mb-6 text-green-100">
-                  Join hundreds of families who are building their sovereign future with L.A.W.S. Collective.
+                  Join hundreds of families who are building their sovereign future with The L.A.W.S. Collective, LLC.
                 </p>
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center gap-2">
@@ -308,7 +308,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-stone-900">
-              The L.A.W.S. Collective Framework
+              The L.A.W.S. Collective, LLC Framework
             </h2>
             <p className="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
               A holistic approach to personal and community development, 
@@ -485,7 +485,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-stone-800 text-center text-stone-400">
-            <p>&copy; {new Date().getFullYear()} L.A.W.S. Collective. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} The L.A.W.S. Collective, LLC. All rights reserved.</p>
             <p className="mt-2 text-sm">Multi-Generational Wealth Architecture | Building Legacy Through Purpose & Community</p>
           </div>
         </div>

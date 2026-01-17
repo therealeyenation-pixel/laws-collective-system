@@ -6,10 +6,16 @@
 |-------|-------|
 | Legal Name | Real-Eye-Nation LLC |
 | EIN | 84-4976416 |
-| Entity Type | Limited Liability Company |
+| Entity Type | Domestic Limited Liability Company |
 | State of Formation | Georgia |
-| Formation Date | March 4, 2020 |
-| Formation Status | Formed - Not Operating |
+| Control Number | 20031738 |
+| Filed Date | February 28, 2020 |
+| Effective Date | March 3, 2020 |
+| Formation Status | Active |
+| Principal Address | 113 S. Perry Street Suite 206, Lawrenceville, GA 30046 |
+| Registered Agent | Legalinc Corporate Services Inc. |
+| Agent Address | 1870 The Exchange, Suite 200-44, Atlanta, GA 30339 |
+| Organizer | LaShanna Russell |
 | Principal | LaShanna Russell (Founder) |
 | Ownership | Calea Freeman Family Trust |
 | Revenue Assignment | Services (Consulting, professional services) |

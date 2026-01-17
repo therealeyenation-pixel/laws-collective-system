@@ -1,22 +1,29 @@
-# LuvOnPurpose LLC Business Plan
+# LuvOnPurpose Autonomous Wealth System LLC Business Plan
 
 **Entity Information**
-- Legal Name: LuvOnPurpose LLC
-- EIN: [Pending - has paperwork]
+- Legal Name: LuvOnPurpose Autonomous Wealth System LLC
+- EIN: [Pending]
 - Entity Type: Limited Liability Company
-- Formation Status: Not Started - Has Paperwork
+- State of Formation: Delaware
+- File Number: 10252584
+- SR Number: 20253294275
+- Formation Date: July 8, 2025
+- Registered Agent: Republic Registered Agent LLC
+- Registered Office: 262 Chapman Rd, Ste 240, Newark, DE 19702
+- Formation Status: Active
 - Principal: LaShanna Russell (Founder)
+- Organizer: Lovette Dobson
 - Ownership: Calea Freeman Family Trust
 
 ---
 
 ## Executive Summary
 
-LuvOnPurpose LLC serves as the primary operating company and technology platform within the Freeman family's multi-generational wealth system. The company develops and operates the LuvOnPurpose platform—a comprehensive financial automation and family governance system that enables families to build, track, and transfer wealth across generations.
+LuvOnPurpose Autonomous Wealth System LLC serves as the primary operating company and technology platform within the Freeman family's multi-generational wealth system. The company develops and operates the LuvOnPurpose platform—a comprehensive financial automation and family governance system that enables families to build, track, and transfer wealth across generations.
 
-The platform integrates financial management, business formation, grant tracking, document storage, training simulations, and family governance into a unified system. LuvOnPurpose LLC generates revenue through platform subscriptions, consulting services, implementation support, and licensing fees from families and organizations adopting the system.
+The platform integrates financial management, business formation, grant tracking, document storage, training simulations, and family governance into a unified system. LuvOnPurpose Autonomous Wealth System LLC generates revenue through platform subscriptions, consulting services, implementation support, and licensing fees from families and organizations adopting the system.
 
-As the operational hub of the ecosystem, LuvOnPurpose LLC coordinates activities across all family entities and serves as the model for the replicable system that will be offered to other families.
+As the operational hub of the ecosystem, LuvOnPurpose Autonomous Wealth System LLC coordinates activities across all family entities and serves as the model for the replicable system that will be offered to other families.
 
 ---
 
@@ -34,17 +41,17 @@ A world where every family has access to the tools, knowledge, and systems to bu
 
 ## Organization Description
 
-LuvOnPurpose LLC operates the technology infrastructure and business operations that power the entire family ecosystem. The company was founded to solve a critical problem: families, particularly those in underserved communities, lack access to the integrated systems and knowledge needed to build and maintain wealth across generations.
+LuvOnPurpose Autonomous Wealth System LLC operates the technology infrastructure and business operations that power the entire family ecosystem. The company was founded to solve a critical problem: families, particularly those in underserved communities, lack access to the integrated systems and knowledge needed to build and maintain wealth across generations.
 
 The company develops and maintains the LuvOnPurpose platform, which includes modules for financial tracking (LuvLedger), business formation (Business Simulator), grant management, document storage (Document Vault), family governance, training and certification (Academy integration), and community programs (L.A.W.S. Collective integration).
 
-LuvOnPurpose LLC serves as the operational center that coordinates all family business activities. It provides shared services to other entities including technology infrastructure, administrative support, and strategic planning.
+LuvOnPurpose Autonomous Wealth System LLC serves as the operational center that coordinates all family business activities. It provides shared services to other entities including technology infrastructure, administrative support, and strategic planning.
 
 ---
 
 ## Products and Services
 
-LuvOnPurpose LLC offers the following products and services:
+LuvOnPurpose Autonomous Wealth System LLC offers the following products and services:
 
 | Product/Service | Description | Target Market |
 |----------------|-------------|---------------|
@@ -86,7 +93,7 @@ LUV token rewards for training completion, contribution tracking, and engagement
 
 ## Target Market
 
-LuvOnPurpose LLC serves three primary market segments:
+LuvOnPurpose Autonomous Wealth System LLC serves three primary market segments:
 
 **Primary Market: Multi-Generational Families**
 Families with existing wealth seeking better governance and transfer mechanisms, as well as families building wealth who want systems in place from the beginning. These families value legacy, education, and structured approaches to wealth building.
@@ -113,7 +120,7 @@ Community economic development programs increasingly recognize the need for fami
 
 ## Competitive Advantage
 
-LuvOnPurpose LLC's competitive advantages include:
+LuvOnPurpose Autonomous Wealth System LLC's competitive advantages include:
 
 **Integrated Approach**: Unlike point solutions that address single aspects of family wealth, LuvOnPurpose provides a comprehensive platform covering governance, operations, education, and community.
 
@@ -129,7 +136,7 @@ LuvOnPurpose LLC's competitive advantages include:
 
 ## Team Structure
 
-LuvOnPurpose LLC operates with a lean team leveraging family members and contractors:
+LuvOnPurpose Autonomous Wealth System LLC operates with a lean team leveraging family members and contractors:
 
 | Role | Responsibility | Person |
 |------|---------------|--------|
@@ -144,7 +151,7 @@ LuvOnPurpose LLC operates with a lean team leveraging family members and contrac
 
 ## Revenue Model
 
-LuvOnPurpose LLC generates revenue through multiple streams:
+LuvOnPurpose Autonomous Wealth System LLC generates revenue through multiple streams:
 
 | Revenue Stream | Model | Projected Contribution |
 |---------------|-------|----------------------|
@@ -182,7 +189,7 @@ LuvOnPurpose LLC generates revenue through multiple streams:
 
 ## Funding Needs
 
-LuvOnPurpose LLC requires initial funding of $25,000 - $50,000 to cover:
+LuvOnPurpose Autonomous Wealth System LLC requires initial funding of $25,000 - $50,000 to cover:
 
 | Category | Amount | Purpose |
 |----------|--------|---------|
@@ -198,7 +205,7 @@ Funding will be sought through small business grants, foundation grants supporti
 
 ## Social Impact
 
-LuvOnPurpose LLC creates social impact through:
+LuvOnPurpose Autonomous Wealth System LLC creates social impact through:
 
 **Wealth Gap Reduction**: Providing tools and systems that enable underserved families to build and maintain wealth, addressing systemic economic inequities.
 
@@ -214,7 +221,7 @@ LuvOnPurpose LLC creates social impact through:
 
 ## Community Benefit
 
-LuvOnPurpose LLC benefits the community by:
+LuvOnPurpose Autonomous Wealth System LLC benefits the community by:
 
 - Offering reduced-cost or free platform access to qualifying families
 - Partnering with community organizations for program delivery
@@ -237,7 +244,7 @@ LuvOnPurpose LLC benefits the community by:
 
 ## Governance
 
-LuvOnPurpose LLC operates under the governance of the Calea Freeman Family Trust:
+LuvOnPurpose Autonomous Wealth System LLC operates under the governance of the Calea Freeman Family Trust:
 
 - **Ownership**: Calea Freeman Family Trust (majority)
 - **Management**: LaShanna Russell (Managing Member)
@@ -248,4 +255,4 @@ All operations align with the L.A.W.S. framework and support the multi-generatio
 
 ---
 
-*This business plan was created for LuvOnPurpose LLC as part of the LuvOnPurpose Sovereign Wealth System.*
+*This business plan was created for LuvOnPurpose Autonomous Wealth System LLC as part of the LuvOnPurpose Sovereign Wealth System.*

@@ -5,11 +5,18 @@
 | Field | Value |
 |-------|-------|
 | Legal Name | The L.A.W.S. Collective, LLC |
-| EIN | Pending - has paperwork |
+| EIN | 39-3122993 |
 | Entity Type | Limited Liability Company |
 | State of Formation | Delaware |
-| Formation Status | Not Started - Has Paperwork |
-| Principal | LaShanna Russell (Founder) |
+| File Number | 10251122 |
+| SR Number | 20253283949 |
+| Formation Date | July 7, 2025 |
+| Registered Agent | Republic Registered Agent LLC |
+| Registered Office | 262 Chapman Rd, Ste 240, Newark, DE 19702 |
+| Formation Status | Active |
+| Principal | LaShanna Russell (Sole Member) |
+| Member Address | 4093 Cottingham Way, Augusta, GA 30909 |
+| Organizer | Lovette Dobson |
 | Ownership | Calea Freeman Family Trust |
 | Affiliation | LuvOnPurpose Ecosystem |
 | Revenue Assignment | Products (Platform/SaaS subscriptions) |

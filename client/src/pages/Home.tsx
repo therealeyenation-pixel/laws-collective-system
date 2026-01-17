@@ -159,7 +159,7 @@ export default function Home() {
                   Build Multi-Generational Wealth Through Purpose & Community
                 </h2>
                 <p className="text-green-100 mb-6 text-lg">
-                  Join thousands of families creating lasting legacies through our sovereign wealth system. L.A.W.S. Collective provides the framework, tools, and community to transform your family's financial future.
+                  Join thousands of families creating lasting legacies through our sovereign wealth system. The L.A.W.S. Collective, LLC provides the framework, tools, and community to transform your family's financial future.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Button 
@@ -202,7 +202,7 @@ export default function Home() {
         <section id="learn-more" className="mb-12">
           <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
             <h2 className="text-2xl font-bold text-foreground mb-4">
-              L.A.W.S. Collective Framework
+              The L.A.W.S. Collective, LLC Framework
             </h2>
             <p className="text-muted-foreground mb-6">
               A community-focused framework helping people reconnect with land, strengthen identity, restore balance, and build practical skills for generational wealth.

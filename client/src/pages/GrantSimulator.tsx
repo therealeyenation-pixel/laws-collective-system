@@ -93,8 +93,8 @@ const availableGrants = [
 const entities = [
   { id: "realeyenation", name: "Real-Eye-Nation LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "small_business"] },
   { id: "trust", name: "Calea Freeman Family Trust", type: "Trust", eligibility: ["family_trust"] },
-  { id: "luvonpurpose", name: "LuvOnPurpose LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "small_business"] },
-  { id: "laws", name: "L.A.W.S. Collective", type: "Collective", eligibility: ["women_owned", "minority_owned", "community"] },
+  { id: "luvonpurpose", name: "LuvOnPurpose Autonomous Wealth System LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "small_business"] },
+  { id: "laws", name: "The L.A.W.S. Collective, LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "community"] },
   { id: "508academy", name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "508(c)(1)(a)", eligibility: ["faith_based", "nonprofit", "education"] },
 ];
 

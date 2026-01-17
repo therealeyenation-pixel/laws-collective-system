@@ -800,7 +800,7 @@ export default function BusinessPlanCourse({ onExit, onComplete, connectedEntity
     content += `${worksheetData.riskAnalysis || "[To be completed]"}\n\n`;
     
     content += "---\n\n";
-    content += "*Generated through L.A.W.S. Collective Business Plan Workshop*\n";
+    content += "*Generated through The L.A.W.S. Collective, LLC Business Plan Workshop*\n";
     content += "*All records immutably stored on LuvLedger blockchain*\n";
 
     const blob = new Blob([content], { type: "text/markdown" });

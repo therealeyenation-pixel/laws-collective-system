@@ -59,9 +59,9 @@ const ENTITY_TYPES = [
 const EXISTING_ENTITIES = [
   { id: 1, name: "Real-Eye-Nation LLC", type: "llc", status: "formed", ein: "84-4976416" },
   { id: 2, name: "Calea Freeman Family Trust", type: "trust", status: "ein_obtained", ein: "98-6109577" },
-  { id: 3, name: "LuvOnPurpose LLC", type: "llc", status: "not_started" },
-  { id: 4, name: "L.A.W.S. Collective", type: "collective", status: "not_started" },
-  { id: 5, name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "nonprofit_508", status: "not_started" },
+  { id: 3, name: "LuvOnPurpose Autonomous Wealth System LLC", type: "llc", status: "active" },
+  { id: 4, name: "The L.A.W.S. Collective, LLC", type: "llc", status: "active", ein: "39-3122993" },
+  { id: 5, name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "nonprofit_508", status: "active" },
 ];
 
 // Team members from Family Onboarding (would come from database)

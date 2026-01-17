@@ -166,7 +166,7 @@ export default function GenesisCeremony() {
               <CheckCircle2 className="w-16 h-16 mx-auto mb-4 text-emerald-500" />
               <h1 className="text-3xl font-bold mb-2">Organization Successfully Established</h1>
               <p className="text-muted-foreground max-w-xl mx-auto">
-                Your L.A.W.S. Collective organization was founded on this day. All subsequent family branches trace their connection to this foundation.
+                Your L.A.W.S. Collective, LLC organization was founded on this day. All subsequent family branches trace their connection to this foundation.
               </p>
             </div>
           </div>
@@ -263,7 +263,7 @@ export default function GenesisCeremony() {
             <CardContent className="pt-6">
               <h1 className="text-4xl font-bold mb-4">Your Organization Has Been Activated</h1>
               <p className="text-muted-foreground mb-8">
-                Congratulations! Your L.A.W.S. Collective organization is now established. Your founding declaration has been recorded and verified.
+                Congratulations! Your L.A.W.S. Collective, LLC organization is now established. Your founding declaration has been recorded and verified.
               </p>
               
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -316,7 +316,7 @@ export default function GenesisCeremony() {
           </div>
           <h1 className="text-3xl font-bold mb-2">Getting Started</h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Complete these steps to establish your L.A.W.S. Collective organization and begin building multi-generational wealth.
+            Complete these steps to establish your L.A.W.S. Collective, LLC organization and begin building multi-generational wealth.
           </p>
         </div>
 
