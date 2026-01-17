@@ -1650,3 +1650,33 @@
 - [x] Add Training Manager content approval workflow
 - [x] Update certificate signing to use Cornelius
 - [x] Add dual signature on certificates (Simulator Manager + Training Manager)
+
+
+## Phase 83: Grant Management Module Enhancement
+
+- [x] Review current Grant Management implementation
+- [x] Add database-backed grant tracking (schema, procedures)
+- [x] Implement grant opportunity CRUD operations
+- [x] Add application status tracking (Draft, Submitted, Under Review, Approved, Denied)
+- [x] Add deadline tracking with notifications (rolling deadlines supported)
+- [x] Connect grants to eligible entities (508, LLC, etc.)
+- [x] Add document storage for grant materials
+- [x] Research and add relevant grant opportunities
+- [x] Create Grant Management page UI with filtering
+- [x] Add 12 real grant opportunities (women-owned, minority-owned, faith-based)
+- [x] Add eligibility category matching
+- [x] Add Grant Management to navigation menu
+
+### Grant Opportunities Added:
+- Amber Grant ($10K-$50K monthly, women-owned)
+- Women Founders Grant ($5K monthly)
+- HerRise Microgrant ($1K monthly, women of color)
+- IFundWomen Universal Application (multi-partner matching)
+- NAACP Powershift Entrepreneur Grant ($25K, Black entrepreneurs)
+- Wish Local Empowerment Program ($500-$2K, Black-owned)
+- Hustler's Microgrant ($1K monthly)
+- Freed Fellowship Grant ($500-$2.5K)
+- Awesome Foundation Grant ($1K monthly)
+- EmpowHER Grants (up to $25K, female founders)
+- Black Ambition Prize (up to $1M)
+- Instrumentl Faith-Based Grants Database (100+ grants)

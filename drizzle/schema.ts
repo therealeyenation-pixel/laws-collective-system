@@ -5975,3 +5975,207 @@ export const ytdTotals = mysqlTable("ytd_totals", {
 
 export type YtdTotal = typeof ytdTotals.$inferSelect;
 export type InsertYtdTotal = typeof ytdTotals.$inferInsert;
+
+
+// ============================================
+// GRANT MANAGEMENT SYSTEM
+// ============================================
+
+/**
+ * Grant Opportunities - Track available grants to apply for
+ */
+export const grantOpportunities = mysqlTable("grant_opportunities", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Grant Details
+  name: varchar("name", { length: 255 }).notNull(),
+  funderName: varchar("funderName", { length: 255 }).notNull(),
+  funderType: mysqlEnum("funderType", [
+    "federal",
+    "state",
+    "local",
+    "foundation",
+    "corporate",
+    "religious",
+    "community",
+    "other"
+  ]).notNull(),
+  
+  // Funding Information
+  minAmount: decimal("minAmount", { precision: 12, scale: 2 }),
+  maxAmount: decimal("maxAmount", { precision: 12, scale: 2 }),
+  typicalAmount: decimal("typicalAmount", { precision: 12, scale: 2 }),
+  
+  // Eligibility
+  eligibleEntityTypes: json("eligibleEntityTypes"), // ["508", "501c3", "llc", "trust"]
+  eligibilityRequirements: text("eligibilityRequirements"),
+  geographicRestrictions: varchar("geographicRestrictions", { length: 255 }),
+  
+  // Focus Areas
+  focusAreas: json("focusAreas"), // ["education", "community", "youth", "health"]
+  description: text("description"),
+  
+  // Timeline
+  applicationDeadline: timestamp("applicationDeadline"),
+  awardAnnouncementDate: timestamp("awardAnnouncementDate"),
+  fundingPeriodStart: timestamp("fundingPeriodStart"),
+  fundingPeriodEnd: timestamp("fundingPeriodEnd"),
+  isRolling: boolean("isRolling").default(false), // Rolling deadline
+  
+  // Application Details
+  applicationUrl: text("applicationUrl"),
+  applicationRequirements: text("applicationRequirements"),
+  matchingRequired: boolean("matchingRequired").default(false),
+  matchingPercentage: decimal("matchingPercentage", { precision: 5, scale: 2 }),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "researching",    // Still gathering info
+    "eligible",       // Confirmed eligible
+    "not_eligible",   // Not eligible
+    "applying",       // Currently working on application
+    "submitted",      // Application submitted
+    "archived"        // No longer relevant
+  ]).default("researching").notNull(),
+  
+  // Priority
+  priority: mysqlEnum("priority", ["high", "medium", "low"]).default("medium"),
+  
+  // Notes
+  notes: text("notes"),
+  
+  // Tracking
+  addedBy: int("addedBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GrantOpportunity = typeof grantOpportunities.$inferSelect;
+export type InsertGrantOpportunity = typeof grantOpportunities.$inferInsert;
+
+/**
+ * Grant Applications - Track submitted applications
+ */
+export const grantApplications = mysqlTable("grant_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  grantOpportunityId: int("grantOpportunityId").notNull(),
+  applyingEntityId: int("applyingEntityId"), // Which of our entities is applying
+  applyingEntityName: varchar("applyingEntityName", { length: 255 }).notNull(),
+  
+  // Application Details
+  requestedAmount: decimal("requestedAmount", { precision: 12, scale: 2 }).notNull(),
+  projectTitle: varchar("projectTitle", { length: 255 }),
+  projectDescription: text("projectDescription"),
+  
+  // Status Tracking
+  status: mysqlEnum("status", [
+    "draft",          // Working on application
+    "in_review",      // Internal review before submission
+    "submitted",      // Submitted to funder
+    "under_review",   // Funder is reviewing
+    "additional_info", // Funder requested more info
+    "approved",       // Grant approved
+    "denied",         // Grant denied
+    "withdrawn"       // We withdrew application
+  ]).default("draft").notNull(),
+  
+  // Important Dates
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  submittedAt: timestamp("submittedAt"),
+  decisionDate: timestamp("decisionDate"),
+  
+  // Award Details (if approved)
+  awardedAmount: decimal("awardedAmount", { precision: 12, scale: 2 }),
+  awardDate: timestamp("awardDate"),
+  
+  // Documents
+  proposalDocumentId: int("proposalDocumentId"), // Link to Document Vault
+  budgetDocumentId: int("budgetDocumentId"),
+  supportingDocuments: json("supportingDocuments"), // Array of document IDs
+  
+  // Feedback
+  funderFeedback: text("funderFeedback"),
+  lessonsLearned: text("lessonsLearned"),
+  
+  // Tracking
+  assignedTo: int("assignedTo"), // Who is working on this
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GrantApplication = typeof grantApplications.$inferSelect;
+export type InsertGrantApplication = typeof grantApplications.$inferInsert;
+
+/**
+ * Grant Tasks - Track tasks for grant applications
+ */
+export const grantTasks = mysqlTable("grant_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  grantApplicationId: int("grantApplicationId").notNull(),
+  
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  dueDate: timestamp("dueDate"),
+  
+  status: mysqlEnum("status", ["pending", "in_progress", "completed", "blocked"]).default("pending").notNull(),
+  priority: mysqlEnum("priority", ["high", "medium", "low"]).default("medium"),
+  
+  assignedTo: int("assignedTo"),
+  completedAt: timestamp("completedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GrantTask = typeof grantTasks.$inferSelect;
+export type InsertGrantTask = typeof grantTasks.$inferInsert;
+
+/**
+ * Grant Funders - Track relationship with funders
+ */
+export const grantFunders = mysqlTable("grant_funders", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  name: varchar("name", { length: 255 }).notNull(),
+  type: mysqlEnum("type", [
+    "federal",
+    "state",
+    "local",
+    "foundation",
+    "corporate",
+    "religious",
+    "community",
+    "other"
+  ]).notNull(),
+  
+  website: text("website"),
+  contactName: varchar("contactName", { length: 255 }),
+  contactEmail: varchar("contactEmail", { length: 255 }),
+  contactPhone: varchar("contactPhone", { length: 50 }),
+  
+  focusAreas: json("focusAreas"),
+  typicalGrantRange: varchar("typicalGrantRange", { length: 100 }),
+  applicationCycle: varchar("applicationCycle", { length: 100 }), // "Annual", "Quarterly", "Rolling"
+  
+  notes: text("notes"),
+  relationshipStatus: mysqlEnum("relationshipStatus", [
+    "researching",
+    "contacted",
+    "applied",
+    "funded",
+    "declined",
+    "inactive"
+  ]).default("researching"),
+  
+  totalApplied: int("totalApplied").default(0),
+  totalAwarded: int("totalAwarded").default(0),
+  totalFundingReceived: decimal("totalFundingReceived", { precision: 14, scale: 2 }).default("0"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GrantFunder = typeof grantFunders.$inferSelect;
+export type InsertGrantFunder = typeof grantFunders.$inferInsert;
