@@ -15,10 +15,10 @@ import { Users, UserPlus, Building2, Briefcase, CheckCircle2, Clock, Heart, Grad
 
 const FAMILY_MEMBERS = [
   { id: "shanna", name: "Shanna Russell", role: "Founder / Matriarch", departments: ["Business", "Outreach"], businessEntity: "Purpose Proposal Group", status: "active", credentials: ["Business Degree", "Government Contracting Experience", "ULC Ordination"], boardRole: "Founder + Business Director" },
+  { id: "craig", name: "Craig", role: "House Member", departments: ["Finance", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "amber", name: "Amber", role: "House Member", departments: ["Health", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "essence", name: "Essence", role: "House Member", departments: ["Design", "IT", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "amandes", name: "Amandes", role: "House Member", departments: ["Media", "IT", "Outreach"], businessEntity: "FreeLife Media", status: "active", credentials: [], boardRole: "Board Member" },
-  { id: "craig", name: "Craig", role: "House Member", departments: ["Finance", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "cornelius", name: "Cornelius", role: "Education/Training Manager", departments: ["Education", "Training", "Outreach"], businessEntity: "TBD", status: "pending", credentials: ["Masters in Education", "Masters in Criminal Justice"], boardRole: "Board Member (Education/Training)", supportsLegal: true },
   { id: "contracts-mgr", name: "TBD - Contracts Manager", role: "Department Manager", departments: ["Contracts", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Contracts)" },
   { id: "grants-mgr", name: "TBD - Grants Manager", role: "Department Manager", departments: ["Grants", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Grants)" },

@@ -1680,3 +1680,24 @@
 - EmpowHER Grants (up to $25K, female founders)
 - Black Ambition Prize (up to $1M)
 - Instrumentl Faith-Based Grants Database (100+ grants)
+
+
+## Phase 84: Grant Application Simulator
+
+- [x] Design grant application simulator flow
+- [x] Step 1: Grant Selection - Match grants to eligible entities
+- [x] Step 2: Entity Selection - Choose which entity applies
+- [x] Step 3: Eligibility Verification - Confirm requirements met
+- [x] Step 4: Document Preparation - Gather required materials
+- [x] Step 5: Organization Information - Draft org description
+- [x] Step 6: Need Statement - Write compelling need statement
+- [x] Step 7: Project Description - Define project goals and activities
+- [x] Step 8: Budget Creation - Build realistic grant budget
+- [x] Step 9: Review & Checklist - Final review before submission
+- [x] Step 10: Completion Certificate with Training Manager (Cornelius) signature
+- [x] Add progress tracking with step indicators
+- [x] Add training tips at each step
+- [x] Add direct links to actual grant applications upon completion
+- [x] Add LUV token rewards for completion
+
+- [x] Move Craig to be listed right after Shanna in Family Onboarding

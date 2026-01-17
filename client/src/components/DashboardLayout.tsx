@@ -46,6 +46,7 @@ const menuItems = [
   { icon: Gavel, label: "Board Meetings", path: "/board-meetings" },
   { icon: Globe2, label: "International Business", path: "/international-business" },
   { icon: Gift, label: "Grant Management", path: "/grants" },
+  { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator" },
   { icon: FileText, label: "Document Vault", path: "/vault" },
   { icon: Bot, label: "Agents", path: "/agents" },
   { icon: Share2, label: "Social Media", path: "/social-media" },
