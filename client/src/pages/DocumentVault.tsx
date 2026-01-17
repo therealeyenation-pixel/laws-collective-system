@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
+import EntityDocuments from "../components/EntityDocuments";
 import { trpc } from "../lib/trpc";
 import { 
   FileText, 
@@ -61,7 +62,7 @@ interface Document {
 }
 
 export default function DocumentVault() {
-  const [activeTab, setActiveTab] = useState<"documents" | "folders">("documents");
+  const [activeTab, setActiveTab] = useState<"documents" | "folders" | "entities">("documents");
   const [selectedType, setSelectedType] = useState<DocumentType | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -417,15 +418,25 @@ export default function DocumentVault() {
             >
               Documents
             </button>
-            <button
+<button
               onClick={() => setActiveTab("folders")}
-              className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 activeTab === "folders"
-                  ? "border-green-600 text-green-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  ? "bg-green-700 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               Folders
+            </button>
+            <button
+              onClick={() => setActiveTab("entities")}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === "entities"
+                  ? "bg-green-700 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Entity Documents
             </button>
           </nav>
         </div>
@@ -569,6 +580,11 @@ export default function DocumentVault() {
               </div>
             )}
           </div>
+        )}
+
+        {/* Entity Documents Tab */}
+        {activeTab === "entities" && (
+          <EntityDocuments />
         )}
 
         {/* Create Document Modal */}

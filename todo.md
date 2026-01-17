@@ -1894,3 +1894,18 @@
 - [x] Update all frontend references to use correct entity names
 - [x] Update business plan files with correct entity information
 - [x] Update database records with correct entity details
+
+
+## Trust Governance Dashboard (January 2026)
+- [x] Create TrustGovernance.tsx page component
+- [x] Implement allocation tracking visualization (20% Reserve, 30% Wealth Building, 30% Reinvestment, 10% Family, 10% Community)
+- [x] Build subsidiary distributions tracking for all 4 entities
+- [x] Create succession planning interface with Academy certification requirements
+- [x] Add Family Council governance section
+- [x] Add route to App.tsx and navigation
+
+## Document Vault Entity Integration (January 2026)
+- [x] Extend Document Vault schema to support entity linking
+- [x] Create entity document upload interface
+- [x] Upload and link formation documents (Articles of Organization, EIN letters)
+- [x] Add document viewing from Entity Management page

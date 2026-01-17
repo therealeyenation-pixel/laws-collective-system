@@ -34,6 +34,7 @@ import Pricing from "./pages/Pricing";
 import ProposalSimulator from "./pages/ProposalSimulator";
 import RFPGenerator from "@/pages/RFPGenerator";
 import BusinessSetupWizard from "@/pages/BusinessSetupWizard";
+import TrustGovernance from "@/pages/TrustGovernance";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -121,6 +122,7 @@ function Router() {
       <Route path="/proposal-simulator">{() => <ProtectedRoute component={ProposalSimulator} />}</Route>
       <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} />}</Route>
       <Route path="/business-setup" component={BusinessSetupWizard} />
+      <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

@@ -34,6 +34,7 @@ const menuItems = [
   { icon: Rocket, label: "Getting Started", path: "/genesis" },
   { icon: Settings, label: "Owner Setup", path: "/owner-setup" },
   { icon: Shield, label: "Trust System", path: "/system" },
+  { icon: PieChart, label: "Trust Governance", path: "/trust-governance" },
   { icon: GraduationCap, label: "Learning Center", path: "/academy" },
   { icon: Building2, label: "Foundation", path: "/foundation" },
   { icon: DollarSign, label: "Financial Automation", path: "/financial-automation" },
