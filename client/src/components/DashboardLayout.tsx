@@ -28,37 +28,68 @@ import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 import { NotificationCenter } from "./NotificationCenter";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-  { icon: Home, label: "House Dashboard", path: "/house" },
-  { icon: Rocket, label: "Getting Started", path: "/getting-started" },
-  { icon: Building2, label: "Organization Setup", path: "/genesis" },
-  { icon: Settings, label: "Owner Setup", path: "/owner-setup" },
-  { icon: Shield, label: "System Overview", path: "/system-overview" },
-  { icon: GraduationCap, label: "Learning Center", path: "/academy" },
-  { icon: Building2, label: "Foundation", path: "/foundation" },
-  { icon: DollarSign, label: "Financial Automation", path: "/financial-automation" },
-  { icon: Coins, label: "Banking & Credit", path: "/banking" },
-  { icon: Play, label: "Business Simulator", path: "/business-simulator" },
-  { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator" },
-  { icon: FileText, label: "Upload Business Plan", path: "/business-plan-upload" },
-  { icon: Building2, label: "Business Formation", path: "/business-formation" },
-  { icon: Users, label: "Position Management", path: "/positions" },
-  { icon: Users, label: "Family Onboarding", path: "/family-onboarding" },
-  { icon: Users, label: "HR Management", path: "/hr-management" },
-  { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing" },
-  { icon: Gavel, label: "Board Meetings", path: "/board-meetings" },
-  { icon: Globe2, label: "International Business", path: "/international-business" },
-  { icon: Gift, label: "Grant Management", path: "/grants" },
-  { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator" },
-  { icon: Calculator, label: "Tax Simulator", path: "/tax-simulator" },
-  { icon: FileText, label: "Document Vault", path: "/vault" },
-  { icon: Bot, label: "Agents", path: "/agents" },
-  { icon: Share2, label: "Social Media", path: "/social-media" },
-  { icon: DollarSign, label: "Pricing", path: "/pricing" },
-  { icon: FileText, label: "Proposal Simulator", path: "/proposal-simulator" },
-  { icon: FileText, label: "RFP Generator", path: "/rfp-generator" },
-  { icon: Building2, label: "Business Setup", path: "/business-setup" },
+// Access levels: user (member), staff, admin, owner
+type AccessLevel = "user" | "staff" | "admin" | "owner";
+
+interface MenuItem {
+  icon: any;
+  label: string;
+  path: string;
+  minRole: AccessLevel;
+  category?: string;
+}
+
+// Role hierarchy for permission checking
+const roleHierarchy: Record<AccessLevel, number> = {
+  user: 1,
+  staff: 2,
+  admin: 3,
+  owner: 4,
+};
+
+const hasAccess = (userRole: AccessLevel | undefined, requiredRole: AccessLevel): boolean => {
+  if (!userRole) return false;
+  return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
+};
+
+const menuItems: MenuItem[] = [
+  // Member Level - Personal Journey
+  { icon: Home, label: "My House", path: "/house", minRole: "user", category: "Personal" },
+  { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user", category: "Personal" },
+  { icon: GraduationCap, label: "Learning Center", path: "/academy", minRole: "user", category: "Personal" },
+  { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user", category: "Learning" },
+  { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator", minRole: "user", category: "Learning" },
+  { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator", minRole: "user", category: "Learning" },
+  { icon: Calculator, label: "Tax Simulator", path: "/tax-simulator", minRole: "user", category: "Learning" },
+  
+  // Staff Level - Operations & Management
+  { icon: LayoutDashboard, label: "Business Dashboard", path: "/dashboard", minRole: "staff", category: "Management" },
+  { icon: DollarSign, label: "Financial Automation", path: "/financial-automation", minRole: "staff", category: "Management" },
+  { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff", category: "Management" },
+  { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff", category: "Management" },
+  { icon: Users, label: "Position Management", path: "/positions", minRole: "staff", category: "Management" },
+  { icon: Gift, label: "Grant Management", path: "/grants", minRole: "staff", category: "Management" },
+  { icon: FileText, label: "Document Vault", path: "/vault", minRole: "staff", category: "Management" },
+  { icon: Bot, label: "Agents", path: "/agents", minRole: "staff", category: "Management" },
+  { icon: Share2, label: "Social Media", path: "/social-media", minRole: "staff", category: "Management" },
+  { icon: FileText, label: "Proposal Simulator", path: "/proposal-simulator", minRole: "staff", category: "Management" },
+  { icon: FileText, label: "RFP Generator", path: "/rfp-generator", minRole: "staff", category: "Management" },
+  
+  // Admin Level - Entity & Business Operations
+  { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin", category: "Administration" },
+  { icon: Building2, label: "Foundation", path: "/foundation", minRole: "admin", category: "Administration" },
+  { icon: FileText, label: "Upload Business Plan", path: "/business-plan-upload", minRole: "admin", category: "Administration" },
+  { icon: Building2, label: "Business Formation", path: "/business-formation", minRole: "admin", category: "Administration" },
+  { icon: Building2, label: "Business Setup", path: "/business-setup", minRole: "admin", category: "Administration" },
+  { icon: Users, label: "Family Onboarding", path: "/family-onboarding", minRole: "admin", category: "Administration" },
+  { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin", category: "Administration" },
+  { icon: Gavel, label: "Board Meetings", path: "/board-meetings", minRole: "admin", category: "Administration" },
+  { icon: Globe2, label: "International Business", path: "/international-business", minRole: "admin", category: "Administration" },
+  { icon: DollarSign, label: "Pricing", path: "/pricing", minRole: "admin", category: "Administration" },
+  
+  // Owner Level - Trust & Governance
+  { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner", category: "Governance" },
+  { icon: Shield, label: "System Overview", path: "/system-overview", minRole: "owner", category: "Governance" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -118,7 +149,9 @@ function DashboardLayoutContent({
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const activeMenuItem = menuItems.find(item => item.path === location);
+  const userRole = (user?.role as AccessLevel) || "user";
+  const filteredMenuItems = menuItems.filter(item => hasAccess(userRole, item.minRole));
+  const activeMenuItem = filteredMenuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -186,7 +219,7 @@ function DashboardLayoutContent({
 
           <SidebarContent className="gap-0">
             <SidebarMenu className="px-2 py-1">
-              {menuItems.map(item => {
+              {filteredMenuItems.map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>

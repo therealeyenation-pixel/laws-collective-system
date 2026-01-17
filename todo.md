@@ -2351,3 +2351,57 @@
 - [x] Add "Welcome to LuvOnPurpose Autonomous Wealth System (LAWS)"
 - [x] Highlight dual meaning: LAWS = LuvOnPurpose Autonomous Wealth System (colored first letters)
 - [x] Connect both LAWS meanings as integral brand pillars (shows "A L.A.W.S. Collective Enterprise")
+
+
+## Phase 47: Role-Based Access Control
+
+### Access Levels
+- [x] Define access levels: user (member), staff, admin, owner
+- [x] Categorize all sidebar menu items by access level
+- [x] Updated database role enum to include staff and owner
+
+### Member Level (authenticated users)
+- My House (House Dashboard)
+- Getting Started
+- Learning Center
+- Business Simulator
+- Business Plan Simulator
+- Grant Simulator
+- Tax Simulator
+
+### Staff/Management Level
+- Business Dashboard (main system dashboard)
+- Financial Automation
+- Banking & Credit
+- HR Management
+- Position Management
+- Grant Management
+- Document Vault
+- Agents
+- Social Media
+- Proposal Simulator
+- RFP Generator
+
+### Admin Level
+- Organization Setup
+- Foundation
+- Business Formation
+- Business Setup
+- Family Onboarding
+- Revenue Sharing
+- Board Meetings
+- International Business
+- Pricing
+
+### Owner Level
+- Owner Setup
+- System Overview
+- Trust Governance
+
+### Implementation
+- [x] Update DashboardLayout sidebar with role-based visibility
+- [x] Add route protection for management pages (minRole="staff")
+- [x] Add route protection for admin pages (minRole="admin")
+- [x] Add route protection for owner-only pages (minRole="owner")
+- [x] Show Access Denied page for unauthorized users
+- [x] Renamed Dashboard to Business Dashboard, House Dashboard to My House

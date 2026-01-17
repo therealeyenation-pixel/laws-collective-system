@@ -44,7 +44,22 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
 
-function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+// Access levels: user (member), staff, admin, owner
+type AccessLevel = "user" | "staff" | "admin" | "owner";
+
+const roleHierarchy: Record<AccessLevel, number> = {
+  user: 1,
+  staff: 2,
+  admin: 3,
+  owner: 4,
+};
+
+const hasAccess = (userRole: AccessLevel | undefined, requiredRole: AccessLevel): boolean => {
+  if (!userRole) return false;
+  return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
+};
+
+function ProtectedRoute({ component: Component, minRole = "user" }: { component: React.ComponentType; minRole?: AccessLevel }) {
   const { isAuthenticated, loading, user } = useAuth();
 
   // Show loading state while checking auth
@@ -59,8 +74,7 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
     );
   }
 
-  // If not authenticated after loading completes, show sign-in prompt instead of redirect
-  // This prevents redirect loops on mobile
+  // If not authenticated after loading completes, show sign-in prompt
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -87,6 +101,28 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
     );
   }
 
+  // Check role-based access
+  const userRole = (user?.role as AccessLevel) || "user";
+  if (!hasAccess(userRole, minRole)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center space-y-6 max-w-md">
+          <Shield className="w-16 h-16 mx-auto text-red-500" />
+          <h1 className="text-2xl font-bold">Access Denied</h1>
+          <p className="text-muted-foreground">
+            You don't have permission to access this page. Contact an administrator if you believe this is an error.
+          </p>
+          <button
+            onClick={() => window.location.href = '/dashboard'}
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return <Component />;
 }
 
@@ -95,43 +131,50 @@ function Router() {
   // Protected routes: Trust System, Document Vault, Agents, Social Media
   return (
     <Switch>
+      {/* Public routes - no authentication required */}
       <Route path="/" component={Home} />
-      <Route path="/system-overview" component={SystemOverview} />
-      <Route path="/academy" component={AcademyDashboard} />
-      <Route path="/pricing" component={Pricing} />
       <Route path="/careers" component={Careers} />
       <Route path="/contact" component={Contact} />
-      {/* Dashboard is now public so users can view and take courses */}
-      <Route path="/dashboard" component={Dashboard} />
-      {/* Protected routes - require authentication */}
-      <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} />}</Route>
-      <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} />}</Route>
-      <Route path="/agents">{() => <ProtectedRoute component={Agents} />}</Route>
-      <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} />}</Route>
-      <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} />}</Route>
-      <Route path="/financial-automation">{() => <ProtectedRoute component={FinancialAutomation} />}</Route>
-      <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} />}</Route>
-      <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} />}</Route>
-      <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} />}</Route>
-      <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} />}</Route>
-      <Route path="/banking">{() => <ProtectedRoute component={BankingCredit} />}</Route>
-      <Route path="/business-formation">{() => <ProtectedRoute component={BusinessFormation} />}</Route>
-      <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} />}</Route>
-      <Route path="/family-onboarding">{() => <ProtectedRoute component={FamilyOnboarding} />}</Route>
-      <Route path="/revenue-sharing">{() => <ProtectedRoute component={RevenueSharing} />}</Route>
-      <Route path="/board-meetings">{() => <ProtectedRoute component={BoardMeetings} />}</Route>
-      <Route path="/international-business">{() => <ProtectedRoute component={InternationalBusiness} />}</Route>
-      <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} />}</Route>
-      <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} />}</Route>
-      <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} />}</Route>
-      <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} />}</Route>
-      <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} />}</Route>
-      <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} />}</Route>
-      <Route path="/proposal-simulator">{() => <ProtectedRoute component={ProposalSimulator} />}</Route>
-      <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} />}</Route>
-      <Route path="/business-setup" component={BusinessSetupWizard} />
-      <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} />}</Route>
-      <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} />}</Route>
+      
+      {/* Member routes - any authenticated user */}
+      <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} minRole="user" />}</Route>
+      <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
+      <Route path="/academy">{() => <ProtectedRoute component={AcademyDashboard} minRole="user" />}</Route>
+      <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>
+      <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} minRole="user" />}</Route>
+      <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>
+      <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} minRole="user" />}</Route>
+      
+      {/* Staff routes - management level */}
+      <Route path="/dashboard">{() => <ProtectedRoute component={Dashboard} minRole="staff" />}</Route>
+      <Route path="/financial-automation">{() => <ProtectedRoute component={FinancialAutomation} minRole="staff" />}</Route>
+      <Route path="/banking">{() => <ProtectedRoute component={BankingCredit} minRole="staff" />}</Route>
+      <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} minRole="staff" />}</Route>
+      <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} minRole="staff" />}</Route>
+      <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} minRole="staff" />}</Route>
+      <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
+      <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
+      <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>
+      <Route path="/proposal-simulator">{() => <ProtectedRoute component={ProposalSimulator} minRole="staff" />}</Route>
+      <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} minRole="staff" />}</Route>
+      
+      {/* Admin routes - entity & business operations */}
+      <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} minRole="admin" />}</Route>
+      <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} minRole="admin" />}</Route>
+      <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} minRole="admin" />}</Route>
+      <Route path="/business-formation">{() => <ProtectedRoute component={BusinessFormation} minRole="admin" />}</Route>
+      <Route path="/business-setup">{() => <ProtectedRoute component={BusinessSetupWizard} minRole="admin" />}</Route>
+      <Route path="/family-onboarding">{() => <ProtectedRoute component={FamilyOnboarding} minRole="admin" />}</Route>
+      <Route path="/revenue-sharing">{() => <ProtectedRoute component={RevenueSharing} minRole="admin" />}</Route>
+      <Route path="/board-meetings">{() => <ProtectedRoute component={BoardMeetings} minRole="admin" />}</Route>
+      <Route path="/international-business">{() => <ProtectedRoute component={InternationalBusiness} minRole="admin" />}</Route>
+      <Route path="/pricing">{() => <ProtectedRoute component={Pricing} minRole="admin" />}</Route>
+      <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} minRole="admin" />}</Route>
+      
+      {/* Owner routes - trust & governance */}
+      <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} minRole="owner" />}</Route>
+      <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
+      <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
