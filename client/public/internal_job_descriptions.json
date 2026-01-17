@@ -633,6 +633,109 @@
         "Manage program budgets",
         "Build relationships with community partners"
       ]
+    },
+    {
+      "id": "health-manager",
+      "title": "Health Manager",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Health & Wellness",
+      "reportsTo": "COO / CEO",
+      "classification": "Full-Time",
+      "location": "Hybrid",
+      "salaryRange": {
+        "min": 85000,
+        "max": 115000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$85,000 - $115,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Health and wellness certifications",
+        "governanceVoice": true,
+        "flexibleSchedule": true,
+        "wellnessPrograms": true
+      },
+      "requirements": {
+        "experience": "5+ years in health administration, wellness program management, or healthcare coordination",
+        "skills": ["Program development", "Healthcare coordination", "Community health", "Data analysis", "Grant management"],
+        "preferred": ["MPH or healthcare administration degree", "Community health experience", "Nonprofit healthcare background"]
+      },
+      "description": "The Health Manager oversees all health and wellness initiatives aligned with the WATER pillar of the L.A.W.S. framework. This role develops and manages wellness programs, coordinates healthcare resources, and ensures community members have access to healing and balance services.",
+      "responsibilities": [
+        "Develop and implement wellness programs aligned with WATER pillar principles",
+        "Coordinate healthcare resources and referral networks",
+        "Manage health-related grants and funding",
+        "Supervise Health Operations Coordinator",
+        "Track health outcomes and program effectiveness",
+        "Build partnerships with healthcare providers and wellness organizations",
+        "Ensure compliance with health-related regulations",
+        "Design mental health and emotional wellness support programs",
+        "Coordinate with Education department on health literacy curriculum",
+        "Report health metrics and outcomes to leadership"
+      ],
+      "directReports": ["Health Operations Coordinator"],
+      "priority": "High",
+      "status": "Open"
+    },
+    {
+      "id": "procurement-manager",
+      "title": "Procurement Manager",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Procurement",
+      "reportsTo": "COO / CEO",
+      "classification": "Full-Time",
+      "location": "Remote with vendor site visits",
+      "salaryRange": {
+        "min": 95000,
+        "max": 130000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$95,000 - $130,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Supply chain and procurement certifications",
+        "governanceVoice": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "7+ years in procurement, supply chain management, or strategic sourcing",
+        "skills": ["Strategic sourcing", "Contract negotiation", "Vendor management", "Cost analysis", "Compliance"],
+        "preferred": ["CPM, CPSM, or CSCP certification", "Federal/grant procurement experience", "Multi-entity procurement"]
+      },
+      "description": "The Procurement Manager leads strategic procurement operations across all subsidiary entities. This senior role develops procurement strategies, manages major vendor relationships, ensures grant compliance, and optimizes organizational spending.",
+      "responsibilities": [
+        "Develop and implement procurement strategies across all entities",
+        "Lead strategic sourcing initiatives and major contract negotiations",
+        "Manage vendor relationships and performance evaluations",
+        "Ensure procurement compliance with grant requirements and regulations",
+        "Supervise Purchasing Manager and procurement staff",
+        "Analyze spending patterns and identify cost-saving opportunities",
+        "Develop procurement policies and procedures",
+        "Coordinate with Finance on budget planning and forecasting",
+        "Manage RFP/RFQ processes for major purchases",
+        "Report procurement metrics and savings to leadership"
+      ],
+      "directReports": ["Purchasing Manager"],
+      "priority": "High",
+      "status": "Open"
     }
   ],
   "leadPositions": [

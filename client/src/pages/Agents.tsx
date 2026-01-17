@@ -31,6 +31,10 @@ import {
   Play,
   Pause,
   Clock,
+  Users,
+  ClipboardCheck,
+  ShoppingCart,
+  Heart,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
@@ -46,6 +50,10 @@ const agentIcons: Record<string, React.ReactNode> = {
   outreach: <Megaphone className="w-5 h-5" />,
   seo: <Search className="w-5 h-5" />,
   engagement: <TrendingUp className="w-5 h-5" />,
+  hr: <Users className="w-5 h-5" />,
+  qaqc: <ClipboardCheck className="w-5 h-5" />,
+  purchasing: <ShoppingCart className="w-5 h-5" />,
+  health: <Heart className="w-5 h-5" />,
   custom: <Sparkles className="w-5 h-5" />,
 };
 
@@ -60,6 +68,10 @@ const agentColors: Record<string, string> = {
   outreach: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
   seo: "bg-indigo-500/10 text-indigo-500 border-indigo-500/20",
   engagement: "bg-green-500/10 text-green-500 border-green-500/20",
+  hr: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+  qaqc: "bg-teal-500/10 text-teal-500 border-teal-500/20",
+  purchasing: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+  health: "bg-rose-500/10 text-rose-500 border-rose-500/20",
   custom: "bg-cyan-500/10 text-cyan-500 border-cyan-500/20",
 };
 

@@ -382,6 +382,18 @@
         "lead": "Grant Writer",
         "servesEntities": ["All"],
         "functions": ["Research", "Writing", "Submission", "Tracking"]
+      },
+      {
+        "name": "Health & Wellness",
+        "lead": "Health Manager",
+        "servesEntities": ["All"],
+        "functions": ["Wellness Programs", "Healthcare Coordination", "Mental Health", "WATER Pillar"]
+      },
+      {
+        "name": "Procurement",
+        "lead": "Procurement Manager",
+        "servesEntities": ["All"],
+        "functions": ["Strategic Sourcing", "Contract Management", "Vendor Relations", "Compliance"]
       }
     ]
   },
@@ -412,7 +424,10 @@
       {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
       {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
       {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
-      {"title": "Education Operations Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$68,000 - $88,000"}
+      {"title": "Education Operations Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
+      {"title": "Health Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000"},
+      {"title": "Procurement Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000"},
+      {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"}
     ]
   },
   "reportingStructure": {
@@ -430,7 +445,7 @@
     },
     "level4": {
       "title": "Managers",
-      "positions": ["Operations Manager", "HR Manager", "QA/QC Manager", "Purchasing Manager", "Platform Administrator", "Grant Writer", "Design Lead (Essence)"]
+      "positions": ["Operations Manager", "HR Manager", "QA/QC Manager", "Purchasing Manager", "Health Manager", "Procurement Manager", "Platform Administrator", "Grant Writer", "Design Lead (Essence)"]
     },
     "level5": {
       "title": "Lead",
@@ -442,5 +457,5 @@
     },
     "level7": {
       "title": "Operations Coordinator",
-      "positions": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator"]
+      "positions": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator"]
     }

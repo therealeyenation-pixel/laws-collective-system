@@ -2647,3 +2647,14 @@
 - [x] Update all job descriptions with new salary ranges
 - [x] Update job postings with new salary ranges
 - [x] Update Careers page with new salary ranges
+
+
+## Phase 43: New Manager Positions and Agent Updates
+- [x] Create Health Manager position ($85,000 - $115,000)
+- [x] Add Health Manager to job descriptions
+- [x] Add Health Manager to organizational structure
+- [x] Create Procurement Manager position ($95,000 - $130,000)
+- [x] Add Procurement Manager to job descriptions
+- [x] Add Procurement Manager to organizational structure
+- [x] Update Agents page UI to display new department agents (HR, QA/QC, Purchasing, Health)
+- [x] Add agent icons and colors for new departments
