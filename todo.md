@@ -1790,3 +1790,23 @@
 - [x] Add employee salary/personnel line items to Grant Simulator budget section
 - [x] Add business formation and startup costs categories to Grant Simulator budget section
 - [x] Fix pink/low-contrast text on Dashboard House Structure Progress cards
+- [x] Create Tax Preparation Simulator under Financial Automation
+- [x] Add database schema for tax records and W-2 data
+- [x] Build income aggregation from LuvLedger transactions
+- [x] Build deduction tracking from expense categories
+- [x] Add W-2 form generation for family employees
+- [x] Add 1099-NEC/MISC form generation for contractors
+- [x] Add entity-specific tax form support (Schedule C, 1120-S, 1065, 1041)
+- [x] Add estimated tax calculator for quarterly payments
+- [x] Add tax document checklist based on entity type
+- [x] Add tax calendar with filing deadlines
+- [x] Pull uploaded documents from Document Vault
+- [x] Add navigation link under Financial Automation section
+- [x] Auto-generate 1099-NEC when contractor payments exceed $600/year
+- [x] Track contractor payments with running YTD totals
+- [x] Generate contract renewal reminders (30/60/90 days before expiration)
+- [x] Prepare contract renewal documents with updated terms
+- [x] W-9 collection tracking before first payment
+- [x] Bulk 1099 generation for year-end
+- [x] Missing W-9 alerts in Tax Simulator
+- [x] Contractor payment summary by year

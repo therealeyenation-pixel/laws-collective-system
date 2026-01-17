@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -49,6 +49,7 @@ const menuItems = [
   { icon: Globe2, label: "International Business", path: "/international-business" },
   { icon: Gift, label: "Grant Management", path: "/grants" },
   { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator" },
+  { icon: Calculator, label: "Tax Simulator", path: "/tax-simulator" },
   { icon: FileText, label: "Document Vault", path: "/vault" },
   { icon: Bot, label: "Agents", path: "/agents" },
   { icon: Share2, label: "Social Media", path: "/social-media" },
