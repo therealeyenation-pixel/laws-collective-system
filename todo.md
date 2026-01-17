@@ -2105,3 +2105,59 @@
 - **Grant Management** - Ensures grant compliance requirements are met
 - **Purchasing** - Reviews vendor quality and procurement compliance
 
+
+
+## Phase 36: Getting Started Page Redesign
+
+### New Flow Order
+- [x] Step 1: Personal Intake Form (create profile/datasheet)
+- [x] Step 2: Needs Assessment (what do you need? business, education, employment, community)
+- [x] Step 3: Path Assignment (route to appropriate service based on assessment)
+- [x] Step 4: Service Delivery (business generator, Academy, employment, etc.)
+- [x] Step 5: Entity/Trust Setup (only after understanding the system)
+
+### Personal Intake Form Fields
+- [x] Personal Information (name, contact, address)
+- [x] Background (education, work history, skills)
+- [x] Goals (what are you trying to achieve?)
+- [x] Interests (areas of interest within the organization)
+- [x] Availability (full-time, part-time, volunteer)
+- [x] Emergency Contact
+- [ ] Documents (ID, resume, certifications)
+
+### System Integration
+- [ ] Create profiles table for all intake data
+- [ ] Link profile to user account
+- [ ] Auto-populate business generator fields from profile
+- [x] Route users based on assessment answers
+
+## Phase 37: Formal Job Descriptions
+
+### Department Leads (The L.A.W.S. Collective, LLC)
+- [x] HR Department Lead - full job description
+- [x] QA/QC Department Lead - full job description
+- [x] Purchasing Department Lead - full job description
+
+### Operations (LuvOnPurpose Autonomous Wealth System LLC)
+- [x] Operations Manager - full job description
+- [x] Technology/Platform Administrator - full job description
+
+### Education (Temple/Academy)
+- [x] Outreach Coordinator - full job description
+- [x] Academy Instructor/Curriculum Developer - full job description
+
+### Media (Real-Eye-Nation LLC)
+- [x] Content Creator/Media Assistant - full job description
+
+### Shared Services
+- [x] Grant Writer/Proposal Specialist - full job description
+- [x] Community Programs Coordinator - full job description
+
+### Current Filled Positions (document existing roles)
+- [ ] Founder/Matriarch (Shanna Russell) - job description
+- [ ] Finance Lead (Craig) - job description
+- [ ] Education/Training Manager (Cornelius) - job description
+- [ ] Design Lead (Essence) - job description
+- [ ] Media Lead (Amandes) - job description
+- [ ] Operations Support (Amber) - job description
+

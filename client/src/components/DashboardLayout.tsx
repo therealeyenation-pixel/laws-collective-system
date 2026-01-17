@@ -31,7 +31,8 @@ import { NotificationCenter } from "./NotificationCenter";
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: Home, label: "House Dashboard", path: "/house" },
-  { icon: Rocket, label: "Getting Started", path: "/genesis" },
+  { icon: Rocket, label: "Getting Started", path: "/getting-started" },
+  { icon: Building2, label: "Organization Setup", path: "/genesis" },
   { icon: Settings, label: "Owner Setup", path: "/owner-setup" },
   { icon: Shield, label: "Trust System", path: "/system" },
   { icon: PieChart, label: "Trust Governance", path: "/trust-governance" },
