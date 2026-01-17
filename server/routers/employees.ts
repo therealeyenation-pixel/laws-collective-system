@@ -291,4 +291,127 @@ export const employeesRouter = router({
       entityName: r.entity?.name || "Unknown Entity"
     }));
   }),
+
+  /**
+   * Get current user's employee profile (self-service)
+   */
+  getMyProfile: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    const result = await db.select({
+      employee: employees,
+      entity: {
+        id: businessEntities.id,
+        name: businessEntities.name,
+      }
+    })
+    .from(employees)
+    .leftJoin(businessEntities, eq(employees.entityId, businessEntities.id))
+    .where(eq(employees.userId, ctx.user.id))
+    .limit(1);
+
+    if (!result.length) return null;
+    
+    return {
+      ...result[0].employee,
+      entityName: result[0].entity?.name || "Unknown Entity"
+    };
+  }),
+
+  /**
+   * Update current user's own profile (self-service - limited fields)
+   */
+  updateMyProfile: protectedProcedure
+    .input(z.object({
+      preferredName: z.string().max(100).optional().nullable(),
+      phone: z.string().max(50).optional().nullable(),
+      bio: z.string().optional().nullable(),
+      avatarUrl: z.string().max(500).optional().nullable(),
+      linkedinUrl: z.string().max(255).optional().nullable(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Find employee linked to current user
+      const existing = await db.select()
+        .from(employees)
+        .where(eq(employees.userId, ctx.user.id))
+        .limit(1);
+
+      if (!existing.length) {
+        throw new Error("No employee profile linked to your account");
+      }
+
+      // Only allow updating limited fields for self-service
+      const cleanData = Object.fromEntries(
+        Object.entries(input).filter(([_, v]) => v !== undefined)
+      );
+
+      await db.update(employees)
+        .set(cleanData)
+        .where(eq(employees.userId, ctx.user.id));
+
+      return { success: true, message: "Profile updated successfully" };
+    }),
+
+  /**
+   * Link an employee to a user account (admin only)
+   */
+  linkToUser: protectedProcedure
+    .input(z.object({
+      employeeId: z.number(),
+      userId: z.number(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      await db.update(employees)
+        .set({ userId: input.userId })
+        .where(eq(employees.id, input.employeeId));
+
+      return { success: true, message: "Employee linked to user account" };
+    }),
+
+  /**
+   * Unlink an employee from a user account (admin only)
+   */
+  unlinkFromUser: protectedProcedure
+    .input(z.object({ employeeId: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      await db.update(employees)
+        .set({ userId: null })
+        .where(eq(employees.id, input.employeeId));
+
+      return { success: true, message: "Employee unlinked from user account" };
+    }),
+
+  /**
+   * Get employees that are not linked to any user account
+   */
+  getUnlinkedEmployees: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    const result = await db.select({
+      employee: employees,
+      entity: {
+        id: businessEntities.id,
+        name: businessEntities.name,
+      }
+    })
+    .from(employees)
+    .leftJoin(businessEntities, eq(employees.entityId, businessEntities.id))
+    .where(sql`${employees.userId} IS NULL`);
+
+    return result.map(r => ({
+      ...r.employee,
+      entityName: r.entity?.name || "Unknown Entity"
+    }));
+  }),
 });

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, UserCircle, UserPlus } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -54,6 +54,7 @@ const hasAccess = (userRole: AccessLevel | undefined, requiredRole: AccessLevel)
 
 const menuItems: MenuItem[] = [
   // Member Level - Personal Journey
+  { icon: UserCircle, label: "My Profile", path: "/my-profile", minRole: "user", category: "Personal" },
   { icon: Home, label: "My House", path: "/house", minRole: "user", category: "Personal" },
   { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user", category: "Personal" },
   { icon: GraduationCap, label: "Learning Center", path: "/academy", minRole: "user", category: "Personal" },
@@ -69,6 +70,7 @@ const menuItems: MenuItem[] = [
   { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff", category: "Management" },
   { icon: ClipboardList, label: "HR Dashboard", path: "/hr-dashboard", minRole: "staff", category: "Management" },
   { icon: Users, label: "Employee Directory", path: "/employees", minRole: "staff", category: "Management" },
+  { icon: UserPlus, label: "Onboarding", path: "/onboarding", minRole: "staff", category: "Management" },
   { icon: BarChart3, label: "Operations Dashboard", path: "/operations-dashboard", minRole: "staff", category: "Management" },
   { icon: Users, label: "Position Management", path: "/positions", minRole: "staff", category: "Management" },
   { icon: Gift, label: "Grant Management", path: "/grants", minRole: "staff", category: "Management" },

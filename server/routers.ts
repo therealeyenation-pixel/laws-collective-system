@@ -64,6 +64,7 @@ import { businessPlanParserRouter } from "./routers/business-plan-parser";
 import { trainingRouter } from "./routers/training";
 import { jobApplicationsRouter } from "./routers/job-applications";
 import { employeesRouter } from "./routers/employees";
+import { onboardingRouter } from "./routers/onboarding";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -129,6 +130,7 @@ export const appRouter = router({
   training: trainingRouter,
   jobApplications: jobApplicationsRouter,
   employees: employeesRouter,
+  onboarding: onboardingRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

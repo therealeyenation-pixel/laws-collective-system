@@ -2708,3 +2708,20 @@
 - [x] Add employee statistics dashboard
 - [x] Add Employee Directory to sidebar navigation
 - [x] Write unit tests for employees router
+
+
+## Phase 48: Employee Seeding, User Linking, and Onboarding Workflow
+- [x] Seed sample employees for each department (Executive, Finance, HR, Operations, Legal, Technology, Education, Media, Design)
+- [x] Add userId field linking to employees table (already exists)
+- [x] Create employee profile self-service update functionality
+- [x] Add My Profile page for self-service updates
+- [x] Add link/unlink employee to user account procedures
+- [x] Build employee onboarding workflow from job applications
+- [x] Connect hired applicants to employee directory
+- [x] Add onboarding status tracking
+- [x] Create onboarding checklist UI
+- [x] Create onboarding database tables
+- [x] Create onboarding router with CRUD operations
+- [x] Create Onboarding page with task management
+- [x] Seed default onboarding checklist with 24 items
+- [x] Write tests for new functionality (15 tests for onboarding router)

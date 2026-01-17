@@ -7189,3 +7189,119 @@ export const employees = mysqlTable("employees", {
 
 export type Employee = typeof employees.$inferSelect;
 export type InsertEmployee = typeof employees.$inferInsert;
+
+
+// ============================================
+// EMPLOYEE ONBOARDING
+// Track new hire onboarding progress
+// ============================================
+
+/**
+ * Onboarding Checklists - Template checklists for different positions
+ */
+export const onboardingChecklists = mysqlTable("onboarding_checklists", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  department: varchar("department", { length: 100 }),
+  positionLevel: mysqlEnum("positionLevel", [
+    "executive",
+    "manager",
+    "lead",
+    "coordinator",
+    "specialist",
+    "intern"
+  ]),
+  isDefault: boolean("isDefault").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OnboardingChecklist = typeof onboardingChecklists.$inferSelect;
+export type InsertOnboardingChecklist = typeof onboardingChecklists.$inferInsert;
+
+/**
+ * Onboarding Checklist Items - Individual tasks in a checklist
+ */
+export const onboardingChecklistItems = mysqlTable("onboarding_checklist_items", {
+  id: int("id").autoincrement().primaryKey(),
+  checklistId: int("checklistId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  category: mysqlEnum("category", [
+    "documentation",
+    "equipment",
+    "access",
+    "training",
+    "introduction",
+    "compliance",
+    "benefits",
+    "other"
+  ]).default("other").notNull(),
+  dueWithinDays: int("dueWithinDays").default(7).notNull(), // Days from start date
+  assignedTo: mysqlEnum("assignedTo", [
+    "employee",
+    "manager",
+    "hr",
+    "it",
+    "finance"
+  ]).default("employee").notNull(),
+  isRequired: boolean("isRequired").default(true).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OnboardingChecklistItem = typeof onboardingChecklistItems.$inferSelect;
+export type InsertOnboardingChecklistItem = typeof onboardingChecklistItems.$inferInsert;
+
+/**
+ * Employee Onboarding - Track individual employee onboarding progress
+ */
+export const employeeOnboarding = mysqlTable("employee_onboarding", {
+  id: int("id").autoincrement().primaryKey(),
+  employeeId: int("employeeId").notNull(),
+  applicationId: int("applicationId"), // Link to original job application
+  checklistId: int("checklistId").notNull(),
+  status: mysqlEnum("status", [
+    "not_started",
+    "in_progress",
+    "completed",
+    "on_hold"
+  ]).default("not_started").notNull(),
+  startDate: timestamp("startDate"),
+  targetCompletionDate: timestamp("targetCompletionDate"),
+  actualCompletionDate: timestamp("actualCompletionDate"),
+  assignedHrId: int("assignedHrId"), // HR person managing onboarding
+  assignedManagerId: int("assignedManagerId"), // Direct manager
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmployeeOnboarding = typeof employeeOnboarding.$inferSelect;
+export type InsertEmployeeOnboarding = typeof employeeOnboarding.$inferInsert;
+
+/**
+ * Onboarding Task Progress - Track completion of individual tasks
+ */
+export const onboardingTaskProgress = mysqlTable("onboarding_task_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  onboardingId: int("onboardingId").notNull(),
+  checklistItemId: int("checklistItemId").notNull(),
+  status: mysqlEnum("status", [
+    "pending",
+    "in_progress",
+    "completed",
+    "skipped",
+    "blocked"
+  ]).default("pending").notNull(),
+  completedAt: timestamp("completedAt"),
+  completedBy: int("completedBy"), // User who marked it complete
+  notes: text("notes"),
+  dueDate: timestamp("dueDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OnboardingTaskProgress = typeof onboardingTaskProgress.$inferSelect;
+export type InsertOnboardingTaskProgress = typeof onboardingTaskProgress.$inferInsert;
