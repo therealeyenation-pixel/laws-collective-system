@@ -2230,3 +2230,20 @@
 - [x] Update public job descriptions
 - [x] Update HR Management page
 - [x] Clarified: System maintenance is organizational-level cost, not per-employee
+
+
+## Phase 41: Entity Naming and Organizational Structure
+
+### Naming Corrections
+- [x] Replace all "AWS LLC" abbreviations with "LuvOnPurpose Autonomous Wealth System LLC"
+- [x] Use "LAWS, LLC" as abbreviation for Wealth System (distinct from "L.A.W.S." Collective)
+- [x] Ensure no confusion with Amazon Web Services (AWS)
+
+### Organizational Structure
+- [x] Create unified executive structure at holding company level
+- [x] Define entity-specific leadership positions
+- [x] Add COO position description ($70,000 - $95,000)
+- [x] Formalize CFO title for Craig ($65,000 - $90,000)
+- [x] Add Executive Director position for Temple/508 ($55,000 - $75,000)
+- [x] Create organizational structure JSON with reporting hierarchy
+- [x] Update public and internal job descriptions with executive positions

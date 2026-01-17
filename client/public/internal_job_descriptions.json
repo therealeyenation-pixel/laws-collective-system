@@ -4,6 +4,132 @@
     "lastUpdated": "2026-01-17",
     "approvedBy": "Shanna Russell, Founder/Matriarch/Trustee"
   },
+  "executivePositions": [
+    {
+      "id": "coo",
+      "title": "Chief Operating Officer",
+      "abbreviation": "COO",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Executive Leadership",
+      "reportsTo": "Matriarch/CEO (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote with regular in-person leadership meetings",
+      "salaryRange": {
+        "min": 70000,
+        "max": 95000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$70,000 - $95,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
+        "tokenEarnings": true,
+        "tokenMetrics": "Organizational efficiency and growth metrics"
+      },
+      "benefits": {
+        "academyCertifications": "All certifications provided at no cost",
+        "governanceVoice": true,
+        "flexibleSchedule": true,
+        "executiveBenefits": true
+      },
+      "requirements": {
+        "experience": "5+ years in operations management or similar leadership role",
+        "skills": ["Multi-department management", "Strategic planning", "Process improvement", "Project management"],
+        "preferred": ["Nonprofit and for-profit experience", "MBA or equivalent", "Remote team leadership"]
+      },
+      "description": "The Chief Operating Officer oversees day-to-day operations across all five subsidiary entities. This role coordinates between department leads, ensures efficient resource allocation, and drives operational excellence throughout the organization.",
+      "responsibilities": [
+        "Direct supervision of Operations Manager, HR Lead, QA/QC Lead, Purchasing Lead, and Platform Administrator",
+        "Develop and implement operational policies and procedures",
+        "Monitor organizational performance metrics and KPIs",
+        "Coordinate cross-entity projects and initiatives",
+        "Manage capacity planning and resource allocation",
+        "Report operational status to CEO/Matriarch",
+        "Drive continuous process improvement",
+        "Ensure alignment between entity operations and organizational strategy"
+      ],
+      "directReports": ["Operations Manager", "HR Department Lead", "QA/QC Department Lead", "Purchasing Department Lead", "Platform Administrator", "Community Programs Coordinator"],
+      "priority": "High",
+      "status": "Open"
+    },
+    {
+      "id": "executive-director",
+      "title": "Executive Director",
+      "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "department": "Executive Leadership",
+      "reportsTo": "Matriarch/CEO (Shanna Russell)",
+      "classification": "Full-Time",
+      "location": "Remote with community presence required",
+      "salaryRange": {
+        "min": 55000,
+        "max": 75000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$55,000 - $75,000 annually"
+      },
+      "compensation": {
+        "type": "nonprofit_salary",
+        "tokenEarnings": true,
+        "tokenMetrics": "Program outcomes and grant success"
+      },
+      "benefits": {
+        "academyCertifications": "All certifications provided at no cost",
+        "governanceVoice": true,
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "3+ years in nonprofit leadership or program management",
+        "skills": ["Grant compliance", "Community engagement", "Public speaking", "Program development"],
+        "preferred": ["508(c)(1)(a) or 501(c)(3) experience", "Faith-based organization background", "Fundraising experience"]
+      },
+      "description": "The Executive Director provides overall leadership for the 508(c)(1)(a) faith-based organization, ensuring program excellence, grant compliance, and community impact. This role is essential for nonprofit credibility with funders and partners.",
+      "responsibilities": [
+        "Overall leadership of Temple/Academy operations",
+        "Grant compliance and reporting for nonprofit programs",
+        "Community and donor relationship management",
+        "Program development and oversight",
+        "Board liaison and governance support",
+        "Direct supervision of Education Director and Outreach Coordinator",
+        "Represent organization at community events and with partners",
+        "Develop and maintain relationships with funders"
+      ],
+      "directReports": ["Education Director (Cornelius)", "Outreach Coordinator"],
+      "priority": "High",
+      "status": "Open",
+      "notes": "Required for nonprofit credibility with funders"
+    }
+  ],
+  "filledExecutivePositions": [
+    {
+      "id": "ceo",
+      "title": "Chief Executive Officer / Matriarch",
+      "currentHolder": "Shanna Russell",
+      "entity": "Calea Freeman Family Trust / The L.A.W.S. Collective, LLC",
+      "description": "Vision and strategic direction for all entities. Final authority on major decisions. Trust governance and succession planning."
+    },
+    {
+      "id": "cfo",
+      "title": "Chief Financial Officer",
+      "currentHolder": "Craig",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "salaryRange": {
+        "min": 65000,
+        "max": 90000,
+        "displayText": "$65,000 - $90,000 annually"
+      },
+      "description": "Financial strategy and planning across all entities. Budget development and monitoring. Grant financial management and compliance. Token economy oversight.",
+      "responsibilities": [
+        "Financial strategy and planning across all entities",
+        "Budget development and monitoring",
+        "Grant financial management and compliance",
+        "Token economy oversight",
+        "Financial reporting and analysis",
+        "Banking and investment relationships"
+      ],
+      "directReports": ["Grant Writer", "Bookkeeper (future)"]
+    }
+  ],
   "positions": [
     {
       "id": "hr-lead",

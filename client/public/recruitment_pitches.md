@@ -311,7 +311,7 @@
 > You'll have access to cutting-edge technology—autonomous AI systems, blockchain integration, multi-token economies. This is hands-on experience you can't get anywhere else.
 >
 > **What we offer:**
-> - Ownership stake in LuvOnPurpose AWS LLC
+> - Ownership stake in LuvOnPurpose Autonomous Wealth System LLC
 > - Experience with emerging technologies
 > - Remote/flexible work
 > - Continuous learning opportunities

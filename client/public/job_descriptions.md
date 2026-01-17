@@ -14,7 +14,65 @@ Our entities include educational programs, media production, community outreach,
 
 ---
 
-## Open Positions
+## Executive Leadership Positions
+
+### Chief Operating Officer (COO)
+
+**Entity:** The L.A.W.S. Collective, LLC  
+**Location:** Remote with regular in-person leadership meetings  
+**Type:** Full-Time  
+**Salary Range:** $70,000 - $95,000 annually
+
+The Chief Operating Officer oversees day-to-day operations across all five subsidiary entities. This role coordinates between department leads, ensures efficient resource allocation, and drives operational excellence throughout the organization.
+
+**Key Responsibilities:**
+- Direct supervision of Operations Manager, HR Lead, QA/QC Lead, Purchasing Lead, and Platform Administrator
+- Develop and implement operational policies and procedures
+- Monitor organizational performance metrics and KPIs
+- Coordinate cross-entity projects and initiatives
+- Manage capacity planning and resource allocation
+- Report operational status to CEO/Matriarch
+- Drive continuous process improvement
+
+**Requirements:**
+- 5+ years experience in operations management or similar leadership role
+- Proven ability to manage multiple departments simultaneously
+- Strong analytical and problem-solving skills
+- Experience with project management methodologies
+- Excellent communication and interpersonal skills
+- Familiarity with nonprofit and for-profit operational differences preferred
+
+---
+
+### Executive Director (Temple/Academy)
+
+**Entity:** LuvOnPurpose Outreach Temple and Academy Society, Inc.  
+**Location:** Remote with community presence required  
+**Type:** Full-Time  
+**Salary Range:** $55,000 - $75,000 annually
+
+The Executive Director provides overall leadership for the 508(c)(1)(a) faith-based organization, ensuring program excellence, grant compliance, and community impact. This role is essential for nonprofit credibility with funders and partners.
+
+**Key Responsibilities:**
+- Overall leadership of Temple/Academy operations
+- Grant compliance and reporting for nonprofit programs
+- Community and donor relationship management
+- Program development and oversight
+- Board liaison and governance support
+- Direct supervision of Education Director and Outreach Coordinator
+- Represent organization at community events and with partners
+
+**Requirements:**
+- 3+ years experience in nonprofit leadership or program management
+- Understanding of 508(c)(1)(a) or 501(c)(3) compliance requirements
+- Grant management and reporting experience
+- Strong public speaking and community engagement skills
+- Passion for education and community development
+- Experience with faith-based organizations preferred
+
+---
+
+## Department Lead Positions
 
 ### 1. HR Department Lead
 
