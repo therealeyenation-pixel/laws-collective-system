@@ -1970,3 +1970,45 @@
 - [ ] Distribute initial token allocation
 - [ ] Link to LuvLedger for immutable record
 
+
+
+## Phase 32: Multi-Token Economy Design
+
+### Token Types
+- [ ] **LUV Token** (Utility) - 2M circulating supply, recycled through economy
+  - Used for: Course access, services, inter-entity payments
+  - When spent: Returns to Trust treasury for redistribution
+  - Allocation: 40% LuvOnPurpose AWS / 30% Temple / 20% Real-Eye-Nation / 10% L.A.W.S.
+
+- [ ] **CROWN Token** (Governance) - Fixed 1,000 supply, family-only
+  - Used for: Voting rights, major Trust decisions, policy changes
+  - Distribution: Based on family role and Academy certification level
+  - Non-transferable outside family
+
+- [ ] **SPARK Token** (Achievement) - Unlimited mint on achievement
+  - Used for: Recognition, unlocking advanced content, reputation
+  - Earned through: Course completion, simulator mastery, contributions
+  - Non-transferable, soulbound to earner
+
+- [ ] **LEGACY Token** (Generational) - Minted per milestone event
+  - Used for: Commemorating births, graduations, entity formations, major achievements
+  - Special edition NFTs attached to each
+  - Transferable within family lineage
+
+### Token Flow Architecture
+- [ ] Implement token recycling (spent tokens return to Trust)
+- [ ] Create Trust redistribution scheduler (weekly/monthly cycles)
+- [ ] Build token velocity tracking in LuvLedger
+- [ ] Implement burn prevention (tokens recycle, never destroyed)
+
+### Database Updates
+- [ ] Add token_types table (token_id, name, symbol, max_supply, current_supply, is_mintable, is_transferable)
+- [ ] Update wallet_transactions to support multiple token types
+- [ ] Add token_minting_events table for SPARK and LEGACY tracking
+- [ ] Add governance_votes table for CROWN token voting
+
+### Assigned Team
+- **Craig (Finance)** - Primary: Token economics, treasury management, redistribution policy
+- **Essence (Design)** - Support: Token visual identity, NFT artwork, wallet UI
+- **Amandes (Media)** - Support: Token documentation, tutorials, LEGACY event coverage
+
