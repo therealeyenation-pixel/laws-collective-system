@@ -106,11 +106,10 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         <div className="container max-w-6xl mx-auto px-4 py-20 md:py-32 relative">
           <div className="max-w-3xl">
-            {/* Welcome & Brand */}
+            {/* Brand */}
             <div className="mb-6">
-              <p className="text-lg md:text-xl text-muted-foreground mb-2">Welcome to</p>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-4">
-                The L.A.W.S. Collective
+                The L.A.W.S. Collective, LLC
               </h1>
               
               {/* LAWS Acronym Display */}
