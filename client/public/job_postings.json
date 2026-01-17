@@ -1,0 +1,395 @@
+{
+  "metadata": {
+    "lastUpdated": "2026-01-17",
+    "version": "1.0",
+    "managedBy": "HR Department",
+    "applicationEmail": "careers@lawscollective.org",
+    "applicationPortal": "https://lawscollective.org/careers"
+  },
+  "companyOverview": {
+    "name": "The L.A.W.S. Collective, LLC",
+    "tagline": "Building Generational Wealth Through Purpose",
+    "description": "The L.A.W.S. Collective is a family-based enterprise dedicated to building generational wealth through education, community development, and innovative business solutions. Our L.A.W.S. framework (Land, Air, Water, Self) guides our approach to helping individuals and families achieve financial independence and purposeful living.",
+    "culture": [
+      "Family-first values with professional excellence",
+      "Commitment to community impact and generational wealth",
+      "Collaborative, supportive work environment",
+      "Growth opportunities and ownership potential",
+      "Remote-friendly with flexible arrangements"
+    ],
+    "benefits": [
+      "Competitive salary with performance bonuses",
+      "Health, dental, and vision insurance",
+      "Paid time off and holidays",
+      "Professional development opportunities",
+      "Ownership stake potential through token economy",
+      "Path to independent contractor status"
+    ]
+  },
+  "activePostings": [
+    {
+      "postingId": "ADMIN-HR-001",
+      "title": "HR Administrative Support",
+      "department": "Human Resources",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$35,000 - $48,000",
+      "reportsTo": "HR Department Lead",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "High",
+      "summary": "We're seeking a detail-oriented HR Administrative Support professional to join our growing team. In this role, you'll provide essential administrative support to our HR department, helping to ensure smooth operations across recruitment, onboarding, and employee services. This is an excellent opportunity for someone looking to build a career in Human Resources within a mission-driven organization.",
+      "responsibilities": [
+        "Coordinate interview scheduling and candidate communications throughout the hiring process",
+        "Process new hire paperwork and maintain accurate employee files and records",
+        "Support onboarding activities including orientation scheduling and materials preparation",
+        "Track employee training completion and maintain certification records",
+        "Prepare HR reports and compile metrics for leadership review",
+        "Respond to routine employee inquiries and direct complex questions appropriately",
+        "Assist with benefits enrollment and maintain benefits documentation",
+        "Support performance review administration and tracking",
+        "Maintain confidentiality of all employee information"
+      ],
+      "requiredQualifications": [
+        "High school diploma or equivalent; Associate's degree preferred",
+        "1-2 years of administrative experience, preferably in HR or related field",
+        "Proficiency with Microsoft Office Suite (Word, Excel, Outlook)",
+        "Strong organizational skills and attention to detail",
+        "Excellent written and verbal communication skills",
+        "Ability to handle confidential information with discretion",
+        "Reliable internet connection for remote work"
+      ],
+      "preferredQualifications": [
+        "Experience with HRIS or applicant tracking systems",
+        "Knowledge of HR practices and employment law basics",
+        "Experience in a nonprofit or mission-driven organization",
+        "Bilingual (English/Spanish) a plus"
+      ],
+      "whatWeOffer": [
+        "Comprehensive training program with HR certification path",
+        "Mentorship from experienced HR professionals",
+        "Clear career advancement opportunities",
+        "Flexible remote work environment",
+        "Meaningful work supporting our community mission"
+      ],
+      "applicationInstructions": "Submit your resume and a brief cover letter explaining your interest in HR and our mission. In your cover letter, please describe a time when you successfully managed multiple priorities while maintaining attention to detail.",
+      "interviewProcess": [
+        "Application review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Skills assessment (15 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    },
+    {
+      "postingId": "ADMIN-QA-001",
+      "title": "QA/QC Administrative Support",
+      "department": "Quality Assurance/Quality Control",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$35,000 - $48,000",
+      "reportsTo": "QA/QC Department Lead",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "Medium",
+      "summary": "Join our Quality Assurance team as an Administrative Support professional. You'll play a key role in maintaining our quality documentation, tracking audits and corrective actions, and ensuring our organization meets the highest standards. This position is ideal for someone who values precision, enjoys working with documentation, and wants to contribute to organizational excellence.",
+      "responsibilities": [
+        "Maintain and organize quality documentation including SOPs and work instructions",
+        "Track audit schedules, findings, and corrective action completion",
+        "Coordinate quality review meetings and prepare agendas",
+        "Compile quality metrics and prepare reports for leadership",
+        "Manage document control processes including version tracking",
+        "Support internal audit activities and documentation",
+        "Maintain the corrective and preventive action (CAPA) tracking system",
+        "Assist with grant compliance documentation as needed",
+        "Ensure timely follow-up on quality-related action items"
+      ],
+      "requiredQualifications": [
+        "High school diploma or equivalent; Associate's degree preferred",
+        "1-2 years of administrative experience",
+        "Strong proficiency with Microsoft Office, especially Excel",
+        "Exceptional attention to detail and accuracy",
+        "Strong organizational and time management skills",
+        "Ability to work independently and meet deadlines",
+        "Reliable internet connection for remote work"
+      ],
+      "preferredQualifications": [
+        "Experience in quality assurance or compliance environment",
+        "Familiarity with document control systems",
+        "Knowledge of audit processes",
+        "Experience with grant-funded organizations"
+      ],
+      "whatWeOffer": [
+        "Training in quality management principles",
+        "Exposure to compliance and audit processes",
+        "Path to QA/QC specialist roles",
+        "Collaborative team environment",
+        "Contribution to organizational excellence"
+      ],
+      "applicationInstructions": "Submit your resume and cover letter. Please include an example of how you've maintained accuracy and attention to detail in a previous role.",
+      "interviewProcess": [
+        "Application review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Skills assessment (15 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    },
+    {
+      "postingId": "ADMIN-PUR-001",
+      "title": "Purchasing Administrative Support",
+      "department": "Purchasing",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$35,000 - $48,000",
+      "reportsTo": "Purchasing Department Lead",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "Medium",
+      "summary": "We're looking for a Purchasing Administrative Support professional to help manage our procurement operations. You'll process purchase orders, communicate with vendors, track inventory, and ensure our purchasing activities meet grant compliance requirements. This role is perfect for someone who enjoys working with numbers, building vendor relationships, and keeping things organized.",
+      "responsibilities": [
+        "Process purchase orders from request through completion",
+        "Communicate with vendors regarding orders, deliveries, and inquiries",
+        "Track inventory levels and assist with reorder planning",
+        "Match invoices to purchase orders and receiving documents",
+        "Maintain vendor files and contact information",
+        "Prepare purchasing reports and spending summaries",
+        "Support grant-compliant purchasing documentation",
+        "Assist with vendor evaluation and performance tracking",
+        "Maintain accurate records for audit purposes"
+      ],
+      "requiredQualifications": [
+        "High school diploma or equivalent; Associate's degree preferred",
+        "1-2 years of administrative or purchasing experience",
+        "Strong proficiency with Microsoft Excel and data entry",
+        "Excellent organizational skills and attention to detail",
+        "Good communication skills for vendor interactions",
+        "Ability to manage multiple orders and priorities",
+        "Reliable internet connection for remote work"
+      ],
+      "preferredQualifications": [
+        "Experience with purchasing or procurement systems",
+        "Knowledge of basic accounting principles",
+        "Experience with grant-funded purchasing requirements",
+        "Vendor management experience"
+      ],
+      "whatWeOffer": [
+        "Training in procurement best practices",
+        "Exposure to grant compliance processes",
+        "Career path to Purchasing Specialist or Lead",
+        "Collaborative team environment",
+        "Impact on organizational efficiency"
+      ],
+      "applicationInstructions": "Submit your resume and cover letter. Please describe your experience with data entry, tracking systems, or vendor communications.",
+      "interviewProcess": [
+        "Application review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Skills assessment (15 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    },
+    {
+      "postingId": "ADMIN-OPS-001",
+      "title": "Operations Administrative Support",
+      "department": "Operations",
+      "entity": "LuvOnPurpose Autonomous Wealth System LLC (LAWS, LLC)",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$35,000 - $48,000",
+      "reportsTo": "Operations Manager",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "High",
+      "summary": "Join our Operations team as an Administrative Support professional. You'll be at the center of our day-to-day operations, coordinating meetings, tracking projects, preparing reports, and facilitating communication across departments. This dynamic role is ideal for someone who thrives in a fast-paced environment and enjoys keeping things running smoothly.",
+      "responsibilities": [
+        "Coordinate meeting scheduling and calendar management for operations team",
+        "Track project milestones and follow up on action items",
+        "Prepare operational reports and status updates",
+        "Maintain operational documentation and process guides",
+        "Facilitate cross-department communications and information sharing",
+        "Support platform operations monitoring and basic troubleshooting",
+        "Assist with onboarding coordination for new team members",
+        "Manage operational task lists and priority tracking",
+        "Prepare materials for team meetings and leadership updates"
+      ],
+      "requiredQualifications": [
+        "High school diploma or equivalent; Associate's degree preferred",
+        "1-2 years of administrative or operations support experience",
+        "Strong proficiency with Microsoft Office and collaboration tools",
+        "Excellent organizational and multitasking abilities",
+        "Strong written and verbal communication skills",
+        "Ability to work across teams and manage competing priorities",
+        "Reliable internet connection for remote work"
+      ],
+      "preferredQualifications": [
+        "Experience with project management tools (Asana, Monday, etc.)",
+        "Familiarity with remote collaboration platforms",
+        "Experience in a startup or growing organization",
+        "Tech-savvy with ability to learn new systems quickly"
+      ],
+      "whatWeOffer": [
+        "Exposure to all aspects of operations",
+        "Training in project management fundamentals",
+        "Career path to Operations Coordinator or Specialist",
+        "Dynamic, fast-paced work environment",
+        "Central role in organizational success"
+      ],
+      "applicationInstructions": "Submit your resume and cover letter. Please describe a time when you successfully coordinated multiple projects or priorities simultaneously.",
+      "interviewProcess": [
+        "Application review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Skills assessment (15 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    },
+    {
+      "postingId": "ADMIN-EDU-001",
+      "title": "Education Administrative Support",
+      "department": "Education/Academy",
+      "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$35,000 - $48,000",
+      "reportsTo": "Chief Education & Training Officer (CETO)",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "High",
+      "summary": "Support our Academy's mission by joining as an Education Administrative Support professional. You'll help manage student enrollment, track progress, coordinate with instructors, and ensure our educational programs run smoothly. This role is perfect for someone passionate about education and community development who wants to make a direct impact on learners' lives.",
+      "responsibilities": [
+        "Process student enrollment and registration",
+        "Maintain student records and track progress through programs",
+        "Coordinate certificate issuance upon program completion",
+        "Schedule classes and manage instructor calendars",
+        "Respond to student inquiries and provide support",
+        "Prepare education reports and completion metrics",
+        "Support curriculum materials organization and distribution",
+        "Assist with cohort coordination for L.A.W.S. programs",
+        "Maintain learning management system (LMS) records"
+      ],
+      "requiredQualifications": [
+        "High school diploma or equivalent; Associate's degree preferred",
+        "1-2 years of administrative experience, education setting preferred",
+        "Proficiency with Microsoft Office and learning management systems",
+        "Strong organizational skills and attention to detail",
+        "Excellent communication skills and student-service orientation",
+        "Ability to manage multiple programs and deadlines",
+        "Reliable internet connection for remote work"
+      ],
+      "preferredQualifications": [
+        "Experience in educational administration",
+        "Familiarity with LMS platforms (Canvas, Moodle, etc.)",
+        "Experience with adult education or workforce development",
+        "Passion for community education and development"
+      ],
+      "whatWeOffer": [
+        "Direct impact on student success",
+        "Training in educational administration",
+        "Free access to all Academy courses",
+        "Career path to Education Coordinator or Specialist",
+        "Meaningful work in community education"
+      ],
+      "applicationInstructions": "Submit your resume and cover letter. Please share why you're passionate about education and how you've supported learners or students in the past.",
+      "interviewProcess": [
+        "Application review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Skills assessment (15 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    }
+  ],
+  "upcomingPostings": [
+    {
+      "title": "COO - Chief Operating Officer",
+      "department": "Executive",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "salaryRange": "$70,000 - $95,000",
+      "expectedPostingDate": "Q1 2026",
+      "priority": "High"
+    },
+    {
+      "title": "Executive Director",
+      "department": "Leadership",
+      "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "salaryRange": "$55,000 - $75,000",
+      "expectedPostingDate": "Q1 2026",
+      "priority": "High"
+    },
+    {
+      "title": "HR Department Lead",
+      "department": "Human Resources",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "salaryRange": "$55,000 - $75,000",
+      "expectedPostingDate": "Q1 2026",
+      "priority": "High"
+    },
+    {
+      "title": "Operations Manager",
+      "department": "Operations",
+      "entity": "LAWS, LLC",
+      "salaryRange": "$60,000 - $85,000",
+      "expectedPostingDate": "Q1 2026",
+      "priority": "High"
+    },
+    {
+      "title": "Grant Writer",
+      "department": "Development",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "salaryRange": "$50,000 - $72,000",
+      "expectedPostingDate": "Q1 2026",
+      "priority": "High"
+    }
+  ],
+  "applicationProcess": {
+    "steps": [
+      {
+        "step": 1,
+        "name": "Submit Application",
+        "description": "Send your resume and cover letter to careers@lawscollective.org or through our application portal. Include the position title in your subject line."
+      },
+      {
+        "step": 2,
+        "name": "Application Review",
+        "description": "Our HR team reviews all applications within 2-5 business days depending on position level."
+      },
+      {
+        "step": 3,
+        "name": "Phone/Video Screen",
+        "description": "Selected candidates participate in a brief phone or video screen to discuss the role and qualifications."
+      },
+      {
+        "step": 4,
+        "name": "Panel Interview",
+        "description": "Advancing candidates meet with a panel via Microsoft Teams for a comprehensive interview."
+      },
+      {
+        "step": 5,
+        "name": "Skills Assessment",
+        "description": "Depending on the role, candidates may complete a brief skills assessment."
+      },
+      {
+        "step": 6,
+        "name": "Final Decision",
+        "description": "We aim to make decisions within 1-3 business days after final interviews."
+      },
+      {
+        "step": 7,
+        "name": "Offer & Onboarding",
+        "description": "Successful candidates receive an offer letter and begin our comprehensive onboarding program."
+      }
+    ],
+    "tips": [
+      "Tailor your cover letter to explain why you're interested in our mission",
+      "Highlight relevant experience and transferable skills",
+      "Be prepared to discuss how you align with our L.A.W.S. values",
+      "Research our organization before your interview",
+      "Prepare questions to ask the interview panel"
+    ]
+  },
+  "equalOpportunity": "The L.A.W.S. Collective is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees. We do not discriminate based on race, color, religion, sex, sexual orientation, gender identity, national origin, disability, veteran status, or any other protected characteristic."
+}

@@ -2563,3 +2563,24 @@
 - [x] Set Admin Support salary ranges ($35,000 - $48,000)
 - [x] Update organizational structure with new positions
 - [x] Update salary recommendations document
+
+
+## Phase 37: Interview and Hiring Process
+- [x] Create comprehensive hiring process documentation
+- [x] Define interview stages (application review, phone screen, panel interview, final decision)
+- [x] Establish panel interview requirements (who participates, roles)
+- [x] Create interview questions for Executive positions
+- [x] Create interview questions for Department Lead positions
+- [x] Create interview questions for Administrative Support positions
+- [x] Define scoring rubric for candidate evaluation
+- [x] Create offer and onboarding workflow
+- [x] Create job postings for Admin Support positions (5 positions)
+- [x] Add hiring process to HR Management page
+
+- [x] Create new employee training program documentation
+- [x] Define standard onboarding training (all employees)
+- [x] Create department-specific training tracks
+- [x] Define training completion requirements and timeline
+
+- [x] Create detailed course descriptions for all training modules
+- [x] Add course catalog to workshop/academy pages

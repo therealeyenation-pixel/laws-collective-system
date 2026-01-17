@@ -1,0 +1,519 @@
+{
+  "metadata": {
+    "classification": "INTERNAL USE ONLY - HR DEPARTMENT",
+    "lastUpdated": "2026-01-17",
+    "approvedBy": "Shanna Russell, Founder/Matriarch/CEO",
+    "version": "1.0"
+  },
+  "overview": {
+    "description": "Standardized hiring process for The L.A.W.S. Collective and all subsidiary entities. This process ensures fair, consistent, and thorough evaluation of all candidates while reflecting our organizational values.",
+    "principles": [
+      "Transparency in all communications",
+      "Fair and equitable evaluation",
+      "Cultural fit with L.A.W.S. values (Land, Air, Water, Self)",
+      "Skills-based assessment",
+      "Timely communication with candidates"
+    ],
+    "interviewPlatform": {
+      "primary": "Microsoft Teams",
+      "alternative": "Zoom",
+      "requirements": [
+        "Camera on for all interviews",
+        "Professional background or virtual background",
+        "Stable internet connection",
+        "Quiet environment"
+      ]
+    }
+  },
+  "positionTiers": {
+    "executive": {
+      "name": "Executive/C-Suite",
+      "positions": ["COO", "Executive Director", "CETO"],
+      "salaryRange": "$55,000 - $150,000+",
+      "hiringAuthority": "Matriarch/CEO with Board input"
+    },
+    "departmentLead": {
+      "name": "Department Lead",
+      "positions": ["HR Lead", "QA/QC Lead", "Purchasing Lead", "Operations Manager", "Platform Administrator", "Grant Writer"],
+      "salaryRange": "$48,000 - $85,000",
+      "hiringAuthority": "COO or Matriarch/CEO"
+    },
+    "staff": {
+      "name": "Staff",
+      "positions": ["Outreach Coordinator", "Content Creator", "Academy Instructor", "Community Programs Coordinator"],
+      "salaryRange": "$35,000 - $65,000",
+      "hiringAuthority": "Department Lead with COO approval"
+    },
+    "adminSupport": {
+      "name": "Administrative Support",
+      "positions": ["HR Admin Support", "QA/QC Admin Support", "Purchasing Admin Support", "Operations Admin Support", "Education Admin Support"],
+      "salaryRange": "$35,000 - $48,000",
+      "hiringAuthority": "Department Lead with HR approval"
+    }
+  },
+  "hiringStages": {
+    "stage1": {
+      "name": "Application Review",
+      "description": "Initial screening of applications and resumes",
+      "duration": "3-5 business days",
+      "responsible": "HR Department",
+      "activities": [
+        "Review resume for minimum qualifications",
+        "Check for required experience and skills",
+        "Evaluate cover letter for cultural alignment",
+        "Flag candidates for advancement or rejection"
+      ],
+      "advancementCriteria": [
+        "Meets minimum education/experience requirements",
+        "Demonstrates relevant skills",
+        "Professional presentation of materials"
+      ],
+      "byTier": {
+        "executive": {
+          "additionalReview": "Matriarch/CEO reviews all executive applications",
+          "minimumApplications": "5 qualified candidates before proceeding"
+        },
+        "departmentLead": {
+          "additionalReview": "Hiring manager reviews shortlist",
+          "minimumApplications": "3 qualified candidates before proceeding"
+        },
+        "staff": {
+          "additionalReview": "Department Lead reviews shortlist",
+          "minimumApplications": "3 qualified candidates before proceeding"
+        },
+        "adminSupport": {
+          "additionalReview": "HR Lead reviews shortlist",
+          "minimumApplications": "3 qualified candidates before proceeding"
+        }
+      }
+    },
+    "stage2": {
+      "name": "Phone/Video Screen",
+      "description": "Initial conversation to assess basic fit and interest",
+      "duration": "15-30 minutes",
+      "responsible": "HR Department or Hiring Manager",
+      "platform": "Phone or Microsoft Teams",
+      "activities": [
+        "Verify application information",
+        "Discuss role expectations and salary range",
+        "Assess communication skills",
+        "Answer candidate questions about organization",
+        "Confirm availability and timeline"
+      ],
+      "standardQuestions": [
+        "Tell me about your interest in this position and our organization.",
+        "Walk me through your relevant experience.",
+        "What are your salary expectations?",
+        "What is your availability to start?",
+        "Do you have any questions about the role or organization?"
+      ],
+      "byTier": {
+        "executive": {
+          "conductor": "Matriarch/CEO or COO",
+          "duration": "30-45 minutes",
+          "additionalFocus": "Leadership philosophy, strategic vision"
+        },
+        "departmentLead": {
+          "conductor": "COO or HR Lead",
+          "duration": "20-30 minutes",
+          "additionalFocus": "Management experience, department-specific knowledge"
+        },
+        "staff": {
+          "conductor": "HR Lead or Department Lead",
+          "duration": "15-20 minutes",
+          "additionalFocus": "Role-specific skills, team fit"
+        },
+        "adminSupport": {
+          "conductor": "HR Lead or HR Admin",
+          "duration": "15-20 minutes",
+          "additionalFocus": "Administrative skills, reliability, attention to detail"
+        }
+      }
+    },
+    "stage3": {
+      "name": "Panel Interview",
+      "description": "Comprehensive interview with multiple stakeholders",
+      "platform": "Microsoft Teams (camera required)",
+      "activities": [
+        "Structured behavioral interview",
+        "Skills assessment questions",
+        "Scenario-based questions",
+        "Cultural fit evaluation",
+        "Candidate Q&A session"
+      ],
+      "format": {
+        "introduction": "5 minutes - Panel introductions and overview",
+        "candidateIntro": "5-10 minutes - Candidate background presentation",
+        "structuredQuestions": "30-45 minutes - Panel questions",
+        "candidateQuestions": "10-15 minutes - Candidate asks questions",
+        "closing": "5 minutes - Next steps and timeline"
+      },
+      "byTier": {
+        "executive": {
+          "duration": "90 minutes",
+          "panelSize": "4-5 members",
+          "panelComposition": [
+            {"role": "Chair", "member": "Matriarch/CEO (Shanna Russell)", "focus": "Vision alignment, leadership capability"},
+            {"role": "Member", "member": "CFO (Craig)", "focus": "Financial acumen, resource management"},
+            {"role": "Member", "member": "CETO (Cornelius)", "focus": "Cross-functional collaboration"},
+            {"role": "Member", "member": "Department stakeholder", "focus": "Functional expertise"},
+            {"role": "HR Observer", "member": "HR Lead (when hired)", "focus": "Process compliance, cultural fit"}
+          ],
+          "additionalComponents": [
+            "30-minute presentation on strategic vision for role",
+            "Case study or scenario exercise",
+            "Reference check before final offer"
+          ]
+        },
+        "departmentLead": {
+          "duration": "60 minutes",
+          "panelSize": "3-4 members",
+          "panelComposition": [
+            {"role": "Chair", "member": "COO or Matriarch/CEO", "focus": "Leadership capability, organizational fit"},
+            {"role": "Member", "member": "Peer Department Lead or C-Suite", "focus": "Cross-functional collaboration"},
+            {"role": "Member", "member": "Team member from department (if available)", "focus": "Team dynamics"},
+            {"role": "HR Observer", "member": "HR Lead", "focus": "Process compliance, cultural fit"}
+          ],
+          "additionalComponents": [
+            "Skills demonstration or work sample review",
+            "Scenario-based problem solving"
+          ]
+        },
+        "staff": {
+          "duration": "45 minutes",
+          "panelSize": "2-3 members",
+          "panelComposition": [
+            {"role": "Chair", "member": "Department Lead", "focus": "Role fit, skills assessment"},
+            {"role": "Member", "member": "Team peer or cross-functional partner", "focus": "Team dynamics, collaboration"},
+            {"role": "HR Observer", "member": "HR representative", "focus": "Process compliance"}
+          ],
+          "additionalComponents": [
+            "Skills demonstration if applicable"
+          ]
+        },
+        "adminSupport": {
+          "duration": "30-45 minutes",
+          "panelSize": "2 members",
+          "panelComposition": [
+            {"role": "Chair", "member": "Department Lead (direct supervisor)", "focus": "Role fit, skills assessment"},
+            {"role": "Member", "member": "HR representative", "focus": "Cultural fit, process compliance"}
+          ],
+          "additionalComponents": [
+            "Basic skills assessment (typing, software proficiency)"
+          ]
+        }
+      }
+    },
+    "stage4": {
+      "name": "Skills Assessment",
+      "description": "Practical evaluation of job-relevant skills",
+      "byTier": {
+        "executive": {
+          "required": true,
+          "assessments": [
+            {"type": "Presentation", "description": "30-minute presentation on 90-day plan for role", "evaluators": "Full panel"},
+            {"type": "Case Study", "description": "Written response to organizational scenario", "timeLimit": "48 hours"},
+            {"type": "References", "description": "3 professional references, including direct supervisor", "conductedBy": "HR"}
+          ]
+        },
+        "departmentLead": {
+          "required": true,
+          "assessments": [
+            {"type": "Work Sample", "description": "Review of previous work or portfolio", "evaluators": "Hiring manager"},
+            {"type": "Scenario Exercise", "description": "Response to department-specific challenge", "timeLimit": "30 minutes during interview"},
+            {"type": "References", "description": "2-3 professional references", "conductedBy": "HR"}
+          ]
+        },
+        "staff": {
+          "required": "Recommended",
+          "assessments": [
+            {"type": "Skills Demo", "description": "Demonstration of role-specific skills", "evaluators": "Department Lead"},
+            {"type": "References", "description": "2 professional references", "conductedBy": "HR"}
+          ]
+        },
+        "adminSupport": {
+          "required": "Recommended",
+          "assessments": [
+            {"type": "Software Proficiency", "description": "Basic test of Microsoft Office/Google Workspace skills", "timeLimit": "15 minutes"},
+            {"type": "Data Entry", "description": "Accuracy and speed test", "timeLimit": "10 minutes"},
+            {"type": "References", "description": "2 references (professional or character)", "conductedBy": "HR"}
+          ]
+        }
+      }
+    },
+    "stage5": {
+      "name": "Final Decision",
+      "description": "Panel deliberation and hiring decision",
+      "duration": "1-3 business days after final interview",
+      "activities": [
+        "Panel scoring compilation",
+        "Deliberation meeting",
+        "Salary determination within approved range",
+        "Approval from hiring authority",
+        "Offer preparation"
+      ],
+      "scoringMethod": {
+        "categories": [
+          {"name": "Technical Skills", "weight": 25},
+          {"name": "Experience", "weight": 20},
+          {"name": "Cultural Fit", "weight": 20},
+          {"name": "Communication", "weight": 15},
+          {"name": "Leadership/Initiative", "weight": 10},
+          {"name": "Growth Potential", "weight": 10}
+        ],
+        "scale": "1-5 (1=Poor, 2=Below Average, 3=Average, 4=Above Average, 5=Excellent)",
+        "minimumScore": "3.5 average to receive offer"
+      },
+      "approvalChain": {
+        "executive": ["Panel recommendation", "Matriarch/CEO approval", "Board notification"],
+        "departmentLead": ["Panel recommendation", "COO approval", "Matriarch/CEO notification"],
+        "staff": ["Panel recommendation", "Department Lead approval", "COO notification"],
+        "adminSupport": ["Panel recommendation", "Department Lead approval", "HR confirmation"]
+      }
+    },
+    "stage6": {
+      "name": "Offer & Onboarding",
+      "description": "Extending offer and beginning employment",
+      "activities": [
+        "Verbal offer extended by hiring manager",
+        "Written offer letter prepared by HR",
+        "Candidate acceptance (7 business days to respond)",
+        "Background check (if applicable)",
+        "Onboarding scheduling",
+        "First day preparation"
+      ],
+      "offerComponents": [
+        "Position title and department",
+        "Reporting structure",
+        "Salary and compensation details",
+        "Benefits overview",
+        "Start date",
+        "Employment classification (W-2 initially)",
+        "Ownership stake details",
+        "Token earning potential"
+      ],
+      "onboardingTimeline": {
+        "preboarding": "1-2 weeks before start - Paperwork, system access setup",
+        "day1": "Welcome, orientation, team introductions",
+        "week1": "Department training, system access, initial assignments",
+        "days30": "Check-in with manager, goal setting",
+        "days60": "Performance check-in, training completion",
+        "days90": "Probationary review, full integration"
+      }
+    }
+  },
+  "interviewQuestions": {
+    "universal": {
+      "opening": [
+        "Tell us about yourself and what drew you to this opportunity.",
+        "What do you know about The L.A.W.S. Collective and our mission?",
+        "How does this role align with your career goals?"
+      ],
+      "behavioral": [
+        "Describe a time when you had to adapt to a significant change at work. How did you handle it?",
+        "Tell us about a time you disagreed with a supervisor or colleague. How did you resolve it?",
+        "Give an example of a project or task you're particularly proud of. What was your role?",
+        "Describe a situation where you had to meet a tight deadline. How did you prioritize?"
+      ],
+      "cultural": [
+        "Our organization values Land (roots/stability), Air (education/growth), Water (healing/balance), and Self (purpose/skills). Which resonates most with you and why?",
+        "How do you approach working with diverse teams and perspectives?",
+        "What does 'building generational wealth' mean to you?",
+        "How do you balance individual achievement with team success?"
+      ],
+      "closing": [
+        "What questions do you have for us?",
+        "Is there anything else you'd like us to know about you?",
+        "What would make this opportunity ideal for you?"
+      ]
+    },
+    "byTier": {
+      "executive": {
+        "leadership": [
+          "Describe your leadership philosophy. How do you motivate and develop teams?",
+          "Tell us about a time you had to make a difficult decision with incomplete information.",
+          "How have you built and maintained organizational culture in previous roles?",
+          "Describe a significant change initiative you led. What was the outcome?",
+          "How do you balance strategic planning with day-to-day operations?"
+        ],
+        "strategic": [
+          "Where do you see opportunities for growth in an organization like ours?",
+          "How would you approach building partnerships and external relationships?",
+          "Describe your experience with budget management and resource allocation.",
+          "How do you measure success in a leadership role?",
+          "What's your approach to managing multiple stakeholders with competing priorities?"
+        ],
+        "vision": [
+          "What would your first 90 days look like in this role?",
+          "How would you approach learning our organization's unique structure and culture?",
+          "What legacy do you want to leave in this position?"
+        ]
+      },
+      "departmentLead": {
+        "management": [
+          "Describe your experience managing a team. What's your management style?",
+          "How do you handle underperforming team members?",
+          "Tell us about a time you had to delegate an important task. How did you ensure success?",
+          "How do you prioritize competing demands from your team and leadership?"
+        ],
+        "functional": [
+          "What experience do you have specific to this department's function?",
+          "Describe a process improvement you implemented. What was the impact?",
+          "How do you stay current with best practices in your field?",
+          "What tools or systems have you used to manage department operations?"
+        ],
+        "collaboration": [
+          "How do you build relationships with other departments?",
+          "Describe a cross-functional project you led or participated in.",
+          "How do you handle conflicting priorities between your department and others?"
+        ]
+      },
+      "staff": {
+        "roleSpecific": [
+          "What specific skills do you bring to this role?",
+          "Describe your experience with [role-specific task].",
+          "How do you approach learning new skills or tools?",
+          "What do you enjoy most about this type of work?"
+        ],
+        "teamwork": [
+          "Describe your ideal work environment.",
+          "How do you handle feedback from supervisors?",
+          "Tell us about a time you helped a colleague succeed."
+        ],
+        "growth": [
+          "Where do you see yourself in 2-3 years?",
+          "What professional development interests you?",
+          "How do you handle multiple responsibilities?"
+        ]
+      },
+      "adminSupport": {
+        "organizational": [
+          "How do you organize and prioritize your daily tasks?",
+          "Describe your experience with scheduling and calendar management.",
+          "How do you handle interruptions while working on important tasks?",
+          "What systems do you use to track deadlines and follow-ups?"
+        ],
+        "technical": [
+          "Rate your proficiency with Microsoft Office/Google Workspace (1-10).",
+          "Describe your experience with data entry and record keeping.",
+          "Have you used any project management or HR software?",
+          "How comfortable are you learning new software systems?"
+        ],
+        "communication": [
+          "How do you handle confidential information?",
+          "Describe a time you had to communicate difficult information.",
+          "How do you ensure accuracy in your written communications?"
+        ],
+        "reliability": [
+          "How do you ensure you meet deadlines consistently?",
+          "Describe your attendance record in previous positions.",
+          "How do you handle unexpected changes to your schedule or priorities?"
+        ]
+      }
+    }
+  },
+  "scoringRubric": {
+    "scale": {
+      "1": {"label": "Poor", "description": "Does not meet requirements; significant concerns"},
+      "2": {"label": "Below Average", "description": "Partially meets requirements; some concerns"},
+      "3": {"label": "Average", "description": "Meets basic requirements; adequate"},
+      "4": {"label": "Above Average", "description": "Exceeds requirements; strong candidate"},
+      "5": {"label": "Excellent", "description": "Far exceeds requirements; exceptional candidate"}
+    },
+    "categories": {
+      "technicalSkills": {
+        "weight": 25,
+        "criteria": [
+          "Demonstrates required technical competencies",
+          "Shows proficiency with relevant tools/systems",
+          "Provides concrete examples of skill application"
+        ]
+      },
+      "experience": {
+        "weight": 20,
+        "criteria": [
+          "Relevant work history",
+          "Progressive responsibility",
+          "Industry/sector knowledge"
+        ]
+      },
+      "culturalFit": {
+        "weight": 20,
+        "criteria": [
+          "Alignment with L.A.W.S. values",
+          "Interest in mission and vision",
+          "Collaborative mindset"
+        ]
+      },
+      "communication": {
+        "weight": 15,
+        "criteria": [
+          "Clear and articulate responses",
+          "Active listening",
+          "Professional demeanor"
+        ]
+      },
+      "leadershipInitiative": {
+        "weight": 10,
+        "criteria": [
+          "Takes ownership of work",
+          "Proactive problem-solving",
+          "Demonstrates leadership potential"
+        ]
+      },
+      "growthPotential": {
+        "weight": 10,
+        "criteria": [
+          "Willingness to learn",
+          "Career trajectory alignment",
+          "Adaptability"
+        ]
+      }
+    },
+    "minimumThresholds": {
+      "executive": 4.0,
+      "departmentLead": 3.75,
+      "staff": 3.5,
+      "adminSupport": 3.25
+    }
+  },
+  "timeline": {
+    "executive": {
+      "applicationReview": "5-7 business days",
+      "phoneScreen": "Within 3 days of advancing",
+      "panelInterview": "Within 7 days of phone screen",
+      "skillsAssessment": "Within 5 days of panel",
+      "finalDecision": "Within 5 business days of assessment",
+      "totalProcess": "4-6 weeks"
+    },
+    "departmentLead": {
+      "applicationReview": "3-5 business days",
+      "phoneScreen": "Within 3 days of advancing",
+      "panelInterview": "Within 5 days of phone screen",
+      "skillsAssessment": "During or within 3 days of panel",
+      "finalDecision": "Within 3 business days",
+      "totalProcess": "2-4 weeks"
+    },
+    "staff": {
+      "applicationReview": "3-5 business days",
+      "phoneScreen": "Within 2 days of advancing",
+      "panelInterview": "Within 5 days of phone screen",
+      "finalDecision": "Within 3 business days",
+      "totalProcess": "2-3 weeks"
+    },
+    "adminSupport": {
+      "applicationReview": "2-3 business days",
+      "phoneScreen": "Within 2 days of advancing",
+      "panelInterview": "Within 3 days of phone screen",
+      "finalDecision": "Within 2 business days",
+      "totalProcess": "1-2 weeks"
+    }
+  },
+  "communicationTemplates": {
+    "applicationReceived": "Thank you for your interest in [Position] at The L.A.W.S. Collective. We have received your application and will review it within [X] business days. We appreciate your patience.",
+    "advancingToScreen": "Congratulations! We would like to schedule a phone/video screen for the [Position] role. Please reply with your availability for a [X]-minute call.",
+    "advancingToPanel": "We enjoyed speaking with you and would like to invite you to a panel interview. The interview will be conducted via Microsoft Teams and will last approximately [X] minutes.",
+    "notAdvancing": "Thank you for your interest in [Position] at The L.A.W.S. Collective. After careful consideration, we have decided to move forward with other candidates whose qualifications more closely match our current needs. We encourage you to apply for future opportunities.",
+    "offerExtended": "We are pleased to extend an offer for the position of [Position]. Please find the attached offer letter with complete details. We request your response within 7 business days."
+  }
+}
