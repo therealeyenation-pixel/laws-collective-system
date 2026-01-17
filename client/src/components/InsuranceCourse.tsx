@@ -592,7 +592,7 @@ This assessment is for planning purposes. Consult with a licensed insurance prof
             { value: "manufacturing", label: "Manufacturing" },
             { value: "food_service", label: "Food Service/Restaurant" },
             { value: "real_estate", label: "Real Estate" },
-            { value: "education", label: "Education/Training" },
+            { value: "education", label: "Education" },
             { value: "other", label: "Other" }
           ],
           required: true,

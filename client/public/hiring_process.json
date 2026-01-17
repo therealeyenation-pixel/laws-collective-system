@@ -28,7 +28,7 @@
   "positionTiers": {
     "executive": {
       "name": "Executive/C-Suite",
-      "positions": ["COO", "Executive Director", "CETO"],
+      "positions": ["COO", "Executive Director", "CEO-Ed"],
       "salaryRange": "$55,000 - $150,000+",
       "hiringAuthority": "Matriarch/CEO with Board input"
     },
@@ -155,7 +155,7 @@
           "panelComposition": [
             {"role": "Chair", "member": "Matriarch/CEO (Shanna Russell)", "focus": "Vision alignment, leadership capability"},
             {"role": "Member", "member": "CFO (Craig)", "focus": "Financial acumen, resource management"},
-            {"role": "Member", "member": "CETO (Cornelius)", "focus": "Cross-functional collaboration"},
+            {"role": "Member", "member": "CEO-Ed (Cornelius)", "focus": "Cross-functional collaboration"},
             {"role": "Member", "member": "Department stakeholder", "focus": "Functional expertise"},
             {"role": "HR Observer", "member": "HR Lead (when hired)", "focus": "Process compliance, cultural fit"}
           ],

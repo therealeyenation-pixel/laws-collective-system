@@ -2633,3 +2633,17 @@
 - [x] Add Health Department with Health Operations Coordinator position
 - [x] Add Health Agent to match Health Department
 - [x] Update all job descriptions, postings, and organizational structure
+
+
+## Phase 42: Salary Competitiveness and Training Consolidation
+- [x] Remove "Training" as separate category - consolidate under "Education"
+- [x] Update Cornelius's tags to remove separate Training tag
+- [x] Update all salary ranges to market-competitive levels for degreed professionals
+- [x] Executive positions: $125,000 - $200,000
+- [x] Manager positions: $80,000 - $115,000
+- [x] Coordinator positions: $65,000 - $88,000
+- [x] Operations Coordinator positions: $52,000 - $72,000
+- [x] Update salary-recommendations.md with new ranges
+- [x] Update all job descriptions with new salary ranges
+- [x] Update job postings with new salary ranges
+- [x] Update Careers page with new salary ranges

@@ -39,7 +39,7 @@
         ],
         "reportsTo": "Matriarch/CEO",
         "directReports": ["Operations Manager", "HR Lead", "QA/QC Lead", "Purchasing Lead", "Platform Administrator"],
-        "salaryRange": "$70,000 - $95,000"
+        "salaryRange": "$125,000 - $165,000"
       },
       {
         "title": "CFO",
@@ -59,8 +59,8 @@
         "salaryRange": "$65,000 - $90,000"
       },
       {
-        "title": "CETO",
-        "fullTitle": "Chief Education & Training Officer",
+        "title": "CEO-Ed",
+        "fullTitle": "Chief Education Officer",
         "currentHolder": "Cornelius",
         "entity": "The L.A.W.S. Collective, LLC",
         "crossEntityScope": ["Temple/Academy", "LAWS, LLC", "Real-Eye-Nation", "L.A.W.S. Collective"],
@@ -106,7 +106,7 @@
             ],
             "reportsTo": "Matriarch/CEO",
             "directReports": ["Education Director", "Outreach Coordinator"],
-            "salaryRange": "$55,000 - $75,000",
+            "salaryRange": "$85,000 - $115,000",
             "notes": "Required for nonprofit credibility with funders"
           },
           {
@@ -119,8 +119,8 @@
               "Instructor schedule coordination",
               "Student support and inquiries"
             ],
-            "reportsTo": "CETO (Cornelius)",
-            "salaryRange": "$35,000 - $48,000"
+            "reportsTo": "CEO-Ed (Cornelius)",
+            "salaryRange": "$68,000 - $88,000"
           },
           {
             "title": "Outreach Coordinator",
@@ -152,7 +152,7 @@
             ],
             "reportsTo": "COO",
             "directReports": ["Operations Operations Coordinator"],
-            "salaryRange": "$60,000 - $85,000"
+            "salaryRange": "$85,000 - $115,000"
           },
           {
             "title": "Operations Operations Coordinator",
@@ -165,7 +165,7 @@
               "Cross-department communications"
             ],
             "reportsTo": "Operations Manager",
-            "salaryRange": "$35,000 - $48,000"
+            "salaryRange": "$68,000 - $88,000"
           },
           {
             "title": "Platform Administrator",
@@ -177,7 +177,7 @@
               "System updates and maintenance"
             ],
             "reportsTo": "COO",
-            "salaryRange": "$55,000 - $80,000"
+            "salaryRange": "$95,000 - $130,000"
           }
         ]
       },
@@ -198,7 +198,7 @@
             ],
             "reportsTo": "COO",
             "directReports": ["HR Operations Coordinator"],
-            "salaryRange": "$55,000 - $75,000"
+            "salaryRange": "$85,000 - $115,000"
           },
           {
             "title": "HR Operations Coordinator",
@@ -211,7 +211,7 @@
               "HR reports and metrics"
             ],
             "reportsTo": "HR Manager",
-            "salaryRange": "$35,000 - $48,000"
+            "salaryRange": "$68,000 - $88,000"
           },
           {
             "title": "QA/QC Manager",
@@ -224,7 +224,7 @@
             ],
             "reportsTo": "COO",
             "directReports": ["QA/QC Operations Coordinator"],
-            "salaryRange": "$50,000 - $70,000"
+            "salaryRange": "$85,000 - $115,000"
           },
           {
             "title": "QA/QC Operations Coordinator",
@@ -237,7 +237,7 @@
               "Document control"
             ],
             "reportsTo": "QA/QC Manager",
-            "salaryRange": "$35,000 - $48,000"
+            "salaryRange": "$68,000 - $88,000"
           },
           {
             "title": "Purchasing Manager",
@@ -250,7 +250,7 @@
             ],
             "reportsTo": "COO",
             "directReports": ["Purchasing Operations Coordinator"],
-            "salaryRange": "$48,000 - $65,000"
+            "salaryRange": "$80,000 - $110,000"
           },
           {
             "title": "Purchasing Operations Coordinator",
@@ -263,7 +263,7 @@
               "Purchasing reports"
             ],
             "reportsTo": "Purchasing Manager",
-            "salaryRange": "$35,000 - $48,000"
+            "salaryRange": "$68,000 - $88,000"
           },
           {
             "title": "Grant Writer",
@@ -275,7 +275,7 @@
               "Deadline and submission tracking"
             ],
             "reportsTo": "CFO",
-            "salaryRange": "$50,000 - $72,000"
+            "salaryRange": "$85,000 - $115,000"
           },
           {
             "title": "Community Programs Coordinator",
@@ -287,7 +287,7 @@
               "Outcome tracking"
             ],
             "reportsTo": "COO",
-            "salaryRange": "$45,000 - $60,000"
+            "salaryRange": "$80,000 - $110,000"
           }
         ]
       },
@@ -389,30 +389,30 @@
     "filled": [
       {"name": "Shanna Russell", "title": "Matriarch/CEO", "entity": "Trust/L.A.W.S. Collective"},
       {"name": "Craig", "title": "CFO", "entity": "L.A.W.S. Collective"},
-      {"name": "Cornelius", "title": "Chief Education & Training Officer (CETO)", "entity": "L.A.W.S. Collective (cross-entity)"},
+      {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "entity": "L.A.W.S. Collective (cross-entity)"},
       {"name": "Amandes", "title": "Creative Director", "entity": "Real-Eye-Nation"},
       {"name": "Essence", "title": "Design Lead", "entity": "Real-Eye-Nation"},
       {"name": "Amber", "title": "Operations Support", "entity": "L.A.W.S. Collective"}
     ],
     "openPositions": [
-      {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$70,000 - $95,000"},
-      {"title": "Executive Director", "entity": "Temple/508", "priority": "High", "salaryRange": "$55,000 - $75,000"},
-      {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High", "salaryRange": "$60,000 - $85,000"},
-      {"title": "HR Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$55,000 - $75,000"},
-      {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$55,000 - $80,000"},
-      {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$50,000 - $72,000"},
-      {"title": "QA/QC Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$50,000 - $70,000"},
-      {"title": "Purchasing Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$48,000 - $65,000"},
+      {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$125,000 - $165,000"},
+      {"title": "Executive Director", "entity": "Temple/508", "priority": "High", "salaryRange": "$85,000 - $115,000"},
+      {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High", "salaryRange": "$85,000 - $115,000"},
+      {"title": "HR Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000"},
+      {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$95,000 - $130,000"},
+      {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000"},
+      {"title": "QA/QC Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$85,000 - $115,000"},
+      {"title": "Purchasing Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$80,000 - $110,000"},
       {"title": "Outreach Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$42,000 - $58,000"},
       {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$35,000 - $55,000"},
       {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low", "salaryRange": "$40,000 - $65,000"},
-      {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$45,000 - $60,000"},
-      {"title": "Lead Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$52,000 - $68,000"},
-      {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Education Operations Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$35,000 - $48,000"}
+      {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$80,000 - $110,000"},
+      {"title": "Lead Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$68,000 - $88,000"},
+      {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
+      {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
+      {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
+      {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
+      {"title": "Education Operations Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$68,000 - $88,000"}
     ]
   },
   "reportingStructure": {
@@ -426,7 +426,7 @@
     },
     "level3": {
       "title": "C-Suite",
-      "positions": ["COO (Open)", "CFO (Craig)", "CETO (Cornelius)", "Executive Director - Temple (Open)", "Creative Director (Amandes)"]
+      "positions": ["COO (Open)", "CFO (Craig)", "CEO-Ed (Cornelius)", "Executive Director - Temple (Open)", "Creative Director (Amandes)"]
     },
     "level4": {
       "title": "Managers",

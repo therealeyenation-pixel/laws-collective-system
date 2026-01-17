@@ -40,7 +40,7 @@ export default function CompletionCertificate({
   managerName,
   managerTitle,
   trainingManagerName = "Cornelius",
-  trainingManagerTitle = "Education/Training Manager",
+  trainingManagerTitle = "Education Manager",
   tokensEarned = 500,
 }: CertificateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
@@ -191,7 +191,7 @@ export default function CompletionCertificate({
         <p className="text-xs text-center text-amber-600 mt-8">
           This certificate acknowledges completion of the training simulator and successful entity formation.
           <br />
-          Training content reviewed and approved by the Education/Training Department.
+          Training content reviewed and approved by the Education Department.
           <br />
           LuvOnPurpose Sovereign System • The L.A.W.S. Collective, LLC
         </p>

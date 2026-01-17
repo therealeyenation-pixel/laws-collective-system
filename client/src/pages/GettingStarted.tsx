@@ -83,7 +83,7 @@ const SKILLS_OPTIONS = [
   "Design/Creative",
   "Writing/Communications",
   "Legal/Compliance",
-  "Education/Training",
+  "Education",
   "Healthcare",
   "Real Estate",
   "Construction",
@@ -95,7 +95,7 @@ const SKILLS_OPTIONS = [
 const DEPARTMENT_OPTIONS = [
   { id: "business", name: "Business Development", icon: Briefcase },
   { id: "finance", name: "Finance", icon: Building2 },
-  { id: "education", name: "Education/Training", icon: GraduationCap },
+  { id: "education", name: "Education", icon: GraduationCap },
   { id: "media", name: "Media Production", icon: FileText },
   { id: "design", name: "Design", icon: Target },
   { id: "outreach", name: "Community Outreach", icon: Users },

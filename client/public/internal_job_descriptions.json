@@ -66,7 +66,7 @@
         "max": 75000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$55,000 - $75,000 annually"
+        "displayText": "$110,000 - $145,000 annually"
       },
       "compensation": {
         "type": "nonprofit_salary",
@@ -131,8 +131,8 @@
     },
     {
       "id": "ceto",
-      "title": "Chief Education & Training Officer",
-      "abbreviation": "CETO",
+      "title": "Chief Education Officer",
+      "abbreviation": "CEO-Ed",
       "currentHolder": "Cornelius",
       "entity": "The L.A.W.S. Collective, LLC",
       "crossEntityScope": ["LuvOnPurpose Outreach Temple and Academy Society, Inc.", "LuvOnPurpose Autonomous Wealth System LLC", "Real-Eye-Nation LLC", "The L.A.W.S. Collective, LLC"],
@@ -141,7 +141,7 @@
         "max": 150000,
         "displayText": "$130,000 - $150,000 annually"
       },
-      "description": "The Chief Education & Training Officer provides strategic leadership for all education, training, and professional development initiatives across all subsidiary entities. This executive role oversees curriculum development, instructor management, certification programs, and educational partnerships while leveraging expertise in both education and criminal justice.",
+      "description": "The Chief Education Officer provides strategic leadership for all education, training, and professional development initiatives across all subsidiary entities. This executive role oversees curriculum development, instructor management, certification programs, and educational partnerships while leveraging expertise in both education and criminal justice.",
       "responsibilities": [
         "Strategic oversight of all education and training programs across entities",
         "Academy curriculum development and quality assurance",
@@ -191,7 +191,7 @@
         "max": 75000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$55,000 - $75,000 annually"
+        "displayText": "$110,000 - $145,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -237,7 +237,7 @@
         "max": 70000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$50,000 - $70,000 annually"
+        "displayText": "$85,000 - $115,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -284,7 +284,7 @@
         "max": 65000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$48,000 - $65,000 annually"
+        "displayText": "$80,000 - $110,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -329,7 +329,7 @@
         "max": 85000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$60,000 - $85,000 annually"
+        "displayText": "$85,000 - $115,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -457,7 +457,7 @@
       "title": "Academy Instructor / Curriculum Developer",
       "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
       "department": "Education",
-      "reportsTo": "Cornelius (Education/Training Manager)",
+      "reportsTo": "Cornelius (Education Manager)",
       "classification": "Part-Time to Full-Time",
       "location": "Remote with occasional in-person",
       "salaryRange": {
@@ -557,7 +557,7 @@
         "max": 80000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$55,000 - $80,000 annually"
+        "displayText": "$95,000 - $130,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -602,7 +602,7 @@
         "max": 60000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$45,000 - $60,000 annually"
+        "displayText": "$80,000 - $110,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -649,7 +649,7 @@
         "max": 68000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$52,000 - $68,000 annually"
+        "displayText": "$68,000 - $88,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -701,7 +701,7 @@
         "max": 48000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$35,000 - $48,000 annually"
+        "displayText": "$68,000 - $88,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -743,7 +743,7 @@
         "max": 48000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$35,000 - $48,000 annually"
+        "displayText": "$68,000 - $88,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -785,7 +785,7 @@
         "max": 48000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$35,000 - $48,000 annually"
+        "displayText": "$68,000 - $88,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -827,7 +827,7 @@
         "max": 48000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$35,000 - $48,000 annually"
+        "displayText": "$68,000 - $88,000 annually"
       },
       "compensation": {
         "type": "ownership_stake",
@@ -861,7 +861,7 @@
       "title": "Education Operations Coordinator",
       "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
       "department": "Education",
-      "reportsTo": "Chief Education & Training Officer (Cornelius)",
+      "reportsTo": "Chief Education Officer (Cornelius)",
       "classification": "Full-Time",
       "location": "Remote",
       "salaryRange": {
@@ -869,7 +869,7 @@
         "max": 48000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$35,000 - $48,000 annually"
+        "displayText": "$68,000 - $88,000 annually"
       },
       "compensation": {
         "type": "role_based",
@@ -911,7 +911,7 @@
         "max": 52000,
         "currency": "USD",
         "period": "annually",
-        "displayText": "$38,000 - $52,000 annually"
+        "displayText": "$68,000 - $88,000 annually"
       },
       "compensation": {
         "type": "role_based",
@@ -1150,14 +1150,14 @@
   "salaryRangeSummary": {
     "totalPositions": 10,
     "rangeOverview": [
-      {"position": "Operations Manager", "range": "$60,000 - $85,000"},
-      {"position": "Platform Administrator", "range": "$55,000 - $80,000"},
-      {"position": "HR Manager", "range": "$55,000 - $75,000"},
+      {"position": "Operations Manager", "range": "$85,000 - $115,000"},
+      {"position": "Platform Administrator", "range": "$95,000 - $130,000"},
+      {"position": "HR Manager", "range": "$110,000 - $145,000"},
       {"position": "Grant Writer", "range": "$50,000 - $72,000"},
-      {"position": "QA/QC Manager", "range": "$50,000 - $70,000"},
-      {"position": "Purchasing Manager", "range": "$48,000 - $65,000"},
+      {"position": "QA/QC Manager", "range": "$85,000 - $115,000"},
+      {"position": "Purchasing Manager", "range": "$80,000 - $110,000"},
       {"position": "Academy Instructor", "range": "$40,000 - $65,000"},
-      {"position": "Community Programs Coordinator", "range": "$45,000 - $60,000"},
+      {"position": "Community Programs Coordinator", "range": "$80,000 - $110,000"},
       {"position": "Outreach Coordinator", "range": "$42,000 - $58,000"},
       {"position": "Content Creator", "range": "$35,000 - $55,000"}
     ],

@@ -42,7 +42,7 @@ const POSITIONS = [
     department: "Human Resources",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$55,000 - $75,000",
+    salaryRange: "$85,000 - $115,000",
     description: "Build and maintain the human capital infrastructure across all five subsidiary entities. Oversee talent acquisition, onboarding, training coordination, performance management, and employee relations.",
     requirements: ["3+ years HR experience", "Strong interpersonal skills", "HR systems proficiency", "Employment law knowledge"],
     category: "operations"
@@ -55,7 +55,7 @@ const POSITIONS = [
     department: "Quality Assurance",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$50,000 - $70,000",
+    salaryRange: "$85,000 - $115,000",
     description: "Establish and maintain quality standards across all subsidiary entities. Ensure deliverables meet organizational standards and grant compliance requirements are satisfied.",
     requirements: ["3+ years QA/compliance experience", "Strong attention to detail", "Technical writing skills", "Process documentation"],
     category: "operations"
@@ -68,7 +68,7 @@ const POSITIONS = [
     department: "Purchasing",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$48,000 - $65,000",
+    salaryRange: "$80,000 - $110,000",
     description: "Manage procurement operations across all subsidiary entities. Handle vendor relationships, cost control, inventory tracking, and grant compliance for purchasing activities.",
     requirements: ["2+ years purchasing experience", "Negotiation skills", "Spreadsheet proficiency", "Basic accounting knowledge"],
     category: "operations"
@@ -81,7 +81,7 @@ const POSITIONS = [
     department: "Operations",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$60,000 - $85,000",
+    salaryRange: "$85,000 - $115,000",
     description: "Ensure smooth day-to-day operations across all subsidiary entities. Coordinate workflows, monitor business systems, identify bottlenecks, and provide support to team members.",
     requirements: ["3+ years operations experience", "Strong organizational skills", "Excellent communication", "Problem-solving mindset"],
     category: "operations"
@@ -94,7 +94,7 @@ const POSITIONS = [
     department: "Community Outreach",
     type: "Full-Time",
     location: "Hybrid",
-    salaryRange: "$42,000 - $58,000",
+    salaryRange: "$65,000 - $85,000",
     description: "Connect the organization with the broader community through events, partnerships, and relationship building. Plan community events, build partner relationships, and coordinate volunteers.",
     requirements: ["2+ years outreach experience", "Strong interpersonal skills", "Event planning ability", "Public speaking comfort"],
     category: "community"
@@ -120,7 +120,7 @@ const POSITIONS = [
     department: "Education",
     type: "Part-Time to Full-Time",
     location: "Remote + Occasional In-Person",
-    salaryRange: "$40,000 - $65,000",
+    salaryRange: "$75,000 - $100,000",
     description: "Deliver educational content and develop new courses for the LuvOnPurpose Academy. Teach courses, create curriculum, develop assessments, and track student progress.",
     requirements: ["Subject matter expertise", "Teaching experience", "Clear communication", "Online teaching comfort"],
     category: "education"
@@ -133,7 +133,7 @@ const POSITIONS = [
     department: "Grants & Proposals",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$50,000 - $72,000",
+    salaryRange: "$85,000 - $115,000",
     description: "Identify funding opportunities and write compelling proposals to secure grants for all subsidiary entities. Research opportunities, develop narratives, create budgets, and manage deadlines.",
     requirements: ["2+ years grant writing", "Strong writing skills", "Deadline management", "Research abilities"],
     category: "operations"
@@ -146,7 +146,7 @@ const POSITIONS = [
     department: "Technology",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$55,000 - $80,000",
+    salaryRange: "$95,000 - $130,000",
     description: "Maintain and improve the technology infrastructure of the organization. Monitor system health, manage user accounts, implement new features, and ensure security.",
     requirements: ["2+ years IT administration", "Tech-savvy", "Security-conscious", "User support patience"],
     category: "technology"
@@ -159,7 +159,7 @@ const POSITIONS = [
     department: "Community Programs",
     type: "Full-Time",
     location: "Hybrid",
-    salaryRange: "$45,000 - $60,000",
+    salaryRange: "$80,000 - $110,000",
     description: "Develop and manage programs based on the L.A.W.S. framework (Land, Air, Water, Self) that help community members reconnect with their roots, gain knowledge, find balance, and discover purpose.",
     requirements: ["2+ years program management", "Community development passion", "Organizational skills", "Cultural sensitivity"],
     category: "community"
@@ -172,7 +172,7 @@ const POSITIONS = [
     department: "Operations",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$52,000 - $68,000",
+    salaryRange: "$68,000 - $88,000",
     description: "Oversee all department Operations Coordinator staff across the organization. Serve as the primary support to the executive team while supervising HR, QA/QC, Purchasing, Operations, and Education Operations Coordinator staff.",
     requirements: ["3+ years operations/admin leadership", "Team leadership experience", "Process management skills", "Remote team coordination"],
     category: "operations"
@@ -185,7 +185,7 @@ const POSITIONS = [
     department: "Human Resources",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$35,000 - $48,000",
+    salaryRange: "$52,000 - $68,000",
     description: "Provide day-to-day administrative assistance to the HR Department. Handle scheduling, document management, candidate coordination, and employee record maintenance.",
     requirements: ["1+ years admin/HR support", "Organization skills", "Microsoft Office/Google Workspace", "Data entry proficiency"],
     category: "operations"
@@ -198,7 +198,7 @@ const POSITIONS = [
     department: "Quality Assurance",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$35,000 - $48,000",
+    salaryRange: "$52,000 - $68,000",
     description: "Assist the Quality Department with documentation, tracking, and compliance activities. Maintain quality records, track audit findings, and support process improvement initiatives.",
     requirements: ["1+ years admin/quality support", "Attention to detail", "Documentation skills", "Process tracking"],
     category: "operations"
@@ -211,7 +211,7 @@ const POSITIONS = [
     department: "Purchasing",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$35,000 - $48,000",
+    salaryRange: "$52,000 - $68,000",
     description: "Assist with procurement operations including order processing, vendor communications, and inventory tracking. Ensure accurate records and timely processing of purchases.",
     requirements: ["1+ years admin/purchasing support", "Data entry skills", "Vendor communication", "Invoice processing"],
     category: "operations"
@@ -224,7 +224,7 @@ const POSITIONS = [
     department: "Operations",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$35,000 - $48,000",
+    salaryRange: "$52,000 - $68,000",
     description: "Provide day-to-day assistance to the Operations team. Handle scheduling, project tracking, communications, and general administrative tasks to keep operations running smoothly.",
     requirements: ["1+ years admin/operations support", "Organization skills", "Multitasking ability", "Project tracking"],
     category: "operations"
@@ -237,7 +237,7 @@ const POSITIONS = [
     department: "Education",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$35,000 - $48,000",
+    salaryRange: "$52,000 - $68,000",
     description: "Provide administrative support to the Education Department and Academy. Assist with student enrollment, course scheduling, materials preparation, and instructor coordination.",
     requirements: ["1+ years admin/education support", "Organization skills", "Student communication", "LMS familiarity preferred"],
     category: "education"
@@ -250,7 +250,7 @@ const POSITIONS = [
     department: "Health",
     type: "Full-Time",
     location: "Remote",
-    salaryRange: "$38,000 - $52,000",
+    salaryRange: "$55,000 - $72,000",
     description: "Support community wellness initiatives within the L.A.W.S. framework (WATER pillar - Healing & Balance). Coordinate health programs, track wellness metrics, and help community members access health resources.",
     requirements: ["1+ years health/wellness coordination", "Organization skills", "Compassionate approach", "Health resource knowledge"],
     category: "health"

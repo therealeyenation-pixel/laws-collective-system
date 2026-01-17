@@ -24,7 +24,7 @@ import {
 // Training Manager - Reviews and approves all training content
 const TRAINING_MANAGER = {
   name: "Cornelius",
-  title: "Education/Training Manager",
+  title: "Education Manager",
   credentials: ["Masters in Education", "Masters in Criminal Justice"],
 };
 

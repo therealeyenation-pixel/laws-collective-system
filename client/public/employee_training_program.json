@@ -4,7 +4,7 @@
     "lastUpdated": "2026-01-17",
     "approvedBy": "Shanna Russell, Founder/Matriarch/CEO",
     "version": "1.0",
-    "managedBy": "HR Department in coordination with CETO (Cornelius)"
+    "managedBy": "HR Department in coordination with CEO-Ed (Cornelius)"
   },
   "overview": {
     "description": "Comprehensive new employee training program for The L.A.W.S. Collective and all subsidiary entities. This program ensures all team members receive consistent foundational training while also receiving role-specific preparation for their departments.",
@@ -76,7 +76,7 @@
               {"time": "11:00 AM", "activity": "Entity Overview - All 4 entities and their missions", "duration": "1.5 hours"},
               {"time": "1:00 PM", "activity": "Trust Structure and Governance (overview only)", "duration": "1 hour"},
               {"time": "2:00 PM", "activity": "Token Economy and Ownership Model", "duration": "1.5 hours"},
-              {"time": "3:30 PM", "activity": "Q&A with CETO or HR", "duration": "1 hour"}
+              {"time": "3:30 PM", "activity": "Q&A with CEO-Ed or HR", "duration": "1 hour"}
             ]
           },
           {
@@ -119,7 +119,7 @@
         "name": "Department Training",
         "timing": "Weeks 2-4",
         "description": "Role-specific skill development",
-        "responsible": "Manager + CETO",
+        "responsible": "Manager + CEO-Ed",
         "structure": "See departmentTraining section for specific tracks"
       },
       {

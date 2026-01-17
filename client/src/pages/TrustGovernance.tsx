@@ -102,7 +102,7 @@ const familyMembers = [
   { name: "Amber", role: "House Member", department: "Operations support", status: "onboarding", certifications: [] },
   { name: "Essence", role: "House Member", department: "Creative support", status: "onboarding", certifications: [] },
   { name: "Amandes", role: "House Member", department: "Administrative support", status: "onboarding", certifications: [] },
-  { name: "Cornelius", role: "Education/Training Manager", department: "Education Department, Justice Advisor", status: "active", certifications: ["Financial Literacy", "Education"] },
+  { name: "Cornelius", role: "Education Manager", department: "Education Department, Justice Advisor", status: "active", certifications: ["Financial Literacy", "Education"] },
 ];
 
 // L.A.W.S. Framework principles

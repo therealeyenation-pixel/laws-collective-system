@@ -71,7 +71,7 @@ const TEAM_MEMBERS = [
   { id: 3, name: "Amber", role: "House Member", department: "Outreach, Education" },
   { id: 4, name: "Essence", role: "House Member", department: "Outreach" },
   { id: 5, name: "Amandes", role: "House Member", department: "Operations" },
-  { id: 6, name: "Cornelius", role: "Education/Training Manager", department: "Education, Justice Support" },
+  { id: 6, name: "Cornelius", role: "Education Manager", department: "Education, Justice Support" },
 ];
 
 export default function BusinessPlanSimulator() {
@@ -838,7 +838,7 @@ export default function BusinessPlanSimulator() {
             managerName="Business Development"
             managerTitle="Simulator Manager"
             trainingManagerName="Cornelius"
-            trainingManagerTitle="Education/Training Manager"
+            trainingManagerTitle="Education Manager"
             tokensEarned={150}
           />
           

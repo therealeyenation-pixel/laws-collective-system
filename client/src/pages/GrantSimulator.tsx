@@ -716,7 +716,7 @@ export default function GrantSimulator() {
                     <div className="text-center">
                       <div className="border-t border-foreground pt-2 mx-8">
                         <p className="font-semibold">Cornelius</p>
-                        <p className="text-sm text-muted-foreground">Education/Training Manager</p>
+                        <p className="text-sm text-muted-foreground">Education Manager</p>
                         <p className="text-xs text-muted-foreground">Content Approved</p>
                       </div>
                     </div>
