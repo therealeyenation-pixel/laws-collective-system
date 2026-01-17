@@ -1601,3 +1601,52 @@
 - [x] Add Collective formation checklist
 - [x] Add Corporation formation checklist
 - [x] Add progress indicators for each entity
+
+
+## Phase 79: Business Simulator Progressive Redesign
+
+- [x] Review current Business Simulator implementation
+- [x] Design progressive multi-step flow
+- [x] Step 1: Entity Type Selection
+- [x] Step 2: Basic Information (Name, Purpose)
+- [x] Step 3: State Selection & Requirements
+- [x] Step 4: Formation Costs & Fees
+- [x] Step 5: Timeline Planning
+- [x] Step 6: Action Steps & Checklist
+- [x] Add step navigation with progress indicator
+- [x] Add ability to save/resume simulation progress
+- [x] Add navigation menu entry for Business Simulator
+
+
+## Phase 80: Simulator Certificate & Entity Creation
+
+- [x] Add completion certificate generation
+- [x] Add Manager signature fields on certificates
+- [x] Connect simulator completion to actual entity creation
+- [x] Add certificate preview/download
+- [x] Add training modules for each entity type
+- [x] Add module completion tracking
+- [x] Add token rewards display
+- [ ] Store completed certificates in Document Vault
+- [ ] Track simulator completion status per user
+
+## Phase 81: Simulator Manager Customization
+
+- [ ] Create Simulator Manager role/position
+- [ ] Allow Managers to edit their simulator's training modules
+- [ ] Allow Managers to add/remove module content
+- [ ] Manager dashboard for their assigned simulator
+- [ ] Track Manager assignments per simulator type
+
+
+## Phase 82: Organizational Structure Update
+
+- [x] Update Cornelius role to Education/Training Manager (Department Head)
+- [x] Move Justice Department under Legal Department
+- [x] Add Cornelius as Justice Advisor/Support to Legal
+- [x] Keep Legal Manager as open position (includes Justice)
+- [x] Update Position Management page with new structure
+- [x] Update Family Onboarding with role changes
+- [x] Add Training Manager content approval workflow
+- [x] Update certificate signing to use Cornelius
+- [x] Add dual signature on certificates (Simulator Manager + Training Manager)

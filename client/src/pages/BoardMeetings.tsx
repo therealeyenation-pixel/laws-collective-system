@@ -55,7 +55,7 @@ const BOARD_MEMBERS = [
   { id: 3, name: "Essence", role: "Board Member", department: "Design, IT", hasVote: true, attendance: 85 },
   { id: 4, name: "Amandes", role: "Board Member", department: "Media", hasVote: true, attendance: 95 },
   { id: 5, name: "Craig", role: "Board Member", department: "Finance", hasVote: true, attendance: 88 },
-  { id: 6, name: "Cornelius", role: "Board Member", department: "Education, Justice", hasVote: true, attendance: 92 },
+  { id: 6, name: "Cornelius", role: "Education/Training Manager", department: "Education/Training (supports Legal/Justice)", hasVote: true, attendance: 92 },
   { id: 7, name: "Twin Sister", role: "Honorary Advisor", department: "Sweet Miracles (Partner)", hasVote: false, attendance: 75 },
 ];
 

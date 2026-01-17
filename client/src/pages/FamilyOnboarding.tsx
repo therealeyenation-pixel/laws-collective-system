@@ -19,10 +19,10 @@ const FAMILY_MEMBERS = [
   { id: "essence", name: "Essence", role: "House Member", departments: ["Design", "IT", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
   { id: "amandes", name: "Amandes", role: "House Member", departments: ["Media", "IT", "Outreach"], businessEntity: "FreeLife Media", status: "active", credentials: [], boardRole: "Board Member" },
   { id: "craig", name: "Craig", role: "House Member", departments: ["Finance", "Outreach"], businessEntity: "TBD", status: "pending", credentials: [], boardRole: "Board Member" },
-  { id: "cornelius", name: "Cornelius", role: "House Member", departments: ["Education", "Justice", "Outreach"], businessEntity: "TBD", status: "pending", credentials: ["Masters in Education", "Masters in Criminal Justice"], boardRole: "Board Member" },
+  { id: "cornelius", name: "Cornelius", role: "Education/Training Manager", departments: ["Education", "Training", "Outreach"], businessEntity: "TBD", status: "pending", credentials: ["Masters in Education", "Masters in Criminal Justice"], boardRole: "Board Member (Education/Training)", supportsLegal: true },
   { id: "contracts-mgr", name: "TBD - Contracts Manager", role: "Department Manager", departments: ["Contracts", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Contracts)" },
   { id: "grants-mgr", name: "TBD - Grants Manager", role: "Department Manager", departments: ["Grants", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Grants)" },
-  { id: "legal-mgr", name: "TBD - Legal Manager", role: "Department Manager", departments: ["Legal", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Legal)" },
+  { id: "legal-mgr", name: "TBD - Legal Manager", role: "Department Manager", departments: ["Legal", "Justice", "Outreach"], businessEntity: "TBD", status: "open", credentials: [], boardRole: "Board Member (Legal/Justice)", justiceAdvisor: "Cornelius" },
   { id: "property-mgr", name: "TBD - Property & Assets Manager", role: "Department Manager", departments: ["Property & Assets Management", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   { id: "realestate-mgr", name: "TBD - Real Estate Manager", role: "Department Manager", departments: ["Real Estate", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
   { id: "ops-admin-mgr", name: "TBD - Operations & Administration Manager", role: "Department Manager", departments: ["Operations & Administration", "Outreach"], businessEntity: "TBD", status: "lined_up", credentials: [], boardRole: "Board Member" },
@@ -45,8 +45,8 @@ const DEPARTMENTS = [
   { id: "it", name: "IT", description: "Technology, systems, infrastructure, support" },
   { id: "media", name: "Media", description: "Content creation, social media, communications" },
   { id: "finance", name: "Finance", description: "Accounting, budgeting, financial management" },
-  { id: "legal", name: "Legal", description: "Legal affairs, compliance, contracts review" },
-  { id: "justice", name: "Justice", description: "Advocacy, reentry support, mentorship programs" },
+  { id: "legal", name: "Legal/Justice", description: "Legal affairs, compliance, contracts review, advocacy, reentry support, mentorship programs" },
+  { id: "education", name: "Education/Training", description: "Training simulators, Academy curriculum, educational content, certificate management" },
 ];
 
 const ONBOARDING_STEPS = [
@@ -313,7 +313,7 @@ export default function FamilyOnboarding() {
                     { name: "TBD - Health Entity", member: "Amber", focus: "Health, Outreach", status: "pending" },
                     { name: "TBD - Design/IT Entity", member: "Essence", focus: "Design, IT, Outreach", status: "pending" },
                     { name: "TBD - Finance Entity", member: "Craig", focus: "Finance, Outreach", status: "pending" },
-                    { name: "TBD - Education/Justice Entity", member: "Cornelius", focus: "Education, Justice, Outreach", status: "pending" },
+                    { name: "TBD - Education/Training Entity", member: "Cornelius", focus: "Education, Training, Outreach (supports Legal/Justice)", status: "pending" },
                   ].map((entity, idx) => (
                     <div key={idx} className="flex items-center justify-between p-4 rounded-lg border">
                       <div className="flex items-center gap-4">
