@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE agents MODIFY COLUMN type ENUM('operations', 'support', 'education', 'analytics', 'guardian', 'finance', 'media', 'outreach', 'seo', 'engagement', 'hr', 'qaqc', 'purchasing', 'health', 'design', 'custom') NOT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE agents MODIFY COLUMN type ENUM('operations', 'support', 'education', 'analytics', 'guardian', 'finance', 'media', 'outreach', 'seo', 'engagement', 'hr', 'qaqc', 'purchasing', 'health', 'design', 'custom') NOT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 550
+}

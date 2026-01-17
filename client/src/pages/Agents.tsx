@@ -35,6 +35,8 @@ import {
   ClipboardCheck,
   ShoppingCart,
   Heart,
+  Palette,
+  Video,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
@@ -54,6 +56,7 @@ const agentIcons: Record<string, React.ReactNode> = {
   qaqc: <ClipboardCheck className="w-5 h-5" />,
   purchasing: <ShoppingCart className="w-5 h-5" />,
   health: <Heart className="w-5 h-5" />,
+  design: <Palette className="w-5 h-5" />,
   custom: <Sparkles className="w-5 h-5" />,
 };
 
@@ -64,7 +67,7 @@ const agentColors: Record<string, string> = {
   analytics: "bg-orange-500/10 text-orange-500 border-orange-500/20",
   guardian: "bg-red-500/10 text-red-500 border-red-500/20",
   finance: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
-  media: "bg-green-500/10 text-green-500 border-green-500/20",
+  media: "bg-fuchsia-500/10 text-fuchsia-500 border-fuchsia-500/20",
   outreach: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
   seo: "bg-indigo-500/10 text-indigo-500 border-indigo-500/20",
   engagement: "bg-green-500/10 text-green-500 border-green-500/20",
@@ -72,6 +75,7 @@ const agentColors: Record<string, string> = {
   qaqc: "bg-teal-500/10 text-teal-500 border-teal-500/20",
   purchasing: "bg-amber-500/10 text-amber-500 border-amber-500/20",
   health: "bg-rose-500/10 text-rose-500 border-rose-500/20",
+  design: "bg-pink-500/10 text-pink-500 border-pink-500/20",
   custom: "bg-cyan-500/10 text-cyan-500 border-cyan-500/20",
 };
 

@@ -854,6 +854,7 @@ export const agents = mysqlTable("agents", {
     "qaqc",            // Quality Assurance/Quality Control
     "purchasing",      // Procurement and purchasing
     "health",          // Health and wellness programs
+    "design",          // Design and creative services
     "custom"           // User-defined agents
   ]).notNull(),
   description: text("description"),
@@ -7116,3 +7117,75 @@ export const applicationActivityLog = mysqlTable("application_activity_log", {
 export type ApplicationActivityLog = typeof applicationActivityLog.$inferSelect;
 export type InsertApplicationActivityLog = typeof applicationActivityLog.$inferInsert;
 
+
+
+// ============================================
+// EMPLOYEE DIRECTORY
+// Track current employees across all entities
+// ============================================
+
+/**
+ * Employees - Current team members across all entities
+ */
+export const employees = mysqlTable("employees", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Personal info
+  firstName: varchar("firstName", { length: 100 }).notNull(),
+  lastName: varchar("lastName", { length: 100 }).notNull(),
+  preferredName: varchar("preferredName", { length: 100 }),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 50 }),
+  
+  // Employment info
+  entityId: int("entityId").notNull(), // Which business entity they work for
+  department: varchar("department", { length: 100 }).notNull(),
+  jobTitle: varchar("jobTitle", { length: 255 }).notNull(),
+  positionLevel: mysqlEnum("positionLevel", [
+    "executive",      // CEO, COO, CFO, etc.
+    "manager",        // Department managers
+    "lead",           // Lead Operations Coordinator
+    "coordinator",    // Operations Coordinators
+    "specialist",     // Individual contributors
+    "intern"          // Interns
+  ]).notNull(),
+  reportsTo: int("reportsTo"), // Manager's employee ID
+  
+  // Employment details
+  employmentType: mysqlEnum("employmentType", [
+    "full_time",
+    "part_time",
+    "contract",
+    "intern"
+  ]).default("full_time").notNull(),
+  workLocation: mysqlEnum("workLocation", [
+    "remote",
+    "hybrid",
+    "on_site"
+  ]).default("remote").notNull(),
+  startDate: timestamp("startDate").notNull(),
+  endDate: timestamp("endDate"),
+  
+  // Profile
+  bio: text("bio"),
+  avatarUrl: varchar("avatarUrl", { length: 500 }),
+  linkedinUrl: varchar("linkedinUrl", { length: 255 }),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "active",
+    "on_leave",
+    "terminated",
+    "pending"
+  ]).default("active").notNull(),
+  
+  // User account link (if they have system access)
+  userId: int("userId"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Employee = typeof employees.$inferSelect;
+export type InsertEmployee = typeof employees.$inferInsert;

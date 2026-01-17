@@ -68,6 +68,7 @@ const menuItems: MenuItem[] = [
   { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff", category: "Management" },
   { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff", category: "Management" },
   { icon: ClipboardList, label: "HR Dashboard", path: "/hr-dashboard", minRole: "staff", category: "Management" },
+  { icon: Users, label: "Employee Directory", path: "/employees", minRole: "staff", category: "Management" },
   { icon: BarChart3, label: "Operations Dashboard", path: "/operations-dashboard", minRole: "staff", category: "Management" },
   { icon: Users, label: "Position Management", path: "/positions", minRole: "staff", category: "Management" },
   { icon: Gift, label: "Grant Management", path: "/grants", minRole: "staff", category: "Management" },

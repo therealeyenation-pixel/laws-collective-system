@@ -2690,3 +2690,21 @@
 - [x] Add all positions to organizational_structure.json
 - [x] Add job postings for all new positions
 - [x] Update Careers page with new positions
+
+
+## Phase 47: Agents, Job Postings, and Employee Directory
+- [x] Add Design Agent to match Design department
+- [x] Add Media Agent to match Media department
+- [x] Add Design and Media agent types to database schema
+- [x] Update Agents page with Design and Media icons/colors
+- [x] Add Health Manager job posting to Careers page
+- [x] Add Procurement Manager job posting to Careers page
+- [x] Create employees database table
+- [x] Build employee directory page with team member profiles
+- [x] Add employee CRUD operations router
+- [x] Add employee filtering by entity, department, status
+- [x] Add employee search functionality
+- [x] Add org chart view for employees
+- [x] Add employee statistics dashboard
+- [x] Add Employee Directory to sidebar navigation
+- [x] Write unit tests for employees router

@@ -243,6 +243,32 @@ const POSITIONS = [
     category: "education"
   },
   { 
+    id: "health-manager", 
+    title: "Health Manager", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Health & Wellness",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$85,000 - $115,000",
+    description: "Lead community health and wellness initiatives within the L.A.W.S. framework (WATER pillar - Healing & Balance). Develop health programs, coordinate with healthcare partners, and ensure community members have access to quality health resources and support.",
+    requirements: ["5+ years health/wellness management", "Healthcare program development", "Community health experience", "Team leadership skills"],
+    category: "health"
+  },
+  { 
+    id: "procurement-manager", 
+    title: "Procurement Manager", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Procurement",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$95,000 - $130,000",
+    description: "Lead strategic procurement operations across all subsidiary entities. Develop vendor relationships, negotiate contracts, implement cost-saving initiatives, and ensure compliance with grant requirements and organizational policies.",
+    requirements: ["5+ years procurement/supply chain management", "Contract negotiation skills", "Vendor management experience", "Professional certification preferred (CPM, CPSM)"],
+    category: "operations"
+  },
+  { 
     id: "ops-coordinator-health", 
     title: "Health Operations Coordinator", 
     entity: "The L.A.W.S. Collective, LLC",

@@ -42,6 +42,7 @@ import HRDashboard from "@/pages/HRDashboard";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
 import Careers from "@/pages/Careers";
+import EmployeeDirectory from "@/pages/EmployeeDirectory";
 import GettingStarted from "@/pages/GettingStarted";
 import SystemOverview from "@/pages/SystemOverview";
 import Contact from "@/pages/Contact";
@@ -157,6 +158,7 @@ function Router() {
       <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} minRole="staff" />}</Route>
       <Route path="/hr-applications">{() => <ProtectedRoute component={HRApplications} minRole="staff" />}</Route>
       <Route path="/hr-dashboard">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
+      <Route path="/employees">{() => <ProtectedRoute component={EmployeeDirectory} minRole="staff" />}</Route>
       <Route path="/operations-dashboard">{() => <ProtectedRoute component={OperationsDashboard} minRole="staff" />}</Route>
       <Route path="/executive-dashboard">{() => <ProtectedRoute component={ExecutiveDashboard} minRole="admin" />}</Route>
       <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} minRole="staff" />}</Route>

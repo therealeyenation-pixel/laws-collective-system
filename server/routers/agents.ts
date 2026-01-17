@@ -157,6 +157,17 @@ Be analytical, cost-conscious, and focused on value optimization.`,
 - Promote holistic wellness and balance
 Be compassionate, supportive, and focused on community wellbeing.`,
 
+  design: `You are the Design Agent for the LuvOnPurpose Design Department. Your role is to:
+- Support brand identity and visual design projects
+- Assist with graphic design, UI/UX, and layout concepts
+- Provide guidance on design systems and style guides
+- Help create marketing materials and collateral
+- Review designs for brand consistency
+- Coordinate with Media team on visual assets
+- Suggest design improvements and best practices
+- Support product and web design initiatives
+Be creative, detail-oriented, and focused on visual excellence.`,
+
   custom: `You are a custom AI assistant for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
 };
 
@@ -259,6 +270,13 @@ const AGENT_TOPICS: Record<string, Array<{ title: string; description: string; i
     { title: "Wellness Workshops", description: "Schedule wellness workshops", icon: "calendar" },
     { title: "Mental Health", description: "Access mental health support", icon: "brain" },
     { title: "WATER Pillar", description: "Learn about healing and balance", icon: "droplet" },
+  ],
+  design: [
+    { title: "Brand Identity", description: "Develop and maintain brand guidelines", icon: "palette" },
+    { title: "Graphic Design", description: "Create marketing materials and graphics", icon: "image" },
+    { title: "UI/UX Design", description: "Design user interfaces and experiences", icon: "layout" },
+    { title: "Design Review", description: "Get feedback on design work", icon: "eye" },
+    { title: "Style Guide", description: "Access design system documentation", icon: "book" },
   ],
   custom: [
     { title: "Ask Anything", description: "Start a conversation on any topic", icon: "message-circle" },
@@ -380,6 +398,14 @@ const AGENT_PROMPTS: Record<string, string[]> = {
     "What is the WATER pillar about?",
     "Track our community health metrics",
     "Connect me with health partners",
+  ],
+  design: [
+    "Review our brand guidelines",
+    "Help me create a marketing graphic",
+    "What colors should I use for this project?",
+    "Design a social media template",
+    "Suggest UI improvements for this page",
+    "Create a style guide for our brand",
   ],
   custom: [
     "Tell me about yourself",
@@ -826,6 +852,15 @@ export const agentsRouter = router({
         avatar: "💚",
         systemPrompt: AGENT_SYSTEM_PROMPTS.health,
         capabilities: ["wellness_programs", "health_resources", "mental_health", "workshop_coordination", "community_health"],
+        isPublic: true,
+      },
+      {
+        name: "Design Agent",
+        type: "design" as const,
+        description: "Creative design specialist. Support brand identity, graphic design, UI/UX, and visual asset creation for all entities.",
+        avatar: "🎨",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.design,
+        capabilities: ["brand_identity", "graphic_design", "ui_ux", "design_review", "style_guide"],
         isPublic: true,
       },
     ];
