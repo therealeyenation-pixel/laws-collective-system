@@ -152,7 +152,12 @@ const initialData: ApplicationData = {
     { category: "Salaries & Wages", description: "", amount: "" },
     { category: "Fringe Benefits", description: "", amount: "" },
     { category: "Contractors", description: "", amount: "" },
+    { category: "Business Formation", description: "", amount: "" },
+    { category: "Legal & Professional", description: "", amount: "" },
+    { category: "Licenses & Permits", description: "", amount: "" },
+    { category: "Insurance", description: "", amount: "" },
     { category: "Equipment", description: "", amount: "" },
+    { category: "Software & Technology", description: "", amount: "" },
     { category: "Supplies", description: "", amount: "" },
     { category: "Travel", description: "", amount: "" },
     { category: "Marketing", description: "", amount: "" },
@@ -592,7 +597,7 @@ export default function GrantSimulator() {
                 <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-blue-800 dark:text-blue-200">Training: Budget Creation</p>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Create a realistic budget showing how you'll use the funds. Most grants allow personnel costs including salaries, wages, and benefits.</p>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Create a realistic budget showing how you'll use the funds. Most grants allow personnel costs (salaries, benefits), business formation costs (LLC fees, legal setup), and operational infrastructure when framed as essential to program delivery.</p>
                 </div>
               </div>
             </div>

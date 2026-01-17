@@ -1788,3 +1788,4 @@
 - [x] Auto-populate Project Description fields (Project Title, Project Goals, Key Activities, Timeline) from business plan data
 - [x] Auto-populate Problem Description field in Need Statement step from business plan data
 - [x] Add employee salary/personnel line items to Grant Simulator budget section
+- [x] Add business formation and startup costs categories to Grant Simulator budget section
