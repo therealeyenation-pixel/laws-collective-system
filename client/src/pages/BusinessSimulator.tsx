@@ -42,12 +42,12 @@ const ENTITY_TYPES = [
     id: "llc",
     name: "Limited Liability Company (LLC)",
     icon: Building2,
-    description: "Flexible business structure with liability protection. Ideal for small businesses and real estate.",
-    benefits: ["Personal asset protection", "Pass-through taxation", "Flexible management", "Less paperwork than corporations"],
+    description: "Flexible business structure with liability protection. Ideal for small businesses, contractors, and real estate.",
+    benefits: ["Personal asset protection", "Pass-through taxation", "Flexible management", "Less paperwork than corporations", "Contractor operations training included"],
     considerations: ["Self-employment taxes", "State fees vary", "May need operating agreement"],
     recommended: true,
-    tokensReward: 500,
-    modules: 7,
+    tokensReward: 750,
+    modules: 12,
   },
   {
     id: "trust",
@@ -114,6 +114,60 @@ const TRAINING_MODULES: Record<string, { id: string; title: string; description:
     { id: "llc-5", title: "Operating Agreement", description: "Draft the internal governance document for your LLC.", duration: "25 min" },
     { id: "llc-6", title: "EIN & Banking", description: "Apply for your Federal EIN and set up business banking.", duration: "15 min" },
     { id: "llc-7", title: "Compliance & Maintenance", description: "Ongoing requirements to keep your LLC in good standing.", duration: "15 min" },
+    { 
+      id: "llc-8", 
+      title: "Contractor Operations: Getting Started", 
+      description: "Set up your contractor business - invoicing, W-9s, and getting paid.",
+      duration: "20 min",
+      quiz: [
+        { question: "What form must you collect from clients before they pay you?", options: ["W-2", "W-9", "1099-NEC", "W-4"], correct: 1 },
+        { question: "What form will clients send you at year-end if they paid you $600+?", options: ["W-2", "W-9", "1099-NEC", "1040"], correct: 2 },
+      ]
+    },
+    { 
+      id: "llc-9", 
+      title: "Paying Yourself as a Contractor", 
+      description: "Learn the difference between owner's draw and salary, and how to properly pay yourself.",
+      duration: "25 min",
+      quiz: [
+        { question: "What is an owner's draw?", options: ["A loan from the business", "Taking profits from the business", "A salary payment", "A tax deduction"], correct: 1 },
+        { question: "LLC owners typically pay themselves through:", options: ["W-2 wages only", "Owner's draws", "1099 payments", "Dividends"], correct: 1 },
+      ]
+    },
+    { 
+      id: "llc-10", 
+      title: "S-Corp Election: When & How", 
+      description: "Understand when S-Corp tax treatment saves money and how to elect it.",
+      duration: "30 min",
+      quiz: [
+        { question: "S-Corp is:", options: ["A type of business entity", "A tax election for LLCs or Corps", "Required for all businesses", "Only for large companies"], correct: 1 },
+        { question: "S-Corp election typically makes sense when profits exceed:", options: ["$10,000/year", "$25,000/year", "$40,000-50,000/year", "$100,000/year"], correct: 2 },
+        { question: "What form do you file to elect S-Corp status?", options: ["Form 1040", "Form 2553", "Form 1099", "Form W-9"], correct: 1 },
+        { question: "With S-Corp election, you save on:", options: ["Income tax", "Self-employment tax on distributions", "State taxes", "Property taxes"], correct: 1 },
+      ]
+    },
+    { 
+      id: "llc-11", 
+      title: "Quarterly Tax Obligations", 
+      description: "Master quarterly estimated payments and avoid IRS penalties.",
+      duration: "25 min",
+      quiz: [
+        { question: "What is the self-employment tax rate?", options: ["7.65%", "10%", "15.3%", "22%"], correct: 2 },
+        { question: "Quarterly estimated taxes are due:", options: ["Jan, Apr, Jul, Oct", "Apr, Jun, Sep, Jan", "Mar, Jun, Sep, Dec", "Monthly"], correct: 1 },
+        { question: "What form is used for quarterly estimated payments?", options: ["Form 1040", "Form 1040-ES", "Form 941", "Form W-4"], correct: 1 },
+      ]
+    },
+    { 
+      id: "llc-12", 
+      title: "Deductions & Record Keeping", 
+      description: "Maximize deductions and maintain proper records for tax time.",
+      duration: "25 min",
+      quiz: [
+        { question: "The home office deduction requires:", options: ["Any room in your home", "Regular and exclusive use for business", "A separate building", "Employer approval"], correct: 1 },
+        { question: "The standard mileage rate for 2024 is approximately:", options: ["$0.45/mile", "$0.585/mile", "$0.67/mile", "$1.00/mile"], correct: 2 },
+        { question: "How long should you keep business tax records?", options: ["1 year", "3 years", "7 years", "Forever"], correct: 2 },
+      ]
+    },
   ],
   trust: [
     { id: "trust-1", title: "Trust Fundamentals", description: "Understand what trusts are and how they protect assets.", duration: "15 min" },

@@ -2481,3 +2481,47 @@
 ## Phase 32: Agent Session Refresh
 - [x] Add Refresh Session button to user dropdown
 - [x] Implement session refresh functionality in useAuth hook
+
+
+## Phase 33: Contractor Operations Module
+- [x] Add Contractor Operations module to Business Simulator
+- [x] Lesson 1: Setting Up as a Contractor (llc-8)
+  - [x] Business entity selection (LLC vs Sole Prop)
+  - [x] EIN application process
+  - [x] Business bank account setup
+  - [x] Invoicing basics
+- [x] Lesson 2: Getting Paid as a Contractor (llc-8)
+  - [x] Invoice creation and tracking
+  - [x] Payment terms (Net 30, etc.)
+  - [x] Collecting W-9s from clients
+  - [x] Receiving and understanding 1099-NEC forms
+- [x] Lesson 3: Paying Yourself (llc-9)
+  - [x] Owner's draw vs salary (LLC)
+  - [x] Reasonable compensation concept
+  - [x] Setting up payroll for yourself
+  - [x] Frequency and documentation
+- [x] Lesson 4: S-Corp Election - When and How (llc-10)
+  - [x] What is S-Corp election (tax treatment, not entity type)
+  - [x] When S-Corp makes sense (profit thresholds)
+  - [x] Form 2553 filing process
+  - [x] Reasonable salary requirements
+  - [x] Salary vs distribution split strategy
+  - [x] Self-employment tax savings calculation
+- [x] Lesson 5: Quarterly Tax Obligations (llc-11)
+  - [x] Quarterly estimated payments (Form 1040-ES)
+  - [x] Self-employment tax calculation (15.3%)
+  - [x] Payment deadlines (Apr 15, Jun 15, Sep 15, Jan 15)
+  - [x] Penalty avoidance strategies
+- [x] Lesson 6: Deductions and Record Keeping (llc-12)
+  - [x] Deductible business expenses
+  - [x] Home office deduction
+  - [x] Mileage tracking and deduction
+  - [x] Receipt management
+  - [x] Separating personal and business finances
+  - [x] Year-end preparation checklist
+- [ ] Add interactive worksheets for each lesson
+- [x] Add quiz checkpoints after each lesson
+- [ ] Connect to Tax Simulator for document uploads
+- [x] Award tokens for module completion (750 tokens for LLC path)
+- [x] Created ContractorLessons.tsx component with detailed lesson content
+- [x] All 18 unit tests passing
