@@ -121,11 +121,33 @@ Return ONLY valid JSON with the extracted fields. Use null for any field not fou
           },
         });
 
-        const rawContent = response.choices[0]?.message?.content;
-        if (!rawContent) {
+        const choice = response.choices?.[0];
+        if (!choice || !choice.message) {
           throw new Error("No response from AI parser");
         }
-        const content = typeof rawContent === "string" ? rawContent : JSON.stringify(rawContent);
+        
+        const rawContent = choice.message.content;
+        if (!rawContent) {
+          throw new Error("No content in AI response");
+        }
+        
+        // Handle both string and array content types
+        let content: string;
+        if (typeof rawContent === "string") {
+          content = rawContent;
+        } else if (Array.isArray(rawContent)) {
+          // Extract text from content array
+          const textParts = rawContent
+            .filter((part): part is { type: "text"; text: string } => part.type === "text")
+            .map(part => part.text);
+          content = textParts.join("\n");
+        } else {
+          content = JSON.stringify(rawContent);
+        }
+        
+        if (!content) {
+          throw new Error("Could not extract text content from AI response");
+        }
 
         const extractedData = JSON.parse(content);
 
@@ -265,11 +287,32 @@ missionStatement, visionStatement, organizationDescription, yearFounded, product
           ],
         });
 
-        const rawContent2 = response.choices[0]?.message?.content;
-        if (!rawContent2) {
+        const choice2 = response.choices?.[0];
+        if (!choice2 || !choice2.message) {
           throw new Error("No response from AI parser");
         }
-        const content2 = typeof rawContent2 === "string" ? rawContent2 : JSON.stringify(rawContent2);
+        
+        const rawContent2 = choice2.message.content;
+        if (!rawContent2) {
+          throw new Error("No content in AI response");
+        }
+        
+        // Handle both string and array content types
+        let content2: string;
+        if (typeof rawContent2 === "string") {
+          content2 = rawContent2;
+        } else if (Array.isArray(rawContent2)) {
+          const textParts2 = rawContent2
+            .filter((part): part is { type: "text"; text: string } => part.type === "text")
+            .map(part => part.text);
+          content2 = textParts2.join("\n");
+        } else {
+          content2 = JSON.stringify(rawContent2);
+        }
+        
+        if (!content2) {
+          throw new Error("Could not extract text content from AI response");
+        }
 
         // Try to parse JSON from response
         const jsonMatch = content2.match(/\{[\s\S]*\}/);
