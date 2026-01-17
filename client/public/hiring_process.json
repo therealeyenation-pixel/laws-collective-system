@@ -45,7 +45,7 @@
       "hiringAuthority": "Manager with COO approval"
     },
     "adminSupport": {
-      "name": "Operations & Support",
+      "name": "Operations Coordinator",
       "positions": ["HR Admin Support", "QA/QC Admin Support", "Purchasing Admin Support", "Operations Admin Support", "Education Admin Support"],
       "salaryRange": "$35,000 - $48,000",
       "hiringAuthority": "Manager with HR approval"

@@ -2554,7 +2554,7 @@
 - [x] Set CETO salary range at $130,000 - $150,000
 - [x] Add stipend structure language for cross-entity additional duties
 - [x] Define stipend ranges ($5,000 - $15,000 per additional role)
-- [x] Create Department Operations & Support position template
+- [x] Create Department Operations Coordinator position template
 - [x] Add Admin Support for HR Department
 - [x] Add Admin Support for QA/QC Department
 - [x] Add Admin Support for Purchasing Department
@@ -2571,7 +2571,7 @@
 - [x] Establish panel interview requirements (who participates, roles)
 - [x] Create interview questions for Executive positions
 - [x] Create interview questions for Manager positions
-- [x] Create interview questions for Operations & Support positions
+- [x] Create interview questions for Operations Coordinator positions
 - [x] Define scoring rubric for candidate evaluation
 - [x] Create offer and onboarding workflow
 - [x] Create job postings for Admin Support positions (5 positions)
@@ -2587,11 +2587,11 @@
 
 
 ## Phase 38: Position Naming and Structure Updates
-- [x] Rename "Administrative Support" to "Operations & Support" in all files
+- [x] Rename "Administrative Support" to "Operations Coordinator" in all files
 - [x] Change "Department Lead" titles to "Manager" throughout
-- [x] Create Lead Operations & Support position (supervises all Ops & Support staff, supports executives)
-- [x] Update organizational structure with correct hierarchy (Executive > Manager > Lead > Staff > Operations & Support)
-- [x] Add Operations & Support positions to Open Positions/Careers page UI
+- [x] Create Lead Operations Coordinator position (supervises all Ops & Support staff, supports executives)
+- [x] Update organizational structure with correct hierarchy (Executive > Manager > Lead > Staff > Operations Coordinator)
+- [x] Add Operations Coordinator positions to Open Positions/Careers page UI
 - [x] Update job postings with new naming convention
 - [x] Update hiring process documentation with new titles
 - [x] Update training program with new position names
@@ -2610,3 +2610,26 @@
 - [ ] Create interview scheduling integration placeholder
 
 - [x] Integrate LuvLedger milestone tracking for HR events (interviewed, hired, rejected, offer accepted)
+
+
+## Phase 40: Align Agents with Department Structure
+- [x] Update agent types to match departments (HR, QA/QC, Purchasing, Operations, Education, Health)
+- [x] Add HR Agent for recruitment, onboarding, and employee management
+- [x] Add QA/QC Agent for quality assurance and compliance
+- [x] Add Purchasing Agent for procurement and vendor management
+- [x] Keep Operations Agent aligned with Operations department
+- [x] Keep Education Agent aligned with Education/Academy department
+- [x] Update agent system prompts to match department responsibilities
+- [x] Add Health Agent for wellness programs and WATER pillar support
+
+
+## Phase 41: Operations Coordinator Rename and Health Department
+- [x] Rename "Operations & Support" to "(Department) Operations Coordinator" format
+- [x] Update HR Operations & Support to HR Operations Coordinator
+- [x] Update QA/QC Operations & Support to QA/QC Operations Coordinator
+- [x] Update Purchasing Operations & Support to Purchasing Operations Coordinator
+- [x] Update Operations Operations & Support to Operations Coordinator
+- [x] Update Education Operations & Support to Education Operations Coordinator
+- [x] Add Health Department with Health Operations Coordinator position
+- [x] Add Health Agent to match Health Department
+- [x] Update all job descriptions, postings, and organizational structure

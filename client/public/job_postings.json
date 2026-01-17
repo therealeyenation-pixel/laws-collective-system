@@ -29,7 +29,7 @@
   "activePostings": [
     {
       "postingId": "OPS-HR-001",
-      "title": "HR Operations & Support",
+      "title": "HR Operations Coordinator",
       "department": "Human Resources",
       "entity": "The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
@@ -39,7 +39,7 @@
       "postingDate": "2026-01-17",
       "closingDate": "Open until filled",
       "priority": "High",
-      "summary": "We're seeking a detail-oriented HR Operations & Support professional to join our growing team. In this role, you'll provide essential administrative support to our HR department, helping to ensure smooth operations across recruitment, onboarding, and employee services. This is an excellent opportunity for someone looking to build a career in Human Resources within a mission-driven organization.",
+      "summary": "We're seeking a detail-oriented HR Operations Coordinator professional to join our growing team. In this role, you'll provide essential administrative support to our HR department, helping to ensure smooth operations across recruitment, onboarding, and employee services. This is an excellent opportunity for someone looking to build a career in Human Resources within a mission-driven organization.",
       "responsibilities": [
         "Coordinate interview scheduling and candidate communications throughout the hiring process",
         "Process new hire paperwork and maintain accurate employee files and records",
@@ -84,7 +84,7 @@
     },
     {
       "postingId": "OPS-QA-001",
-      "title": "QA/QC Operations & Support",
+      "title": "QA/QC Operations Coordinator",
       "department": "Quality Assurance/Quality Control",
       "entity": "The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
@@ -94,7 +94,7 @@
       "postingDate": "2026-01-17",
       "closingDate": "Open until filled",
       "priority": "Medium",
-      "summary": "Join our Quality Assurance team as an Operations & Support professional. You'll play a key role in maintaining our quality documentation, tracking audits and corrective actions, and ensuring our organization meets the highest standards. This position is ideal for someone who values precision, enjoys working with documentation, and wants to contribute to organizational excellence.",
+      "summary": "Join our Quality Assurance team as an Operations Coordinator professional. You'll play a key role in maintaining our quality documentation, tracking audits and corrective actions, and ensuring our organization meets the highest standards. This position is ideal for someone who values precision, enjoys working with documentation, and wants to contribute to organizational excellence.",
       "responsibilities": [
         "Maintain and organize quality documentation including SOPs and work instructions",
         "Track audit schedules, findings, and corrective action completion",
@@ -139,7 +139,7 @@
     },
     {
       "postingId": "OPS-PUR-001",
-      "title": "Purchasing Operations & Support",
+      "title": "Purchasing Operations Coordinator",
       "department": "Purchasing",
       "entity": "The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
@@ -149,7 +149,7 @@
       "postingDate": "2026-01-17",
       "closingDate": "Open until filled",
       "priority": "Medium",
-      "summary": "We're looking for a Purchasing Operations & Support professional to help manage our procurement operations. You'll process purchase orders, communicate with vendors, track inventory, and ensure our purchasing activities meet grant compliance requirements. This role is perfect for someone who enjoys working with numbers, building vendor relationships, and keeping things organized.",
+      "summary": "We're looking for a Purchasing Operations Coordinator professional to help manage our procurement operations. You'll process purchase orders, communicate with vendors, track inventory, and ensure our purchasing activities meet grant compliance requirements. This role is perfect for someone who enjoys working with numbers, building vendor relationships, and keeping things organized.",
       "responsibilities": [
         "Process purchase orders from request through completion",
         "Communicate with vendors regarding orders, deliveries, and inquiries",
@@ -194,7 +194,7 @@
     },
     {
       "postingId": "OPS-OPS-001",
-      "title": "Operations Operations & Support",
+      "title": "Operations Operations Coordinator",
       "department": "Operations",
       "entity": "LuvOnPurpose Autonomous Wealth System LLC (LAWS, LLC)",
       "location": "Remote (US-based)",
@@ -204,7 +204,7 @@
       "postingDate": "2026-01-17",
       "closingDate": "Open until filled",
       "priority": "High",
-      "summary": "Join our Operations team as an Operations & Support professional. You'll be at the center of our day-to-day operations, coordinating meetings, tracking projects, preparing reports, and facilitating communication across departments. This dynamic role is ideal for someone who thrives in a fast-paced environment and enjoys keeping things running smoothly.",
+      "summary": "Join our Operations team as an Operations Coordinator professional. You'll be at the center of our day-to-day operations, coordinating meetings, tracking projects, preparing reports, and facilitating communication across departments. This dynamic role is ideal for someone who thrives in a fast-paced environment and enjoys keeping things running smoothly.",
       "responsibilities": [
         "Coordinate meeting scheduling and calendar management for operations team",
         "Track project milestones and follow up on action items",
@@ -249,7 +249,7 @@
     },
     {
       "postingId": "OPS-EDU-001",
-      "title": "Education Operations & Support",
+      "title": "Education Operations Coordinator",
       "department": "Education/Academy",
       "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
       "location": "Remote (US-based)",
@@ -259,7 +259,7 @@
       "postingDate": "2026-01-17",
       "closingDate": "Open until filled",
       "priority": "High",
-      "summary": "Support our Academy's mission by joining as an Education Operations & Support professional. You'll help manage student enrollment, track progress, coordinate with instructors, and ensure our educational programs run smoothly. This role is perfect for someone passionate about education and community development who wants to make a direct impact on learners' lives.",
+      "summary": "Support our Academy's mission by joining as an Education Operations Coordinator professional. You'll help manage student enrollment, track progress, coordinate with instructors, and ensure our educational programs run smoothly. This role is perfect for someone passionate about education and community development who wants to make a direct impact on learners' lives.",
       "responsibilities": [
         "Process student enrollment and registration",
         "Maintain student records and track progress through programs",
@@ -294,6 +294,63 @@
         "Meaningful work in community education"
       ],
       "applicationInstructions": "Submit your resume and cover letter. Please share why you're passionate about education and how you've supported learners or students in the past.",
+      "interviewProcess": [
+        "Application review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Skills assessment (15 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    },
+    {
+      "postingId": "OPS-HEALTH-001",
+      "title": "Health Operations Coordinator",
+      "department": "Health",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$38,000 - $52,000",
+      "reportsTo": "Lead Operations Coordinator",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "High",
+      "summary": "Join our team as a Health Operations Coordinator to support community wellness initiatives within the L.A.W.S. framework. You'll coordinate health programs, track wellness metrics, and help community members access health resources. This role is part of our WATER pillar (Healing & Balance) and is ideal for someone passionate about community health and holistic wellness.",
+      "responsibilities": [
+        "Coordinate health and wellness programs across the organization",
+        "Track community health metrics and program outcomes",
+        "Schedule and support wellness workshops and events",
+        "Maintain and update health resource directory",
+        "Process wellness program enrollments and registrations",
+        "Support mental health and healing initiatives",
+        "Coordinate with external health partners and providers",
+        "Prepare health program reports and metrics for leadership",
+        "Assist with health education content development",
+        "Support the WATER pillar healing and balance programs"
+      ],
+      "requiredQualifications": [
+        "1+ years in health administration, wellness coordination, or related field",
+        "Strong organizational and coordination skills",
+        "Excellent communication and interpersonal abilities",
+        "Proficiency with Microsoft Office Suite and Google Workspace",
+        "Compassionate approach to community health support",
+        "Ability to maintain confidentiality with health information",
+        "Reliable internet connection for remote work"
+      ],
+      "preferredQualifications": [
+        "Background in public health or community health",
+        "Experience with wellness program coordination",
+        "Health education or wellness certification",
+        "Knowledge of mental health resources and support systems",
+        "Experience with underserved communities"
+      ],
+      "whatWeOffer": [
+        "Meaningful work in community health and wellness",
+        "Training in health program coordination",
+        "Free access to all Academy wellness courses",
+        "Career path to Health Program Manager",
+        "Opportunity to impact community wellbeing"
+      ],
+      "applicationInstructions": "Submit your resume and cover letter. Please share your experience with health or wellness programs and why you're passionate about community health.",
       "interviewProcess": [
         "Application review (2-3 business days)",
         "Phone screen with HR (15-20 minutes)",

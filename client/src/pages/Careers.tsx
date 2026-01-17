@@ -165,21 +165,21 @@ const POSITIONS = [
     category: "community"
   },
   { 
-    id: "lead-ops-support", 
-    title: "Lead Operations & Support", 
+    id: "lead-ops-coordinator", 
+    title: "Lead Operations Coordinator", 
     entity: "The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Operations",
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$52,000 - $68,000",
-    description: "Oversee all department Operations & Support staff across the organization. Serve as the primary support to the executive team while supervising HR, QA/QC, Purchasing, Operations, and Education Operations & Support staff.",
+    description: "Oversee all department Operations Coordinator staff across the organization. Serve as the primary support to the executive team while supervising HR, QA/QC, Purchasing, Operations, and Education Operations Coordinator staff.",
     requirements: ["3+ years operations/admin leadership", "Team leadership experience", "Process management skills", "Remote team coordination"],
     category: "operations"
   },
   { 
-    id: "ops-support-hr", 
-    title: "HR Operations & Support", 
+    id: "ops-coordinator-hr", 
+    title: "HR Operations Coordinator", 
     entity: "The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Human Resources",
@@ -191,8 +191,8 @@ const POSITIONS = [
     category: "operations"
   },
   { 
-    id: "ops-support-qaqc", 
-    title: "QA/QC Operations & Support", 
+    id: "ops-coordinator-qaqc", 
+    title: "QA/QC Operations Coordinator", 
     entity: "The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Quality Assurance",
@@ -204,8 +204,8 @@ const POSITIONS = [
     category: "operations"
   },
   { 
-    id: "ops-support-purchasing", 
-    title: "Purchasing Operations & Support", 
+    id: "ops-coordinator-purchasing", 
+    title: "Purchasing Operations Coordinator", 
     entity: "The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Purchasing",
@@ -217,8 +217,8 @@ const POSITIONS = [
     category: "operations"
   },
   { 
-    id: "ops-support-operations", 
-    title: "Operations Operations & Support", 
+    id: "ops-coordinator-operations", 
+    title: "Operations Operations Coordinator", 
     entity: "LuvOnPurpose Autonomous Wealth System LLC",
     entityShort: "LAWS LLC",
     department: "Operations",
@@ -230,8 +230,8 @@ const POSITIONS = [
     category: "operations"
   },
   { 
-    id: "ops-support-education", 
-    title: "Education Operations & Support", 
+    id: "ops-coordinator-education", 
+    title: "Education Operations Coordinator", 
     entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
     entityShort: "Temple/508",
     department: "Education",
@@ -242,6 +242,19 @@ const POSITIONS = [
     requirements: ["1+ years admin/education support", "Organization skills", "Student communication", "LMS familiarity preferred"],
     category: "education"
   },
+  { 
+    id: "ops-coordinator-health", 
+    title: "Health Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Health",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$38,000 - $52,000",
+    description: "Support community wellness initiatives within the L.A.W.S. framework (WATER pillar - Healing & Balance). Coordinate health programs, track wellness metrics, and help community members access health resources.",
+    requirements: ["1+ years health/wellness coordination", "Organization skills", "Compassionate approach", "Health resource knowledge"],
+    category: "health"
+  },
 ];
 
 const CATEGORIES = [
@@ -249,6 +262,7 @@ const CATEGORIES = [
   { id: "operations", label: "Operations", count: POSITIONS.filter(p => p.category === "operations").length },
   { id: "community", label: "Community", count: POSITIONS.filter(p => p.category === "community").length },
   { id: "education", label: "Education", count: POSITIONS.filter(p => p.category === "education").length },
+  { id: "health", label: "Health", count: POSITIONS.filter(p => p.category === "health").length },
   { id: "media", label: "Media", count: POSITIONS.filter(p => p.category === "media").length },
   { id: "technology", label: "Technology", count: POSITIONS.filter(p => p.category === "technology").length },
 ];

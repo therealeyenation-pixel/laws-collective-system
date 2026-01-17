@@ -160,7 +160,7 @@
         "experience": "5+ years in education leadership or training management",
         "skills": ["Curriculum development", "Instructor management", "Program evaluation", "Educational technology"]
       },
-      "directReports": ["Academy Instructors", "Education Operations & Support"],
+      "directReports": ["Academy Instructors", "Education Operations Coordinator"],
       "additionalStipends": [
         {"role": "Justice/Legal Advisor", "amount": 10000, "description": "Advisory support leveraging Criminal Justice expertise"}
       ]
@@ -637,8 +637,8 @@
   ],
   "leadPositions": [
     {
-      "id": "lead-ops-support",
-      "title": "Lead Operations & Support",
+      "id": "lead-ops-coordinator",
+      "title": "Lead Operations Coordinator",
       "entity": "The L.A.W.S. Collective, LLC",
       "department": "Operations",
       "reportsTo": "COO / CEO",
@@ -667,30 +667,30 @@
         "skills": ["Team leadership", "Process management", "Communication", "Problem-solving", "Project coordination"],
         "preferred": ["Supervisory experience", "Operations management background", "Remote team leadership"]
       },
-      "description": "The Lead Operations & Support oversees all department Operations & Support staff across the organization, ensuring efficient day-to-day operations. This role serves as the primary support to the executive team while supervising and coordinating the HR, QA/QC, Purchasing, Operations, and Education Operations & Support staff.",
+      "description": "The Lead Operations Coordinator oversees all department Operations Coordinator staff across the organization, ensuring efficient day-to-day operations. This role serves as the primary support to the executive team while supervising and coordinating the HR, QA/QC, Purchasing, Operations, and Education Operations Coordinator staff.",
       "responsibilities": [
-        "Supervise and lead all department Operations & Support staff (HR, QA/QC, Purchasing, Operations, Education)",
+        "Supervise and lead all department Operations Coordinator staff (HR, QA/QC, Purchasing, Operations, Education)",
         "Provide direct administrative and operational support to CEO, COO, and executive team",
         "Coordinate daily operations and communications across all entities",
         "Manage team schedules, assignments, and workload distribution",
         "Develop and improve operational processes and procedures",
-        "Conduct team meetings and performance check-ins with Operations & Support staff",
+        "Conduct team meetings and performance check-ins with Operations Coordinator staff",
         "Serve as escalation point for operational issues across departments",
         "Coordinate cross-department projects and communications",
         "Prepare executive reports and operational summaries",
         "Support executive meetings, board activities, and strategic initiatives",
-        "Train and onboard new Operations & Support staff",
+        "Train and onboard new Operations Coordinator staff",
         "Ensure consistent quality and efficiency across all support functions"
       ],
-      "directReports": ["HR Operations & Support", "QA/QC Operations & Support", "Purchasing Operations & Support", "Operations Operations & Support", "Education Operations & Support"],
+      "directReports": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator"],
       "priority": "High",
       "status": "Open"
     }
   ],
-  "operationsAndSupportPositions": [
+  "operationsCoordinatorPositions": [
     {
-      "id": "ops-support-hr",
-      "title": "HR Operations & Support",
+      "id": "ops-coordinator-hr",
+      "title": "HR Operations Coordinator",
       "entity": "The L.A.W.S. Collective, LLC",
       "department": "Human Resources",
       "reportsTo": "HR Manager",
@@ -718,7 +718,7 @@
         "skills": ["Organization", "Communication", "Microsoft Office/Google Workspace", "Data entry"],
         "preferred": ["HR coursework or certification", "HRIS experience"]
       },
-      "description": "The HR Operations & Support provides day-to-day administrative assistance to the HR Department. This role handles scheduling, document management, candidate coordination, and employee record maintenance.",
+      "description": "The HR Operations Coordinator provides day-to-day administrative assistance to the HR Department. This role handles scheduling, document management, candidate coordination, and employee record maintenance.",
       "responsibilities": [
         "Schedule interviews and coordinate candidate communications",
         "Maintain employee files and HR documentation",
@@ -731,8 +731,8 @@
       ]
     },
     {
-      "id": "ops-support-qaqc",
-      "title": "QA/QC Operations & Support",
+      "id": "ops-coordinator-qaqc",
+      "title": "QA/QC Operations Coordinator",
       "entity": "The L.A.W.S. Collective, LLC",
       "department": "Quality Assurance / Quality Control",
       "reportsTo": "QA/QC Manager",
@@ -760,7 +760,7 @@
         "skills": ["Attention to detail", "Documentation", "Spreadsheets", "Process tracking"],
         "preferred": ["Quality assurance coursework", "ISO or Six Sigma exposure"]
       },
-      "description": "The QA/QC Operations & Support assists the Quality Department with documentation, tracking, and compliance activities. This role maintains quality records, tracks audit findings, and supports process improvement initiatives.",
+      "description": "The QA/QC Operations Coordinator assists the Quality Department with documentation, tracking, and compliance activities. This role maintains quality records, tracks audit findings, and supports process improvement initiatives.",
       "responsibilities": [
         "Maintain quality documentation and SOPs",
         "Track audit findings and corrective actions",
@@ -773,8 +773,8 @@
       ]
     },
     {
-      "id": "ops-support-purchasing",
-      "title": "Purchasing Operations & Support",
+      "id": "ops-coordinator-purchasing",
+      "title": "Purchasing Operations Coordinator",
       "entity": "The L.A.W.S. Collective, LLC",
       "department": "Purchasing",
       "reportsTo": "Purchasing Manager",
@@ -802,7 +802,7 @@
         "skills": ["Data entry", "Spreadsheets", "Vendor communication", "Invoice processing"],
         "preferred": ["Accounting coursework", "Procurement software experience"]
       },
-      "description": "The Purchasing Operations & Support assists with procurement operations including order processing, vendor communications, and inventory tracking. This role ensures accurate records and timely processing of purchases.",
+      "description": "The Purchasing Operations Coordinator assists with procurement operations including order processing, vendor communications, and inventory tracking. This role ensures accurate records and timely processing of purchases.",
       "responsibilities": [
         "Process purchase orders and requisitions",
         "Communicate with vendors on orders and deliveries",
@@ -815,8 +815,8 @@
       ]
     },
     {
-      "id": "ops-support-operations",
-      "title": "Operations Operations & Support",
+      "id": "ops-coordinator-operations",
+      "title": "Operations Operations Coordinator",
       "entity": "LuvOnPurpose Autonomous Wealth System LLC",
       "department": "Operations",
       "reportsTo": "Operations Manager",
@@ -844,7 +844,7 @@
         "skills": ["Organization", "Multitasking", "Communication", "Project tracking"],
         "preferred": ["Project management coursework", "CRM or operations software experience"]
       },
-      "description": "The Operations Operations & Support provides day-to-day assistance to the Operations team. This role handles scheduling, project tracking, communications, and general administrative tasks to keep operations running smoothly.",
+      "description": "The Operations Operations Coordinator provides day-to-day assistance to the Operations team. This role handles scheduling, project tracking, communications, and general administrative tasks to keep operations running smoothly.",
       "responsibilities": [
         "Schedule meetings and coordinate calendars",
         "Track project milestones and deadlines",
@@ -857,8 +857,8 @@
       ]
     },
     {
-      "id": "ops-support-education",
-      "title": "Education Operations & Support",
+      "id": "ops-coordinator-education",
+      "title": "Education Operations Coordinator",
       "entity": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
       "department": "Education",
       "reportsTo": "Chief Education & Training Officer (Cornelius)",
@@ -886,7 +886,7 @@
         "skills": ["Organization", "Student communication", "LMS navigation", "Record keeping"],
         "preferred": ["Education background", "LMS administration experience"]
       },
-      "description": "The Education Operations & Support assists the Academy with student services, course administration, and certification processing. This role ensures smooth operations of educational programs and excellent student experience.",
+      "description": "The Education Operations Coordinator assists the Academy with student services, course administration, and certification processing. This role ensures smooth operations of educational programs and excellent student experience.",
       "responsibilities": [
         "Process student enrollments and registrations",
         "Track student progress and completion",
@@ -896,6 +896,49 @@
         "Coordinate instructor schedules",
         "Prepare education reports and metrics",
         "Support curriculum updates and course launches"
+      ]
+    },
+    {
+      "id": "health-ops-coordinator",
+      "title": "Health Operations Coordinator",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "department": "Health",
+      "reportsTo": "Lead Operations Coordinator",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 38000,
+        "max": 52000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$38,000 - $52,000 annually"
+      },
+      "compensation": {
+        "type": "role_based",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "All Academy certifications at no cost",
+        "careerGrowth": "Path to Health Program Manager",
+        "flexibleSchedule": true
+      },
+      "requirements": {
+        "experience": "1+ years in health administration or wellness coordination",
+        "skills": ["Health program coordination", "Wellness tracking", "Community health outreach", "Record keeping"],
+        "preferred": ["Health education background", "Community health experience", "Wellness certification"]
+      },
+      "description": "The Health Operations Coordinator supports the organization's health and wellness initiatives within the L.A.W.S. framework (WATER pillar - Healing & Balance). This role coordinates health programs, tracks wellness metrics, and ensures community members have access to health resources.",
+      "responsibilities": [
+        "Coordinate health and wellness programs",
+        "Track community health metrics and outcomes",
+        "Schedule and support wellness workshops",
+        "Maintain health resource directory",
+        "Process wellness program enrollments",
+        "Support mental health and healing initiatives",
+        "Coordinate with external health partners",
+        "Prepare health program reports and metrics",
+        "Assist with health education content development",
+        "Support the WATER pillar healing programs"
       ]
     }
   ],

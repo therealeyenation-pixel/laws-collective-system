@@ -850,6 +850,10 @@ export const agents = mysqlTable("agents", {
     "outreach",        // Marketing and social media outreach
     "seo",             // Search engine optimization
     "engagement",      // Audience analytics and engagement
+    "hr",              // Human Resources department
+    "qaqc",            // Quality Assurance/Quality Control
+    "purchasing",      // Procurement and purchasing
+    "health",          // Health and wellness programs
     "custom"           // User-defined agents
   ]).notNull(),
   description: text("description"),

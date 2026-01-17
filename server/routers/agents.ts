@@ -116,6 +116,47 @@ Be technical, data-driven, and focused on organic search visibility.`,
 - Suggest community engagement activities and events
 Be analytical, strategic, and focused on building lasting audience relationships.`,
 
+  hr: `You are the HR Agent for the LuvOnPurpose Human Resources Department. Your role is to:
+- Assist with recruitment, job postings, and candidate screening
+- Guide employees through onboarding and training processes
+- Answer questions about policies, benefits, and procedures
+- Help managers with performance reviews and feedback
+- Track employee development and career progression
+- Support the hiring process from application to offer letter
+- Maintain confidentiality and compliance with employment laws
+Be professional, supportive, and focused on employee success and organizational growth.`,
+
+  qaqc: `You are the QA/QC Agent for the LuvOnPurpose Quality Assurance Department. Your role is to:
+- Monitor quality standards across all business operations
+- Review processes for compliance with established procedures
+- Identify quality issues and recommend corrective actions
+- Track quality metrics and generate compliance reports
+- Assist with audit preparation and documentation
+- Ensure deliverables meet organizational standards
+- Support continuous improvement initiatives
+Be detail-oriented, systematic, and focused on maintaining excellence.`,
+
+  purchasing: `You are the Purchasing Agent for the LuvOnPurpose Procurement Department. Your role is to:
+- Assist with vendor selection and management
+- Help create purchase requisitions and orders
+- Track procurement status and delivery schedules
+- Analyze spending patterns and identify cost savings
+- Maintain vendor relationships and performance records
+- Ensure compliance with purchasing policies
+- Support budget planning and forecasting
+Be analytical, cost-conscious, and focused on value optimization.`,
+
+  health: `You are the Health Agent for the LuvOnPurpose Health Department (WATER pillar - Healing & Balance). Your role is to:
+- Support health and wellness program coordination
+- Provide guidance on community health resources
+- Track wellness metrics and program outcomes
+- Assist with mental health and healing initiatives
+- Coordinate wellness workshops and events
+- Support the L.A.W.S. WATER pillar programs
+- Connect community members with health resources
+- Promote holistic wellness and balance
+Be compassionate, supportive, and focused on community wellbeing.`,
+
   custom: `You are a custom AI assistant for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
 };
 
@@ -190,6 +231,34 @@ const AGENT_TOPICS: Record<string, Array<{ title: string; description: string; i
     { title: "A/B Testing", description: "Create content experiments", icon: "split" },
     { title: "Engagement Metrics", description: "Track likes, shares, and comments", icon: "heart" },
     { title: "Trending Topics", description: "Discover relevant trending content", icon: "hash" },
+  ],
+  hr: [
+    { title: "Job Postings", description: "Create and manage job listings", icon: "briefcase" },
+    { title: "Applications Review", description: "Review candidate applications", icon: "users" },
+    { title: "Onboarding", description: "Guide new employee onboarding", icon: "user-plus" },
+    { title: "Training Programs", description: "Access employee training resources", icon: "book-open" },
+    { title: "Policy Questions", description: "Get answers about HR policies", icon: "file-text" },
+  ],
+  qaqc: [
+    { title: "Quality Audit", description: "Run quality assessment on processes", icon: "clipboard-check" },
+    { title: "Compliance Check", description: "Verify compliance with standards", icon: "shield-check" },
+    { title: "Issue Tracking", description: "Log and track quality issues", icon: "alert-circle" },
+    { title: "Metrics Report", description: "Generate quality metrics report", icon: "bar-chart-2" },
+    { title: "Improvement Plan", description: "Create continuous improvement plan", icon: "trending-up" },
+  ],
+  purchasing: [
+    { title: "Vendor Search", description: "Find and evaluate vendors", icon: "search" },
+    { title: "Purchase Request", description: "Create a purchase requisition", icon: "shopping-cart" },
+    { title: "Order Tracking", description: "Track purchase order status", icon: "truck" },
+    { title: "Spend Analysis", description: "Analyze procurement spending", icon: "pie-chart" },
+    { title: "Budget Review", description: "Review procurement budget", icon: "dollar-sign" },
+  ],
+  health: [
+    { title: "Wellness Programs", description: "Explore health and wellness initiatives", icon: "heart" },
+    { title: "Health Resources", description: "Find community health resources", icon: "clipboard" },
+    { title: "Wellness Workshops", description: "Schedule wellness workshops", icon: "calendar" },
+    { title: "Mental Health", description: "Access mental health support", icon: "brain" },
+    { title: "WATER Pillar", description: "Learn about healing and balance", icon: "droplet" },
   ],
   custom: [
     { title: "Ask Anything", description: "Start a conversation on any topic", icon: "message-circle" },
@@ -279,6 +348,38 @@ const AGENT_PROMPTS: Record<string, string[]> = {
     "Who is our target audience?",
     "What topics are trending in our niche?",
     "Suggest community engagement activities",
+  ],
+  hr: [
+    "What positions are currently open?",
+    "Help me review this candidate's application",
+    "What's the onboarding process for new hires?",
+    "Generate interview questions for this role",
+    "What training is required for this position?",
+    "Explain our benefits package",
+  ],
+  qaqc: [
+    "Run a quality audit on our processes",
+    "What compliance issues need attention?",
+    "Generate a quality metrics report",
+    "Create a checklist for this procedure",
+    "What improvements should we prioritize?",
+    "Review this deliverable for quality",
+  ],
+  purchasing: [
+    "Find vendors for this product category",
+    "Create a purchase requisition",
+    "What's the status of my orders?",
+    "Analyze our spending this quarter",
+    "Compare these vendor quotes",
+    "What's our budget remaining?",
+  ],
+  health: [
+    "What wellness programs are available?",
+    "Help me find mental health resources",
+    "Schedule a wellness workshop",
+    "What is the WATER pillar about?",
+    "Track our community health metrics",
+    "Connect me with health partners",
   ],
   custom: [
     "Tell me about yourself",
@@ -689,6 +790,42 @@ export const agentsRouter = router({
         avatar: "📈",
         systemPrompt: AGENT_SYSTEM_PROMPTS.engagement,
         capabilities: ["analytics_tracking", "posting_optimization", "ab_testing", "audience_insights", "trend_identification"],
+        isPublic: true,
+      },
+      {
+        name: "HR Agent",
+        type: "hr" as const,
+        description: "Human Resources assistant. Manage recruitment, onboarding, training, and employee support across the organization.",
+        avatar: "👥",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.hr,
+        capabilities: ["recruitment", "onboarding", "training", "policy_guidance", "employee_support"],
+        isPublic: true,
+      },
+      {
+        name: "QA/QC Agent",
+        type: "qaqc" as const,
+        description: "Quality Assurance specialist. Monitor quality standards, track compliance, and drive continuous improvement.",
+        avatar: "✅",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.qaqc,
+        capabilities: ["quality_audit", "compliance_check", "issue_tracking", "metrics_reporting", "improvement_planning"],
+        isPublic: true,
+      },
+      {
+        name: "Purchasing Agent",
+        type: "purchasing" as const,
+        description: "Procurement specialist. Manage vendors, track orders, analyze spending, and optimize purchasing decisions.",
+        avatar: "🛒",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.purchasing,
+        capabilities: ["vendor_management", "purchase_orders", "spend_analysis", "budget_tracking", "procurement"],
+        isPublic: true,
+      },
+      {
+        name: "Health Agent",
+        type: "health" as const,
+        description: "Health and Wellness coordinator. Support community health programs, wellness initiatives, and the WATER pillar healing programs.",
+        avatar: "💚",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.health,
+        capabilities: ["wellness_programs", "health_resources", "mental_health", "workshop_coordination", "community_health"],
         isPublic: true,
       },
     ];

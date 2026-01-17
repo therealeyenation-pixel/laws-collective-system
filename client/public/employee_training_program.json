@@ -289,7 +289,7 @@
     "tracks": {
       "hrDepartment": {
         "name": "Human Resources Training Track",
-        "positions": ["HR Manager", "HR Operations & Support"],
+        "positions": ["HR Manager", "HR Operations Coordinator"],
         "duration": "40 hours over 3 weeks",
         "modules": [
           {
@@ -365,7 +365,7 @@
       },
       "qaqcDepartment": {
         "name": "Quality Assurance/Quality Control Training Track",
-        "positions": ["QA/QC Manager", "QA/QC Operations & Support"],
+        "positions": ["QA/QC Manager", "QA/QC Operations Coordinator"],
         "duration": "36 hours over 3 weeks",
         "modules": [
           {
@@ -434,7 +434,7 @@
       },
       "purchasingDepartment": {
         "name": "Purchasing Department Training Track",
-        "positions": ["Purchasing Manager", "Purchasing Operations & Support"],
+        "positions": ["Purchasing Manager", "Purchasing Operations Coordinator"],
         "duration": "32 hours over 3 weeks",
         "modules": [
           {
@@ -503,7 +503,7 @@
       },
       "operationsDepartment": {
         "name": "Operations Department Training Track",
-        "positions": ["Operations Manager", "Operations Operations & Support"],
+        "positions": ["Operations Manager", "Operations Operations Coordinator"],
         "duration": "36 hours over 3 weeks",
         "modules": [
           {
@@ -572,7 +572,7 @@
       },
       "educationDepartment": {
         "name": "Education Department Training Track",
-        "positions": ["Academy Instructor", "Education Operations & Support"],
+        "positions": ["Academy Instructor", "Education Operations Coordinator"],
         "duration": "40 hours over 3 weeks",
         "modules": [
           {

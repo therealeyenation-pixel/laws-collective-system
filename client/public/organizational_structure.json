@@ -75,7 +75,7 @@
           "Legal/Justice advisory support (Criminal Justice expertise)"
         ],
         "reportsTo": "Matriarch/CEO",
-        "directReports": ["Academy Instructors", "Education Operations & Support"],
+        "directReports": ["Academy Instructors", "Education Operations Coordinator"],
         "salaryRange": "$130,000 - $150,000",
         "additionalStipends": [
           {"role": "Justice/Legal Advisor", "amount": "$10,000", "description": "Advisory support leveraging Criminal Justice expertise"}
@@ -110,7 +110,7 @@
             "notes": "Required for nonprofit credibility with funders"
           },
           {
-            "title": "Education Operations & Support",
+            "title": "Education Operations Coordinator",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Student enrollment and registration processing",
@@ -151,11 +151,11 @@
               "Quality assurance for deliverables"
             ],
             "reportsTo": "COO",
-            "directReports": ["Operations Operations & Support"],
+            "directReports": ["Operations Operations Coordinator"],
             "salaryRange": "$60,000 - $85,000"
           },
           {
-            "title": "Operations Operations & Support",
+            "title": "Operations Operations Coordinator",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Meeting scheduling and calendar coordination",
@@ -197,11 +197,11 @@
               "Performance management"
             ],
             "reportsTo": "COO",
-            "directReports": ["HR Operations & Support"],
+            "directReports": ["HR Operations Coordinator"],
             "salaryRange": "$55,000 - $75,000"
           },
           {
-            "title": "HR Operations & Support",
+            "title": "HR Operations Coordinator",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Interview scheduling and candidate coordination",
@@ -223,11 +223,11 @@
               "Internal audits"
             ],
             "reportsTo": "COO",
-            "directReports": ["QA/QC Operations & Support"],
+            "directReports": ["QA/QC Operations Coordinator"],
             "salaryRange": "$50,000 - $70,000"
           },
           {
-            "title": "QA/QC Operations & Support",
+            "title": "QA/QC Operations Coordinator",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Quality documentation maintenance",
@@ -249,11 +249,11 @@
               "Asset tracking"
             ],
             "reportsTo": "COO",
-            "directReports": ["Purchasing Operations & Support"],
+            "directReports": ["Purchasing Operations Coordinator"],
             "salaryRange": "$48,000 - $65,000"
           },
           {
-            "title": "Purchasing Operations & Support",
+            "title": "Purchasing Operations Coordinator",
             "currentHolder": "Open Position",
             "responsibilities": [
               "Purchase order processing",
@@ -407,12 +407,12 @@
       {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$35,000 - $55,000"},
       {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low", "salaryRange": "$40,000 - $65,000"},
       {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$45,000 - $60,000"},
-      {"title": "Lead Operations & Support", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$52,000 - $68,000"},
-      {"title": "HR Operations & Support", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "QA/QC Operations & Support", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Purchasing Operations & Support", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Operations Operations & Support", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
-      {"title": "Education Operations & Support", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$35,000 - $48,000"}
+      {"title": "Lead Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$52,000 - $68,000"},
+      {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$35,000 - $48,000"},
+      {"title": "Education Operations Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$35,000 - $48,000"}
     ]
   },
   "reportingStructure": {
@@ -434,13 +434,13 @@
     },
     "level5": {
       "title": "Lead",
-      "positions": ["Lead Operations & Support"]
+      "positions": ["Lead Operations Coordinator"]
     },
     "level6": {
       "title": "Staff",
       "positions": ["Outreach Coordinator", "Content Creator", "Academy Instructors", "Community Programs Coordinator"]
     },
     "level7": {
-      "title": "Operations & Support",
-      "positions": ["HR Operations & Support", "QA/QC Operations & Support", "Purchasing Operations & Support", "Operations Operations & Support", "Education Operations & Support"]
+      "title": "Operations Coordinator",
+      "positions": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator"]
     }
