@@ -563,6 +563,228 @@ const LESSON_CONTENT: Record<string, React.ReactNode> = {
       </Card>
     </div>
   ),
+
+  "llc-13": (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="w-5 h-5" />
+            W-2 to Contractor Transition
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p>
+            Transitioning from W-2 employee to independent contractor is a significant step 
+            that requires careful planning. This module guides you through the legal requirements, 
+            timing considerations, and practical steps to make a successful transition.
+          </p>
+
+          <Separator />
+
+          <h3 className="font-semibold text-lg">1. Understanding the Difference</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="border-blue-200 dark:border-blue-800">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">W-2 Employee</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm space-y-1">
+                <p>• Employer controls how, when, where you work</p>
+                <p>• Employer provides equipment and tools</p>
+                <p>• Employer withholds taxes</p>
+                <p>• Eligible for benefits (health, 401k)</p>
+                <p>• Employer pays half of payroll taxes (7.65%)</p>
+                <p>• Receive regular paycheck</p>
+              </CardContent>
+            </Card>
+            <Card className="border-green-200 dark:border-green-800">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">1099 Contractor</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm space-y-1">
+                <p>• You control how you complete the work</p>
+                <p>• You provide your own equipment</p>
+                <p>• You handle your own taxes</p>
+                <p>• No employer benefits</p>
+                <p>• You pay full self-employment tax (15.3%)</p>
+                <p>• Invoice clients for payment</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Separator />
+
+          <h3 className="font-semibold text-lg">2. IRS Classification Factors</h3>
+          <p>The IRS uses three categories to determine worker classification:</p>
+          
+          <div className="space-y-3">
+            <div className="p-3 bg-secondary/30 rounded-lg">
+              <h4 className="font-medium">Behavioral Control</h4>
+              <p className="text-sm text-muted-foreground">
+                Does the company control how you do your work? W-2 employees receive detailed 
+                instructions; contractors control their own methods.
+              </p>
+            </div>
+            <div className="p-3 bg-secondary/30 rounded-lg">
+              <h4 className="font-medium">Financial Control</h4>
+              <p className="text-sm text-muted-foreground">
+                Do you have a significant investment in your business? Can you profit or lose money? 
+                Contractors have financial risk; employees don't.
+              </p>
+            </div>
+            <div className="p-3 bg-secondary/30 rounded-lg">
+              <h4 className="font-medium">Type of Relationship</h4>
+              <p className="text-sm text-muted-foreground">
+                Is there a written contract? Benefits? Permanency? Employees have ongoing 
+                relationships with benefits; contractors have project-based agreements.
+              </p>
+            </div>
+          </div>
+
+          <Alert>
+            <Info className="w-4 h-4" />
+            <AlertTitle>Key Point</AlertTitle>
+            <AlertDescription>
+              Misclassification is a serious IRS issue. Both you and your former employer 
+              must ensure the transition reflects a genuine change in the working relationship.
+            </AlertDescription>
+          </Alert>
+
+          <Separator />
+
+          <h3 className="font-semibold text-lg">3. Transition Timeline</h3>
+          
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <Badge variant="outline" className="mt-1">Step 1</Badge>
+              <div>
+                <h4 className="font-medium">Form Your Business Entity (While Still Employed)</h4>
+                <p className="text-sm text-muted-foreground">
+                  File your LLC, get your EIN, open a business bank account. This can be done 
+                  while you're still a W-2 employee.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Badge variant="outline" className="mt-1">Step 2</Badge>
+              <div>
+                <h4 className="font-medium">Negotiate the Transition</h4>
+                <p className="text-sm text-muted-foreground">
+                  Discuss with your employer about transitioning to a contractor relationship. 
+                  Agree on scope, rates, and terms.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Badge variant="outline" className="mt-1">Step 3</Badge>
+              <div>
+                <h4 className="font-medium">Draft Service Agreement</h4>
+                <p className="text-sm text-muted-foreground">
+                  Replace your employment agreement with a service/consulting agreement that 
+                  defines deliverables, not hours worked.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Badge variant="outline" className="mt-1">Step 4</Badge>
+              <div>
+                <h4 className="font-medium">Complete Final Paycheck & Benefits</h4>
+                <p className="text-sm text-muted-foreground">
+                  Receive your final W-2 paycheck, handle any benefits transitions (COBRA, 
+                  401k rollover), and get your final W-2 for the year.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Badge variant="outline" className="mt-1">Step 5</Badge>
+              <div>
+                <h4 className="font-medium">Begin Invoicing</h4>
+                <p className="text-sm text-muted-foreground">
+                  Submit your W-9 to your former employer (now client) and begin invoicing 
+                  for services rendered.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <h3 className="font-semibold text-lg">4. Service Agreement Essentials</h3>
+          <p>Your contractor agreement should include:</p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li><strong>Scope of Work</strong> - What you'll deliver (not how many hours)</li>
+            <li><strong>Payment Terms</strong> - Rate, invoicing schedule, payment timeline</li>
+            <li><strong>Term & Termination</strong> - How long, how to end the relationship</li>
+            <li><strong>Independent Contractor Status</strong> - Explicit statement of classification</li>
+            <li><strong>Intellectual Property</strong> - Who owns work product</li>
+            <li><strong>Confidentiality</strong> - Protection of sensitive information</li>
+            <li><strong>Insurance</strong> - Your liability coverage requirements</li>
+            <li><strong>Non-Exclusivity</strong> - Your right to work with other clients</li>
+          </ul>
+
+          <Alert variant="destructive">
+            <AlertTriangle className="w-4 h-4" />
+            <AlertTitle>Warning Signs of Misclassification</AlertTitle>
+            <AlertDescription>
+              <ul className="list-disc pl-4 mt-2 space-y-1">
+                <li>Required to work set hours at their location</li>
+                <li>Can't work for other clients</li>
+                <li>They provide all equipment</li>
+                <li>Same work, just different paperwork</li>
+              </ul>
+            </AlertDescription>
+          </Alert>
+
+          <Separator />
+
+          <h3 className="font-semibold text-lg">5. Financial Considerations</h3>
+          
+          <div className="p-4 bg-secondary/30 rounded-lg">
+            <h4 className="font-medium mb-2">Rate Calculation</h4>
+            <p className="text-sm text-muted-foreground mb-3">
+              As a contractor, you need to charge more than your W-2 hourly rate to cover:
+            </p>
+            <ul className="list-disc pl-6 space-y-1 text-sm">
+              <li>Self-employment tax (additional 7.65%)</li>
+              <li>Health insurance (previously employer-subsidized)</li>
+              <li>Retirement contributions (no employer match)</li>
+              <li>Paid time off (you don't get paid when not working)</li>
+              <li>Business expenses (equipment, software, insurance)</li>
+            </ul>
+            <p className="text-sm font-medium mt-3">
+              Rule of thumb: Your contractor rate should be 25-50% higher than your W-2 equivalent.
+            </p>
+          </div>
+
+          <Separator />
+
+          <h3 className="font-semibold text-lg">Transition Checklist</h3>
+          <div className="space-y-2">
+            {[
+              "Form your LLC and obtain EIN",
+              "Open business bank account",
+              "Set up business accounting system",
+              "Obtain business insurance (general liability, E&O)",
+              "Draft service agreement template",
+              "Calculate your contractor rate",
+              "Plan for health insurance (marketplace, COBRA, spouse's plan)",
+              "Set up quarterly estimated tax payments",
+              "Create invoice template",
+              "Prepare W-9 for clients",
+              "Consider S-Corp election if income will exceed $50k",
+              "Consult with CPA about tax implications",
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm">
+                <CheckCircle2 className="w-4 h-4 text-green-600" />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  ),
 };
 
 export default ContractorLessonContent;

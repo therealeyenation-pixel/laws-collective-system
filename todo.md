@@ -2525,3 +2525,25 @@
 - [x] Award tokens for module completion (750 tokens for LLC path)
 - [x] Created ContractorLessons.tsx component with detailed lesson content
 - [x] All 18 unit tests passing
+
+
+## Phase 34: W-2 to Contractor Transition Module
+- [x] Add W-2 to Contractor Transition module to Business Simulator (llc-13)
+- [x] Lesson content: Understanding W-2 vs 1099 classification
+- [x] Lesson content: IRS classification factors (behavioral, financial, relationship)
+- [x] Lesson content: Legal requirements for transition
+- [x] Lesson content: Timing and documentation requirements
+- [x] Lesson content: Forming your business entity during employment
+- [x] Lesson content: Transition checklist and service agreements
+- [x] Lesson content: Invoicing your former employer
+- [ ] Add interactive transition readiness assessment
+- [ ] Add sample service agreement template
+- [x] Award tokens for module completion (800 tokens for LLC path)
+
+
+## Phase 35: Trust Privacy Protection
+- [x] Remove Trust references from offer letter templates
+- [x] Remove Trust references from employment documents
+- [x] Update offer letter header to use employing LLC only
+- [x] Remove "subsidiary of Trust" language from public documents
+- [x] Ensure Trust name only appears in internal/confidential documents

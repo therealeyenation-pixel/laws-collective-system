@@ -59,7 +59,7 @@ const BENEFITS_PACKAGES = [
       "All Academy certifications at no cost",
       "Token earnings based on role metrics",
       "Flexible work schedule",
-      "Voice in Trust governance decisions",
+      "Voice in organizational governance decisions",
       "Professional development opportunities"
     ]
   },
@@ -618,7 +618,7 @@ export default function HRManagement() {
                 <div className="border rounded-lg p-8 bg-white dark:bg-gray-900">
                   {/* Letter Header */}
                   <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-primary">Calea Freeman Family Trust</h2>
+                    <h2 className="text-2xl font-bold text-primary">{selectedOffer.entity}</h2>
                     <p className="text-sm text-muted-foreground">Building Multi-Generational Wealth Through Purpose & Community</p>
                   </div>
                   
@@ -635,8 +635,7 @@ export default function HRManagement() {
                     <p className="mt-6">Dear {selectedOffer.candidateName.split(' ')[0]},</p>
                     
                     <p>
-                      We are pleased to extend this offer of membership and employment with <strong>{selectedOffer.entity}</strong>, 
-                      a subsidiary of the Calea Freeman Family Trust.
+                      We are pleased to extend this offer of membership and employment with <strong>{selectedOffer.entity}</strong>.
                     </p>
                     
                     <div className="bg-muted p-4 rounded-lg my-6">
@@ -694,8 +693,8 @@ export default function HRManagement() {
                     <div className="mt-8">
                       <p>Sincerely,</p>
                       <p className="font-medium mt-4">Shanna Russell</p>
-                      <p className="text-sm text-muted-foreground">Founder / Matriarch / Trustee</p>
-                      <p className="text-sm text-muted-foreground">Calea Freeman Family Trust</p>
+                      <p className="text-sm text-muted-foreground">Founder & Managing Member</p>
+                      <p className="text-sm text-muted-foreground">{selectedOffer.entity}</p>
                     </div>
                     
                     <Separator className="my-8" />

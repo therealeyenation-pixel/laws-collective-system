@@ -46,8 +46,8 @@ const ENTITY_TYPES = [
     benefits: ["Personal asset protection", "Pass-through taxation", "Flexible management", "Less paperwork than corporations", "Contractor operations training included"],
     considerations: ["Self-employment taxes", "State fees vary", "May need operating agreement"],
     recommended: true,
-    tokensReward: 750,
-    modules: 12,
+    tokensReward: 800,
+    modules: 13,
   },
   {
     id: "trust",
@@ -166,6 +166,19 @@ const TRAINING_MODULES: Record<string, { id: string; title: string; description:
         { question: "The home office deduction requires:", options: ["Any room in your home", "Regular and exclusive use for business", "A separate building", "Employer approval"], correct: 1 },
         { question: "The standard mileage rate for 2024 is approximately:", options: ["$0.45/mile", "$0.585/mile", "$0.67/mile", "$1.00/mile"], correct: 2 },
         { question: "How long should you keep business tax records?", options: ["1 year", "3 years", "7 years", "Forever"], correct: 2 },
+      ]
+    },
+    { 
+      id: "llc-13", 
+      title: "W-2 to Contractor Transition", 
+      description: "Learn how to transition from W-2 employee to independent contractor with your own business.",
+      duration: "35 min",
+      quiz: [
+        { question: "What is the key difference between W-2 and 1099 workers?", options: ["Pay rate", "Control over how work is performed", "Type of work done", "Location of work"], correct: 1 },
+        { question: "Which IRS factor determines worker classification?", options: ["Salary amount", "Behavioral, financial, and relationship type", "Job title", "Years of experience"], correct: 1 },
+        { question: "Before transitioning to contractor, you should:", options: ["Quit immediately", "Form your business entity and get an EIN", "Stop paying taxes", "Change your job title"], correct: 1 },
+        { question: "As a contractor, you invoice your client instead of:", options: ["Sending emails", "Receiving a paycheck", "Doing the work", "Signing contracts"], correct: 1 },
+        { question: "A genuine contractor relationship requires:", options: ["Working only for one client", "Using the client's equipment", "Control over how you complete the work", "Fixed work hours"], correct: 2 },
       ]
     },
   ],
