@@ -358,6 +358,336 @@
         "Skills assessment (15 minutes)",
         "Final decision (within 2 business days)"
       ]
+    },
+    {
+      "postingId": "MGR-CONTRACTS-001",
+      "title": "Contracts Manager",
+      "department": "Contracts",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$95,000 - $130,000",
+      "reportsTo": "COO",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "High",
+      "summary": "We're seeking an experienced Contracts Manager to oversee all contract administration, negotiations, and compliance across our family of entities. This senior role requires expertise in contract law, vendor management, and regulatory compliance. You'll work closely with leadership to protect organizational interests while building strong partner relationships.",
+      "responsibilities": [
+        "Draft, review, and negotiate contracts including vendor agreements, service contracts, and partnership agreements",
+        "Manage the full contract lifecycle from initiation through execution and renewal",
+        "Ensure all contracts comply with legal requirements and organizational policies",
+        "Develop and maintain contract templates and standard terms and conditions",
+        "Coordinate with legal counsel on complex contract matters and disputes",
+        "Track contract milestones, renewals, and expiration dates",
+        "Conduct contract risk assessments and recommend mitigation strategies",
+        "Train staff on contract procedures and compliance requirements",
+        "Maintain organized contract repository and documentation system",
+        "Report on contract performance metrics and cost savings"
+      ],
+      "requirements": [
+        "Bachelor's degree in Business Administration, Legal Studies, or related field",
+        "5+ years of contract management or administration experience",
+        "Strong knowledge of contract law and regulatory compliance",
+        "Excellent negotiation and communication skills",
+        "Experience with contract management software and databases",
+        "Detail-oriented with strong analytical abilities",
+        "Ability to manage multiple contracts and priorities simultaneously",
+        "Professional certification (CPCM, CFCM, or similar) preferred"
+      ],
+      "preferredQualifications": [
+        "JD or Paralegal certification",
+        "Experience with government contracts and grants",
+        "Knowledge of nonprofit and 501(c)(3) compliance",
+        "Experience in multi-entity organizational structures",
+        "Familiarity with intellectual property and licensing agreements"
+      ],
+      "whatWeOffer": [
+        "Senior leadership role with organizational impact",
+        "Competitive salary with performance bonuses",
+        "Professional development and certification support",
+        "Career path to Chief Legal Officer or General Counsel",
+        "Ownership stake potential through token economy"
+      ],
+      "applicationInstructions": "Submit your resume and cover letter. Please include examples of contract types you've managed and any significant negotiations or cost savings achieved.",
+      "interviewProcess": [
+        "Application review (3-5 business days)",
+        "Phone screen with HR (20-30 minutes)",
+        "Technical interview with leadership (45-60 minutes)",
+        "Contract review exercise (take-home)",
+        "Final panel interview via Microsoft Teams (45 minutes)",
+        "Final decision (within 5 business days)"
+      ]
+    },
+    {
+      "postingId": "OPS-CONTRACTS-001",
+      "title": "Contracts Operations Coordinator",
+      "department": "Contracts",
+      "entity": "The L.A.W.S. Collective, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$52,000 - $72,000",
+      "reportsTo": "Contracts Manager",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "Medium",
+      "summary": "We're seeking a detail-oriented Contracts Operations Coordinator to support our contract management function. In this role, you'll assist with contract administration, document management, and compliance tracking. This is an excellent opportunity for someone looking to build a career in contract management within a mission-driven organization.",
+      "responsibilities": [
+        "Maintain and organize contract files, databases, and documentation systems",
+        "Track contract deadlines, renewals, and key milestones",
+        "Prepare contract summaries and status reports for leadership review",
+        "Coordinate contract routing for signatures and approvals",
+        "Assist with vendor onboarding and compliance documentation",
+        "Process contract amendments and modifications",
+        "Respond to routine contract inquiries from internal stakeholders",
+        "Support contract audits and compliance reviews",
+        "Maintain confidentiality of sensitive contract information",
+        "Assist Contracts Manager with special projects as assigned"
+      ],
+      "requirements": [
+        "Associate's degree or equivalent experience in Business, Legal Studies, or related field",
+        "2+ years of administrative experience, preferably in contracts or legal support",
+        "Strong organizational skills and attention to detail",
+        "Proficiency in Microsoft Office Suite and database management",
+        "Excellent written and verbal communication skills",
+        "Ability to handle confidential information with discretion",
+        "Self-motivated with ability to work independently"
+      ],
+      "preferredQualifications": [
+        "Bachelor's degree in Business Administration or related field",
+        "Experience with contract management software (DocuSign, Concord, etc.)",
+        "Paralegal coursework or certification",
+        "Experience in nonprofit or multi-entity organizations",
+        "Knowledge of government contracting basics"
+      ],
+      "whatWeOffer": [
+        "Entry point to contract management career",
+        "Training and professional development support",
+        "Mentorship from experienced Contracts Manager",
+        "Career path to Contracts Manager",
+        "Free access to all Academy professional courses"
+      ],
+      "applicationInstructions": "Submit your resume and cover letter. Please describe your experience with document management and any exposure to contracts or legal support work.",
+      "interviewProcess": [
+        "Application review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Skills assessment (15 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    },
+    {
+      "postingId": "MGR-DESIGN-001",
+      "title": "Design Manager",
+      "department": "Design & Creative",
+      "entity": "Real-Eye-Nation, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$85,000 - $115,000",
+      "reportsTo": "COO / CEO",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "High",
+      "summary": "We're seeking a creative Design Manager to lead all visual design and branding initiatives across our organization. In this role, you'll establish brand identity, create design systems, and ensure visual consistency across all entities, marketing materials, and digital platforms.",
+      "responsibilities": [
+        "Develop and maintain brand identity and design systems for all entities",
+        "Create visual designs for marketing, web, print, and digital platforms",
+        "Lead design projects from concept to completion",
+        "Supervise Design Operations Coordinator and creative staff",
+        "Establish design standards and style guides",
+        "Collaborate with Marketing and Media teams on campaigns",
+        "Manage design project timelines and deliverables",
+        "Review and approve all design work for brand consistency"
+      ],
+      "requirements": [
+        "5+ years in graphic design, brand management, or creative direction",
+        "Proficiency in Adobe Creative Suite (Photoshop, Illustrator, InDesign)",
+        "Strong portfolio demonstrating brand design and visual systems",
+        "Experience leading design teams or projects",
+        "Excellent communication and presentation skills"
+      ],
+      "preferredQualifications": [
+        "BFA or design degree",
+        "Agency or in-house creative experience",
+        "Motion graphics and video editing experience",
+        "UI/UX design experience",
+        "Experience with design systems and component libraries"
+      ],
+      "whatWeOffer": [
+        "Ownership stake in Real-Eye-Nation, LLC",
+        "Creative freedom and leadership opportunity",
+        "Adobe Creative Cloud license provided",
+        "Professional development and conference attendance",
+        "Free access to all Academy professional courses"
+      ],
+      "applicationInstructions": "Submit your resume, cover letter, and portfolio link. Please include examples of brand identity work and design systems you've developed.",
+      "interviewProcess": [
+        "Application and portfolio review (3-5 business days)",
+        "Phone screen with HR (20-30 minutes)",
+        "Design presentation and panel interview via Microsoft Teams (60 minutes)",
+        "Design exercise (take-home, 2-3 hours)",
+        "Final interview with leadership (30 minutes)",
+        "Final decision (within 3 business days)"
+      ]
+    },
+    {
+      "postingId": "OPS-DESIGN-001",
+      "title": "Design Operations Coordinator",
+      "department": "Design & Creative",
+      "entity": "Real-Eye-Nation, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$52,000 - $72,000",
+      "reportsTo": "Design Manager",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "Medium",
+      "summary": "We're seeking a creative Design Operations Coordinator to support our design function. In this role, you'll assist with design production, asset management, and coordination of creative projects across all organizational entities.",
+      "responsibilities": [
+        "Execute design projects under Design Manager direction",
+        "Maintain design asset library and file organization",
+        "Prepare files for print and digital production",
+        "Create design variations and adaptations",
+        "Coordinate with vendors for print production",
+        "Track design project timelines and deliverables",
+        "Support brand consistency across materials",
+        "Assist with social media graphics and content"
+      ],
+      "requirements": [
+        "2+ years in graphic design, visual design, or creative production",
+        "Proficiency in Adobe Creative Suite (Photoshop, Illustrator, InDesign)",
+        "Strong attention to detail and file organization skills",
+        "Ability to work on multiple projects simultaneously",
+        "Excellent communication skills"
+      ],
+      "preferredQualifications": [
+        "Design degree or certificate",
+        "Brand design experience",
+        "Print and digital design experience",
+        "Experience with design asset management systems",
+        "Social media graphics experience"
+      ],
+      "whatWeOffer": [
+        "Entry point to creative career",
+        "Adobe Creative Cloud license provided",
+        "Mentorship from experienced Design Manager",
+        "Career path to Design Manager",
+        "Free access to all Academy professional courses"
+      ],
+      "applicationInstructions": "Submit your resume, cover letter, and portfolio link. Please include examples of your design work across different mediums.",
+      "interviewProcess": [
+        "Application and portfolio review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Design skills assessment (30 minutes)",
+        "Final decision (within 2 business days)"
+      ]
+    },
+    {
+      "postingId": "MGR-MEDIA-001",
+      "title": "Media Manager",
+      "department": "Media Production",
+      "entity": "Real-Eye-Nation, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$85,000 - $115,000",
+      "reportsTo": "COO / CEO",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "High",
+      "summary": "We're seeking an experienced Media Manager to lead all media production and content creation initiatives for Real-Eye-Nation and the broader organization. In this role, you'll oversee video production, podcasts, social media content, and ensure consistent messaging across all media channels.",
+      "responsibilities": [
+        "Develop and execute media content strategy across all platforms",
+        "Lead video production projects from pre-production to post",
+        "Manage podcast production and distribution",
+        "Supervise Media Operations Coordinator and content creators",
+        "Oversee social media content calendar and engagement",
+        "Coordinate with Design team on visual content",
+        "Manage media equipment and production resources",
+        "Track media metrics and optimize content performance"
+      ],
+      "requirements": [
+        "5+ years in media production, video production, or content management",
+        "Proficiency in Adobe Premiere, Final Cut Pro, or similar editing software",
+        "Strong portfolio demonstrating video and content production",
+        "Experience managing content teams or production projects",
+        "Excellent storytelling and communication skills"
+      ],
+      "preferredQualifications": [
+        "Broadcast or film production background",
+        "Podcast production experience",
+        "Live streaming expertise",
+        "Social media management certification",
+        "Experience with content management systems"
+      ],
+      "whatWeOffer": [
+        "Ownership stake in Real-Eye-Nation, LLC",
+        "Creative freedom and leadership opportunity",
+        "Production equipment provided",
+        "Professional development and conference attendance",
+        "Free access to all Academy professional courses"
+      ],
+      "applicationInstructions": "Submit your resume, cover letter, and portfolio/reel link. Please include examples of video content, podcasts, or social media campaigns you've produced.",
+      "interviewProcess": [
+        "Application and portfolio review (3-5 business days)",
+        "Phone screen with HR (20-30 minutes)",
+        "Content presentation and panel interview via Microsoft Teams (60 minutes)",
+        "Production exercise (take-home, 2-3 hours)",
+        "Final interview with leadership (30 minutes)",
+        "Final decision (within 3 business days)"
+      ]
+    },
+    {
+      "postingId": "OPS-MEDIA-001",
+      "title": "Media Operations Coordinator",
+      "department": "Media Production",
+      "entity": "Real-Eye-Nation, LLC",
+      "location": "Remote (US-based)",
+      "employmentType": "Full-Time",
+      "salaryRange": "$52,000 - $72,000",
+      "reportsTo": "Media Manager",
+      "postingDate": "2026-01-17",
+      "closingDate": "Open until filled",
+      "priority": "Medium",
+      "summary": "We're seeking a creative Media Operations Coordinator to support our media production function. In this role, you'll assist with video production, social media management, and coordination of media projects across all platforms.",
+      "responsibilities": [
+        "Edit video content under Media Manager direction",
+        "Schedule and publish social media content",
+        "Manage media asset library and archives",
+        "Coordinate production schedules and logistics",
+        "Assist with podcast production and editing",
+        "Track media metrics and engagement",
+        "Respond to social media comments and messages",
+        "Support live streaming and virtual events"
+      ],
+      "requirements": [
+        "2+ years in video production, content creation, or media coordination",
+        "Proficiency in video editing software (Premiere, Final Cut, DaVinci)",
+        "Experience with social media management and scheduling tools",
+        "Strong organizational and project coordination skills",
+        "Excellent communication skills"
+      ],
+      "preferredQualifications": [
+        "Film or media production background",
+        "Podcast production experience",
+        "Live streaming experience",
+        "Photography skills",
+        "Experience with content management systems"
+      ],
+      "whatWeOffer": [
+        "Entry point to media production career",
+        "Access to production equipment",
+        "Mentorship from experienced Media Manager",
+        "Career path to Media Manager",
+        "Free access to all Academy professional courses"
+      ],
+      "applicationInstructions": "Submit your resume, cover letter, and portfolio/reel link. Please include examples of video content or social media work you've produced.",
+      "interviewProcess": [
+        "Application and portfolio review (2-3 business days)",
+        "Phone screen with HR (15-20 minutes)",
+        "Panel interview via Microsoft Teams (30-45 minutes)",
+        "Media skills assessment (30 minutes)",
+        "Final decision (within 2 business days)"
+      ]
     }
   ],
   "upcomingPostings": [

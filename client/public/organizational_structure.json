@@ -400,6 +400,18 @@
         "lead": "Contracts Manager",
         "servesEntities": ["All"],
         "functions": ["Contract Drafting", "Negotiation", "Compliance Monitoring", "Risk Management"]
+      },
+      {
+        "name": "Design & Creative",
+        "lead": "Design Manager",
+        "servesEntities": ["All"],
+        "functions": ["Brand Identity", "Graphic Design", "UI/UX Design", "Visual Content"]
+      },
+      {
+        "name": "Media Production",
+        "lead": "Media Manager",
+        "servesEntities": ["All"],
+        "functions": ["Video Production", "Social Media", "Podcasts", "Content Strategy"]
       }
     ]
   },
@@ -435,7 +447,11 @@
       {"title": "Procurement Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000"},
       {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"},
       {"title": "Contracts Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000"},
-      {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"}
+      {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"},
+      {"title": "Design Manager", "entity": "Real-Eye-Nation", "priority": "High", "salaryRange": "$85,000 - $115,000"},
+      {"title": "Design Operations Coordinator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$52,000 - $72,000"},
+      {"title": "Media Manager", "entity": "Real-Eye-Nation", "priority": "High", "salaryRange": "$85,000 - $115,000"},
+      {"title": "Media Operations Coordinator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$52,000 - $72,000"}
     ]
   },
   "reportingStructure": {

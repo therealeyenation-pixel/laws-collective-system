@@ -2668,3 +2668,25 @@
 - [x] Create Operations Dashboard (cross-department metrics, task tracking)
 - [x] Create Executive Dashboard (high-level KPIs across all entities)
 - [x] Add dashboard navigation to sidebar
+
+
+## Phase 45: Dashboard Navigation, Job Postings, and Employee Directory
+- [x] Add HR Dashboard link to sidebar navigation
+- [x] Add Operations Dashboard link to sidebar navigation
+- [x] Add Executive Dashboard link to sidebar navigation
+- [x] Create job posting for Contracts Manager
+- [x] Create job posting for Contracts Operations Coordinator
+- [ ] Build employee directory database schema
+- [ ] Create employee directory page with team member profiles
+- [ ] Add employee CRUD operations
+
+
+## Phase 46: Design and Media Department Positions
+- [x] Create Design Manager position ($85,000 - $115,000)
+- [x] Create Design Operations Coordinator position ($52,000 - $72,000)
+- [x] Create Media Manager position ($85,000 - $115,000)
+- [x] Create Media Operations Coordinator position ($52,000 - $72,000)
+- [x] Add all positions to internal_job_descriptions.json
+- [x] Add all positions to organizational_structure.json
+- [x] Add job postings for all new positions
+- [x] Update Careers page with new positions

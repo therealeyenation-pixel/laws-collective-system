@@ -789,6 +789,110 @@
       "directReports": ["Contracts Operations Coordinator"],
       "priority": "High",
       "status": "Open"
+    },
+    {
+      "id": "design-manager",
+      "title": "Design Manager",
+      "entity": "Real-Eye-Nation, LLC",
+      "department": "Design & Creative",
+      "reportsTo": "COO / CEO",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 85000,
+        "max": 115000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$85,000 - $115,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "Real-Eye-Nation, LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Design and creative certifications",
+        "governanceVoice": true,
+        "flexibleSchedule": true,
+        "creativeSoftware": "Adobe Creative Cloud license"
+      },
+      "requirements": {
+        "experience": "5+ years in graphic design, brand management, or creative direction",
+        "skills": ["Graphic design", "Brand identity", "UI/UX design", "Adobe Creative Suite", "Team leadership"],
+        "preferred": ["BFA or design degree", "Agency or in-house creative experience", "Motion graphics experience"]
+      },
+      "description": "The Design Manager leads all visual design and branding initiatives across the organization. This role establishes brand identity, creates design systems, and ensures visual consistency across all entities, marketing materials, and digital platforms.",
+      "responsibilities": [
+        "Develop and maintain brand identity and design systems for all entities",
+        "Create visual designs for marketing, web, print, and digital platforms",
+        "Lead design projects from concept to completion",
+        "Supervise Design Operations Coordinator and creative staff",
+        "Establish design standards and style guides",
+        "Collaborate with Marketing and Media teams on campaigns",
+        "Manage design project timelines and deliverables",
+        "Review and approve all design work for brand consistency",
+        "Stay current with design trends and tools",
+        "Support Academy with course materials and visual content"
+      ],
+      "directReports": ["Design Operations Coordinator"],
+      "priority": "High",
+      "status": "Open"
+    },
+    {
+      "id": "media-manager",
+      "title": "Media Manager",
+      "entity": "Real-Eye-Nation, LLC",
+      "department": "Media Production",
+      "reportsTo": "COO / CEO",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 85000,
+        "max": 115000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$85,000 - $115,000 annually"
+      },
+      "compensation": {
+        "type": "ownership_stake",
+        "ownershipEntity": "Real-Eye-Nation, LLC",
+        "tokenEarnings": true,
+        "allocationSplit": {
+          "interHouse": "60/40",
+          "intraHouse": "70/30"
+        }
+      },
+      "benefits": {
+        "academyCertifications": "Media production and content certifications",
+        "governanceVoice": true,
+        "flexibleSchedule": true,
+        "productionEquipment": "Camera and production equipment provided"
+      },
+      "requirements": {
+        "experience": "5+ years in media production, video production, or content management",
+        "skills": ["Video production", "Content strategy", "Social media management", "Adobe Premiere/Final Cut", "Team leadership"],
+        "preferred": ["Broadcast or film production background", "Podcast production experience", "Live streaming expertise"]
+      },
+      "description": "The Media Manager leads all media production and content creation initiatives for Real-Eye-Nation and the broader organization. This role oversees video production, podcasts, social media content, and ensures consistent messaging across all media channels.",
+      "responsibilities": [
+        "Develop and execute media content strategy across all platforms",
+        "Lead video production projects from pre-production to post",
+        "Manage podcast production and distribution",
+        "Supervise Media Operations Coordinator and content creators",
+        "Oversee social media content calendar and engagement",
+        "Coordinate with Design team on visual content",
+        "Manage media equipment and production resources",
+        "Track media metrics and optimize content performance",
+        "Build relationships with media partners and influencers",
+        "Support Academy with video courses and educational content"
+      ],
+      "directReports": ["Media Operations Coordinator", "Content Creator / Media Assistant"],
+      "priority": "High",
+      "status": "Open"
     }
   ],
   "leadPositions": [
@@ -838,7 +942,7 @@
         "Train and onboard new Operations Coordinator staff",
         "Ensure consistent quality and efficiency across all support functions"
       ],
-      "directReports": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator", "Contracts Operations Coordinator"],
+      "directReports": ["HR Operations Coordinator", "QA/QC Operations Coordinator", "Purchasing Operations Coordinator", "Operations Operations Coordinator", "Education Operations Coordinator", "Health Operations Coordinator", "Contracts Operations Coordinator", "Design Operations Coordinator", "Media Operations Coordinator"],
       "priority": "High",
       "status": "Open"
     }
@@ -1138,6 +1242,94 @@
         "Support vendor onboarding documentation",
         "Assist with contract research and due diligence",
         "Coordinate with departments on contract needs"
+      ]
+    },
+    {
+      "id": "design-ops-coordinator",
+      "title": "Design Operations Coordinator",
+      "entity": "Real-Eye-Nation, LLC",
+      "department": "Design & Creative",
+      "reportsTo": "Design Manager",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 52000,
+        "max": 72000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$52,000 - $72,000 annually"
+      },
+      "compensation": {
+        "type": "role_based",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "All Academy certifications at no cost",
+        "careerGrowth": "Path to Design Manager",
+        "flexibleSchedule": true,
+        "creativeSoftware": "Adobe Creative Cloud license"
+      },
+      "requirements": {
+        "experience": "2+ years in graphic design, visual design, or creative production",
+        "skills": ["Graphic design", "Adobe Creative Suite", "File management", "Project coordination", "Attention to detail"],
+        "preferred": ["Design degree or certificate", "Brand design experience", "Print and digital design"]
+      },
+      "description": "The Design Operations Coordinator supports the Design Manager in executing visual design projects across all organizational entities. This role assists with design production, asset management, and coordination of creative projects.",
+      "responsibilities": [
+        "Execute design projects under Design Manager direction",
+        "Maintain design asset library and file organization",
+        "Prepare files for print and digital production",
+        "Create design variations and adaptations",
+        "Coordinate with vendors for print production",
+        "Track design project timelines and deliverables",
+        "Support brand consistency across materials",
+        "Assist with social media graphics and content",
+        "Prepare design presentations and mockups",
+        "Update and maintain design templates"
+      ]
+    },
+    {
+      "id": "media-ops-coordinator",
+      "title": "Media Operations Coordinator",
+      "entity": "Real-Eye-Nation, LLC",
+      "department": "Media Production",
+      "reportsTo": "Media Manager",
+      "classification": "Full-Time",
+      "location": "Remote",
+      "salaryRange": {
+        "min": 52000,
+        "max": 72000,
+        "currency": "USD",
+        "period": "annually",
+        "displayText": "$52,000 - $72,000 annually"
+      },
+      "compensation": {
+        "type": "role_based",
+        "tokenEarnings": true
+      },
+      "benefits": {
+        "academyCertifications": "All Academy certifications at no cost",
+        "careerGrowth": "Path to Media Manager",
+        "flexibleSchedule": true,
+        "productionEquipment": "Access to production equipment"
+      },
+      "requirements": {
+        "experience": "2+ years in video production, content creation, or media coordination",
+        "skills": ["Video editing", "Social media management", "Content scheduling", "Adobe Premiere/Final Cut", "Project coordination"],
+        "preferred": ["Film or media production background", "Podcast production experience", "Live streaming experience"]
+      },
+      "description": "The Media Operations Coordinator supports the Media Manager in producing and distributing media content across all platforms. This role assists with video production, social media management, and coordination of media projects.",
+      "responsibilities": [
+        "Edit video content under Media Manager direction",
+        "Schedule and publish social media content",
+        "Manage media asset library and archives",
+        "Coordinate production schedules and logistics",
+        "Assist with podcast production and editing",
+        "Track media metrics and engagement",
+        "Respond to social media comments and messages",
+        "Support live streaming and virtual events",
+        "Prepare media reports and analytics",
+        "Coordinate with Design team on visual content"
       ]
     }
   ],

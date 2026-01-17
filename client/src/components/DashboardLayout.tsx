@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -67,6 +67,8 @@ const menuItems: MenuItem[] = [
   { icon: DollarSign, label: "Financial Automation", path: "/financial-automation", minRole: "staff", category: "Management" },
   { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff", category: "Management" },
   { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff", category: "Management" },
+  { icon: ClipboardList, label: "HR Dashboard", path: "/hr-dashboard", minRole: "staff", category: "Management" },
+  { icon: BarChart3, label: "Operations Dashboard", path: "/operations-dashboard", minRole: "staff", category: "Management" },
   { icon: Users, label: "Position Management", path: "/positions", minRole: "staff", category: "Management" },
   { icon: Gift, label: "Grant Management", path: "/grants", minRole: "staff", category: "Management" },
   { icon: FileText, label: "Document Vault", path: "/vault", minRole: "staff", category: "Management" },
@@ -88,6 +90,7 @@ const menuItems: MenuItem[] = [
   { icon: DollarSign, label: "Pricing", path: "/pricing", minRole: "admin", category: "Administration" },
   
   // Owner Level - Trust & Governance
+  { icon: Briefcase, label: "Executive Dashboard", path: "/executive-dashboard", minRole: "admin", category: "Governance" },
   { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner", category: "Governance" },
   { icon: Shield, label: "System Overview", path: "/system-overview", minRole: "owner", category: "Governance" },
 ];
