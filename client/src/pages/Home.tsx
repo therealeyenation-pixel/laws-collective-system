@@ -12,6 +12,7 @@ import {
   Droplets,
   Heart,
   ChevronRight,
+  Quote,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -75,6 +76,27 @@ export default function Home() {
     "Community members looking for education and personal development",
     "Creatives wanting to monetize their talents and build their brand",
     "Individuals ready to break generational cycles and build legacy",
+  ];
+
+  const testimonials = [
+    {
+      quote: "This program changed how I think about building wealth for my family. It's not just about money—it's about legacy.",
+      name: "Community Member",
+      role: "Business Owner",
+      initials: "CM",
+    },
+    {
+      quote: "The L.A.W.S. framework helped me reconnect with my purpose and build a business that aligns with my values.",
+      name: "Program Graduate",
+      role: "Entrepreneur",
+      initials: "PG",
+    },
+    {
+      quote: "Finally, a system that understands multi-generational wealth building from a community-centered perspective.",
+      name: "Academy Student",
+      role: "Financial Literacy Graduate",
+      initials: "AS",
+    },
   ];
 
   return (
@@ -226,6 +248,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-16 md:py-24 bg-secondary/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              What Our Community Says
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Hear from members who are building their legacy with us
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial, idx) => (
+              <Card key={idx} className="p-6 relative">
+                <Quote className="w-8 h-8 text-primary/20 absolute top-4 right-4" />
+                <p className="text-muted-foreground mb-6 italic leading-relaxed">
+                  "{testimonial.quote}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-sm font-bold text-primary">{testimonial.initials}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          <p className="text-center text-sm text-muted-foreground mt-8">
+            *Testimonials represent the experiences of our community members. Individual results may vary.
+          </p>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-primary/5">
         <div className="container max-w-4xl mx-auto px-4 text-center">
@@ -265,6 +323,7 @@ export default function Home() {
               <ul className="space-y-2 text-sm">
                 <li><Link href="/getting-started" className="text-muted-foreground hover:text-foreground">Get Started</Link></li>
                 <li><Link href="/careers" className="text-muted-foreground hover:text-foreground">Careers</Link></li>
+                <li><Link href="/contact" className="text-muted-foreground hover:text-foreground">Contact Us</Link></li>
                 <li><Link href="/system-overview" className="text-muted-foreground hover:text-foreground">System Overview</Link></li>
                 {isAuthenticated && (
                   <li><Link href="/dashboard" className="text-muted-foreground hover:text-foreground">Dashboard</Link></li>

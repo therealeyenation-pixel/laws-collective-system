@@ -26,7 +26,16 @@ import {
   Calendar,
   Target,
   BookOpen,
+  Upload,
+  Download,
+  Eye,
+  Lock,
+  Plus,
+  Wallet,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import { Link } from "wouter";
 
 // Trust allocation policy from business plan
@@ -122,8 +131,37 @@ const implementationTimeline = [
   { phase: "Maturity", timeline: "Years 5+", milestones: "Sustainable operations, next generation preparation", status: "pending" },
 ];
 
+// Trust documents
+const trustDocuments = [
+  { name: "Trust Agreement", type: "Legal", status: "draft", date: "2024-01-15", confidential: true },
+  { name: "Operating Agreement - LAWS, LLC", type: "Entity", status: "active", date: "2024-02-01", confidential: true },
+  { name: "Operating Agreement - L.A.W.S. Collective", type: "Entity", status: "active", date: "2024-02-01", confidential: true },
+  { name: "Bylaws - Temple/Academy", type: "Entity", status: "active", date: "2024-02-15", confidential: true },
+  { name: "Operating Agreement - Real-Eye-Nation", type: "Entity", status: "active", date: "2024-02-01", confidential: true },
+  { name: "Family Governance Charter", type: "Governance", status: "draft", date: "2024-03-01", confidential: false },
+  { name: "Succession Plan", type: "Governance", status: "draft", date: "2024-03-15", confidential: true },
+  { name: "Distribution Policy", type: "Financial", status: "draft", date: "2024-04-01", confidential: true },
+];
+
+// Beneficiaries
+const beneficiaries = [
+  { name: "Shanna Russell", relationship: "Founder/Trustee", status: "primary", percentage: 40, notes: "Managing beneficiary" },
+  { name: "Craig", relationship: "House Member", status: "primary", percentage: 15, notes: "Finance lead" },
+  { name: "Amber", relationship: "House Member", status: "contingent", percentage: 10, notes: "Operations" },
+  { name: "Essence", relationship: "House Member", status: "contingent", percentage: 10, notes: "Creative" },
+  { name: "Amandes", relationship: "House Member", status: "contingent", percentage: 10, notes: "Media" },
+  { name: "Cornelius", relationship: "House Member", status: "contingent", percentage: 10, notes: "Education" },
+  { name: "Future Generations", relationship: "Descendants", status: "remainder", percentage: 5, notes: "Remainder beneficiaries" },
+];
+
+// Distribution history (sample)
+const distributionHistory = [
+  { id: "D001", date: "2024-12-01", type: "Operating", amount: 0, recipient: "All Entities", status: "pending", notes: "Initial funding pending" },
+];
+
 export default function TrustGovernance() {
   const [selectedEntity, setSelectedEntity] = useState<string | null>(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const totalAllocation = subsidiaryEntities.reduce((sum, e) => sum + e.allocation, 0);
 
@@ -221,7 +259,7 @@ export default function TrustGovernance() {
 
         {/* Main Tabs */}
         <Tabs defaultValue="allocation" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="allocation" className="gap-2">
               <PieChart className="w-4 h-4" />
               Allocation
@@ -229,6 +267,18 @@ export default function TrustGovernance() {
             <TabsTrigger value="subsidiaries" className="gap-2">
               <Building2 className="w-4 h-4" />
               Subsidiaries
+            </TabsTrigger>
+            <TabsTrigger value="beneficiaries" className="gap-2">
+              <Users className="w-4 h-4" />
+              Beneficiaries
+            </TabsTrigger>
+            <TabsTrigger value="distributions" className="gap-2">
+              <Wallet className="w-4 h-4" />
+              Distributions
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Documents
             </TabsTrigger>
             <TabsTrigger value="succession" className="gap-2">
               <GraduationCap className="w-4 h-4" />
@@ -388,6 +438,299 @@ export default function TrustGovernance() {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          </TabsContent>
+
+          {/* Beneficiaries Tab */}
+          <TabsContent value="beneficiaries" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="flex items-center gap-2">
+                          <Users className="w-5 h-5" />
+                          Trust Beneficiaries
+                        </CardTitle>
+                        <CardDescription>
+                          Current and contingent beneficiaries of the Trust
+                        </CardDescription>
+                      </div>
+                      <Button size="sm" className="gap-2" onClick={() => toast.info("Add beneficiary feature coming soon")}>
+                        <Plus className="w-4 h-4" />
+                        Add Beneficiary
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {beneficiaries.map((beneficiary, idx) => (
+                        <div key={idx} className="p-4 border rounded-lg hover:bg-secondary/30 transition-colors">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span className="font-bold text-primary">{beneficiary.name.charAt(0)}</span>
+                              </div>
+                              <div>
+                                <p className="font-medium">{beneficiary.name}</p>
+                                <p className="text-sm text-muted-foreground">{beneficiary.relationship}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <Badge variant={
+                                beneficiary.status === "primary" ? "default" :
+                                beneficiary.status === "contingent" ? "secondary" : "outline"
+                              }>
+                                {beneficiary.status}
+                              </Badge>
+                              <p className="text-lg font-bold text-primary mt-1">{beneficiary.percentage}%</p>
+                            </div>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{beneficiary.notes}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Beneficiary Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Primary Beneficiaries</span>
+                      <span className="font-bold">{beneficiaries.filter(b => b.status === "primary").length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Contingent Beneficiaries</span>
+                      <span className="font-bold">{beneficiaries.filter(b => b.status === "contingent").length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Remainder Beneficiaries</span>
+                      <span className="font-bold">{beneficiaries.filter(b => b.status === "remainder").length}</span>
+                    </div>
+                    <div className="pt-4 border-t">
+                      <div className="flex justify-between">
+                        <span className="font-medium">Total Allocation</span>
+                        <span className="font-bold text-primary">{beneficiaries.reduce((sum, b) => sum + b.percentage, 0)}%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800">
+                  <CardContent className="pt-6">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+                      <div>
+                        <p className="font-medium text-amber-800 dark:text-amber-200">Confidential Information</p>
+                        <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                          Beneficiary information is private and should only be shared with authorized parties.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Distributions Tab */}
+          <TabsContent value="distributions" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="flex items-center gap-2">
+                          <Wallet className="w-5 h-5" />
+                          Distribution History
+                        </CardTitle>
+                        <CardDescription>
+                          Record of all Trust distributions
+                        </CardDescription>
+                      </div>
+                      <Button size="sm" className="gap-2" onClick={() => toast.info("Record distribution feature coming soon")}>
+                        <Plus className="w-4 h-4" />
+                        Record Distribution
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {distributionHistory.length === 0 || distributionHistory[0].amount === 0 ? (
+                      <div className="text-center py-8">
+                        <Wallet className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
+                        <p className="text-muted-foreground">No distributions recorded yet</p>
+                        <p className="text-sm text-muted-foreground mt-1">Distributions will appear here once the Trust is funded</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {distributionHistory.map((dist) => (
+                          <div key={dist.id} className="p-4 border rounded-lg">
+                            <div className="flex items-center justify-between mb-2">
+                              <div>
+                                <p className="font-medium">{dist.type} Distribution</p>
+                                <p className="text-sm text-muted-foreground">{dist.date}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-lg font-bold">${dist.amount.toLocaleString()}</p>
+                                <Badge variant={dist.status === "completed" ? "default" : "secondary"}>
+                                  {dist.status}
+                                </Badge>
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground">Recipient: {dist.recipient}</p>
+                            {dist.notes && <p className="text-sm text-muted-foreground mt-1">{dist.notes}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Distribution Policy</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="p-3 bg-secondary/30 rounded-lg">
+                      <p className="text-sm font-medium">Operating Reserve</p>
+                      <p className="text-xs text-muted-foreground">20% maintained before distributions</p>
+                    </div>
+                    <div className="p-3 bg-secondary/30 rounded-lg">
+                      <p className="text-sm font-medium">Distribution Frequency</p>
+                      <p className="text-xs text-muted-foreground">Quarterly, after reserve requirements met</p>
+                    </div>
+                    <div className="p-3 bg-secondary/30 rounded-lg">
+                      <p className="text-sm font-medium">Approval Required</p>
+                      <p className="text-xs text-muted-foreground">Trustee + Family Council for amounts over $5,000</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Distribution Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Distributed (YTD)</span>
+                      <span className="font-bold">$0</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Distributed (All Time)</span>
+                      <span className="font-bold">$0</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Pending Distributions</span>
+                      <span className="font-bold">$0</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Documents Tab */}
+          <TabsContent value="documents" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="w-5 h-5" />
+                      Trust Document Vault
+                    </CardTitle>
+                    <CardDescription>
+                      Secure storage for all Trust-related documents
+                    </CardDescription>
+                  </div>
+                  <Button size="sm" className="gap-2" onClick={() => toast.info("Document upload feature coming soon")}>
+                    <Upload className="w-4 h-4" />
+                    Upload Document
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {trustDocuments.map((doc, idx) => (
+                    <div key={idx} className="p-4 border rounded-lg hover:bg-secondary/30 transition-colors">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-secondary">
+                            <FileText className="w-5 h-5 text-muted-foreground" />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium">{doc.name}</p>
+                              {doc.confidential && <Lock className="w-4 h-4 text-amber-500" />}
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Badge variant="outline" className="text-xs">{doc.type}</Badge>
+                              <span>•</span>
+                              <span>{doc.date}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={doc.status === "active" ? "default" : "secondary"}>
+                            {doc.status}
+                          </Badge>
+                          <Button variant="ghost" size="sm" onClick={() => toast.info("Document preview coming soon")}>
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={() => toast.info("Document download coming soon")}>
+                            <Download className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-3">
+                      <FileText className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <p className="text-2xl font-bold">{trustDocuments.length}</p>
+                    <p className="text-sm text-muted-foreground">Total Documents</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-3">
+                      <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                    </div>
+                    <p className="text-2xl font-bold">{trustDocuments.filter(d => d.status === "active").length}</p>
+                    <p className="text-sm text-muted-foreground">Active Documents</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-3">
+                      <Lock className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <p className="text-2xl font-bold">{trustDocuments.filter(d => d.confidential).length}</p>
+                    <p className="text-sm text-muted-foreground">Confidential</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 

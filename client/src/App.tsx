@@ -39,6 +39,7 @@ import HRManagement from "@/pages/HRManagement";
 import Careers from "@/pages/Careers";
 import GettingStarted from "@/pages/GettingStarted";
 import SystemOverview from "@/pages/SystemOverview";
+import Contact from "@/pages/Contact";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -99,6 +100,7 @@ function Router() {
       <Route path="/academy" component={AcademyDashboard} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/careers" component={Careers} />
+      <Route path="/contact" component={Contact} />
       {/* Dashboard is now public so users can view and take courses */}
       <Route path="/dashboard" component={Dashboard} />
       {/* Protected routes - require authentication */}
