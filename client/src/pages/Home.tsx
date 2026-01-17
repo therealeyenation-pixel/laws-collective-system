@@ -106,20 +106,38 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
         <div className="container max-w-6xl mx-auto px-4 py-20 md:py-32 relative">
           <div className="max-w-3xl">
-            {/* Company Brand */}
-            <div className="mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-primary mb-2">
-                The L.A.W.S. Collective, LLC
-              </h2>
-              <p className="text-sm md:text-base text-muted-foreground tracking-wide">
-                <span className="font-semibold">L</span>and • <span className="font-semibold">A</span>ir • <span className="font-semibold">W</span>ater • <span className="font-semibold">S</span>elf
-              </p>
+            {/* Welcome & Brand */}
+            <div className="mb-6">
+              <p className="text-lg md:text-xl text-muted-foreground mb-2">Welcome to</p>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-4">
+                The L.A.W.S. Collective
+              </h1>
+              
+              {/* LAWS Acronym Display */}
+              <div className="flex flex-wrap gap-4 md:gap-6 mb-6">
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">L</span>
+                  <span className="text-lg md:text-xl text-foreground">and</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">A</span>
+                  <span className="text-lg md:text-xl text-foreground">ir</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">W</span>
+                  <span className="text-lg md:text-xl text-foreground">ater</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">S</span>
+                  <span className="text-lg md:text-xl text-foreground">elf</span>
+                </div>
+              </div>
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-6">
               Building Multi-Generational Wealth Through{" "}
               <span className="text-primary">Purpose & Community</span>
-            </h1>
+            </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
               A family enterprise helping individuals and families create lasting prosperity 
               through education, business development, and community support.

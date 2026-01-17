@@ -106,15 +106,22 @@ export default function SystemOverview() {
         <div className="container max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-primary mb-1">
-                The L.A.W.S. Collective, LLC presents
+              <p className="text-sm font-medium text-muted-foreground mb-1">
+                Welcome to
               </p>
-              <h1 className="text-3xl font-bold text-foreground">
-                LuvOnPurpose Autonomous Wealth System
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                <span className="text-primary">L</span>uvOnPurpose{" "}
+                <span className="text-primary">A</span>utonomous{" "}
+                <span className="text-primary">W</span>ealth{" "}
+                <span className="text-primary">S</span>ystem
               </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                <span className="font-semibold">L</span>uvOnPurpose <span className="font-semibold">A</span>utonomous <span className="font-semibold">W</span>ealth <span className="font-semibold">S</span>ystem • Multi-Generational Wealth Architecture
-              </p>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span className="font-bold text-primary text-lg">LAWS</span>
+                <span>•</span>
+                <span>Multi-Generational Wealth Architecture</span>
+                <span>•</span>
+                <span className="text-xs">A L.A.W.S. Collective Enterprise</span>
+              </div>
             </div>
             <div className="flex gap-2">
               {!isAuthenticated ? (
