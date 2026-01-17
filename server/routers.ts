@@ -57,6 +57,7 @@ import { interCompanyRouter } from "./routers/inter-company";
 import { businessFormationRouter } from "./routers/business-formation";
 import { bankingCreditRouter } from "./routers/banking-credit";
 import { digitalSignaturesRouter } from "./routers/digital-signatures";
+import { exchangeRatesRouter } from "./routers/exchange-rates";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -115,6 +116,7 @@ export const appRouter = router({
   businessFormation: businessFormationRouter,
   bankingCredit: bankingCreditRouter,
   digitalSignatures: digitalSignaturesRouter,
+  exchangeRates: exchangeRatesRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

@@ -306,6 +306,8 @@ export default function FamilyOnboarding() {
               <CardContent>
                 <div className="space-y-4">
                   {[
+                    { name: "Calea Freeman Family Trust", member: "Trust - Owner Only", focus: "Holding Entity, Asset Protection", status: "active" },
+                    { name: "Real-Eye-Nation LLC", member: "Shanna Russell", focus: "Operations, Business", status: "active" },
                     { name: "Purpose Proposal Group", member: "Shanna Russell", focus: "Contracts, Grants, Business", status: "active" },
                     { name: "FreeLife Media", member: "Amandes", focus: "Media, IT, Outreach", status: "active" },
                     { name: "TBD - Health Entity", member: "Amber", focus: "Health, Outreach", status: "pending" },
