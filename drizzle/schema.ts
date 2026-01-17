@@ -6179,3 +6179,171 @@ export const grantFunders = mysqlTable("grant_funders", {
 
 export type GrantFunder = typeof grantFunders.$inferSelect;
 export type InsertGrantFunder = typeof grantFunders.$inferInsert;
+
+
+// ============================================
+// BUSINESS PLAN SYSTEM - Smart Data Flow
+// ============================================
+
+/**
+ * Business Plans - Created via Business Plan Simulator
+ * Auto-populates Grant Simulator and other modules
+ */
+export const businessPlans = mysqlTable("business_plans", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Link to entity
+  entityType: mysqlEnum("entityType", [
+    "llc", "corporation", "trust", "nonprofit_508", "nonprofit_501c3", "collective", "sole_proprietorship"
+  ]).notNull(),
+  entityName: varchar("entityName", { length: 255 }).notNull(),
+  
+  // Ownership
+  houseId: int("houseId"),
+  createdByUserId: int("createdByUserId").notNull(),
+  
+  // Core Business Info
+  missionStatement: text("missionStatement"),
+  visionStatement: text("visionStatement"),
+  organizationDescription: text("organizationDescription"),
+  yearFounded: int("yearFounded"),
+  
+  // Products/Services
+  productsServices: text("productsServices"),
+  uniqueValueProposition: text("uniqueValueProposition"),
+  
+  // Market
+  targetMarket: text("targetMarket"),
+  marketSize: varchar("marketSize", { length: 255 }),
+  competitiveAdvantage: text("competitiveAdvantage"),
+  
+  // Team
+  teamSize: int("teamSize"),
+  teamDescription: text("teamDescription"),
+  keyPersonnel: json("keyPersonnel"), // Array of { name, role, bio }
+  
+  // Financial Projections
+  startupCosts: decimal("startupCosts", { precision: 14, scale: 2 }),
+  monthlyOperatingCosts: decimal("monthlyOperatingCosts", { precision: 14, scale: 2 }),
+  projectedRevenueYear1: decimal("projectedRevenueYear1", { precision: 14, scale: 2 }),
+  projectedRevenueYear2: decimal("projectedRevenueYear2", { precision: 14, scale: 2 }),
+  projectedRevenueYear3: decimal("projectedRevenueYear3", { precision: 14, scale: 2 }),
+  breakEvenTimeline: varchar("breakEvenTimeline", { length: 100 }),
+  
+  // Funding
+  fundingNeeded: decimal("fundingNeeded", { precision: 14, scale: 2 }),
+  fundingPurpose: text("fundingPurpose"),
+  fundingSources: json("fundingSources"), // Array of { source, amount, status }
+  
+  // Goals & Milestones
+  shortTermGoals: json("shortTermGoals"), // Array of goals
+  longTermGoals: json("longTermGoals"),
+  milestones: json("milestones"), // Array of { milestone, targetDate, status }
+  
+  // Impact (for nonprofits/508)
+  socialImpact: text("socialImpact"),
+  communityBenefit: text("communityBenefit"),
+  measurableOutcomes: json("measurableOutcomes"), // Array of outcomes
+  
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "in_progress", "completed", "approved", "archived"
+  ]).default("draft").notNull(),
+  completedAt: timestamp("completedAt"),
+  approvedAt: timestamp("approvedAt"),
+  approvedBy: int("approvedBy"),
+  
+  // Version tracking
+  version: int("version").default(1),
+  previousVersionId: int("previousVersionId"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BusinessPlan = typeof businessPlans.$inferSelect;
+export type InsertBusinessPlan = typeof businessPlans.$inferInsert;
+
+/**
+ * Business Plan Sections - Individual sections for step-by-step completion
+ */
+export const businessPlanSections = mysqlTable("business_plan_sections", {
+  id: int("id").autoincrement().primaryKey(),
+  businessPlanId: int("businessPlanId").notNull(),
+  
+  // Section info
+  sectionType: mysqlEnum("sectionType", [
+    "executive_summary",
+    "company_description",
+    "products_services",
+    "market_analysis",
+    "marketing_strategy",
+    "operations_plan",
+    "management_team",
+    "financial_projections",
+    "funding_request",
+    "appendix"
+  ]).notNull(),
+  
+  sectionTitle: varchar("sectionTitle", { length: 255 }).notNull(),
+  content: text("content"),
+  
+  // Completion tracking
+  isComplete: boolean("isComplete").default(false),
+  completedAt: timestamp("completedAt"),
+  
+  // Order
+  sortOrder: int("sortOrder").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BusinessPlanSection = typeof businessPlanSections.$inferSelect;
+export type InsertBusinessPlanSection = typeof businessPlanSections.$inferInsert;
+
+/**
+ * Simulator Completions - Track which simulators a user has completed
+ * Used to unlock subsequent simulators and auto-populate data
+ */
+export const simulatorCompletions = mysqlTable("simulator_completions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  userId: int("userId").notNull(),
+  houseId: int("houseId"),
+  
+  // Simulator info
+  simulatorType: mysqlEnum("simulatorType", [
+    "business_formation",
+    "business_plan",
+    "grant_application",
+    "trust_formation",
+    "nonprofit_formation"
+  ]).notNull(),
+  
+  // Entity created (if applicable)
+  entityType: varchar("entityType", { length: 50 }),
+  entityName: varchar("entityName", { length: 255 }),
+  entityId: int("entityId"), // Reference to created entity
+  
+  // Business plan created (if applicable)
+  businessPlanId: int("businessPlanId"),
+  
+  // Completion details
+  completedAt: timestamp("completedAt").defaultNow().notNull(),
+  certificateIssued: boolean("certificateIssued").default(false),
+  certificateIssuedAt: timestamp("certificateIssuedAt"),
+  
+  // Training Manager signature
+  trainingManagerId: int("trainingManagerId"),
+  trainingManagerName: varchar("trainingManagerName", { length: 255 }),
+  
+  // Token rewards
+  tokensEarned: int("tokensEarned").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SimulatorCompletion = typeof simulatorCompletions.$inferSelect;
+export type InsertSimulatorCompletion = typeof simulatorCompletions.$inferInsert;

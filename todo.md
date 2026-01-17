@@ -1701,3 +1701,27 @@
 - [x] Add LUV token rewards for completion
 
 - [x] Move Craig to be listed right after Shanna in Family Onboarding
+
+
+## Phase 85: Smart Data Flow System - Integrated Simulators
+
+- [x] Design database schema for business plans linked to entities
+- [x] Add business_plans table with foreign key to entities
+- [x] Create Business Plan Simulator that pulls entity data from Business Simulator
+- [x] Business Plan fields: mission, vision, description, products/services, target market, financials
+- [ ] Update Grant Simulator to auto-populate from entity and business plan data (next phase)
+- [ ] Create backend tRPC procedures for cross-simulator data retrieval
+- [ ] Wire entity selection in Grant Simulator to fetch business plan data
+- [x] Auto-fill organization description, mission statement, year founded, team size
+- [ ] Test complete data flow: Business Simulator → Business Plan → Grant Simulator
+- [x] Add Business Plan Simulator page with 8 progressive steps
+- [x] Step 1: Entity Selection (pulls from Business Simulator entities)
+- [x] Step 2: Mission & Vision
+- [x] Step 3: Products/Services (adapts for nonprofits)
+- [x] Step 4: Market Analysis
+- [x] Step 5: Team Structure (pulls from Family Onboarding)
+- [x] Step 6: Financial Projections
+- [x] Step 7: Funding Needs
+- [x] Step 8: Review & Complete with Certificate
+- [x] Add completion certificate with Training Manager (Cornelius) signature
+- [x] Add Business Plan Simulator to navigation menu

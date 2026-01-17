@@ -39,6 +39,7 @@ const menuItems = [
   { icon: DollarSign, label: "Financial Automation", path: "/financial-automation" },
   { icon: Coins, label: "Banking & Credit", path: "/banking" },
   { icon: Play, label: "Business Simulator", path: "/business-simulator" },
+  { icon: FileText, label: "Business Plan", path: "/business-plan-simulator" },
   { icon: Building2, label: "Business Formation", path: "/business-formation" },
   { icon: Users, label: "Position Management", path: "/positions" },
   { icon: Users, label: "Family Onboarding", path: "/family-onboarding" },
