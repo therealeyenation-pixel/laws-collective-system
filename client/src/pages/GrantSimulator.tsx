@@ -95,7 +95,7 @@ const entities = [
   { id: "trust", name: "Calea Freeman Family Trust", type: "Trust", eligibility: ["family_trust"] },
   { id: "luvonpurpose", name: "LuvOnPurpose LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "small_business"] },
   { id: "laws", name: "L.A.W.S. Collective", type: "Collective", eligibility: ["women_owned", "minority_owned", "community"] },
-  { id: "508academy", name: "508 Academy & Outreach", type: "508(c)(1)(a)", eligibility: ["faith_based", "nonprofit", "education"] },
+  { id: "508academy", name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "508(c)(1)(a)", eligibility: ["faith_based", "nonprofit", "education"] },
 ];
 
 const steps = [

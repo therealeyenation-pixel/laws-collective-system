@@ -35,7 +35,7 @@ const entities = [
   { id: "calea-trust", name: "Calea Freeman Family Trust", type: "trust" as const, ein: "98-6109577" },
   { id: "luvonpurpose", name: "LuvOnPurpose LLC", type: "llc" as const, ein: null },
   { id: "laws-collective", name: "L.A.W.S. Collective", type: "collective" as const, ein: null },
-  { id: "508-academy", name: "508 Academy & Outreach", type: "nonprofit_508" as const, ein: null },
+  { id: "508-academy", name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "nonprofit_508" as const, ein: null },
 ];
 
 type EntityType = "llc" | "corporation" | "trust" | "nonprofit_508" | "nonprofit_501c3" | "collective" | "sole_proprietorship";

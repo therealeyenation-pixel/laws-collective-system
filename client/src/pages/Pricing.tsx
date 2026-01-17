@@ -207,7 +207,7 @@ export default function Pricing() {
       description: "Comprehensive financial education for individuals and families",
       icon: <BookOpen className="w-6 h-6" />,
       turnaround: "Self-paced",
-      entity: "508 Academy & Outreach",
+      entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
       entityType: "training",
       deliverables: [
         "12-module video curriculum",
@@ -224,7 +224,7 @@ export default function Pricing() {
       description: "Hands-on training for starting and structuring businesses",
       icon: <GraduationCap className="w-6 h-6" />,
       turnaround: "2-day intensive",
-      entity: "508 Academy & Outreach",
+      entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
       entityType: "training",
       deliverables: [
         "Entity selection guidance",

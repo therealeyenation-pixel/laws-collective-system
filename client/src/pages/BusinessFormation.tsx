@@ -30,6 +30,9 @@ interface EntityData {
   formationStatus: FormationStatus;
   dateFormed?: string;
   ein?: string;
+  controlNumber?: string;
+  address?: string;
+  naicsCode?: string;
   hasEIN: boolean;
   hasPaperwork: boolean;
   isOperating: boolean;
@@ -87,14 +90,18 @@ const REAL_ENTITIES: EntityData[] = [
   },
   {
     id: 5,
-    name: "508 Academy & Outreach",
+    name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
     entityType: "nonprofit",
-    state: "TBD",
-    formationStatus: "not_started",
+    state: "GA",
+    formationStatus: "active",
+    dateFormed: "2025-07-04",
+    controlNumber: "25132958",
     hasEIN: false,
     hasPaperwork: true,
-    isOperating: false,
-    notes: "Has paperwork. 508(c)(1)(A) nonprofit formation pending."
+    isOperating: true,
+    address: "4093 Cottingham Way, Augusta, GA 30909",
+    naicsCode: "Religious Organizations",
+    notes: "Domestic Nonprofit Corporation - Georgia. Control Number: 25132958. Status: Active/Owes Current Year AR. NAICS: Religious Organizations."
   },
 ];
 

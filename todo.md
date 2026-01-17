@@ -1838,7 +1838,7 @@
 ## Entity-Based Revenue Stream Separation
 - [x] Assign Products (Platform/SaaS) to The L.A.W.S. Collective, LLC
 - [x] Assign Services (Grant writing, Proposals, Contracts) to LuvOnPurpose Autonomous Wealth System LLC
-- [x] Assign Training/Education to 508 Academy & Outreach
+- [x] Assign Training/Education to LuvOnPurpose Outreach Temple and Academy Society, Inc.
 - [x] Create house permissions system (Founding House + Heirs can offer services independently)
 - [x] Restrict other houses from independently offering services
 - [ ] Update Pricing page to show entity assignments for each offering
@@ -1847,7 +1847,7 @@
 ## Entity Revenue Stream Assignments (Confirmed)
 - [x] The L.A.W.S. Collective, LLC (Delaware) → Products (Platform/SaaS subscriptions)
 - [x] LuvOnPurpose Autonomous Wealth System LLC (Delaware) → Services (Grant writing, proposals, contracts, consulting)
-- [x] 508 Academy & Outreach → Training (Courses, workshops, coaching)
+- [x] LuvOnPurpose Outreach Temple and Academy Society, Inc. → Training (Courses, workshops, coaching)
 - [x] Real-Eye-Nation LLC (Georgia) → Media/Content Production
 - [x] Calea Freeman Family Trust → Asset protection, holdings
 
@@ -1857,3 +1857,12 @@
 - [ ] Implement employee-service assignment (family members as W-2 under LuvOnPurpose AWS)
 - [ ] Implement inter-entity contracting (LuvOnPurpose contracts with 508 Academy)
 - [ ] Build Business Setup Wizard
+
+## Update 508 Entity Information
+- [x] Update 508 entity name from "508 Academy & Outreach" to "LuvOnPurpose Outreach Temple and Academy Society, Inc."
+- [x] Update entity type to Domestic Nonprofit Corporation
+- [x] Update address to 4093 Cottingham Way, Augusta, GA 30909
+- [x] Update formation date to 7/4/2025
+- [x] Update state to Georgia
+- [x] Update NAICS code to Religious Organizations
+- [x] Update control number to 25132958
