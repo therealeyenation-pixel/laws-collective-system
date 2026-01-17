@@ -1,0 +1,70 @@
+{
+  "query": "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_NAME LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_NAME LIMIT 20;",
+  "rows": [
+    {
+      "TABLE_NAME": "__drizzle_migrations"
+    },
+    {
+      "TABLE_NAME": "academy_courses"
+    },
+    {
+      "TABLE_NAME": "academy_houses"
+    },
+    {
+      "TABLE_NAME": "academy_languages"
+    },
+    {
+      "TABLE_NAME": "academy_lessons"
+    },
+    {
+      "TABLE_NAME": "achievements"
+    },
+    {
+      "TABLE_NAME": "activity_audit_trail"
+    },
+    {
+      "TABLE_NAME": "agent_actions"
+    },
+    {
+      "TABLE_NAME": "agent_conversations"
+    },
+    {
+      "TABLE_NAME": "agent_messages"
+    },
+    {
+      "TABLE_NAME": "agents"
+    },
+    {
+      "TABLE_NAME": "allocation_pots"
+    },
+    {
+      "TABLE_NAME": "allocation_transactions"
+    },
+    {
+      "TABLE_NAME": "approvals"
+    },
+    {
+      "TABLE_NAME": "assets"
+    },
+    {
+      "TABLE_NAME": "audit_events"
+    },
+    {
+      "TABLE_NAME": "audit_requests"
+    },
+    {
+      "TABLE_NAME": "autonomous_operations"
+    },
+    {
+      "TABLE_NAME": "blockchain_records"
+    },
+    {
+      "TABLE_NAME": "bot_actions"
+    }
+  ],
+  "messages": [],
+  "stdout": "TABLE_NAME\n__drizzle_migrations\nacademy_courses\nacademy_houses\nacademy_languages\nacademy_lessons\nachievements\nactivity_audit_trail\nagent_actions\nagent_conversations\nagent_messages\nagents\nallocation_pots\nallocation_transactions\napprovals\nassets\naudit_events\naudit_requests\nautonomous_operations\nblockchain_records\nbot_actions\n",
+  "stderr": "",
+  "execution_time_ms": 64
+}

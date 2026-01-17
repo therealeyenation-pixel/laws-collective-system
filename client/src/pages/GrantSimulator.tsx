@@ -149,10 +149,15 @@ const initialData: ApplicationData = {
   projectTimeline: "",
   expectedOutcomes: "",
   budgetItems: [
-    { category: "Personnel", description: "", amount: "" },
+    { category: "Salaries & Wages", description: "", amount: "" },
+    { category: "Fringe Benefits", description: "", amount: "" },
+    { category: "Contractors", description: "", amount: "" },
     { category: "Equipment", description: "", amount: "" },
     { category: "Supplies", description: "", amount: "" },
+    { category: "Travel", description: "", amount: "" },
     { category: "Marketing", description: "", amount: "" },
+    { category: "Training", description: "", amount: "" },
+    { category: "Operating Costs", description: "", amount: "" },
     { category: "Other", description: "", amount: "" },
   ],
 };
@@ -175,6 +180,44 @@ export default function GrantSimulator() {
   // Auto-populate when business plan data is loaded
   useEffect(() => {
     if (businessPlanData && !autoPopulated) {
+      // Helper to format goals array into readable text
+      const formatGoals = (goals: unknown): string => {
+        if (!goals) return "";
+        if (Array.isArray(goals)) {
+          return goals.map((g, i) => `${i + 1}. ${typeof g === 'string' ? g : (g as {goal?: string}).goal || JSON.stringify(g)}`).join("\n");
+        }
+        return typeof goals === 'string' ? goals : "";
+      };
+      
+      // Helper to format milestones into timeline
+      const formatTimeline = (milestones: unknown): string => {
+        if (!milestones) return "";
+        if (Array.isArray(milestones)) {
+          return milestones.map((m) => {
+            if (typeof m === 'string') return m;
+            const ms = m as {milestone?: string; targetDate?: string; description?: string};
+            return `${ms.milestone || ms.description || ''} - ${ms.targetDate || 'TBD'}`;
+          }).join("\n");
+        }
+        return typeof milestones === 'string' ? milestones : "";
+      };
+      
+      // Generate project title from entity name and mission
+      const generateProjectTitle = (): string => {
+        const entityName = businessPlanData.entityName || "";
+        // Extract key words from mission for title
+        const missionWords = (businessPlanData.missionStatement || "").split(" ").slice(0, 5).join(" ");
+        return `${entityName} Growth Initiative` || missionWords;
+      };
+      
+      // Generate activities from products/services
+      const generateActivities = (): string => {
+        const products = businessPlanData.productsServices || "";
+        if (!products) return "";
+        // Convert products/services description into activities
+        return `Key Activities:\n- Expand and enhance ${products.substring(0, 100)}...\n- Strengthen market presence in ${businessPlanData.targetMarket || 'target markets'}\n- Build operational capacity and team capabilities`;
+      };
+      
       setData(prev => ({
         ...prev,
         orgDescription: businessPlanData.organizationDescription || prev.orgDescription,
@@ -182,7 +225,14 @@ export default function GrantSimulator() {
         yearFounded: businessPlanData.yearFounded?.toString() || prev.yearFounded,
         teamSize: getTeamSizeCategory(businessPlanData.teamSize),
         needStatement: businessPlanData.fundingPurpose || prev.needStatement,
+        problemDescription: businessPlanData.socialImpact || prev.problemDescription,
         targetPopulation: businessPlanData.communityBenefit || prev.targetPopulation,
+        // Project Description fields
+        projectTitle: generateProjectTitle() || prev.projectTitle,
+        projectGoals: formatGoals(businessPlanData.shortTermGoals) || formatGoals(businessPlanData.longTermGoals) || prev.projectGoals,
+        projectActivities: generateActivities() || prev.projectActivities,
+        projectTimeline: formatTimeline(businessPlanData.milestones) || prev.projectTimeline,
+        expectedOutcomes: businessPlanData.uniqueValueProposition || prev.expectedOutcomes,
       }));
       setAutoPopulated(true);
       toast.success("Auto-populated from your Business Plan!");
@@ -542,7 +592,7 @@ export default function GrantSimulator() {
                 <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-blue-800 dark:text-blue-200">Training: Budget Creation</p>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Create a realistic budget showing how you'll use the funds.</p>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Create a realistic budget showing how you'll use the funds. Most grants allow personnel costs including salaries, wages, and benefits.</p>
                 </div>
               </div>
             </div>

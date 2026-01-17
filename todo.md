@@ -1774,3 +1774,17 @@
 - [x] Fix "Cannot read properties of undefined (reading '0')" error in business-plan-parser
 - [x] Add proper error handling for LLM response parsing (handle string and array content types)
 - [ ] Test parsing with actual business plan content
+
+
+## Phase 90: Seed Business Plan Data into Database
+
+- [x] Create seed script to insert all 5 business plans into database
+- [x] Insert Real-Eye-Nation LLC business plan data
+- [x] Insert Calea Freeman Family Trust business plan data
+- [x] Insert LuvOnPurpose LLC business plan data
+- [x] Insert L.A.W.S. Collective business plan data
+- [x] Insert 508 Academy & Outreach business plan data
+- [x] Verify data auto-populates in Grant Simulator
+- [x] Auto-populate Project Description fields (Project Title, Project Goals, Key Activities, Timeline) from business plan data
+- [x] Auto-populate Problem Description field in Need Statement step from business plan data
+- [x] Add employee salary/personnel line items to Grant Simulator budget section

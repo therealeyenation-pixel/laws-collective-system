@@ -153,6 +153,16 @@ export const businessPlanRouter = router({
       }
       
       const plan = plans[0];
+      
+      // Parse JSON fields safely
+      const parseJson = (val: unknown) => {
+        if (!val) return null;
+        if (typeof val === 'string') {
+          try { return JSON.parse(val); } catch { return null; }
+        }
+        return val;
+      };
+      
       return {
         entityName: plan.entityName,
         entityType: plan.entityType,
@@ -165,6 +175,14 @@ export const businessPlanRouter = router({
         fundingPurpose: plan.fundingPurpose,
         socialImpact: plan.socialImpact,
         communityBenefit: plan.communityBenefit,
+        // Project Description fields
+        productsServices: plan.productsServices,
+        uniqueValueProposition: plan.uniqueValueProposition,
+        shortTermGoals: parseJson(plan.shortTermGoals),
+        longTermGoals: parseJson(plan.longTermGoals),
+        milestones: parseJson(plan.milestones),
+        targetMarket: plan.targetMarket,
+        competitiveAdvantage: plan.competitiveAdvantage,
       };
     }),
 });
