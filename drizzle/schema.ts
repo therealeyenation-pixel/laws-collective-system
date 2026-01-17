@@ -6993,3 +6993,122 @@ export const trainingResponses = mysqlTable("training_responses", {
 export type TrainingResponse = typeof trainingResponses.$inferSelect;
 export type InsertTrainingResponse = typeof trainingResponses.$inferInsert;
 
+
+/**
+ * Job Applications - Track candidate applications
+ */
+export const jobApplications = mysqlTable("job_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  positionId: varchar("positionId", { length: 100 }).notNull(), // References position ID from job_postings.json
+  positionTitle: varchar("positionTitle", { length: 255 }).notNull(),
+  entity: varchar("entity", { length: 255 }).notNull(),
+  // Applicant Information
+  firstName: varchar("firstName", { length: 100 }).notNull(),
+  lastName: varchar("lastName", { length: 100 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 50 }),
+  // Application Details
+  currentRole: varchar("currentRole", { length: 255 }),
+  yearsExperience: varchar("yearsExperience", { length: 50 }),
+  relevantSkills: text("relevantSkills"),
+  whyInterested: text("whyInterested"),
+  coverLetter: text("coverLetter"),
+  // Resume
+  resumeUrl: text("resumeUrl"),
+  resumeFileName: varchar("resumeFileName", { length: 255 }),
+  resumeFileKey: varchar("resumeFileKey", { length: 500 }),
+  // Status Tracking
+  status: mysqlEnum("status", [
+    "received",
+    "screening",
+    "phone_screen",
+    "interview_scheduled",
+    "interview_completed",
+    "reference_check",
+    "offer_extended",
+    "offer_accepted",
+    "hired",
+    "rejected",
+    "withdrawn"
+  ]).default("received").notNull(),
+  statusNotes: text("statusNotes"),
+  // Interview Details
+  interviewDate: timestamp("interviewDate"),
+  interviewType: mysqlEnum("interviewType", ["phone", "video", "in_person"]),
+  interviewNotes: text("interviewNotes"),
+  interviewScore: int("interviewScore"), // 1-5 rating
+  // Panel Review
+  panelReviewers: json("panelReviewers"), // Array of reviewer IDs
+  panelScores: json("panelScores"), // Object with reviewer scores
+  panelNotes: json("panelNotes"), // Object with reviewer notes
+  // Decision
+  decisionMadeBy: int("decisionMadeBy"),
+  decisionDate: timestamp("decisionDate"),
+  decisionReason: text("decisionReason"),
+  // Offer Details (if applicable)
+  offeredSalary: decimal("offeredSalary", { precision: 10, scale: 2 }),
+  offeredStartDate: date("offeredStartDate"),
+  offerExpiresAt: timestamp("offerExpiresAt"),
+  // Timestamps
+  appliedAt: timestamp("appliedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type JobApplication = typeof jobApplications.$inferSelect;
+export type InsertJobApplication = typeof jobApplications.$inferInsert;
+
+/**
+ * Application Documents - Additional documents uploaded by applicants
+ */
+export const applicationDocuments = mysqlTable("application_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  applicationId: int("applicationId").notNull(),
+  documentType: mysqlEnum("documentType", [
+    "resume",
+    "cover_letter",
+    "portfolio",
+    "certification",
+    "reference_letter",
+    "transcript",
+    "other"
+  ]).notNull(),
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  fileKey: varchar("fileKey", { length: 500 }).notNull(),
+  fileUrl: text("fileUrl").notNull(),
+  fileSize: int("fileSize"), // in bytes
+  mimeType: varchar("mimeType", { length: 100 }),
+  uploadedAt: timestamp("uploadedAt").defaultNow().notNull(),
+});
+export type ApplicationDocument = typeof applicationDocuments.$inferSelect;
+export type InsertApplicationDocument = typeof applicationDocuments.$inferInsert;
+
+/**
+ * Application Activity Log - Track all actions on an application
+ */
+export const applicationActivityLog = mysqlTable("application_activity_log", {
+  id: int("id").autoincrement().primaryKey(),
+  applicationId: int("applicationId").notNull(),
+  actorId: int("actorId"), // User who performed the action (null for system actions)
+  actorName: varchar("actorName", { length: 255 }),
+  action: mysqlEnum("action", [
+    "application_received",
+    "status_changed",
+    "document_uploaded",
+    "interview_scheduled",
+    "interview_completed",
+    "note_added",
+    "score_updated",
+    "offer_sent",
+    "offer_accepted",
+    "offer_rejected",
+    "hired",
+    "rejected",
+    "withdrawn"
+  ]).notNull(),
+  previousValue: text("previousValue"),
+  newValue: text("newValue"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ApplicationActivityLog = typeof applicationActivityLog.$inferSelect;
+export type InsertApplicationActivityLog = typeof applicationActivityLog.$inferInsert;
+

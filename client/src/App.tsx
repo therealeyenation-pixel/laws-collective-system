@@ -37,6 +37,7 @@ import BusinessSetupWizard from "@/pages/BusinessSetupWizard";
 import TrustGovernance from "@/pages/TrustGovernance";
 import TrainingContentManager from "@/pages/TrainingContentManager";
 import HRManagement from "@/pages/HRManagement";
+import HRApplications from "@/pages/HRApplications";
 import Careers from "@/pages/Careers";
 import GettingStarted from "@/pages/GettingStarted";
 import SystemOverview from "@/pages/SystemOverview";
@@ -151,6 +152,7 @@ function Router() {
       <Route path="/financial-automation">{() => <ProtectedRoute component={FinancialAutomation} minRole="staff" />}</Route>
       <Route path="/banking">{() => <ProtectedRoute component={BankingCredit} minRole="staff" />}</Route>
       <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} minRole="staff" />}</Route>
+      <Route path="/hr-applications">{() => <ProtectedRoute component={HRApplications} minRole="staff" />}</Route>
       <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} minRole="staff" />}</Route>
       <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>

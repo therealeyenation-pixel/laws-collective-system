@@ -2595,3 +2595,18 @@
 - [x] Update job postings with new naming convention
 - [x] Update hiring process documentation with new titles
 - [x] Update training program with new position names
+
+
+## Phase 39: Application Tracking System with Resume Upload
+- [x] Create job_applications table in database schema
+- [x] Create application_documents table for resume storage
+- [x] Build applications router with CRUD operations
+- [x] Implement resume upload to S3 storage
+- [x] Add resume upload field to Careers page application form
+- [x] Create HR application management dashboard
+- [x] Add application status tracking (received, screening, interview, offer, hired/rejected)
+- [x] Build application review interface for HR
+- [ ] Add email notifications for application status changes
+- [ ] Create interview scheduling integration placeholder
+
+- [x] Integrate LuvLedger milestone tracking for HR events (interviewed, hired, rejected, offer accepted)

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,8 +6,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 import { 
   Building2, 
   MapPin, 
@@ -27,7 +27,9 @@ import {
   DollarSign,
   Wifi,
   Laptop,
-  Shirt
+  Shirt,
+  X,
+  Loader2
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -236,8 +238,8 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$35,000 - $48,000",
-    description: "Assist the Academy with student services, course administration, and certification processing. Ensure smooth operations of educational programs and excellent student experience.",
-    requirements: ["1+ years admin/education support", "Student communication skills", "LMS navigation", "Record keeping"],
+    description: "Provide administrative support to the Education Department and Academy. Assist with student enrollment, course scheduling, materials preparation, and instructor coordination.",
+    requirements: ["1+ years admin/education support", "Organization skills", "Student communication", "LMS familiarity preferred"],
     category: "education"
   },
 ];
@@ -263,10 +265,17 @@ const BENEFITS = [
   { icon: Shirt, title: "Wardrobe Budget", description: "Professional appearance allowance for public-facing roles" },
 ];
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_FILE_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
 export default function Careers() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showApplyDialog, setShowApplyDialog] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<typeof POSITIONS[0] | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const [application, setApplication] = useState({
     firstName: "",
     lastName: "",
@@ -275,7 +284,20 @@ export default function Careers() {
     currentRole: "",
     yearsExperience: "",
     relevantSkills: "",
-    whyInterested: ""
+    whyInterested: "",
+    coverLetter: ""
+  });
+
+  const submitMutation = trpc.jobApplications.submit.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setShowApplyDialog(false);
+      resetForm();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit application. Please try again.");
+      setIsSubmitting(false);
+    }
   });
 
   const filteredPositions = selectedCategory === "all" 
@@ -287,15 +309,7 @@ export default function Careers() {
     setShowApplyDialog(true);
   };
 
-  const handleSubmitApplication = () => {
-    if (!application.firstName || !application.lastName || !application.email) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    
-    // In production, this would submit to the backend
-    toast.success("Application submitted! We'll be in touch soon.");
-    setShowApplyDialog(false);
+  const resetForm = () => {
     setApplication({
       firstName: "",
       lastName: "",
@@ -304,8 +318,85 @@ export default function Careers() {
       currentRole: "",
       yearsExperience: "",
       relevantSkills: "",
-      whyInterested: ""
+      whyInterested: "",
+      coverLetter: ""
     });
+    setResumeFile(null);
+    setIsSubmitting(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+      toast.error("Please upload a PDF or Word document");
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("File size must be less than 5MB");
+      return;
+    }
+
+    setResumeFile(file);
+  };
+
+  const removeResume = () => {
+    setResumeFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleSubmitApplication = async () => {
+    if (!application.firstName || !application.lastName || !application.email) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      let resumeData: string | undefined;
+      let resumeFileName: string | undefined;
+      let resumeMimeType: string | undefined;
+
+      // Convert resume file to base64 if provided
+      if (resumeFile) {
+        const reader = new FileReader();
+        resumeData = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(resumeFile);
+        });
+        resumeFileName = resumeFile.name;
+        resumeMimeType = resumeFile.type;
+      }
+
+      await submitMutation.mutateAsync({
+        positionId: selectedPosition?.id || "general-interest",
+        positionTitle: selectedPosition?.title || "General Interest",
+        entity: selectedPosition?.entity || "LuvOnPurpose Family Enterprise",
+        firstName: application.firstName,
+        lastName: application.lastName,
+        email: application.email,
+        phone: application.phone || undefined,
+        currentRole: application.currentRole || undefined,
+        yearsExperience: application.yearsExperience || undefined,
+        relevantSkills: application.relevantSkills || undefined,
+        whyInterested: application.whyInterested || undefined,
+        coverLetter: application.coverLetter || undefined,
+        resumeData,
+        resumeFileName,
+        resumeMimeType,
+      });
+    } catch (error) {
+      // Error handled by mutation onError
+    }
   };
 
   return (
@@ -464,7 +555,7 @@ export default function Careers() {
                   </div>
 
                   <Button className="w-full" onClick={() => handleApply(position)}>
-                    Express Interest
+                    Apply Now
                     <Send className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
@@ -515,7 +606,10 @@ export default function Careers() {
       </footer>
 
       {/* Apply Dialog */}
-      <Dialog open={showApplyDialog} onOpenChange={setShowApplyDialog}>
+      <Dialog open={showApplyDialog} onOpenChange={(open) => {
+        setShowApplyDialog(open);
+        if (!open) resetForm();
+      }}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
@@ -523,7 +617,7 @@ export default function Careers() {
             </DialogTitle>
             <DialogDescription>
               {selectedPosition 
-                ? `Submit your interest for the ${selectedPosition.title} position at ${selectedPosition.entity}.`
+                ? `Submit your application for the ${selectedPosition.title} position at ${selectedPosition.entity}.`
                 : "Tell us about yourself and we'll keep you in mind for future opportunities."
               }
             </DialogDescription>
@@ -591,6 +685,59 @@ export default function Careers() {
                 />
               </div>
             </div>
+
+            {/* Resume Upload Section */}
+            <div className="space-y-2">
+              <Label htmlFor="resume">Resume / CV</Label>
+              <div className="border-2 border-dashed border-border rounded-lg p-4">
+                {resumeFile ? (
+                  <div className="flex items-center justify-between bg-muted/50 p-3 rounded-md">
+                    <div className="flex items-center gap-3">
+                      <FileText className="w-8 h-8 text-primary" />
+                      <div>
+                        <p className="text-sm font-medium">{resumeFile.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {(resumeFile.size / 1024).toFixed(1)} KB
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={removeResume}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Drag and drop your resume, or click to browse
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      PDF or Word document, max 5MB
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      Select File
+                    </Button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="relevantSkills">Relevant Skills</Label>
               <Textarea
@@ -611,18 +758,39 @@ export default function Careers() {
                 rows={3}
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="coverLetter">Cover Letter (Optional)</Label>
+              <Textarea
+                id="coverLetter"
+                placeholder="Add a brief cover letter..."
+                value={application.coverLetter}
+                onChange={(e) => setApplication({ ...application, coverLetter: e.target.value })}
+                rows={4}
+              />
+            </div>
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground">
-                <strong>Note:</strong> You can also upload your resume and cover letter after submitting this form. 
-                Our HR team will review your submission and reach out if there's a good fit.
+                <strong>Note:</strong> Your application will be reviewed by our HR team. 
+                We typically respond within 5-7 business days if there's a good fit.
               </p>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowApplyDialog(false)}>Cancel</Button>
-            <Button onClick={handleSubmitApplication}>
-              <Send className="w-4 h-4 mr-2" />
-              Submit Interest
+            <Button variant="outline" onClick={() => setShowApplyDialog(false)} disabled={isSubmitting}>
+              Cancel
+            </Button>
+            <Button onClick={handleSubmitApplication} disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Submit Application
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
