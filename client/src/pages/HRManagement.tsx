@@ -64,6 +64,13 @@ const POSITIONS = [
   { id: "ops-coordinator-design", title: "Design Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Design & Creative", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "remote-work" },
   { id: "ops-coordinator-media", title: "Media Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Media Production", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "remote-work" },
   { id: "ops-coordinator-project-controls", title: "Project Controls Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Project Controls", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
+  
+  // LEGAL DEPARTMENT
+  { id: "legal-manager", title: "Legal Manager", entity: "The L.A.W.S. Collective, LLC", department: "Legal", tier: "tier3_open", salaryRange: "$95,000 - $130,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-legal", title: "Legal Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Legal", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
+  
+  // REAL ESTATE DEPARTMENT
+  { id: "ops-coordinator-real-estate", title: "Real Estate Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Real Estate", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "standard" },
 ];
 
 const BENEFITS_PACKAGES = [

@@ -137,8 +137,8 @@ const POSITIONS = [
     description: "Manage day-to-day purchasing operations across all subsidiary entities. Handle vendor relationships, purchase orders, cost control, inventory tracking, and grant compliance for purchasing activities. Reports to Procurement Manager.",
     requirements: ["3+ years purchasing experience", "Negotiation skills", "Spreadsheet proficiency", "Vendor management"],
     category: "operations",
-    tier: "tier3_open",
-    hiringStatus: "Future Hiring"
+    tier: "tier2_identified",
+    hiringStatus: "Candidate Identified",
   },
   { 
     id: "operations-manager", 
@@ -438,7 +438,7 @@ const POSITIONS = [
     salaryRange: "$95,000 - $130,000",
     description: "Oversee all contract administration, negotiations, and compliance across our family of entities. Draft, review, and negotiate contracts while ensuring legal compliance and protecting organizational interests. Reports to Procurement Manager for strategic alignment.",
     requirements: ["5+ years contract management", "Contract law knowledge", "Negotiation skills", "Professional certification preferred"],
-    category: "operations",
+    category: "contracts",
     tier: "tier2_identified",
     hiringStatus: "Candidate Identified"
   },
@@ -453,7 +453,7 @@ const POSITIONS = [
     salaryRange: "$52,000 - $72,000",
     description: "Support the Contracts Manager with document management, compliance tracking, and administrative tasks. Maintain contract files, track deadlines, and coordinate approvals.",
     requirements: ["2+ years admin/legal support", "Organization skills", "Document management", "Confidentiality handling"],
-    category: "operations",
+    category: "contracts",
     tier: "tier4_coordinator",
     hiringStatus: "Open Position"
   },
@@ -548,7 +548,73 @@ const POSITIONS = [
     requirements: ["2+ years project coordination/admin", "Scheduling software familiarity", "Excel/spreadsheet proficiency", "Document control experience", "Attention to detail"],
     category: "project_controls",
     tier: "tier4_coordinator",
-    hiringStatus: "Pending Manager"
+    hiringStatus: "Pending Manager",
+  },
+  // ============================================
+  // LEGAL DEPARTMENT
+  // ============================================
+  { 
+    id: "legal-manager", 
+    title: "Legal Manager", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Legal",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$95,000 - $130,000",
+    description: "Oversee all legal matters across our family of entities. Manage corporate governance, regulatory compliance, intellectual property, and provide legal guidance on business decisions. Coordinate with external counsel as needed and ensure all entities operate within legal requirements.",
+    requirements: ["JD or equivalent legal education", "5+ years corporate/nonprofit legal experience", "Multi-entity governance knowledge", "Contract review expertise", "Bar admission preferred"],
+    category: "legal",
+    tier: "tier3_open",
+    hiringStatus: "Open Position",
+  },
+  { 
+    id: "ops-coordinator-legal", 
+    title: "Legal Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Legal",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$55,000 - $75,000",
+    description: "Support the Legal Manager with document management, compliance tracking, and administrative tasks. Maintain legal files, track deadlines, coordinate with external counsel, and assist with corporate governance documentation.",
+    requirements: ["2+ years legal admin/paralegal experience", "Document management skills", "Confidentiality handling", "Legal research basics", "Paralegal certification preferred"],
+    category: "legal",
+    tier: "tier4_coordinator",
+    hiringStatus: "Open Position",
+  },
+  // ============================================
+  // REAL ESTATE DEPARTMENT
+  // ============================================
+  { 
+    id: "real-estate-manager", 
+    title: "Real Estate Manager", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Real Estate",
+    type: "Full-Time",
+    location: "Hybrid",
+    salaryRange: "$90,000 - $125,000",
+    description: "Lead all real estate acquisition, development, and management activities across our family of entities. Identify property opportunities, manage existing holdings, oversee tenant relations, and develop strategies for building generational wealth through real estate.",
+    requirements: ["5+ years real estate management/development", "Property acquisition experience", "Tenant management skills", "Real estate license preferred", "Investment analysis capability"],
+    category: "real_estate",
+    tier: "tier2_identified",
+    hiringStatus: "Candidate Identified",
+  },
+  { 
+    id: "ops-coordinator-real-estate", 
+    title: "Real Estate Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Real Estate",
+    type: "Full-Time",
+    location: "Hybrid",
+    salaryRange: "$52,000 - $72,000",
+    description: "Support the Real Estate Manager with property documentation, tenant communications, lease administration, and coordination of maintenance activities. Maintain property records, track lease renewals, and assist with property showings.",
+    requirements: ["2+ years property management/admin", "Lease administration knowledge", "Tenant communication skills", "Document organization", "Real estate software familiarity"],
+    category: "real_estate",
+    tier: "tier4_coordinator",
+    hiringStatus: "Open Position",
   },
 ];
 
@@ -575,6 +641,8 @@ const CATEGORIES = [
   { id: "design", label: "Design", count: POSITIONS.filter(p => p.category === "design").length },
   { id: "media", label: "Media", count: POSITIONS.filter(p => p.category === "media").length },
   { id: "technology", label: "Technology", count: POSITIONS.filter(p => p.category === "technology").length },
+  { id: "legal", label: "Legal", count: POSITIONS.filter(p => p.category === "legal").length },
+  { id: "real_estate", label: "Real Estate", count: POSITIONS.filter(p => p.category === "real_estate").length },
 ];
 
 const BENEFITS = [

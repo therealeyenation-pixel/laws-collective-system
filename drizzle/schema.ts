@@ -7563,3 +7563,36 @@ export const projectStatusReports = mysqlTable("project_status_reports", {
 
 export type ProjectStatusReport = typeof projectStatusReports.$inferSelect;
 export type InsertProjectStatusReport = typeof projectStatusReports.$inferInsert;
+
+
+/**
+ * Position Requisitions - Track requests to fill coordinator positions
+ */
+export const positionRequisitions = mysqlTable("position_requisitions", {
+  id: int("id").autoincrement().primaryKey(),
+  positionId: varchar("positionId", { length: 100 }).notNull(), // e.g., "ops-coordinator-finance"
+  positionTitle: varchar("positionTitle", { length: 255 }).notNull(),
+  department: varchar("department", { length: 100 }).notNull(),
+  entity: varchar("entity", { length: 255 }).notNull(),
+  tier: varchar("tier", { length: 50 }).notNull(), // tier3_open, tier4_coordinator
+  requestedBy: int("requestedBy").notNull(), // Manager requesting the position
+  requestedByName: varchar("requestedByName", { length: 255 }),
+  justification: text("justification").notNull(), // Why this position is needed
+  budgetApproved: mysqlEnum("budgetApproved", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  salaryRange: varchar("salaryRange", { length: 100 }),
+  targetStartDate: timestamp("targetStartDate"),
+  urgency: mysqlEnum("urgency", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  status: mysqlEnum("status", ["draft", "submitted", "under_review", "approved", "rejected", "filled", "cancelled"]).default("draft").notNull(),
+  approvedBy: int("approvedBy"),
+  approvedByName: varchar("approvedByName", { length: 255 }),
+  approvalDate: timestamp("approvalDate"),
+  approvalNotes: text("approvalNotes"),
+  candidateName: varchar("candidateName", { length: 255 }), // If a candidate is identified
+  candidateEmail: varchar("candidateEmail", { length: 320 }),
+  filledDate: timestamp("filledDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PositionRequisition = typeof positionRequisitions.$inferSelect;
+export type InsertPositionRequisition = typeof positionRequisitions.$inferInsert;

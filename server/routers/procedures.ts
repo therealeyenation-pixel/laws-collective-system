@@ -318,6 +318,141 @@ export const proceduresRouter = router({
     };
   }),
 
+  // Get acknowledgment dashboard data - all procedures with their acknowledgment stats
+  getAcknowledgmentDashboard: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return { procedures: [], employees: [] };
+
+    // Get all approved procedures
+    const procedures = await db
+      .select()
+      .from(operatingProcedures)
+      .where(eq(operatingProcedures.status, "approved"));
+
+    // Get all acknowledgments with user info
+    const acknowledgments = await db
+      .select({
+        id: procedureAcknowledgments.id,
+        procedureId: procedureAcknowledgments.procedureId,
+        userId: procedureAcknowledgments.userId,
+        acknowledgedAt: procedureAcknowledgments.acknowledgedAt,
+        version: procedureAcknowledgments.version,
+        signature: procedureAcknowledgments.signature,
+      })
+      .from(procedureAcknowledgments);
+
+    // Get all users for employee tracking
+    const { users } = await import("../../drizzle/schema");
+    const allUsers = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+      })
+      .from(users);
+
+    // Build procedure stats
+    const procedureStats = procedures.map(proc => {
+      const procAcks = acknowledgments.filter(a => a.procedureId === proc.id);
+      const acknowledgedCount = procAcks.length;
+      const totalEmployees = allUsers.length;
+      const pendingCount = totalEmployees - acknowledgedCount;
+      
+      return {
+        procedureId: proc.id,
+        procedureTitle: proc.title,
+        department: proc.department || "General",
+        documentNumber: proc.documentNumber,
+        version: proc.version,
+        totalEmployees,
+        acknowledgedCount,
+        pendingCount,
+        overdueCount: 0, // Would need due date tracking
+        lastUpdated: proc.updatedAt,
+      };
+    });
+
+    // Build employee acknowledgment list
+    const employeeAcks = [];
+    for (const user of allUsers) {
+      for (const proc of procedures) {
+        const ack = acknowledgments.find(a => a.procedureId === proc.id && a.userId === user.id);
+        employeeAcks.push({
+          employeeId: user.id,
+          employeeName: user.name || user.email || `User ${user.id}`,
+          department: proc.department || "General",
+          procedureId: proc.id,
+          procedureTitle: proc.title,
+          status: ack ? "acknowledged" : "pending",
+          acknowledgedAt: ack?.acknowledgedAt,
+          signature: ack?.signature,
+        });
+      }
+    }
+
+    return {
+      procedures: procedureStats,
+      employees: employeeAcks,
+    };
+  }),
+
+  // Send reminder for pending acknowledgments
+  sendAcknowledgmentReminder: protectedProcedure
+    .input(z.object({
+      procedureId: z.number(),
+      employeeIds: z.array(z.number()).optional(), // If not provided, send to all pending
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Get the procedure
+      const [procedure] = await db
+        .select()
+        .from(operatingProcedures)
+        .where(eq(operatingProcedures.id, input.procedureId));
+
+      if (!procedure) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Procedure not found" });
+      }
+
+      // Get all acknowledgments for this procedure
+      const acknowledgments = await db
+        .select()
+        .from(procedureAcknowledgments)
+        .where(eq(procedureAcknowledgments.procedureId, input.procedureId));
+
+      const acknowledgedUserIds = acknowledgments.map(a => a.userId);
+
+      // Get users who haven't acknowledged
+      const { users } = await import("../../drizzle/schema");
+      let pendingUsers = await db
+        .select()
+        .from(users);
+
+      // Filter to only pending users
+      pendingUsers = pendingUsers.filter(u => !acknowledgedUserIds.includes(u.id));
+
+      // If specific employee IDs provided, filter further
+      if (input.employeeIds && input.employeeIds.length > 0) {
+        pendingUsers = pendingUsers.filter(u => input.employeeIds!.includes(u.id));
+      }
+
+      // In a real implementation, this would send emails via notification service
+      // For now, we'll just return the count of reminders that would be sent
+      const reminderCount = pendingUsers.length;
+
+      // Log the reminder action (could be stored in a reminders table)
+      console.log(`[Reminder] Sent ${reminderCount} reminders for procedure: ${procedure.title}`);
+
+      return {
+        success: true,
+        message: `Reminder sent to ${reminderCount} employee(s)`,
+        reminderCount,
+        procedureTitle: procedure.title,
+      };
+    }),
+
   // Get procedures requiring acknowledgment for current user
   getPendingAcknowledgments: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();

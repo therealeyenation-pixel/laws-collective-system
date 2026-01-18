@@ -47,6 +47,7 @@ import MyProfile from "@/pages/MyProfile";
 import Onboarding from "@/pages/Onboarding";
 import OperatingProcedures from "@/pages/OperatingProcedures";
 import ProjectControls from "@/pages/ProjectControls";
+import PositionRequisitions from "@/pages/PositionRequisitions";
 import GettingStarted from "@/pages/GettingStarted";
 import SystemOverview from "@/pages/SystemOverview";
 import Contact from "@/pages/Contact";
@@ -170,6 +171,7 @@ function Router() {
       <Route path="/operations-dashboard">{() => <ProtectedRoute component={OperationsDashboard} minRole="staff" />}</Route>
       <Route path="/executive-dashboard">{() => <ProtectedRoute component={ExecutiveDashboard} minRole="admin" />}</Route>
       <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} minRole="staff" />}</Route>
+      <Route path="/requisitions">{() => <ProtectedRoute component={PositionRequisitions} minRole="staff" />}</Route>
       <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
