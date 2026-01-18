@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS vault_access_logs (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  vault_id INT NOT NULL,\n  document_id INT NOT NULL,\n  user_id INT NOT NULL,\n  action ENUM('view', 'download', 'upload', 'delete', 'share', 'print') NOT NULL,\n  ip_address VARCHAR(45),\n  user_agent TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS vault_access_logs (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  vault_id INT NOT NULL,\n  document_id INT NOT NULL,\n  user_id INT NOT NULL,\n  action ENUM('view', 'download', 'upload', 'delete', 'share', 'print') NOT NULL,\n  ip_address VARCHAR(45),\n  user_agent TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n)",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 182
+}
