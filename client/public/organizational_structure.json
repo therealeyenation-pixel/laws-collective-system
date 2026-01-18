@@ -448,6 +448,13 @@
         "lead": "Media Manager",
         "servesEntities": ["All"],
         "functions": ["Video Production", "Social Media", "Podcasts", "Content Strategy"]
+      },
+      {
+        "name": "Real Estate",
+        "lead": "Real Estate Manager",
+        "servesEntities": ["All"],
+        "functions": ["Property Acquisition", "Real Estate Transactions", "Market Analysis", "Investment Properties"],
+        "notes": "Multi-state operation with licensed managers in each jurisdiction"
       }
     ]
   },
@@ -467,7 +474,8 @@
       "description": "Tier 2: Candidates identified but not yet approached (pending funding)",
       "positions": [
         {"title": "Purchasing Manager", "department": "Purchasing", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$80,000 - $110,000"},
-        {"title": "Real Estate Manager", "department": "Real Estate", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$85,000 - $115,000"},
+        {"title": "Real Estate Manager (State A)", "department": "Real Estate", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$85,000 - $115,000", "notes": "Licensed broker/agent required for state jurisdiction"},
+        {"title": "Real Estate Manager (State B)", "department": "Real Estate", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$85,000 - $115,000", "notes": "Licensed broker/agent required for state jurisdiction"},
         {"title": "Property Manager", "department": "Property", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$75,000 - $100,000"},
         {"title": "Contracts Manager", "department": "Contracts", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$95,000 - $130,000"}
       ]
@@ -498,7 +506,9 @@
         {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Contracts Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager"},
         {"title": "Design Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Design Manager (Essence)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
         {"title": "Media Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Media Manager (Amandes)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
-        {"title": "Finance Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "CFO (Craig)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"}
+        {"title": "Finance Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "CFO (Craig)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
+        {"title": "Real Estate Coordinator 1", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "notes": "Lead generation, client intake - no license required"},
+        {"title": "Real Estate Coordinator 2", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "notes": "Lead generation, client intake - no license required"}
       ]
     },
     "staffPositions": {
@@ -576,7 +586,8 @@
       ],
       "candidateIdentified": [
         "Purchasing Manager - CANDIDATE IDENTIFIED",
-        "Real Estate Manager - CANDIDATE IDENTIFIED",
+        "Real Estate Manager (State A) - CANDIDATE IDENTIFIED",
+        "Real Estate Manager (State B) - CANDIDATE IDENTIFIED",
         "Property Manager - CANDIDATE IDENTIFIED",
         "Contracts Manager - CANDIDATE IDENTIFIED"
       ],
@@ -612,6 +623,8 @@
         "QA/QC Operations Coordinator",
         "Purchasing Operations Coordinator",
         "Operations Operations Coordinator",
-        "Contracts Operations Coordinator"
+        "Contracts Operations Coordinator",
+        "Real Estate Coordinator 1",
+        "Real Estate Coordinator 2"
       ]
     }
