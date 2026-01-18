@@ -35,18 +35,34 @@ import {
   Printer
 } from "lucide-react";
 
-// Position data from internal job descriptions
+// Position data synced with Careers.tsx - includes all open/recruiting positions
 const POSITIONS = [
-  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources" },
-  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance" },
-  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing" },
-  { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations" },
-  { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach" },
-  { id: "content-creator", title: "Content Creator / Media Assistant", entity: "Real-Eye-Nation LLC", department: "Media Production" },
-  { id: "academy-instructor", title: "Academy Instructor / Curriculum Developer", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Education" },
-  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The L.A.W.S. Collective, LLC", department: "Grants & Proposals" },
-  { id: "platform-admin", title: "Platform Administrator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Technology" },
-  { id: "programs-coordinator", title: "Community Programs Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Community Programs" },
+  // TIER 3: OPEN MANAGER POSITIONS
+  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier3_open" },
+  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier3_open" },
+  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier3_open" },
+  { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier3_open" },
+  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The L.A.W.S. Collective, LLC", department: "Grants & Proposals", tier: "tier3_open" },
+  { id: "platform-admin", title: "Platform Administrator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Technology", tier: "tier3_open" },
+  
+  // TIER 4: OPERATIONS COORDINATORS - All Open Positions
+  { id: "finance-ops-coordinator", title: "Finance Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Finance", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-education", title: "Education Operations Coordinator", entity: "508-LuvOnPurpose Academy and Outreach", department: "Education", tier: "tier4_coordinator" },
+  { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach", tier: "tier4_coordinator" },
+  { id: "content-creator", title: "Content Creator / Media Assistant", entity: "Real-Eye-Nation LLC", department: "Media Production", tier: "tier4_coordinator" },
+  { id: "academy-instructor", title: "Academy Instructor / Curriculum Developer", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Education", tier: "tier4_coordinator" },
+  { id: "programs-coordinator", title: "Community Programs Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Community Programs", tier: "tier4_coordinator" },
+  { id: "lead-ops-coordinator", title: "Lead Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Operations", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-hr", title: "HR Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-qaqc", title: "QA/QC Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-purchasing", title: "Purchasing Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-operations", title: "Operations Operations Coordinator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-health", title: "Health Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Health", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-procurement", title: "Procurement Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Procurement", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-contracts", title: "Contracts Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Contracts", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-design", title: "Design Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Design & Creative", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-media", title: "Media Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Media Production", tier: "tier4_coordinator" },
+  { id: "ops-coordinator-project-controls", title: "Project Controls Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Project Controls", tier: "tier4_coordinator" },
 ];
 
 const BENEFITS_PACKAGES = [
