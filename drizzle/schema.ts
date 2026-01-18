@@ -8362,3 +8362,266 @@ export const eventInvitees = mysqlTable("event_invitees", {
 
 export type EventInvitee = typeof eventInvitees.$inferSelect;
 export type InsertEventInvitee = typeof eventInvitees.$inferInsert;
+
+
+// ============================================
+// E-SIGNATURE & DOCUMENT WORKFLOW TABLES
+// ============================================
+
+/**
+ * Document workflow status tracking
+ * Manages document lifecycle from draft to official
+ */
+export const documentWorkflow = mysqlTable("document_workflow", {
+  id: int("id").autoincrement().primaryKey(),
+  documentId: int("documentId").notNull(), // Reference to secure_documents
+  documentType: varchar("documentType", { length: 100 }).notNull(), // offer, resolution, contract, policy
+  status: mysqlEnum("status", ["draft", "review", "pending_signature", "approved", "official", "expired", "superseded"]).default("draft").notNull(),
+  version: int("version").default(1).notNull(),
+  createdBy: int("createdBy").notNull(),
+  reviewedBy: int("reviewedBy"),
+  approvedBy: int("approvedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  approvedAt: timestamp("approvedAt"),
+  officialAt: timestamp("officialAt"),
+  expiresAt: timestamp("expiresAt"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/**
+ * E-Signature requests
+ * Tracks documents requiring signatures
+ */
+export const signatureRequests = mysqlTable("signature_requests", {
+  id: int("id").autoincrement().primaryKey(),
+  documentId: int("documentId").notNull(),
+  documentType: varchar("documentType", { length: 100 }).notNull(),
+  documentTitle: varchar("documentTitle", { length: 255 }).notNull(),
+  requestedBy: int("requestedBy").notNull(),
+  status: mysqlEnum("status", ["pending", "in_progress", "completed", "expired", "cancelled"]).default("pending").notNull(),
+  expiresAt: timestamp("expiresAt"),
+  completedAt: timestamp("completedAt"),
+  signedDocumentUrl: text("signedDocumentUrl"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/**
+ * Individual signatures on documents
+ * Captures each signer's signature with legal metadata
+ */
+export const signatures = mysqlTable("signatures", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  signerId: int("signerId").notNull(),
+  signerName: varchar("signerName", { length: 255 }).notNull(),
+  signerEmail: varchar("signerEmail", { length: 320 }),
+  signerTitle: varchar("signerTitle", { length: 100 }), // CEO, Secretary, etc.
+  signatureType: mysqlEnum("signatureType", ["typed", "drawn", "uploaded"]).default("typed").notNull(),
+  signatureData: text("signatureData"), // Base64 signature image or typed name
+  signedAt: timestamp("signedAt"),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  status: mysqlEnum("status", ["pending", "signed", "declined"]).default("pending").notNull(),
+  declineReason: text("declineReason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+// ============================================
+// BOARD GOVERNANCE TABLES
+// ============================================
+
+/**
+ * Board positions within the organization
+ */
+export const boardPositions = mysqlTable("board_positions", {
+  id: int("id").autoincrement().primaryKey(),
+  entityId: int("entityId").notNull(), // Which business entity
+  title: varchar("title", { length: 100 }).notNull(), // President, Secretary, Treasurer, Board Member
+  description: text("description"),
+  responsibilities: json("responsibilities"), // Array of responsibility strings
+  votingRights: boolean("votingRights").default(true).notNull(),
+  signatureAuthority: boolean("signatureAuthority").default(false).notNull(),
+  maxSignatureAmount: decimal("maxSignatureAmount", { precision: 15, scale: 2 }), // Max $ they can authorize
+  isOfficer: boolean("isOfficer").default(false).notNull(), // Officers vs Board Members
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/**
+ * Board members - who holds which positions
+ */
+export const boardMembers = mysqlTable("board_members", {
+  id: int("id").autoincrement().primaryKey(),
+  positionId: int("positionId").notNull(),
+  userId: int("userId"), // If they have a user account
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 20 }),
+  status: mysqlEnum("status", ["active", "pending", "resigned", "removed"]).default("active").notNull(),
+  appointedAt: timestamp("appointedAt").defaultNow().notNull(),
+  appointedBy: int("appointedBy"), // Who appointed them
+  termStartDate: timestamp("termStartDate"),
+  termEndDate: timestamp("termEndDate"),
+  resignedAt: timestamp("resignedAt"),
+  signatureOnFile: text("signatureOnFile"), // Their stored signature
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/**
+ * Board resolutions with voting
+ */
+export const boardResolutionVotes = mysqlTable("board_resolution_votes", {
+  id: int("id").autoincrement().primaryKey(),
+  resolutionId: int("resolutionId").notNull(), // Reference to board_resolutions
+  memberId: int("memberId").notNull(),
+  vote: mysqlEnum("vote", ["approve", "reject", "abstain"]).notNull(),
+  votedAt: timestamp("votedAt").defaultNow().notNull(),
+  comments: text("comments"),
+});
+
+/**
+ * Board meeting attendance tracking
+ */
+export const boardMeetingAttendance = mysqlTable("board_meeting_attendance", {
+  id: int("id").autoincrement().primaryKey(),
+  meetingId: int("meetingId").notNull(), // Reference to calendar_meetings
+  memberId: int("memberId").notNull(),
+  status: mysqlEnum("status", ["invited", "confirmed", "attended", "absent", "excused"]).default("invited").notNull(),
+  checkedInAt: timestamp("checkedInAt"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+
+// ============================================
+// PENDING HEIR REGISTRY
+// Grandchildren and future heirs awaiting House activation
+// ============================================
+
+/**
+ * Pending House Heirs - Heir Queue for grandchildren and future generations
+ * These are heirs who will receive their own House upon activation criteria being met
+ * Until activated, their distributions accumulate in their parent's House
+ */
+export const pendingHouseHeirs = mysqlTable("pending_house_heirs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Parent House (where accumulation happens until activation)
+  parentHouseId: int("parentHouseId").notNull(),
+  parentHouseName: varchar("parentHouseName", { length: 255 }),
+  
+  // Parent member (biological parent in the system)
+  parentMemberId: int("parentMemberId"), // Reference to houseMembers
+  parentMemberName: varchar("parentMemberName", { length: 255 }),
+  otherParentName: varchar("otherParentName", { length: 255 }), // Non-member parent
+  
+  // Heir identification
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  dateOfBirth: timestamp("dateOfBirth").notNull(),
+  relationship: mysqlEnum("relationship", [
+    "grandchild", "great_grandchild", "step_grandchild", 
+    "adopted_grandchild", "foster_grandchild", "other"
+  ]).notNull(),
+  generation: int("generation").default(3).notNull(), // 1=founder, 2=children, 3=grandchildren, etc.
+  
+  // Contact (for when they're older)
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  
+  // Projected House details
+  projectedHouseName: varchar("projectedHouseName", { length: 255 }), // e.g., "House of Christopher"
+  projectedHouseType: mysqlEnum("projectedHouseType", ["bloodline", "mirrored", "adaptive"]).default("bloodline"),
+  
+  // Activation criteria
+  activationTrigger: mysqlEnum("activationTrigger", [
+    "age_18",           // Automatic at 18
+    "age_21",           // Automatic at 21
+    "age_25",           // Automatic at 25
+    "education",        // Upon completing education
+    "marriage",         // Upon marriage
+    "first_business",   // Upon starting first business
+    "manual",           // Manual activation by trustee
+    "custom"            // Custom criteria
+  ]).default("age_18").notNull(),
+  customActivationCriteria: text("customActivationCriteria"),
+  projectedActivationDate: timestamp("projectedActivationDate"), // Calculated from DOB + trigger
+  
+  // Accumulation tracking
+  accumulatedAmount: decimal("accumulatedAmount", { precision: 18, scale: 2 }).default("0"),
+  lastAccumulationDate: timestamp("lastAccumulationDate"),
+  accumulationAccountId: int("accumulationAccountId"), // Reference to heir_accumulation_accounts
+  
+  // Distribution percentage (from parent House's heir pool)
+  distributionPercentage: decimal("distributionPercentage", { precision: 5, scale: 2 }).notNull(),
+  percentageLocked: boolean("percentageLocked").default(false),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "pending",          // Awaiting activation
+    "eligible",         // Met criteria, ready to activate
+    "activating",       // In activation process
+    "activated",        // House created
+    "deferred",         // Activation deferred
+    "removed"           // Removed from registry
+  ]).default("pending").notNull(),
+  
+  // Activation tracking
+  activatedHouseId: int("activatedHouseId"), // Reference to houses table once activated
+  activatedAt: timestamp("activatedAt"),
+  activatedBy: int("activatedBy"),
+  
+  // Audit
+  registeredBy: int("registeredBy").notNull(),
+  registeredAt: timestamp("registeredAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  notes: text("notes"),
+});
+
+export type PendingHouseHeir = typeof pendingHouseHeirs.$inferSelect;
+export type InsertPendingHouseHeir = typeof pendingHouseHeirs.$inferInsert;
+
+/**
+ * Pending Heir Placeholders - For children not yet born
+ * Allows setting aside allocation for future grandchildren
+ */
+export const pendingHeirPlaceholders = mysqlTable("pending_heir_placeholders", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Parent House
+  parentHouseId: int("parentHouseId").notNull(),
+  
+  // Parent member who will have the child
+  parentMemberId: int("parentMemberId").notNull(),
+  parentMemberName: varchar("parentMemberName", { length: 255 }),
+  
+  // Placeholder details
+  placeholderName: varchar("placeholderName", { length: 255 }).notNull(), // e.g., "Future Child of Amandes"
+  projectedHouseType: mysqlEnum("projectedHouseType", ["bloodline", "mirrored", "adaptive"]).default("bloodline"),
+  
+  // Reserved allocation
+  reservedPercentage: decimal("reservedPercentage", { precision: 5, scale: 2 }).notNull(),
+  reservedAmount: decimal("reservedAmount", { precision: 18, scale: 2 }).default("0"),
+  
+  // Status
+  status: mysqlEnum("status", ["active", "converted", "released"]).default("active").notNull(),
+  
+  // When converted to actual heir
+  convertedToHeirId: int("convertedToHeirId"), // Reference to pending_house_heirs
+  convertedAt: timestamp("convertedAt"),
+  
+  // Expiration (optional - release funds if no child by date)
+  expiresAt: timestamp("expiresAt"),
+  
+  // Audit
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PendingHeirPlaceholder = typeof pendingHeirPlaceholders.$inferSelect;
+export type InsertPendingHeirPlaceholder = typeof pendingHeirPlaceholders.$inferInsert;
