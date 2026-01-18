@@ -618,7 +618,7 @@ const POSITIONS = [
     requirements: ["2+ years property management/admin", "Lease administration knowledge", "Tenant communication skills", "Document organization", "Real estate software familiarity"],
     category: "real_estate",
     tier: "tier4_coordinator",
-    hiringStatus: "Open Position",
+    hiringStatus: "Candidate Identified",
   },
 ];
 

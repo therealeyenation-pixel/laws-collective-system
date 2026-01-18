@@ -197,7 +197,7 @@ export default function OperationsDashboard() {
       bgColor: "bg-stone-500/10",
       coordinator: "Real Estate Operations Coordinator",
       manager: "Real Estate Manager",
-      status: "Open",
+      status: "Identified",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
   ];

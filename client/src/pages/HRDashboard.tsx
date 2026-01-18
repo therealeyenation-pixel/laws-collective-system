@@ -65,7 +65,7 @@ export default function HRDashboard() {
     { title: "Operations Manager", department: "Operations", applications: 0, status: "Open Position" },
     { title: "Technology Manager", department: "Technology", applications: 0, status: "Open Position" },
     { title: "Legal Manager", department: "Legal", applications: 0, status: "Open Position" },
-    { title: "Real Estate Manager", department: "Real Estate", applications: 0, status: "Open Position" },
+    { title: "Real Estate Manager", department: "Real Estate", applications: 0, status: "Candidate Identified" },
     // Open Positions - Coordinator Level
     { title: "Education Operations Coordinator", department: "Education", applications: 0, status: "Open Position" },
     { title: "HR Operations Coordinator", department: "Human Resources", applications: 0, status: "Open Position" },
@@ -73,7 +73,7 @@ export default function HRDashboard() {
     { title: "Operations Coordinator", department: "Operations", applications: 0, status: "Open Position" },
     { title: "Platform Administrator", department: "Technology", applications: 0, status: "Open Position" },
     { title: "Legal Operations Coordinator", department: "Legal", applications: 0, status: "Open Position" },
-    { title: "Real Estate Operations Coordinator", department: "Real Estate", applications: 0, status: "Open Position" },
+    { title: "Real Estate Operations Coordinator", department: "Real Estate", applications: 0, status: "Candidate Identified" },
     // Ready to Hire (3)
     { title: "Media Operations Coordinator", department: "Media Production", applications: 0, status: "Ready to Hire" },
     { title: "Design Operations Coordinator", department: "Design", applications: 0, status: "Ready to Hire" },

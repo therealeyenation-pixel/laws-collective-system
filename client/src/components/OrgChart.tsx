@@ -370,8 +370,8 @@ const staticOrgData: OrgNode = {
       title: "Real Estate Manager",
       department: "Real Estate",
       entity: "The L.A.W.S. Collective LLC",
-      tier: "tier3_open",
-      status: "open",
+      tier: "tier2_identified",
+      status: "identified",
       children: [
         {
           id: "realestate-ops-coordinator",
@@ -379,7 +379,7 @@ const staticOrgData: OrgNode = {
           department: "Real Estate",
           entity: "The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
-          status: "open"
+          status: "identified"
         }
       ]
     }
