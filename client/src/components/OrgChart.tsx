@@ -366,20 +366,40 @@ const staticOrgData: OrgNode = {
       ]
     },
     {
-      id: "realestate-manager",
-      title: "Real Estate Manager",
+      id: "realestate-manager-sc",
+      title: "Real Estate Manager - SC",
+      name: "Treiva Hunter",
       department: "Real Estate",
       entity: "The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
-      status: "identified",
+      status: "filled",
       children: [
         {
-          id: "realestate-ops-coordinator",
-          title: "Real Estate Operations Coordinator",
+          id: "realestate-ops-coordinator-sc",
+          title: "Real Estate Ops Coordinator - SC",
           department: "Real Estate",
           entity: "The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
-          status: "identified"
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "realestate-manager-ga",
+      title: "Real Estate Manager - GA",
+      name: "Kenneth Coleman",
+      department: "Real Estate",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier2_identified",
+      status: "filled",
+      children: [
+        {
+          id: "realestate-ops-coordinator-ga",
+          title: "Real Estate Ops Coordinator - GA",
+          department: "Real Estate",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
         }
       ]
     }

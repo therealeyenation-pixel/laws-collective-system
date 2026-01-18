@@ -65,7 +65,8 @@ export default function HRDashboard() {
     { title: "Operations Manager", department: "Operations", applications: 0, status: "Open Position" },
     { title: "Technology Manager", department: "Technology", applications: 0, status: "Open Position" },
     { title: "Legal Manager", department: "Legal", applications: 0, status: "Open Position" },
-    { title: "Real Estate Manager", department: "Real Estate", applications: 0, status: "Candidate Identified" },
+    { title: "Real Estate Manager - SC (Treiva Hunter)", department: "Real Estate", applications: 0, status: "Filled (Family)" },
+    { title: "Real Estate Manager - GA (Kenneth Coleman)", department: "Real Estate", applications: 0, status: "Filled (Family)" },
     // Open Positions - Coordinator Level
     { title: "Education Operations Coordinator", department: "Education", applications: 0, status: "Open Position" },
     { title: "HR Operations Coordinator", department: "Human Resources", applications: 0, status: "Open Position" },
@@ -73,7 +74,8 @@ export default function HRDashboard() {
     { title: "Operations Coordinator", department: "Operations", applications: 0, status: "Open Position" },
     { title: "Platform Administrator", department: "Technology", applications: 0, status: "Open Position" },
     { title: "Legal Operations Coordinator", department: "Legal", applications: 0, status: "Open Position" },
-    { title: "Real Estate Operations Coordinator", department: "Real Estate", applications: 0, status: "Candidate Identified" },
+    { title: "Real Estate Operations Coordinator - SC", department: "Real Estate", applications: 0, status: "Open Position" },
+    { title: "Real Estate Operations Coordinator - GA", department: "Real Estate", applications: 0, status: "Open Position" },
     // Ready to Hire (3)
     { title: "Media Operations Coordinator", department: "Media Production", applications: 0, status: "Ready to Hire" },
     { title: "Design Operations Coordinator", department: "Design", applications: 0, status: "Ready to Hire" },

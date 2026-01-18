@@ -189,15 +189,15 @@ export default function OperationsDashboard() {
       status: "Open",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
-    // Real Estate Department
+    // Real Estate Department (Two Managers due to state jurisdiction)
     { 
       name: "Real Estate", 
       icon: Building2, 
       color: "text-stone-500",
       bgColor: "bg-stone-500/10",
-      coordinator: "Real Estate Operations Coordinator",
-      manager: "Real Estate Manager",
-      status: "Identified",
+      coordinator: "SC & GA Coordinators (Open)",
+      manager: "Treiva Hunter (SC) & Kenneth Coleman (GA)",
+      status: "Filled",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
   ];
