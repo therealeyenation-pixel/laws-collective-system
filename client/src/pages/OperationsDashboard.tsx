@@ -20,14 +20,99 @@ import {
   Calendar,
   BarChart3,
   Loader2,
+  DollarSign,
+  Cpu,
+  Palette,
+  Video,
+  Scale,
+  Building2,
+  Package,
 } from "lucide-react";
 import { Link } from "wouter";
 
 export default function OperationsDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Department metrics
+  // Department metrics - All departments with correct manager/coordinator assignments
   const departments = [
+    // Executive Department
+    { 
+      name: "Executive", 
+      icon: TrendingUp, 
+      color: "text-gold-500",
+      bgColor: "bg-yellow-500/10",
+      coordinator: "Executive Assistant",
+      manager: "LaShanna Russell (CEO)",
+      status: "Filled",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Finance Department
+    { 
+      name: "Finance", 
+      icon: DollarSign, 
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+      coordinator: "Finance Operations Coordinator",
+      manager: "Craig Russell (Finance Manager)",
+      status: "Filled",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Education Department
+    { 
+      name: "Education", 
+      icon: BookOpen, 
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      coordinator: "Education Operations Coordinator",
+      manager: "Cornelius Christopher (Education Manager)",
+      status: "Filled",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Health Department
+    { 
+      name: "Health", 
+      icon: Heart, 
+      color: "text-rose-500",
+      bgColor: "bg-rose-500/10",
+      coordinator: "Health Operations Coordinator",
+      manager: "Amber Hunter (Health Manager)",
+      status: "Filled",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Design Department
+    { 
+      name: "Design", 
+      icon: Palette, 
+      color: "text-pink-500",
+      bgColor: "bg-pink-500/10",
+      coordinator: "Design Operations Coordinator",
+      manager: "Essence Hunter (Design Manager)",
+      status: "Filled",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Media Department
+    { 
+      name: "Media", 
+      icon: Video, 
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+      coordinator: "Media Operations Coordinator",
+      manager: "Amandes Pearsall IV (Media Manager)",
+      status: "Filled",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Technology Department
+    { 
+      name: "Technology", 
+      icon: Cpu, 
+      color: "text-cyan-500",
+      bgColor: "bg-cyan-500/10",
+      coordinator: "Technology Operations Coordinator",
+      manager: "Platform Administrator",
+      status: "Open",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Human Resources Department
     { 
       name: "Human Resources", 
       icon: Users, 
@@ -38,26 +123,7 @@ export default function OperationsDashboard() {
       status: "Open",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
-    { 
-      name: "QA/QC", 
-      icon: ClipboardCheck, 
-      color: "text-teal-500",
-      bgColor: "bg-teal-500/10",
-      coordinator: "QA/QC Operations Coordinator",
-      manager: "QA/QC Manager",
-      status: "Open",
-      tasks: { completed: 0, pending: 0, total: 0 }
-    },
-    { 
-      name: "Purchasing", 
-      icon: ShoppingCart, 
-      color: "text-amber-500",
-      bgColor: "bg-amber-500/10",
-      coordinator: "Purchasing Operations Coordinator",
-      manager: "Purchasing Manager",
-      status: "Open",
-      tasks: { completed: 0, pending: 0, total: 0 }
-    },
+    // Operations Department
     { 
       name: "Operations", 
       icon: Settings, 
@@ -68,26 +134,40 @@ export default function OperationsDashboard() {
       status: "Open",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
+    // QA/QC Department
     { 
-      name: "Education", 
-      icon: BookOpen, 
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-500/10",
-      coordinator: "Education Operations Coordinator",
-      manager: "Education Manager (Cornelius)",
-      status: "Filled",
-      tasks: { completed: 0, pending: 0, total: 0 }
-    },
-    { 
-      name: "Health", 
-      icon: Heart, 
-      color: "text-rose-500",
-      bgColor: "bg-rose-500/10",
-      coordinator: "Health Operations Coordinator",
-      manager: "Health Manager",
+      name: "QA/QC", 
+      icon: ClipboardCheck, 
+      color: "text-teal-500",
+      bgColor: "bg-teal-500/10",
+      coordinator: "QA/QC Operations Coordinator",
+      manager: "QA/QC Manager",
       status: "Open",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
+    // Procurement Department (Oversight)
+    { 
+      name: "Procurement", 
+      icon: Package, 
+      color: "text-amber-600",
+      bgColor: "bg-amber-600/10",
+      coordinator: "Procurement Operations Coordinator",
+      manager: "Procurement Manager (Oversight)",
+      status: "Identified",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Purchasing Department (under Procurement)
+    { 
+      name: "Purchasing", 
+      icon: ShoppingCart, 
+      color: "text-amber-500",
+      bgColor: "bg-amber-500/10",
+      coordinator: "Purchasing Operations Coordinator",
+      manager: "Purchasing Manager",
+      status: "Identified",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Contracts Department (under Procurement)
     { 
       name: "Contracts", 
       icon: FileText, 
@@ -95,23 +175,52 @@ export default function OperationsDashboard() {
       bgColor: "bg-indigo-500/10",
       coordinator: "Contracts Operations Coordinator",
       manager: "Contracts Manager",
+      status: "Identified",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Legal Department
+    { 
+      name: "Legal", 
+      icon: Scale, 
+      color: "text-slate-500",
+      bgColor: "bg-slate-500/10",
+      coordinator: "Legal Operations Coordinator",
+      manager: "Legal Manager",
+      status: "Open",
+      tasks: { completed: 0, pending: 0, total: 0 }
+    },
+    // Real Estate Department
+    { 
+      name: "Real Estate", 
+      icon: Building2, 
+      color: "text-stone-500",
+      bgColor: "bg-stone-500/10",
+      coordinator: "Real Estate Operations Coordinator",
+      manager: "Real Estate Manager",
       status: "Open",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
   ];
 
+  // Calculate metrics
+  const filledCount = departments.filter(d => d.status === "Filled").length;
+  const identifiedCount = departments.filter(d => d.status === "Identified").length;
+  const openCount = departments.filter(d => d.status === "Open").length;
+
   const overallMetrics = [
     { label: "Departments", value: departments.length, icon: BarChart3, color: "text-blue-500" },
-    { label: "Positions Filled", value: 1, icon: CheckCircle, color: "text-green-500" },
-    { label: "Positions Open", value: 13, icon: AlertCircle, color: "text-yellow-500" },
-    { label: "Active Tasks", value: 0, icon: Clock, color: "text-purple-500" },
+    { label: "Positions Filled", value: filledCount, icon: CheckCircle, color: "text-green-500" },
+    { label: "Candidates Identified", value: identifiedCount, icon: Users, color: "text-amber-500" },
+    { label: "Positions Open", value: openCount, icon: AlertCircle, color: "text-yellow-500" },
   ];
 
   const recentActivity = [
-    { action: "System initialized", department: "All", time: "Today", type: "system" },
+    { action: "LaShanna Russell updated to CEO", department: "Executive", time: "Today", type: "system" },
+    { action: "Family managers confirmed", department: "All", time: "Today", type: "hr" },
+    { action: "Procurement hierarchy established", department: "Procurement", time: "Today", type: "operations" },
+    { action: "Legal and Real Estate added", department: "Legal", time: "Today", type: "system" },
     { action: "Job postings created", department: "HR", time: "Today", type: "hr" },
     { action: "Training programs defined", department: "Education", time: "Today", type: "education" },
-    { action: "Hiring process documented", department: "HR", time: "Today", type: "hr" },
   ];
 
   return (
@@ -172,7 +281,7 @@ export default function OperationsDashboard() {
               {/* Department Status */}
               <Card className="p-6">
                 <h3 className="font-semibold text-foreground mb-4">Department Status</h3>
-                <div className="space-y-3">
+                <div className="space-y-3 max-h-[400px] overflow-y-auto">
                   {departments.map((dept) => (
                     <div key={dept.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">
                       <div className="flex items-center gap-3">
@@ -181,7 +290,11 @@ export default function OperationsDashboard() {
                         </div>
                         <span className="text-sm font-medium text-foreground">{dept.name}</span>
                       </div>
-                      <Badge variant={dept.status === "Filled" ? "default" : "secondary"}>
+                      <Badge variant={
+                        dept.status === "Filled" ? "default" : 
+                        dept.status === "Identified" ? "outline" : 
+                        "secondary"
+                      }>
                         {dept.status}
                       </Badge>
                     </div>
@@ -195,31 +308,62 @@ export default function OperationsDashboard() {
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Executive Positions</span>
-                      <span className="text-foreground">2/5 filled</span>
+                      <span className="text-muted-foreground">Executive Level</span>
+                      <span className="text-foreground">1/1 filled</span>
                     </div>
-                    <Progress value={40} className="h-2" />
+                    <Progress value={100} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Manager Positions</span>
-                      <span className="text-foreground">1/10 filled</span>
+                      <span className="text-muted-foreground">Family Manager Positions (Tier 2)</span>
+                      <span className="text-foreground">5/5 filled</span>
                     </div>
-                    <Progress value={10} className="h-2" />
+                    <Progress value={100} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Lead Positions</span>
-                      <span className="text-foreground">0/1 filled</span>
+                      <span className="text-muted-foreground">Specialized Manager Positions (Tier 3)</span>
+                      <span className="text-foreground">3/10 identified</span>
+                    </div>
+                    <Progress value={30} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-muted-foreground">Operations Coordinators (Tier 4)</span>
+                      <span className="text-foreground">0/15 filled</span>
                     </div>
                     <Progress value={0} className="h-2" />
                   </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Operations Coordinators</span>
-                      <span className="text-foreground">0/7 filled</span>
+                </div>
+                
+                {/* Family Manager Summary */}
+                <div className="mt-6 pt-4 border-t border-border">
+                  <h4 className="text-sm font-semibold text-foreground mb-3">Family Management Team</h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span>LaShanna Russell - CEO</span>
                     </div>
-                    <Progress value={0} className="h-2" />
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span>Craig Russell - Finance</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span>Cornelius Christopher - Education</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span>Amber Hunter - Health</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span>Essence Hunter - Design</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span>Amandes Pearsall IV - Media</span>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -229,10 +373,10 @@ export default function OperationsDashboard() {
             <Card className="p-6">
               <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <Link href="/organizational-structure">
+                <Link href="/employees">
                   <Button variant="outline" className="w-full gap-2">
                     <Users className="w-4 h-4" />
-                    Org Structure
+                    Employee Directory
                   </Button>
                 </Link>
                 <Link href="/careers">
@@ -241,16 +385,16 @@ export default function OperationsDashboard() {
                     Job Postings
                   </Button>
                 </Link>
-                <Link href="/training">
+                <Link href="/position-requisitions">
                   <Button variant="outline" className="w-full gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    Training
+                    <FileText className="w-4 h-4" />
+                    Requisitions
                   </Button>
                 </Link>
-                <Link href="/luv-ledger">
+                <Link href="/procedures">
                   <Button variant="outline" className="w-full gap-2">
-                    <TrendingUp className="w-4 h-4" />
-                    LuvLedger
+                    <BookOpen className="w-4 h-4" />
+                    Procedures
                   </Button>
                 </Link>
               </div>
@@ -267,7 +411,14 @@ export default function OperationsDashboard() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground">{dept.name}</h3>
-                      <Badge variant={dept.status === "Filled" ? "default" : "secondary"} className="mt-1">
+                      <Badge 
+                        variant={
+                          dept.status === "Filled" ? "default" : 
+                          dept.status === "Identified" ? "outline" : 
+                          "secondary"
+                        } 
+                        className="mt-1"
+                      >
                         {dept.status}
                       </Badge>
                     </div>
@@ -275,7 +426,7 @@ export default function OperationsDashboard() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Manager:</span>
-                      <span className="text-foreground">{dept.manager}</span>
+                      <span className="text-foreground text-right text-xs">{dept.manager}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Coordinator:</span>

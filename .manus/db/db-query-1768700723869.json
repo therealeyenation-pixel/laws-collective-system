@@ -1,0 +1,17 @@
+{
+  "query": "SELECT e.id, e.firstName, e.lastName, e.entityId, b.name as entityName FROM employees e LEFT JOIN business_entities b ON e.entityId = b.id WHERE e.firstName = 'Shanna';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT e.id, e.firstName, e.lastName, e.entityId, b.name as entityName FROM employees e LEFT JOIN business_entities b ON e.entityId = b.id WHERE e.firstName = 'Shanna';",
+  "rows": [
+    {
+      "id": "1",
+      "firstName": "Shanna",
+      "lastName": "Russell",
+      "entityId": "6",
+      "entityName": "98 Trust - CALEA Freeman Family Trust"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tentityId\tentityName\n1\tShanna\tRussell\t6\t98 Trust - CALEA Freeman Family Trust\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}
