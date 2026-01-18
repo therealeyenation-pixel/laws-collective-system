@@ -361,7 +361,9 @@ interface OrgNodeCardProps {
 }
 
 function OrgNodeCard({ node, level, isLast }: OrgNodeCardProps) {
-  const [expanded, setExpanded] = useState(level < 2);
+  // Expand by default: level 0-1 always, plus Purchasing Manager and Contracts Manager
+  const shouldExpandByDefault = level < 2 || node.id === "purchasing-manager" || node.id === "contracts-manager";
+  const [expanded, setExpanded] = useState(shouldExpandByDefault);
   const hasChildren = node.children && node.children.length > 0;
 
   return (
