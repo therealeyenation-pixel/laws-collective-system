@@ -9,13 +9,17 @@ const employmentClassifications = [
   "contractor",
 ] as const;
 
-// Core hours definition
+// Core hours definition - After standard work hours for startup phase
 const coreHours = {
   days: ["Tuesday", "Wednesday", "Thursday"],
-  startTime: "10:00",
-  endTime: "14:00",
+  startTime: "18:00",
+  endTime: "21:00",
   timezone: "America/Chicago",
-  description: "Tuesday - Thursday, 10:00 AM - 2:00 PM CT",
+  description: "Tuesday - Thursday, 6:00 PM - 9:00 PM CT (after standard work hours)",
+  alternateDay: "Saturday",
+  alternateTime: "9:00 AM - 12:00 PM CT",
+  phase: "startup",
+  note: "Startup phase schedule allows team members to maintain current employment while building the organization.",
 };
 
 // Employment terms structure
@@ -24,9 +28,11 @@ const employmentTerms = {
   hoursPerWeek: 40,
   flexibleSchedule: true,
   coreHours: coreHours,
-  responseTime: "4 business hours for urgent communications",
-  meetingAttendance: "Mandatory for all scheduled meetings",
+  responseTime: "24 hours for communications (async-first approach)",
+  meetingAttendance: "Mandatory for all scheduled evening/weekend meetings",
   advanceNotice: "48 hours for scheduled meetings when possible",
+  meetingSchedule: "Evenings (6-9 PM CT) or Saturday mornings",
+  phase: "startup",
   outsideEmployment: {
     allowed: true,
     conditions: [

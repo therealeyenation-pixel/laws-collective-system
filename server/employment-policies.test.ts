@@ -14,18 +14,20 @@ describe("Employment Policies Router", () => {
       expect(terms.flexibleSchedule).toBe(true);
     });
 
-    it("should define core hours correctly", () => {
+    it("should define core hours correctly (after standard work hours)", () => {
       const coreHours = {
         days: ["Tuesday", "Wednesday", "Thursday"],
-        startTime: "10:00",
-        endTime: "14:00",
+        startTime: "18:00",
+        endTime: "21:00",
         timezone: "America/Chicago",
+        phase: "startup",
       };
       
       expect(coreHours.days).toHaveLength(3);
-      expect(coreHours.startTime).toBe("10:00");
-      expect(coreHours.endTime).toBe("14:00");
+      expect(coreHours.startTime).toBe("18:00");
+      expect(coreHours.endTime).toBe("21:00");
       expect(coreHours.timezone).toBe("America/Chicago");
+      expect(coreHours.phase).toBe("startup");
     });
   });
 
