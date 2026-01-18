@@ -223,13 +223,13 @@ export default function ExecutiveDashboard() {
                     Financial Map
                   </Button>
                 </Link>
-                <Link href="/organizational-structure">
+                <Link href="/employees">
                   <Button variant="outline" className="w-full gap-2">
                     <Users className="w-4 h-4" />
                     Org Structure
                   </Button>
                 </Link>
-                <Link href="/token-economy">
+                <Link href="/system">
                   <Button variant="outline" className="w-full gap-2">
                     <Award className="w-4 h-4" />
                     Token Economy
