@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO secure_documents (ownerId, title, description, documentType, content, status, accessLevel, version, createdAt, updatedAt)\nSELECT 1, document_name, description, 'legal_document', '', 'final', 'owner_only', 1, created_at, updated_at\nFROM vault_documents\nWHERE document_name NOT IN (SELECT title FROM secure_documents)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO secure_documents (ownerId, title, description, documentType, content, status, accessLevel, version, createdAt, updatedAt)\nSELECT 1, document_name, description, 'legal_document', '', 'final', 'owner_only', 1, created_at, updated_at\nFROM vault_documents\nWHERE document_name NOT IN (SELECT title FROM secure_documents)",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 60
+}

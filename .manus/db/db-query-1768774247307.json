@@ -1,0 +1,52 @@
+{
+  "query": "SELECT id, document_name, document_type, file_size, s3_url FROM vault_documents LIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, document_name, document_type, file_size, s3_url FROM vault_documents LIMIT 10",
+  "rows": [
+    {
+      "id": "1",
+      "document_name": "L.A.W.S. Collective LLC Operating Agreement",
+      "document_type": "legal",
+      "file_size": "325354",
+      "s3_url": "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/uIZubXDeZtpgWUfg.pdf"
+    },
+    {
+      "id": "2",
+      "document_name": "LuvOnPurpose AWS LLC Operating Agreement",
+      "document_type": "legal",
+      "file_size": "319715",
+      "s3_url": "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/PyhAefJznWDIEbBr.pdf"
+    },
+    {
+      "id": "3",
+      "document_name": "Real-Eye-Nation LLC Operating Agreement",
+      "document_type": "legal",
+      "file_size": "323658",
+      "s3_url": "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/askLMNfKcERnoNmA.pdf"
+    },
+    {
+      "id": "4",
+      "document_name": "508-LuvOnPurpose Academy Bylaws",
+      "document_type": "legal",
+      "file_size": "338055",
+      "s3_url": "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/OxDsjYXfvHVYshuJ.pdf"
+    },
+    {
+      "id": "5",
+      "document_name": "CALEA Freeman Family Trust Declaration",
+      "document_type": "legal",
+      "file_size": "345289",
+      "s3_url": "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/oBHcfpMAQPedweaB.pdf"
+    },
+    {
+      "id": "6",
+      "document_name": "CALEA Freeman Family Trust Agreement",
+      "document_type": "legal",
+      "file_size": "379636",
+      "s3_url": "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/vCtovynWFpQXAZpw.pdf"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tdocument_name\tdocument_type\tfile_size\ts3_url\n1\tL.A.W.S. Collective LLC Operating Agreement\tlegal\t325354\thttps://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/uIZubXDeZtpgWUfg.pdf\n2\tLuvOnPurpose AWS LLC Operating Agreement\tlegal\t319715\thttps://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/PyhAefJznWDIEbBr.pdf\n3\tReal-Eye-Nation LLC Operating Agreement\tlegal\t323658\thttps://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/askLMNfKcERnoNmA.pdf\n4\t508-LuvOnPurpose Academy Bylaws\tlegal\t338055\thttps://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/OxDsjYXfvHVYshuJ.pdf\n5\tCALEA Freeman Family Trust Declaration\tlegal\t345289\thttps://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/oBHcfpMAQPedweaB.pdf\n6\tCALEA Freeman Family Trust Agreement\tlegal\t379636\thttps://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/vCtovynWFpQXAZpw.pdf\n",
+  "stderr": "",
+  "execution_time_ms": 51
+}
