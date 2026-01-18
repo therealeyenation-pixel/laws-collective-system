@@ -3,7 +3,8 @@ import { eq, desc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { positionRequisitions } from "../../drizzle/schema";
+import { positionRequisitions, users } from "../../drizzle/schema";
+import { notifyOwner } from "../_core/notification";
 
 export const requisitionsRouter = router({
   // Get all requisitions
@@ -101,10 +102,37 @@ export const requisitionsRouter = router({
         updateData.filledDate = new Date();
       }
 
+      // Get the requisition to send notification
+      const [requisition] = await db
+        .select()
+        .from(positionRequisitions)
+        .where(eq(positionRequisitions.id, input.id));
+
       await db
         .update(positionRequisitions)
         .set(updateData)
         .where(eq(positionRequisitions.id, input.id));
+
+      // Send notification for status changes
+      if (requisition && (input.status === "approved" || input.status === "rejected")) {
+        const statusText = input.status === "approved" ? "Approved" : "Rejected";
+        const notificationTitle = `Position Requisition ${statusText}: ${requisition.positionTitle}`;
+        const notificationContent = `
+Requisition Details:
+- Position: ${requisition.positionTitle}
+- Department: ${requisition.department}
+- Entity: ${requisition.entity}
+- Requested By: ${requisition.requestedByName}
+- Status: ${statusText}
+${input.approvalNotes ? `- Notes: ${input.approvalNotes}` : ""}
+${input.status === "approved" ? "\nThis position is now approved for hiring." : ""}
+        `.trim();
+
+        await notifyOwner({
+          title: notificationTitle,
+          content: notificationContent,
+        });
+      }
 
       return { success: true };
     }),
@@ -131,6 +159,44 @@ export const requisitionsRouter = router({
         .where(eq(positionRequisitions.id, input.id));
 
       return { success: true };
+    }),
+
+  // Create offer letter from approved requisition
+  createOfferFromRequisition: protectedProcedure
+    .input(z.object({
+      requisitionId: z.number(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      const [requisition] = await db
+        .select()
+        .from(positionRequisitions)
+        .where(eq(positionRequisitions.id, input.requisitionId));
+
+      if (!requisition) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Requisition not found" });
+      }
+
+      if (requisition.status !== "approved") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Requisition must be approved to create offer letter" });
+      }
+
+      // Return the requisition data formatted for offer letter creation
+      return {
+        success: true,
+        offerData: {
+          position: requisition.positionTitle,
+          department: requisition.department,
+          entity: requisition.entity,
+          salaryRange: requisition.salaryRange,
+          candidateName: requisition.candidateName,
+          candidateEmail: requisition.candidateEmail,
+          requisitionId: requisition.id,
+          startDate: requisition.targetStartDate,
+        },
+      };
     }),
 
   // Get statistics

@@ -246,6 +246,38 @@ export default function HRManagement() {
     customTerms: ""
   });
 
+  // Check for pending offer data from requisition workflow
+  useEffect(() => {
+    const pendingData = sessionStorage.getItem('pendingOfferData');
+    if (pendingData) {
+      try {
+        const offerData = JSON.parse(pendingData);
+        // Find matching position or use first match by title
+        const matchingPosition = POSITIONS.find(
+          p => p.title.toLowerCase().includes(offerData.position?.toLowerCase() || '') ||
+               p.department.toLowerCase() === offerData.department?.toLowerCase()
+        );
+        
+        setNewOffer({
+          candidateName: offerData.candidateName || "",
+          candidateEmail: offerData.candidateEmail || "",
+          positionId: matchingPosition?.id || "",
+          offeredSalary: offerData.salaryRange?.split(' - ')[0] || "",
+          benefitsPackage: (matchingPosition as any)?.recommendedBenefits || "standard",
+          startDate: offerData.startDate ? new Date(offerData.startDate).toISOString().split('T')[0] : "",
+          customTerms: `From Requisition #${offerData.requisitionId}`
+        });
+        
+        setShowCreateDialog(true);
+        sessionStorage.removeItem('pendingOfferData');
+        toast.info("Offer form pre-filled from approved requisition");
+      } catch (e) {
+        console.error('Failed to parse pending offer data:', e);
+        sessionStorage.removeItem('pendingOfferData');
+      }
+    }
+  }, []);
+
   // Auto-fill salary range and benefits when position changes
   const handlePositionChange = (positionId: string) => {
     const position = POSITIONS.find(p => p.id === positionId) as any;

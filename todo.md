@@ -3045,3 +3045,26 @@
 ### Completion
 - [x] Run tests (170 passed)
 - [ ] Save checkpoint
+
+
+## Phase 56: HR Workflow Enhancements
+
+### Feature 1: Email Notifications for Requisition Status Changes
+- [x] Add notification when requisition is approved
+- [x] Add notification when requisition is rejected
+- [x] Include requisition details in notification (position, department, entity, requester, notes)
+
+### Feature 2: Requisition-to-Offer-Letter Workflow
+- [x] Added createOfferFromRequisition endpoint in requisitions router
+- [x] Added "Create Offer" button on approved requisitions
+- [x] Auto-populate offer form with requisition data (position, candidate, salary, start date)
+- [x] Added requisition ID tracking in offer letter custom terms
+
+### Feature 3: Department Budget Tracking
+- [ ] Create department budgets table
+- [ ] Track approved requisitions against budget
+- [ ] Show budget utilization on requisitions page
+
+### Completion
+- [ ] Run tests
+- [ ] Save checkpoint

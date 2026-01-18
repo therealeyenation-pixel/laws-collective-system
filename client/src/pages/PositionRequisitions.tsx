@@ -41,11 +41,13 @@ import {
   Loader2,
   Eye,
   ThumbsUp,
-  ThumbsDown
+  ThumbsDown,
+  FileOutput
 } from "lucide-react";
 import { format } from "date-fns";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useLocation } from "wouter";
 
 // Available positions for requisition
 const POSITIONS = [
@@ -107,6 +109,7 @@ const getUrgencyBadge = (urgency: string) => {
 };
 
 export default function PositionRequisitions() {
+  const [, setLocation] = useLocation();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [selectedRequisition, setSelectedRequisition] = useState<any>(null);
@@ -121,6 +124,18 @@ export default function PositionRequisitions() {
 
   const { data: requisitions, isLoading, refetch } = trpc.requisitions.list.useQuery();
   const { data: stats } = trpc.requisitions.getStats.useQuery();
+
+  const createOfferMutation = trpc.requisitions.createOfferFromRequisition.useMutation({
+    onSuccess: (data) => {
+      // Store offer data in sessionStorage for HR Management page
+      sessionStorage.setItem('pendingOfferData', JSON.stringify(data.offerData));
+      toast.success("Navigating to HR Management to create offer letter");
+      setLocation('/hr-management');
+    },
+    onError: (error) => {
+      toast.error(`Failed to create offer: ${error.message}`);
+    },
+  });
 
   const createMutation = trpc.requisitions.create.useMutation({
     onSuccess: () => {
@@ -335,6 +350,18 @@ export default function PositionRequisitions() {
                                   <ThumbsDown className="w-4 h-4" />
                                 </Button>
                               </>
+                            )}
+                            {req.status === "approved" && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-primary hover:text-primary/80"
+                                onClick={() => createOfferMutation.mutate({ requisitionId: req.id })}
+                                disabled={createOfferMutation.isPending}
+                              >
+                                <FileOutput className="w-4 h-4 mr-1" />
+                                Create Offer
+                              </Button>
                             )}
                           </div>
                         </TableCell>

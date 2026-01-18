@@ -382,7 +382,7 @@ const POSITIONS = [
     requirements: ["5+ years health/wellness management", "Healthcare program development", "Community health experience", "Team leadership skills"],
     category: "health",
     tier: "tier1_family",
-    hiringStatus: "Filled - Family (Amber)"
+    hiringStatus: "Filled - Family (Amber Hunter)"
   },
   { 
     id: "procurement-manager", 
@@ -427,7 +427,7 @@ const POSITIONS = [
     requirements: ["1+ years health/wellness coordination", "Organization skills", "Compassionate approach", "Health resource knowledge"],
     category: "health",
     tier: "tier4_coordinator",
-    hiringStatus: "Ready to Hire (reports to Amber)"
+    hiringStatus: "Ready to Hire (reports to Amber Hunter)"
   },
   { 
     id: "contracts-manager", 
@@ -472,7 +472,7 @@ const POSITIONS = [
     requirements: ["5+ years graphic design/brand management", "Adobe Creative Suite proficiency", "Strong portfolio", "Team leadership experience"],
     category: "design",
     tier: "tier1_family",
-    hiringStatus: "Filled - Family (Essence)"
+    hiringStatus: "Filled - Family (Essence Hunter)"
   },
   { 
     id: "ops-coordinator-design", 
@@ -487,7 +487,7 @@ const POSITIONS = [
     requirements: ["2+ years graphic design", "Adobe Creative Suite proficiency", "File organization skills", "Multi-project management"],
     category: "design",
     tier: "tier4_coordinator",
-    hiringStatus: "Ready to Hire (reports to Essence)"
+    hiringStatus: "Ready to Hire (reports to Essence Hunter)"
   },
   { 
     id: "media-manager", 
@@ -502,7 +502,7 @@ const POSITIONS = [
     requirements: ["5+ years media/video production", "Video editing proficiency", "Strong portfolio/reel", "Content team management"],
     category: "media",
     tier: "tier1_family",
-    hiringStatus: "Filled - Family (Amandes)"
+    hiringStatus: "Filled - Family (Amandes Pearsall IV)"
   },
   { 
     id: "ops-coordinator-media", 
@@ -517,7 +517,7 @@ const POSITIONS = [
     requirements: ["2+ years video/content creation", "Video editing software proficiency", "Social media management", "Project coordination"],
     category: "media",
     tier: "tier4_coordinator",
-    hiringStatus: "Ready to Hire (reports to Amandes)"
+    hiringStatus: "Ready to Hire (reports to Amandes Pearsall IV)"
   },
   // ============================================
   // PROJECT CONTROLS DEPARTMENT

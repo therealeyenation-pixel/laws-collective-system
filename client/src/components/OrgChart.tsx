@@ -56,7 +56,7 @@ const orgData: OrgNode = {
     {
       id: "cfo",
       title: "Chief Financial Officer",
-      name: "Amber Christopher",
+      name: "Amber Hunter",
       department: "Finance",
       entity: "The L.A.W.S. Collective, LLC",
       tier: "tier1_executive",
