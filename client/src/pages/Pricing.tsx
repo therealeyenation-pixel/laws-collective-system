@@ -148,7 +148,7 @@ export default function Pricing() {
     },
     {
       name: "Contract Management",
-      price: "$1,500 - $7,500",
+      price: "$5,000 - $25,000",
       description: "Professional contract creation, review, negotiation support, and ongoing management services",
       icon: <Gavel className="w-6 h-6" />,
       turnaround: "5-14 days",
