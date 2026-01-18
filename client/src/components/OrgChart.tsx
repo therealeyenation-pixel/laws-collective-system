@@ -25,40 +25,29 @@ interface OrgNode {
   children?: OrgNode[];
 }
 
+// Organization Structure:
+// LaShanna Russell - Matriarch/CEO (Executive)
+// ├── Craig Russell - Finance Manager (Manager)
+// ├── Cornelius Christopher - Education Manager (Manager)
+// ├── Amber Hunter - Health Manager (Manager)
+// ├── Amandes Pearsall IV - Media Manager (Manager)
+// └── Essence Hunter - Design Manager (Manager)
+
 const orgData: OrgNode = {
   id: "ceo",
-  title: "Chief Executive Officer",
-  name: "Cornelius Christopher",
+  title: "Matriarch / Chief Executive Officer",
+  name: "LaShanna Russell",
   department: "Executive",
-  entity: "LuvOnPurpose Autonomous Wealth System LLC",
+  entity: "The L.A.W.S. Collective LLC",
   tier: "tier1_executive",
   status: "filled",
   children: [
     {
-      id: "business-manager",
-      title: "Business Manager",
-      name: "Technical Oversight",
-      department: "Business Management",
-      entity: "The L.A.W.S. Collective, LLC",
-      tier: "tier1_executive",
-      status: "filled",
-      children: [
-        {
-          id: "ops-coordinator-business",
-          title: "Business Operations Coordinator",
-          department: "Business Management",
-          entity: "The L.A.W.S. Collective, LLC",
-          tier: "tier4_coordinator",
-          status: "open"
-        }
-      ]
-    },
-    {
-      id: "cfo",
-      title: "Chief Financial Officer",
-      name: "Amber Hunter",
+      id: "finance-manager",
+      title: "Finance Manager",
+      name: "Craig Russell",
       department: "Finance",
-      entity: "The L.A.W.S. Collective, LLC",
+      entity: "The L.A.W.S. Collective LLC",
       tier: "tier1_executive",
       status: "filled",
       children: [
@@ -66,101 +55,15 @@ const orgData: OrgNode = {
           id: "finance-ops-coordinator",
           title: "Finance Operations Coordinator",
           department: "Finance",
-          entity: "The L.A.W.S. Collective, LLC",
+          entity: "The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
       ]
     },
     {
-      id: "lead-ops-coordinator",
-      title: "Lead Operations Coordinator",
-      department: "Operations",
-      entity: "The L.A.W.S. Collective, LLC",
-      tier: "tier4_coordinator",
-      status: "recruiting",
-      children: [
-        {
-          id: "ops-coordinator-hr",
-          title: "HR Operations Coordinator",
-          department: "Human Resources",
-          entity: "The L.A.W.S. Collective, LLC",
-          tier: "tier4_coordinator",
-          status: "open"
-        },
-        {
-          id: "ops-coordinator-qaqc",
-          title: "QA/QC Operations Coordinator",
-          department: "Quality Assurance",
-          entity: "The L.A.W.S. Collective, LLC",
-          tier: "tier4_coordinator",
-          status: "open"
-        },
-        {
-          id: "ops-coordinator-purchasing",
-          title: "Purchasing Operations Coordinator",
-          department: "Purchasing",
-          entity: "The L.A.W.S. Collective, LLC",
-          tier: "tier4_coordinator",
-          status: "open"
-        },
-        {
-          id: "ops-coordinator-operations",
-          title: "Operations Coordinator",
-          department: "Operations",
-          entity: "LuvOnPurpose Autonomous Wealth System LLC",
-          tier: "tier4_coordinator",
-          status: "open"
-        }
-      ]
-    },
-    {
-      id: "procurement-manager",
-      title: "Procurement Manager",
-      department: "Procurement",
-      entity: "The L.A.W.S. Collective, LLC",
-      tier: "tier2_identified",
-      status: "identified",
-      children: [
-        {
-          id: "ops-coordinator-procurement",
-          title: "Procurement Operations Coordinator",
-          department: "Procurement",
-          entity: "The L.A.W.S. Collective, LLC",
-          tier: "tier4_coordinator",
-          status: "open"
-        },
-        {
-          id: "purchasing-manager",
-          title: "Purchasing Manager",
-          department: "Purchasing",
-          entity: "The L.A.W.S. Collective, LLC",
-          tier: "tier3_open",
-          status: "open"
-        },
-        {
-          id: "contracts-manager",
-          title: "Contracts Manager",
-          department: "Contracts",
-          entity: "The L.A.W.S. Collective, LLC",
-          tier: "tier2_identified",
-          status: "identified",
-          children: [
-            {
-              id: "ops-coordinator-contracts",
-              title: "Contracts Operations Coordinator",
-              department: "Contracts",
-              entity: "The L.A.W.S. Collective, LLC",
-              tier: "tier4_coordinator",
-              status: "open"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: "education-director",
-      title: "Education Director",
+      id: "education-manager",
+      title: "Education Manager",
       name: "Cornelius Christopher",
       department: "Education",
       entity: "508-LuvOnPurpose Academy and Outreach",
@@ -179,33 +82,72 @@ const orgData: OrgNode = {
           id: "academy-instructor",
           title: "Academy Instructor",
           department: "Education",
-          entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+          entity: "508-LuvOnPurpose Academy and Outreach",
           tier: "tier4_coordinator",
           status: "open"
         }
       ]
     },
     {
+      id: "health-manager",
+      title: "Health Manager",
+      name: "Amber Hunter",
+      department: "Health",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier1_executive",
+      status: "filled",
+      children: [
+        {
+          id: "health-ops-coordinator",
+          title: "Health Operations Coordinator",
+          department: "Health",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "media-manager",
+      title: "Media Manager / Creative Director",
+      name: "Amandes Pearsall IV",
+      department: "Media",
+      entity: "Real-Eye-Nation",
+      tier: "tier1_executive",
+      status: "filled",
+      children: [
+        {
+          id: "ops-coordinator-media",
+          title: "Media Operations Coordinator",
+          department: "Media Production",
+          entity: "Real-Eye-Nation",
+          tier: "tier4_coordinator",
+          status: "open"
+        },
+        {
+          id: "content-creator",
+          title: "Content Creator",
+          department: "Media Production",
+          entity: "Real-Eye-Nation",
+          tier: "tier4_coordinator",
+          status: "recruiting"
+        }
+      ]
+    },
+    {
       id: "design-manager",
-      title: "Design Manager",
-      department: "Design & Creative",
-      entity: "Real-Eye-Nation, LLC",
-      tier: "tier2_identified",
-      status: "identified",
+      title: "Design Manager / Design Lead",
+      name: "Essence Hunter",
+      department: "Design",
+      entity: "Real-Eye-Nation",
+      tier: "tier1_executive",
+      status: "filled",
       children: [
         {
           id: "ops-coordinator-design",
           title: "Design Operations Coordinator",
           department: "Design & Creative",
-          entity: "Real-Eye-Nation, LLC",
-          tier: "tier4_coordinator",
-          status: "open"
-        },
-        {
-          id: "ops-coordinator-media",
-          title: "Media Operations Coordinator",
-          department: "Media Production",
-          entity: "Real-Eye-Nation, LLC",
+          entity: "Real-Eye-Nation",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -215,17 +157,163 @@ const orgData: OrgNode = {
       id: "hr-manager",
       title: "HR Manager",
       department: "Human Resources",
-      entity: "The L.A.W.S. Collective, LLC",
+      entity: "The L.A.W.S. Collective LLC",
       tier: "tier3_open",
-      status: "open"
+      status: "open",
+      children: [
+        {
+          id: "hr-ops-coordinator",
+          title: "HR Operations Coordinator",
+          department: "Human Resources",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "operations-manager",
+      title: "Operations Manager",
+      department: "Operations",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier3_open",
+      status: "open",
+      children: [
+        {
+          id: "ops-coordinator-operations",
+          title: "Operations Coordinator",
+          department: "Operations",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "technology-manager",
+      title: "Platform Administrator",
+      department: "Technology",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier3_open",
+      status: "open",
+      children: [
+        {
+          id: "tech-ops-coordinator",
+          title: "Technology Operations Coordinator",
+          department: "Technology",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
     },
     {
       id: "qaqc-manager",
       title: "QA/QC Manager",
       department: "Quality Assurance",
-      entity: "The L.A.W.S. Collective, LLC",
+      entity: "The L.A.W.S. Collective LLC",
       tier: "tier3_open",
-      status: "open"
+      status: "open",
+      children: [
+        {
+          id: "qaqc-ops-coordinator",
+          title: "QA/QC Operations Coordinator",
+          department: "Quality Assurance",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "procurement-manager",
+      title: "Procurement Manager (Oversight)",
+      department: "Procurement",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier2_identified",
+      status: "identified",
+      children: [
+        {
+          id: "ops-coordinator-procurement",
+          title: "Procurement Operations Coordinator",
+          department: "Procurement",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        },
+        {
+          id: "purchasing-manager",
+          title: "Purchasing Manager",
+          department: "Purchasing",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier2_identified",
+          status: "identified",
+          children: [
+            {
+              id: "purchasing-ops-coordinator",
+              title: "Purchasing Operations Coordinator",
+              department: "Purchasing",
+              entity: "The L.A.W.S. Collective LLC",
+              tier: "tier4_coordinator",
+              status: "open"
+            }
+          ]
+        },
+        {
+          id: "contracts-manager",
+          title: "Contracts Manager",
+          department: "Contracts",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier2_identified",
+          status: "identified",
+          children: [
+            {
+              id: "ops-coordinator-contracts",
+              title: "Contracts Operations Coordinator",
+              department: "Contracts",
+              entity: "The L.A.W.S. Collective LLC",
+              tier: "tier4_coordinator",
+              status: "open"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "legal-manager",
+      title: "Legal Manager",
+      department: "Legal",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier3_open",
+      status: "open",
+      children: [
+        {
+          id: "legal-ops-coordinator",
+          title: "Legal Operations Coordinator",
+          department: "Legal",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "real-estate-manager",
+      title: "Real Estate Manager",
+      department: "Real Estate",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier3_open",
+      status: "open",
+      children: [
+        {
+          id: "real-estate-ops-coordinator",
+          title: "Real Estate Operations Coordinator",
+          department: "Real Estate",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
     }
   ]
 };
@@ -251,7 +339,7 @@ const getTierLabel = (tier: OrgNode["tier"]) => {
 const getStatusBadge = (status: OrgNode["status"]) => {
   switch (status) {
     case "filled": return <Badge className="bg-green-500/10 text-green-700 border-green-500/30">Filled</Badge>;
-    case "identified": return <Badge className="bg-blue-500/10 text-blue-700 border-blue-500/30">Candidate Identified</Badge>;
+    case "identified": return <Badge className="bg-blue-500/10 text-blue-700 border-blue-500/30">Identified</Badge>;
     case "open": return <Badge className="bg-amber-500/10 text-amber-700 border-amber-500/30">Open Position</Badge>;
     case "recruiting": return <Badge className="bg-purple-500/10 text-purple-700 border-purple-500/30">Actively Recruiting</Badge>;
   }

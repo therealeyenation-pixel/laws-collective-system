@@ -356,8 +356,8 @@ const POSITIONS = [
     hiringStatus: "Pending Manager"
   },
   { 
-    id: "ops-coordinator-education", 
-    title: "Education Operations Coordinator", 
+    id: "ops-coordinator-education-temple", 
+    title: "Education Operations Coordinator (Temple)", 
     entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
     entityShort: "Temple/508",
     department: "Education",
@@ -367,6 +367,8 @@ const POSITIONS = [
     description: "Provide administrative support to the Education Department and Academy. Reports to Cornelius Christopher (Education Manager). Assist with student enrollment, course scheduling, materials preparation, and instructor coordination.",
     requirements: ["1+ years admin/education support", "Organization skills", "Student communication", "LMS familiarity preferred"],
     category: "education",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager",
     reportsTo: "Cornelius Christopher"
   },
   { 
@@ -803,25 +805,17 @@ export default function Careers() {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="container max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/">
-              <a className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
                 <Sparkles className="w-6 h-6 text-primary" />
                 <div>
                   <span className="font-bold text-foreground">The L.A.W.S. Collective, LLC</span>
                   <span className="text-xs text-muted-foreground block">Land • Air • Water • Self</span>
                 </div>
-              </a>
             </Link>
             <nav className="hidden md:flex items-center gap-6">
-              <Link href="/">
-                <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">Home</a>
-              </Link>
-              <Link href="/academy">
-                <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">Academy</a>
-              </Link>
-              <Link href="/pricing">
-                <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">Services</a>
-              </Link>
+              <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Home</Link>
+              <Link href="/academy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Academy</Link>
+              <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Services</Link>
               <span className="text-sm font-medium text-primary">Careers</span>
             </nav>
           </div>
@@ -847,9 +841,7 @@ export default function Careers() {
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/getting-started">
-                  <a>Learn About Us</a>
-                </Link>
+                <Link href="/getting-started">Learn About Us</Link>
               </Button>
             </div>
           </div>
@@ -1063,15 +1055,9 @@ export default function Careers() {
               © 2026 LuvOnPurpose Family Enterprise. Building Multi-Generational Wealth Through Purpose & Community.
             </p>
             <div className="flex gap-4">
-              <Link href="/">
-                <a className="text-sm text-muted-foreground hover:text-foreground">Home</a>
-              </Link>
-              <Link href="/academy">
-                <a className="text-sm text-muted-foreground hover:text-foreground">Academy</a>
-              </Link>
-              <Link href="/pricing">
-                <a className="text-sm text-muted-foreground hover:text-foreground">Services</a>
-              </Link>
+              <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">Home</Link>
+              <Link href="/academy" className="text-sm text-muted-foreground hover:text-foreground">Academy</Link>
+              <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground">Services</Link>
             </div>
           </div>
         </div>
