@@ -2914,4 +2914,30 @@
 
 ### Completion
 - [x] All 170 tests passing
+- [x] Save checkpoint (version: 9a3f65ad)
+
+
+## Phase 52: Position Tier Corrections and Missing Coordinators
+
+### QA/QC Department
+- [x] QA/QC Manager → Changed to Open Position (Tier 3)
+- [x] QA/QC Operations Coordinator → Changed to Open Position (Tier 4)
+
+### HR Department
+- [x] HR Manager → Changed to Open Position (Tier 3)
+- [x] HR Operations Coordinator → Changed to Open Position (Tier 4)
+
+### Contracts Department
+- [x] Contracts Manager → Tier 2 Identified (reports to Procurement Manager)
+- [x] Contracts Operations Coordinator → Changed to Open Position (Tier 4)
+
+### Procurement/Purchasing/Contracts Hierarchy
+- [x] Procurement Manager → Tier 2 Identified (oversight of Purchasing + Contracts)
+- [x] Procurement Operations Coordinator → Added as Open Position (Tier 4)
+- [x] Purchasing Manager → Changed to Tier 3 Open (reports to Procurement Manager)
+- [x] Purchasing Operations Coordinator → Changed to Open Position (Tier 4)
+- [x] Added "Open Position" filter to hiring status dropdown
+
+### Completion
+- [x] Run tests (170 passed)
 - [ ] Save checkpoint

@@ -104,7 +104,7 @@ const POSITIONS = [
     requirements: ["3+ years HR experience", "Strong interpersonal skills", "HR systems proficiency", "Employment law knowledge"],
     category: "operations",
     tier: "tier3_open",
-    hiringStatus: "Future Hiring"
+    hiringStatus: "Open Position"
   },
   { 
     id: "qaqc-lead", 
@@ -119,7 +119,7 @@ const POSITIONS = [
     requirements: ["3+ years QA/compliance experience", "Strong attention to detail", "Technical writing skills", "Process documentation"],
     category: "operations",
     tier: "tier3_open",
-    hiringStatus: "Future Hiring"
+    hiringStatus: "Open Position"
   },
   // ============================================
   // TIER 2: IDENTIFIED CANDIDATES (Pending Funding)
@@ -133,11 +133,11 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$80,000 - $110,000",
-    description: "Manage procurement operations across all subsidiary entities. Handle vendor relationships, cost control, inventory tracking, and grant compliance for purchasing activities.",
-    requirements: ["2+ years purchasing experience", "Negotiation skills", "Spreadsheet proficiency", "Basic accounting knowledge"],
+    description: "Manage day-to-day purchasing operations across all subsidiary entities. Handle vendor relationships, purchase orders, cost control, inventory tracking, and grant compliance for purchasing activities. Reports to Procurement Manager.",
+    requirements: ["3+ years purchasing experience", "Negotiation skills", "Spreadsheet proficiency", "Vendor management"],
     category: "operations",
-    tier: "tier2_identified",
-    hiringStatus: "Candidate Identified"
+    tier: "tier3_open",
+    hiringStatus: "Future Hiring"
   },
   { 
     id: "operations-manager", 
@@ -291,7 +291,7 @@ const POSITIONS = [
     requirements: ["1+ years admin/HR support", "Organization skills", "Microsoft Office/Google Workspace", "Data entry proficiency"],
     category: "operations",
     tier: "tier4_coordinator",
-    hiringStatus: "Pending Manager"
+    hiringStatus: "Open Position"
   },
   { 
     id: "ops-coordinator-qaqc", 
@@ -306,7 +306,7 @@ const POSITIONS = [
     requirements: ["1+ years admin/quality support", "Attention to detail", "Documentation skills", "Process tracking"],
     category: "operations",
     tier: "tier4_coordinator",
-    hiringStatus: "Pending Manager"
+    hiringStatus: "Open Position"
   },
   { 
     id: "ops-coordinator-purchasing", 
@@ -317,11 +317,11 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$52,000 - $68,000",
-    description: "Assist with procurement operations including order processing, vendor communications, and inventory tracking. Ensure accurate records and timely processing of purchases.",
+    description: "Assist the Purchasing Manager with day-to-day purchasing operations including order processing, vendor communications, and inventory tracking. Ensure accurate records and timely processing of purchases.",
     requirements: ["1+ years admin/purchasing support", "Data entry skills", "Vendor communication", "Invoice processing"],
     category: "operations",
     tier: "tier4_coordinator",
-    hiringStatus: "Pending Manager"
+    hiringStatus: "Open Position"
   },
   { 
     id: "ops-coordinator-operations", 
@@ -375,11 +375,26 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$95,000 - $130,000",
-    description: "Lead strategic procurement operations across all subsidiary entities. Develop vendor relationships, negotiate contracts, implement cost-saving initiatives, and ensure compliance with grant requirements and organizational policies.",
+    description: "Provide strategic oversight of all procurement-related functions including Purchasing and Contracts departments. Develop vendor relationships, negotiate major contracts, implement cost-saving initiatives, and ensure compliance with grant requirements and organizational policies across all subsidiary entities.",
     requirements: ["5+ years procurement/supply chain management", "Contract negotiation skills", "Vendor management experience", "Professional certification preferred (CPM, CPSM)"],
     category: "operations",
     tier: "tier2_identified",
     hiringStatus: "Candidate Identified"
+  },
+  { 
+    id: "ops-coordinator-procurement", 
+    title: "Procurement Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Procurement",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$55,000 - $75,000",
+    description: "Support the Procurement Manager with strategic procurement activities, vendor analysis, contract tracking, and compliance documentation. Coordinate between Purchasing and Contracts departments to ensure alignment with organizational procurement strategy.",
+    requirements: ["2+ years procurement/supply chain support", "Analytical skills", "Vendor coordination experience", "Excel/reporting proficiency"],
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Open Position"
   },
   { 
     id: "ops-coordinator-health", 
@@ -405,7 +420,7 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$95,000 - $130,000",
-    description: "Oversee all contract administration, negotiations, and compliance across our family of entities. Draft, review, and negotiate contracts while ensuring legal compliance and protecting organizational interests.",
+    description: "Oversee all contract administration, negotiations, and compliance across our family of entities. Draft, review, and negotiate contracts while ensuring legal compliance and protecting organizational interests. Reports to Procurement Manager for strategic alignment.",
     requirements: ["5+ years contract management", "Contract law knowledge", "Negotiation skills", "Professional certification preferred"],
     category: "operations",
     tier: "tier2_identified",
@@ -420,11 +435,11 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$52,000 - $72,000",
-    description: "Support the contract management function with document management, compliance tracking, and administrative tasks. Maintain contract files, track deadlines, and coordinate approvals.",
+    description: "Support the Contracts Manager with document management, compliance tracking, and administrative tasks. Maintain contract files, track deadlines, and coordinate approvals.",
     requirements: ["2+ years admin/legal support", "Organization skills", "Document management", "Confidentiality handling"],
     category: "operations",
     tier: "tier4_coordinator",
-    hiringStatus: "Pending Manager"
+    hiringStatus: "Open Position"
   },
   { 
     id: "design-manager", 
@@ -525,6 +540,7 @@ const POSITIONS = [
 const HIRING_STATUSES = [
   { id: "all", label: "All Positions" },
   { id: "actively_recruiting", label: "Actively Recruiting", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Actively") || p.hiringStatus?.includes("Ready to Hire") },
+  { id: "open_position", label: "Open Position", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Open Position" },
   { id: "future_hiring", label: "Future Hiring", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Future Hiring" },
   { id: "pending_manager", label: "Pending Manager", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Pending Manager" },
   { id: "filled_family", label: "Filled (Family)", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Filled") },
