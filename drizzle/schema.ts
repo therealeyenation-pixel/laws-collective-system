@@ -7610,3 +7610,148 @@ export const positionRequisitions = mysqlTable("position_requisitions", {
 
 export type PositionRequisition = typeof positionRequisitions.$inferSelect;
 export type InsertPositionRequisition = typeof positionRequisitions.$inferInsert;
+
+
+/**
+ * Contractor Transitions - Track employee-to-contractor transitions
+ */
+export const contractorTransitions = mysqlTable("contractor_transitions", {
+  id: int("id").autoincrement().primaryKey(),
+  employeeId: int("employeeId").notNull(),
+  employeeName: varchar("employeeName", { length: 255 }).notNull(),
+  initiatedBy: int("initiatedBy").notNull(),
+  initiatedByName: varchar("initiatedByName", { length: 255 }),
+  
+  // Transition phases
+  phase: mysqlEnum("phase", [
+    "initiated",
+    "training_assigned",
+    "training_in_progress",
+    "training_completed",
+    "entity_formation",
+    "entity_verified",
+    "contract_pending",
+    "contract_signed",
+    "completed",
+    "cancelled"
+  ]).default("initiated").notNull(),
+  
+  // Training tracking
+  trainingModuleId: int("trainingModuleId"),
+  trainingStartDate: timestamp("trainingStartDate"),
+  trainingCompletionDate: timestamp("trainingCompletionDate"),
+  trainingScore: int("trainingScore"),
+  certificationIssued: boolean("certificationIssued").default(false).notNull(),
+  
+  // Entity formation tracking
+  businessEntityId: int("businessEntityId"),
+  entityName: varchar("entityName", { length: 255 }),
+  entityType: varchar("entityType", { length: 100 }),
+  entityFormationDate: timestamp("entityFormationDate"),
+  einObtained: boolean("einObtained").default(false).notNull(),
+  businessBankSetup: boolean("businessBankSetup").default(false).notNull(),
+  
+  // Contract tracking
+  contractId: int("contractId"),
+  contractSignedDate: timestamp("contractSignedDate"),
+  contractTerms: json("contractTerms"),
+  
+  // Status tracking
+  status: mysqlEnum("status", ["active", "completed", "cancelled", "on_hold"]).default("active").notNull(),
+  completedDate: timestamp("completedDate"),
+  cancellationReason: text("cancellationReason"),
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContractorTransition = typeof contractorTransitions.$inferSelect;
+export type InsertContractorTransition = typeof contractorTransitions.$inferInsert;
+
+/**
+ * Impact Metrics - Track program outcomes for grant reporting
+ */
+export const impactMetrics = mysqlTable("impact_metrics", {
+  id: int("id").autoincrement().primaryKey(),
+  metricType: mysqlEnum("metricType", [
+    "employees_trained",
+    "employees_transitioned",
+    "businesses_formed",
+    "contractor_retention",
+    "contractor_revenue",
+    "jobs_created",
+    "community_members_served",
+    "scholarships_awarded",
+    "volunteer_hours"
+  ]).notNull(),
+  
+  // Time period
+  periodType: mysqlEnum("periodType", ["monthly", "quarterly", "annual"]).notNull(),
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd").notNull(),
+  
+  // Metric values
+  targetValue: decimal("targetValue", { precision: 15, scale: 2 }),
+  actualValue: decimal("actualValue", { precision: 15, scale: 2 }).notNull(),
+  previousPeriodValue: decimal("previousPeriodValue", { precision: 15, scale: 2 }),
+  
+  // Context
+  entityId: int("entityId"),
+  entityName: varchar("entityName", { length: 255 }),
+  programName: varchar("programName", { length: 255 }),
+  grantId: varchar("grantId", { length: 100 }),
+  
+  // Notes and verification
+  notes: text("notes"),
+  dataSource: varchar("dataSource", { length: 255 }),
+  verifiedBy: int("verifiedBy"),
+  verifiedAt: timestamp("verifiedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ImpactMetric = typeof impactMetrics.$inferSelect;
+export type InsertImpactMetric = typeof impactMetrics.$inferInsert;
+
+/**
+ * Contractor Businesses - Track businesses formed by transitioned contractors
+ */
+export const contractorBusinesses = mysqlTable("contractor_businesses", {
+  id: int("id").autoincrement().primaryKey(),
+  transitionId: int("transitionId").notNull(),
+  contractorId: int("contractorId").notNull(),
+  contractorName: varchar("contractorName", { length: 255 }).notNull(),
+  
+  // Business details
+  businessName: varchar("businessName", { length: 255 }).notNull(),
+  businessType: varchar("businessType", { length: 100 }),
+  ein: varchar("ein", { length: 20 }),
+  stateOfFormation: varchar("stateOfFormation", { length: 50 }),
+  formationDate: timestamp("formationDate"),
+  
+  // Business status
+  status: mysqlEnum("status", ["active", "inactive", "dissolved"]).default("active").notNull(),
+  
+  // Revenue tracking (self-reported)
+  annualRevenue: decimal("annualRevenue", { precision: 15, scale: 2 }),
+  revenueYear: int("revenueYear"),
+  employeesHired: int("employeesHired").default(0),
+  
+  // Platform usage
+  platformSubscription: mysqlEnum("platformSubscription", ["none", "basic", "professional", "enterprise"]).default("none").notNull(),
+  platformActiveDate: timestamp("platformActiveDate"),
+  
+  // Relationship tracking
+  activeContractWithLaws: boolean("activeContractWithLaws").default(false).notNull(),
+  lastContractDate: timestamp("lastContractDate"),
+  totalContractValue: decimal("totalContractValue", { precision: 15, scale: 2 }),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContractorBusiness = typeof contractorBusinesses.$inferSelect;
+export type InsertContractorBusiness = typeof contractorBusinesses.$inferInsert;

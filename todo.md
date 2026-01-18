@@ -3126,3 +3126,64 @@
 - [ ] Create contractor agreement generation
 - [ ] Design multi-tenant architecture for external customers
 - [ ] Document integration points (QuickBooks, Gusto, DocuSign, IRS)
+
+
+## Phase 61: Business Plan Updates for Grant Positioning
+- [ ] Update L.A.W.S. Collective Business Plan with Contractor Transition Program
+- [ ] Update grant narratives with workforce-to-ownership positioning
+- [ ] Add impact metrics tracking for transitions and new businesses formed
+
+
+## Phase 63: Gated Contractor Transition System (L.A.W.S. Business OS)
+
+### Database Tables
+- [x] Create contractor_transitions table with phase tracking
+- [x] Create contractor_businesses table for formed entities
+- [x] Create impact_metrics table for grant reporting
+
+### Contractor Transition Router
+- [x] Create contractor-transition router with gated verification logic
+- [x] Implement 9-phase transition workflow (initiated → completed)
+- [x] Add training gate - must complete all 8 modules before entity formation
+- [x] Add entity formation gate - must have LLC/Corp, EIN, business bank account
+- [x] Add contract signing gate - all previous gates must pass
+- [x] Implement platform lock-in clauses (non-compete, IP assignment, platform subscription)
+- [x] Add dashboard metrics for transition tracking
+
+### Required Training Modules (8 total, ~14.5 hours)
+- [x] 1099 Tax Obligations (2h, 80% pass)
+- [x] Professional Invoicing & Billing (1.5h, 80% pass)
+- [x] Understanding Contract Terms (2h, 85% pass)
+- [x] Independent Contractor vs Employee (2.5h, 90% pass)
+- [x] Business Entity Formation (2h, 80% pass)
+- [x] Business Banking & Financial Separation (1.5h, 80% pass)
+- [x] Business Insurance Requirements (1h, 75% pass)
+- [x] L.A.W.S. Business OS Platform Orientation (2h, 85% pass)
+
+### Contractor Transitions UI
+- [x] Create ContractorTransitions management page
+- [x] Add dashboard metrics (total, active, completed, businesses formed, platform subscribers)
+- [x] Add transition pipeline view with phase tracking
+- [x] Add gate status visualization (locked/unlocked)
+- [x] Add transition details panel with action buttons
+- [x] Add requirements & gates documentation tab
+- [x] Add training modules reference tab
+- [x] Add route to App.tsx (/contractor-transitions)
+
+### Platform Lock-In Features
+- [x] Non-compete clause for transition methodology
+- [x] IP assignment for system improvements
+- [x] Platform subscription requirement
+- [x] Contractor must use L.A.W.S. Business OS for invoicing
+
+### Testing
+- [x] Create contractor-transition.test.ts with 14 tests
+- [x] Test gate verification logic
+- [x] Test EIN format validation
+- [x] Test progress calculation
+- [x] Test platform lock-in verification
+- [x] All 184 tests passing
+
+### Completion
+- [x] TypeScript compilation passing
+- [ ] Save checkpoint

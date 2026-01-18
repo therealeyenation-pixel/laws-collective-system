@@ -54,6 +54,7 @@ import Contact from "@/pages/Contact";
 import Support from "@/pages/Support";
 import ContractorTransition from "./pages/ContractorTransition";
 import ContractorAgreement from "./pages/ContractorAgreement";
+import ContractorTransitions from "./pages/ContractorTransitions";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -169,6 +170,7 @@ function Router() {
       <Route path="/hr-applications">{() => <ProtectedRoute component={HRApplications} minRole="staff" />}</Route>
       <Route path="/hr-dashboard">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
       <Route path="/contractor-transition">{() => <ProtectedRoute component={ContractorTransition} minRole="staff" />}</Route>
+      <Route path="/contractor-transitions">{() => <ProtectedRoute component={ContractorTransitions} minRole="staff" />}</Route>
       <Route path="/contractor-agreements">{() => <ProtectedRoute component={ContractorAgreement} minRole="staff" />}</Route>
       <Route path="/onboarding">{() => <ProtectedRoute component={Onboarding} />}</Route>
       <Route path="/procedures">{() => <ProtectedRoute component={OperatingProcedures} />}</Route>

@@ -11,8 +11,8 @@
     "description": "Enterprise-wide leadership positions at holding company level",
     "positions": [
       {
-        "title": "Matriarch/CEO",
-        "fullTitle": "Chief Executive Officer / Matriarch",
+        "title": "CEO",
+        "fullTitle": "Chief Executive Officer",
         "currentHolder": "LaShanna Russell",
         "entity": "Calea Freeman Family Trust / The L.A.W.S. Collective, LLC",
         "responsibilities": [
@@ -37,7 +37,7 @@
           "Resource allocation and capacity planning",
           "Performance monitoring and reporting"
         ],
-        "reportsTo": "Matriarch/CEO",
+        "reportsTo": "CEO",
         "directReports": ["Operations Manager", "HR Lead", "QA/QC Lead", "Purchasing Lead", "Platform Administrator"],
         "salaryRange": "$125,000 - $165,000"
       },
@@ -54,7 +54,7 @@
           "Financial reporting and analysis",
           "Banking and investment relationships"
         ],
-        "reportsTo": "Matriarch/CEO",
+        "reportsTo": "CEO",
         "directReports": ["Grant Writer", "Bookkeeper (future)"],
         "salaryRange": "$65,000 - $90,000"
       },
@@ -74,7 +74,7 @@
           "Education liaison coordination with Real-Eye-Nation",
           "Legal/Justice advisory support (Criminal Justice expertise)"
         ],
-        "reportsTo": "Matriarch/CEO",
+        "reportsTo": "CEO",
         "directReports": ["Academy Instructors", "Education Operations Coordinator"],
         "salaryRange": "$130,000 - $150,000",
         "additionalStipends": [
@@ -104,7 +104,7 @@
               "Program oversight and development",
               "Board liaison (if applicable)"
             ],
-            "reportsTo": "Matriarch/CEO",
+            "reportsTo": "CEO",
             "directReports": ["Education Director", "Outreach Coordinator"],
             "salaryRange": "$85,000 - $115,000",
             "notes": "Required for nonprofit credibility with funders"
@@ -340,7 +340,7 @@
               "Brand management",
               "NFT and digital asset strategy"
             ],
-            "reportsTo": "Matriarch/CEO",
+            "reportsTo": "CEO",
             "directReports": ["Content Creator", "Design Lead"]
           },
           {
@@ -455,7 +455,7 @@
     "familyManagers": {
       "description": "Tier 1: Family members confirmed in management roles",
       "members": [
-        {"name": "LaShanna Russell", "title": "Matriarch/CEO", "department": "Executive/Business", "entity": "Trust/L.A.W.S. Collective", "status": "Active"},
+        {"name": "LaShanna Russell", "title": "CEO", "department": "Executive/Business", "entity": "Trust/L.A.W.S. Collective", "status": "Active"},
         {"name": "Craig", "title": "CFO", "department": "Finance", "entity": "L.A.W.S. Collective", "status": "Active"},
         {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "department": "Education", "entity": "L.A.W.S. Collective (cross-entity)", "status": "Active"},
         {"name": "Amandes", "title": "Media Manager/Creative Director", "department": "Media", "entity": "Real-Eye-Nation", "status": "Active"},
@@ -512,7 +512,7 @@
       ]
     },
     "filled": [
-      {"name": "LaShanna Russell", "title": "Matriarch/CEO", "entity": "Trust/L.A.W.S. Collective"},
+      {"name": "LaShanna Russell", "title": "CEO", "entity": "Trust/L.A.W.S. Collective"},
       {"name": "Craig", "title": "CFO", "entity": "L.A.W.S. Collective"},
       {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "entity": "L.A.W.S. Collective (cross-entity)"},
       {"name": "Amandes", "title": "Media Manager/Creative Director", "entity": "Real-Eye-Nation"},
