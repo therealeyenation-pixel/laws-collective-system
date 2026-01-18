@@ -53,7 +53,7 @@ const businessPlans = [
     teamSize: 4,
     teamDescription: 'Lean team structure leveraging broader LuvOnPurpose family for support functions',
     keyPersonnel: JSON.stringify([
-      { name: 'LaShanna Russell', role: 'Founder/Creative Director', bio: 'Vision, strategy, and creative oversight' },
+      { name: 'LaLaShanna Russell', role: 'Founder/Creative Director', bio: 'Vision, strategy, and creative oversight' },
       { name: 'Family Members', role: 'Media Production Support', bio: 'Content creation and editing (training in progress)' },
       { name: 'Cornelius', role: 'Education Liaison', bio: 'Coordination with 508 Academy, Education/Training Manager' }
     ]),
@@ -114,7 +114,7 @@ const businessPlans = [
     keyPersonnel: JSON.stringify([
       { name: 'Trustee (TBD)', role: 'Trustee', bio: 'Legal administration, fiduciary duties' },
       { name: 'Trust Protector (TBD)', role: 'Trust Protector', bio: 'Oversight, amendment authority' },
-      { name: 'Shanna Russell', role: 'Family Council Lead', bio: 'Matriarch, advisory, conflict resolution' },
+      { name: 'LaShanna Russell', role: 'Family Council Lead', bio: 'Matriarch, advisory, conflict resolution' },
       { name: 'Craig', role: 'Finance Support', bio: 'Financial oversight, Outreach support' },
       { name: 'Cornelius', role: 'Education/Training Manager', bio: 'Education Department, Justice Advisor' }
     ]),
@@ -174,7 +174,7 @@ const businessPlans = [
     teamSize: 6,
     teamDescription: 'Lean team leveraging family members and contractors',
     keyPersonnel: JSON.stringify([
-      { name: 'LaShanna Russell', role: 'Founder/CEO', bio: 'Vision, strategy, platform direction' },
+      { name: 'LaLaShanna Russell', role: 'Founder/CEO', bio: 'Vision, strategy, platform direction' },
       { name: 'Family Members', role: 'Operations Support', bio: 'Day-to-day operations, client support' },
       { name: 'Cornelius', role: 'Education/Training', bio: 'Training program development' },
       { name: 'Craig', role: 'Finance/Outreach', bio: 'Financial management, marketing, partnerships' }
@@ -234,7 +234,7 @@ const businessPlans = [
     teamSize: 7,
     teamDescription: 'Collaborative leadership model with pillar leads',
     keyPersonnel: JSON.stringify([
-      { name: 'LaShanna Russell', role: 'Founder/Director', bio: 'Vision, strategy, community relationships' },
+      { name: 'LaLaShanna Russell', role: 'Founder/Director', bio: 'Vision, strategy, community relationships' },
       { name: 'Cornelius', role: 'AIR Pillar Lead', bio: 'Education programs, Education Manager' },
       { name: 'Craig', role: 'Outreach', bio: 'Member recruitment, partnerships' },
       { name: 'TBD', role: 'LAND Pillar Lead', bio: 'Genealogy and land programs' },
@@ -300,7 +300,7 @@ const businessPlans = [
     teamSize: 5,
     teamDescription: 'Lean team relying on trained volunteers and certified facilitators',
     keyPersonnel: JSON.stringify([
-      { name: 'LaShanna Russell', role: 'Founder/Director', bio: 'Vision, strategy, spiritual leadership' },
+      { name: 'LaLaShanna Russell', role: 'Founder/Director', bio: 'Vision, strategy, spiritual leadership' },
       { name: 'Cornelius', role: 'Training Manager', bio: 'Curriculum, certification, quality - signs all completion certificates' },
       { name: 'Family Member/Volunteer', role: 'Program Coordinator', bio: 'Scheduling, enrollment, logistics' },
       { name: 'TBD', role: 'Outreach Coordinator', bio: 'Community services, volunteer management' },

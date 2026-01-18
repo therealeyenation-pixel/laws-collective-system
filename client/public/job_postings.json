@@ -12,7 +12,7 @@
       "tier1_familyManagers": {
         "description": "Family members confirmed in management roles - NOT open for external hiring",
         "positions": [
-          {"title": "CEO/Matriarch", "holder": "Shanna Russell", "department": "Executive"},
+          {"title": "CEO/Matriarch", "holder": "LaShanna Russell", "department": "Executive"},
           {"title": "CFO", "holder": "Craig", "department": "Finance"},
           {"title": "CEO-Ed", "holder": "Cornelius", "department": "Education"},
           {"title": "Media Manager/Creative Director", "holder": "Amandes", "department": "Media"},

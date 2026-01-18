@@ -9,7 +9,7 @@
 - Jurisdiction: Jamaica
 - Foreign Address: 99 Great George St, Savanna la Mar, Westmoreland, Jamaica
 - Mailing Address: 2302 Parklake Dr NE SU3 #808, Atlanta, GA 30345
-- Trustee: LaShanna Russell
+- Trustee: LaLaShanna Russell
 - Beneficiaries: Freeman Family Members
 
 ---
@@ -54,7 +54,7 @@ The Trust operates under a governance framework that balances authority with acc
 |------|---------------|----------------|
 | Trustee | Legal administration, fiduciary duties | To be designated |
 | Trust Protector | Oversight, amendment authority | To be designated |
-| Family Council | Advisory, conflict resolution | Shanna Russell (Matriarch), Craig, Family Members |
+| Family Council | Advisory, conflict resolution | LaShanna Russell (Matriarch), Craig, Family Members |
 | Board of Directors | Operating entity oversight | Family members with assigned roles |
 
 **Governance Principles**
@@ -140,7 +140,7 @@ The Trust establishes clear roles for family members within the ecosystem:
 
 | Member | Primary Role | Department/Entity |
 |--------|-------------|-------------------|
-| Shanna Russell | Founder/Matriarch | Overall leadership, Trust governance |
+| LaShanna Russell | Founder/Matriarch | Overall leadership, Trust governance |
 | Craig | House Member | Finance, Outreach support |
 | Amber | House Member | Operations support |
 | Essence | House Member | Creative support |

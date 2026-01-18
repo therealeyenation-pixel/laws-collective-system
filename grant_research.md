@@ -1,7 +1,7 @@
 # Grant Research for LuvOnPurpose / L.A.W.S. Collective
 
 ## Your Eligibility Categories
-- **Women-owned business** (Shanna Russell - Real-Eye-Nation LLC)
+- **Women-owned business** (LaShanna Russell - Real-Eye-Nation LLC)
 - **Minority-owned / Black-owned business**
 - **Faith-based / 508(c)(1)(A) organization** (508 Academy & Outreach)
 - **Community development / generational wealth**

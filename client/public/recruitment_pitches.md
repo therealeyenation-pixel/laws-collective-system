@@ -4,7 +4,7 @@
 
 | Name | Current Role | Department | Entity |
 |------|--------------|------------|--------|
-| Shanna Russell | Founder/Matriarch | Trust Governance | Calea Freeman Family Trust |
+| LaShanna Russell | Founder/Matriarch | Trust Governance | Calea Freeman Family Trust |
 | Craig | Finance Lead | Finance, Outreach Support | All Entities |
 | Cornelius | Education/Training Manager | Education, Justice Advisor | Temple/Academy |
 | Amber | House Member | Operations Support | Onboarding |

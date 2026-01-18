@@ -811,7 +811,7 @@ export default function HRManagement() {
                     
                     <div className="mt-8">
                       <p>Sincerely,</p>
-                      <p className="font-medium mt-4">Shanna Russell</p>
+                      <p className="font-medium mt-4">LaShanna Russell</p>
                       <p className="text-sm text-muted-foreground">Founder & Managing Member</p>
                       <p className="text-sm text-muted-foreground">{selectedOffer.entity}</p>
                     </div>

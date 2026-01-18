@@ -13,7 +13,7 @@
       {
         "title": "Matriarch/CEO",
         "fullTitle": "Chief Executive Officer / Matriarch",
-        "currentHolder": "Shanna Russell",
+        "currentHolder": "LaShanna Russell",
         "entity": "Calea Freeman Family Trust / The L.A.W.S. Collective, LLC",
         "responsibilities": [
           "Vision and strategic direction for all entities",
@@ -373,7 +373,7 @@
         "positions": [
           {
             "title": "Trustee",
-            "currentHolder": "Shanna Russell",
+            "currentHolder": "LaShanna Russell",
             "responsibilities": [
               "Trust administration",
               "Asset protection",
@@ -455,7 +455,7 @@
     "familyManagers": {
       "description": "Tier 1: Family members confirmed in management roles",
       "members": [
-        {"name": "Shanna Russell", "title": "Matriarch/CEO", "department": "Executive/Business", "entity": "Trust/L.A.W.S. Collective", "status": "Active"},
+        {"name": "LaShanna Russell", "title": "Matriarch/CEO", "department": "Executive/Business", "entity": "Trust/L.A.W.S. Collective", "status": "Active"},
         {"name": "Craig", "title": "CFO", "department": "Finance", "entity": "L.A.W.S. Collective", "status": "Active"},
         {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "department": "Education", "entity": "L.A.W.S. Collective (cross-entity)", "status": "Active"},
         {"name": "Amandes", "title": "Media Manager/Creative Director", "department": "Media", "entity": "Real-Eye-Nation", "status": "Active"},
@@ -512,7 +512,7 @@
       ]
     },
     "filled": [
-      {"name": "Shanna Russell", "title": "Matriarch/CEO", "entity": "Trust/L.A.W.S. Collective"},
+      {"name": "LaShanna Russell", "title": "Matriarch/CEO", "entity": "Trust/L.A.W.S. Collective"},
       {"name": "Craig", "title": "CFO", "entity": "L.A.W.S. Collective"},
       {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "entity": "L.A.W.S. Collective (cross-entity)"},
       {"name": "Amandes", "title": "Media Manager/Creative Director", "entity": "Real-Eye-Nation"},
@@ -552,11 +552,11 @@
   "reportingStructure": {
     "level1": {
       "title": "Trust Governance",
-      "positions": ["Trustee (Shanna Russell)"]
+      "positions": ["Trustee (LaShanna Russell)"]
     },
     "level2": {
       "title": "Executive Leadership",
-      "positions": ["Matriarch/CEO (Shanna Russell) - FAMILY"]
+      "positions": ["Matriarch/CEO (LaShanna Russell) - FAMILY"]
     },
     "level3": {
       "title": "C-Suite",
