@@ -1322,7 +1322,66 @@ export const houses = mysqlTable("houses", {
   successionStartedAt: timestamp("successionStartedAt"),
   
   // Status
-  status: mysqlEnum("status", ["forming", "active", "suspended", "dissolved"]).default("forming").notNull(),
+  status: mysqlEnum("status", ["template", "forming", "pending_activation", "active", "suspended", "dissolved"]).default("template").notNull(),
+  
+  // Activation Pathway
+  activationPathway: mysqlEnum("activationPathway", [
+    "employee_transition",  // Employee becoming contractor
+    "external_partner",     // Outside partner joining
+    "business_first",       // Existing business wrapping into House
+    "community_member",     // Community member
+    "family_branch"         // Extended family
+  ]),
+  
+  // Business-First Fields
+  // NOTE: For Business-First pathway, the linked business remains SEPARATE from House distributions
+  // The business owner's existing revenue does NOT flow into the House system automatically
+  // They only receive distributions from the COLLECTIVE pool based on participation
+  linkedBusinessEntityId: int("linkedBusinessEntityId"), // Reference only - business stays independent
+  businessVerificationStatus: mysqlEnum("businessVerificationStatus", [
+    "not_applicable",
+    "pending_verification",
+    "verified",
+    "rejected"
+  ]).default("not_applicable"),
+  businessVerifiedAt: timestamp("businessVerifiedAt"),
+  businessVerifiedByUserId: int("businessVerifiedByUserId"),
+  
+  // Voluntary Contribution (Business-First only)
+  // Owner chooses what % of their business revenue to contribute to the collective
+  voluntaryContributionRate: decimal("voluntaryContributionRate", { precision: 5, scale: 2 }).default("0.00"), // 0% by default
+  contributionFrequency: mysqlEnum("contributionFrequency", ["none", "monthly", "quarterly", "annually"]).default("none"),
+  lastContributionDate: timestamp("lastContributionDate"),
+  totalContributed: decimal("totalContributed", { precision: 20, scale: 2 }).default("0.00"),
+  
+  // Distribution Eligibility (separate from their business)
+  // Distributions come from the collective pool, NOT from their own business
+  distributionEligible: boolean("distributionEligible").default(false), // Must complete training first
+  distributionTier: mysqlEnum("distributionTier", ["observer", "participant", "contributor", "partner"]).default("observer"),
+  
+  // Platform Usage Tracking (how the system benefits from Business-First Houses)
+  // All tool usage fees flow through the 60/40 and 70/30 framework
+  platformSubscriptionTier: mysqlEnum("platformSubscriptionTier", ["free", "basic", "professional", "enterprise"]).default("free"),
+  monthlySubscriptionFee: decimal("monthlySubscriptionFee", { precision: 10, scale: 2 }).default("0.00"),
+  totalPlatformFeesGenerated: decimal("totalPlatformFeesGenerated", { precision: 20, scale: 2 }).default("0.00"),
+  totalToolUsageFees: decimal("totalToolUsageFees", { precision: 20, scale: 2 }).default("0.00"),
+  totalReferralCommissions: decimal("totalReferralCommissions", { precision: 20, scale: 2 }).default("0.00"),
+  totalMarketplaceFees: decimal("totalMarketplaceFees", { precision: 20, scale: 2 }).default("0.00"),
+  referredHousesCount: int("referredHousesCount").default(0),
+  lastPlatformActivityAt: timestamp("lastPlatformActivityAt"),
+  
+  // Training Completion (required for all pathways)
+  trainingCompletionStatus: mysqlEnum("trainingCompletionStatus", [
+    "not_started",
+    "in_progress",
+    "completed"
+  ]).default("not_started"),
+  trainingCompletedAt: timestamp("trainingCompletedAt"),
+  requiredCoursesCompleted: int("requiredCoursesCompleted").default(0),
+  totalRequiredCourses: int("totalRequiredCourses").default(8),
+  
+  // Template Reference
+  templateId: int("templateId"), // Which template this House was created from
   generation: int("generation").default(1).notNull(), // 1 = founding, 2 = children, etc.
   
   // Genesis House Fields (for the founding Root House)
@@ -7755,3 +7814,469 @@ export const contractorBusinesses = mysqlTable("contractor_businesses", {
 
 export type ContractorBusiness = typeof contractorBusinesses.$inferSelect;
 export type InsertContractorBusiness = typeof contractorBusinesses.$inferInsert;
+
+
+// ============================================================================
+// HOUSE TEMPLATE & ACTIVATION SYSTEM
+// Placeholder Houses that can be activated when real entities are formed
+// ============================================================================
+
+/**
+ * House Templates - Predefined structures for different House types
+ * These serve as blueprints for creating placeholder Houses
+ */
+export const houseTemplates = mysqlTable("house_templates", {
+  id: int("id").autoincrement().primaryKey(),
+  templateCode: varchar("templateCode", { length: 50 }).notNull().unique(), // e.g., "EMP_TRANSITION", "PARTNER", "COMMUNITY"
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Template Configuration
+  targetAudience: mysqlEnum("targetAudience", [
+    "employee_transition",  // Employees becoming contractors
+    "external_partner",     // Outside partners joining ecosystem
+    "community_member",     // Community members
+    "family_branch",        // Extended family branches
+    "business_entity"       // Business-focused Houses
+  ]).notNull(),
+  
+  // Default Trust Structure
+  defaultTrustType: mysqlEnum("defaultTrustType", ["living", "revocable", "irrevocable", "dynasty"]).default("living"),
+  defaultHouseType: mysqlEnum("defaultHouseType", ["bloodline", "mirrored", "adaptive"]).default("adaptive"),
+  
+  // Default Distribution Splits
+  defaultInterHouseSplit: decimal("defaultInterHouseSplit", { precision: 5, scale: 2 }).default("60.00").notNull(),
+  defaultInterHouseDistribution: decimal("defaultInterHouseDistribution", { precision: 5, scale: 2 }).default("40.00").notNull(),
+  defaultIntraHouseOperations: decimal("defaultIntraHouseOperations", { precision: 5, scale: 2 }).default("70.00").notNull(),
+  defaultIntraHouseInheritance: decimal("defaultIntraHouseInheritance", { precision: 5, scale: 2 }).default("30.00").notNull(),
+  
+  // Activation Requirements (JSON array of requirement codes)
+  activationRequirements: json("activationRequirements"),
+  
+  // Educational Content
+  educationalModules: json("educationalModules"), // Array of module IDs
+  estimatedActivationTime: varchar("estimatedActivationTime", { length: 50 }), // e.g., "24 months"
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseTemplate = typeof houseTemplates.$inferSelect;
+export type InsertHouseTemplate = typeof houseTemplates.$inferInsert;
+
+/**
+ * Activation Requirements - Define what's needed to activate a House
+ */
+export const activationRequirements = mysqlTable("activation_requirements", {
+  id: int("id").autoincrement().primaryKey(),
+  requirementCode: varchar("requirementCode", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  category: mysqlEnum("category", [
+    "tenure",           // Time-based requirements
+    "training",         // Educational requirements
+    "legal",            // Legal entity formation
+    "financial",        // Financial requirements
+    "documentation",    // Document requirements
+    "ceremonial"        // Ceremonial/ritual requirements
+  ]).notNull(),
+  
+  // Verification Details
+  verificationType: mysqlEnum("verificationType", [
+    "automatic",        // System can verify automatically
+    "document_upload",  // Requires document upload
+    "manual_review",    // Requires admin review
+    "external_api",     // Verified via external API
+    "self_attestation"  // User self-attests
+  ]).notNull(),
+  
+  verificationConfig: json("verificationConfig"), // Configuration for verification
+  
+  // Display
+  iconName: varchar("iconName", { length: 50 }), // Lucide icon name
+  sortOrder: int("sortOrder").default(0).notNull(),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ActivationRequirement = typeof activationRequirements.$inferSelect;
+export type InsertActivationRequirement = typeof activationRequirements.$inferInsert;
+
+/**
+ * House Activation Progress - Track progress toward House activation
+ */
+export const houseActivationProgress = mysqlTable("house_activation_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  requirementId: int("requirementId").notNull(),
+  
+  status: mysqlEnum("status", [
+    "not_started",
+    "in_progress",
+    "pending_verification",
+    "verified",
+    "failed",
+    "waived"
+  ]).default("not_started").notNull(),
+  
+  // Progress Details
+  progressPercentage: int("progressPercentage").default(0).notNull(),
+  progressData: json("progressData"), // Requirement-specific progress data
+  
+  // Verification
+  verifiedAt: timestamp("verifiedAt"),
+  verifiedByUserId: int("verifiedByUserId"),
+  verificationNotes: text("verificationNotes"),
+  
+  // Documents
+  documentUrls: json("documentUrls"), // Array of uploaded document URLs
+  
+  // Waiver (if requirement was waived)
+  waivedAt: timestamp("waivedAt"),
+  waivedByUserId: int("waivedByUserId"),
+  waiverReason: text("waiverReason"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseActivationProgress = typeof houseActivationProgress.$inferSelect;
+export type InsertHouseActivationProgress = typeof houseActivationProgress.$inferInsert;
+
+/**
+ * House Activation Events - Track the activation journey
+ */
+export const houseActivationEvents = mysqlTable("house_activation_events", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  
+  eventType: mysqlEnum("eventType", [
+    "template_selected",
+    "requirement_started",
+    "requirement_completed",
+    "document_uploaded",
+    "verification_requested",
+    "verification_approved",
+    "verification_rejected",
+    "activation_initiated",
+    "activation_completed",
+    "activation_ceremony",
+    "status_changed"
+  ]).notNull(),
+  
+  // Event Details
+  requirementId: int("requirementId"),
+  previousStatus: varchar("previousStatus", { length: 50 }),
+  newStatus: varchar("newStatus", { length: 50 }),
+  description: text("description"),
+  metadata: json("metadata"),
+  
+  // Actor
+  actorUserId: int("actorUserId"),
+  actorType: mysqlEnum("actorType", ["system", "user", "admin"]).default("user").notNull(),
+  
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type HouseActivationEvent = typeof houseActivationEvents.$inferSelect;
+export type InsertHouseActivationEvent = typeof houseActivationEvents.$inferInsert;
+
+/**
+ * House Projected Distributions - Show what placeholder Houses would receive if activated
+ */
+export const houseProjectedDistributions = mysqlTable("house_projected_distributions", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  
+  // Projection Period
+  periodStart: date("periodStart").notNull(),
+  periodEnd: date("periodEnd").notNull(),
+  
+  // Projected Amounts
+  projectedGrossIncome: decimal("projectedGrossIncome", { precision: 20, scale: 2 }).default("0").notNull(),
+  projectedNetDistribution: decimal("projectedNetDistribution", { precision: 20, scale: 2 }).default("0").notNull(),
+  projectedOperationsAllocation: decimal("projectedOperationsAllocation", { precision: 20, scale: 2 }).default("0").notNull(),
+  projectedInheritanceAllocation: decimal("projectedInheritanceAllocation", { precision: 20, scale: 2 }).default("0").notNull(),
+  
+  // Calculation Basis
+  calculationMethod: mysqlEnum("calculationMethod", [
+    "average_house",      // Based on average of activated Houses
+    "tier_based",         // Based on House tier/level
+    "custom_projection",  // Custom projection
+    "historical"          // Based on historical data
+  ]).default("average_house").notNull(),
+  
+  calculationNotes: text("calculationNotes"),
+  
+  // Display
+  isDisplayed: boolean("isDisplayed").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseProjectedDistribution = typeof houseProjectedDistributions.$inferSelect;
+export type InsertHouseProjectedDistribution = typeof houseProjectedDistributions.$inferInsert;
+
+/**
+ * Activation Credits - Credits earned toward House activation
+ */
+export const activationCredits = mysqlTable("activation_credits", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  userId: int("userId").notNull(),
+  
+  creditType: mysqlEnum("creditType", [
+    "course_completion",
+    "community_participation",
+    "referral",
+    "milestone_achievement",
+    "time_tenure",
+    "bonus"
+  ]).notNull(),
+  
+  credits: int("credits").notNull(),
+  description: text("description"),
+  sourceReferenceType: varchar("sourceReferenceType", { length: 50 }), // e.g., "course", "event"
+  sourceReferenceId: int("sourceReferenceId"),
+  
+  expiresAt: timestamp("expiresAt"),
+  status: mysqlEnum("status", ["active", "used", "expired"]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ActivationCredit = typeof activationCredits.$inferSelect;
+export type InsertActivationCredit = typeof activationCredits.$inferInsert;
+
+/**
+ * House Sub-Entities - Internal trust structures within an activated House
+ */
+export const houseSubEntities = mysqlTable("house_sub_entities", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  
+  entityType: mysqlEnum("entityType", [
+    "operating_llc",
+    "family_trust",
+    "education_trust",
+    "charitable_trust",
+    "investment_entity",
+    "holding_company"
+  ]).notNull(),
+  
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Legal Details
+  ein: varchar("ein", { length: 20 }),
+  stateOfFormation: varchar("stateOfFormation", { length: 50 }),
+  formationDate: date("formationDate"),
+  
+  // Financial Allocation
+  allocationPercentage: decimal("allocationPercentage", { precision: 5, scale: 2 }).default("0").notNull(),
+  
+  // Documents
+  formationDocumentUrl: text("formationDocumentUrl"),
+  operatingAgreementUrl: text("operatingAgreementUrl"),
+  
+  status: mysqlEnum("status", ["forming", "active", "suspended", "dissolved"]).default("forming").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseSubEntity = typeof houseSubEntities.$inferSelect;
+export type InsertHouseSubEntity = typeof houseSubEntities.$inferInsert;
+
+/**
+ * House Succession Designations - Designated successors for House leadership
+ */
+export const houseSuccessionDesignations = mysqlTable("house_succession_designations", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  
+  // Successor Details
+  successorUserId: int("successorUserId").notNull(),
+  priority: int("priority").notNull(), // 1 = primary, 2 = secondary, etc.
+  
+  // Designation Type
+  designationType: mysqlEnum("designationType", [
+    "explicit",           // Explicitly designated by current custodian
+    "automatic_spouse",   // Automatic spouse succession
+    "automatic_eldest",   // Automatic eldest child
+    "automatic_trust"     // Returns to parent trust
+  ]).notNull(),
+  
+  // Conditions
+  conditions: json("conditions"), // JSON array of conditions for succession
+  
+  // Acceptance
+  acceptanceStatus: mysqlEnum("acceptanceStatus", [
+    "pending",
+    "accepted",
+    "declined",
+    "revoked"
+  ]).default("pending").notNull(),
+  acceptedAt: timestamp("acceptedAt"),
+  
+  // Designation Details
+  designatedByUserId: int("designatedByUserId").notNull(),
+  designatedAt: timestamp("designatedAt").defaultNow().notNull(),
+  effectiveDate: date("effectiveDate"),
+  expiresAt: timestamp("expiresAt"),
+  
+  notes: text("notes"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  status: mysqlEnum("status", ["active", "superseded", "revoked", "executed"]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseSuccessionDesignation = typeof houseSuccessionDesignations.$inferSelect;
+export type InsertHouseSuccessionDesignation = typeof houseSuccessionDesignations.$inferInsert;
+
+
+/**
+ * Platform Usage Fees - Track all tool usage that generates revenue for the collective
+ * This is how Business-First Houses contribute to the ecosystem without giving up their business revenue
+ */
+export const platformUsageFees = mysqlTable("platform_usage_fees", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId").notNull(),
+  userId: int("userId").notNull(),
+  
+  // Fee Type
+  feeType: mysqlEnum("feeType", [
+    "subscription",           // Monthly platform subscription
+    "payroll_processing",     // Payroll tool usage
+    "invoice_generation",     // Invoice creation
+    "contract_management",    // Contract tools
+    "document_vault",         // Document storage
+    "tax_prep",              // Tax preparation tools
+    "banking_credit",        // Banking/credit features
+    "digital_signatures",    // E-signature usage
+    "training_course",       // Course/certification fees
+    "marketplace_listing",   // Marketplace listing fees
+    "marketplace_sale",      // Marketplace transaction fees
+    "api_access",           // API usage fees
+    "white_label",          // White-label service fees
+    "insurance_pool",       // Insurance participation
+    "asset_access",         // Property/asset usage
+    "referral_commission"   // Referral bonuses
+  ]).notNull(),
+  
+  // Fee Details
+  description: text("description"),
+  baseAmount: decimal("baseAmount", { precision: 20, scale: 2 }).notNull(),
+  feePercentage: decimal("feePercentage", { precision: 5, scale: 2 }), // If percentage-based
+  calculatedFee: decimal("calculatedFee", { precision: 20, scale: 2 }).notNull(),
+  
+  // Split Application (60/40 or 70/30)
+  splitType: mysqlEnum("splitType", ["inter_house_60_40", "intra_house_70_30"]).default("inter_house_60_40").notNull(),
+  collectiveShare: decimal("collectiveShare", { precision: 20, scale: 2 }).notNull(), // Amount to collective
+  houseShare: decimal("houseShare", { precision: 20, scale: 2 }).notNull(), // Amount credited to House
+  
+  // Reference to source transaction
+  sourceType: varchar("sourceType", { length: 50 }), // e.g., "payroll_run", "invoice", "contract"
+  sourceId: int("sourceId"),
+  
+  // Status
+  status: mysqlEnum("status", ["pending", "processed", "distributed", "refunded"]).default("pending").notNull(),
+  processedAt: timestamp("processedAt"),
+  distributedAt: timestamp("distributedAt"),
+  
+  // Blockchain
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PlatformUsageFee = typeof platformUsageFees.$inferSelect;
+export type InsertPlatformUsageFee = typeof platformUsageFees.$inferInsert;
+
+/**
+ * Platform Subscription Plans - Define subscription tiers for Houses
+ */
+export const platformSubscriptionPlans = mysqlTable("platform_subscription_plans", {
+  id: int("id").autoincrement().primaryKey(),
+  planCode: varchar("planCode", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  
+  // Pricing
+  monthlyPrice: decimal("monthlyPrice", { precision: 10, scale: 2 }).notNull(),
+  annualPrice: decimal("annualPrice", { precision: 10, scale: 2 }), // Discounted annual
+  
+  // Features (JSON array of feature codes)
+  includedFeatures: json("includedFeatures"),
+  
+  // Limits
+  maxUsers: int("maxUsers"),
+  maxStorageGb: int("maxStorageGb"),
+  maxTransactionsPerMonth: int("maxTransactionsPerMonth"),
+  
+  // Tool Access
+  payrollAccess: boolean("payrollAccess").default(false).notNull(),
+  invoicingAccess: boolean("invoicingAccess").default(false).notNull(),
+  contractsAccess: boolean("contractsAccess").default(false).notNull(),
+  taxPrepAccess: boolean("taxPrepAccess").default(false).notNull(),
+  bankingAccess: boolean("bankingAccess").default(false).notNull(),
+  marketplaceAccess: boolean("marketplaceAccess").default(false).notNull(),
+  apiAccess: boolean("apiAccess").default(false).notNull(),
+  whiteLabelAccess: boolean("whiteLabelAccess").default(false).notNull(),
+  
+  // Transaction Fee Rates (percentage)
+  payrollFeeRate: decimal("payrollFeeRate", { precision: 5, scale: 2 }).default("2.00"),
+  invoiceFeeRate: decimal("invoiceFeeRate", { precision: 5, scale: 2 }).default("1.50"),
+  marketplaceFeeRate: decimal("marketplaceFeeRate", { precision: 5, scale: 2 }).default("5.00"),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PlatformSubscriptionPlan = typeof platformSubscriptionPlans.$inferSelect;
+export type InsertPlatformSubscriptionPlan = typeof platformSubscriptionPlans.$inferInsert;
+
+/**
+ * House Referrals - Track referrals for commission calculation
+ */
+export const houseReferrals = mysqlTable("house_referrals", {
+  id: int("id").autoincrement().primaryKey(),
+  referringHouseId: int("referringHouseId").notNull(),
+  referredHouseId: int("referredHouseId").notNull(),
+  referringUserId: int("referringUserId").notNull(),
+  
+  // Referral Details
+  referralCode: varchar("referralCode", { length: 50 }),
+  referralType: mysqlEnum("referralType", ["direct", "link", "event", "partner"]).default("direct").notNull(),
+  
+  // Commission
+  commissionRate: decimal("commissionRate", { precision: 5, scale: 2 }).default("10.00"), // 10% default
+  commissionDuration: int("commissionDuration").default(12), // Months to receive commission
+  totalCommissionEarned: decimal("totalCommissionEarned", { precision: 20, scale: 2 }).default("0.00"),
+  
+  // Status
+  status: mysqlEnum("status", ["pending", "active", "expired", "cancelled"]).default("pending").notNull(),
+  activatedAt: timestamp("activatedAt"),
+  expiresAt: timestamp("expiresAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseReferral = typeof houseReferrals.$inferSelect;
+export type InsertHouseReferral = typeof houseReferrals.$inferInsert;

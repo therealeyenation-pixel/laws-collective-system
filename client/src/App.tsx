@@ -64,6 +64,8 @@ import ContractorInvoices from "@/pages/ContractorInvoices";
 import ContractManagement from "@/pages/ContractManagement";
 import Donations from "@/pages/Donations";
 import GrantTracking from "@/pages/GrantTracking";
+import HouseManagement from "./pages/HouseManagement";
+import TrustVisualization from "./pages/TrustVisualization";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -219,6 +221,8 @@ function Router() {
       <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} minRole="admin" />}</Route>
       
       {/* Owner routes - trust & governance */}
+      <Route path="/houses">{() => <ProtectedRoute component={HouseManagement} minRole="admin" />}</Route>
+      <Route path="/trust-structure">{() => <ProtectedRoute component={TrustVisualization} minRole="admin" />}</Route>
       <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} minRole="owner" />}</Route>
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, publicProcedure, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
+import { sql } from "drizzle-orm";
 
 export const donationsRouter = router({
   // Get donation dashboard stats (admin)
@@ -8,8 +9,8 @@ export const donationsRouter = router({
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    const [donations] = await db.execute(
-      `SELECT 
+    const donations = await db.execute(
+      sql`SELECT 
         COUNT(*) as total_donations,
         SUM(CASE WHEN status = 'completed' THEN amount ELSE 0 END) as total_raised,
         SUM(CASE WHEN donation_type = 'recurring' THEN 1 ELSE 0 END) as recurring_donors,
@@ -18,14 +19,14 @@ export const donationsRouter = router({
       FROM donations`
     );
 
-    const [campaigns] = await db.execute(
-      `SELECT id, name, goal_amount, raised_amount, is_active,
+    const campaigns = await db.execute(
+      sql`SELECT id, name, goal_amount, raised_amount, is_active,
         ROUND((raised_amount / goal_amount) * 100, 1) as progress_percent
       FROM donation_campaigns WHERE is_active = TRUE ORDER BY created_at DESC LIMIT 5`
     );
 
-    const [recentDonations] = await db.execute(
-      `SELECT id, donor_name, amount, donation_type, status, created_at, is_anonymous
+    const recentDonations = await db.execute(
+      sql`SELECT id, donor_name, amount, donation_type, status, created_at, is_anonymous
       FROM donations ORDER BY created_at DESC LIMIT 10`
     );
 
@@ -66,35 +67,24 @@ export const donationsRouter = router({
 
       // Generate tax receipt number
       const taxReceiptNumber = `LOP-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+      const donorName = input.isAnonymous ? "Anonymous" : (input.donorName || "Anonymous");
 
       // Insert donation
-      const [result] = await db.execute(
-        `INSERT INTO donations (
+      await db.execute(
+        sql`INSERT INTO donations (
           donor_name, donor_email, donor_phone, donor_address, amount,
           donation_type, payment_method, campaign_id, designation,
           is_anonymous, tax_receipt_number, notes, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed')`,
-        [
-          input.isAnonymous ? "Anonymous" : input.donorName,
-          input.donorEmail,
-          input.donorPhone || null,
-          input.donorAddress || null,
-          input.amount,
-          input.donationType,
-          input.paymentMethod,
-          input.campaignId || null,
-          input.designation || null,
-          input.isAnonymous,
-          taxReceiptNumber,
-          input.notes || null,
-        ]
+        ) VALUES (${donorName}, ${input.donorEmail}, ${input.donorPhone || null},
+          ${input.donorAddress || null}, ${input.amount}, ${input.donationType},
+          ${input.paymentMethod}, ${input.campaignId || null}, ${input.designation || null},
+          ${input.isAnonymous}, ${taxReceiptNumber}, ${input.notes || null}, 'completed')`
       );
 
       // Update campaign raised amount if applicable
       if (input.campaignId) {
         await db.execute(
-          `UPDATE donation_campaigns SET raised_amount = raised_amount + ? WHERE id = ?`,
-          [input.amount, input.campaignId]
+          sql`UPDATE donation_campaigns SET raised_amount = raised_amount + ${input.amount} WHERE id = ${input.campaignId}`
         );
       }
 
@@ -118,25 +108,18 @@ export const donationsRouter = router({
             break;
         }
 
+        const startDateStr = startDate.toISOString().split("T")[0];
+        const nextChargeDateStr = nextChargeDate.toISOString().split("T")[0];
+
         await db.execute(
-          `INSERT INTO recurring_donations (
+          sql`INSERT INTO recurring_donations (
             donor_name, donor_email, amount, frequency, payment_method,
             campaign_id, designation, start_date, next_charge_date,
             status, total_donated, donation_count, last_donation_date
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, 1, ?)`,
-          [
-            input.donorName,
-            input.donorEmail,
-            input.amount,
-            input.frequency,
-            input.paymentMethod,
-            input.campaignId || null,
-            input.designation || null,
-            startDate.toISOString().split("T")[0],
-            nextChargeDate.toISOString().split("T")[0],
-            input.amount,
-            startDate.toISOString().split("T")[0],
-          ]
+          ) VALUES (${input.donorName || 'Anonymous'}, ${input.donorEmail}, ${input.amount},
+            ${input.frequency}, ${input.paymentMethod}, ${input.campaignId || null},
+            ${input.designation || null}, ${startDateStr}, ${nextChargeDateStr},
+            'active', ${input.amount}, 1, ${startDateStr})`
         );
       }
 
@@ -152,8 +135,8 @@ export const donationsRouter = router({
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    const [campaigns] = await db.execute(
-      `SELECT id, name, description, goal_amount, raised_amount, start_date, end_date, image_url,
+    const campaigns = await db.execute(
+      sql`SELECT id, name, description, goal_amount, raised_amount, start_date, end_date, image_url,
         ROUND((raised_amount / goal_amount) * 100, 1) as progress_percent
       FROM donation_campaigns 
       WHERE is_active = TRUE AND (end_date IS NULL OR end_date >= CURDATE())
@@ -180,16 +163,9 @@ export const donationsRouter = router({
       if (!db) throw new Error("Database not available");
 
       await db.execute(
-        `INSERT INTO donation_campaigns (name, description, goal_amount, start_date, end_date, image_url)
-        VALUES (?, ?, ?, ?, ?, ?)`,
-        [
-          input.name,
-          input.description || null,
-          input.goalAmount,
-          input.startDate || null,
-          input.endDate || null,
-          input.imageUrl || null,
-        ]
+        sql`INSERT INTO donation_campaigns (name, description, goal_amount, start_date, end_date, image_url)
+        VALUES (${input.name}, ${input.description || null}, ${input.goalAmount},
+          ${input.startDate || null}, ${input.endDate || null}, ${input.imageUrl || null})`
       );
 
       return { success: true };
@@ -209,25 +185,21 @@ export const donationsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = `SELECT d.*, c.name as campaign_name 
+      let baseQuery = sql`SELECT d.*, c.name as campaign_name 
         FROM donations d 
         LEFT JOIN donation_campaigns c ON d.campaign_id = c.id
         WHERE 1=1`;
-      const params: any[] = [];
 
       if (input.status) {
-        query += ` AND d.status = ?`;
-        params.push(input.status);
+        baseQuery = sql`${baseQuery} AND d.status = ${input.status}`;
       }
       if (input.campaignId) {
-        query += ` AND d.campaign_id = ?`;
-        params.push(input.campaignId);
+        baseQuery = sql`${baseQuery} AND d.campaign_id = ${input.campaignId}`;
       }
 
-      query += ` ORDER BY d.created_at DESC LIMIT ? OFFSET ?`;
-      params.push(input.limit, input.offset);
+      baseQuery = sql`${baseQuery} ORDER BY d.created_at DESC LIMIT ${input.limit} OFFSET ${input.offset}`;
 
-      const [donations] = await db.execute(query, params);
+      const donations = await db.execute(baseQuery);
       return donations as any[];
     }),
 
@@ -236,8 +208,8 @@ export const donationsRouter = router({
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    const [recurring] = await db.execute(
-      `SELECT * FROM recurring_donations ORDER BY created_at DESC`
+    const recurring = await db.execute(
+      sql`SELECT * FROM recurring_donations ORDER BY created_at DESC`
     );
 
     return recurring as any[];
@@ -250,9 +222,8 @@ export const donationsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const [donations] = await db.execute(
-        `SELECT * FROM donations WHERE id = ?`,
-        [input.donationId]
+      const donations = await db.execute(
+        sql`SELECT * FROM donations WHERE id = ${input.donationId}`
       );
 
       const donation = (donations as any[])[0];
@@ -260,8 +231,7 @@ export const donationsRouter = router({
 
       // Mark receipt as sent
       await db.execute(
-        `UPDATE donations SET tax_receipt_sent = TRUE, tax_receipt_sent_at = NOW() WHERE id = ?`,
-        [input.donationId]
+        sql`UPDATE donations SET tax_receipt_sent = TRUE, tax_receipt_sent_at = NOW() WHERE id = ${input.donationId}`
       );
 
       // Return receipt data for PDF generation

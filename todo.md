@@ -3507,3 +3507,73 @@
 - [x] Write donations-grants.test.ts with 12 tests
 - [x] All tests passing
 
+
+
+## Phase 74: House/Trust Architecture - IN PROGRESS
+
+### Design & Schema
+- [x] Design House/Trust architecture document
+- [x] Add House Templates table to schema
+- [x] Add Activation Requirements table to schema
+- [x] Add House Activation Progress table to schema
+- [x] Add House Activation Events table to schema
+- [x] Add House Projected Distributions table to schema
+- [x] Add Activation Credits table to schema
+- [x] Add House Sub-Entities table to schema
+- [x] Add House Succession Designations table to schema
+- [ ] Push schema changes to database
+
+### House Pathways
+- [ ] Employee-to-Contractor transition pathway (24-month tenure + training)
+- [ ] External Partner pathway (application + vetting + training)
+- [ ] Business-First pathway (existing business + required training)
+- [ ] Community Member pathway (training + participation)
+
+### Business-First House Feature
+- [ ] Allow existing businesses to register as House candidates
+- [ ] Link existing business entities to placeholder Houses
+- [ ] Track business verification status
+- [ ] Require simulator/training completion for activation
+- [ ] Calculate projected distributions based on business revenue
+
+### House Management Router
+- [x] Create house-management.ts router
+- [x] CRUD for House Templates
+- [x] CRUD for Activation Requirements
+- [x] Track activation progress per House
+- [x] Handle Business-First registration
+- [x] Calculate projected distributions
+- [x] Manage activation credits
+
+### House Dashboard UI
+- [x] House overview page showing all Houses
+- [x] House detail page with activation progress
+- [x] Activation checklist with progress bars
+- [x] Projected distribution calculator
+- [x] Business-First registration form
+- [x] Training requirement tracker
+- [x] Add route to App.tsx (/houses)
+
+### Trust Visualization
+- [x] House hierarchy tree view
+- [x] Distribution flow diagram
+- [ ] Succession chain visualization
+- [ ] Sub-entity relationship map
+
+### Testing
+- [x] Write house-management.test.ts
+- [x] Test all House pathways
+- [x] Test Business-First flow
+- [x] Test activation progress tracking
+
+
+### Platform Usage Fee System (How System Benefits from Business-First Houses)
+- [x] Add platformUsageFees table to schema
+- [x] Add platformSubscriptionPlans table to schema
+- [x] Add houseReferrals table to schema
+- [x] Add platform usage tracking fields to Houses table
+- [x] Document revenue model in architecture doc
+- [ ] Create platform fee tracking router
+- [ ] Build subscription management UI
+- [ ] Implement fee calculation for each tool usage
+- [ ] Create referral tracking system

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
+import { sql } from "drizzle-orm";
 
 export const contractorInvoicesRouter = router({
   // Get all invoices for a contractor
@@ -9,25 +10,23 @@ export const contractorInvoicesRouter = router({
       contractorId: z.number().optional(),
       status: z.enum(['draft', 'submitted', 'approved', 'rejected', 'paid', 'overdue', 'cancelled']).optional()
     }))
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
-      let query = `SELECT * FROM contractor_invoices WHERE 1=1`;
-      const params: any[] = [];
+      let baseQuery = sql`SELECT * FROM contractor_invoices WHERE 1=1`;
       
       if (input.contractorId) {
-        query += ` AND contractorId = ?`;
-        params.push(input.contractorId);
+        baseQuery = sql`${baseQuery} AND contractorId = ${input.contractorId}`;
       }
       
       if (input.status) {
-        query += ` AND status = ?`;
-        params.push(input.status);
+        baseQuery = sql`${baseQuery} AND status = ${input.status}`;
       }
       
-      query += ` ORDER BY invoiceDate DESC`;
+      baseQuery = sql`${baseQuery} ORDER BY invoiceDate DESC`;
       
-      const [invoices] = await db.execute(query, params);
+      const invoices = await db.execute(baseQuery);
       return invoices as any[];
     }),
 
@@ -36,10 +35,10 @@ export const contractorInvoicesRouter = router({
     .input(z.object({ invoiceId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
-      const [invoices] = await db.execute(
-        `SELECT * FROM contractor_invoices WHERE id = ?`,
-        [input.invoiceId]
+      const invoices = await db.execute(
+        sql`SELECT * FROM contractor_invoices WHERE id = ${input.invoiceId}`
       );
       const invoice = (invoices as any[])[0];
       
@@ -47,14 +46,12 @@ export const contractorInvoicesRouter = router({
         throw new Error('Invoice not found');
       }
       
-      const [lineItems] = await db.execute(
-        `SELECT * FROM invoice_line_items WHERE invoiceId = ? ORDER BY id`,
-        [input.invoiceId]
+      const lineItems = await db.execute(
+        sql`SELECT * FROM invoice_line_items WHERE invoiceId = ${input.invoiceId} ORDER BY id`
       );
       
-      const [payments] = await db.execute(
-        `SELECT * FROM invoice_payments WHERE invoiceId = ? ORDER BY paymentDate DESC`,
-        [input.invoiceId]
+      const payments = await db.execute(
+        sql`SELECT * FROM invoice_payments WHERE invoiceId = ${input.invoiceId} ORDER BY paymentDate DESC`
       );
       
       return {
@@ -90,11 +87,11 @@ export const contractorInvoicesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       // Generate invoice number
-      const [countResult] = await db.execute(
-        `SELECT COUNT(*) as count FROM contractor_invoices WHERE contractorId = ?`,
-        [input.contractorId]
+      const countResult = await db.execute(
+        sql`SELECT COUNT(*) as count FROM contractor_invoices WHERE contractorId = ${input.contractorId}`
       );
       const count = (countResult as any[])[0].count + 1;
       const invoiceNumber = `INV-${input.contractorId}-${String(count).padStart(4, '0')}`;
@@ -105,29 +102,16 @@ export const contractorInvoicesRouter = router({
       const totalAmount = subtotal + taxAmount;
       
       // Insert invoice
-      const [result] = await db.execute(
-        `INSERT INTO contractor_invoices 
+      const result = await db.execute(
+        sql`INSERT INTO contractor_invoices 
          (invoiceNumber, contractorId, contractorBusinessId, clientEntityId, contractId, sowId,
           invoiceDate, dueDate, periodStart, periodEnd, subtotal, taxAmount, totalAmount,
           paymentTerms, notes, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft')`,
-        [
-          invoiceNumber,
-          input.contractorId,
-          input.contractorBusinessId || null,
-          input.clientEntityId || null,
-          input.contractId || null,
-          input.sowId || null,
-          input.invoiceDate,
-          input.dueDate,
-          input.periodStart || null,
-          input.periodEnd || null,
-          subtotal,
-          taxAmount,
-          totalAmount,
-          input.paymentTerms || 'Net 30',
-          input.notes || null
-        ]
+         VALUES (${invoiceNumber}, ${input.contractorId}, ${input.contractorBusinessId || null},
+          ${input.clientEntityId || null}, ${input.contractId || null}, ${input.sowId || null},
+          ${input.invoiceDate}, ${input.dueDate}, ${input.periodStart || null}, ${input.periodEnd || null},
+          ${subtotal}, ${taxAmount}, ${totalAmount}, ${input.paymentTerms || 'Net 30'},
+          ${input.notes || null}, 'draft')`
       );
       
       const invoiceId = (result as any).insertId;
@@ -136,20 +120,11 @@ export const contractorInvoicesRouter = router({
       for (const item of input.lineItems) {
         const amount = item.quantity * item.unitPrice;
         await db.execute(
-          `INSERT INTO invoice_line_items 
+          sql`INSERT INTO invoice_line_items 
            (invoiceId, description, quantity, unitPrice, amount, category, projectName, hoursWorked, hourlyRate)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [
-            invoiceId,
-            item.description,
-            item.quantity,
-            item.unitPrice,
-            amount,
-            item.category || 'labor',
-            item.projectName || null,
-            item.hoursWorked || null,
-            item.hourlyRate || null
-          ]
+           VALUES (${invoiceId}, ${item.description}, ${item.quantity}, ${item.unitPrice}, ${amount},
+            ${item.category || 'labor'}, ${item.projectName || null}, ${item.hoursWorked || null},
+            ${item.hourlyRate || null})`
         );
       }
       
@@ -165,12 +140,12 @@ export const contractorInvoicesRouter = router({
     .input(z.object({ invoiceId: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       await db.execute(
-        `UPDATE contractor_invoices 
+        sql`UPDATE contractor_invoices 
          SET status = 'submitted', submittedAt = NOW()
-         WHERE id = ? AND status = 'draft'`,
-        [input.invoiceId]
+         WHERE id = ${input.invoiceId} AND status = 'draft'`
       );
       
       return { success: true };
@@ -184,12 +159,12 @@ export const contractorInvoicesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       await db.execute(
-        `UPDATE contractor_invoices 
-         SET status = 'approved', approvedAt = NOW(), approvedBy = ?
-         WHERE id = ? AND status = 'submitted'`,
-        [input.approvedBy, input.invoiceId]
+        sql`UPDATE contractor_invoices 
+         SET status = 'approved', approvedAt = NOW(), approvedBy = ${input.approvedBy}
+         WHERE id = ${input.invoiceId} AND status = 'submitted'`
       );
       
       return { success: true };
@@ -203,12 +178,12 @@ export const contractorInvoicesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       await db.execute(
-        `UPDATE contractor_invoices 
-         SET status = 'rejected', notes = CONCAT(IFNULL(notes, ''), '\n[REJECTED] ', ?)
-         WHERE id = ? AND status = 'submitted'`,
-        [input.reason, input.invoiceId]
+        sql`UPDATE contractor_invoices 
+         SET status = 'rejected', notes = CONCAT(IFNULL(notes, ''), '\n[REJECTED] ', ${input.reason})
+         WHERE id = ${input.invoiceId} AND status = 'submitted'`
       );
       
       return { success: true };
@@ -227,42 +202,32 @@ export const contractorInvoicesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       // Record payment
       await db.execute(
-        `INSERT INTO invoice_payments 
+        sql`INSERT INTO invoice_payments 
          (invoiceId, paymentDate, amount, paymentMethod, referenceNumber, notes, processedBy)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [
-          input.invoiceId,
-          input.paymentDate,
-          input.amount,
-          input.paymentMethod,
-          input.referenceNumber || null,
-          input.notes || null,
-          input.processedBy
-        ]
+         VALUES (${input.invoiceId}, ${input.paymentDate}, ${input.amount}, ${input.paymentMethod},
+          ${input.referenceNumber || null}, ${input.notes || null}, ${input.processedBy})`
       );
       
       // Check if fully paid
-      const [invoice] = await db.execute(
-        `SELECT totalAmount FROM contractor_invoices WHERE id = ?`,
-        [input.invoiceId]
+      const invoice = await db.execute(
+        sql`SELECT totalAmount FROM contractor_invoices WHERE id = ${input.invoiceId}`
       );
       const totalAmount = parseFloat((invoice as any[])[0].totalAmount);
       
-      const [payments] = await db.execute(
-        `SELECT SUM(amount) as totalPaid FROM invoice_payments WHERE invoiceId = ?`,
-        [input.invoiceId]
+      const payments = await db.execute(
+        sql`SELECT SUM(amount) as totalPaid FROM invoice_payments WHERE invoiceId = ${input.invoiceId}`
       );
       const totalPaid = parseFloat((payments as any[])[0].totalPaid || 0);
       
       if (totalPaid >= totalAmount) {
         await db.execute(
-          `UPDATE contractor_invoices 
-           SET status = 'paid', paidAt = NOW(), paymentMethod = ?, paymentReference = ?
-           WHERE id = ?`,
-          [input.paymentMethod, input.referenceNumber || null, input.invoiceId]
+          sql`UPDATE contractor_invoices 
+           SET status = 'paid', paidAt = NOW(), paymentMethod = ${input.paymentMethod}, paymentReference = ${input.referenceNumber || null}
+           WHERE id = ${input.invoiceId}`
         );
       }
       
@@ -274,17 +239,9 @@ export const contractorInvoicesRouter = router({
     .input(z.object({ contractorId: z.number().optional() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
-      let whereClause = '';
-      const params: any[] = [];
-      
-      if (input.contractorId) {
-        whereClause = 'WHERE contractorId = ?';
-        params.push(input.contractorId);
-      }
-      
-      const [stats] = await db.execute(
-        `SELECT 
+      let baseQuery = sql`SELECT 
            COUNT(*) as totalInvoices,
            SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) as draftCount,
            SUM(CASE WHEN status = 'submitted' THEN 1 ELSE 0 END) as submittedCount,
@@ -294,10 +251,13 @@ export const contractorInvoicesRouter = router({
            SUM(CASE WHEN status = 'paid' THEN totalAmount ELSE 0 END) as totalPaid,
            SUM(CASE WHEN status IN ('submitted', 'approved') THEN totalAmount ELSE 0 END) as totalPending,
            SUM(CASE WHEN status = 'overdue' THEN totalAmount ELSE 0 END) as totalOverdue
-         FROM contractor_invoices ${whereClause}`,
-        params
-      );
+         FROM contractor_invoices`;
       
+      if (input.contractorId) {
+        baseQuery = sql`${baseQuery} WHERE contractorId = ${input.contractorId}`;
+      }
+      
+      const stats = await db.execute(baseQuery);
       return (stats as any[])[0];
     }),
 
@@ -310,39 +270,37 @@ export const contractorInvoicesRouter = router({
     }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
-      let query = `SELECT ci.*, cb.businessName, cb.ownerName
+      let baseQuery = sql`SELECT ci.*, cb.businessName, cb.ownerName
                    FROM contractor_invoices ci
                    LEFT JOIN contractor_businesses cb ON ci.contractorBusinessId = cb.id
                    WHERE 1=1`;
-      const params: any[] = [];
       
       if (input.status) {
-        query += ` AND ci.status = ?`;
-        params.push(input.status);
+        baseQuery = sql`${baseQuery} AND ci.status = ${input.status}`;
       }
       
-      query += ` ORDER BY ci.invoiceDate DESC`;
+      baseQuery = sql`${baseQuery} ORDER BY ci.invoiceDate DESC`;
       
       if (input.limit) {
-        query += ` LIMIT ?`;
-        params.push(input.limit);
+        baseQuery = sql`${baseQuery} LIMIT ${input.limit}`;
         if (input.offset) {
-          query += ` OFFSET ?`;
-          params.push(input.offset);
+          baseQuery = sql`${baseQuery} OFFSET ${input.offset}`;
         }
       }
       
-      const [invoices] = await db.execute(query, params);
+      const invoices = await db.execute(baseQuery);
       return invoices as any[];
     }),
 
   // Mark overdue invoices
   markOverdueInvoices: protectedProcedure.mutation(async () => {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     
-    const [result] = await db.execute(
-      `UPDATE contractor_invoices 
+    const result = await db.execute(
+      sql`UPDATE contractor_invoices 
        SET status = 'overdue'
        WHERE status IN ('submitted', 'approved') 
        AND dueDate < CURDATE()`

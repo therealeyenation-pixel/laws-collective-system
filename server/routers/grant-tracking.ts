@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
+import { sql } from "drizzle-orm";
 
 export const grantTrackingRouter = router({
   // Get grant tracking dashboard
@@ -8,8 +9,8 @@ export const grantTrackingRouter = router({
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    const [opportunities] = await db.execute(
-      `SELECT 
+    const opportunities = await db.execute(
+      sql`SELECT 
         COUNT(*) as total_opportunities,
         SUM(CASE WHEN status = 'eligible' THEN 1 ELSE 0 END) as eligible,
         SUM(CASE WHEN status = 'applied' THEN 1 ELSE 0 END) as applied,
@@ -17,8 +18,8 @@ export const grantTrackingRouter = router({
       FROM grant_opportunities`
     );
 
-    const [applications] = await db.execute(
-      `SELECT 
+    const applications = await db.execute(
+      sql`SELECT 
         COUNT(*) as total_applications,
         SUM(CASE WHEN status = 'awarded' THEN 1 ELSE 0 END) as awarded,
         SUM(CASE WHEN status = 'submitted' OR status = 'under_review' THEN 1 ELSE 0 END) as pending,
@@ -27,23 +28,23 @@ export const grantTrackingRouter = router({
       FROM grant_applications`
     );
 
-    const [upcomingDeadlines] = await db.execute(
-      `SELECT go.id, go.grant_name, go.funder_name, go.deadline, go.funding_amount_max, go.priority
+    const upcomingDeadlines = await db.execute(
+      sql`SELECT go.id, go.grant_name, go.funder_name, go.deadline, go.funding_amount_max, go.priority
       FROM grant_opportunities go
       WHERE go.deadline >= CURDATE() AND go.status IN ('researching', 'eligible')
       ORDER BY go.deadline ASC LIMIT 10`
     );
 
-    const [recentApplications] = await db.execute(
-      `SELECT ga.id, ga.project_title, ga.status, ga.requested_amount, ga.submitted_date,
+    const recentApplications = await db.execute(
+      sql`SELECT ga.id, ga.project_title, ga.status, ga.requested_amount, ga.submitted_date,
         go.grant_name, go.funder_name
       FROM grant_applications ga
       JOIN grant_opportunities go ON ga.opportunity_id = go.id
       ORDER BY ga.updated_at DESC LIMIT 10`
     );
 
-    const [upcomingReports] = await db.execute(
-      `SELECT gr.id, gr.report_type, gr.report_name, gr.due_date, gr.status,
+    const upcomingReports = await db.execute(
+      sql`SELECT gr.id, gr.report_type, gr.report_name, gr.due_date, gr.status,
         ga.project_title, go.funder_name
       FROM grant_reporting gr
       JOIN grant_applications ga ON gr.application_id = ga.id
@@ -88,25 +89,21 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = `SELECT * FROM grant_opportunities WHERE 1=1`;
-      const params: any[] = [];
+      let baseQuery = sql`SELECT * FROM grant_opportunities WHERE 1=1`;
 
       if (input.status) {
-        query += ` AND status = ?`;
-        params.push(input.status);
+        baseQuery = sql`${baseQuery} AND status = ${input.status}`;
       }
       if (input.grantType) {
-        query += ` AND grant_type = ?`;
-        params.push(input.grantType);
+        baseQuery = sql`${baseQuery} AND grant_type = ${input.grantType}`;
       }
       if (input.priority) {
-        query += ` AND priority = ?`;
-        params.push(input.priority);
+        baseQuery = sql`${baseQuery} AND priority = ${input.priority}`;
       }
 
-      query += ` ORDER BY deadline ASC`;
+      baseQuery = sql`${baseQuery} ORDER BY deadline ASC`;
 
-      const [opportunities] = await db.execute(query, params);
+      const opportunities = await db.execute(baseQuery);
       return opportunities as any[];
     }),
 
@@ -133,25 +130,15 @@ export const grantTrackingRouter = router({
       if (!db) throw new Error("Database not available");
 
       await db.execute(
-        `INSERT INTO grant_opportunities (
+        sql`INSERT INTO grant_opportunities (
           funder_name, grant_name, description, funding_amount_min, funding_amount_max,
           deadline, application_url, eligibility_requirements, focus_areas,
           grant_type, priority, notes
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          input.funderName,
-          input.grantName,
-          input.description || null,
-          input.fundingAmountMin || null,
-          input.fundingAmountMax || null,
-          input.deadline || null,
-          input.applicationUrl || null,
-          input.eligibilityRequirements || null,
-          input.focusAreas || null,
-          input.grantType,
-          input.priority,
-          input.notes || null,
-        ]
+        ) VALUES (${input.funderName}, ${input.grantName}, ${input.description || null},
+          ${input.fundingAmountMin || null}, ${input.fundingAmountMax || null},
+          ${input.deadline || null}, ${input.applicationUrl || null},
+          ${input.eligibilityRequirements || null}, ${input.focusAreas || null},
+          ${input.grantType}, ${input.priority}, ${input.notes || null})`
       );
 
       return { success: true };
@@ -170,8 +157,7 @@ export const grantTrackingRouter = router({
       if (!db) throw new Error("Database not available");
 
       await db.execute(
-        `UPDATE grant_opportunities SET status = ? WHERE id = ?`,
-        [input.status, input.id]
+        sql`UPDATE grant_opportunities SET status = ${input.status} WHERE id = ${input.id}`
       );
 
       return { success: true };
@@ -189,24 +175,21 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = `SELECT ga.*, go.grant_name, go.funder_name, go.deadline as opportunity_deadline
+      let baseQuery = sql`SELECT ga.*, go.grant_name, go.funder_name, go.deadline as opportunity_deadline
         FROM grant_applications ga
         JOIN grant_opportunities go ON ga.opportunity_id = go.id
         WHERE 1=1`;
-      const params: any[] = [];
 
       if (input.status) {
-        query += ` AND ga.status = ?`;
-        params.push(input.status);
+        baseQuery = sql`${baseQuery} AND ga.status = ${input.status}`;
       }
       if (input.opportunityId) {
-        query += ` AND ga.opportunity_id = ?`;
-        params.push(input.opportunityId);
+        baseQuery = sql`${baseQuery} AND ga.opportunity_id = ${input.opportunityId}`;
       }
 
-      query += ` ORDER BY ga.updated_at DESC`;
+      baseQuery = sql`${baseQuery} ORDER BY ga.updated_at DESC`;
 
-      const [applications] = await db.execute(query, params);
+      const applications = await db.execute(baseQuery);
       return applications as any[];
     }),
 
@@ -228,27 +211,19 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const [result] = await db.execute(
-        `INSERT INTO grant_applications (
+      const result = await db.execute(
+        sql`INSERT INTO grant_applications (
           opportunity_id, application_name, project_title, project_description,
           requested_amount, project_start_date, project_end_date, assigned_to, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'not_started')`,
-        [
-          input.opportunityId,
-          input.applicationName || null,
-          input.projectTitle,
-          input.projectDescription || null,
-          input.requestedAmount || null,
-          input.projectStartDate || null,
-          input.projectEndDate || null,
-          input.assignedTo || null,
-        ]
+        ) VALUES (${input.opportunityId}, ${input.applicationName || null}, ${input.projectTitle},
+          ${input.projectDescription || null}, ${input.requestedAmount || null},
+          ${input.projectStartDate || null}, ${input.projectEndDate || null},
+          ${input.assignedTo || null}, 'not_started')`
       );
 
       // Update opportunity status to applied
       await db.execute(
-        `UPDATE grant_opportunities SET status = 'applied' WHERE id = ?`,
-        [input.opportunityId]
+        sql`UPDATE grant_opportunities SET status = 'applied' WHERE id = ${input.opportunityId}`
       );
 
       return { success: true, applicationId: (result as any).insertId };
@@ -269,26 +244,21 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = `UPDATE grant_applications SET status = ?`;
-      const params: any[] = [input.status];
+      let baseQuery = sql`UPDATE grant_applications SET status = ${input.status}`;
 
       if (input.submittedDate) {
-        query += `, submitted_date = ?`;
-        params.push(input.submittedDate);
+        baseQuery = sql`${baseQuery}, submitted_date = ${input.submittedDate}`;
       }
       if (input.confirmationNumber) {
-        query += `, confirmation_number = ?`;
-        params.push(input.confirmationNumber);
+        baseQuery = sql`${baseQuery}, confirmation_number = ${input.confirmationNumber}`;
       }
       if (input.awardedAmount !== undefined) {
-        query += `, awarded_amount = ?`;
-        params.push(input.awardedAmount);
+        baseQuery = sql`${baseQuery}, awarded_amount = ${input.awardedAmount}`;
       }
 
-      query += ` WHERE id = ?`;
-      params.push(input.id);
+      baseQuery = sql`${baseQuery} WHERE id = ${input.id}`;
 
-      await db.execute(query, params);
+      await db.execute(baseQuery);
 
       return { success: true };
     }),
@@ -300,9 +270,8 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const [documents] = await db.execute(
-        `SELECT * FROM grant_documents WHERE application_id = ? ORDER BY due_date ASC`,
-        [input.applicationId]
+      const documents = await db.execute(
+        sql`SELECT * FROM grant_documents WHERE application_id = ${input.applicationId} ORDER BY due_date ASC`
       );
 
       return documents as any[];
@@ -324,9 +293,9 @@ export const grantTrackingRouter = router({
       if (!db) throw new Error("Database not available");
 
       await db.execute(
-        `INSERT INTO grant_documents (application_id, document_type, document_name, due_date, assigned_to)
-        VALUES (?, ?, ?, ?, ?)`,
-        [input.applicationId, input.documentType, input.documentName, input.dueDate || null, input.assignedTo || null]
+        sql`INSERT INTO grant_documents (application_id, document_type, document_name, due_date, assigned_to)
+        VALUES (${input.applicationId}, ${input.documentType}, ${input.documentName},
+          ${input.dueDate || null}, ${input.assignedTo || null})`
       );
 
       return { success: true };
@@ -345,18 +314,15 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = `UPDATE grant_documents SET status = ?`;
-      const params: any[] = [input.status];
+      let baseQuery = sql`UPDATE grant_documents SET status = ${input.status}`;
 
       if (input.fileUrl) {
-        query += `, file_url = ?`;
-        params.push(input.fileUrl);
+        baseQuery = sql`${baseQuery}, file_url = ${input.fileUrl}`;
       }
 
-      query += ` WHERE id = ?`;
-      params.push(input.id);
+      baseQuery = sql`${baseQuery} WHERE id = ${input.id}`;
 
-      await db.execute(query, params);
+      await db.execute(baseQuery);
 
       return { success: true };
     }),
@@ -368,20 +334,18 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = `SELECT gr.*, ga.project_title, go.funder_name
+      let baseQuery = sql`SELECT gr.*, ga.project_title, go.funder_name
         FROM grant_reporting gr
         JOIN grant_applications ga ON gr.application_id = ga.id
         JOIN grant_opportunities go ON ga.opportunity_id = go.id`;
-      const params: any[] = [];
 
       if (input.applicationId) {
-        query += ` WHERE gr.application_id = ?`;
-        params.push(input.applicationId);
+        baseQuery = sql`${baseQuery} WHERE gr.application_id = ${input.applicationId}`;
       }
 
-      query += ` ORDER BY gr.due_date ASC`;
+      baseQuery = sql`${baseQuery} ORDER BY gr.due_date ASC`;
 
-      const [reports] = await db.execute(query, params);
+      const reports = await db.execute(baseQuery);
       return reports as any[];
     }),
 
@@ -400,9 +364,8 @@ export const grantTrackingRouter = router({
       if (!db) throw new Error("Database not available");
 
       await db.execute(
-        `INSERT INTO grant_reporting (application_id, report_type, report_name, due_date)
-        VALUES (?, ?, ?, ?)`,
-        [input.applicationId, input.reportType, input.reportName || null, input.dueDate]
+        sql`INSERT INTO grant_reporting (application_id, report_type, report_name, due_date)
+        VALUES (${input.applicationId}, ${input.reportType}, ${input.reportName || null}, ${input.dueDate})`
       );
 
       return { success: true };
@@ -422,22 +385,18 @@ export const grantTrackingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = `UPDATE grant_reporting SET status = ?`;
-      const params: any[] = [input.status];
+      let baseQuery = sql`UPDATE grant_reporting SET status = ${input.status}`;
 
       if (input.submittedDate) {
-        query += `, submitted_date = ?`;
-        params.push(input.submittedDate);
+        baseQuery = sql`${baseQuery}, submitted_date = ${input.submittedDate}`;
       }
       if (input.fileUrl) {
-        query += `, file_url = ?`;
-        params.push(input.fileUrl);
+        baseQuery = sql`${baseQuery}, file_url = ${input.fileUrl}`;
       }
 
-      query += ` WHERE id = ?`;
-      params.push(input.id);
+      baseQuery = sql`${baseQuery} WHERE id = ${input.id}`;
 
-      await db.execute(query, params);
+      await db.execute(baseQuery);
 
       return { success: true };
     }),
@@ -447,14 +406,14 @@ export const grantTrackingRouter = router({
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    const [researching] = await db.execute(
-      `SELECT * FROM grant_opportunities WHERE status = 'researching' ORDER BY deadline ASC`
+    const researching = await db.execute(
+      sql`SELECT * FROM grant_opportunities WHERE status = 'researching' ORDER BY deadline ASC`
     );
-    const [eligible] = await db.execute(
-      `SELECT * FROM grant_opportunities WHERE status = 'eligible' ORDER BY deadline ASC`
+    const eligible = await db.execute(
+      sql`SELECT * FROM grant_opportunities WHERE status = 'eligible' ORDER BY deadline ASC`
     );
-    const [applied] = await db.execute(
-      `SELECT go.*, ga.status as application_status, ga.id as application_id
+    const applied = await db.execute(
+      sql`SELECT go.*, ga.status as application_status, ga.id as application_id
       FROM grant_opportunities go
       LEFT JOIN grant_applications ga ON go.id = ga.opportunity_id
       WHERE go.status = 'applied' ORDER BY go.deadline ASC`

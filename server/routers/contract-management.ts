@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
+import { sql } from "drizzle-orm";
 
 export const contractManagementRouter = router({
   // Get all contracts
@@ -12,31 +13,29 @@ export const contractManagementRouter = router({
     }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
-      let query = `SELECT c.*, cb.businessName, cb.ownerName
+      // Build query dynamically based on filters
+      let baseQuery = sql`SELECT c.*, cb.businessName, cb.ownerName
                    FROM contracts c
                    LEFT JOIN contractor_businesses cb ON c.contractorBusinessId = cb.id
                    WHERE 1=1`;
-      const params: any[] = [];
       
       if (input.contractType) {
-        query += ` AND c.contractType = ?`;
-        params.push(input.contractType);
+        baseQuery = sql`${baseQuery} AND c.contractType = ${input.contractType}`;
       }
       
       if (input.status) {
-        query += ` AND c.status = ?`;
-        params.push(input.status);
+        baseQuery = sql`${baseQuery} AND c.status = ${input.status}`;
       }
       
       if (input.contractorId) {
-        query += ` AND c.contractorId = ?`;
-        params.push(input.contractorId);
+        baseQuery = sql`${baseQuery} AND c.contractorId = ${input.contractorId}`;
       }
       
-      query += ` ORDER BY c.createdAt DESC`;
+      baseQuery = sql`${baseQuery} ORDER BY c.createdAt DESC`;
       
-      const [contracts] = await db.execute(query, params);
+      const contracts = await db.execute(baseQuery);
       return contracts as any[];
     }),
 
@@ -45,13 +44,13 @@ export const contractManagementRouter = router({
     .input(z.object({ contractId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
-      const [contracts] = await db.execute(
-        `SELECT c.*, cb.businessName, cb.ownerName
+      const contracts = await db.execute(
+        sql`SELECT c.*, cb.businessName, cb.ownerName
          FROM contracts c
          LEFT JOIN contractor_businesses cb ON c.contractorBusinessId = cb.id
-         WHERE c.id = ?`,
-        [input.contractId]
+         WHERE c.id = ${input.contractId}`
       );
       const contract = (contracts as any[])[0];
       
@@ -60,15 +59,13 @@ export const contractManagementRouter = router({
       }
       
       // Get associated SOWs
-      const [sows] = await db.execute(
-        `SELECT * FROM statements_of_work WHERE contractId = ? ORDER BY createdAt DESC`,
-        [input.contractId]
+      const sows = await db.execute(
+        sql`SELECT * FROM statements_of_work WHERE contractId = ${input.contractId} ORDER BY createdAt DESC`
       );
       
       // Get amendments
-      const [amendments] = await db.execute(
-        `SELECT * FROM contract_amendments WHERE contractId = ? ORDER BY createdAt DESC`,
-        [input.contractId]
+      const amendments = await db.execute(
+        sql`SELECT * FROM contract_amendments WHERE contractId = ${input.contractId} ORDER BY createdAt DESC`
       );
       
       return {
@@ -107,50 +104,31 @@ export const contractManagementRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       // Generate contract number
       const typePrefix = input.contractType.toUpperCase().substring(0, 3);
-      const [countResult] = await db.execute(
-        `SELECT COUNT(*) as count FROM contracts WHERE contractType = ?`,
-        [input.contractType]
+      const countResult = await db.execute(
+        sql`SELECT COUNT(*) as count FROM contracts WHERE contractType = ${input.contractType}`
       );
       const count = (countResult as any[])[0].count + 1;
       const contractNumber = `${typePrefix}-${new Date().getFullYear()}-${String(count).padStart(4, '0')}`;
       
-      const [result] = await db.execute(
-        `INSERT INTO contracts 
+      const result = await db.execute(
+        sql`INSERT INTO contracts 
          (contractNumber, contractType, title, description, contractorId, contractorBusinessId,
           clientEntityId, effectiveDate, expirationDate, autoRenew, renewalTermMonths,
           totalValue, paymentTerms, billingFrequency, retainerAmount, hourlyRate,
           terminationNoticeDays, nonCompeteMonths, ipAssignment, confidentialityRequired,
           insuranceRequired, insuranceMinimum, notes, createdBy, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft')`,
-        [
-          contractNumber,
-          input.contractType,
-          input.title,
-          input.description || null,
-          input.contractorId || null,
-          input.contractorBusinessId || null,
-          input.clientEntityId || null,
-          input.effectiveDate || null,
-          input.expirationDate || null,
-          input.autoRenew ?? false,
-          input.renewalTermMonths ?? 12,
-          input.totalValue || null,
-          input.paymentTerms || null,
-          input.billingFrequency || 'monthly',
-          input.retainerAmount || null,
-          input.hourlyRate || null,
-          input.terminationNoticeDays ?? 30,
-          input.nonCompeteMonths ?? 0,
-          input.ipAssignment ?? true,
-          input.confidentialityRequired ?? true,
-          input.insuranceRequired ?? false,
-          input.insuranceMinimum || null,
-          input.notes || null,
-          input.createdBy
-        ]
+         VALUES (${contractNumber}, ${input.contractType}, ${input.title}, ${input.description || null},
+          ${input.contractorId || null}, ${input.contractorBusinessId || null}, ${input.clientEntityId || null},
+          ${input.effectiveDate || null}, ${input.expirationDate || null}, ${input.autoRenew ?? false},
+          ${input.renewalTermMonths ?? 12}, ${input.totalValue || null}, ${input.paymentTerms || null},
+          ${input.billingFrequency || 'monthly'}, ${input.retainerAmount || null}, ${input.hourlyRate || null},
+          ${input.terminationNoticeDays ?? 30}, ${input.nonCompeteMonths ?? 0}, ${input.ipAssignment ?? true},
+          ${input.confidentialityRequired ?? true}, ${input.insuranceRequired ?? false},
+          ${input.insuranceMinimum || null}, ${input.notes || null}, ${input.createdBy}, 'draft')`
       );
       
       return {
@@ -180,38 +158,25 @@ export const contractManagementRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       // Generate SOW number
-      const [countResult] = await db.execute(
-        `SELECT COUNT(*) as count FROM statements_of_work WHERE contractId = ?`,
-        [input.contractId]
+      const countResult = await db.execute(
+        sql`SELECT COUNT(*) as count FROM statements_of_work WHERE contractId = ${input.contractId}`
       );
       const count = (countResult as any[])[0].count + 1;
       const sowNumber = `SOW-${input.contractId}-${String(count).padStart(3, '0')}`;
       
-      const [result] = await db.execute(
-        `INSERT INTO statements_of_work 
+      const result = await db.execute(
+        sql`INSERT INTO statements_of_work 
          (sowNumber, contractId, title, description, scope, deliverables,
           startDate, endDate, estimatedHours, fixedPrice, hourlyRate, budgetAmount,
           milestones, acceptanceCriteria, projectManagerId, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft')`,
-        [
-          sowNumber,
-          input.contractId,
-          input.title,
-          input.description || null,
-          input.scope || null,
-          input.deliverables || null,
-          input.startDate || null,
-          input.endDate || null,
-          input.estimatedHours || null,
-          input.fixedPrice || null,
-          input.hourlyRate || null,
-          input.budgetAmount || null,
-          input.milestones || null,
-          input.acceptanceCriteria || null,
-          input.projectManagerId || null
-        ]
+         VALUES (${sowNumber}, ${input.contractId}, ${input.title}, ${input.description || null},
+          ${input.scope || null}, ${input.deliverables || null}, ${input.startDate || null},
+          ${input.endDate || null}, ${input.estimatedHours || null}, ${input.fixedPrice || null},
+          ${input.hourlyRate || null}, ${input.budgetAmount || null}, ${input.milestones || null},
+          ${input.acceptanceCriteria || null}, ${input.projectManagerId || null}, 'draft')`
       );
       
       return {
@@ -229,10 +194,10 @@ export const contractManagementRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       await db.execute(
-        `UPDATE contracts SET status = ? WHERE id = ?`,
-        [input.status, input.contractId]
+        sql`UPDATE contracts SET status = ${input.status} WHERE id = ${input.contractId}`
       );
       
       return { success: true };
@@ -243,25 +208,23 @@ export const contractManagementRouter = router({
     .input(z.object({ contractId: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       await db.execute(
-        `UPDATE contracts 
+        sql`UPDATE contracts 
          SET signedByContractor = TRUE, signedByContractorAt = NOW()
-         WHERE id = ?`,
-        [input.contractId]
+         WHERE id = ${input.contractId}`
       );
       
       // Check if both parties signed
-      const [contracts] = await db.execute(
-        `SELECT signedByContractor, signedByClient FROM contracts WHERE id = ?`,
-        [input.contractId]
+      const contracts = await db.execute(
+        sql`SELECT signedByContractor, signedByClient FROM contracts WHERE id = ${input.contractId}`
       );
       const contract = (contracts as any[])[0];
       
       if (contract.signedByContractor && contract.signedByClient) {
         await db.execute(
-          `UPDATE contracts SET status = 'active' WHERE id = ?`,
-          [input.contractId]
+          sql`UPDATE contracts SET status = 'active' WHERE id = ${input.contractId}`
         );
       }
       
@@ -276,25 +239,23 @@ export const contractManagementRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       await db.execute(
-        `UPDATE contracts 
-         SET signedByClient = TRUE, signedByClientAt = NOW(), signedByClientName = ?
-         WHERE id = ?`,
-        [input.signerName, input.contractId]
+        sql`UPDATE contracts 
+         SET signedByClient = TRUE, signedByClientAt = NOW(), signedByClientName = ${input.signerName}
+         WHERE id = ${input.contractId}`
       );
       
       // Check if both parties signed
-      const [contracts] = await db.execute(
-        `SELECT signedByContractor, signedByClient FROM contracts WHERE id = ?`,
-        [input.contractId]
+      const contracts = await db.execute(
+        sql`SELECT signedByContractor, signedByClient FROM contracts WHERE id = ${input.contractId}`
       );
       const contract = (contracts as any[])[0];
       
       if (contract.signedByContractor && contract.signedByClient) {
         await db.execute(
-          `UPDATE contracts SET status = 'active' WHERE id = ?`,
-          [input.contractId]
+          sql`UPDATE contracts SET status = 'active' WHERE id = ${input.contractId}`
         );
       }
       
@@ -309,26 +270,24 @@ export const contractManagementRouter = router({
     }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
-      let query = `SELECT s.*, c.contractNumber, c.title as contractTitle
+      let baseQuery = sql`SELECT s.*, c.contractNumber, c.title as contractTitle
                    FROM statements_of_work s
                    JOIN contracts c ON s.contractId = c.id
                    WHERE 1=1`;
-      const params: any[] = [];
       
       if (input.contractId) {
-        query += ` AND s.contractId = ?`;
-        params.push(input.contractId);
+        baseQuery = sql`${baseQuery} AND s.contractId = ${input.contractId}`;
       }
       
       if (input.status) {
-        query += ` AND s.status = ?`;
-        params.push(input.status);
+        baseQuery = sql`${baseQuery} AND s.status = ${input.status}`;
       }
       
-      query += ` ORDER BY s.createdAt DESC`;
+      baseQuery = sql`${baseQuery} ORDER BY s.createdAt DESC`;
       
-      const [sows] = await db.execute(query, params);
+      const sows = await db.execute(baseQuery);
       return sows as any[];
     }),
 
@@ -341,25 +300,23 @@ export const contractManagementRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       if (input.status === 'active' && input.approvedBy) {
         await db.execute(
-          `UPDATE statements_of_work 
-           SET status = ?, approvedBy = ?, approvedAt = NOW()
-           WHERE id = ?`,
-          [input.status, input.approvedBy, input.sowId]
+          sql`UPDATE statements_of_work 
+           SET status = ${input.status}, approvedBy = ${input.approvedBy}, approvedAt = NOW()
+           WHERE id = ${input.sowId}`
         );
       } else if (input.status === 'completed') {
         await db.execute(
-          `UPDATE statements_of_work 
-           SET status = ?, completedAt = NOW()
-           WHERE id = ?`,
-          [input.status, input.sowId]
+          sql`UPDATE statements_of_work 
+           SET status = ${input.status}, completedAt = NOW()
+           WHERE id = ${input.sowId}`
         );
       } else {
         await db.execute(
-          `UPDATE statements_of_work SET status = ? WHERE id = ?`,
-          [input.status, input.sowId]
+          sql`UPDATE statements_of_work SET status = ${input.status} WHERE id = ${input.sowId}`
         );
       }
       
@@ -374,12 +331,12 @@ export const contractManagementRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       await db.execute(
-        `UPDATE statements_of_work 
-         SET actualHours = actualHours + ?
-         WHERE id = ?`,
-        [input.hours, input.sowId]
+        sql`UPDATE statements_of_work 
+         SET actualHours = actualHours + ${input.hours}
+         WHERE id = ${input.sowId}`
       );
       
       return { success: true };
@@ -400,32 +357,22 @@ export const contractManagementRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       
       // Generate amendment number
-      const [countResult] = await db.execute(
-        `SELECT COUNT(*) as count FROM contract_amendments WHERE contractId = ?`,
-        [input.contractId]
+      const countResult = await db.execute(
+        sql`SELECT COUNT(*) as count FROM contract_amendments WHERE contractId = ${input.contractId}`
       );
       const count = (countResult as any[])[0].count + 1;
       const amendmentNumber = `AMD-${input.contractId}-${String(count).padStart(2, '0')}`;
       
-      const [result] = await db.execute(
-        `INSERT INTO contract_amendments 
+      const result = await db.execute(
+        sql`INSERT INTO contract_amendments 
          (amendmentNumber, contractId, sowId, title, description, changeType,
           previousValue, newValue, effectiveDate, createdBy, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft')`,
-        [
-          amendmentNumber,
-          input.contractId,
-          input.sowId || null,
-          input.title,
-          input.description || null,
-          input.changeType,
-          input.previousValue || null,
-          input.newValue || null,
-          input.effectiveDate || null,
-          input.createdBy
-        ]
+         VALUES (${amendmentNumber}, ${input.contractId}, ${input.sowId || null}, ${input.title},
+          ${input.description || null}, ${input.changeType}, ${input.previousValue || null},
+          ${input.newValue || null}, ${input.effectiveDate || null}, ${input.createdBy}, 'draft')`
       );
       
       return {
@@ -438,9 +385,10 @@ export const contractManagementRouter = router({
   // Get contract stats
   getContractStats: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) throw new Error('Database not available');
     
-    const [stats] = await db.execute(
-      `SELECT 
+    const stats = await db.execute(
+      sql`SELECT 
          COUNT(*) as totalContracts,
          SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as activeContracts,
          SUM(CASE WHEN status = 'pending_signature' THEN 1 ELSE 0 END) as pendingSignature,
@@ -450,8 +398,8 @@ export const contractManagementRouter = router({
        FROM contracts`
     );
     
-    const [sowStats] = await db.execute(
-      `SELECT 
+    const sowStats = await db.execute(
+      sql`SELECT 
          COUNT(*) as totalSOWs,
          SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as activeSOWs,
          SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completedSOWs,
@@ -470,17 +418,17 @@ export const contractManagementRouter = router({
     .input(z.object({ daysAhead: z.number().optional() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database not available');
       const days = input.daysAhead || 30;
       
-      const [contracts] = await db.execute(
-        `SELECT c.*, cb.businessName
+      const contracts = await db.execute(
+        sql`SELECT c.*, cb.businessName
          FROM contracts c
          LEFT JOIN contractor_businesses cb ON c.contractorBusinessId = cb.id
          WHERE c.status = 'active'
          AND c.expirationDate IS NOT NULL
-         AND c.expirationDate <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
-         ORDER BY c.expirationDate ASC`,
-        [days]
+         AND c.expirationDate <= DATE_ADD(CURDATE(), INTERVAL ${days} DAY)
+         ORDER BY c.expirationDate ASC`
       );
       
       return contracts as any[];

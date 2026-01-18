@@ -1,13 +1,15 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
+import { sql } from "drizzle-orm";
 
 export const trainingTransitionRouter = router({
   // Get all required transition training courses
   getRequiredCourses: protectedProcedure.query(async () => {
     const db = await getDb();
-    const [courses] = await db.execute(
-      `SELECT * FROM transition_training_requirements ORDER BY sequenceOrder ASC`
+    if (!db) throw new Error('Database connection failed');
+    const courses = await db.execute(
+      sql`SELECT * FROM transition_training_requirements ORDER BY sequenceOrder ASC`
     );
     return courses as any[];
   }),
@@ -17,22 +19,21 @@ export const trainingTransitionRouter = router({
     .input(z.object({ employeeId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database connection failed');
       
       // Get all required courses
-      const [requirements] = await db.execute(
-        `SELECT * FROM transition_training_requirements ORDER BY sequenceOrder ASC`
+      const requirements = await db.execute(
+        sql`SELECT * FROM transition_training_requirements ORDER BY sequenceOrder ASC`
       );
       
       // Get employee's enrollments
-      const [enrollments] = await db.execute(
-        `SELECT * FROM training_enrollments WHERE employeeId = ? AND isTransitionRequirement = TRUE`,
-        [input.employeeId]
+      const enrollments = await db.execute(
+        sql`SELECT * FROM training_enrollments WHERE employeeId = ${input.employeeId} AND isTransitionRequirement = TRUE`
       );
       
       // Get employee's completions
-      const [completions] = await db.execute(
-        `SELECT * FROM training_completions WHERE employeeId = ? AND passed = TRUE`,
-        [input.employeeId]
+      const completions = await db.execute(
+        sql`SELECT * FROM training_completions WHERE employeeId = ${input.employeeId} AND passed = TRUE`
       );
       
       const enrollmentMap = new Map((enrollments as any[]).map(e => [e.courseId, e]));
@@ -49,28 +50,25 @@ export const trainingTransitionRouter = router({
             : 'not_enrolled'
       }));
       
-      const totalCourses = (requirements as any[]).length;
-      const completedCourses = (completions as any[]).length;
-      const totalHours = (requirements as any[]).reduce((sum: number, r: any) => sum + parseFloat(r.durationHours), 0);
-      const completedHours = courseProgress
-        .filter(c => c.status === 'completed')
-        .reduce((sum, c) => sum + parseFloat(c.durationHours), 0);
+      const totalRequired = (requirements as any[]).filter(r => r.isRequired).length;
+      const completedRequired = courseProgress.filter(c => c.status === 'completed' && c.isRequired).length;
+      const totalHoursRequired = (requirements as any[]).filter(r => r.isRequired).reduce((sum, r) => sum + parseFloat(r.durationHours || 0), 0);
+      const hoursCompleted = courseProgress.filter(c => c.status === 'completed').reduce((sum, c) => sum + parseFloat(c.durationHours || 0), 0);
       
       return {
         courses: courseProgress,
         summary: {
-          totalCourses,
-          completedCourses,
-          progressPercent: Math.round((completedCourses / totalCourses) * 100),
-          totalHours,
-          completedHours,
-          hoursRemaining: totalHours - completedHours,
-          allCompleted: completedCourses === totalCourses
+          totalRequired,
+          completedRequired,
+          percentComplete: totalRequired > 0 ? Math.round((completedRequired / totalRequired) * 100) : 0,
+          totalHoursRequired,
+          hoursCompleted,
+          allRequiredComplete: completedRequired >= totalRequired
         }
       };
     }),
 
-  // Enroll employee in all required transition courses
+  // Enroll employee in all required transition training
   enrollInTransitionTraining: protectedProcedure
     .input(z.object({ 
       employeeId: z.number(),
@@ -78,41 +76,38 @@ export const trainingTransitionRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database connection failed');
       
       // Get all required courses
-      const [requirements] = await db.execute(
-        `SELECT * FROM transition_training_requirements WHERE isRequired = TRUE ORDER BY sequenceOrder ASC`
+      const requirements = await db.execute(
+        sql`SELECT * FROM transition_training_requirements WHERE isRequired = TRUE ORDER BY sequenceOrder ASC`
       );
       
       // Check existing enrollments
-      const [existing] = await db.execute(
-        `SELECT courseId FROM training_enrollments WHERE employeeId = ? AND isTransitionRequirement = TRUE`,
-        [input.employeeId]
+      const existing = await db.execute(
+        sql`SELECT courseId FROM training_enrollments WHERE employeeId = ${input.employeeId} AND isTransitionRequirement = TRUE`
       );
+      
       const existingCourseIds = new Set((existing as any[]).map(e => e.courseId));
       
       // Enroll in courses not already enrolled
-      const newEnrollments = [];
-      for (const req of requirements as any[]) {
+      for (const req of (requirements as any[])) {
         if (!existingCourseIds.has(req.courseId)) {
           await db.execute(
-            `INSERT INTO training_enrollments (employeeId, courseId, courseName, status, isTransitionRequirement, transitionId)
-             VALUES (?, ?, ?, 'not_started', TRUE, ?)`,
-            [input.employeeId, req.courseId, req.courseName, input.transitionId || null]
+            sql`INSERT INTO training_enrollments (employeeId, courseId, courseName, status, isTransitionRequirement, transitionId)
+             VALUES (${input.employeeId}, ${req.courseId}, ${req.courseName}, 'not_started', TRUE, ${input.transitionId || null})`
           );
-          newEnrollments.push(req.courseId);
         }
       }
       
-      return {
-        success: true,
-        newEnrollments,
-        message: `Enrolled in ${newEnrollments.length} new courses`
+      return { 
+        success: true, 
+        enrolledCount: (requirements as any[]).length - existingCourseIds.size 
       };
     }),
 
   // Update course progress
-  updateCourseProgress: protectedProcedure
+  updateProgress: protectedProcedure
     .input(z.object({
       employeeId: z.number(),
       courseId: z.string(),
@@ -121,12 +116,12 @@ export const trainingTransitionRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database connection failed');
       
       await db.execute(
-        `UPDATE training_enrollments 
-         SET progress = ?, status = ?, updatedAt = NOW()
-         WHERE employeeId = ? AND courseId = ?`,
-        [input.progress, input.status, input.employeeId, input.courseId]
+        sql`UPDATE training_enrollments 
+         SET progress = ${input.progress}, status = ${input.status}, updatedAt = NOW()
+         WHERE employeeId = ${input.employeeId} AND courseId = ${input.courseId}`
       );
       
       return { success: true };
@@ -141,11 +136,11 @@ export const trainingTransitionRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database connection failed');
       
       // Get course requirements
-      const [courses] = await db.execute(
-        `SELECT * FROM transition_training_requirements WHERE courseId = ?`,
-        [input.courseId]
+      const courses = await db.execute(
+        sql`SELECT * FROM transition_training_requirements WHERE courseId = ${input.courseId}`
       );
       const course = (courses as any[])[0];
       
@@ -154,9 +149,8 @@ export const trainingTransitionRouter = router({
       }
       
       // Get enrollment
-      const [enrollments] = await db.execute(
-        `SELECT * FROM training_enrollments WHERE employeeId = ? AND courseId = ?`,
-        [input.employeeId, input.courseId]
+      const enrollments = await db.execute(
+        sql`SELECT * FROM training_enrollments WHERE employeeId = ${input.employeeId} AND courseId = ${input.courseId}`
       );
       const enrollment = (enrollments as any[])[0];
       
@@ -171,28 +165,16 @@ export const trainingTransitionRouter = router({
       
       // Record completion
       await db.execute(
-        `INSERT INTO training_completions 
+        sql`INSERT INTO training_completions 
          (enrollmentId, employeeId, courseId, courseName, score, passingScore, passed, certificateNumber, hoursCompleted)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          enrollment.id,
-          input.employeeId,
-          input.courseId,
-          course.courseName,
-          input.score,
-          course.passingScore,
-          passed,
-          certificateNumber,
-          course.durationHours
-        ]
+         VALUES (${enrollment.id}, ${input.employeeId}, ${input.courseId}, ${course.courseName}, ${input.score}, ${course.passingScore}, ${passed}, ${certificateNumber}, ${course.durationHours})`
       );
       
       // Update enrollment status
       await db.execute(
-        `UPDATE training_enrollments 
-         SET status = ?, progress = 100, updatedAt = NOW()
-         WHERE id = ?`,
-        [passed ? 'completed' : 'failed', enrollment.id]
+        sql`UPDATE training_enrollments 
+         SET status = ${passed ? 'completed' : 'failed'}, progress = 100, updatedAt = NOW()
+         WHERE id = ${enrollment.id}`
       );
       
       return {
@@ -212,31 +194,29 @@ export const trainingTransitionRouter = router({
       if (!db) throw new Error('Database connection failed');
       
       // Get required course count
-      const [requirements] = await db.execute(
-        `SELECT COUNT(*) as total FROM transition_training_requirements WHERE isRequired = TRUE`
+      const requirements = await db.execute(
+        sql`SELECT COUNT(*) as total FROM transition_training_requirements WHERE isRequired = TRUE`
       );
       const totalRequired = (requirements as any[])[0].total;
       
       // Get completed course count
-      const [completions] = await (db as any).execute(
-        `SELECT COUNT(DISTINCT tc.courseId) as completed
+      const completions = await db.execute(
+        sql`SELECT COUNT(DISTINCT tc.courseId) as completed
          FROM training_completions tc
          JOIN transition_training_requirements ttr ON tc.courseId = ttr.courseId
-         WHERE tc.employeeId = ? AND tc.passed = TRUE AND ttr.isRequired = TRUE`,
-        [input.employeeId]
+         WHERE tc.employeeId = ${input.employeeId} AND tc.passed = TRUE AND ttr.isRequired = TRUE`
       );
       const completedCount = (completions as any[])[0].completed;
       
       // Get incomplete courses
-      const [incomplete] = await (db as any).execute(
-        `SELECT ttr.* FROM transition_training_requirements ttr
+      const incomplete = await db.execute(
+        sql`SELECT ttr.courseId, ttr.courseName, ttr.durationHours
+         FROM transition_training_requirements ttr
          WHERE ttr.isRequired = TRUE
          AND ttr.courseId NOT IN (
-           SELECT courseId FROM training_completions 
-           WHERE employeeId = ? AND passed = TRUE
-         )
-         ORDER BY ttr.sequenceOrder`,
-        [input.employeeId]
+           SELECT tc.courseId FROM training_completions tc 
+           WHERE tc.employeeId = ${input.employeeId} AND tc.passed = TRUE
+         )`
       );
       
       return {
@@ -244,70 +224,50 @@ export const trainingTransitionRouter = router({
         totalRequired,
         completedCount,
         remainingCount: totalRequired - completedCount,
-        incompleteCourses: incomplete
+        incompleteCourses: incomplete as any[]
       };
     }),
 
-  // Get employee's certificates
-  getEmployeeCertificates: protectedProcedure
-    .input(z.object({ employeeId: z.number() }))
-    .query(async ({ input }) => {
-      const db = await getDb();
-      if (!db) throw new Error('Database connection failed');
-      
-      const [certificates] = await (db as any).execute(
-        `SELECT tc.*, ttr.category, ttr.durationHours
-         FROM training_completions tc
-         JOIN transition_training_requirements ttr ON tc.courseId = ttr.courseId
-         WHERE tc.employeeId = ? AND tc.passed = TRUE
-         ORDER BY tc.completionDate DESC`,
-        [input.employeeId]
-      );
-      
-      return certificates;
-    }),
-
-  // Get training dashboard stats
+  // Get training statistics
   getTrainingStats: protectedProcedure.query(async () => {
     const db = await getDb();
     if (!db) throw new Error('Database connection failed');
     
-    const [enrollmentStats] = await db.execute(
-      `SELECT 
+    const enrollmentStats = await db.execute(
+      sql`SELECT 
          COUNT(DISTINCT employeeId) as totalEmployeesEnrolled,
          COUNT(*) as totalEnrollments,
          SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completedEnrollments,
          SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) as inProgressEnrollments
-       FROM training_enrollments
-       WHERE isTransitionRequirement = TRUE`
+       FROM training_enrollments WHERE isTransitionRequirement = TRUE`
     );
     
-    const [completionStats] = await db.execute(
-      `SELECT 
+    const completionStats = await db.execute(
+      sql`SELECT 
          COUNT(*) as totalCompletions,
          SUM(hoursCompleted) as totalHoursCompleted,
          AVG(score) as averageScore
-       FROM training_completions
-       WHERE passed = TRUE`
+       FROM training_completions`
     );
     
-    const [courseStats] = await db.execute(
-      `SELECT 
+    const courseStats = await db.execute(
+      sql`SELECT 
          ttr.courseId,
          ttr.courseName,
-         ttr.category,
-         COUNT(tc.id) as completionCount,
+         COUNT(DISTINCT te.employeeId) as enrolledCount,
+         SUM(CASE WHEN tc.passed = TRUE THEN 1 ELSE 0 END) as passedCount,
          AVG(tc.score) as averageScore
        FROM transition_training_requirements ttr
-       LEFT JOIN training_completions tc ON ttr.courseId = tc.courseId AND tc.passed = TRUE
-       GROUP BY ttr.courseId, ttr.courseName, ttr.category
+       LEFT JOIN training_enrollments te ON ttr.courseId = te.courseId
+       LEFT JOIN training_completions tc ON ttr.courseId = tc.courseId
+       GROUP BY ttr.courseId, ttr.courseName
        ORDER BY ttr.sequenceOrder`
     );
     
     return {
-      enrollment: (enrollmentStats as unknown as any[])[0],
-      completion: (completionStats as unknown as any[])[0],
-      courseBreakdown: courseStats as unknown as any[]
+      enrollment: (enrollmentStats as any[])[0] || {},
+      completion: (completionStats as any[])[0] || {},
+      courses: courseStats as any[]
     };
   })
 });
