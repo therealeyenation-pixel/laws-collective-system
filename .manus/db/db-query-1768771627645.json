@@ -1,0 +1,19 @@
+{
+  "query": "SHOW TABLES LIKE 'board%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SHOW TABLES LIKE 'board%';",
+  "rows": [
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (board%)": "board_meetings"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (board%)": "board_members"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (board%)": "board_resolutions"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_SPWUc63a3tjYuzCxiuEomB (board%)\nboard_meetings\nboard_members\nboard_resolutions\n",
+  "stderr": "",
+  "execution_time_ms": 97
+}
