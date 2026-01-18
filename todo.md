@@ -2958,3 +2958,46 @@
 ### Completion
 - [x] Run tests (170 passed)
 - [ ] Save checkpoint
+
+### New Position Added
+- [x] Added Business Operations Coordinator (Tier 4 Open) - Reports to Business Manager
+- [x] Added to Careers page with full job description
+- [x] Added to HRManagement positions for offer letters
+
+
+### Feature 1: Salary Range Auto-fill - COMPLETED
+- [x] Auto-populate salary field when selecting position in offer letters
+- [x] Pull salary range from position data (shows range, auto-fills minimum)
+
+### Feature 2: Group Positions by Tier - COMPLETED
+- [x] Organize position dropdown into tier sections (Manager/Coordinator)
+- [x] Add visual separators between tiers
+- [x] Show department in parentheses for each position
+
+### Feature 3: Position-Specific Benefits Mapping - COMPLETED
+- [x] Link each position to appropriate benefits package (recommendedBenefits field)
+- [x] Auto-select benefits based on position type (standard, grant-compliant, remote-work, part-time)
+
+
+### Feature 4: Org Chart Visualization - COMPLETED
+- [x] Created OrgChart component with expandable tree structure
+- [x] Shows CEO → Department Manager → Coordinator hierarchy
+- [x] Includes Procurement → Purchasing/Contracts reporting structure
+- [x] Color-coded by tier (Executive, Identified, Open, Coordinator)
+- [x] Status badges (Filled, Candidate Identified, Open Position, Recruiting)
+- [x] Added to Careers page between Benefits and Positions sections
+
+
+### Feature 5: Acknowledgment Reporting Dashboard - COMPLETED
+- [x] Created AcknowledgmentDashboard component with summary cards
+- [x] Shows acknowledged/pending/overdue counts and compliance rate
+- [x] Two views: By Procedure (progress bars) and By Employee (status tracking)
+- [x] Filters by department and status
+- [x] Search functionality
+- [x] Compliance alert for overdue acknowledgments
+- [x] Added as "Compliance Dashboard" tab in Operating Procedures page
+
+
+### Completion
+- [x] All 170 tests passing
+- [ ] Save checkpoint

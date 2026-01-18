@@ -32,6 +32,7 @@ import {
   Loader2
 } from "lucide-react";
 import { Link } from "wouter";
+import OrgChart from "@/components/OrgChart";
 
 // Position Tiers:
 // tier1_family: Family members confirmed in roles - NOT open for external hiring
@@ -277,6 +278,21 @@ const POSITIONS = [
     category: "operations",
     tier: "tier4_coordinator",
     hiringStatus: "Actively Recruiting"
+  },
+  { 
+    id: "ops-coordinator-business", 
+    title: "Business Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Business Management",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$60,000 - $80,000",
+    description: "Support the Business Manager with executive-level operations across all subsidiary entities. Handle scheduling, communications, project tracking, meeting coordination, and administrative tasks. Serve as the primary administrative support for strategic business initiatives.",
+    requirements: ["2+ years executive/business admin support", "Strong organizational skills", "Excellent communication", "Multi-entity coordination experience", "Discretion with confidential matters"],
+    category: "operations",
+    tier: "tier4_coordinator",
+    hiringStatus: "Open Position"
   },
   { 
     id: "ops-coordinator-hr", 
@@ -794,8 +810,19 @@ export default function Careers() {
         </div>
       </section>
 
+      {/* Organization Chart Section */}
+      <section className="py-16">
+        <div className="container max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center mb-4">Our Organization</h2>
+          <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+            See how our team is structured and where you might fit in. Click on positions to expand their reporting structure.
+          </p>
+          <OrgChart />
+        </div>
+      </section>
+
       {/* Positions Section */}
-      <section id="positions" className="py-16">
+      <section id="positions" className="py-16 bg-muted/30">
         <div className="container max-w-7xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-center mb-4">Position Directory</h2>
           <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">

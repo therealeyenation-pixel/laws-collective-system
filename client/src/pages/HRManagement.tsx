@@ -38,31 +38,32 @@ import {
 // Position data synced with Careers.tsx - includes all open/recruiting positions
 const POSITIONS = [
   // TIER 3: OPEN MANAGER POSITIONS
-  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier3_open" },
-  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier3_open" },
-  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier3_open" },
-  { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier3_open" },
-  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The L.A.W.S. Collective, LLC", department: "Grants & Proposals", tier: "tier3_open" },
-  { id: "platform-admin", title: "Platform Administrator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Technology", tier: "tier3_open" },
+  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "standard" },
+  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "standard" },
+  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier3_open", salaryRange: "$80,000 - $110,000", recommendedBenefits: "standard" },
+  { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "standard" },
+  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The L.A.W.S. Collective, LLC", department: "Grants & Proposals", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "grant-compliant" },
+  { id: "platform-admin", title: "Platform Administrator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Technology", tier: "tier3_open", salaryRange: "$95,000 - $130,000", recommendedBenefits: "remote-work" },
   
   // TIER 4: OPERATIONS COORDINATORS - All Open Positions
-  { id: "finance-ops-coordinator", title: "Finance Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Finance", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-education", title: "Education Operations Coordinator", entity: "508-LuvOnPurpose Academy and Outreach", department: "Education", tier: "tier4_coordinator" },
-  { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach", tier: "tier4_coordinator" },
-  { id: "content-creator", title: "Content Creator / Media Assistant", entity: "Real-Eye-Nation LLC", department: "Media Production", tier: "tier4_coordinator" },
-  { id: "academy-instructor", title: "Academy Instructor / Curriculum Developer", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Education", tier: "tier4_coordinator" },
-  { id: "programs-coordinator", title: "Community Programs Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Community Programs", tier: "tier4_coordinator" },
-  { id: "lead-ops-coordinator", title: "Lead Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Operations", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-hr", title: "HR Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-qaqc", title: "QA/QC Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-purchasing", title: "Purchasing Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-operations", title: "Operations Operations Coordinator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-health", title: "Health Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Health", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-procurement", title: "Procurement Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Procurement", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-contracts", title: "Contracts Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Contracts", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-design", title: "Design Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Design & Creative", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-media", title: "Media Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Media Production", tier: "tier4_coordinator" },
-  { id: "ops-coordinator-project-controls", title: "Project Controls Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Project Controls", tier: "tier4_coordinator" },
+  { id: "finance-ops-coordinator", title: "Finance Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Finance", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-education", title: "Education Operations Coordinator", entity: "508-LuvOnPurpose Academy and Outreach", department: "Education", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
+  { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach", tier: "tier4_coordinator", salaryRange: "$65,000 - $85,000", recommendedBenefits: "standard" },
+  { id: "content-creator", title: "Content Creator / Media Assistant", entity: "Real-Eye-Nation LLC", department: "Media Production", tier: "tier4_coordinator", salaryRange: "$35,000 - $55,000", recommendedBenefits: "part-time" },
+  { id: "academy-instructor", title: "Academy Instructor / Curriculum Developer", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Education", tier: "tier4_coordinator", salaryRange: "$75,000 - $100,000", recommendedBenefits: "standard" },
+  { id: "programs-coordinator", title: "Community Programs Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Community Programs", tier: "tier4_coordinator", salaryRange: "$80,000 - $110,000", recommendedBenefits: "grant-compliant" },
+  { id: "lead-ops-coordinator", title: "Lead Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Operations", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-business", title: "Business Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Business Management", tier: "tier4_coordinator", salaryRange: "$60,000 - $80,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-hr", title: "HR Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-qaqc", title: "QA/QC Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-purchasing", title: "Purchasing Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-operations", title: "Operations Operations Coordinator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "remote-work" },
+  { id: "ops-coordinator-health", title: "Health Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Health", tier: "tier4_coordinator", salaryRange: "$55,000 - $72,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-procurement", title: "Procurement Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Procurement", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-contracts", title: "Contracts Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Contracts", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-design", title: "Design Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Design & Creative", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "remote-work" },
+  { id: "ops-coordinator-media", title: "Media Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Media Production", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "remote-work" },
+  { id: "ops-coordinator-project-controls", title: "Project Controls Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Project Controls", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
 ];
 
 const BENEFITS_PACKAGES = [
@@ -169,6 +170,9 @@ interface OfferLetter {
   positionId: string;
   positionTitle: string;
   entity: string;
+  department: string;
+  salaryRange: string;
+  offeredSalary: string;
   benefitsPackage: string;
   startDate: string;
   status: "draft" | "sent" | "accepted" | "declined" | "expired";
@@ -187,7 +191,10 @@ const SAMPLE_OFFERS: OfferLetter[] = [
     positionId: "grant-writer",
     positionTitle: "Grant Writer / Proposal Specialist",
     entity: "The L.A.W.S. Collective, LLC",
-    benefitsPackage: "standard",
+    department: "Grants & Proposals",
+    salaryRange: "$85,000 - $115,000",
+    offeredSalary: "$95,000",
+    benefitsPackage: "grant-compliant",
     startDate: "2026-02-01",
     status: "sent",
     createdAt: "2026-01-10",
@@ -200,6 +207,9 @@ const SAMPLE_OFFERS: OfferLetter[] = [
     positionId: "content-creator",
     positionTitle: "Content Creator / Media Assistant",
     entity: "Real-Eye-Nation LLC",
+    department: "Media Production",
+    salaryRange: "$35,000 - $55,000",
+    offeredSalary: "$42,000",
     benefitsPackage: "part-time",
     startDate: "2026-01-20",
     status: "accepted",
@@ -223,13 +233,29 @@ export default function HRManagement() {
     candidateName: "",
     candidateEmail: "",
     positionId: "",
+    offeredSalary: "",
     benefitsPackage: "standard",
     startDate: "",
     customTerms: ""
   });
 
+  // Auto-fill salary range and benefits when position changes
+  const handlePositionChange = (positionId: string) => {
+    const position = POSITIONS.find(p => p.id === positionId) as any;
+    if (position) {
+      setNewOffer(prev => ({
+        ...prev,
+        positionId,
+        offeredSalary: position.salaryRange ? position.salaryRange.split(' - ')[0] : "",
+        benefitsPackage: position.recommendedBenefits || "standard"
+      }));
+    } else {
+      setNewOffer(prev => ({ ...prev, positionId }));
+    }
+  };
+
   const handleCreateOffer = () => {
-    const position = POSITIONS.find(p => p.id === newOffer.positionId);
+    const position = POSITIONS.find(p => p.id === newOffer.positionId) as any;
     if (!position) {
       toast.error("Please select a position");
       return;
@@ -242,6 +268,9 @@ export default function HRManagement() {
       positionId: newOffer.positionId,
       positionTitle: position.title,
       entity: position.entity,
+      department: position.department,
+      salaryRange: position.salaryRange || "Negotiable",
+      offeredSalary: newOffer.offeredSalary,
       benefitsPackage: newOffer.benefitsPackage,
       startDate: newOffer.startDate,
       status: "draft",
@@ -251,7 +280,7 @@ export default function HRManagement() {
     
     setOffers([offer, ...offers]);
     setShowCreateDialog(false);
-    setNewOffer({ candidateName: "", candidateEmail: "", positionId: "", benefitsPackage: "standard", startDate: "", customTerms: "" });
+    setNewOffer({ candidateName: "", candidateEmail: "", positionId: "", offeredSalary: "", benefitsPackage: "standard", startDate: "", customTerms: "" });
     toast.success("Offer letter created as draft");
   };
 
@@ -566,20 +595,54 @@ export default function HRManagement() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="position">Position</Label>
-                <Select value={newOffer.positionId} onValueChange={(v) => setNewOffer({ ...newOffer, positionId: v })}>
+                <Select value={newOffer.positionId} onValueChange={handlePositionChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select position" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {POSITIONS.map((pos) => (
+                  <SelectContent className="max-h-[300px]">
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted">Manager Positions (Tier 3)</div>
+                    {POSITIONS.filter(p => p.tier === "tier3_open").map((pos) => (
                       <SelectItem key={pos.id} value={pos.id}>
-                        {pos.title} - {pos.entity}
+                        <span className="flex items-center gap-2">
+                          <span>{pos.title}</span>
+                          <span className="text-xs text-muted-foreground">({pos.department})</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                    <Separator className="my-1" />
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted">Coordinator Positions (Tier 4)</div>
+                    {POSITIONS.filter(p => p.tier === "tier4_coordinator").map((pos) => (
+                      <SelectItem key={pos.id} value={pos.id}>
+                        <span className="flex items-center gap-2">
+                          <span>{pos.title}</span>
+                          <span className="text-xs text-muted-foreground">({pos.department})</span>
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
+              {newOffer.positionId && (
+                <div className="p-3 bg-muted/50 rounded-lg border">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Salary Range:</span>
+                    <span className="font-medium">
+                      {(POSITIONS.find(p => p.id === newOffer.positionId) as any)?.salaryRange || "Negotiable"}
+                    </span>
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="offeredSalary">Offered Salary</Label>
+                  <Input
+                    id="offeredSalary"
+                    placeholder="$XX,XXX"
+                    value={newOffer.offeredSalary}
+                    onChange={(e) => setNewOffer({ ...newOffer, offeredSalary: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground">Auto-filled from position range (editable)</p>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="benefitsPackage">Benefits Package</Label>
                   <Select value={newOffer.benefitsPackage} onValueChange={(v) => setNewOffer({ ...newOffer, benefitsPackage: v })}>
@@ -594,16 +657,17 @@ export default function HRManagement() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">Auto-selected based on position type</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="startDate">Proposed Start Date</Label>
-                  <Input
-                    id="startDate"
-                    type="date"
-                    value={newOffer.startDate}
-                    onChange={(e) => setNewOffer({ ...newOffer, startDate: e.target.value })}
-                  />
-                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="startDate">Proposed Start Date</Label>
+                <Input
+                  id="startDate"
+                  type="date"
+                  value={newOffer.startDate}
+                  onChange={(e) => setNewOffer({ ...newOffer, startDate: e.target.value })}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="customTerms">Custom Terms (Optional)</Label>

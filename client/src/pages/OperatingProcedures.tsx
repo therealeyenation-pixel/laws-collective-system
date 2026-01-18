@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import ProcedureAcknowledgment from "@/components/ProcedureAcknowledgment";
+import AcknowledgmentDashboard from "@/components/AcknowledgmentDashboard";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -431,6 +432,7 @@ export default function OperatingProcedures() {
                 </Badge>
               )}
             </TabsTrigger>
+            <TabsTrigger value="compliance">Compliance Dashboard</TabsTrigger>
             <TabsTrigger value="stats">Statistics</TabsTrigger>
           </TabsList>
 
@@ -605,6 +607,10 @@ export default function OperatingProcedures() {
                 </div>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="compliance" className="mt-4">
+            <AcknowledgmentDashboard />
           </TabsContent>
         </Tabs>
 
