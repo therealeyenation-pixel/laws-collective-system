@@ -65,8 +65,8 @@ export default function HRDashboard() {
     { title: "Operations Manager", department: "Operations", applications: 0, status: "Open Position" },
     { title: "Technology Manager", department: "Technology", applications: 0, status: "Open Position" },
     { title: "Legal Manager", department: "Legal", applications: 0, status: "Open Position" },
-    { title: "Real Estate Manager - SC (Treiva Hunter)", department: "Real Estate", applications: 0, status: "Filled (Family)" },
-    { title: "Real Estate Manager - GA (Kenneth Coleman)", department: "Real Estate", applications: 0, status: "Filled (Family)" },
+    { title: "Real Estate Manager - SC (Treiva Hunter)", department: "Real Estate", applications: 0, status: "Candidate Identified" },
+    { title: "Real Estate Manager - GA (Kenneth Coleman)", department: "Real Estate", applications: 0, status: "Candidate Identified" },
     // Open Positions - Coordinator Level
     { title: "Education Operations Coordinator", department: "Education", applications: 0, status: "Open Position" },
     { title: "HR Operations Coordinator", department: "Human Resources", applications: 0, status: "Open Position" },

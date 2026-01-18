@@ -603,7 +603,7 @@ const POSITIONS = [
     requirements: ["5+ years real estate management/development", "Property acquisition experience", "Tenant management skills", "South Carolina real estate license required", "Investment analysis capability"],
     category: "real_estate",
     tier: "tier2_identified",
-    hiringStatus: "Filled (Family) - Treiva Hunter",
+    hiringStatus: "Candidate Identified - Treiva Hunter",
   },
   { 
     id: "real-estate-manager-ga", 
@@ -618,7 +618,7 @@ const POSITIONS = [
     requirements: ["5+ years real estate management/development", "Property acquisition experience", "Tenant management skills", "Georgia real estate license required", "Investment analysis capability"],
     category: "real_estate",
     tier: "tier2_identified",
-    hiringStatus: "Filled (Family) - Kenneth Coleman",
+    hiringStatus: "Candidate Identified - Kenneth Coleman",
   },
   { 
     id: "ops-coordinator-real-estate-sc", 

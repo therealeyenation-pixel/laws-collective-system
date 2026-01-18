@@ -197,7 +197,7 @@ export default function OperationsDashboard() {
       bgColor: "bg-stone-500/10",
       coordinator: "SC & GA Coordinators (Open)",
       manager: "Treiva Hunter (SC) & Kenneth Coleman (GA)",
-      status: "Filled",
+      status: "Identified",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
   ];
