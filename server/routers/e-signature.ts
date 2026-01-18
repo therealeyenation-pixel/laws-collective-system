@@ -199,6 +199,81 @@ export const eSignatureRouter = router({
       return { success: true, message: "Request cancelled" };
     }),
 
+  // Sign a vault document
+  signVaultDocument: protectedProcedure
+    .input(z.object({
+      documentId: z.number(),
+      signatureType: z.enum(["typed", "drawn", "uploaded"]),
+      signatureData: z.string(),
+      signerName: z.string(),
+      signerTitle: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      // Create signature request for vault document
+      const [request] = await db.execute(sql`
+        INSERT INTO signature_requests (documentId, documentType, documentTitle, requestedBy, status, createdAt, updatedAt)
+        VALUES (${input.documentId}, 'vault_document', 'Vault Document Signature', ${ctx.user.id}, 'pending', NOW(), NOW())
+      `);
+
+      const requestId = (request as any).insertId;
+
+      // Create signature record
+      const [sig] = await db.execute(sql`
+        INSERT INTO signatures (requestId, signerId, signerName, signerTitle, status, createdAt)
+        VALUES (${requestId}, ${ctx.user.id}, ${input.signerName}, ${input.signerTitle || null}, 'pending', NOW())
+      `);
+
+      const signatureId = (sig as any).insertId;
+
+      // Sign immediately
+      const ipAddress = "127.0.0.1";
+      await db.execute(sql`
+        UPDATE signatures 
+        SET signatureType = ${input.signatureType}, 
+            signatureData = ${input.signatureData},
+            signedAt = NOW(),
+            ipAddress = ${ipAddress},
+            status = 'signed'
+        WHERE id = ${signatureId}
+      `);
+
+      // Mark request as completed
+      await db.execute(sql`
+        UPDATE signature_requests 
+        SET status = 'completed', completedAt = NOW(), updatedAt = NOW()
+        WHERE id = ${requestId}
+      `);
+
+      // Log access
+      await db.execute(sql`
+        INSERT INTO vault_access_logs (vault_id, document_id, user_id, action, created_at)
+        VALUES (1, ${input.documentId}, ${ctx.user.id}, 'sign', NOW())
+      `);
+
+      return { success: true, signatureId, message: "Document signed successfully" };
+    }),
+
+  // Get vault document signatures
+  getDocumentSignatures: protectedProcedure
+    .input(z.object({ documentId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const [signatures] = await db.execute(sql`
+        SELECT s.*, sr.documentTitle, sr.completedAt
+        FROM signatures s
+        JOIN signature_requests sr ON s.requestId = sr.id
+        WHERE sr.documentId = ${input.documentId}
+        ORDER BY s.signedAt DESC
+      `);
+
+      return signatures as unknown as any[];
+    }),
+
   // Store user's signature on file
   saveSignatureOnFile: protectedProcedure
     .input(z.object({

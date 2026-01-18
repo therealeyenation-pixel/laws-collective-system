@@ -167,6 +167,10 @@ export default function DocumentVault() {
     });
   };
 
+  const handleSignDocument = (doc: Document) => {
+    toast.info("Document signing feature coming soon");
+  };
+
   const handleDownloadDocument = (doc: Document) => {
     const content = doc.content || `# ${doc.title}\n\n${doc.description || "No content available."}`;
     const blob = new Blob([content], { type: "text/markdown" });
@@ -206,6 +210,13 @@ export default function DocumentVault() {
                 <p className="text-sm text-gray-600">{viewingDocument.description}</p>
               </div>
               <div className="flex gap-2">
+                <button
+                  onClick={() => handleSignDocument(viewingDocument)}
+                  className="p-3 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors"
+                  title="Sign this document digitally"
+                >
+                  <Shield className="w-5 h-5" />
+                </button>
                 <button
                   onClick={() => handleEditDocument(viewingDocument)}
                   className="p-3 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
