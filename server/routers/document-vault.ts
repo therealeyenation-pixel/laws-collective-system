@@ -110,8 +110,8 @@ export const documentVaultRouter = router({
         return [];
       }
 
-      // Check if user is the owner (by openId match)
-      const isOwner = ctx.user?.openId === ENV.ownerOpenId;
+      // Check if user is the owner (by openId match or by role)
+      const isOwner = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === 'admin';
       
       // Get documents owned by user or with explicit access
       // If user is owner, show all documents regardless of ownerId
