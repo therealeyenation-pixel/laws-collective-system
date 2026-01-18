@@ -78,6 +78,9 @@ import { contractManagementRouter } from "./routers/contract-management";
 import { donationsRouter } from "./routers/donations";
 import { grantTrackingRouter } from "./routers/grant-tracking";
 import { houseManagementRouter } from "./routers/house-management";
+import { financialStatementsRouter } from "./routers/financial-statements";
+import { boardResolutionsRouter } from "./routers/board-resolutions";
+import { contingencyOffersRouter } from "./routers/contingency-offers";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -157,6 +160,9 @@ export const appRouter = router({
   donations: donationsRouter,
   grantTracking: grantTrackingRouter,
   houseManagement: houseManagementRouter,
+  financialStatements: financialStatementsRouter,
+  boardResolutions: boardResolutionsRouter,
+  contingencyOffers: contingencyOffersRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

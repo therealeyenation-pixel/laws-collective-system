@@ -66,6 +66,9 @@ import Donations from "@/pages/Donations";
 import GrantTracking from "@/pages/GrantTracking";
 import HouseManagement from "./pages/HouseManagement";
 import TrustVisualization from "./pages/TrustVisualization";
+import FinancialStatements from "./pages/FinancialStatements";
+import BoardResolutions from "./pages/BoardResolutions";
+import ContingencyOffers from "./pages/ContingencyOffers";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -201,6 +204,9 @@ function Router() {
       <Route path="/requisitions">{() => <ProtectedRoute component={PositionRequisitions} minRole="staff" />}</Route>
       <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} minRole="staff" />}</Route>
       <Route path="/grant-tracking">{() => <ProtectedRoute component={GrantTracking} minRole="staff" />}</Route>
+      <Route path="/financial-statements">{() => <ProtectedRoute component={FinancialStatements} minRole="staff" />}</Route>
+      <Route path="/board-resolutions">{() => <ProtectedRoute component={BoardResolutions} minRole="admin" />}</Route>
+      <Route path="/contingency-offers">{() => <ProtectedRoute component={ContingencyOffers} minRole="admin" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>
