@@ -3615,3 +3615,31 @@
 - [x] Funding trigger conditions
 - [x] Build Contingency Offers UI page
 - [x] Add route to App.tsx
+
+
+## Phase 76: Academy Homeschool Track (Future)
+
+### Academic Curriculum Module
+- [ ] K-12 curriculum structure
+- [ ] Core subjects: Math, Science, English, History
+- [ ] Electives tied to L.A.W.S. pillars
+- [ ] State accreditation requirements research
+- [ ] Curriculum partnership options (Abeka, BJU, etc.)
+- [ ] Teacher certification tracking
+- [ ] Student transcript/record-keeping system
+- [ ] Grade tracking and progress reports
+- [ ] Parent dashboard for homeschool management
+
+### Integration with Business Track
+- [ ] Dual-track enrollment (parent + child)
+- [ ] Family learning plans
+- [ ] Shared calendar/scheduling
+- [ ] Combined progress tracking
+- [ ] Family completion certificates
+
+### Funding/Revenue
+- [ ] Education grant eligibility research
+- [ ] State voucher program integration
+- [ ] Tuition structure for academic track
+- [ ] Scholarship fund for L.A.W.S. families
+
