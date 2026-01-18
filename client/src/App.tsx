@@ -59,6 +59,9 @@ import CareerPathPlanner from "./pages/CareerPathPlanner";
 import BenefitsComparison from "./pages/BenefitsComparison";
 import BoardGovernance from "./pages/BoardGovernance";
 import ContractorNetwork from "./pages/ContractorNetwork";
+import TransitionTraining from "./pages/TransitionTraining";
+import ContractorInvoices from "@/pages/ContractorInvoices";
+import ContractManagement from "@/pages/ContractManagement";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -177,8 +180,11 @@ function Router() {
       <Route path="/contractor-transitions">{() => <ProtectedRoute component={ContractorTransitions} minRole="staff" />}</Route>
       <Route path="/career-path-planner">{() => <ProtectedRoute component={CareerPathPlanner} minRole="staff" />}</Route>
       <Route path="/benefits-comparison">{() => <ProtectedRoute component={BenefitsComparison} minRole="user" />}</Route>
+      <Route path="/transition-training">{() => <ProtectedRoute component={TransitionTraining} minRole="staff" />}</Route>
       <Route path="/board-governance">{() => <ProtectedRoute component={BoardGovernance} minRole="admin" />}</Route>
       <Route path="/contractor-network">{() => <ProtectedRoute component={ContractorNetwork} minRole="admin" />}</Route>
+      <Route path="/contractor-invoices">{() => <ProtectedRoute component={ContractorInvoices} minRole="staff" />}</Route>
+      <Route path="/contract-management">{() => <ProtectedRoute component={ContractManagement} minRole="staff" />}</Route>
       <Route path="/contractor-agreements">{() => <ProtectedRoute component={ContractorAgreement} minRole="staff" />}</Route>
       <Route path="/onboarding">{() => <ProtectedRoute component={Onboarding} />}</Route>
       <Route path="/procedures">{() => <ProtectedRoute component={OperatingProcedures} />}</Route>

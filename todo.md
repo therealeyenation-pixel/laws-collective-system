@@ -3373,3 +3373,77 @@
 - Compensation must be market-rate
 - Actual work must be performed
 - Conflict of interest must be disclosed by hiring manager
+
+
+## Phase 68: Academy-Transition Gate Integration - COMPLETED
+
+### Database Tables
+- [x] Create training_enrollments table (employee, course, enrollment date, status)
+- [x] Create training_completions table (employee, course, completion date, score, certificate)
+- [x] Create transition_training_requirements table (links required courses to transition)
+- [x] Insert 8 required transition training courses
+
+### Training Enrollment Router
+- [x] Enroll employee in required transition courses
+- [x] Track course progress and completion
+- [x] Verify all 8 required modules completed before gate passes
+- [x] Generate completion certificates
+- [x] Get training statistics
+
+### Training Progress UI
+- [x] Show employee's required courses for transition
+- [x] Display progress per course (not started, in progress, completed)
+- [x] Show overall transition training progress percentage
+- [x] Link to Academy course content
+- [x] Add route to App.tsx (/transition-training)
+
+
+## Phase 69: Contractor Invoice Portal - COMPLETED
+
+### Database Tables
+- [x] Create contractor_invoices table (contractor, amount, status, due date)
+- [x] Create invoice_line_items table (description, hours, rate, amount)
+- [x] Create invoice_payments table (invoice, payment date, amount, method)
+
+### Invoice Router
+- [x] Create invoice submission endpoint
+- [x] Track invoice status (draft, submitted, approved, paid)
+- [x] Calculate totals and apply any referral fees
+- [x] Generate invoice numbers
+- [x] Get contractor invoice dashboard
+
+### Invoice Portal UI
+- [x] Invoice creation form with line items
+- [x] Invoice history and status tracking
+- [x] Payment history
+- [x] Invoice status workflow visualization
+- [x] Add route to App.tsx (/contractor-invoices)
+
+
+## Phase 70: Contract Management System - COMPLETED
+
+### Database Tables
+- [x] Create contracts table (MSA, SOW, NDA, employment, contractor types)
+- [x] Create statements_of_work table (linked to MSA, project, deliverables, budget)
+- [x] Create contract_amendments table (original contract, changes, effective date)
+
+### Contract Router
+- [x] Create and manage contracts (MSA, SOW, NDA)
+- [x] Track contract status (draft, pending_signature, active, expired, terminated)
+- [x] Link contracts to contractors
+- [x] Get contract dashboard with metrics
+
+### Contract Management UI
+- [x] Contract creation with type selection
+- [x] Contract list with filtering by status and type
+- [x] Contract status dashboard with metrics
+- [x] Amendment tracking
+- [x] Add route to App.tsx (/contract-management)
+
+### Testing
+- [x] Write training-contracts.test.ts with 25 tests
+- [x] Test all database tables exist
+- [x] Test contract types and status workflows
+- [x] Test invoice status workflows
+- [x] Test platform lock-in features
+- [x] All 235 tests passing
