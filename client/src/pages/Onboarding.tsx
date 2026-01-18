@@ -174,11 +174,29 @@ export default function Onboarding() {
                     <SelectContent>
                       {checklists?.map((checklist) => (
                         <SelectItem key={checklist.id} value={checklist.id.toString()}>
-                          {checklist.name} ({checklist.itemCount} items)
+                          <div className="flex items-center gap-2">
+                            <span>{checklist.name}</span>
+                            <Badge variant="outline" className="text-xs">
+                              {checklist.itemCount} items
+                            </Badge>
+                            {checklist.department && (
+                              <Badge variant="secondary" className="text-xs">
+                                {checklist.department}
+                              </Badge>
+                            )}
+                            {checklist.isDefault && (
+                              <Badge className="text-xs bg-green-100 text-green-800">
+                                Default
+                              </Badge>
+                            )}
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Select a department-specific checklist for specialized onboarding tasks, or use the default checklist for standard onboarding.
+                  </p>
                 </div>
               </div>
               <DialogFooter>

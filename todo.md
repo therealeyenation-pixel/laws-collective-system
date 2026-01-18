@@ -2887,4 +2887,31 @@
 - [x] Fixed Careers page filter logic (department/status filters reset each other)
 
 ### Completion
+- [x] Save checkpoint (version: e64ccc37)
+
+
+## Phase 51: Education Coordinator, Procedure Acknowledgments, Department Onboarding
+
+### Education Operations Coordinator
+- [x] Add Education Operations Coordinator position to Careers page (Tier 4 - reports to Cornelius, Pending Manager status)
+
+### Procedure Acknowledgment Workflow
+- [x] Create procedure acknowledgment UI component (ProcedureAcknowledgment.tsx)
+- [x] Add acknowledgment tracking to Operating Procedures page
+- [x] Allow employees to digitally sign off on SOPs (typed or drawn signature)
+- [x] Track acknowledgment history per employee (via procedureAcknowledgments table)
+- [x] Add confirmation checkboxes (read/understood verification)
+- [x] Add timestamp and compliance warning to acknowledgment dialog
+
+### Department-Specific Onboarding Checklists
+- [x] Create Finance department onboarding checklist (14 items: QuickBooks, grant systems, GAAP, multi-entity structure)
+- [x] Create Education department onboarding checklist (14 items: LMS, Divine STEM, FERPA, student tracking)
+- [x] Create Technology department onboarding checklist (14 items: dev environment, security, architecture, blockchain)
+- [x] Create Legal department onboarding checklist (14 items: contract management, entity structure, compliance)
+- [x] Create Design/Media department onboarding checklist (14 items: Adobe, brand guidelines, content calendar)
+- [x] Create HR department onboarding checklist (14 items: HRIS, employment law, performance management)
+- [x] Update onboarding UI to show department badges and default indicators
+
+### Completion
+- [x] All 170 tests passing
 - [ ] Save checkpoint

@@ -73,6 +73,21 @@ const POSITIONS = [
     tier: "tier1_family",
     hiringStatus: "Filled - Family (Cornelius)"
   },
+  { 
+    id: "ops-coordinator-education", 
+    title: "Education Operations Coordinator", 
+    entity: "508-LuvOnPurpose Academy and Outreach",
+    entityShort: "508 Academy",
+    department: "Education",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$55,000 - $75,000",
+    description: "Support the Education Manager with curriculum administration, student enrollment, course scheduling, and learning management system operations. Coordinate with instructors, track student progress, and ensure smooth delivery of educational programs.",
+    requirements: ["2+ years education administration", "LMS experience preferred", "Strong organizational skills", "Student support orientation"],
+    category: "education",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
+  },
   // ============================================
   // TIER 3: OPEN MANAGER POSITIONS (Future Hiring)
   // ============================================

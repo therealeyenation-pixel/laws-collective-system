@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
+import ProcedureAcknowledgment from "@/components/ProcedureAcknowledgment";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -98,6 +99,8 @@ export default function OperatingProcedures() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isAcknowledgeOpen, setIsAcknowledgeOpen] = useState(false);
+  const [procedureToAcknowledge, setProcedureToAcknowledge] = useState<any>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -156,10 +159,20 @@ export default function OperatingProcedures() {
 
   const acknowledgeMutation = trpc.procedures.acknowledge.useMutation({
     onSuccess: () => {
-      toast.success("Procedure acknowledged");
+      toast.success("Procedure acknowledged successfully");
+      setIsAcknowledgeOpen(false);
+      setProcedureToAcknowledge(null);
       refetch();
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
+
+  const handleOpenAcknowledge = (procedure: any) => {
+    setProcedureToAcknowledge(procedure);
+    setIsAcknowledgeOpen(true);
+  };
 
   const handleCreate = () => {
     if (!formData.title || !formData.category) {
@@ -543,16 +556,10 @@ export default function OperatingProcedures() {
                         </div>
                       </div>
                       <Button
-                        onClick={() => {
-                          acknowledgeMutation.mutate({
-                            procedureId: procedure.id,
-                            version: procedure.version,
-                          });
-                        }}
-                        disabled={acknowledgeMutation.isPending}
+                        onClick={() => handleOpenAcknowledge(procedure)}
                       >
                         <CheckCircle className="w-4 h-4 mr-2" />
-                        Acknowledge
+                        Review & Acknowledge
                       </Button>
                     </div>
                   </Card>
@@ -654,15 +661,12 @@ export default function OperatingProcedures() {
                     <div className="flex justify-end">
                       <Button
                         onClick={() => {
-                          acknowledgeMutation.mutate({
-                            procedureId: selectedProcedure.id,
-                            version: selectedProcedure.version,
-                          });
                           setIsViewOpen(false);
+                          handleOpenAcknowledge(selectedProcedure);
                         }}
                       >
                         <CheckCircle className="w-4 h-4 mr-2" />
-                        Acknowledge
+                        Review & Acknowledge
                       </Button>
                     </div>
                   )}
@@ -671,6 +675,20 @@ export default function OperatingProcedures() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Procedure Acknowledgment Dialog */}
+        {procedureToAcknowledge && (
+          <ProcedureAcknowledgment
+            procedure={procedureToAcknowledge}
+            isOpen={isAcknowledgeOpen}
+            onClose={() => {
+              setIsAcknowledgeOpen(false);
+              setProcedureToAcknowledge(null);
+            }}
+            onAcknowledge={(data) => acknowledgeMutation.mutate(data)}
+            isPending={acknowledgeMutation.isPending}
+          />
+        )}
       </div>
     </DashboardLayout>
   );
