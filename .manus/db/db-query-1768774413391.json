@@ -1,0 +1,70 @@
+{
+  "query": "SELECT id, name, email, openId FROM users LIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, email, openId FROM users LIMIT 10",
+  "rows": [
+    {
+      "id": "1",
+      "name": "LaShanna Russell",
+      "email": "therealeyenation@gmail.com",
+      "openId": "Ls3zKcDhAdCKDwudn4kGB6"
+    },
+    {
+      "id": "150031",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768448710116"
+    },
+    {
+      "id": "630001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768571714323"
+    },
+    {
+      "id": "630002",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768571899277"
+    },
+    {
+      "id": "630003",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768571935136"
+    },
+    {
+      "id": "630004",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768571954894"
+    },
+    {
+      "id": "660001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768573338461"
+    },
+    {
+      "id": "720001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768578389491"
+    },
+    {
+      "id": "750001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768579463613"
+    },
+    {
+      "id": "750004",
+      "name": "Test User",
+      "email": "test@example.com",
+      "openId": "test-user-1768579570560"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\topenId\n1\tLaShanna Russell\ttherealeyenation@gmail.com\tLs3zKcDhAdCKDwudn4kGB6\n150031\tTest User\ttest@example.com\ttest-user-1768448710116\n630001\tTest User\ttest@example.com\ttest-user-1768571714323\n630002\tTest User\ttest@example.com\ttest-user-1768571899277\n630003\tTest User\ttest@example.com\ttest-user-1768571935136\n630004\tTest User\ttest@example.com\ttest-user-1768571954894\n660001\tTest User\ttest@example.com\ttest-user-1768573338461\n720001\tTest User\ttest@example.com\ttest-user-1768578389491\n750001\tTest User\ttest@example.com\ttest-user-1768579463613\n750004\tTest User\ttest@example.com\ttest-user-1768579570560\n",
+  "stderr": "",
+  "execution_time_ms": 49
+}

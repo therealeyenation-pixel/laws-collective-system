@@ -3796,3 +3796,12 @@
 - [x] Build Document Vault signing UI component
 - [x] Create signature overlay and PDF generation
 - [x] Test document signing and audit trail
+
+
+
+## Phase 85: Document Vault User ID Fix & MSA Template
+- [x] Fix Document Vault user ID assignment - documents not showing for logged-in user
+- [x] Update document ownership to use OWNER_OPEN_ID from environment
+- [x] Create Management Services Agreement template for Founding Manager → Department Executive transition
+- [ ] Build Contractor Impact Metrics Dashboard for grant reporting
+- [ ] Document Founding Manager → Department Executive transition model for future implementation

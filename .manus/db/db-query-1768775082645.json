@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO secure_documents (ownerId, entityId, folderId, documentType, title, description, fileUrl, version, status, isTemplate, accessLevel, createdAt, updatedAt)\nVALUES (\n  32,\n  5,\n  NULL,\n  'legal_document',\n  'Management Services Agreement Template',\n  'Template for Founding Manager to Department Executive transition - includes compensation options, service scope, and transition checklist',\n  'https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/fshvLdQwEKOzttoZ.pdf',\n  1,\n  'final',\n  1,\n  'owner_only',\n  NOW(),\n  NOW()\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO secure_documents (ownerId, entityId, folderId, documentType, title, description, fileUrl, version, status, isTemplate, accessLevel, createdAt, updatedAt)\nVALUES (\n  32,\n  5,\n  NULL,\n  'legal_document',\n  'Management Services Agreement Template',\n  'Template for Founding Manager to Department Executive transition - includes compensation options, service scope, and transition checklist',\n  'https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/fshvLdQwEKOzttoZ.pdf',\n  1,\n  'final',\n  1,\n  'owner_only',\n  NOW(),\n  NOW()\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 53
+}

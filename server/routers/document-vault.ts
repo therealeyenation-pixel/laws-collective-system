@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
+import { ENV } from "../_core/env";
 import { 
   secureDocuments, 
   documentFolders, 
@@ -13,6 +14,25 @@ import { eq, and, desc, or, isNull } from "drizzle-orm";
 import crypto from "crypto";
 
 export const documentVaultRouter = router({
+  // Debug: Get current user info and document count
+  debugInfo: publicProcedure
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const userId = ctx.user?.id;
+      
+      const allDocs = await db.select().from(secureDocuments);
+      const userDocs = userId ? await db.select().from(secureDocuments).where(eq(secureDocuments.ownerId, userId)) : [];
+      
+      return {
+        currentUserId: userId,
+        totalDocuments: allDocs.length,
+        userDocuments: userDocs.length,
+        documentOwnerIds: Array.from(new Set(allDocs.map(d => d.ownerId))),
+        sampleDocs: allDocs.slice(0, 3).map(d => ({ id: d.id, title: d.title, ownerId: d.ownerId }))
+      };
+    }),
+
   // Get all folders for the current user
   getFolders: publicProcedure
     .input(z.object({
@@ -90,18 +110,32 @@ export const documentVaultRouter = router({
         return [];
       }
 
+      // Check if user is the owner (by openId match)
+      const isOwner = ctx.user?.openId === ENV.ownerOpenId;
+      
       // Get documents owned by user or with explicit access
+      // If user is owner, show all documents regardless of ownerId
+      const baseConditions = [];
+      
+      if (!isOwner) {
+        baseConditions.push(eq(secureDocuments.ownerId, userId));
+      }
+      
+      // Only filter by folderId if explicitly provided
+      if (input?.folderId) {
+        baseConditions.push(eq(secureDocuments.folderId, input.folderId));
+      }
+      if (input?.entityId) {
+        baseConditions.push(eq(secureDocuments.entityId, input.entityId));
+      }
+      if (input?.documentType) {
+        baseConditions.push(eq(secureDocuments.documentType, input.documentType as any));
+      }
+
       const ownedDocs = await db
         .select()
         .from(secureDocuments)
-        .where(
-          and(
-            eq(secureDocuments.ownerId, userId),
-            input?.folderId ? eq(secureDocuments.folderId, input.folderId) : isNull(secureDocuments.folderId),
-            input?.entityId ? eq(secureDocuments.entityId, input.entityId) : undefined,
-            input?.documentType ? eq(secureDocuments.documentType, input.documentType as any) : undefined
-          )
-        )
+        .where(baseConditions.length > 0 ? and(...baseConditions) : undefined)
         .orderBy(desc(secureDocuments.updatedAt));
 
       return ownedDocs;
