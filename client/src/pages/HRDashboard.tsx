@@ -53,13 +53,42 @@ export default function HRDashboard() {
   ];
 
   const openPositions = [
-    { title: "COO", department: "Executive", applications: 0, priority: "High" },
-    { title: "Operations Manager", department: "Operations", applications: 0, priority: "High" },
-    { title: "HR Manager", department: "Human Resources", applications: 0, priority: "High" },
-    { title: "Contracts Manager", department: "Contracts", applications: 0, priority: "High" },
-    { title: "Lead Operations Coordinator", department: "Operations", applications: 0, priority: "High" },
-    { title: "HR Operations Coordinator", department: "Human Resources", applications: 0, priority: "Medium" },
-    { title: "Contracts Operations Coordinator", department: "Contracts", applications: 0, priority: "Medium" },
+    // Actively Recruiting (5)
+    { title: "Outreach Coordinator", department: "Community Outreach", applications: 0, status: "Actively Recruiting" },
+    { title: "Content Creator / Media Assistant", department: "Media Production", applications: 0, status: "Actively Recruiting" },
+    { title: "Academy Instructor", department: "Education", applications: 0, status: "Actively Recruiting" },
+    { title: "Grant Writer / Proposal Specialist", department: "Grants", applications: 0, status: "Actively Recruiting" },
+    { title: "Community Programs Coordinator", department: "Community", applications: 0, status: "Actively Recruiting" },
+    // Open Positions - Manager Level
+    { title: "HR Manager", department: "Human Resources", applications: 0, status: "Open Position" },
+    { title: "QA/QC Manager", department: "Quality Assurance", applications: 0, status: "Open Position" },
+    { title: "Operations Manager", department: "Operations", applications: 0, status: "Open Position" },
+    { title: "Technology Manager", department: "Technology", applications: 0, status: "Open Position" },
+    { title: "Legal Manager", department: "Legal", applications: 0, status: "Open Position" },
+    { title: "Real Estate Manager", department: "Real Estate", applications: 0, status: "Open Position" },
+    // Open Positions - Coordinator Level
+    { title: "Education Operations Coordinator", department: "Education", applications: 0, status: "Open Position" },
+    { title: "HR Operations Coordinator", department: "Human Resources", applications: 0, status: "Open Position" },
+    { title: "QA/QC Operations Coordinator", department: "Quality Assurance", applications: 0, status: "Open Position" },
+    { title: "Operations Coordinator", department: "Operations", applications: 0, status: "Open Position" },
+    { title: "Platform Administrator", department: "Technology", applications: 0, status: "Open Position" },
+    { title: "Legal Operations Coordinator", department: "Legal", applications: 0, status: "Open Position" },
+    { title: "Real Estate Operations Coordinator", department: "Real Estate", applications: 0, status: "Open Position" },
+    // Ready to Hire (3)
+    { title: "Media Operations Coordinator", department: "Media Production", applications: 0, status: "Ready to Hire" },
+    { title: "Design Operations Coordinator", department: "Design", applications: 0, status: "Ready to Hire" },
+    { title: "Health Operations Coordinator", department: "Health & Wellness", applications: 0, status: "Ready to Hire" },
+    // Pending Manager (4)
+    { title: "Finance Operations Coordinator", department: "Finance", applications: 0, status: "Pending Manager" },
+    { title: "Project Controls Coordinator", department: "Project Controls", applications: 0, status: "Pending Manager" },
+    { title: "Contracts Operations Coordinator", department: "Contracts", applications: 0, status: "Pending Manager" },
+    { title: "Education Ops Coordinator (Temple)", department: "Education", applications: 0, status: "Pending Manager" },
+    // Candidate Identified (5)
+    { title: "Purchasing Manager", department: "Purchasing", applications: 0, status: "Candidate Identified" },
+    { title: "Contracts Manager", department: "Contracts", applications: 0, status: "Candidate Identified" },
+    { title: "Procurement Manager (Oversight)", department: "Procurement", applications: 0, status: "Candidate Identified" },
+    { title: "Project Controls Manager", department: "Project Controls", applications: 0, status: "Candidate Identified" },
+    { title: "Purchasing Operations Coordinator", department: "Purchasing", applications: 0, status: "Candidate Identified" },
   ];
 
   return (
@@ -236,8 +265,15 @@ export default function HRDashboard() {
 
           <TabsContent value="positions" className="mt-4">
             <Card className="p-6">
-              <h3 className="font-semibold text-foreground mb-4">Open Positions</h3>
-              <div className="space-y-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground">Open Positions ({openPositions.length})</h3>
+                <div className="flex gap-2 text-xs">
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500"></span> Actively Recruiting</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500"></span> Ready to Hire</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-600"></span> Open</span>
+                </div>
+              </div>
+              <div className="space-y-3 max-h-[500px] overflow-y-auto">
                 {openPositions.map((position, idx) => (
                   <div key={idx} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                     <div>
@@ -245,12 +281,18 @@ export default function HRDashboard() {
                       <p className="text-sm text-muted-foreground">{position.department}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant={position.priority === "High" ? "destructive" : "secondary"}>
-                        {position.priority}
+                      <Badge 
+                        variant="secondary"
+                        className={`${
+                          position.status === "Actively Recruiting" ? "bg-red-500 text-white hover:bg-red-600" :
+                          position.status === "Ready to Hire" ? "bg-amber-500 text-white hover:bg-amber-600" :
+                          position.status === "Candidate Identified" ? "bg-blue-500 text-white hover:bg-blue-600" :
+                          position.status === "Pending Manager" ? "bg-purple-500 text-white hover:bg-purple-600" :
+                          "bg-green-600 text-white hover:bg-green-700"
+                        }`}
+                      >
+                        {position.status}
                       </Badge>
-                      <span className="text-sm text-muted-foreground">
-                        {position.applications} applicants
-                      </span>
                     </div>
                   </div>
                 ))}
