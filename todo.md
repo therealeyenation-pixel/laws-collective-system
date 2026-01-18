@@ -3345,3 +3345,31 @@
 - Handoff to Manager licensed in that state
 - Manager handles all licensed activities
 - If neither manager licensed in state → referral fee to licensed agent (25%)
+
+
+## Phase 67: Hiring Preference & Conflict of Interest Updates - COMPLETED
+
+### Organizational Structure Updates
+- [x] Remove "external hire" language from Coordinator descriptions
+- [x] Change terminology from "external hires" to "pipeline positions"
+- [x] Add "hiringPreference" field (family/open) to position definitions
+- [x] Add conflict of interest disclosure requirement for family hires
+- [x] Add hiringPolicy object with familyHiresAllowed, conflictOfInterestRequired, disclosureNote
+
+### Position Requisition Updates
+- [x] Add hiringPreference field to position_requisitions table (open/family/internal)
+- [x] Add conflictOfInterestDisclosed field (boolean)
+- [x] Add familyRelationship field for family hires
+- [x] Add disclosureDate and disclosureNotes fields
+
+### Documentation
+- [x] Document that family members can be hired for any position
+- [x] Add grant compliance notes (job posting, qualifications, market-rate pay)
+- [x] Add conflict of interest disclosure process
+
+### Grant Compliance Requirements for Family Hires
+- Job posting must exist (shows position was "open")
+- Qualifications must be documented and met
+- Compensation must be market-rate
+- Actual work must be performed
+- Conflict of interest must be disclosed by hiring manager

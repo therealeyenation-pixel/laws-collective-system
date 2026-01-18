@@ -494,21 +494,27 @@
       ]
     },
     "operationsCoordinators": {
-      "description": "Tier 4: Operations Coordinator positions - selected by department Managers, primary external hires",
-      "hiringNote": "Each Operations Coordinator is selected by their respective department Manager once the Manager position is filled",
+      "description": "Tier 4: Operations Coordinator positions - pipeline positions selected by department Managers",
+      "hiringNote": "Each Operations Coordinator is selected by their respective department Manager once the Manager position is filled. Family members may be hired if they meet qualifications.",
+      "hiringPolicy": {
+        "preference": "open",
+        "familyHiresAllowed": true,
+        "conflictOfInterestRequired": true,
+        "disclosureNote": "When hiring family members, Manager must disclose relationship and document that candidate meets all stated qualifications"
+      },
       "positions": [
-        {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "HR Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
-        {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "QA/QC Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
-        {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Purchasing Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
-        {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "reportsTo": "Operations Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager"},
-        {"title": "Education Operations Coordinator", "entity": "Temple/508", "reportsTo": "CEO-Ed (Cornelius)", "salaryRange": "$68,000 - $88,000", "status": "Ready to Hire"},
-        {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Health Manager (Amber)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
-        {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Contracts Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager"},
-        {"title": "Design Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Design Manager (Essence)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
-        {"title": "Media Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Media Manager (Amandes)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
-        {"title": "Finance Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "CFO (Craig)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire"},
-        {"title": "Real Estate Coordinator 1", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "notes": "Lead generation, client intake - no license required"},
-        {"title": "Real Estate Coordinator 2", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "notes": "Lead generation, client intake - no license required"}
+        {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "HR Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
+        {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "QA/QC Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
+        {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Purchasing Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
+        {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "reportsTo": "Operations Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
+        {"title": "Education Operations Coordinator", "entity": "Temple/508", "reportsTo": "CEO-Ed (Cornelius)", "salaryRange": "$68,000 - $88,000", "status": "Ready to Hire", "hiringPreference": "open"},
+        {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Health Manager (Amber)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
+        {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Contracts Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "hiringPreference": "open"},
+        {"title": "Design Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Design Manager (Essence)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
+        {"title": "Media Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Media Manager (Amandes)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
+        {"title": "Finance Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "CFO (Craig)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
+        {"title": "Real Estate Coordinator 1", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "hiringPreference": "open", "notes": "Lead generation, client intake - no license required"},
+        {"title": "Real Estate Coordinator 2", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "hiringPreference": "open", "notes": "Lead generation, client intake - no license required"}
       ]
     },
     "staffPositions": {
