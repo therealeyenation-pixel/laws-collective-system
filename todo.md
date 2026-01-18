@@ -3643,3 +3643,21 @@
 - [ ] Tuition structure for academic track
 - [ ] Scholarship fund for L.A.W.S. families
 
+
+
+## Phase 77: Procurement Catalog & Board Resolution
+
+### Procurement Catalog
+- [x] Create procurement-catalog router
+- [x] Equipment packages CRUD
+- [x] Benefits packages CRUD
+- [x] Startup costs tracking
+- [x] Vendor management
+- [x] Build Procurement Catalog UI page
+- [x] Add route to App.tsx
+
+### Board Resolution Generator
+- [x] Generate Grant Authorization resolution for L.A.W.S. Collective
+- [x] Include all required sections (WHEREAS, RESOLVED, signatures)
+- [x] PDF export capability
+
