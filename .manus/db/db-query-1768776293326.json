@@ -1,0 +1,110 @@
+{
+  "query": "-- First, let's see all documents with their IDs and fileUrls\nSELECT id, title, \n  CASE WHEN fileUrl IS NOT NULL AND fileUrl != '' THEN 'HAS_URL' ELSE 'NO_URL' END as has_url\nFROM secure_documents \nORDER BY title, id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute -- First, let's see all documents with their IDs and fileUrls\nSELECT id, title, \n  CASE WHEN fileUrl IS NOT NULL AND fileUrl != '' THEN 'HAS_URL' ELSE 'NO_URL' END as has_url\nFROM secure_documents \nORDER BY title, id;",
+  "rows": [
+    {
+      "id": "60004",
+      "title": "508-LuvOnPurpose Academy Bylaws",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60010",
+      "title": "508-LuvOnPurpose Academy Bylaws",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "5",
+      "title": "508-LuvOnPurpose Academy and Outreach Business Plan",
+      "has_url": "NO_URL"
+    },
+    {
+      "id": "1",
+      "title": "98 Trust - CALEA Freeman Family Trust Business Plan",
+      "has_url": "NO_URL"
+    },
+    {
+      "id": "60006",
+      "title": "CALEA Freeman Family Trust Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60012",
+      "title": "CALEA Freeman Family Trust Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60005",
+      "title": "CALEA Freeman Family Trust Declaration",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60011",
+      "title": "CALEA Freeman Family Trust Declaration",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "6",
+      "title": "Grant Application Template - Community Education Program",
+      "has_url": "NO_URL"
+    },
+    {
+      "id": "60001",
+      "title": "L.A.W.S. Collective LLC Operating Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60007",
+      "title": "L.A.W.S. Collective LLC Operating Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60002",
+      "title": "LuvOnPurpose AWS LLC Operating Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60008",
+      "title": "LuvOnPurpose AWS LLC Operating Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "2",
+      "title": "LuvOnPurpose Autonomous Wealth System, LLC Business Plan",
+      "has_url": "NO_URL"
+    },
+    {
+      "id": "60013",
+      "title": "Management Services Agreement Template",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "4",
+      "title": "Real-Eye-Nation Business Plan",
+      "has_url": "NO_URL"
+    },
+    {
+      "id": "60003",
+      "title": "Real-Eye-Nation LLC Operating Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "60009",
+      "title": "Real-Eye-Nation LLC Operating Agreement",
+      "has_url": "HAS_URL"
+    },
+    {
+      "id": "30001",
+      "title": "Test",
+      "has_url": "NO_URL"
+    },
+    {
+      "id": "3",
+      "title": "The L.A.W.S. Collective LLC Business Plan",
+      "has_url": "NO_URL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\thas_url\n60004\t508-LuvOnPurpose Academy Bylaws\tHAS_URL\n60010\t508-LuvOnPurpose Academy Bylaws\tHAS_URL\n5\t508-LuvOnPurpose Academy and Outreach Business Plan\tNO_URL\n1\t98 Trust - CALEA Freeman Family Trust Business Plan\tNO_URL\n60006\tCALEA Freeman Family Trust Agreement\tHAS_URL\n60012\tCALEA Freeman Family Trust Agreement\tHAS_URL\n60005\tCALEA Freeman Family Trust Declaration\tHAS_URL\n60011\tCALEA Freeman Family Trust Declaration\tHAS_URL\n6\tGrant Application Template - Community Education Program\tNO_URL\n60001\tL.A.W.S. Collective LLC Operating Agreement\tHAS_URL\n60007\tL.A.W.S. Collective LLC Operating Agreement\tHAS_URL\n60002\tLuvOnPurpose AWS LLC Operating Agreement\tHAS_URL\n60008\tLuvOnPurpose AWS LLC Operating Agreement\tHAS_URL\n2\tLuvOnPurpose Autonomous Wealth System, LLC Business Plan\tNO_URL\n60013\tManagement Services Agreement Template\tHAS_URL\n4\tReal-Eye-Nation Business Plan\tNO_URL\n60003\tReal-Eye-Nation LLC Operating Agreement\tHAS_URL\n60009\tReal-Eye-Nation LLC Operating Agreement\tHAS_URL\n30001\tTest\tNO_URL\n3\tThe L.A.W.S. Collective LLC Business Plan\tNO_URL\n",
+  "stderr": "",
+  "execution_time_ms": 48
+}

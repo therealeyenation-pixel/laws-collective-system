@@ -53,6 +53,9 @@ interface Document {
   description: string | null;
   documentType: string;
   content: string | null;
+  fileUrl: string | null;
+  fileName: string | null;
+  mimeType: string | null;
   status: string;
   accessLevel: string;
   version: number;
@@ -172,6 +175,21 @@ export default function DocumentVault() {
   };
 
   const handleDownloadDocument = (doc: Document) => {
+    // If document has a fileUrl (PDF or other file), download from that URL
+    if (doc.fileUrl) {
+      const a = document.createElement("a");
+      a.href = doc.fileUrl;
+      a.target = "_blank";
+      const fileName = doc.fileName || `${doc.title.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.pdf`;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      toast.success("Document download started");
+      return;
+    }
+    
+    // Fallback: download content as markdown
     const content = doc.content || `# ${doc.title}\n\n${doc.description || "No content available."}`;
     const blob = new Blob([content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
@@ -257,16 +275,40 @@ export default function DocumentVault() {
             </div>
 
             {/* Document Content */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
-              <div className="prose prose-green max-w-none">
-                {viewingDocument.content ? (
-                  <pre className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
-                    {viewingDocument.content}
-                  </pre>
-                ) : (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              {viewingDocument.fileUrl ? (
+                <div className="w-full">
+                  {/* PDF Viewer */}
+                  <iframe
+                    src={viewingDocument.fileUrl}
+                    className="w-full h-[70vh] border-0"
+                    title={viewingDocument.title}
+                  />
+                  <div className="p-4 bg-gray-50 border-t border-gray-200">
+                    <a
+                      href={viewingDocument.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Open in new tab or download
+                    </a>
+                  </div>
+                </div>
+              ) : viewingDocument.content ? (
+                <div className="p-6 md:p-8">
+                  <div className="prose prose-green max-w-none">
+                    <pre className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
+                      {viewingDocument.content}
+                    </pre>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-6 md:p-8">
                   <p className="text-gray-500 italic">No content available for this document.</p>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
             {/* Footer Info */}

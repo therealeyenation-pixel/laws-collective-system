@@ -3805,3 +3805,11 @@
 - [x] Create Management Services Agreement template for Founding Manager → Department Executive transition
 - [ ] Build Contractor Impact Metrics Dashboard for grant reporting
 - [ ] Document Founding Manager → Department Executive transition model for future implementation
+
+
+## Phase 99: Document Vault PDF Fix
+- [x] Fix Document interface to include fileUrl, fileName, mimeType fields
+- [x] Update document viewer to display PDFs using iframe when fileUrl exists
+- [x] Update download function to handle PDF files with fileUrl
+- [x] Clean up duplicate document entries in database
+- [x] Test PDF viewing and downloading functionality
