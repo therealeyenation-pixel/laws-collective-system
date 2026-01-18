@@ -144,6 +144,21 @@ const POSITIONS = [
   // Selected by respective department Managers
   // ============================================
   { 
+    id: "finance-ops-coordinator", 
+    title: "Finance Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Finance",
+    type: "Full-Time",
+    location: "Hybrid",
+    salaryRange: "$55,000 - $75,000",
+    description: "Support the Finance Manager in daily financial operations including accounts payable/receivable, expense tracking, financial data entry, report preparation, and grant financial documentation. Assist with budgeting, reconciliations, and financial compliance tasks.",
+    requirements: ["2+ years accounting/bookkeeping experience", "QuickBooks or similar software proficiency", "Excel/spreadsheet expertise", "Attention to detail", "Basic understanding of grant accounting"],
+    category: "finance",
+    tier: "tier4_coordinator",
+    hiringStatus: "Pending Manager"
+  },
+  { 
     id: "outreach-coordinator", 
     title: "Outreach Coordinator", 
     entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
@@ -765,7 +780,7 @@ export default function Careers() {
                   key={status.id}
                   variant={selectedHiringStatus === status.id ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedHiringStatus(status.id)}
+                  onClick={() => { setSelectedHiringStatus(status.id); setSelectedCategory("all"); }}
                 >
                   {status.label}
                 </Button>
@@ -782,7 +797,7 @@ export default function Careers() {
                   key={cat.id}
                   variant={selectedCategory === cat.id ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedCategory(cat.id)}
+                  onClick={() => { setSelectedCategory(cat.id); setSelectedHiringStatus("all"); }}
                 >
                   {cat.label} ({cat.count})
                 </Button>
