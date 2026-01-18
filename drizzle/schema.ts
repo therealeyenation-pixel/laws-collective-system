@@ -7166,6 +7166,20 @@ export const employees = mysqlTable("employees", {
   startDate: timestamp("startDate").notNull(),
   endDate: timestamp("endDate"),
   
+  // Worker classification
+  workerType: mysqlEnum("workerType", [
+    "employee",      // W-2 employee
+    "contractor",    // 1099 contractor
+    "volunteer"      // Unpaid volunteer
+  ]).default("employee").notNull(),
+  
+  // Contractor-specific fields
+  contractStartDate: timestamp("contractStartDate"),
+  contractEndDate: timestamp("contractEndDate"),
+  hourlyRate: decimal("hourlyRate", { precision: 10, scale: 2 }),
+  is1099: boolean("is1099").default(false),
+  contractTerms: text("contractTerms"),
+  
   // Profile
   bio: text("bio"),
   avatarUrl: varchar("avatarUrl", { length: 500 }),

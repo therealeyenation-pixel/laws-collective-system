@@ -3100,3 +3100,29 @@
   - Financial Literacy Course: $997 - $2,997
   - Business Formation Workshop: $1,497 - $4,997
   - Media Production Training: $1,997 - $5,997
+
+## Phase 60: Org Chart Improvements
+- [ ] Add Collapse All / Expand All toggle to org chart header
+- [ ] Connect org chart data to database for automatic sync
+- [ ] Add Apply Now buttons on open positions in org chart
+
+## Phase 60: Support the Collective Donation Feature
+- [ ] Create donation page routing to 508(c)(1)(a) entity
+- [ ] Add Support the Collective button to navigation
+- [ ] Fix Matriarch/CEO to CEO in org chart
+
+## Phase 61: Worker Type Migration Capability
+- [ ] Add workerType field to employees table (employee/contractor/volunteer)
+- [ ] Add contractor-specific fields (contractStartDate, contractEndDate, hourlyRate, is1099)
+- [ ] Update Employee Directory to filter by worker type
+- [ ] Update offer letter generation for contractor agreements
+- [ ] Fix CEO title (remove Matriarch)
+
+## Phase 62: SaaS Product Architecture & Transition System
+- [ ] Create product architecture document for SaaS/white-label model
+- [ ] Build employee-to-contractor transition workflow with training gate
+- [ ] Link transition to Business Setup Simulator completion
+- [ ] Update Employee Directory with worker type filtering
+- [ ] Create contractor agreement generation
+- [ ] Design multi-tenant architecture for external customers
+- [ ] Document integration points (QuickBooks, Gusto, DocuSign, IRS)

@@ -62,11 +62,18 @@ const STATUS_OPTIONS = [
   { value: "pending", label: "Pending", color: "bg-gray-500" },
 ];
 
+const WORKER_TYPES = [
+  { value: "employee", label: "Employee", color: "bg-blue-500" },
+  { value: "contractor", label: "Contractor", color: "bg-orange-500" },
+  { value: "volunteer", label: "Volunteer", color: "bg-purple-500" },
+];
+
 export default function EmployeeDirectory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEntity, setSelectedEntity] = useState<string>("all");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("active");
+  const [selectedWorkerType, setSelectedWorkerType] = useState<string>("all");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -386,6 +393,20 @@ export default function EmployeeDirectory() {
                         ))}
                       </SelectContent>
                     </Select>
+                    <Select value={selectedWorkerType} onValueChange={setSelectedWorkerType}>
+                      <SelectTrigger className="w-[150px]">
+                        <UserCircle className="w-4 h-4 mr-2" />
+                        <SelectValue placeholder="Worker Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        {WORKER_TYPES.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </CardContent>
@@ -459,6 +480,11 @@ export default function EmployeeDirectory() {
                             <Badge variant="outline" className="text-xs">
                               {employee.department}
                             </Badge>
+                            {employee.workerType && employee.workerType !== "employee" && (
+                              <Badge className={`${WORKER_TYPES.find(t => t.value === employee.workerType)?.color || "bg-gray-500"} text-white text-xs`}>
+                                {WORKER_TYPES.find(t => t.value === employee.workerType)?.label}
+                              </Badge>
+                            )}
                           </div>
                         </div>
                       </div>
