@@ -83,11 +83,12 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$55,000 - $75,000",
-    description: "Support the Education Manager with curriculum administration, student enrollment, course scheduling, and learning management system operations. Coordinate with instructors, track student progress, and ensure smooth delivery of educational programs.",
+    description: "Support the Education Manager with curriculum administration, student enrollment, course scheduling, and learning management system operations. Reports to Cornelius Christopher (Education Manager). Coordinate with instructors, track student progress, and ensure smooth delivery of educational programs.",
     requirements: ["2+ years education administration", "LMS experience preferred", "Strong organizational skills", "Student support orientation"],
     category: "education",
     tier: "tier4_coordinator",
-    hiringStatus: "Pending Manager"
+    hiringStatus: "Open Position",
+    reportsTo: "Cornelius Christopher"
   },
   // ============================================
   // TIER 3: OPEN MANAGER POSITIONS (Future Hiring)
@@ -363,9 +364,10 @@ const POSITIONS = [
     type: "Full-Time",
     location: "Remote",
     salaryRange: "$52,000 - $68,000",
-    description: "Provide administrative support to the Education Department and Academy. Assist with student enrollment, course scheduling, materials preparation, and instructor coordination.",
+    description: "Provide administrative support to the Education Department and Academy. Reports to Cornelius Christopher (Education Manager). Assist with student enrollment, course scheduling, materials preparation, and instructor coordination.",
     requirements: ["1+ years admin/education support", "Organization skills", "Student communication", "LMS familiarity preferred"],
-    category: "education"
+    category: "education",
+    reportsTo: "Cornelius Christopher"
   },
   { 
     id: "health-manager", 
