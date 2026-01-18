@@ -62,6 +62,8 @@ import ContractorNetwork from "./pages/ContractorNetwork";
 import TransitionTraining from "./pages/TransitionTraining";
 import ContractorInvoices from "@/pages/ContractorInvoices";
 import ContractManagement from "@/pages/ContractManagement";
+import Donations from "@/pages/Donations";
+import GrantTracking from "@/pages/GrantTracking";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -158,6 +160,7 @@ function Router() {
       <Route path="/careers" component={Careers} />
       <Route path="/contact" component={Contact} />
       <Route path="/support" component={Support} />
+      <Route path="/donate" component={Donations} />
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
@@ -195,6 +198,7 @@ function Router() {
       <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} minRole="staff" />}</Route>
       <Route path="/requisitions">{() => <ProtectedRoute component={PositionRequisitions} minRole="staff" />}</Route>
       <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} minRole="staff" />}</Route>
+      <Route path="/grant-tracking">{() => <ProtectedRoute component={GrantTracking} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>

@@ -1,0 +1,94 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'position_requisitions';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'position_requisitions';",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "positionId"
+    },
+    {
+      "COLUMN_NAME": "positionTitle"
+    },
+    {
+      "COLUMN_NAME": "department"
+    },
+    {
+      "COLUMN_NAME": "entity"
+    },
+    {
+      "COLUMN_NAME": "tier"
+    },
+    {
+      "COLUMN_NAME": "requestedBy"
+    },
+    {
+      "COLUMN_NAME": "requestedByName"
+    },
+    {
+      "COLUMN_NAME": "justification"
+    },
+    {
+      "COLUMN_NAME": "budgetApproved"
+    },
+    {
+      "COLUMN_NAME": "salaryRange"
+    },
+    {
+      "COLUMN_NAME": "targetStartDate"
+    },
+    {
+      "COLUMN_NAME": "urgency"
+    },
+    {
+      "COLUMN_NAME": "status"
+    },
+    {
+      "COLUMN_NAME": "approvedBy"
+    },
+    {
+      "COLUMN_NAME": "approvedByName"
+    },
+    {
+      "COLUMN_NAME": "approvalDate"
+    },
+    {
+      "COLUMN_NAME": "approvalNotes"
+    },
+    {
+      "COLUMN_NAME": "candidateName"
+    },
+    {
+      "COLUMN_NAME": "candidateEmail"
+    },
+    {
+      "COLUMN_NAME": "filledDate"
+    },
+    {
+      "COLUMN_NAME": "createdAt"
+    },
+    {
+      "COLUMN_NAME": "updatedAt"
+    },
+    {
+      "COLUMN_NAME": "hiringPreference"
+    },
+    {
+      "COLUMN_NAME": "familyRelationship"
+    },
+    {
+      "COLUMN_NAME": "conflictOfInterestDisclosed"
+    },
+    {
+      "COLUMN_NAME": "disclosureDate"
+    },
+    {
+      "COLUMN_NAME": "disclosureNotes"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\npositionId\npositionTitle\ndepartment\nentity\ntier\nrequestedBy\nrequestedByName\njustification\nbudgetApproved\nsalaryRange\ntargetStartDate\nurgency\nstatus\napprovedBy\napprovedByName\napprovalDate\napprovalNotes\ncandidateName\ncandidateEmail\nfilledDate\ncreatedAt\nupdatedAt\nhiringPreference\nfamilyRelationship\nconflictOfInterestDisclosed\ndisclosureDate\ndisclosureNotes\n",
+  "stderr": "",
+  "execution_time_ms": 66
+}

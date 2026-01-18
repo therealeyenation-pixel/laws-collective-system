@@ -209,6 +209,7 @@ export const trainingTransitionRouter = router({
     .input(z.object({ employeeId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database connection failed');
       
       // Get required course count
       const [requirements] = await db.execute(
@@ -217,7 +218,7 @@ export const trainingTransitionRouter = router({
       const totalRequired = (requirements as any[])[0].total;
       
       // Get completed course count
-      const [completions] = await db.execute(
+      const [completions] = await (db as any).execute(
         `SELECT COUNT(DISTINCT tc.courseId) as completed
          FROM training_completions tc
          JOIN transition_training_requirements ttr ON tc.courseId = ttr.courseId
@@ -227,7 +228,7 @@ export const trainingTransitionRouter = router({
       const completedCount = (completions as any[])[0].completed;
       
       // Get incomplete courses
-      const [incomplete] = await db.execute(
+      const [incomplete] = await (db as any).execute(
         `SELECT ttr.* FROM transition_training_requirements ttr
          WHERE ttr.isRequired = TRUE
          AND ttr.courseId NOT IN (
@@ -243,7 +244,7 @@ export const trainingTransitionRouter = router({
         totalRequired,
         completedCount,
         remainingCount: totalRequired - completedCount,
-        incompleteCourses: incomplete as any[]
+        incompleteCourses: incomplete
       };
     }),
 
@@ -252,8 +253,9 @@ export const trainingTransitionRouter = router({
     .input(z.object({ employeeId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new Error('Database connection failed');
       
-      const [certificates] = await db.execute(
+      const [certificates] = await (db as any).execute(
         `SELECT tc.*, ttr.category, ttr.durationHours
          FROM training_completions tc
          JOIN transition_training_requirements ttr ON tc.courseId = ttr.courseId
@@ -262,7 +264,7 @@ export const trainingTransitionRouter = router({
         [input.employeeId]
       );
       
-      return certificates as any[];
+      return certificates;
     }),
 
   // Get training dashboard stats
