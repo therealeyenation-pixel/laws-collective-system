@@ -8280,3 +8280,85 @@ export const houseReferrals = mysqlTable("house_referrals", {
 
 export type HouseReferral = typeof houseReferrals.$inferSelect;
 export type InsertHouseReferral = typeof houseReferrals.$inferInsert;
+
+
+/**
+ * Company Calendar - Meetings and Events
+ */
+export const calendarEvents = mysqlTable("calendar_events", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  eventType: mysqlEnum("eventType", [
+    "team_meeting",
+    "department_meeting",
+    "all_hands",
+    "training",
+    "planning",
+    "one_on_one",
+    "external",
+    "other"
+  ]).default("team_meeting").notNull(),
+  startTime: timestamp("startTime").notNull(),
+  endTime: timestamp("endTime").notNull(),
+  timezone: varchar("timezone", { length: 50 }).default("America/Chicago").notNull(),
+  location: varchar("location", { length: 255 }), // "Remote" or physical address
+  meetingLink: varchar("meetingLink", { length: 500 }), // Zoom/Teams link
+  isRecurring: boolean("isRecurring").default(false).notNull(),
+  recurrenceRule: varchar("recurrenceRule", { length: 255 }), // RRULE format
+  recurrenceParentId: int("recurrenceParentId"), // Link to parent event for recurring
+  departmentId: int("departmentId"), // Optional department filter
+  createdBy: int("createdBy").notNull(),
+  isMandatory: boolean("isMandatory").default(true).notNull(),
+  status: mysqlEnum("status", ["scheduled", "cancelled", "completed"]).default("scheduled").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CalendarEvent = typeof calendarEvents.$inferSelect;
+export type InsertCalendarEvent = typeof calendarEvents.$inferInsert;
+
+/**
+ * Meeting Attendance Tracking
+ */
+export const meetingAttendance = mysqlTable("meeting_attendance", {
+  id: int("id").autoincrement().primaryKey(),
+  eventId: int("eventId").notNull(),
+  userId: int("userId").notNull(),
+  status: mysqlEnum("status", [
+    "invited",
+    "confirmed",
+    "declined",
+    "attended",
+    "absent",
+    "excused"
+  ]).default("invited").notNull(),
+  responseTime: timestamp("responseTime"),
+  checkInTime: timestamp("checkInTime"),
+  checkOutTime: timestamp("checkOutTime"),
+  excuseReason: text("excuseReason"),
+  approvedBy: int("approvedBy"), // Manager who approved absence
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MeetingAttendance = typeof meetingAttendance.$inferSelect;
+export type InsertMeetingAttendance = typeof meetingAttendance.$inferInsert;
+
+/**
+ * Event Invitees - Who should attend each event
+ */
+export const eventInvitees = mysqlTable("event_invitees", {
+  id: int("id").autoincrement().primaryKey(),
+  eventId: int("eventId").notNull(),
+  userId: int("userId"),
+  departmentId: int("departmentId"), // Invite whole department
+  roleLevel: varchar("roleLevel", { length: 50 }), // Invite by role (e.g., "manager", "coordinator")
+  isRequired: boolean("isRequired").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EventInvitee = typeof eventInvitees.$inferSelect;
+export type InsertEventInvitee = typeof eventInvitees.$inferInsert;

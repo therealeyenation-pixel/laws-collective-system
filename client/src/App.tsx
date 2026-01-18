@@ -70,6 +70,7 @@ import FinancialStatements from "./pages/FinancialStatements";
 import BoardResolutions from "./pages/BoardResolutions";
 import ContingencyOffers from "./pages/ContingencyOffers";
 import ProcurementCatalog from "./pages/ProcurementCatalog";
+import CompanyCalendar from "./pages/CompanyCalendar";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -209,6 +210,7 @@ function Router() {
       <Route path="/board-resolutions">{() => <ProtectedRoute component={BoardResolutions} minRole="admin" />}</Route>
       <Route path="/contingency-offers">{() => <ProtectedRoute component={ContingencyOffers} minRole="admin" />}</Route>
       <Route path="/procurement-catalog">{() => <ProtectedRoute component={ProcurementCatalog} minRole="staff" />}</Route>
+      <Route path="/calendar">{() => <ProtectedRoute component={CompanyCalendar} minRole="user" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>
