@@ -4051,3 +4051,14 @@
 - [x] Update grant application export to include attached document list
 - [ ] Update Save to Tracking to include attached documents (future enhancement)
 - [x] Test complete document attachment workflow
+
+
+## Phase 123: Document Expiration Alerts
+- [x] Define document types requiring expiration tracking (financial statements, certificates, licenses)
+- [x] Add expiration date field to document upload form
+- [x] Create backend route to get expiring/expired documents
+- [x] Build DocumentExpirationAlert component for dashboard
+- [x] Add expiration status indicators to Document Library
+- [x] Allow setting/updating expiration dates on existing documents
+- [ ] Add expiration filtering to document search (future enhancement)
+- [x] Test expiration alert functionality

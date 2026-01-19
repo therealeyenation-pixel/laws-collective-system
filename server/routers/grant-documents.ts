@@ -31,78 +31,98 @@ const ENTITY_IDS: Record<string, string> = {
   "trust_98": "98 Trust - CALEA Freeman Family Trust"
 };
 
-// Document requirements by category
+// Document requirements by category with expiration settings
 const DOCUMENT_REQUIREMENTS: Record<string, {
   description: string;
   required: boolean;
   formats: string[];
   maxSize: number; // in MB
+  expiresAfterMonths?: number; // How many months until document expires (null = never expires)
+  expirationWarningDays?: number; // Days before expiration to show warning
 }> = {
   budget: {
     description: "Detailed budget breakdown with line items",
     required: true,
     formats: ["pdf", "xlsx", "docx"],
-    maxSize: 10
+    maxSize: 10,
+    expiresAfterMonths: 12, // Annual budget updates
+    expirationWarningDays: 30
   },
   staffing: {
     description: "Organizational chart and staffing plan",
     required: true,
     formats: ["pdf", "docx", "png", "jpg"],
-    maxSize: 10
+    maxSize: 10,
+    expiresAfterMonths: 12, // Annual org chart updates
+    expirationWarningDays: 30
   },
   equipment: {
     description: "Capital equipment list with costs",
     required: false,
     formats: ["pdf", "xlsx", "docx"],
     maxSize: 10
+    // No expiration - equipment lists updated as needed
   },
   letters_of_support: {
     description: "Letters from partners, community members, or officials",
     required: true,
     formats: ["pdf"],
-    maxSize: 5
+    maxSize: 5,
+    expiresAfterMonths: 24, // Letters typically valid for 2 years
+    expirationWarningDays: 60
   },
   legal: {
     description: "Articles of incorporation, bylaws, operating agreements",
     required: true,
     formats: ["pdf"],
     maxSize: 10
+    // No expiration - legal docs don't expire unless amended
   },
   financial_statements: {
     description: "Audited financials, 990s, bank statements",
     required: true,
     formats: ["pdf"],
-    maxSize: 20
+    maxSize: 20,
+    expiresAfterMonths: 12, // Annual financial statements
+    expirationWarningDays: 45
   },
   program_narrative: {
     description: "Detailed program description and methodology",
     required: true,
     formats: ["pdf", "docx"],
-    maxSize: 10
+    maxSize: 10,
+    expiresAfterMonths: 24, // Update every 2 years
+    expirationWarningDays: 30
   },
   evaluation_plan: {
     description: "Monitoring and evaluation framework",
     required: false,
     formats: ["pdf", "docx"],
-    maxSize: 10
+    maxSize: 10,
+    expiresAfterMonths: 24, // Update every 2 years
+    expirationWarningDays: 30
   },
   timeline: {
     description: "Implementation timeline with milestones",
     required: true,
     formats: ["pdf", "docx", "xlsx"],
     maxSize: 5
+    // No expiration - project-specific
   },
   certificates: {
     description: "Tax-exempt status, registrations, licenses",
     required: true,
     formats: ["pdf", "png", "jpg"],
-    maxSize: 5
+    maxSize: 5,
+    expiresAfterMonths: 12, // Annual renewal for most licenses
+    expirationWarningDays: 60
   },
   other: {
     description: "Additional supporting documents",
     required: false,
     formats: ["pdf", "docx", "xlsx", "png", "jpg"],
     maxSize: 20
+    // No default expiration - user can set manually
   }
 };
 
@@ -538,5 +558,254 @@ export const grantDocumentsRouter = router({
       });
 
       return { suggestions };
+    }),
+
+  // Get expiring and expired documents
+  getExpiringDocuments: publicProcedure
+    .input(z.object({
+      entityId: z.string().optional(), // Filter by entity, or get all
+      daysAhead: z.number().default(30), // How many days ahead to check
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const userId = ctx.user?.id;
+      
+      if (!userId) {
+        return { expiring: [], expired: [], summary: { expiringCount: 0, expiredCount: 0 } };
+      }
+
+      const isOwner = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === 'admin';
+      const now = new Date();
+      const futureDate = new Date(now.getTime() + input.daysAhead * 24 * 60 * 60 * 1000);
+
+      // Get all grant documents
+      const docs = await db
+        .select()
+        .from(secureDocuments)
+        .where(
+          and(
+            eq(secureDocuments.documentType, "grant_application"),
+            eq(secureDocuments.status, "final"),
+            isOwner ? undefined : eq(secureDocuments.ownerId, userId)
+          )
+        )
+        .orderBy(desc(secureDocuments.createdAt));
+
+      // Filter by entity if specified
+      const filteredDocs = input.entityId 
+        ? docs.filter(doc => (doc.metadata as any)?.entityId === input.entityId)
+        : docs;
+
+      const expiring: any[] = [];
+      const expired: any[] = [];
+
+      filteredDocs.forEach(doc => {
+        const metadata = doc.metadata as any;
+        if (!metadata) return;
+
+        // Check for explicit expiration date
+        let expirationDate: Date | null = null;
+        
+        if (metadata.expiresAt) {
+          expirationDate = new Date(metadata.expiresAt);
+        } else {
+          // Calculate based on category default
+          const categoryConfig = DOCUMENT_REQUIREMENTS[metadata.category];
+          if (categoryConfig?.expiresAfterMonths && doc.createdAt) {
+            expirationDate = new Date(doc.createdAt);
+            expirationDate.setMonth(expirationDate.getMonth() + categoryConfig.expiresAfterMonths);
+          }
+        }
+
+        if (!expirationDate) return;
+
+        const daysUntilExpiration = Math.ceil((expirationDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
+        const categoryConfig = DOCUMENT_REQUIREMENTS[metadata.category];
+        const warningDays = categoryConfig?.expirationWarningDays || 30;
+
+        const docInfo = {
+          id: doc.id,
+          title: doc.title,
+          fileName: doc.fileName,
+          category: metadata.category,
+          categoryLabel: metadata.category?.replace(/_/g, ' ').toUpperCase(),
+          entityId: metadata.entityId,
+          entityName: ENTITY_IDS[metadata.entityId] || metadata.entityId,
+          expirationDate: expirationDate.toISOString(),
+          daysUntilExpiration,
+          createdAt: doc.createdAt,
+          fileUrl: doc.fileUrl,
+          isExpired: daysUntilExpiration < 0,
+          isWarning: daysUntilExpiration >= 0 && daysUntilExpiration <= warningDays,
+          warningDays
+        };
+
+        if (daysUntilExpiration < 0) {
+          expired.push(docInfo);
+        } else if (daysUntilExpiration <= input.daysAhead) {
+          expiring.push(docInfo);
+        }
+      });
+
+      // Sort by days until expiration (most urgent first)
+      expiring.sort((a, b) => a.daysUntilExpiration - b.daysUntilExpiration);
+      expired.sort((a, b) => a.daysUntilExpiration - b.daysUntilExpiration);
+
+      return {
+        expiring,
+        expired,
+        summary: {
+          expiringCount: expiring.length,
+          expiredCount: expired.length,
+          urgentCount: expiring.filter(d => d.isWarning).length
+        }
+      };
+    }),
+
+  // Update document expiration date
+  updateExpiration: publicProcedure
+    .input(z.object({
+      documentId: z.number(),
+      expiresAt: z.string().nullable(), // ISO date or null to remove expiration
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const userId = ctx.user?.id;
+      
+      if (!userId) {
+        throw new Error("Authentication required");
+      }
+
+      // Get the document
+      const [doc] = await db
+        .select()
+        .from(secureDocuments)
+        .where(eq(secureDocuments.id, input.documentId))
+        .limit(1);
+
+      if (!doc) {
+        throw new Error("Document not found");
+      }
+
+      const isOwner = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === 'admin';
+      if (doc.ownerId !== userId && !isOwner) {
+        throw new Error("Only the owner can update this document");
+      }
+
+      // Update metadata with new expiration
+      const currentMetadata = (doc.metadata as any) || {};
+      const updatedMetadata = {
+        ...currentMetadata,
+        expiresAt: input.expiresAt,
+        expirationUpdatedAt: new Date().toISOString(),
+        expirationUpdatedBy: userId
+      };
+
+      await db
+        .update(secureDocuments)
+        .set({ 
+          metadata: updatedMetadata,
+          updatedAt: new Date()
+        })
+        .where(eq(secureDocuments.id, input.documentId));
+
+      return { success: true, expiresAt: input.expiresAt };
+    }),
+
+  // Get expiration summary for dashboard
+  getExpirationSummary: publicProcedure
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const userId = ctx.user?.id;
+      
+      if (!userId) {
+        return { 
+          byEntity: {},
+          byCategory: {},
+          totalExpired: 0,
+          totalExpiringSoon: 0,
+          totalDocuments: 0
+        };
+      }
+
+      const isOwner = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === 'admin';
+      const now = new Date();
+
+      // Get all grant documents
+      const docs = await db
+        .select()
+        .from(secureDocuments)
+        .where(
+          and(
+            eq(secureDocuments.documentType, "grant_application"),
+            eq(secureDocuments.status, "final"),
+            isOwner ? undefined : eq(secureDocuments.ownerId, userId)
+          )
+        );
+
+      const byEntity: Record<string, { total: number; expired: number; expiringSoon: number }> = {};
+      const byCategory: Record<string, { total: number; expired: number; expiringSoon: number }> = {};
+      let totalExpired = 0;
+      let totalExpiringSoon = 0;
+
+      docs.forEach(doc => {
+        const metadata = doc.metadata as any;
+        if (!metadata) return;
+
+        const entityId = metadata.entityId || 'unknown';
+        const category = metadata.category || 'other';
+
+        // Initialize counters
+        if (!byEntity[entityId]) {
+          byEntity[entityId] = { total: 0, expired: 0, expiringSoon: 0 };
+        }
+        if (!byCategory[category]) {
+          byCategory[category] = { total: 0, expired: 0, expiringSoon: 0 };
+        }
+
+        byEntity[entityId].total++;
+        byCategory[category].total++;
+
+        // Calculate expiration
+        let expirationDate: Date | null = null;
+        
+        if (metadata.expiresAt) {
+          expirationDate = new Date(metadata.expiresAt);
+        } else {
+          const categoryConfig = DOCUMENT_REQUIREMENTS[category];
+          if (categoryConfig?.expiresAfterMonths && doc.createdAt) {
+            expirationDate = new Date(doc.createdAt);
+            expirationDate.setMonth(expirationDate.getMonth() + categoryConfig.expiresAfterMonths);
+          }
+        }
+
+        if (!expirationDate) return;
+
+        const daysUntilExpiration = Math.ceil((expirationDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
+        const categoryConfig = DOCUMENT_REQUIREMENTS[category];
+        const warningDays = categoryConfig?.expirationWarningDays || 30;
+
+        if (daysUntilExpiration < 0) {
+          byEntity[entityId].expired++;
+          byCategory[category].expired++;
+          totalExpired++;
+        } else if (daysUntilExpiration <= warningDays) {
+          byEntity[entityId].expiringSoon++;
+          byCategory[category].expiringSoon++;
+          totalExpiringSoon++;
+        }
+      });
+
+      return {
+        byEntity,
+        byCategory,
+        totalExpired,
+        totalExpiringSoon,
+        totalDocuments: docs.length,
+        entities: ENTITY_IDS
+      };
     }),
 });

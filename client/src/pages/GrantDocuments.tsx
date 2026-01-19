@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import DocumentUpload from "@/components/DocumentUpload";
 import DocumentLibrary from "@/components/DocumentLibrary";
+import DocumentExpirationAlert from "@/components/DocumentExpirationAlert";
 
 // Entity mapping
 const ENTITIES = [
@@ -140,7 +141,7 @@ export default function GrantDocuments() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+          <TabsList className="grid w-full grid-cols-4 lg:w-[500px]">
             <TabsTrigger value="overview" className="gap-2">
               <FolderOpen className="w-4 h-4" />
               Overview
@@ -152,6 +153,10 @@ export default function GrantDocuments() {
             <TabsTrigger value="library" className="gap-2">
               <FileText className="w-4 h-4" />
               Library
+            </TabsTrigger>
+            <TabsTrigger value="alerts" className="gap-2">
+              <AlertCircle className="w-4 h-4" />
+              Alerts
             </TabsTrigger>
           </TabsList>
 
@@ -383,6 +388,102 @@ export default function GrantDocuments() {
               entityName={currentEntity?.name}
               showChecklist={true}
             />
+          </TabsContent>
+
+          {/* Alerts Tab */}
+          <TabsContent value="alerts" className="space-y-6">
+            <Card className="bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border-amber-200 dark:border-amber-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-amber-500" />
+                  Document Expiration Tracking
+                </CardTitle>
+                <CardDescription>
+                  Monitor document validity and renewal deadlines for {currentEntity?.name || "all entities"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Documents like financial statements, certificates, and licenses need periodic renewal.
+                  This system automatically tracks expiration dates based on document type and alerts you
+                  when documents are approaching expiration or have already expired.
+                </p>
+              </CardContent>
+            </Card>
+
+            <DocumentExpirationAlert 
+              entityId={selectedEntity}
+              showSummary={true}
+              maxItems={10}
+              onViewAll={() => setActiveTab("library")}
+            />
+
+            {/* Expiration Policy Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Document Expiration Policies</CardTitle>
+                <CardDescription>
+                  Default expiration periods by document category
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-sm">Annual Renewal (12 months)</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        Budget Documents
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        Staffing & Org Charts
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        Financial Statements
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        Certificates & Licenses
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-medium text-sm">Biennial Renewal (24 months)</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-500" />
+                        Letters of Support
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-500" />
+                        Program Narrative
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-500" />
+                        Evaluation Plan
+                      </li>
+                    </ul>
+                    <h4 className="font-medium text-sm mt-4">No Expiration</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                        Legal Documents (Articles, Bylaws)
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                        Equipment Lists
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                        Project Timelines
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
