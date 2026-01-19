@@ -65,6 +65,7 @@ import ContractManagement from "@/pages/ContractManagement";
 import Donations from "@/pages/Donations";
 import GrantTracking from "@/pages/GrantTracking";
 import GrantDocuments from "@/pages/GrantDocuments";
+import DemographicGrantsPage from "@/pages/DemographicGrantsPage";
 import HouseManagement from "./pages/HouseManagement";
 import TrustVisualization from "./pages/TrustVisualization";
 import FinancialStatements from "./pages/FinancialStatements";
@@ -209,6 +210,7 @@ function Router() {
       <Route path="/grants">{() => <ProtectedRoute component={GrantManagement} minRole="staff" />}</Route>
       <Route path="/grant-tracking">{() => <ProtectedRoute component={GrantTracking} minRole="staff" />}</Route>
       <Route path="/grant-documents">{() => <ProtectedRoute component={GrantDocuments} minRole="staff" />}</Route>
+      <Route path="/demographic-grants">{() => <ProtectedRoute component={DemographicGrantsPage} minRole="user" />}</Route>
       <Route path="/financial-statements">{() => <ProtectedRoute component={FinancialStatements} minRole="staff" />}</Route>
       <Route path="/board-resolutions">{() => <ProtectedRoute component={BoardResolutions} minRole="admin" />}</Route>
       <Route path="/contingency-offers">{() => <ProtectedRoute component={ContingencyOffers} minRole="admin" />}</Route>

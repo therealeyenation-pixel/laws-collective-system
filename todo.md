@@ -4062,3 +4062,18 @@
 - [x] Allow setting/updating expiration dates on existing documents
 - [ ] Add expiration filtering to document search (future enhancement)
 - [x] Test expiration alert functionality
+
+
+## Phase 124: Grant Database Expansion - Women, Minority, Veteran & Elderly Focus
+- [x] Research and add women-focused grants (Amber Grant, IFundWomen, Cartier Women's Initiative, etc.)
+- [x] Research and add additional minority-focused grants (NMSDC, MBDA, SBA 8(a))
+- [x] Add veteran-focused grants (StreetShares, Hivers and Strivers, VetFran)
+- [x] Add elderly/senior-focused grants (AARP, ACL, Archstone Foundation)
+- [x] Add demographic eligibility tags to all existing grants
+- [x] Create demographic filter dropdown in EntityGrants component
+- [x] Add quick filter badges for each demographic category
+- [x] Build dedicated DemographicGrants component with tabbed sections
+- [x] Create DemographicGrantsPage at /demographic-grants route
+- [x] Add application tips section for demographic-specific grants
+- [x] Test filtering functionality across all grant views
+- [x] All 343 tests passing

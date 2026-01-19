@@ -4,15 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Building2,
   DollarSign,
   Calendar,
   ExternalLink,
   Target,
   FileText,
-  CheckCircle,
   Clock,
   AlertCircle,
+  Users,
+  Heart,
+  Shield,
+  Globe,
+  Filter,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -27,6 +38,7 @@ interface Grant {
   url: string;
   fitScore: number;
   notes: string;
+  demographics?: string[];
 }
 
 interface EntityGrants {
@@ -45,20 +57,45 @@ interface EntityGrants {
   }>;
 }
 
+interface DemographicCategory {
+  label: string;
+  description: string;
+  icon: string;
+}
+
 interface GrantData {
   lastUpdated: string;
+  demographicCategories: Record<string, DemographicCategory>;
   entities: Record<string, EntityGrants>;
+  dedicatedGrantSections?: {
+    womenFocused?: { title: string; description: string; grants: Grant[] };
+    minorityFocused?: { title: string; description: string; grants: Grant[] };
+    veteranFocused?: { title: string; description: string; grants: Grant[] };
+    elderlyFocused?: { title: string; description: string; grants: Grant[] };
+  };
   applicationStrategy: {
     rule: string;
     priorityOrder: string[];
     reasoning: string;
+    demographicStrategy?: string;
   };
 }
+
+const demographicIcons: Record<string, React.ReactNode> = {
+  women: <Users className="w-4 h-4 text-pink-500" />,
+  minority: <Users className="w-4 h-4 text-purple-500" />,
+  veteran: <Shield className="w-4 h-4 text-blue-500" />,
+  elderly: <Heart className="w-4 h-4 text-orange-500" />,
+  lgbtq: <Heart className="w-4 h-4 text-rainbow" />,
+  disabled: <Heart className="w-4 h-4 text-teal-500" />,
+  general: <Globe className="w-4 h-4 text-green-500" />,
+};
 
 export default function EntityGrants() {
   const [grantData, setGrantData] = useState<GrantData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedEntity, setSelectedEntity] = useState<string>("luvonpurpose_temple");
+  const [demographicFilter, setDemographicFilter] = useState<string>("all");
 
   useEffect(() => {
     fetch("/grant_opportunities.json")
@@ -88,15 +125,41 @@ export default function EntityGrants() {
     return "Review Carefully";
   };
 
+  const filterGrantsByDemographic = (grants: Grant[]) => {
+    if (demographicFilter === "all") return grants;
+    return grants.filter(
+      (grant) => grant.demographics?.includes(demographicFilter)
+    );
+  };
+
+  const getDemographicBadges = (demographics?: string[]) => {
+    if (!demographics || demographics.length === 0) return null;
+    return (
+      <div className="flex flex-wrap gap-1 mt-2">
+        {demographics.map((demo) => (
+          <Badge
+            key={demo}
+            variant="outline"
+            className="text-xs flex items-center gap-1"
+          >
+            {demographicIcons[demo]}
+            {grantData?.demographicCategories?.[demo]?.label || demo}
+          </Badge>
+        ))}
+      </div>
+    );
+  };
+
   const handleApplyNow = (grant: Grant, entityName: string) => {
-    // Store selected grant for application
-    localStorage.setItem("selectedGrant", JSON.stringify({
-      ...grant,
-      applyingEntity: entityName,
-      selectedAt: new Date().toISOString()
-    }));
+    localStorage.setItem(
+      "selectedGrant",
+      JSON.stringify({
+        ...grant,
+        applyingEntity: entityName,
+        selectedAt: new Date().toISOString(),
+      })
+    );
     toast.success(`Grant "${grant.name}" selected for ${entityName}`);
-    // Navigate to grant application page
     window.location.href = "/grant-simulator";
   };
 
@@ -116,9 +179,19 @@ export default function EntityGrants() {
     );
   }
 
-  // Filter out trust from public view - only show 4 entities
-  const entityKeys = Object.keys(grantData.entities).filter(key => key !== "calea_freeman_trust");
-  const currentEntity = grantData.entities[selectedEntity];
+  const entityKeys = Object.keys(grantData.entities).filter(
+    (key) => key !== "calea_freeman_trust"
+  );
+
+  // Count grants by demographic
+  const demographicCounts: Record<string, number> = {};
+  Object.values(grantData.entities).forEach((entity) => {
+    entity.grants.forEach((grant) => {
+      grant.demographics?.forEach((demo) => {
+        demographicCounts[demo] = (demographicCounts[demo] || 0) + 1;
+      });
+    });
+  });
 
   return (
     <div className="space-y-6">
@@ -127,31 +200,152 @@ export default function EntityGrants() {
         <div className="flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-primary mt-0.5" />
           <div>
-            <h3 className="font-semibold text-foreground">Application Strategy</h3>
-            <p className="text-sm text-muted-foreground mt-1">{grantData.applicationStrategy.rule}</p>
-            <p className="text-xs text-muted-foreground mt-2">{grantData.applicationStrategy.reasoning}</p>
+            <h3 className="font-semibold text-foreground">
+              Application Strategy
+            </h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              {grantData.applicationStrategy.rule}
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              {grantData.applicationStrategy.reasoning}
+            </p>
+            {grantData.applicationStrategy.demographicStrategy && (
+              <p className="text-xs text-accent mt-2 font-medium">
+                💡 {grantData.applicationStrategy.demographicStrategy}
+              </p>
+            )}
           </div>
+        </div>
+      </Card>
+
+      {/* Demographic Filter */}
+      <Card className="p-4">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-muted-foreground" />
+            <span className="font-medium text-foreground">
+              Filter by Eligibility:
+            </span>
+          </div>
+          <Select value={demographicFilter} onValueChange={setDemographicFilter}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="All Grants" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Grants</SelectItem>
+              <SelectItem value="women">
+                Women-Focused ({demographicCounts["women"] || 0})
+              </SelectItem>
+              <SelectItem value="minority">
+                Minority-Focused ({demographicCounts["minority"] || 0})
+              </SelectItem>
+              <SelectItem value="veteran">
+                Veteran-Focused ({demographicCounts["veteran"] || 0})
+              </SelectItem>
+              <SelectItem value="elderly">
+                Senior/Elderly ({demographicCounts["elderly"] || 0})
+              </SelectItem>
+              <SelectItem value="lgbtq">
+                LGBTQ+ ({demographicCounts["lgbtq"] || 0})
+              </SelectItem>
+              <SelectItem value="disabled">
+                Disability-Focused ({demographicCounts["disabled"] || 0})
+              </SelectItem>
+              <SelectItem value="general">
+                All-Inclusive ({demographicCounts["general"] || 0})
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Quick Filter Badges */}
+        <div className="flex flex-wrap gap-2 mt-4">
+          <Badge
+            variant={demographicFilter === "all" ? "default" : "outline"}
+            className="cursor-pointer"
+            onClick={() => setDemographicFilter("all")}
+          >
+            All
+          </Badge>
+          <Badge
+            variant={demographicFilter === "women" ? "default" : "outline"}
+            className="cursor-pointer flex items-center gap-1"
+            onClick={() => setDemographicFilter("women")}
+          >
+            <Users className="w-3 h-3" /> Women
+          </Badge>
+          <Badge
+            variant={demographicFilter === "minority" ? "default" : "outline"}
+            className="cursor-pointer flex items-center gap-1"
+            onClick={() => setDemographicFilter("minority")}
+          >
+            <Users className="w-3 h-3" /> Minority
+          </Badge>
+          <Badge
+            variant={demographicFilter === "veteran" ? "default" : "outline"}
+            className="cursor-pointer flex items-center gap-1"
+            onClick={() => setDemographicFilter("veteran")}
+          >
+            <Shield className="w-3 h-3" /> Veteran
+          </Badge>
+          <Badge
+            variant={demographicFilter === "elderly" ? "default" : "outline"}
+            className="cursor-pointer flex items-center gap-1"
+            onClick={() => setDemographicFilter("elderly")}
+          >
+            <Heart className="w-3 h-3" /> Senior
+          </Badge>
+          <Badge
+            variant={demographicFilter === "lgbtq" ? "default" : "outline"}
+            className="cursor-pointer flex items-center gap-1"
+            onClick={() => setDemographicFilter("lgbtq")}
+          >
+            LGBTQ+
+          </Badge>
+          <Badge
+            variant={demographicFilter === "disabled" ? "default" : "outline"}
+            className="cursor-pointer flex items-center gap-1"
+            onClick={() => setDemographicFilter("disabled")}
+          >
+            Disability
+          </Badge>
         </div>
       </Card>
 
       {/* Entity Tabs */}
       <Tabs value={selectedEntity} onValueChange={setSelectedEntity}>
         <TabsList className="grid grid-cols-4 w-full">
-          <TabsTrigger value="luvonpurpose_temple" className="text-xs">Temple/508</TabsTrigger>
-          <TabsTrigger value="laws_collective" className="text-xs">L.A.W.S.</TabsTrigger>
-          <TabsTrigger value="real_eye_nation" className="text-xs">Real-Eye</TabsTrigger>
-          <TabsTrigger value="luvonpurpose_aws" className="text-xs">LAWS, LLC</TabsTrigger>
+          <TabsTrigger value="luvonpurpose_temple" className="text-xs">
+            Temple/508
+          </TabsTrigger>
+          <TabsTrigger value="laws_collective" className="text-xs">
+            L.A.W.S.
+          </TabsTrigger>
+          <TabsTrigger value="real_eye_nation" className="text-xs">
+            Real-Eye
+          </TabsTrigger>
+          <TabsTrigger value="luvonpurpose_aws" className="text-xs">
+            LAWS, LLC
+          </TabsTrigger>
         </TabsList>
 
         {entityKeys.map((entityKey) => {
           const entity = grantData.entities[entityKey];
+          const filteredGrants = filterGrantsByDemographic(entity.grants);
+
           return (
-            <TabsContent key={entityKey} value={entityKey} className="space-y-4 mt-4">
+            <TabsContent
+              key={entityKey}
+              value={entityKey}
+              className="space-y-4 mt-4"
+            >
               {/* Entity Header */}
               <Card className="p-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h2 className="text-lg font-bold text-foreground">{entity.entityName}</h2>
+                    <h2 className="text-lg font-bold text-foreground">
+                      {entity.entityName}
+                    </h2>
                     <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Building2 className="w-4 h-4" />
@@ -162,7 +356,8 @@ export default function EntityGrants() {
                     </div>
                   </div>
                   <Badge variant="outline" className="text-xs">
-                    {entity.grants.length} Opportunities
+                    {filteredGrants.length} of {entity.grants.length}{" "}
+                    Opportunities
                   </Badge>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -175,7 +370,8 @@ export default function EntityGrants() {
               </Card>
 
               {/* Grant Opportunities */}
-              {entityKey === "calea_freeman_trust" && entity.grantMakingOpportunities ? (
+              {entityKey === "calea_freeman_trust" &&
+              entity.grantMakingOpportunities ? (
                 <div className="space-y-4">
                   <h3 className="font-semibold text-foreground flex items-center gap-2">
                     <DollarSign className="w-5 h-5 text-accent" />
@@ -183,8 +379,12 @@ export default function EntityGrants() {
                   </h3>
                   {entity.grantMakingOpportunities.map((opp) => (
                     <Card key={opp.id} className="p-4">
-                      <h4 className="font-semibold text-foreground">{opp.name}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">{opp.description}</p>
+                      <h4 className="font-semibold text-foreground">
+                        {opp.name}
+                      </h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {opp.description}
+                      </p>
                       <div className="flex items-center gap-4 mt-3 text-sm">
                         <span className="flex items-center gap-1 text-green-600">
                           <DollarSign className="w-4 h-4" />
@@ -198,21 +398,44 @@ export default function EntityGrants() {
                     </Card>
                   ))}
                 </div>
+              ) : filteredGrants.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <p className="text-muted-foreground">
+                    No grants match the selected filter for this entity.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => setDemographicFilter("all")}
+                  >
+                    Clear Filter
+                  </Button>
+                </Card>
               ) : (
                 <div className="space-y-3">
-                  {entity.grants
+                  {filteredGrants
                     .sort((a, b) => b.fitScore - a.fitScore)
                     .map((grant) => (
-                      <Card key={grant.id} className="p-4 hover:shadow-md transition-shadow">
+                      <Card
+                        key={grant.id}
+                        className="p-4 hover:shadow-md transition-shadow"
+                      >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-semibold text-foreground">{grant.name}</h4>
-                              <div className={`px-2 py-0.5 rounded text-xs text-white ${getFitScoreColor(grant.fitScore)}`}>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h4 className="font-semibold text-foreground">
+                                {grant.name}
+                              </h4>
+                              <div
+                                className={`px-2 py-0.5 rounded text-xs text-white ${getFitScoreColor(grant.fitScore)}`}
+                              >
                                 {grant.fitScore}% - {getFitScoreLabel(grant.fitScore)}
                               </div>
                             </div>
-                            <p className="text-sm text-muted-foreground mt-1">{grant.funder}</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {grant.funder}
+                            </p>
+                            {getDemographicBadges(grant.demographics)}
                           </div>
                         </div>
 
@@ -244,7 +467,9 @@ export default function EntityGrants() {
                         <div className="flex items-center gap-2 mt-4">
                           <Button
                             size="sm"
-                            onClick={() => handleApplyNow(grant, entity.entityName)}
+                            onClick={() =>
+                              handleApplyNow(grant, entity.entityName)
+                            }
                             className="gap-1"
                           >
                             <FileText className="w-4 h-4" />
