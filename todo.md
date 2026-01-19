@@ -3947,4 +3947,12 @@
 - [x] Investigate Business Plan Simulator entity status logic
 - [x] Update entity status to show actual formation status (Formed for all entities with EINs)
 - [x] Test entity status display - all 5 entities show "Formed" badge
+- [x] Save checkpoint
+
+## Phase 117: Connect Business Plans to Grant Simulator
+- [x] Investigate Grant Simulator data structure - already has auto-populate from database
+- [x] Map business plan fields to grant application fields - mapping exists in getSummaryForGrant
+- [x] Sync JSON business plans to database (L.A.W.S. Collective and LuvOnPurpose Academy)
+- [x] Auto-populate grant application with business plan data (mission, vision, financials, team)
+- [x] Test data flow from business plan to grant application
 - [ ] Save checkpoint
