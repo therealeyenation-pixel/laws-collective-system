@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-01-17",
-  "version": "1.0",
+  "lastUpdated": "2026-01-19",
+  "version": "2.0",
   "overview": {
     "description": "Unified organizational structure for the LuvOnPurpose Family Enterprise",
     "holdingEntity": "The L.A.W.S. Collective, LLC",
@@ -13,7 +13,8 @@
       {
         "title": "CEO",
         "fullTitle": "Chief Executive Officer",
-        "currentHolder": "LaShanna Russell",
+        "currentHolder": "LaShanna K. Russell",
+        "email": "lashanna@lawscollective.org",
         "entity": "Calea Freeman Family Trust / The L.A.W.S. Collective, LLC",
         "responsibilities": [
           "Vision and strategic direction for all entities",
@@ -44,25 +45,36 @@
       {
         "title": "CFO",
         "fullTitle": "Chief Financial Officer",
-        "currentHolder": "Craig",
+        "currentHolder": "Craig Russell",
+        "email": "craig@lawscollective.org",
+        "phone": "870-413-9074",
         "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Family",
+        "salary": "$102,000",
+        "startDate": "2026-03-01",
         "responsibilities": [
           "Financial strategy and planning across all entities",
           "Budget development and monitoring",
           "Grant financial management and compliance",
           "Token economy oversight",
           "Financial reporting and analysis",
-          "Banking and investment relationships"
+          "Banking and investment relationships",
+          "Web3/blockchain financial operations"
         ],
         "reportsTo": "CEO",
         "directReports": ["Grant Writer", "Bookkeeper (future)"],
-        "salaryRange": "$65,000 - $90,000"
+        "salaryRange": "$95,000 - $120,000"
       },
       {
         "title": "CEO-Ed",
         "fullTitle": "Chief Education Officer",
-        "currentHolder": "Cornelius",
+        "currentHolder": "Cornelius Christopher",
+        "email": "cornelius@lawscollective.org",
+        "phone": "870-794-5469",
         "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Family",
+        "salary": "$102,000",
+        "startDate": "2026-03-01",
         "crossEntityScope": ["Temple/Academy", "LAWS, LLC", "Real-Eye-Nation", "L.A.W.S. Collective"],
         "responsibilities": [
           "Strategic oversight of all education and training programs",
@@ -76,526 +88,434 @@
         ],
         "reportsTo": "CEO",
         "directReports": ["Academy Instructors", "Education Operations Coordinator"],
-        "salaryRange": "$130,000 - $150,000",
-        "additionalStipends": [
-          {"role": "Justice/Legal Advisor", "amount": "$10,000", "description": "Advisory support leveraging Criminal Justice expertise"}
-        ],
-        "qualifications": {
-          "education": ["Master's in Education", "Master's in Criminal Justice"],
-          "experience": "5+ years in education leadership"
-        }
+        "salaryRange": "$95,000 - $120,000"
       }
     ]
   },
-  "entityLeadership": {
-    "description": "Entity-specific leadership positions",
-    "entities": {
-      "temple_508": {
-        "entityName": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
-        "entityType": "508(c)(1)(a) Faith-Based Organization",
-        "positions": [
-          {
-            "title": "Executive Director",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Overall leadership of Temple/Academy operations",
-              "Grant compliance and reporting for nonprofit",
-              "Community and donor relations",
-              "Program oversight and development",
-              "Board liaison (if applicable)"
-            ],
-            "reportsTo": "CEO",
-            "directReports": ["Education Director", "Outreach Coordinator"],
-            "salaryRange": "$85,000 - $115,000",
-            "notes": "Required for nonprofit credibility with funders"
-          },
-          {
-            "title": "Education Operations Coordinator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Student enrollment and registration processing",
-              "Student progress tracking and records",
-              "Certificate issuance",
-              "Instructor schedule coordination",
-              "Student support and inquiries"
-            ],
-            "reportsTo": "CEO-Ed (Cornelius)",
-            "salaryRange": "$68,000 - $88,000"
-          },
-          {
-            "title": "Outreach Coordinator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Community event planning and execution",
-              "Volunteer coordination",
-              "Partnership development",
-              "Impact tracking for grants"
-            ],
-            "reportsTo": "Executive Director",
-            "salaryRange": "$42,000 - $58,000"
-          }
-        ]
+  "departmentManagers": {
+    "description": "Department Manager positions - Tier 3 ($95,000-$120,000 range at 90%)",
+    "familyManagers": [
+      {
+        "name": "Amber S. Hunter",
+        "title": "Health Manager",
+        "department": "Health",
+        "email": "amber@lawscollective.org",
+        "phone": "870-329-8264",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Family",
+        "salary": "$102,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "L.A.W.S. WATER Pillar leadership",
+          "Employee wellness programs",
+          "Healthcare coordination",
+          "Mental health resources",
+          "Work-life balance initiatives"
+        ],
+        "reportsTo": "CEO",
+        "directReports": ["Health Operations Coordinator"]
       },
-      "laws_llc": {
-        "entityName": "LuvOnPurpose Autonomous Wealth System LLC",
-        "entityType": "Limited Liability Company",
-        "abbreviation": "LAWS, LLC",
-        "positions": [
-          {
-            "title": "Operations Manager",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Platform operations and workflow management",
-              "Cross-entity coordination",
-              "Autonomous system monitoring",
-              "Quality assurance for deliverables"
-            ],
-            "reportsTo": "COO",
-            "directReports": ["Operations Operations Coordinator"],
-            "salaryRange": "$85,000 - $115,000"
-          },
-          {
-            "title": "Operations Operations Coordinator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Meeting scheduling and calendar coordination",
-              "Project milestone tracking",
-              "Operational reports preparation",
-              "Documentation maintenance",
-              "Cross-department communications"
-            ],
-            "reportsTo": "Operations Manager",
-            "salaryRange": "$68,000 - $88,000"
-          },
-          {
-            "title": "Platform Administrator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Technical infrastructure management",
-              "User account and permissions management",
-              "Security and data protection",
-              "System updates and maintenance"
-            ],
-            "reportsTo": "COO",
-            "salaryRange": "$95,000 - $130,000"
-          }
-        ]
+      {
+        "name": "Essence M. Hunter",
+        "title": "Design Manager",
+        "department": "Design",
+        "email": "essence@lawscollective.org",
+        "phone": "870-329-3354",
+        "entity": "Real-Eye-Nation / The L.A.W.S. Collective, LLC",
+        "relationship": "Family",
+        "salary": "$102,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Brand identity and visual standards",
+          "Graphic design and marketing materials",
+          "UI/UX design support",
+          "NFT creation and digital asset design",
+          "Visual content strategy"
+        ],
+        "reportsTo": "CEO / Creative Director",
+        "directReports": ["Design Operations Coordinator"]
       },
-      "laws_collective": {
-        "entityName": "The L.A.W.S. Collective, LLC",
-        "entityType": "Limited Liability Company (Holding Company)",
-        "abbreviation": "L.A.W.S.",
-        "positions": [
-          {
-            "title": "HR Manager",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Recruitment and talent acquisition",
-              "Onboarding and training coordination",
-              "Employee relations and culture",
-              "Benefits administration",
-              "Performance management"
-            ],
-            "reportsTo": "COO",
-            "directReports": ["HR Operations Coordinator"],
-            "salaryRange": "$85,000 - $115,000"
-          },
-          {
-            "title": "HR Operations Coordinator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Interview scheduling and candidate coordination",
-              "Employee file maintenance",
-              "Onboarding paperwork processing",
-              "Training tracking",
-              "HR reports and metrics"
-            ],
-            "reportsTo": "HR Manager",
-            "salaryRange": "$68,000 - $88,000"
-          },
-          {
-            "title": "QA/QC Manager",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Quality standards development",
-              "Compliance monitoring",
-              "Process documentation",
-              "Internal audits"
-            ],
-            "reportsTo": "COO",
-            "directReports": ["QA/QC Operations Coordinator"],
-            "salaryRange": "$85,000 - $115,000"
-          },
-          {
-            "title": "QA/QC Operations Coordinator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Quality documentation maintenance",
-              "Audit tracking and corrective actions",
-              "Quality review scheduling",
-              "Metrics compilation",
-              "Document control"
-            ],
-            "reportsTo": "QA/QC Manager",
-            "salaryRange": "$68,000 - $88,000"
-          },
-          {
-            "title": "Purchasing Manager",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Vendor management",
-              "Procurement and inventory",
-              "Cost data for grants",
-              "Asset tracking"
-            ],
-            "reportsTo": "COO",
-            "directReports": ["Purchasing Operations Coordinator"],
-            "salaryRange": "$80,000 - $110,000"
-          },
-          {
-            "title": "Purchasing Operations Coordinator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Purchase order processing",
-              "Vendor communications",
-              "Inventory tracking",
-              "Invoice matching",
-              "Purchasing reports"
-            ],
-            "reportsTo": "Purchasing Manager",
-            "salaryRange": "$68,000 - $88,000"
-          },
-          {
-            "title": "Grant Writer",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Grant research and identification",
-              "Proposal writing and submission",
-              "Budget development with Finance",
-              "Deadline and submission tracking"
-            ],
-            "reportsTo": "CFO",
-            "salaryRange": "$85,000 - $115,000"
-          },
-          {
-            "title": "Community Programs Coordinator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "L.A.W.S. framework program development",
-              "Participant recruitment and management",
-              "Partner coordination",
-              "Outcome tracking"
-            ],
-            "reportsTo": "COO",
-            "salaryRange": "$80,000 - $110,000"
-          },
-          {
-            "title": "Project Controls Manager",
-            "currentHolder": "Candidate Identified",
-            "tier": 2,
-            "hiringStatus": "candidate_identified",
-            "responsibilities": [
-              "Project scheduling and milestone tracking",
-              "Budget and cost control across all entities",
-              "Change order management and documentation",
-              "Progress reporting and KPI development",
-              "Risk identification and mitigation planning",
-              "Earned value analysis for grants and contracts",
-              "Resource allocation optimization",
-              "Project documentation and controls standards"
-            ],
-            "reportsTo": "COO",
-            "directReports": ["Project Controls Operations Coordinator"],
-            "salaryRange": "$90,000 - $120,000"
-          },
-          {
-            "title": "Project Controls Operations Coordinator",
-            "currentHolder": "Open Position",
-            "tier": 4,
-            "hiringStatus": "selected_by_manager",
-            "responsibilities": [
-              "Project schedule updates and maintenance",
-              "Cost tracking and variance reporting",
-              "Change order processing and logging",
-              "Meeting minutes and action item tracking",
-              "Document control and filing",
-              "Progress report compilation",
-              "Risk register maintenance"
-            ],
-            "reportsTo": "Project Controls Manager",
-            "salaryRange": "$68,000 - $88,000"
-          }
-        ]
+      {
+        "name": "Craig Russell",
+        "title": "Finance Manager",
+        "department": "Finance",
+        "email": "craig@lawscollective.org",
+        "phone": "870-413-9074",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Family",
+        "salary": "$102,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Financial planning and analysis",
+          "Budget management",
+          "Grant financial compliance",
+          "Smart contract and blockchain operations",
+          "Token economy management"
+        ],
+        "reportsTo": "CEO",
+        "directReports": ["Finance Operations Coordinator"]
       },
-      "real_eye_nation": {
-        "entityName": "Real-Eye-Nation LLC",
-        "entityType": "Limited Liability Company",
-        "positions": [
-          {
-            "title": "Creative Director",
-            "currentHolder": "Amandes",
-            "responsibilities": [
-              "Media strategy and creative direction",
-              "Content production oversight",
-              "Brand management",
-              "NFT and digital asset strategy"
-            ],
-            "reportsTo": "CEO",
-            "directReports": ["Content Creator", "Design Lead"]
-          },
-          {
-            "title": "Design Lead",
-            "currentHolder": "Essence",
-            "responsibilities": [
-              "Visual design and branding",
-              "Marketing materials",
-              "UI/UX support"
-            ],
-            "reportsTo": "Creative Director"
-          },
-          {
-            "title": "Content Creator",
-            "currentHolder": "Open Position",
-            "responsibilities": [
-              "Social media content",
-              "Video/photo production",
-              "Copywriting",
-              "Event documentation"
-            ],
-            "reportsTo": "Creative Director",
-            "salaryRange": "$35,000 - $55,000"
-          }
-        ]
+      {
+        "name": "Cornelius Christopher",
+        "title": "Education Manager",
+        "department": "Education",
+        "email": "cornelius@lawscollective.org",
+        "phone": "870-794-5469",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Family",
+        "salary": "$102,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "L.A.W.S. AIR Pillar leadership",
+          "Curriculum development",
+          "Instructor management",
+          "Student progress tracking",
+          "Certification programs"
+        ],
+        "reportsTo": "CEO",
+        "directReports": ["Education Operations Coordinator"]
       },
-      "trust": {
-        "entityName": "Calea Freeman Family Trust",
-        "entityType": "Irrevocable Trust",
-        "positions": [
-          {
-            "title": "Trustee",
-            "currentHolder": "LaShanna Russell",
-            "responsibilities": [
-              "Trust administration",
-              "Asset protection",
-              "Beneficiary management",
-              "Succession planning"
-            ],
-            "reportsTo": "Trust Document / Beneficiaries"
-          }
-        ]
+      {
+        "name": "Amandes Pearsall IV",
+        "title": "Media Manager",
+        "department": "Media",
+        "email": "amandes@lawscollective.org",
+        "phone": "870-692-6289",
+        "entity": "Real-Eye-Nation / The L.A.W.S. Collective, LLC",
+        "relationship": "Family",
+        "salary": "$102,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Video production and editing",
+          "Social media strategy",
+          "Podcast production",
+          "Content strategy",
+          "Professional photography/headshots"
+        ],
+        "reportsTo": "CEO",
+        "directReports": ["Media Operations Coordinator"]
       }
-    }
+    ],
+    "friendManagers": [
+      {
+        "name": "Maia Rylandlesesene",
+        "title": "Procurement Manager",
+        "department": "Procurement",
+        "phone": "706-951-7486",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Friend",
+        "salary": "$109,500",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Strategic sourcing and vendor selection",
+          "Vendor relationship management",
+          "Purchasing compliance and policy",
+          "Cost optimization",
+          "Supplier diversity programs"
+        ],
+        "reportsTo": "CEO / COO",
+        "directReports": ["Procurement Operations Coordinator"]
+      },
+      {
+        "name": "Roshonda Parker",
+        "title": "Contracts Manager",
+        "department": "Contracts",
+        "phone": "757-572-7286",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Friend",
+        "salary": "$106,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Contract drafting and review",
+          "Negotiation support",
+          "Compliance monitoring",
+          "Risk assessment",
+          "Contract lifecycle management"
+        ],
+        "reportsTo": "CEO / COO",
+        "directReports": ["Contracts Operations Coordinator"]
+      },
+      {
+        "name": "Latisha Cox",
+        "title": "Purchasing Manager",
+        "department": "Purchasing",
+        "phone": "256-604-6176",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Friend",
+        "salary": "$106,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Purchase order management",
+          "Vendor communications",
+          "Inventory tracking",
+          "Cost data for grants",
+          "Asset tracking"
+        ],
+        "reportsTo": "CEO / COO",
+        "directReports": ["Purchasing Operations Coordinator"]
+      },
+      {
+        "name": "Talbert Cox",
+        "title": "Property Manager",
+        "department": "Property",
+        "phone": "256-213-8086",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Friend",
+        "salary": "$109,500",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Property maintenance and operations",
+          "Tenant relations",
+          "Lease administration",
+          "Centralized software license management",
+          "Asset inventory and tracking",
+          "License renewal management",
+          "Cost allocation by department"
+        ],
+        "reportsTo": "CEO / COO",
+        "directReports": ["Property Operations Coordinator"],
+        "specialDuties": "Manages Master Software Catalog for all departments"
+      },
+      {
+        "name": "Kenneth Coleman",
+        "title": "Real Estate Manager",
+        "department": "Real Estate",
+        "phone": "706-799-6987",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Friend",
+        "salary": "$108,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "jurisdiction": "Georgia",
+        "responsibilities": [
+          "Property acquisition and disposition",
+          "Real estate transactions",
+          "Market analysis",
+          "Investment property management",
+          "L.A.W.S. LAND Pillar support"
+        ],
+        "reportsTo": "CEO / COO",
+        "directReports": ["Real Estate Coordinator"],
+        "requirements": "Georgia Real Estate Commission license required"
+      },
+      {
+        "name": "Christopher Battle Sr.",
+        "title": "Project Controls Manager",
+        "department": "Project Controls",
+        "phone": "501-613-9351",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Brother-In-Law",
+        "salary": "$108,000",
+        "startDate": "2026-03-01",
+        "status": "Offer Extended",
+        "responsibilities": [
+          "Project scheduling and milestone tracking",
+          "Budget and cost control across all entities",
+          "Change order management",
+          "Progress reporting and KPI development",
+          "Risk identification and mitigation",
+          "Earned value analysis for grants"
+        ],
+        "reportsTo": "CEO / COO",
+        "directReports": ["Project Controls Operations Coordinator"]
+      }
+    ],
+    "extendedFamilyManagers": [
+      {
+        "name": "Treiva Hunter",
+        "title": "Real Estate Manager",
+        "department": "Real Estate",
+        "phone": "704-953-3070",
+        "entity": "The L.A.W.S. Collective, LLC",
+        "relationship": "Sister-In-Law",
+        "salary": "$108,000",
+        "startDate": "2026-03-02",
+        "status": "Offer Extended",
+        "jurisdiction": "North Carolina",
+        "responsibilities": [
+          "Property acquisition and disposition",
+          "Real estate transactions",
+          "Market analysis",
+          "Investment property management",
+          "L.A.W.S. LAND Pillar support"
+        ],
+        "reportsTo": "CEO / COO",
+        "directReports": ["Real Estate Coordinator"],
+        "requirements": "North Carolina Real Estate Commission license required"
+      }
+    ]
+  },
+  "managerSummary": {
+    "totalManagers": 12,
+    "familyManagers": 5,
+    "friendManagers": 6,
+    "extendedFamilyManagers": 1,
+    "totalAnnualSalaries": "$1,265,000",
+    "allOffersExtended": true,
+    "targetStartDate": "2026-03-01",
+    "contingentOn": "Grant funding secured"
   },
   "sharedServices": {
     "description": "Departments that serve all entities from The L.A.W.S. Collective, LLC",
     "departments": [
       {
         "name": "Human Resources",
-        "lead": "HR Manager",
+        "lead": "HR Manager (Open)",
         "servesEntities": ["All"],
         "functions": ["Recruitment", "Onboarding", "Training", "Benefits", "Employee Relations"]
       },
       {
         "name": "Quality Assurance",
-        "lead": "QA/QC Manager",
+        "lead": "QA/QC Manager (Open)",
         "servesEntities": ["All"],
         "functions": ["Standards", "Compliance", "Documentation", "Audits"]
       },
       {
         "name": "Purchasing",
-        "lead": "Purchasing Manager",
+        "lead": "Latisha Cox",
         "servesEntities": ["All"],
         "functions": ["Procurement", "Vendor Management", "Inventory", "Cost Data"]
       },
       {
         "name": "Finance",
-        "lead": "CFO (Craig)",
+        "lead": "Craig Russell",
         "servesEntities": ["All"],
-        "functions": ["Budgeting", "Reporting", "Grant Finance", "Token Economy"]
+        "functions": ["Budgeting", "Reporting", "Grant Finance", "Token Economy", "Blockchain Operations"]
       },
       {
         "name": "Grant Development",
-        "lead": "Grant Writer",
+        "lead": "Grant Writer (Open)",
         "servesEntities": ["All"],
         "functions": ["Research", "Writing", "Submission", "Tracking"]
       },
       {
         "name": "Health & Wellness",
-        "lead": "Health Manager",
+        "lead": "Amber S. Hunter",
         "servesEntities": ["All"],
         "functions": ["Wellness Programs", "Healthcare Coordination", "Mental Health", "WATER Pillar"]
       },
       {
         "name": "Procurement",
-        "lead": "Procurement Manager",
+        "lead": "Maia Rylandlesesene",
         "servesEntities": ["All"],
         "functions": ["Strategic Sourcing", "Vendor Selection", "Vendor Relations", "Purchasing Compliance"]
       },
       {
         "name": "Contracts",
-        "lead": "Contracts Manager",
+        "lead": "Roshonda Parker",
         "servesEntities": ["All"],
         "functions": ["Contract Drafting", "Negotiation", "Compliance Monitoring", "Risk Management"]
       },
       {
         "name": "Design & Creative",
-        "lead": "Design Manager",
+        "lead": "Essence M. Hunter",
         "servesEntities": ["All"],
-        "functions": ["Brand Identity", "Graphic Design", "UI/UX Design", "Visual Content"]
+        "functions": ["Brand Identity", "Graphic Design", "UI/UX Design", "Visual Content", "NFT Design"]
       },
       {
         "name": "Media Production",
-        "lead": "Media Manager",
+        "lead": "Amandes Pearsall IV",
         "servesEntities": ["All"],
-        "functions": ["Video Production", "Social Media", "Podcasts", "Content Strategy"]
+        "functions": ["Video Production", "Social Media", "Podcasts", "Content Strategy", "Photography"]
       },
       {
         "name": "Real Estate",
-        "lead": "Real Estate Manager",
+        "lead": "Kenneth Coleman (GA) / Treiva Hunter (NC)",
         "servesEntities": ["All"],
         "functions": ["Property Acquisition", "Real Estate Transactions", "Market Analysis", "Investment Properties"],
         "notes": "Multi-state operation with licensed managers in each jurisdiction"
+      },
+      {
+        "name": "Property Management",
+        "lead": "Talbert Cox",
+        "servesEntities": ["All"],
+        "functions": ["Property Operations", "Software License Management", "Asset Tracking", "Lease Administration"]
+      },
+      {
+        "name": "Project Controls",
+        "lead": "Christopher Battle Sr.",
+        "servesEntities": ["All"],
+        "functions": ["Project Scheduling", "Cost Control", "Progress Reporting", "Risk Management"]
+      },
+      {
+        "name": "Education",
+        "lead": "Cornelius Christopher",
+        "servesEntities": ["All"],
+        "functions": ["Curriculum Development", "Instructor Management", "Certification Programs", "AIR Pillar"]
       }
     ]
   },
-  "currentTeam": {
-    "familyManagers": {
-      "description": "Tier 1: Family members confirmed in management roles",
-      "members": [
-        {"name": "LaShanna Russell", "title": "CEO", "department": "Executive/Business", "entity": "Trust/L.A.W.S. Collective", "status": "Active"},
-        {"name": "Craig", "title": "CFO", "department": "Finance", "entity": "L.A.W.S. Collective", "status": "Active"},
-        {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "department": "Education", "entity": "L.A.W.S. Collective (cross-entity)", "status": "Active"},
-        {"name": "Amandes", "title": "Media Manager/Creative Director", "department": "Media", "entity": "Real-Eye-Nation", "status": "Active"},
-        {"name": "Essence", "title": "Design Manager/Design Lead", "department": "Design", "entity": "Real-Eye-Nation", "status": "Active"},
-        {"name": "Amber", "title": "Health Manager", "department": "Health", "entity": "L.A.W.S. Collective", "status": "Active"}
-      ]
-    },
-    "identifiedCandidates": {
-      "description": "Tier 2: Candidates identified but not yet approached (pending funding)",
-      "positions": [
-        {"title": "Purchasing Manager", "department": "Purchasing", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$80,000 - $110,000"},
-        {"title": "Real Estate Manager (Georgia)", "department": "Real Estate", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$85,000 - $115,000", "notes": "Licensed broker/agent required - Georgia Real Estate Commission license"},
-        {"title": "Real Estate Manager (North Carolina)", "department": "Real Estate", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$85,000 - $115,000", "notes": "Licensed broker/agent required - North Carolina Real Estate Commission license"},
-        {"title": "Property Manager", "department": "Property", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$75,000 - $100,000"},
-        {"title": "Contracts Manager", "department": "Contracts", "entity": "L.A.W.S. Collective", "status": "Candidate Identified", "salaryRange": "$95,000 - $130,000"}
-      ]
-    },
-    "openManagerPositions": {
-      "description": "Tier 3: Manager positions truly open for recruitment",
-      "positions": [
-        {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$125,000 - $165,000", "status": "Open"},
-        {"title": "Executive Director", "entity": "Temple/508", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"},
-        {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"},
-        {"title": "HR Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"},
-        {"title": "QA/QC Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$85,000 - $115,000", "status": "Open"},
-        {"title": "Legal/Compliance Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000", "status": "Open"},
-        {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$95,000 - $130,000", "status": "Open"},
-        {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000", "status": "Open"}
-      ]
-    },
-    "operationsCoordinators": {
-      "description": "Tier 4: Operations Coordinator positions - pipeline positions selected by department Managers",
-      "hiringNote": "Each Operations Coordinator is selected by their respective department Manager once the Manager position is filled. Family members may be hired if they meet qualifications.",
-      "hiringPolicy": {
-        "preference": "open",
-        "familyHiresAllowed": true,
-        "conflictOfInterestRequired": true,
-        "disclosureNote": "When hiring family members, Manager must disclose relationship and document that candidate meets all stated qualifications"
+  "approvalWorkflow": {
+    "description": "Tiered approval workflow for department budget spending",
+    "thresholds": [
+      {
+        "tier": 1,
+        "range": "Under $1,000",
+        "approvers": ["Manager", "Procurement", "Finance"],
+        "ceoInvolvement": "Monthly report notification",
+        "autoApprove": true
       },
-      "positions": [
-        {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "HR Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
-        {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "QA/QC Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
-        {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Purchasing Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
-        {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "reportsTo": "Operations Manager", "salaryRange": "$68,000 - $88,000", "status": "Pending Manager", "hiringPreference": "open"},
-        {"title": "Education Operations Coordinator", "entity": "Temple/508", "reportsTo": "CEO-Ed (Cornelius)", "salaryRange": "$68,000 - $88,000", "status": "Ready to Hire", "hiringPreference": "open"},
-        {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Health Manager (Amber)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
-        {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "Contracts Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "hiringPreference": "open"},
-        {"title": "Design Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Design Manager (Essence)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
-        {"title": "Media Operations Coordinator", "entity": "Real-Eye-Nation", "reportsTo": "Media Manager (Amandes)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
-        {"title": "Finance Operations Coordinator", "entity": "L.A.W.S. Collective", "reportsTo": "CFO (Craig)", "salaryRange": "$52,000 - $72,000", "status": "Ready to Hire", "hiringPreference": "open"},
-        {"title": "Real Estate Coordinator 1", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "hiringPreference": "open", "notes": "Lead generation, client intake - no license required"},
-        {"title": "Real Estate Coordinator 2", "entity": "L.A.W.S. Collective", "reportsTo": "Real Estate Manager", "salaryRange": "$52,000 - $72,000", "status": "Pending Manager", "hiringPreference": "open", "notes": "Lead generation, client intake - no license required"}
-      ]
-    },
-    "staffPositions": {
-      "description": "Additional staff positions",
-      "positions": [
-        {"title": "Lead Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$68,000 - $88,000"},
-        {"title": "Outreach Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$42,000 - $58,000"},
-        {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$35,000 - $55,000"},
-        {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low", "salaryRange": "$40,000 - $65,000"},
-        {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$80,000 - $110,000"}
-      ]
-    },
-    "filled": [
-      {"name": "LaShanna Russell", "title": "CEO", "entity": "Trust/L.A.W.S. Collective"},
-      {"name": "Craig", "title": "CFO", "entity": "L.A.W.S. Collective"},
-      {"name": "Cornelius", "title": "Chief Education Officer (CEO-Ed)", "entity": "L.A.W.S. Collective (cross-entity)"},
-      {"name": "Amandes", "title": "Media Manager/Creative Director", "entity": "Real-Eye-Nation"},
-      {"name": "Essence", "title": "Design Manager/Design Lead", "entity": "Real-Eye-Nation"},
-      {"name": "Amber", "title": "Health Manager", "entity": "L.A.W.S. Collective"}
-    ],
-    "openPositions": [
-      {"title": "COO", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$125,000 - $165,000"},
-      {"title": "Executive Director", "entity": "Temple/508", "priority": "High", "salaryRange": "$85,000 - $115,000"},
-      {"title": "Operations Manager", "entity": "LAWS, LLC", "priority": "High", "salaryRange": "$85,000 - $115,000"},
-      {"title": "HR Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000"},
-      {"title": "Platform Administrator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$95,000 - $130,000"},
-      {"title": "Grant Writer", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000"},
-      {"title": "QA/QC Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$85,000 - $115,000"},
-      {"title": "Purchasing Manager", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$80,000 - $110,000"},
-      {"title": "Outreach Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$42,000 - $58,000"},
-      {"title": "Content Creator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$35,000 - $55,000"},
-      {"title": "Academy Instructor", "entity": "Temple/508", "priority": "Low", "salaryRange": "$40,000 - $65,000"},
-      {"title": "Community Programs Coordinator", "entity": "L.A.W.S. Collective", "priority": "Low", "salaryRange": "$80,000 - $110,000"},
-      {"title": "Lead Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$68,000 - $88,000"},
-      {"title": "HR Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
-      {"title": "QA/QC Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
-      {"title": "Purchasing Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
-      {"title": "Operations Operations Coordinator", "entity": "LAWS, LLC", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
-      {"title": "Education Operations Coordinator", "entity": "Temple/508", "priority": "Medium", "salaryRange": "$68,000 - $88,000"},
-      {"title": "Health Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$85,000 - $115,000"},
-      {"title": "Procurement Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000"},
-      {"title": "Health Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"},
-      {"title": "Contracts Manager", "entity": "L.A.W.S. Collective", "priority": "High", "salaryRange": "$95,000 - $130,000"},
-      {"title": "Contracts Operations Coordinator", "entity": "L.A.W.S. Collective", "priority": "Medium", "salaryRange": "$52,000 - $72,000"},
-      {"title": "Design Manager", "entity": "Real-Eye-Nation", "priority": "High", "salaryRange": "$85,000 - $115,000"},
-      {"title": "Design Operations Coordinator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$52,000 - $72,000"},
-      {"title": "Media Manager", "entity": "Real-Eye-Nation", "priority": "High", "salaryRange": "$85,000 - $115,000"},
-      {"title": "Media Operations Coordinator", "entity": "Real-Eye-Nation", "priority": "Medium", "salaryRange": "$52,000 - $72,000"}
+      {
+        "tier": 2,
+        "range": "$1,000 - $5,000",
+        "approvers": ["Manager", "Procurement", "Finance", "CEO"],
+        "ceoInvolvement": "Approval required",
+        "autoApprove": false
+      },
+      {
+        "tier": 3,
+        "range": "Over $5,000",
+        "approvers": ["Manager", "Procurement", "Finance", "CEO", "Board"],
+        "ceoInvolvement": "Approval required",
+        "boardInvolvement": "Notification required",
+        "autoApprove": false
+      }
     ]
   },
   "reportingStructure": {
     "level1": {
       "title": "Trust Governance",
-      "positions": ["Trustee (LaShanna Russell)"]
+      "positions": ["Trustee (LaShanna K. Russell)"]
     },
     "level2": {
       "title": "Executive Leadership",
-      "positions": ["Matriarch/CEO (LaShanna Russell) - FAMILY"]
+      "positions": ["CEO (LaShanna K. Russell) - FAMILY"]
     },
     "level3": {
       "title": "C-Suite",
       "positions": [
         "COO (Open)",
-        "CFO (Craig) - FAMILY",
-        "CEO-Ed (Cornelius) - FAMILY",
+        "CFO/Finance Manager (Craig Russell) - FAMILY",
+        "CEO-Ed/Education Manager (Cornelius Christopher) - FAMILY",
         "Executive Director - Temple (Open)",
-        "Creative Director/Media Manager (Amandes) - FAMILY"
+        "Creative Director/Media Manager (Amandes Pearsall IV) - FAMILY"
       ]
     },
     "level4": {
       "title": "Department Managers",
       "familyFilled": [
-        "Health Manager (Amber) - FAMILY",
-        "Design Manager (Essence) - FAMILY"
+        "Health Manager (Amber S. Hunter) - FAMILY",
+        "Design Manager (Essence M. Hunter) - FAMILY"
       ],
-      "candidateIdentified": [
-        "Purchasing Manager - CANDIDATE IDENTIFIED",
-        "Real Estate Manager (Georgia) - CANDIDATE IDENTIFIED",
-        "Real Estate Manager (North Carolina) - CANDIDATE IDENTIFIED",
-        "Property Manager - CANDIDATE IDENTIFIED",
-        "Contracts Manager - CANDIDATE IDENTIFIED"
+      "friendFilled": [
+        "Procurement Manager (Maia Rylandlesesene) - FRIEND",
+        "Contracts Manager (Roshonda Parker) - FRIEND",
+        "Purchasing Manager (Latisha Cox) - FRIEND",
+        "Property Manager (Talbert Cox) - FRIEND",
+        "Real Estate Manager GA (Kenneth Coleman) - FRIEND",
+        "Project Controls Manager (Christopher Battle Sr.) - BROTHER-IN-LAW"
+      ],
+      "extendedFamilyFilled": [
+        "Real Estate Manager NC (Treiva Hunter) - SISTER-IN-LAW"
       ],
       "open": [
         "Operations Manager (Open)",
@@ -618,19 +538,24 @@
       "title": "Operations Coordinators",
       "hiringNote": "Selected by respective department Manager",
       "readyToHire": [
-        "Education Operations Coordinator (reports to Cornelius)",
-        "Health Operations Coordinator (reports to Amber)",
-        "Design Operations Coordinator (reports to Essence)",
-        "Media Operations Coordinator (reports to Amandes)",
-        "Finance Operations Coordinator (reports to Craig)"
+        "Education Operations Coordinator (reports to Cornelius Christopher)",
+        "Health Operations Coordinator (reports to Amber S. Hunter)",
+        "Design Operations Coordinator (reports to Essence M. Hunter)",
+        "Media Operations Coordinator (reports to Amandes Pearsall IV)",
+        "Finance Operations Coordinator (reports to Craig Russell)",
+        "Procurement Operations Coordinator (reports to Maia Rylandlesesene)",
+        "Contracts Operations Coordinator (reports to Roshonda Parker)",
+        "Purchasing Operations Coordinator (reports to Latisha Cox)",
+        "Property Operations Coordinator (reports to Talbert Cox)",
+        "Real Estate Coordinator GA (reports to Kenneth Coleman)",
+        "Real Estate Coordinator NC (reports to Treiva Hunter)",
+        "Project Controls Operations Coordinator (reports to Christopher Battle Sr.)"
       ],
       "pendingManager": [
         "HR Operations Coordinator",
         "QA/QC Operations Coordinator",
-        "Purchasing Operations Coordinator",
-        "Operations Operations Coordinator",
-        "Contracts Operations Coordinator",
-        "Real Estate Coordinator 1",
-        "Real Estate Coordinator 2"
+        "Operations Operations Coordinator"
       ]
     }
+  }
+}

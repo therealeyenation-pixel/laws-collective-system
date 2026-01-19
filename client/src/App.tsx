@@ -82,6 +82,7 @@ import CreativeEnterprise from "./pages/CreativeEnterprise";
 import DesignDepartment from "./pages/DesignDepartment";
 import GameCenter from "./pages/GameCenter";
 import SoftwareLicenses from "./pages/SoftwareLicenses";
+import PurchaseRequests from "./pages/PurchaseRequests";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -233,6 +234,7 @@ function Router() {
       <Route path="/design-department">{() => <ProtectedRoute component={DesignDepartment} minRole="staff" />}</Route>
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
+      <Route path="/purchase-requests">{() => <ProtectedRoute component={PurchaseRequests} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>

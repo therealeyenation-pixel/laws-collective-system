@@ -4617,3 +4617,35 @@
 - [x] Confirmation received: "Thank you for submitting your Amber Grant application"
 - [x] Winners announced by 21st of following month (February 21, 2026)
 - [x] Application applies to all WomensNet grants (Amber Grant, Start-Up Grant, Business-Specific Grant)
+
+
+## Phase 147: Organizational Structure Update & Purchase Request Form
+
+### Organizational Structure Update
+- [x] Update organizational_structure.json with all 12 manager candidates
+- [x] Add Family managers: Amber S. Hunter, Essence M. Hunter, Craig Russell, Cornelius Christopher, Amandes Pearsall IV
+- [x] Add Friend managers: Maia Rylandlesesene, Roshonda Parker, Latisha Cox, Talbert Cox, Kenneth Coleman, Christopher Battle Sr.
+- [x] Add Sister-In-Law manager: Treiva Hunter
+- [x] Include contact info, salaries, start dates, relationships
+
+### Purchase Request Form
+- [x] Create purchase_requests database table (schema added)
+- [x] Run database migration (SQL executed directly)
+- [x] Create purchase request router with CRUD operations
+- [x] Implement tiered approval workflow:
+  - Under $1,000: Auto-approve (Manager → Procurement → Finance)
+  - $1,000-$5,000: CEO approval required
+  - Over $5,000: Board notification
+- [x] Create Purchase Request UI page
+- [x] Add request submission form
+- [x] Add approval/rejection interface
+- [x] Add request history and tracking
+- [x] All 11 unit tests passing
+
+
+### Database & Dashboard Verification
+- [x] Verify all database tables are functioning (228 tables)
+- [x] Check dashboard data synchronization
+- [x] Ensure organizational structure displays correctly
+- [x] Verify manager information is accurate (12 managers added)
+- [x] Test purchase request workflow (11 tests passed)

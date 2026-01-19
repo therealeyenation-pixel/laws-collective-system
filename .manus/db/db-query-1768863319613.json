@@ -1,0 +1,298 @@
+{
+  "query": "DESCRIBE purchase_requests;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute DESCRIBE purchase_requests;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "requestNumber",
+      "Type": "varchar(50)",
+      "Null": "NO",
+      "Key": "UNI",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "requesterId",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "departmentId",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "title",
+      "Type": "varchar(255)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "description",
+      "Type": "text",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "category",
+      "Type": "enum('software','equipment','supplies','professional_development','travel','contractor','subscription','other')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "vendor",
+      "Type": "varchar(255)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "amount",
+      "Type": "decimal(12,2)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "budgetCode",
+      "Type": "varchar(50)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "fiscalYear",
+      "Type": "varchar(10)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "approvalTier",
+      "Type": "enum('tier1','tier2','tier3')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "status",
+      "Type": "enum('draft','pending_manager','pending_procurement','pending_finance','pending_ceo','pending_board_notification','approved','rejected','cancelled')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "draft",
+      "Extra": ""
+    },
+    {
+      "Field": "managerApproval",
+      "Type": "enum('pending','approved','rejected')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "pending",
+      "Extra": ""
+    },
+    {
+      "Field": "managerApprovedBy",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "managerApprovedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "managerNotes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "procurementApproval",
+      "Type": "enum('pending','approved','rejected')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "pending",
+      "Extra": ""
+    },
+    {
+      "Field": "procurementApprovedBy",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "procurementApprovedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "procurementNotes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "financeApproval",
+      "Type": "enum('pending','approved','rejected')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "pending",
+      "Extra": ""
+    },
+    {
+      "Field": "financeApprovedBy",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "financeApprovedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "financeNotes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "ceoApproval",
+      "Type": "enum('not_required','pending','approved','rejected')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "not_required",
+      "Extra": ""
+    },
+    {
+      "Field": "ceoApprovedBy",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "ceoApprovedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "ceoNotes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "boardNotified",
+      "Type": "tinyint(1)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "boardNotifiedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "attachments",
+      "Type": "json",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "submittedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "completedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint(11)\tNO\tPRI\tNULL\tauto_increment\nrequestNumber\tvarchar(50)\tNO\tUNI\tNULL\t\nrequesterId\tint(11)\tNO\t\tNULL\t\ndepartmentId\tint(11)\tNO\t\tNULL\t\ntitle\tvarchar(255)\tNO\t\tNULL\t\ndescription\ttext\tNO\t\tNULL\t\ncategory\tenum('software','equipment','supplies','professional_development','travel','contractor','subscription','other')\tNO\t\tNULL\t\nvendor\tvarchar(255)\tYES\t\tNULL\t\namount\tdecimal(12,2)\tNO\t\tNULL\t\nbudgetCode\tvarchar(50)\tYES\t\tNULL\t\nfiscalYear\tvarchar(10)\tYES\t\tNULL\t\napprovalTier\tenum('tier1','tier2','tier3')\tNO\t\tNULL\t\nstatus\tenum('draft','pending_manager','pending_procurement','pending_finance','pending_ceo','pending_board_notification','approved','rejected','cancelled')\tNO\t\tdraft\t\nmanagerApproval\tenum('pending','approved','rejected')\tYES\t\tpending\t\nmanagerApprovedBy\tint(11)\tYES\t\tNULL\t\nmanagerApprovedAt\ttimestamp\tYES\t\tNULL\t\nmanagerNotes\ttext\tYES\t\tNULL\t\nprocurementApproval\tenum('pending','approved','rejected')\tYES\t\tpending\t\nprocurementApprovedBy\tint(11)\tYES\t\tNULL\t\nprocurementApprovedAt\ttimestamp\tYES\t\tNULL\t\nprocurementNotes\ttext\tYES\t\tNULL\t\nfinanceApproval\tenum('pending','approved','rejected')\tYES\t\tpending\t\nfinanceApprovedBy\tint(11)\tYES\t\tNULL\t\nfinanceApprovedAt\ttimestamp\tYES\t\tNULL\t\nfinanceNotes\ttext\tYES\t\tNULL\t\nceoApproval\tenum('not_required','pending','approved','rejected')\tYES\t\tnot_required\t\nceoApprovedBy\tint(11)\tYES\t\tNULL\t\nceoApprovedAt\ttimestamp\tYES\t\tNULL\t\nceoNotes\ttext\tYES\t\tNULL\t\nboardNotified\ttinyint(1)\tYES\t\t0\t\nboardNotifiedAt\ttimestamp\tYES\t\tNULL\t\nattachments\tjson\tYES\t\tNULL\t\nsubmittedAt\ttimestamp\tYES\t\tNULL\t\ncompletedAt\ttimestamp\tYES\t\tNULL\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

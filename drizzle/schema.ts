@@ -10436,3 +10436,108 @@ export const triviaQuestions = mysqlTable("trivia_questions", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
+
+
+/**
+ * Purchase Requests - Tiered approval workflow for department spending
+ * Approval Thresholds:
+ * - Under $1,000: Auto-approve (Manager → Procurement → Finance, CEO gets monthly report)
+ * - $1,000-$5,000: CEO approval required
+ * - Over $5,000: Board notification required
+ */
+export const purchaseRequests = mysqlTable("purchase_requests", {
+  id: int("id").autoincrement().primaryKey(),
+  requestNumber: varchar("requestNumber", { length: 50 }).notNull().unique(),
+  requesterId: int("requesterId").notNull(), // User who submitted the request
+  departmentId: int("departmentId").notNull(),
+  
+  // Request details
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  category: mysqlEnum("category", [
+    "software", 
+    "equipment", 
+    "supplies", 
+    "professional_development", 
+    "travel", 
+    "contractor", 
+    "subscription",
+    "other"
+  ]).notNull(),
+  vendor: varchar("vendor", { length: 255 }),
+  
+  // Financial details
+  amount: decimal("amount", { precision: 12, scale: 2 }).notNull(),
+  budgetCode: varchar("budgetCode", { length: 50 }),
+  fiscalYear: varchar("fiscalYear", { length: 10 }),
+  
+  // Approval tier (auto-calculated based on amount)
+  approvalTier: mysqlEnum("approvalTier", ["tier1", "tier2", "tier3"]).notNull(),
+  // tier1: Under $1,000 - auto-approve
+  // tier2: $1,000-$5,000 - CEO approval
+  // tier3: Over $5,000 - Board notification
+  
+  // Status tracking
+  status: mysqlEnum("status", [
+    "draft",
+    "pending_manager",
+    "pending_procurement", 
+    "pending_finance",
+    "pending_ceo",
+    "pending_board_notification",
+    "approved",
+    "rejected",
+    "cancelled"
+  ]).default("draft").notNull(),
+  
+  // Approval chain tracking
+  managerApproval: mysqlEnum("managerApproval", ["pending", "approved", "rejected"]).default("pending"),
+  managerApprovedBy: int("managerApprovedBy"),
+  managerApprovedAt: timestamp("managerApprovedAt"),
+  managerNotes: text("managerNotes"),
+  
+  procurementApproval: mysqlEnum("procurementApproval", ["pending", "approved", "rejected"]).default("pending"),
+  procurementApprovedBy: int("procurementApprovedBy"),
+  procurementApprovedAt: timestamp("procurementApprovedAt"),
+  procurementNotes: text("procurementNotes"),
+  
+  financeApproval: mysqlEnum("financeApproval", ["pending", "approved", "rejected"]).default("pending"),
+  financeApprovedBy: int("financeApprovedBy"),
+  financeApprovedAt: timestamp("financeApprovedAt"),
+  financeNotes: text("financeNotes"),
+  
+  ceoApproval: mysqlEnum("ceoApproval", ["not_required", "pending", "approved", "rejected"]).default("not_required"),
+  ceoApprovedBy: int("ceoApprovedBy"),
+  ceoApprovedAt: timestamp("ceoApprovedAt"),
+  ceoNotes: text("ceoNotes"),
+  
+  boardNotified: boolean("boardNotified").default(false),
+  boardNotifiedAt: timestamp("boardNotifiedAt"),
+  
+  // Attachments and supporting docs
+  attachments: json("attachments"), // Array of file URLs
+  
+  // Timestamps
+  submittedAt: timestamp("submittedAt"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PurchaseRequest = typeof purchaseRequests.$inferSelect;
+export type InsertPurchaseRequest = typeof purchaseRequests.$inferInsert;
+
+/**
+ * Purchase Request Comments - Audit trail for request discussions
+ */
+export const purchaseRequestComments = mysqlTable("purchase_request_comments", {
+  id: int("id").autoincrement().primaryKey(),
+  purchaseRequestId: int("purchaseRequestId").notNull(),
+  userId: int("userId").notNull(),
+  comment: text("comment").notNull(),
+  isInternal: boolean("isInternal").default(false), // Internal notes vs visible to requester
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PurchaseRequestComment = typeof purchaseRequestComments.$inferSelect;
+export type InsertPurchaseRequestComment = typeof purchaseRequestComments.$inferInsert;
