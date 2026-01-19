@@ -4108,9 +4108,10 @@
 
 
 ## Phase 127: International Contractor Templates & Expansion Strategy
-- [ ] Create international contractor agreement template
-- [ ] Create W-8BEN collection template for foreign contractors
-- [ ] Create EOR (Employer of Record) evaluation checklist
-- [ ] Document Trust-based international expansion strategy
-- [ ] Create international operations playbook
-- [ ] Add contractor vs employee classification guide
+- [x] Create international contractor agreement template
+- [x] Create W-8BEN collection package with instructions and tax treaty guide
+- [x] Create EOR (Employer of Record) evaluation checklist (Deel, Remote, Oyster comparison)
+- [x] Document Trust-based international expansion strategy playbook
+- [x] Create international operations playbook (MOU → Contractor → EOR → Subsidiary phases)
+- [x] Add contractor vs employee classification guide with risk assessment
+- [x] All 343 tests passing

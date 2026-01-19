@@ -180,6 +180,52 @@ const templates: Template[] = [
     icon: <Building2 className="w-6 h-6" />,
     fields: ["Prime Recipient", "Sub-Recipient", "Award Amount", "Currency", "Reporting Requirements", "Audit Requirements", "Termination Clauses"],
   },
+  // Contractor Templates
+  {
+    id: "intl-contractor-agreement",
+    name: "International Contractor Agreement",
+    description: "Independent contractor agreement for engaging foreign teleworkers with clear scope, payment terms, IP ownership, and compliance provisions.",
+    category: "international",
+    format: "docx",
+    icon: <Briefcase className="w-6 h-6" />,
+    fields: ["Contractor Name", "Country", "Scope of Work", "Deliverables", "Payment Terms", "Currency", "IP Ownership", "Confidentiality", "Termination"],
+  },
+  {
+    id: "w8ben-collection",
+    name: "W-8BEN Collection Package",
+    description: "Complete package for collecting W-8BEN forms from foreign contractors including instructions, form templates, and tax treaty guidance.",
+    category: "international",
+    format: "docx",
+    icon: <FileText className="w-6 h-6" />,
+    fields: ["Contractor Information", "Country of Residence", "Tax Treaty Benefits", "Certification", "FATCA Status"],
+  },
+  {
+    id: "eor-evaluation",
+    name: "EOR Evaluation Checklist",
+    description: "Employer of Record evaluation checklist for comparing EOR providers (Deel, Remote, Oyster) when hiring international employees.",
+    category: "international",
+    format: "xlsx",
+    icon: <ClipboardList className="w-6 h-6" />,
+    fields: ["Provider Name", "Countries Covered", "Monthly Cost", "Benefits Included", "Compliance Features", "Onboarding Time", "Support Quality"],
+  },
+  {
+    id: "contractor-classification",
+    name: "Contractor vs Employee Guide",
+    description: "Classification guide to determine whether a foreign worker should be engaged as contractor or employee, with risk assessment checklist.",
+    category: "international",
+    format: "docx",
+    icon: <Scale className="w-6 h-6" />,
+    fields: ["Control Factors", "Financial Factors", "Relationship Factors", "Risk Assessment", "Recommended Classification"],
+  },
+  {
+    id: "trust-expansion-playbook",
+    name: "Trust-Based International Expansion Playbook",
+    description: "Strategic guide for using the 98 Trust (Jamaica) as the anchor for international operations without creating separate foreign entities.",
+    category: "international",
+    format: "docx",
+    icon: <Landmark className="w-6 h-6" />,
+    fields: ["Trust Structure", "Commonwealth Advantages", "Asset Protection", "Tax Treaties", "When to Create Foreign Entity", "MOU Strategy"],
+  },
 ];
 
 const categoryColors: Record<string, string> = {
@@ -1186,6 +1232,914 @@ ATTACHMENTS
 `;
   };
 
+  const generateInternationalContractorAgreement = (entityName: string) => {
+    const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    return `INTERNATIONAL INDEPENDENT CONTRACTOR AGREEMENT
+
+================================================================================
+PARTIES
+================================================================================
+
+This Independent Contractor Agreement ("Agreement") is entered into as of ${today}
+
+BETWEEN:
+
+${entityName} ("Company")
+[Address]
+[City, State ZIP, USA]
+EIN: [XX-XXXXXXX]
+
+AND:
+
+[Contractor Name] ("Contractor")
+[Address]
+[City, Country]
+Tax ID/National ID: [XXXXXX]
+
+================================================================================
+SCOPE OF WORK
+================================================================================
+
+Contractor agrees to provide the following services:
+
+1. Description of Services:
+   _______________________________________________________________
+   _______________________________________________________________
+
+2. Deliverables:
+   • [Deliverable 1]: Due by [Date]
+   • [Deliverable 2]: Due by [Date]
+   • [Deliverable 3]: Due by [Date]
+
+3. Performance Standards:
+   _______________________________________________________________
+
+================================================================================
+TERM AND TERMINATION
+================================================================================
+
+Start Date: _______________
+End Date: _______________
+
+Either party may terminate this Agreement:
+• With 30 days written notice
+• Immediately for material breach
+• Immediately if Contractor fails to meet deliverable deadlines
+
+================================================================================
+COMPENSATION
+================================================================================
+
+Payment Structure:
+[ ] Fixed Fee: $_______________
+[ ] Hourly Rate: $_______________/hour (estimated ___ hours)
+[ ] Milestone-Based: See schedule below
+
+Payment Currency: [ ] USD [ ] Local Currency: _______________
+Exchange Rate Basis: _______________
+
+Payment Schedule:
+• [Milestone 1]: $_______________
+• [Milestone 2]: $_______________
+• [Final Payment]: $_______________
+
+Payment Method: Wire Transfer
+Bank Details:
+  Bank Name: _______________
+  Account Name: _______________
+  Account Number: _______________
+  SWIFT/BIC: _______________
+  IBAN (if applicable): _______________
+
+Invoicing Requirements:
+• Invoice format: [Specify]
+• Invoice due date: [X] days after submission
+• Required documentation: [Time sheets, deliverable proof, etc.]
+
+================================================================================
+INDEPENDENT CONTRACTOR STATUS
+================================================================================
+
+Contractor acknowledges and agrees that:
+
+1. Contractor is an independent contractor, NOT an employee of Company
+2. Contractor is responsible for own taxes, insurance, and benefits
+3. Contractor controls the manner and means of performing services
+4. Contractor may work for other clients during this engagement
+5. Company will not withhold taxes from payments to Contractor
+6. Contractor is not entitled to employee benefits
+
+Contractor will receive IRS Form 1099-NEC (if U.S.) or appropriate tax
+documentation for foreign contractors.
+
+================================================================================
+INTELLECTUAL PROPERTY
+================================================================================
+
+Work Product Ownership:
+[ ] All work product is "work made for hire" and owned by Company
+[ ] Contractor assigns all rights to Company upon payment
+[ ] Contractor retains rights with license to Company
+
+Pre-Existing IP:
+Contractor's pre-existing intellectual property used in deliverables:
+_______________________________________________________________
+
+License Grant:
+Contractor grants Company a [exclusive/non-exclusive], [perpetual/limited]
+license to use any pre-existing IP incorporated into deliverables.
+
+================================================================================
+CONFIDENTIALITY
+================================================================================
+
+Contractor agrees to:
+1. Keep all Company information confidential
+2. Not disclose to third parties without written consent
+3. Return all materials upon termination
+4. Obligations survive termination for [X] years
+
+Exceptions:
+• Information already public
+• Information independently developed
+• Information required by law to disclose
+
+================================================================================
+COMPLIANCE
+================================================================================
+
+Contractor certifies:
+
+[ ] Not on any U.S. government restricted party lists (OFAC, BIS, etc.)
+[ ] Will comply with all applicable anti-corruption laws (FCPA, UK Bribery Act)
+[ ] Will not make payments to government officials on Company's behalf
+[ ] Has legal right to work in country of residence
+[ ] Will comply with all local labor and tax laws
+
+================================================================================
+INSURANCE AND INDEMNIFICATION
+================================================================================
+
+Contractor agrees to:
+1. Maintain appropriate professional liability insurance
+2. Indemnify Company against claims arising from Contractor's work
+3. Provide proof of insurance upon request
+
+================================================================================
+GOVERNING LAW AND DISPUTES
+================================================================================
+
+Governing Law: State of [Georgia], United States
+
+Dispute Resolution:
+[ ] Arbitration under [AAA/ICC] rules
+[ ] Mediation followed by arbitration
+[ ] Courts of [Jurisdiction]
+
+Venue: _______________
+Language: English
+
+================================================================================
+SIGNATURES
+================================================================================
+
+COMPANY: ${entityName}
+
+_______________________________     Date: _______________
+Name: _______________
+Title: _______________
+
+
+CONTRACTOR:
+
+_______________________________     Date: _______________
+Name: _______________
+Country of Residence: _______________
+
+================================================================================
+ATTACHMENTS
+================================================================================
+
+[ ] Attachment A: Detailed Scope of Work
+[ ] Attachment B: Payment Schedule
+[ ] Attachment C: W-8BEN Form (for non-U.S. contractors)
+[ ] Attachment D: Confidentiality Agreement
+`;
+  };
+
+  const generateW8BENPackage = (entityName: string) => {
+    return `W-8BEN COLLECTION PACKAGE
+${entityName}
+
+================================================================================
+INSTRUCTIONS FOR FOREIGN CONTRACTORS
+================================================================================
+
+As a foreign contractor providing services to ${entityName}, a U.S. company,
+you are required to complete IRS Form W-8BEN to certify your foreign status
+and claim any applicable tax treaty benefits.
+
+================================================================================
+WHAT IS FORM W-8BEN?
+================================================================================
+
+Form W-8BEN (Certificate of Foreign Status of Beneficial Owner for United
+States Tax Withholding and Reporting) is used by foreign individuals to:
+
+1. Establish that you are not a U.S. person
+2. Claim that you are the beneficial owner of the income
+3. Claim a reduced rate of, or exemption from, withholding under a tax treaty
+
+================================================================================
+WHO NEEDS TO COMPLETE W-8BEN?
+================================================================================
+
+• All non-U.S. individual contractors
+• Non-U.S. sole proprietors
+• Non-U.S. individuals receiving any U.S.-source income
+
+Note: Entities (corporations, partnerships) use Form W-8BEN-E instead.
+
+================================================================================
+INFORMATION YOU WILL NEED
+================================================================================
+
+Part I - Identification:
+[ ] Full legal name (as shown on government ID)
+[ ] Country of citizenship
+[ ] Permanent residence address (not P.O. Box)
+[ ] Mailing address (if different)
+[ ] U.S. taxpayer identification number (if any)
+[ ] Foreign tax identifying number (from your country)
+[ ] Date of birth
+
+Part II - Tax Treaty Benefits (if applicable):
+[ ] Country of residence for tax purposes
+[ ] Article and paragraph of tax treaty
+[ ] Rate of withholding claimed
+[ ] Type of income (e.g., independent personal services)
+
+Part III - Certification:
+[ ] Signature
+[ ] Date
+[ ] Capacity (if signing for someone else)
+
+================================================================================
+TAX TREATY REFERENCE GUIDE
+================================================================================
+
+Common Tax Treaty Countries and Withholding Rates:
+
+| Country        | Treaty Article | Service Income Rate |
+|----------------|----------------|---------------------|
+| United Kingdom | Article 14     | 0% (if no PE)       |
+| Canada         | Article XIV    | 0% (if no PE)       |
+| Germany        | Article 14     | 0% (if no PE)       |
+| France         | Article 14     | 0% (if no PE)       |
+| India          | Article 15     | 0% (if no PE)       |
+| Jamaica        | Article 14     | 0% (if no PE)       |
+| Mexico         | Article 14     | 0% (if no PE)       |
+| Nigeria        | Article 14     | 0% (if no PE)       |
+| South Africa   | Article 14     | 0% (if no PE)       |
+| Ghana          | Article 14     | 0% (if no PE)       |
+
+PE = Permanent Establishment
+
+Note: If your country has a tax treaty with the U.S. and you do not have a
+permanent establishment in the U.S., you may be exempt from U.S. withholding
+on service income.
+
+================================================================================
+STEP-BY-STEP COMPLETION GUIDE
+================================================================================
+
+Line 1: Enter your full legal name exactly as it appears on your passport
+        or government-issued ID.
+
+Line 2: Enter your country of citizenship.
+
+Line 3: Enter your permanent residence address. This must be your actual
+        residence, not a P.O. Box.
+
+Line 4: Enter your mailing address if different from Line 3.
+
+Line 5: Leave blank unless you have a U.S. Social Security Number or ITIN.
+
+Line 6: Enter your foreign tax identification number from your country of
+        residence. This is REQUIRED for treaty benefits.
+
+Line 7: Enter your reference number (optional - for your records).
+
+Line 8: Enter your date of birth in MM-DD-YYYY format.
+
+Part II (Lines 9-10): Complete ONLY if claiming tax treaty benefits.
+
+Line 9: Check the box and enter your country of residence.
+
+Line 10: Enter the special rates and conditions. Example:
+         "The beneficial owner is claiming the provisions of Article 14
+         of the treaty identified on line 9 to claim a 0% rate of
+         withholding on independent personal services income."
+
+Part III: Sign and date the form. The form is valid for 3 years from the
+          date of signature.
+
+================================================================================
+SUBMISSION CHECKLIST
+================================================================================
+
+[ ] Completed W-8BEN form (all required fields filled)
+[ ] Copy of passport or government ID
+[ ] Proof of foreign tax ID (if claiming treaty benefits)
+[ ] Signed and dated within the last 3 years
+
+Submit to:
+${entityName}
+Attn: Accounts Payable / Tax Compliance
+[Email: _______________]
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+1. VALIDITY: Form W-8BEN is valid for 3 years from the date of signature,
+   unless circumstances change.
+
+2. CHANGES: You must submit a new form within 30 days if any information
+   changes (address, citizenship, etc.).
+
+3. WITHHOLDING: Without a valid W-8BEN, ${entityName} is required to
+   withhold 30% of payments for U.S. tax purposes.
+
+4. TAX ADVICE: This package is for informational purposes only. Consult
+   a tax professional in your country for specific advice.
+
+================================================================================
+FATCA STATUS
+================================================================================
+
+FATCA (Foreign Account Tax Compliance Act) Certification:
+
+By completing Form W-8BEN, you are also certifying your FATCA status as
+a foreign person not subject to U.S. tax reporting requirements.
+
+================================================================================
+CONTACT INFORMATION
+================================================================================
+
+Questions about completing this form?
+
+Contact: ${entityName} Tax Compliance
+Email: [_______________]
+Phone: [_______________]
+
+IRS Resources:
+• Form W-8BEN: https://www.irs.gov/forms-pubs/about-form-w-8-ben
+• Instructions: https://www.irs.gov/instructions/iw8ben
+• Tax Treaties: https://www.irs.gov/businesses/international-businesses/united-states-income-tax-treaties-a-to-z
+`;
+  };
+
+  const generateEOREvaluation = (entityName: string) => {
+    const headers = ["Criteria", "Deel", "Remote", "Oyster", "Papaya Global", "Velocity Global", "Notes"];
+    const rows = [
+      ["BASIC INFORMATION", "", "", "", "", "", ""],
+      ["Website", "deel.com", "remote.com", "oysterhr.com", "papayaglobal.com", "velocityglobal.com", ""],
+      ["Founded", "2019", "2019", "2020", "2016", "2014", ""],
+      ["", "", "", "", "", "", ""],
+      ["PRICING", "", "", "", "", "", ""],
+      ["EOR Monthly Fee (per employee)", "$599", "$599", "$599", "Custom", "Custom", "Rates vary by country"],
+      ["Contractor Management Fee", "$49/mo", "$29/mo", "$29/mo", "Included", "Custom", ""],
+      ["Setup Fee", "None", "None", "None", "Varies", "Varies", ""],
+      ["Minimum Commitment", "None", "None", "None", "Annual", "Annual", ""],
+      ["", "", "", "", "", "", ""],
+      ["COUNTRY COVERAGE", "", "", "", "", "", ""],
+      ["Total Countries", "150+", "180+", "180+", "160+", "185+", ""],
+      ["Jamaica", "Yes", "Yes", "Yes", "Yes", "Yes", "Key for Trust operations"],
+      ["Ghana", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Nigeria", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["UK", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Canada", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["", "", "", "", "", "", ""],
+      ["FEATURES", "", "", "", "", "", ""],
+      ["Payroll Processing", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Benefits Administration", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Compliance Management", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Contract Generation", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Expense Management", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Time Tracking", "Yes", "Yes", "Yes", "Yes", "Limited", ""],
+      ["Equipment Shipping", "Yes", "Yes", "Yes", "No", "No", ""],
+      ["Background Checks", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["", "", "", "", "", "", ""],
+      ["ONBOARDING", "", "", "", "", "", ""],
+      ["Average Onboarding Time", "1-2 weeks", "1-2 weeks", "2-3 weeks", "2-4 weeks", "2-4 weeks", ""],
+      ["Self-Service Portal", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Dedicated Support", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["", "", "", "", "", "", ""],
+      ["COMPLIANCE", "", "", "", "", "", ""],
+      ["Local Entity Owned", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["IP Protection", "Strong", "Strong", "Strong", "Strong", "Strong", ""],
+      ["Data Privacy (GDPR)", "Compliant", "Compliant", "Compliant", "Compliant", "Compliant", ""],
+      ["SOC 2 Certified", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["", "", "", "", "", "", ""],
+      ["SUPPORT", "", "", "", "", "", ""],
+      ["24/7 Support", "Yes", "Yes", "Yes", "Yes", "Yes", ""],
+      ["Dedicated CSM", "Enterprise", "Enterprise", "Enterprise", "All plans", "All plans", ""],
+      ["Response Time SLA", "<24 hrs", "<24 hrs", "<24 hrs", "<24 hrs", "<24 hrs", ""],
+      ["", "", "", "", "", "", ""],
+      ["EVALUATION SCORES (1-5)", "", "", "", "", "", ""],
+      ["Ease of Use", "[Score]", "[Score]", "[Score]", "[Score]", "[Score]", ""],
+      ["Country Coverage", "[Score]", "[Score]", "[Score]", "[Score]", "[Score]", ""],
+      ["Pricing Value", "[Score]", "[Score]", "[Score]", "[Score]", "[Score]", ""],
+      ["Customer Support", "[Score]", "[Score]", "[Score]", "[Score]", "[Score]", ""],
+      ["Compliance Strength", "[Score]", "[Score]", "[Score]", "[Score]", "[Score]", ""],
+      ["TOTAL SCORE", "[Sum]", "[Sum]", "[Sum]", "[Sum]", "[Sum]", ""],
+      ["", "", "", "", "", "", ""],
+      ["RECOMMENDATION", "", "", "", "", "", ""],
+      ["Best For", "Startups, SMBs", "Tech companies", "Growing teams", "Enterprise", "Complex needs", ""],
+      ["Selected Provider", "[ ]", "[ ]", "[ ]", "[ ]", "[ ]", ""],
+    ];
+
+    let csv = `${entityName} - Employer of Record (EOR) Evaluation\n`;
+    csv += `Evaluation Date: ${new Date().toLocaleDateString()}\n`;
+    csv += `Evaluated By: _______________\n\n`;
+    csv += headers.join(",") + "\n";
+    rows.forEach(row => {
+      csv += row.map(cell => `"${cell}"`).join(",") + "\n";
+    });
+
+    return csv;
+  };
+
+  const generateContractorClassificationGuide = (entityName: string) => {
+    return `CONTRACTOR VS. EMPLOYEE CLASSIFICATION GUIDE
+${entityName}
+
+================================================================================
+PURPOSE
+================================================================================
+
+This guide helps ${entityName} determine whether a foreign worker should be
+engaged as an independent contractor or through an Employer of Record (EOR)
+as an employee. Misclassification can result in significant penalties,
+back taxes, and legal liability.
+
+================================================================================
+QUICK DECISION FRAMEWORK
+================================================================================
+
+Answer these questions about the working relationship:
+
+1. CONTROL FACTORS
+   [ ] Does the company control WHEN the work is done?
+   [ ] Does the company control WHERE the work is done?
+   [ ] Does the company control HOW the work is done?
+   [ ] Does the company provide training on methods?
+   [ ] Does the company set specific work hours?
+
+   More "Yes" answers = More likely EMPLOYEE
+
+2. FINANCIAL FACTORS
+   [ ] Does the worker have significant investment in equipment?
+   [ ] Can the worker realize profit or loss?
+   [ ] Does the worker have multiple clients?
+   [ ] Does the worker pay own business expenses?
+   [ ] Does the worker set own rates?
+
+   More "Yes" answers = More likely CONTRACTOR
+
+3. RELATIONSHIP FACTORS
+   [ ] Is the relationship expected to be indefinite?
+   [ ] Does the worker receive benefits?
+   [ ] Is the work integral to the business?
+   [ ] Does the worker have authority to hire/fire?
+   [ ] Is there a written contract specifying contractor status?
+
+   More "Yes" to first 4 = More likely EMPLOYEE
+
+================================================================================
+DETAILED CLASSIFICATION CHECKLIST
+================================================================================
+
+WORKER INFORMATION:
+Name: _______________
+Country: _______________
+Proposed Role: _______________
+Engagement Type: [ ] Project-based [ ] Ongoing
+
+--------------------------------------------------------------------------------
+BEHAVIORAL CONTROL
+--------------------------------------------------------------------------------
+
+| Factor | Contractor | Employee | This Worker |
+|--------|------------|----------|-------------|
+| Work schedule | Sets own | Company sets | [ ] |
+| Work location | Chooses own | Company specifies | [ ] |
+| Work methods | Own discretion | Company directs | [ ] |
+| Training | Not required | Company provides | [ ] |
+| Evaluation | By results | By process | [ ] |
+
+--------------------------------------------------------------------------------
+FINANCIAL CONTROL
+--------------------------------------------------------------------------------
+
+| Factor | Contractor | Employee | This Worker |
+|--------|------------|----------|-------------|
+| Equipment | Provides own | Company provides | [ ] |
+| Expenses | Pays own | Company reimburses | [ ] |
+| Profit/Loss | Can have either | Fixed pay | [ ] |
+| Multiple clients | Yes | Exclusive | [ ] |
+| Payment method | Invoice | Payroll | [ ] |
+
+--------------------------------------------------------------------------------
+RELATIONSHIP TYPE
+--------------------------------------------------------------------------------
+
+| Factor | Contractor | Employee | This Worker |
+|--------|------------|----------|-------------|
+| Duration | Project/term | Indefinite | [ ] |
+| Benefits | None | Receives | [ ] |
+| Termination | Per contract | Employment law | [ ] |
+| Integration | Peripheral | Core business | [ ] |
+| Exclusivity | Non-exclusive | Exclusive | [ ] |
+
+================================================================================
+RISK ASSESSMENT
+================================================================================
+
+COUNTRY-SPECIFIC RISKS:
+
+Country: _______________
+
+[ ] High enforcement risk (UK, France, Germany, Netherlands)
+[ ] Medium enforcement risk (Canada, Australia, India)
+[ ] Lower enforcement risk (varies)
+
+Local labor law considerations:
+_______________________________________________________________
+_______________________________________________________________
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+Based on the above analysis:
+
+[ ] INDEPENDENT CONTRACTOR - Low risk
+    Proceed with contractor agreement
+
+[ ] INDEPENDENT CONTRACTOR - Medium risk
+    Proceed with caution; ensure strong contract and documentation
+
+[ ] EMPLOYEE via EOR - Recommended
+    Use Employer of Record to mitigate misclassification risk
+
+[ ] EMPLOYEE - Direct hire
+    Establish local entity or use EOR
+
+Rationale:
+_______________________________________________________________
+_______________________________________________________________
+
+================================================================================
+MITIGATION STRATEGIES FOR CONTRACTORS
+================================================================================
+
+If proceeding with contractor status, implement these safeguards:
+
+1. Written Contract
+   [ ] Clear scope of work with deliverables
+   [ ] Project-based or time-limited engagement
+   [ ] Explicit independent contractor language
+   [ ] IP assignment provisions
+
+2. Operational Practices
+   [ ] Do not set specific work hours
+   [ ] Do not provide company email/equipment
+   [ ] Do not include in company meetings/events
+   [ ] Do not provide training on methods
+   [ ] Allow work for other clients
+
+3. Payment Practices
+   [ ] Pay by invoice, not payroll
+   [ ] No benefits or reimbursements
+   [ ] Collect W-8BEN for tax purposes
+   [ ] Document business purpose of payments
+
+4. Documentation
+   [ ] Maintain signed contractor agreement
+   [ ] Keep invoices and payment records
+   [ ] Document deliverables received
+   [ ] Annual review of classification
+
+================================================================================
+APPROVAL
+================================================================================
+
+Classification Decision: [ ] Contractor [ ] Employee
+
+Reviewed By: _______________
+Title: _______________
+Date: _______________
+
+Approved By: _______________
+Title: _______________
+Date: _______________
+`;
+  };
+
+  const generateTrustExpansionPlaybook = (entityName: string) => {
+    return `TRUST-BASED INTERNATIONAL EXPANSION PLAYBOOK
+${entityName}
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+This playbook outlines the strategy for using the 98 Trust - CALEA Freeman
+Family Trust (domiciled in Jamaica) as the anchor for international operations
+without creating separate foreign entities in each country of operation.
+
+================================================================================
+CURRENT ENTITY STRUCTURE
+================================================================================
+
+                    98 TRUST - CALEA Freeman Family Trust
+                              (Jamaica)
+                                  |
+        +-----------+-------------+-------------+-----------+
+        |           |             |             |           |
+   LuvOnPurpose   L.A.W.S.    Real-Eye-    Academy      [Future
+   Wealth System  Collective   Nation      (501c3)     Entities]
+      (LLC)        (LLC)        (LLC)        (Inc)
+
+================================================================================
+WHY TRUST AS INTERNATIONAL ANCHOR?
+================================================================================
+
+1. COMMONWEALTH ADVANTAGE
+   - Jamaica is a Commonwealth nation with favorable legal framework
+   - English common law system (familiar legal concepts)
+   - Strong property rights and contract enforcement
+   - Tax treaties with multiple countries
+
+2. ASSET PROTECTION
+   - Trust provides liability shield for international operations
+   - Separates personal assets from business risks
+   - Generational wealth preservation structure
+   - Creditor protection in multiple jurisdictions
+
+3. TAX EFFICIENCY
+   - Jamaica has tax treaties with: UK, Canada, USA, CARICOM nations
+   - No capital gains tax on certain investments
+   - Favorable treatment of trust distributions
+   - Potential for tax-efficient repatriation of profits
+
+4. OPERATIONAL FLEXIBILITY
+   - Trust can hold assets in multiple countries
+   - Can own subsidiaries if needed later
+   - Can enter contracts internationally
+   - Can hold intellectual property globally
+
+================================================================================
+INTERNATIONAL EXPANSION STRATEGY
+================================================================================
+
+PHASE 1: MOU-BASED PARTNERSHIPS (Years 1-3)
+------------------------------------------
+
+Approach: Partner with local organizations via MOUs rather than
+establishing physical presence.
+
+Best For:
+• Educational programs (Academy partnerships)
+• Documentary/media projects (Real-Eye-Nation)
+• Workforce development (L.A.W.S. Collective)
+
+Structure:
+• Trust or U.S. entity signs MOU with foreign partner
+• Foreign partner handles local operations
+• Funds flow as grants or service payments
+• No local entity registration required
+
+Countries to Target:
+• Ghana (diaspora connection, English-speaking)
+• Nigeria (large market, English-speaking)
+• UK (Commonwealth, strong legal system)
+• Canada (proximity, Commonwealth)
+• Caribbean nations (CARICOM, Trust domicile)
+
+PHASE 2: CONTRACTOR ENGAGEMENT (Years 2-4)
+------------------------------------------
+
+Approach: Engage foreign individuals as independent contractors
+for specific projects and ongoing support.
+
+Best For:
+• Technical development (platform work)
+• Content creation (media production)
+• Research and curriculum development
+• Administrative support
+
+Structure:
+• U.S. entity or Trust contracts directly
+• Contractor provides services remotely
+• Payment via wire transfer (USD or local currency)
+• W-8BEN collected for tax compliance
+
+Key Countries:
+• Jamaica (Trust operations, local support)
+• India (technical talent, cost-effective)
+• Philippines (English-speaking, admin support)
+• UK (specialized expertise)
+• Nigeria/Ghana (cultural alignment)
+
+PHASE 3: EOR EMPLOYMENT (Years 3-5)
+-----------------------------------
+
+Approach: Use Employer of Record (EOR) services to hire
+full-time employees in foreign countries without establishing
+local entities.
+
+Best For:
+• Country managers/coordinators
+• Full-time program staff
+• Roles requiring employee benefits
+• Countries with strict labor laws
+
+Recommended EOR Providers:
+• Deel - Good for startups, strong in Africa
+• Remote - Strong compliance, good UX
+• Oyster - Growing team focus
+
+Target Roles:
+• Jamaica Country Coordinator (Trust operations)
+• Regional Program Managers
+• Full-time content creators
+• Local business development
+
+PHASE 4: FOREIGN SUBSIDIARY (Year 5+)
+-------------------------------------
+
+Approach: Establish foreign subsidiary ONLY when specific
+operational requirements demand it.
+
+Triggers for Subsidiary:
+• 5+ full-time employees in one country
+• Physical office/facility required
+• Government contracts requiring local entity
+• Banking relationships requiring local registration
+• Significant local revenue generation
+
+Likely First Subsidiaries:
+• Jamaica (Trust already domiciled, natural first)
+• UK (if significant operations develop)
+• Ghana (if Academy expansion succeeds)
+
+Structure:
+• Trust holds shares in foreign subsidiary
+• Local board with Trust oversight
+• Intercompany agreements for services
+• Transfer pricing compliance
+
+================================================================================
+COUNTRY-SPECIFIC PLAYBOOKS
+================================================================================
+
+JAMAICA (Trust Domicile)
+------------------------
+Current Status: Trust domiciled, operational base
+Strategy: Direct Trust operations + local contractors
+Next Steps:
+• Engage local legal counsel for Trust administration
+• Open Trust bank account (if not already)
+• Identify local contractors for support services
+• Establish relationships with local partners
+
+GHANA (Education Expansion)
+---------------------------
+Current Status: Target market for Academy
+Strategy: MOU partnerships + contractors
+Next Steps:
+• Identify educational institution partners
+• Draft MOU for curriculum delivery
+• Engage local education consultants
+• Research grant opportunities (USAID, foundations)
+
+NIGERIA (Media & Workforce)
+---------------------------
+Current Status: Target market for Real-Eye-Nation & L.A.W.S.
+Strategy: MOU partnerships + contractors
+Next Steps:
+• Identify media production partners
+• Connect with workforce development organizations
+• Engage local content creators as contractors
+• Research diaspora engagement opportunities
+
+UK (Commonwealth Hub)
+---------------------
+Current Status: Potential expansion market
+Strategy: Contractors + EOR if needed
+Next Steps:
+• Identify UK-based diaspora organizations
+• Engage UK contractors for specialized work
+• Research UK grant opportunities
+• Consider UK subsidiary only if 5+ employees needed
+
+================================================================================
+COMPLIANCE FRAMEWORK
+================================================================================
+
+For All International Operations:
+
+1. OFAC Screening
+   • Screen all foreign partners/contractors
+   • Document screening process
+   • Ongoing monitoring
+
+2. FCPA Compliance
+   • No payments to government officials
+   • Anti-corruption certifications from partners
+   • Training for staff working internationally
+
+3. Tax Compliance
+   • W-8BEN collection from all foreign contractors
+   • Transfer pricing documentation (if subsidiaries)
+   • Tax treaty benefit claims
+
+4. Data Privacy
+   • GDPR compliance for EU/UK operations
+   • Local data protection law compliance
+   • Data processing agreements with partners
+
+================================================================================
+DECISION TREE: WHEN TO CREATE FOREIGN ENTITY
+================================================================================
+
+                    Do you need to operate in [Country]?
+                                    |
+                    +-------Yes-----+-----No------+
+                    |                             |
+            Can you partner                    Stop
+            via MOU instead?
+                    |
+            +--Yes--+--No--+
+            |              |
+        Use MOU      Do you need
+                     employees?
+                          |
+                  +--Yes--+--No--+
+                  |              |
+              Use EOR       Use
+                          Contractors
+                  |
+          More than 5
+          employees?
+                  |
+          +--Yes--+--No--+
+          |              |
+      Consider       Continue
+      Subsidiary     with EOR
+
+================================================================================
+KEY CONTACTS & RESOURCES
+================================================================================
+
+Jamaica Trust Administration:
+• Attorney: _______________
+• Accountant: _______________
+• Bank: _______________
+
+EOR Providers:
+• Deel: sales@deel.com
+• Remote: sales@remote.com
+• Oyster: sales@oysterhr.com
+
+International Tax:
+• U.S. Tax Advisor: _______________
+• International Tax Specialist: _______________
+
+Compliance:
+• OFAC Screening Tool: _______________
+• FCPA Training Provider: _______________
+
+================================================================================
+APPENDIX: TAX TREATY SUMMARY
+================================================================================
+
+Jamaica Tax Treaties:
+• United States - Yes (reduced withholding)
+• United Kingdom - Yes
+• Canada - Yes
+• CARICOM nations - Yes (regional agreement)
+
+U.S. Tax Treaties (for U.S. entity operations):
+• Full list: https://www.irs.gov/businesses/international-businesses/united-states-income-tax-treaties-a-to-z
+
+================================================================================
+`;
+  };
+
   const handleDownload = (template: Template) => {
     const entityName = selectedEntity 
       ? entities.find(e => e.id === selectedEntity)?.name || "Organization"
@@ -1250,6 +2204,31 @@ ATTACHMENTS
       case "intl-partner-agreement":
         content = generateForeignPartnerAgreement(entityName, projectName);
         filename = `Foreign_Partner_SubAward_Agreement.txt`;
+        mimeType = "text/plain";
+        break;
+      case "intl-contractor-agreement":
+        content = generateInternationalContractorAgreement(entityName);
+        filename = `International_Contractor_Agreement.txt`;
+        mimeType = "text/plain";
+        break;
+      case "w8ben-collection":
+        content = generateW8BENPackage(entityName);
+        filename = `W8BEN_Collection_Package.txt`;
+        mimeType = "text/plain";
+        break;
+      case "eor-evaluation":
+        content = generateEOREvaluation(entityName);
+        filename = `${entityName.replace(/[^a-zA-Z0-9]/g, "_")}_EOR_Evaluation.csv`;
+        mimeType = "text/csv";
+        break;
+      case "contractor-classification":
+        content = generateContractorClassificationGuide(entityName);
+        filename = `Contractor_vs_Employee_Guide.txt`;
+        mimeType = "text/plain";
+        break;
+      case "trust-expansion-playbook":
+        content = generateTrustExpansionPlaybook(entityName);
+        filename = `Trust_International_Expansion_Playbook.txt`;
         mimeType = "text/plain";
         break;
       default:
