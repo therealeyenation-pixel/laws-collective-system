@@ -57,11 +57,15 @@ const menuItems: MenuItem[] = [
   { icon: UserCircle, label: "My Profile", path: "/my-profile", minRole: "user", category: "Personal" },
   { icon: Home, label: "My House", path: "/house", minRole: "user", category: "Personal" },
   { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user", category: "Personal" },
-  { icon: GraduationCap, label: "Learning Center", path: "/academy", minRole: "user", category: "Personal" },
-  { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user", category: "Learning" },
-  { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator", minRole: "user", category: "Learning" },
-  { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator", minRole: "user", category: "Learning" },
-  { icon: Calculator, label: "Tax Simulator", path: "/tax-simulator", minRole: "user", category: "Learning" },
+  
+  // LuvOnPurpose Academy (508(c)(1)(a)) - Sovereign Education
+  { icon: GraduationCap, label: "Academy", path: "/academy", minRole: "user", category: "LuvOnPurpose Academy" },
+  
+  // L.A.W.S. Collective (LLC) - Business Training
+  { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user", category: "L.A.W.S. Training" },
+  { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator", minRole: "user", category: "L.A.W.S. Training" },
+  { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator", minRole: "user", category: "L.A.W.S. Training" },
+  { icon: Calculator, label: "Tax Simulator", path: "/tax-simulator", minRole: "user", category: "L.A.W.S. Training" },
   
   // Staff Level - Operations & Management
   { icon: LayoutDashboard, label: "Business Dashboard", path: "/dashboard", minRole: "staff", category: "Management" },

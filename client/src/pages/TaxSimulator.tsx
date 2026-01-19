@@ -253,6 +253,11 @@ export default function TaxSimulator() {
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs font-medium">
+                L.A.W.S. Collective
+              </Badge>
+            </div>
             <h1 className="text-2xl font-bold text-foreground">Tax Preparation Simulator</h1>
             <p className="text-muted-foreground">
               Calculate taxes, track documents, and prepare filings

@@ -868,6 +868,11 @@ export default function BusinessPlanSimulator() {
       <div className="p-6 max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
+          <div className="flex items-center gap-2 mb-2">
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs font-medium">
+              L.A.W.S. Collective
+            </Badge>
+          </div>
           <h1 className="text-3xl font-bold text-foreground">Business Plan Simulator</h1>
           <p className="text-muted-foreground mt-1">
             Create a business plan that auto-populates in grant applications

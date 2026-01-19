@@ -25,6 +25,7 @@ import {
   DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 type TabType = "overview" | "houses" | "modules" | "languages" | "courses" | "simulators";
 
@@ -71,6 +72,14 @@ export default function AcademyDashboard() {
       <div className="p-6 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
+          <div className="flex items-center gap-2 mb-3">
+            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 text-xs font-medium">
+              LuvOnPurpose Academy
+            </Badge>
+            <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 text-xs">
+              508(c)(1)(a)
+            </Badge>
+          </div>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl">
               <Flame className="w-8 h-8 text-white" />
@@ -486,18 +495,35 @@ export default function AcademyDashboard() {
             {/* Simulators Tab */}
             {activeTab === "simulators" && (
               <div className="space-y-6">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-                  <h2 className="text-xl font-bold text-blue-900 mb-2 flex items-center gap-2">
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300 text-xs font-medium">
+                      L.A.W.S. Collective Partner Program
+                    </Badge>
+                  </div>
+                  <h2 className="text-xl font-bold text-green-900 mb-2 flex items-center gap-2">
                     <Calculator className="w-6 h-6" />
-                    Business Simulators
+                    Business Training Simulators
                   </h2>
-                  <p className="text-blue-800">
-                    Interactive simulations to practice real-world business scenarios. 
-                    Complete simulators to earn LUV tokens and unlock advanced features.
+                  <p className="text-green-800 mb-4">
+                    Business training simulators are provided through our partnership with The L.A.W.S. Collective, LLC. 
+                    These practical simulations complement the Academy's sovereign education curriculum with real-world 
+                    financial literacy and business readiness training.
                   </p>
+                  <Button 
+                    onClick={() => window.location.href = "/business-simulator"}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    Go to L.A.W.S. Training Center
+                  </Button>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="bg-amber-50 rounded-xl p-6 border border-amber-200">
+                  <h3 className="text-lg font-bold text-amber-900 mb-3">Available Training Programs</h3>
+                  <p className="text-amber-800 text-sm mb-4">
+                    The following simulators are available through L.A.W.S. Collective:
+                  </p>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* Trust Formation Simulator */}
                   <div className="bg-white rounded-xl p-5 border border-gray-200 hover:shadow-lg transition-shadow">
                     <div className="flex items-center gap-3 mb-3">
@@ -721,6 +747,7 @@ export default function AcademyDashboard() {
                         Start
                       </Button>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>

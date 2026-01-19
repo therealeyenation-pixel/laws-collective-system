@@ -3906,3 +3906,24 @@
 - [x] Add email submission capability for grant packages (mailto: with pre-filled body)
 - [x] Display application URLs on grant selection cards
 - [x] Test complete apply workflow from simulator to actual grant
+
+
+## Phase 112: Separate L.A.W.S. Simulators from 508 Academy Content
+- [x] Investigate current simulator and academy page structure
+- [x] Identify which pages belong to L.A.W.S. Collective LLC
+- [x] Identify which pages belong to 508(c)(1)(a) Academy
+- [x] Update navigation to separate L.A.W.S. Training and Academy categories
+- [x] Add L.A.W.S. Collective entity badge to simulator pages (green theme)
+- [x] Add LuvOnPurpose Academy entity badge to academy pages (amber theme)
+- [x] Update Simulators tab in AcademyDashboard to show L.A.W.S. partner reference
+- [x] Update mission statements on each section
+- [x] Test organizational separation
+
+## Phase 113: Update Business Plans and Grant Simulator for Entity Focus
+- [x] Fix AcademyDashboard JSX errors
+- [x] Update L.A.W.S. Collective business plan (workforce-to-self-employment focus)
+- [x] Create LuvOnPurpose Academy business plan (sovereign education focus)
+- [x] Enhance Grant Simulator to reflect workforce transition theme
+- [x] Add entity-specific grant recommendations (technology + workforce grants)
+- [x] Add technology eligibility to L.A.W.S. Collective entity
+- [x] Test complete workflow - technology grants verified in Grant Simulator

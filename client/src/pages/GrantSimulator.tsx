@@ -39,18 +39,116 @@ import {
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
+// Entity-specific grant recommendations
+const entityGrantRecommendations: Record<string, string[]> = {
+  "laws": ["dol_workforce", "sba_emerging", "sbir", "nsf_convergence", "digital_equity", "mbda", "naacp", "amber", "herrise", "freed"], // L.A.W.S. Collective - workforce development + technology focus
+  "508academy": ["lilly", "cdbg", "blank", "csra", "rcdi"], // LuvOnPurpose Academy - faith-based education focus
+  "realeyenation": ["amber", "herrise", "ifundwomen", "empowher", "freed"],
+  "luvonpurpose": ["amber", "herrise", "naacp", "mbda", "wish"],
+  "trust": [], // Trusts typically don't apply for grants
+};
+
 const availableGrants = [
+  // WORKFORCE DEVELOPMENT GRANTS (Best for L.A.W.S. Collective)
+  // TECHNOLOGY & INNOVATION GRANTS (Best for L.A.W.S. Collective SaaS Platform)
+  {
+    id: "sbir",
+    name: "SBIR/STTR Phase I Grant",
+    funder: "Small Business Administration (Multi-Agency)",
+    amount: "$50,000 - $275,000",
+    eligibility: ["small_business", "technology", "minority_owned", "women_owned"],
+    description: "Federal R&D funding for small businesses developing innovative technology solutions - ideal for L.A.W.S. Business Management Platform",
+    applicationFee: "Free",
+    deadline: "Multiple cycles per year",
+    applicationUrl: "https://www.sbir.gov/apply",
+    contactEmail: "sbirsupport@reisystems.com",
+    recommendedFor: ["laws"],
+    focusArea: "technology",
+  },
+  {
+    id: "nsf_convergence",
+    name: "NSF Convergence Accelerator",
+    funder: "National Science Foundation",
+    amount: "$750,000 - $5,000,000",
+    eligibility: ["technology", "education", "workforce_development"],
+    description: "Funding for use-inspired research addressing societal challenges - workforce development through technology platforms",
+    applicationFee: "Free",
+    deadline: "Annual (check nsf.gov)",
+    applicationUrl: "https://new.nsf.gov/funding/initiatives/convergence-accelerator",
+    contactEmail: "convergence@nsf.gov",
+    recommendedFor: ["laws"],
+    focusArea: "technology",
+  },
+  {
+    id: "digital_equity",
+    name: "Digital Equity Competitive Grant",
+    funder: "NTIA (Dept. of Commerce)",
+    amount: "$100,000 - $5,000,000",
+    eligibility: ["community", "nonprofit", "technology", "education"],
+    description: "Grants to promote digital inclusion and equity - supports technology-enabled workforce development programs",
+    applicationFee: "Free",
+    deadline: "Annual cycles",
+    applicationUrl: "https://www.internetforall.gov/program/digital-equity-competitive-grant-program",
+    contactEmail: "digitalequity@ntia.gov",
+    recommendedFor: ["laws", "508academy"],
+    focusArea: "technology",
+  },
+  {
+    id: "google_impact",
+    name: "Google.org Impact Challenge",
+    funder: "Google.org",
+    amount: "$250,000 - $2,000,000",
+    eligibility: ["nonprofit", "technology", "community"],
+    description: "Funding for nonprofits using technology to address economic opportunity and workforce development",
+    applicationFee: "Free",
+    deadline: "Annual (varies by region)",
+    applicationUrl: "https://impactchallenge.withgoogle.com/",
+    contactEmail: "impactchallenge@google.com",
+    recommendedFor: ["laws"],
+    focusArea: "technology",
+  },
+  // WORKFORCE DEVELOPMENT GRANTS
+  {
+    id: "dol_workforce",
+    name: "DOL Workforce Innovation Grant",
+    funder: "U.S. Department of Labor",
+    amount: "$100,000 - $1,000,000",
+    eligibility: ["community", "nonprofit", "workforce_development"],
+    description: "Federal grants for workforce development programs that transition workers to entrepreneurship and self-employment",
+    applicationFee: "Free",
+    deadline: "Annual (check grants.gov)",
+    applicationUrl: "https://www.dol.gov/agencies/eta/grants",
+    contactEmail: "eta.grants@dol.gov",
+    recommendedFor: ["laws"],
+    focusArea: "workforce_to_self",
+  },
+  {
+    id: "sba_emerging",
+    name: "SBA Emerging Leaders Initiative",
+    funder: "U.S. Small Business Administration",
+    amount: "Training + Resources (non-monetary)",
+    eligibility: ["small_business", "minority_owned", "women_owned"],
+    description: "Executive-level training for small business owners to accelerate growth - perfect for contractor transition program graduates",
+    applicationFee: "Free",
+    deadline: "Annual cohorts",
+    applicationUrl: "https://www.sba.gov/sba-learning-platform/emerging-leaders",
+    contactEmail: "answerdesk@sba.gov",
+    recommendedFor: ["laws"],
+    focusArea: "workforce_to_self",
+  },
   {
     id: "amber",
     name: "Amber Grant",
     funder: "WomensNet",
     amount: "$10,000 - $50,000",
     eligibility: ["women_owned"],
-    description: "Monthly grants for women-owned businesses",
+    description: "Monthly grants for women-owned businesses - ideal for newly transitioned contractors",
     applicationFee: "$15",
     deadline: "Monthly (last day of month)",
     applicationUrl: "https://ambergrantsforwomen.com/get-an-amber-grant/",
     contactEmail: "info@womensnet.net",
+    recommendedFor: ["laws", "realeyenation", "luvonpurpose"],
+    focusArea: "small_business",
   },
   {
     id: "herrise",
@@ -202,7 +300,7 @@ const entities = [
   { id: "realeyenation", name: "Real-Eye-Nation LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "small_business"] },
   { id: "trust", name: "Calea Freeman Family Trust", type: "Trust", eligibility: ["family_trust"] },
   { id: "luvonpurpose", name: "LuvOnPurpose Autonomous Wealth System LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "small_business"] },
-  { id: "laws", name: "The L.A.W.S. Collective, LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "community", "small_business"] },
+  { id: "laws", name: "The L.A.W.S. Collective, LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "community", "small_business", "technology", "workforce_development"] },
   { id: "508academy", name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "508(c)(1)(a)", eligibility: ["faith_based", "nonprofit", "education", "community"] },
 ];
 
@@ -946,6 +1044,11 @@ export default function GrantSimulator() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs font-medium">
+              L.A.W.S. Collective
+            </Badge>
+          </div>
           <h1 className="text-3xl font-bold">Grant Application Simulator</h1>
           <p className="text-muted-foreground mt-1">Learn how to write winning grant applications step by step</p>
         </div>
