@@ -1459,6 +1459,192 @@
           "notes": "Digital literacy for older adults"
         }
       ]
+    },
+    "internationalExpansion": {
+      "title": "International & Global Expansion Grants",
+      "description": "Grants for organizations expanding internationally, global development projects, and cross-border initiatives. Aligned with Year 5 global expansion goals.",
+      "grants": [
+        {
+          "id": "intl-001",
+          "name": "United Nations Democracy Fund (UNDEF)",
+          "funder": "United Nations",
+          "amount": "$100,000 - $300,000",
+          "deadline": "Annual cycle (typically November)",
+          "focus": "Democracy, human rights, civic engagement globally",
+          "eligibility": "NGOs, civil society organizations worldwide",
+          "url": "https://www.un.org/democracyfund",
+          "fitScore": 85,
+          "notes": "Supports grassroots democracy initiatives globally"
+        },
+        {
+          "id": "intl-002",
+          "name": "World Bank Small Grants Program",
+          "funder": "World Bank",
+          "amount": "$10,000 - $50,000",
+          "deadline": "Rolling by country",
+          "focus": "Community development, poverty reduction",
+          "eligibility": "Community organizations, NGOs",
+          "url": "https://www.worldbank.org/en/programs/small-grants-program",
+          "fitScore": 80,
+          "notes": "Country-specific programs available"
+        },
+        {
+          "id": "intl-003",
+          "name": "Ford Foundation International Grants",
+          "funder": "Ford Foundation",
+          "amount": "$50,000 - $500,000+",
+          "deadline": "Rolling",
+          "focus": "Social justice, economic fairness, democratic values",
+          "eligibility": "Organizations working on systemic change",
+          "url": "https://www.fordfoundation.org/work/our-grants",
+          "fitScore": 88,
+          "notes": "Global focus on inequality and injustice"
+        },
+        {
+          "id": "intl-004",
+          "name": "Open Society Foundations",
+          "funder": "Open Society Foundations",
+          "amount": "$25,000 - $250,000+",
+          "deadline": "Rolling",
+          "focus": "Human rights, justice, democratic governance",
+          "eligibility": "Organizations promoting open society values",
+          "url": "https://www.opensocietyfoundations.org/grants",
+          "fitScore": 85,
+          "notes": "Global network supporting civil society"
+        },
+        {
+          "id": "intl-005",
+          "name": "Rockefeller Foundation Global Grants",
+          "funder": "Rockefeller Foundation",
+          "amount": "$100,000 - $1,000,000+",
+          "deadline": "By invitation/LOI",
+          "focus": "Food security, health, economic opportunity, climate",
+          "eligibility": "Organizations with global impact potential",
+          "url": "https://www.rockefellerfoundation.org",
+          "fitScore": 82,
+          "notes": "Focus on scalable solutions to global challenges"
+        },
+        {
+          "id": "intl-006",
+          "name": "Bill & Melinda Gates Foundation",
+          "funder": "Gates Foundation",
+          "amount": "$100,000 - $10,000,000+",
+          "deadline": "By invitation",
+          "focus": "Global health, poverty, education",
+          "eligibility": "Organizations with proven track record",
+          "url": "https://www.gatesfoundation.org",
+          "fitScore": 75,
+          "notes": "Primarily invitation-only, but accepts inquiries"
+        },
+        {
+          "id": "intl-007",
+          "name": "USAID Grants",
+          "funder": "U.S. Agency for International Development",
+          "amount": "$50,000 - $5,000,000+",
+          "deadline": "Multiple cycles",
+          "focus": "International development, democracy, humanitarian aid",
+          "eligibility": "U.S. and international NGOs",
+          "url": "https://www.usaid.gov/work-usaid/get-grant-or-contract",
+          "fitScore": 80,
+          "notes": "Major funder for international development work"
+        },
+        {
+          "id": "intl-008",
+          "name": "African Development Foundation",
+          "funder": "U.S. African Development Foundation",
+          "amount": "$50,000 - $250,000",
+          "deadline": "Rolling",
+          "focus": "African community enterprises, economic development",
+          "eligibility": "African community groups and enterprises",
+          "url": "https://www.usadf.gov",
+          "fitScore": 88,
+          "notes": "Excellent for African diaspora connections and expansion"
+        },
+        {
+          "id": "intl-009",
+          "name": "Caribbean Development Bank Grants",
+          "funder": "Caribbean Development Bank",
+          "amount": "Varies by program",
+          "deadline": "Multiple cycles",
+          "focus": "Caribbean regional development, poverty reduction",
+          "eligibility": "Organizations in Caribbean member countries",
+          "url": "https://www.caribank.org",
+          "fitScore": 90,
+          "notes": "Directly relevant for Jamaica-based Trust operations"
+        },
+        {
+          "id": "intl-010",
+          "name": "Inter-American Foundation",
+          "funder": "Inter-American Foundation",
+          "amount": "$25,000 - $400,000",
+          "deadline": "Rolling",
+          "focus": "Latin America and Caribbean grassroots development",
+          "eligibility": "Community organizations in LAC region",
+          "url": "https://www.iaf.gov",
+          "fitScore": 85,
+          "notes": "Supports grassroots economic development"
+        },
+        {
+          "id": "intl-011",
+          "name": "Global Fund for Women",
+          "funder": "Global Fund for Women",
+          "amount": "$5,000 - $50,000",
+          "deadline": "Rolling",
+          "focus": "Women's rights and leadership globally",
+          "eligibility": "Women-led organizations outside U.S.",
+          "url": "https://www.globalfundforwomen.org",
+          "fitScore": 82,
+          "notes": "For international women's initiatives"
+        },
+        {
+          "id": "intl-012",
+          "name": "Skoll Foundation Social Entrepreneurs",
+          "funder": "Skoll Foundation",
+          "amount": "$500,000 - $1,500,000",
+          "deadline": "By nomination",
+          "focus": "Social entrepreneurs driving systemic change",
+          "eligibility": "Proven social entrepreneurs with global impact",
+          "url": "https://skoll.org",
+          "fitScore": 80,
+          "notes": "Prestigious award for social entrepreneurs"
+        },
+        {
+          "id": "intl-013",
+          "name": "Ashoka Fellowship",
+          "funder": "Ashoka",
+          "amount": "Stipend + network access",
+          "deadline": "Rolling nominations",
+          "focus": "Social entrepreneurs worldwide",
+          "eligibility": "Innovative social entrepreneurs",
+          "url": "https://www.ashoka.org/en-us/program/ashoka-fellowship",
+          "fitScore": 85,
+          "notes": "Global network of social entrepreneurs"
+        },
+        {
+          "id": "intl-014",
+          "name": "Echoing Green Fellowship",
+          "funder": "Echoing Green",
+          "amount": "$80,000 over 2 years",
+          "deadline": "Annual cycle",
+          "focus": "Emerging social entrepreneurs globally",
+          "eligibility": "Early-stage social entrepreneurs",
+          "url": "https://echoinggreen.org/fellowship",
+          "fitScore": 88,
+          "notes": "Seed funding for new social ventures"
+        },
+        {
+          "id": "intl-015",
+          "name": "Commonwealth Foundation Grants",
+          "funder": "Commonwealth Foundation",
+          "amount": "£10,000 - £100,000",
+          "deadline": "Multiple cycles",
+          "focus": "Civil society strengthening in Commonwealth nations",
+          "eligibility": "Organizations in Commonwealth countries (incl. Jamaica)",
+          "url": "https://commonwealthfoundation.com",
+          "fitScore": 90,
+          "notes": "Directly applicable for Jamaica operations"
+        }
+      ]
     }
   },
   "applicationStrategy": {

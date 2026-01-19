@@ -28,6 +28,7 @@ import {
 import DocumentUpload from "@/components/DocumentUpload";
 import DocumentLibrary from "@/components/DocumentLibrary";
 import DocumentExpirationAlert from "@/components/DocumentExpirationAlert";
+import DocumentTemplates from "@/components/DocumentTemplates";
 
 // Entity mapping
 const ENTITIES = [
@@ -141,7 +142,7 @@ export default function GrantDocuments() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-[500px]">
+          <TabsList className="grid w-full grid-cols-5 lg:w-[650px]">
             <TabsTrigger value="overview" className="gap-2">
               <FolderOpen className="w-4 h-4" />
               Overview
@@ -153,6 +154,10 @@ export default function GrantDocuments() {
             <TabsTrigger value="library" className="gap-2">
               <FileText className="w-4 h-4" />
               Library
+            </TabsTrigger>
+            <TabsTrigger value="templates" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Templates
             </TabsTrigger>
             <TabsTrigger value="alerts" className="gap-2">
               <AlertCircle className="w-4 h-4" />
@@ -388,6 +393,11 @@ export default function GrantDocuments() {
               entityName={currentEntity?.name}
               showChecklist={true}
             />
+          </TabsContent>
+
+          {/* Templates Tab */}
+          <TabsContent value="templates" className="space-y-6">
+            <DocumentTemplates />
           </TabsContent>
 
           {/* Alerts Tab */}

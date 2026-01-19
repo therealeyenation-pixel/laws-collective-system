@@ -4088,3 +4088,29 @@
 - [x] Add ability to set custom deadline dates when tracking
 - [x] Add deadline status filtering (urgent/approaching/upcoming/rolling)
 - [x] Test deadline reminder functionality - all 343 tests passing
+
+
+## Phase 126: Grant Document Templates (Including International Expansion)
+- [x] Design template structure for common grant documents
+- [x] Create budget spreadsheet template (Excel-compatible) with multi-currency support
+- [x] Create organizational chart template
+- [x] Create letter of support template (Word-compatible)
+- [x] Create project narrative template
+- [x] Create board resolution template
+- [x] Add international grant opportunities to database (UN, World Bank, international foundations)
+- [x] Create international MOU template for foreign partnerships
+- [x] Create international compliance documentation template (OFAC, FCPA, AML)
+- [x] Create global impact narrative template
+- [x] Create foreign partner sub-award agreement template
+- [x] Build DocumentTemplates component with preview and download
+- [x] Add Templates tab to Document Center page
+- [x] Test template downloads - all 343 tests passing
+
+
+## Phase 127: International Contractor Templates & Expansion Strategy
+- [ ] Create international contractor agreement template
+- [ ] Create W-8BEN collection template for foreign contractors
+- [ ] Create EOR (Employer of Record) evaluation checklist
+- [ ] Document Trust-based international expansion strategy
+- [ ] Create international operations playbook
+- [ ] Add contractor vs employee classification guide
