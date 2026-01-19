@@ -4582,3 +4582,36 @@
 - [x] Create Christopher Battle Sr. offer letter - Project Controls Manager ($108,000)
 - [x] Corrected Essence E. Hunter to Essence M. Hunter
 - [x] Generate PDFs for all new offer letters
+
+
+## Phase 145: HerRise Microgrant Application ($1,000)
+
+- [x] Research HerRise Microgrant requirements
+- [ ] SKIPPED - Requires professional headshot (not available)
+- [ ] Add to future: Apply when team headshots completed
+
+## Phase 145B: Freed Fellowship Application ($500-$2,500)
+
+- [ ] Research Freed Fellowship requirements
+- [ ] Navigate to application portal
+- [ ] Complete application form
+- [ ] Submit application
+- [ ] Document submission confirmation
+
+## Future Task: Team Professional Headshots (Amandes - Media Manager)
+
+- [ ] Schedule professional headshot session for CEO (LaShanna Russell)
+- [ ] Schedule headshots for all team members
+- [ ] Use for grant applications, website, LinkedIn, marketing
+
+
+## Phase 146: Amber Grant Application - SUBMITTED
+
+- [x] Navigate to Amber Grant application portal
+- [x] Complete application form with business description
+- [x] Complete grant usage plan for $10K and $50K
+- [x] Enter credit card payment ($15 fee)
+- [x] Submit application - CONFIRMED SUCCESSFUL
+- [x] Confirmation received: "Thank you for submitting your Amber Grant application"
+- [x] Winners announced by 21st of following month (February 21, 2026)
+- [x] Application applies to all WomensNet grants (Amber Grant, Start-Up Grant, Business-Specific Grant)
