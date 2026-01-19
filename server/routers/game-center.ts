@@ -14,12 +14,19 @@ import {
 import { eq, desc, and, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
+// Helper to ensure db is not null
+const ensureDb = async () => {
+  const db = await getDb();
+  if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+  return db;
+};
+
 export const gameCenterRouter = router({
   // Games
   getGames: publicProcedure
     .input(z.object({ ageGroup: z.string().optional() }).optional())
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       if (input?.ageGroup) {
         return db.select().from(gameCenterGames)
           .where(and(
@@ -36,7 +43,7 @@ export const gameCenterRouter = router({
   getGameBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       const [game] = await db.select().from(gameCenterGames)
         .where(eq(gameCenterGames.slug, input.slug));
       if (!game) throw new TRPCError({ code: "NOT_FOUND", message: "Game not found" });
@@ -58,7 +65,7 @@ export const gameCenterRouter = router({
       icon: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       const values: any = {
         ...input,
         skillsTargeted: input.skillsTargeted ? JSON.stringify(input.skillsTargeted) : null,
@@ -69,7 +76,7 @@ export const gameCenterRouter = router({
 
   // Seed default games
   seedGames: protectedProcedure.mutation(async () => {
-    const db = await getDb();
+    const db = await ensureDb();
     const existing = await db.select().from(gameCenterGames);
     if (existing.length > 0) {
       return { message: "Games already seeded", count: existing.length };
@@ -125,7 +132,7 @@ export const gameCenterRouter = router({
       player2Id: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       const [result] = await db.insert(gameMatches).values({
         ...input,
         status: "in_progress",
@@ -145,7 +152,7 @@ export const gameCenterRouter = router({
       tokensAwarded: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       const { id, ...updates } = input;
       const values: any = { ...updates };
       if (updates.status === "completed") {
@@ -161,7 +168,7 @@ export const gameCenterRouter = router({
   getPlayerMatches: protectedProcedure
     .input(z.object({ playerId: z.number(), limit: z.number().default(20) }))
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       return db.select().from(gameMatches)
         .where(sql`${gameMatches.player1Id} = ${input.playerId} OR ${gameMatches.player2Id} = ${input.playerId}`)
         .orderBy(desc(gameMatches.createdAt))
@@ -172,7 +179,7 @@ export const gameCenterRouter = router({
   getTournaments: publicProcedure
     .input(z.object({ status: z.string().optional() }).optional())
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       if (input?.status) {
         return db.select().from(gameTournaments)
           .where(eq(gameTournaments.status, input.status as any))
@@ -195,7 +202,7 @@ export const gameCenterRouter = router({
       startDate: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       const values: any = {
         ...input,
         registrationDeadline: input.registrationDeadline ? new Date(input.registrationDeadline) : undefined,
@@ -209,7 +216,7 @@ export const gameCenterRouter = router({
   getPlayerStats: protectedProcedure
     .input(z.object({ playerId: z.number() }))
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       return db.select().from(gamePlayerStats)
         .where(eq(gamePlayerStats.playerId, input.playerId))
         .orderBy(desc(gamePlayerStats.gamesPlayed));
@@ -224,7 +231,7 @@ export const gameCenterRouter = router({
       tokensEarned: z.number().default(0),
     }))
     .mutation(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       const [existing] = await db.select().from(gamePlayerStats)
         .where(and(
           eq(gamePlayerStats.playerId, input.playerId),
@@ -270,7 +277,7 @@ export const gameCenterRouter = router({
       limit: z.number().default(10),
     }))
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       let query = db.select().from(gamePlayerStats);
       
       if (input.gameId) {
@@ -289,14 +296,14 @@ export const gameCenterRouter = router({
 
   // Trivia
   getTriviaCategories: publicProcedure.query(async () => {
-    const db = await getDb();
+    const db = await ensureDb();
     return db.select().from(triviaCategories)
       .where(eq(triviaCategories.isActive, true))
       .orderBy(triviaCategories.name);
   }),
 
   seedTriviaCategories: protectedProcedure.mutation(async () => {
-    const db = await getDb();
+    const db = await ensureDb();
     const existing = await db.select().from(triviaCategories);
     if (existing.length > 0) {
       return { message: "Categories already seeded", count: existing.length };
@@ -326,7 +333,7 @@ export const gameCenterRouter = router({
       limit: z.number().default(10),
     }))
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       let conditions = [eq(triviaQuestions.isActive, true)];
       
       if (input.categoryId) {
@@ -354,7 +361,7 @@ export const gameCenterRouter = router({
       source: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       const [result] = await db.insert(triviaQuestions).values({
         ...input,
         wrongAnswers: JSON.stringify(input.wrongAnswers),
@@ -366,7 +373,7 @@ export const gameCenterRouter = router({
   getAchievements: publicProcedure
     .input(z.object({ gameId: z.number().optional() }).optional())
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       if (input?.gameId) {
         return db.select().from(gameAchievements)
           .where(and(
@@ -381,7 +388,7 @@ export const gameCenterRouter = router({
   getPlayerAchievements: protectedProcedure
     .input(z.object({ playerId: z.number() }))
     .query(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       return db.select().from(gamePlayerAchievements)
         .where(eq(gamePlayerAchievements.playerId, input.playerId))
         .orderBy(desc(gamePlayerAchievements.earnedAt));
@@ -393,7 +400,7 @@ export const gameCenterRouter = router({
       achievementId: z.number(),
     }))
     .mutation(async ({ input }) => {
-      const db = await getDb();
+      const db = await ensureDb();
       
       // Check if already earned
       const [existing] = await db.select().from(gamePlayerAchievements)
@@ -425,7 +432,7 @@ export const gameCenterRouter = router({
 
   // Stats overview
   getStats: publicProcedure.query(async () => {
-    const db = await getDb();
+    const db = await ensureDb();
     const games = await db.select().from(gameCenterGames).where(eq(gameCenterGames.isActive, true));
     const tournaments = await db.select().from(gameTournaments);
     const categories = await db.select().from(triviaCategories);

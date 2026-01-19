@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, UserCircle, UserPlus, FolderKanban, Award, Music, Palette } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, UserCircle, UserPlus, FolderKanban, Award, Music, Palette, Package, Gamepad2 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -57,6 +57,7 @@ const menuItems: MenuItem[] = [
   { icon: UserCircle, label: "My Profile", path: "/my-profile", minRole: "user", category: "Personal" },
   { icon: Home, label: "My House", path: "/house", minRole: "user", category: "Personal" },
   { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user", category: "Personal" },
+  { icon: Gamepad2, label: "Game Center", path: "/game-center", minRole: "user", category: "Personal" },
   
   // LuvOnPurpose Academy (508(c)(1)(a)) - Sovereign Education
   { icon: GraduationCap, label: "Academy", path: "/academy", minRole: "user", category: "LuvOnPurpose Academy" },
@@ -95,6 +96,9 @@ const menuItems: MenuItem[] = [
   
   // L.A.W.S. Collective - Design Department
   { icon: Palette, label: "Design Department", path: "/design-department", minRole: "staff", category: "L.A.W.S. Design" },
+  
+  // Software & Technology
+  { icon: Package, label: "Software Licenses", path: "/software-licenses", minRole: "staff", category: "Technology" },
   
   // Admin Level - Entity & Business Operations
   { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin", category: "Administration" },

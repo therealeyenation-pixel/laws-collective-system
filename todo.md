@@ -4347,6 +4347,7 @@
 
 ### Game Center UI
 - [x] Game Center dashboard at /game-center
+- [x] Game Center accessible from sidebar navigation
 - [ ] Individual game pages
 - [ ] Tournament lobby and brackets
 - [ ] Player profiles with stats
