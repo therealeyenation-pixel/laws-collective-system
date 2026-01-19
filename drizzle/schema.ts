@@ -8661,3 +8661,125 @@ export const grantApplicationHistory = mysqlTable("grant_application_history", {
 
 export type GrantApplicationHistory = typeof grantApplicationHistory.$inferSelect;
 export type InsertGrantApplicationHistory = typeof grantApplicationHistory.$inferInsert;
+
+// ============================================
+// GRANT DOCUMENT MANAGEMENT
+// Document upload, storage, and management for grant applications
+// ============================================
+
+/**
+ * Grant Documents - Store metadata for uploaded documents
+ * Files stored in S3, metadata in database
+ */
+export const grantDocuments = mysqlTable("grant_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Entity association
+  entityId: varchar("entityId", { length: 100 }).notNull(),
+  entityName: varchar("entityName", { length: 255 }).notNull(),
+  
+  // Document metadata
+  fileName: varchar("fileName", { length: 500 }).notNull(),
+  originalFileName: varchar("originalFileName", { length: 500 }).notNull(),
+  fileSize: int("fileSize").notNull(),
+  mimeType: varchar("mimeType", { length: 100 }).notNull(),
+  
+  // S3 storage
+  s3Key: varchar("s3Key", { length: 1000 }).notNull(),
+  s3Url: varchar("s3Url", { length: 2000 }).notNull(),
+  
+  // Document categorization
+  category: mysqlEnum("grantDocCategory", [
+    "budget",
+    "staffing",
+    "equipment",
+    "letters_of_support",
+    "legal",
+    "financial_statements",
+    "program_narrative",
+    "evaluation_plan",
+    "timeline",
+    "certificates",
+    "other"
+  ]).notNull(),
+  
+  // Document details
+  description: text("description"),
+  version: int("version").default(1).notNull(),
+  
+  // Expiration tracking
+  expiresAt: timestamp("expiresAt"),
+  isExpired: boolean("isExpired").default(false).notNull(),
+  
+  // Status
+  status: mysqlEnum("grantDocStatus", [
+    "active",
+    "archived",
+    "replaced",
+    "deleted"
+  ]).default("active").notNull(),
+  
+  // Audit
+  uploadedBy: varchar("uploadedBy", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GrantDocument = typeof grantDocuments.$inferSelect;
+export type InsertGrantDocument = typeof grantDocuments.$inferInsert;
+
+/**
+ * Grant Application Documents - Link documents to specific applications
+ */
+export const grantApplicationDocuments = mysqlTable("grant_application_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  applicationId: int("applicationId").notNull(),
+  documentId: int("documentId").notNull(),
+  
+  isRequired: boolean("isRequired").default(false).notNull(),
+  isSubmitted: boolean("isSubmitted").default(false).notNull(),
+  
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GrantApplicationDocument = typeof grantApplicationDocuments.$inferSelect;
+export type InsertGrantApplicationDocument = typeof grantApplicationDocuments.$inferInsert;
+
+/**
+ * Document Requirements - Define what documents are needed per grant type
+ */
+export const documentRequirements = mysqlTable("document_requirements", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  grantId: int("grantId"),
+  grantType: varchar("grantType", { length: 100 }),
+  
+  category: mysqlEnum("reqDocCategory", [
+    "budget",
+    "staffing",
+    "equipment",
+    "letters_of_support",
+    "legal",
+    "financial_statements",
+    "program_narrative",
+    "evaluation_plan",
+    "timeline",
+    "certificates",
+    "other"
+  ]).notNull(),
+  
+  description: text("description").notNull(),
+  isRequired: boolean("isRequired").default(true).notNull(),
+  maxFileSize: int("maxFileSize"),
+  allowedFormats: json("allowedFormats").$type<string[]>(),
+  
+  validityPeriod: int("validityPeriod"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DocumentRequirement = typeof documentRequirements.$inferSelect;
+export type InsertDocumentRequirement = typeof documentRequirements.$inferInsert;

@@ -4020,3 +4020,23 @@
 - [x] Fix AcademyDashboard.tsx JSX error
 - [x] Grant-Entity matching with recommended entities
 - [x] Trust handling - shows no available grants with explanatory message
+
+
+## Phase 121: Grant Document Upload Feature
+- [x] Create grant-documents router with S3 integration
+- [x] Define document categories (budget, staffing, legal, financial_statements, etc.)
+- [x] Define document requirements per category (formats, max size, required flag)
+- [x] Implement file upload endpoint with base64 encoding
+- [x] Generate unique S3 keys for uploaded files
+- [x] Store document metadata in secureDocuments table
+- [x] Create blockchain record for document uploads
+- [x] Build DocumentUpload component with drag-and-drop interface
+- [x] Build DocumentLibrary component for viewing/managing documents
+- [x] Create GrantDocuments page with entity selection
+- [x] Implement document checklist with completion tracking
+- [x] Add document category filtering and search
+- [x] Add document preview and download functionality
+- [x] Add delete document functionality (soft delete)
+- [x] Register /grant-documents route in App.tsx
+- [x] Write vitest tests for grant documents (10 tests passing)
+- [x] Test complete document upload workflow
