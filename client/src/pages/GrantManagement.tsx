@@ -1,5 +1,6 @@
 import { useState } from "react";
 import EntityGrants from "@/components/EntityGrants";
+import GrantDeadlineReminder from "@/components/GrantDeadlineReminder";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -324,9 +325,10 @@ export default function GrantManagement() {
 
         {/* Main Tabs */}
         <Tabs defaultValue="by-entity" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsList className="grid w-full grid-cols-3 mb-4">
             <TabsTrigger value="by-entity">By Entity (No Duplicates)</TabsTrigger>
             <TabsTrigger value="all-grants">All Grant Database</TabsTrigger>
+            <TabsTrigger value="deadlines">Deadline Reminders</TabsTrigger>
           </TabsList>
 
           <TabsContent value="by-entity">
@@ -715,6 +717,10 @@ export default function GrantManagement() {
             </div>
           </CardContent>
         </Card>
+          </TabsContent>
+
+          <TabsContent value="deadlines">
+            <GrantDeadlineReminder />
           </TabsContent>
         </Tabs>
       </div>

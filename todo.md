@@ -4077,3 +4077,14 @@
 - [x] Add application tips section for demographic-specific grants
 - [x] Test filtering functionality across all grant views
 - [x] All 343 tests passing
+
+
+## Phase 125: Grant Deadline Reminders
+- [x] Design deadline reminder data structure
+- [x] Create deadline tracking and notification logic (localStorage-based)
+- [x] Build GrantDeadlineReminder component for dashboard
+- [x] Add Deadline Reminders tab to Grant Management page
+- [x] Implement 30/14/7 day reminder alerts with status cards
+- [x] Add ability to set custom deadline dates when tracking
+- [x] Add deadline status filtering (urgent/approaching/upcoming/rolling)
+- [x] Test deadline reminder functionality - all 343 tests passing
