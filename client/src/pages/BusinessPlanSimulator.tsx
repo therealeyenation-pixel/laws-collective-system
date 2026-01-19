@@ -55,13 +55,13 @@ const ENTITY_TYPES = [
   { value: "collective", label: "Collective", description: "Community-based cooperative organization" },
 ];
 
-// Pre-populated entities from Business Simulator (would come from database)
+// Pre-populated entities from Business Formation (synced with BusinessFormation.tsx)
 const EXISTING_ENTITIES = [
   { id: 1, name: "Real-Eye-Nation LLC", type: "llc", status: "formed", ein: "84-4976416" },
-  { id: 2, name: "Calea Freeman Family Trust", type: "trust", status: "ein_obtained", ein: "98-6109577" },
-  { id: 3, name: "LuvOnPurpose Autonomous Wealth System LLC", type: "llc", status: "active" },
-  { id: 4, name: "The L.A.W.S. Collective, LLC", type: "llc", status: "active", ein: "39-3122993" },
-  { id: 5, name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "nonprofit_508", status: "active" },
+  { id: 2, name: "Calea Freeman Family Trust", type: "trust", status: "formed", ein: "98-6109577" },
+  { id: 3, name: "LuvOnPurpose Autonomous Wealth System LLC", type: "llc", status: "formed", ein: "41-3683894" },
+  { id: 4, name: "The L.A.W.S. Collective, LLC", type: "llc", status: "formed", ein: "39-3122993" },
+  { id: 5, name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "nonprofit_508", status: "formed" },
 ];
 
 // Team members from Family Onboarding (would come from database)

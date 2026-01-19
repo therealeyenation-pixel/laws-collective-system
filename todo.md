@@ -3933,4 +3933,18 @@
 - [x] Add trust integration section to LuvOnPurpose Academy business plan
 - [x] Document IP licensing structure (Trust → LLC)
 - [x] Document property holding structure (Trust → Academy)
-- [ ] Save checkpoint with all updates
+- [x] Save checkpoint with all updates
+
+## Phase 115: Grant Workflow Improvements
+- [ ] Fix AcademyDashboard JSX closing tag error
+- [ ] Build grant tracking system with status workflow (draft, submitted, pending, approved, denied)
+- [ ] Add PDF export for grant packages
+- [ ] Create pre-filled grant application templates from business plans
+- [ ] Test complete grant workflow
+- [ ] Save checkpoint
+
+## Phase 116: Fix Entity Status Display
+- [x] Investigate Business Plan Simulator entity status logic
+- [x] Update entity status to show actual formation status (Formed for all entities with EINs)
+- [x] Test entity status display - all 5 entities show "Formed" badge
+- [ ] Save checkpoint
