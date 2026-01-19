@@ -4769,3 +4769,32 @@
 - [ ] Outputs become portfolio pieces
 - [ ] Completion unlocks contractor eligibility
 - [ ] Track competency development
+
+
+## Phase 152: Sidebar Correction & Department Dashboards
+
+### Sidebar Structure Correction
+- [x] Remove "Coordinator Simulator" from each department
+- [x] Add proper department structure: Dashboard, Simulator, Team, Documents
+- [x] Coordinators are roles within departments, not separate training tracks
+- [x] All positions are salaried (high-level entry point)
+
+### Department Dashboards (18 total)
+- [ ] Business Dashboard (CEO - LaShanna K. Russell)
+- [ ] Health Dashboard (Amber S. Hunter)
+- [ ] Education Dashboard (Cornelius Christopher)
+- [ ] Design Dashboard (Essence M. Hunter)
+- [ ] Media Dashboard (Amandes Pearsall IV)
+- [ ] Finance Dashboard (Craig Russell)
+- [ ] HR Dashboard (Open)
+- [ ] Operations Dashboard (Open)
+- [ ] Procurement Dashboard (Maia Rylandlesesene)
+- [ ] Contracts Dashboard (Roshonda Parker)
+- [ ] Purchasing Dashboard (Latisha Cox)
+- [ ] Property Dashboard (Talbert Cox)
+- [ ] Real Estate Dashboard (Kenneth Coleman / Treiva Hunter)
+- [ ] Project Controls Dashboard (Christopher Battle Sr.)
+- [ ] QA/QC Dashboard (Open)
+- [ ] Legal/Compliance Dashboard (Open)
+- [ ] Platform Admin Dashboard (Open)
+- [ ] Grants Dashboard (Open)

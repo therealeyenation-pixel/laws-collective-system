@@ -164,7 +164,8 @@ const menuCategories: MenuCategory[] = [
           { icon: Building2, label: "Business Formation", path: "/business-formation", minRole: "user" },
           { icon: FileText, label: "Operating Agreements", path: "/operating-agreements", minRole: "user" },
           { icon: BarChart3, label: "SWOT Analysis", path: "/swot-analysis", minRole: "user" },
-          { icon: Play, label: "Coordinator Simulator", path: "/business-coordinator-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/business-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/business-documents", minRole: "staff" },
         ]
       },
       // Health Department (Amber S. Hunter)
@@ -175,7 +176,9 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: Heart, label: "Health Dashboard", path: "/health-dashboard", minRole: "staff" },
           { icon: Users, label: "Wellness Programs", path: "/wellness-programs", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/health-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Health Simulator", path: "/health-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/health-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/health-documents", minRole: "staff" },
         ]
       },
       // Education Department (Cornelius Christopher)
@@ -187,7 +190,9 @@ const menuCategories: MenuCategory[] = [
           { icon: GraduationCap, label: "Education Dashboard", path: "/education-dashboard", minRole: "staff" },
           { icon: BookOpen, label: "Curriculum", path: "/curriculum", minRole: "staff" },
           { icon: Users, label: "Instructors", path: "/instructors", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/education-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Education Simulator", path: "/education-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/education-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/education-documents", minRole: "staff" },
         ]
       },
       // Design Department (Essence M. Hunter)
@@ -198,7 +203,9 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: Palette, label: "Design Dashboard", path: "/design-dashboard", minRole: "staff" },
           { icon: Palette, label: "Brand Assets", path: "/brand-assets", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/design-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Design Simulator", path: "/design-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/design-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/design-documents", minRole: "staff" },
         ]
       },
       // Media Department (Amandes Pearsall IV)
@@ -209,7 +216,9 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: Music, label: "Media Dashboard", path: "/media-dashboard", minRole: "staff" },
           { icon: Share2, label: "Content Calendar", path: "/content-calendar", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/media-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Media Simulator", path: "/media-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/media-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/media-documents", minRole: "staff" },
         ]
       },
 // Finance Department (Craig Russell)
@@ -223,7 +232,9 @@ const menuCategories: MenuCategory[] = [
           { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff" },
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },
           { icon: CreditCard, label: "Pricing", path: "/pricing", minRole: "admin" },
-          { icon: Play, label: "Coordinator Simulator", path: "/finance-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Finance Simulator", path: "/finance-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/finance-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/finance-documents", minRole: "staff" },
         ]
       },
       // HR & People
@@ -241,7 +252,9 @@ const menuCategories: MenuCategory[] = [
           { icon: Users, label: "Family Onboarding", path: "/family-onboarding", minRole: "admin" },
           { icon: Award, label: "Resume Builder", path: "/resume-builder", minRole: "staff" },
           { icon: FileSignature, label: "Offer Letters", path: "/offer-letters", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/hr-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "HR Simulator", path: "/hr-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/hr-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/hr-documents", minRole: "staff" },
         ]
       },
       // Operations Department (Open)
@@ -252,7 +265,9 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: Wrench, label: "Operations Dept Dashboard", path: "/operations-dept-dashboard", minRole: "staff" },
           { icon: FileText, label: "Operating Procedures", path: "/procedures", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/operations-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Operations Simulator", path: "/operations-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/operations-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/operations-documents", minRole: "staff" },
         ]
       },
       // Procurement Department (Maia Rylandlesesene)
@@ -266,7 +281,9 @@ const menuCategories: MenuCategory[] = [
           { icon: FileText, label: "RFP Generator", path: "/rfp-generator", minRole: "staff" },
           { icon: Package, label: "Procurement Catalog", path: "/procurement-catalog", minRole: "staff" },
           { icon: Search, label: "Vendor Management", path: "/vendor-management", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/procurement-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Procurement Simulator", path: "/procurement-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/procurement-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/procurement-documents", minRole: "staff" },
         ]
       },
       // Contracts Department (Roshonda Parker)
@@ -278,7 +295,9 @@ const menuCategories: MenuCategory[] = [
           { icon: FileCheck, label: "Contracts Dashboard", path: "/contracts-dashboard", minRole: "staff" },
           { icon: FileCheck, label: "Contract Management", path: "/contract-management", minRole: "staff" },
           { icon: FileText, label: "Contractor Agreements", path: "/contractor-agreements", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/contracts-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Contracts Simulator", path: "/contracts-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/contracts-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/contracts-documents", minRole: "staff" },
         ]
       },
       // Purchasing Department (Latisha Cox)
@@ -289,7 +308,9 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: Truck, label: "Purchasing Dashboard", path: "/purchasing-dashboard", minRole: "staff" },
           { icon: Package, label: "Inventory", path: "/inventory", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/purchasing-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Purchasing Simulator", path: "/purchasing-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/purchasing-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/purchasing-documents", minRole: "staff" },
         ]
       },
       // Property Department (Talbert Cox)
@@ -301,7 +322,9 @@ const menuCategories: MenuCategory[] = [
           { icon: Building, label: "Property Dashboard", path: "/property-dashboard", minRole: "staff" },
           { icon: Package, label: "Software Licenses", path: "/software-licenses", minRole: "staff" },
           { icon: Clipboard, label: "Asset Tracking", path: "/asset-tracking", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/property-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Property Simulator", path: "/property-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/property-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/property-documents", minRole: "staff" },
         ]
       },
       // Real Estate Department (Kenneth Coleman, Treiva Hunter)
@@ -312,7 +335,9 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: MapPin, label: "Real Estate Dashboard", path: "/real-estate-dashboard", minRole: "staff" },
           { icon: Building2, label: "Properties", path: "/properties", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/real-estate-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Real Estate Simulator", path: "/real-estate-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/real-estate-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/real-estate-documents", minRole: "staff" },
         ]
       },
       // Project Controls Department (Christopher Battle Sr.)
@@ -324,7 +349,9 @@ const menuCategories: MenuCategory[] = [
           { icon: FolderKanban, label: "Project Controls Dashboard", path: "/project-controls-dashboard", minRole: "staff" },
           { icon: FolderKanban, label: "Project Controls", path: "/project-controls", minRole: "staff" },
           { icon: BarChart3, label: "Progress Reporting", path: "/progress-reporting", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/project-controls-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Project Controls Simulator", path: "/project-controls-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/project-controls-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/project-controls-documents", minRole: "staff" },
         ]
       },
       // QA/QC Department (Open)
@@ -336,7 +363,9 @@ const menuCategories: MenuCategory[] = [
           { icon: CheckCircle, label: "QA/QC Dashboard", path: "/qaqc-dashboard", minRole: "staff" },
           { icon: ClipboardList, label: "Quality Standards", path: "/quality-standards", minRole: "staff" },
           { icon: FileCheck, label: "Audits", path: "/audits", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/qaqc-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "QA/QC Simulator", path: "/qaqc-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/qaqc-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/qaqc-documents", minRole: "staff" },
         ]
       },
       // Legal/Compliance Department (Open)
@@ -348,7 +377,9 @@ const menuCategories: MenuCategory[] = [
           { icon: Scale, label: "Legal Dashboard", path: "/legal-dashboard", minRole: "staff" },
           { icon: AlertTriangle, label: "Compliance", path: "/compliance", minRole: "staff" },
           { icon: Gavel, label: "Legal Documents", path: "/legal-documents", minRole: "staff" },
-          { icon: Play, label: "Coordinator Simulator", path: "/legal-coordinator-simulator", minRole: "staff" },
+          { icon: Play, label: "Legal Simulator", path: "/legal-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/legal-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/legal-documents", minRole: "staff" },
         ]
       },
       // Platform Administration (Open)
@@ -360,7 +391,9 @@ const menuCategories: MenuCategory[] = [
           { icon: Monitor, label: "Platform Dashboard", path: "/platform-dashboard", minRole: "admin" },
           { icon: Settings, label: "System Settings", path: "/system-settings", minRole: "admin" },
           { icon: Users, label: "User Management", path: "/user-management", minRole: "admin" },
-          { icon: Play, label: "Admin Simulator", path: "/platform-admin-simulator", minRole: "admin" },
+          { icon: Play, label: "Platform Simulator", path: "/platform-simulator", minRole: "admin" },
+          { icon: Users, label: "Team", path: "/platform-team", minRole: "admin" },
+          { icon: FolderOpen, label: "Documents", path: "/platform-documents", minRole: "admin" },
         ]
       },
       // Grants & Funding
@@ -373,7 +406,9 @@ const menuCategories: MenuCategory[] = [
           { icon: Gift, label: "Grant Management", path: "/grants", minRole: "staff" },
           { icon: Gift, label: "Grant Tracking", path: "/grant-tracking", minRole: "staff" },
           { icon: FileText, label: "Grant Documents", path: "/grant-documents", minRole: "staff" },
-          { icon: Play, label: "Grant Writer Simulator", path: "/grant-writer-simulator", minRole: "staff" },
+          { icon: Play, label: "Grants Simulator", path: "/grants-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/grants-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/grants-documents", minRole: "staff" },
         ]
       },
       // Documents
