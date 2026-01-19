@@ -78,11 +78,12 @@ const REAL_ENTITIES: EntityData[] = [
     formationStatus: "active",
     dateFormed: "2025-07-08",
     controlNumber: "10252584",
-    hasEIN: false,
+    ein: "41-3683894",
+    hasEIN: true,
     hasPaperwork: true,
     isOperating: true,
     address: "262 Chapman Rd, Ste 240, Newark, DE 19702",
-    notes: "Delaware LLC. File Number: 10252584. SR: 20253294275. Registered Agent: Republic Registered Agent LLC. Organizer: Lovette Dobson. Revenue assignment: Products (Platform/SaaS subscriptions)."
+    notes: "Delaware LLC. File Number: 10252584. SR: 20253294275. EIN: 41-3683894. Name Control: LUVO. Registered Agent: Republic Registered Agent LLC. Organizer: Lovette Dobson. Revenue assignment: Products (Platform/SaaS subscriptions)."
   },
   {
     id: 4,
