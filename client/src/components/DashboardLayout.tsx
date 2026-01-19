@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, UserCircle, UserPlus, FolderKanban, Award } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, UserCircle, UserPlus, FolderKanban, Award, Music, Palette } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -89,6 +89,12 @@ const menuItems: MenuItem[] = [
   { icon: Share2, label: "Social Media", path: "/social-media", minRole: "staff", category: "Management" },
   { icon: FileText, label: "Proposal Simulator", path: "/proposal-simulator", minRole: "staff", category: "Management" },
   { icon: FileText, label: "RFP Generator", path: "/rfp-generator", minRole: "staff", category: "Management" },
+  
+  // Real-Eye-Nation - Creative Enterprise
+  { icon: Music, label: "Creative Enterprise", path: "/creative-enterprise", minRole: "staff", category: "Real-Eye-Nation" },
+  
+  // L.A.W.S. Collective - Design Department
+  { icon: Palette, label: "Design Department", path: "/design-department", minRole: "staff", category: "L.A.W.S. Design" },
   
   // Admin Level - Entity & Business Operations
   { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin", category: "Administration" },

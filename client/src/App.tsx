@@ -78,6 +78,8 @@ import CompanyCalendar from "./pages/CompanyCalendar";
 import ESignature from "./pages/ESignature";
 import SpecialistTracks from "./pages/SpecialistTracks";
 import Scholarships from "./pages/Scholarships";
+import CreativeEnterprise from "./pages/CreativeEnterprise";
+import DesignDepartment from "./pages/DesignDepartment";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -225,6 +227,8 @@ function Router() {
       <Route path="/e-signature">{() => <ProtectedRoute component={ESignature} minRole="staff" />}</Route>
       <Route path="/specialist-tracks">{() => <ProtectedRoute component={SpecialistTracks} minRole="staff" />}</Route>
       <Route path="/scholarships">{() => <ProtectedRoute component={Scholarships} minRole="staff" />}</Route>
+      <Route path="/creative-enterprise">{() => <ProtectedRoute component={CreativeEnterprise} minRole="staff" />}</Route>
+      <Route path="/design-department">{() => <ProtectedRoute component={DesignDepartment} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>

@@ -9598,3 +9598,489 @@ export const scholarshipFundTransactions = mysqlTable("scholarship_fund_transact
 });
 export type ScholarshipFundTransaction = typeof scholarshipFundTransactions.$inferSelect;
 export type InsertScholarshipFundTransaction = typeof scholarshipFundTransactions.$inferInsert;
+
+
+// ============================================================================
+// CREATIVE ENTERPRISE & DESIGN DEPARTMENT TABLES
+// ============================================================================
+
+/**
+ * Creative Artists - profiles for performers and digital creators
+ * Supports both Real-Eye-Nation (performance) and L.A.W.S. (design) artists
+ */
+export const creativeArtists = mysqlTable("creative_artists", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Basic info
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  stageName: varchar("stageName", { length: 255 }),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 50 }),
+  
+  // Artist type and affiliation
+  artistType: mysqlEnum("artistType", [
+    "performer",      // Real-Eye-Nation: acting, music, dance, spoken word
+    "producer",       // Real-Eye-Nation: recording, filming, editing
+    "designer",       // L.A.W.S.: digital design, branding
+    "animator",       // L.A.W.S.: 3D, motion graphics
+    "hybrid"          // Both divisions
+  ]).notNull(),
+  primaryEntity: mysqlEnum("primaryEntity", ["real_eye_nation", "laws_collective", "both"]).default("real_eye_nation").notNull(),
+  
+  // Specializations (JSON array)
+  specializations: json("specializations"), // e.g., ["acting", "voice_over", "dance"]
+  
+  // Family/House connection (optional)
+  familyMemberId: int("familyMemberId"),
+  houseId: varchar("houseId", { length: 50 }),
+  
+  // Specialist Track connection (for entry-level)
+  specialistTrackId: int("specialistTrackId"),
+  
+  // Status and level
+  status: mysqlEnum("status", ["applicant", "trainee", "active", "senior", "master", "emeritus", "inactive"]).default("applicant").notNull(),
+  experienceLevel: mysqlEnum("experienceLevel", ["entry", "intermediate", "advanced", "expert", "master"]).default("entry").notNull(),
+  
+  // Business fundamentals completion (anti-starving-artist)
+  businessFundamentalsCompleted: boolean("businessFundamentalsCompleted").default(false).notNull(),
+  financialLiteracyCompleted: boolean("financialLiteracyCompleted").default(false).notNull(),
+  ipLicensingTrainingCompleted: boolean("ipLicensingTrainingCompleted").default(false).notNull(),
+  
+  // Portfolio
+  portfolioUrl: text("portfolioUrl"),
+  demoReelUrl: text("demoReelUrl"),
+  bio: text("bio"),
+  
+  // Contract details
+  contractType: mysqlEnum("contractType", ["employee", "contractor", "freelance", "intern"]).default("contractor").notNull(),
+  minimumGuarantee: decimal("minimumGuarantee", { precision: 10, scale: 2 }),
+  revenueSharePercentage: decimal("revenueSharePercentage", { precision: 5, scale: 2 }).default("70.00"), // Artist gets 70% by default
+  
+  // Token economy
+  tokenBalance: int("tokenBalance").default(0).notNull(),
+  lifetimeTokensEarned: int("lifetimeTokensEarned").default(0).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CreativeArtist = typeof creativeArtists.$inferSelect;
+export type InsertCreativeArtist = typeof creativeArtists.$inferInsert;
+
+/**
+ * Creative Productions - content and IP tracking
+ * Tracks all creative works for royalty and licensing management
+ */
+export const creativeProductions = mysqlTable("creative_productions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Production info
+  title: varchar("title", { length: 255 }).notNull(),
+  productionType: mysqlEnum("productionType", [
+    // Performance (Real-Eye-Nation)
+    "film", "video", "music_track", "album", "podcast", "live_performance",
+    "theater_production", "dance_piece", "spoken_word", "documentary",
+    // Design (L.A.W.S.)
+    "graphic_design", "brand_identity", "ui_ux_design", "3d_model",
+    "animation", "motion_graphics", "nft", "digital_art", "illustration",
+    // Hybrid
+    "music_video", "promotional_content", "educational_content"
+  ]).notNull(),
+  
+  // Entity ownership
+  owningEntity: mysqlEnum("owningEntity", ["real_eye_nation", "laws_collective", "joint"]).notNull(),
+  
+  // Description and metadata
+  description: text("description"),
+  genre: varchar("genre", { length: 100 }),
+  duration: int("duration"), // in seconds for time-based media
+  releaseDate: timestamp("releaseDate"),
+  
+  // IP and licensing
+  ipOwnership: mysqlEnum("ipOwnership", [
+    "artist_full",        // Artist owns 100%
+    "company_full",       // Company owns 100%
+    "shared_majority_artist",  // Artist owns majority
+    "shared_majority_company", // Company owns majority
+    "work_for_hire"       // Company owns, artist paid flat fee
+  ]).default("shared_majority_artist").notNull(),
+  
+  copyrightRegistered: boolean("copyrightRegistered").default(false).notNull(),
+  copyrightNumber: varchar("copyrightNumber", { length: 100 }),
+  
+  // Licensing availability
+  licensingAvailable: boolean("licensingAvailable").default(true).notNull(),
+  licensingTypes: json("licensingTypes"), // e.g., ["sync", "commercial", "educational"]
+  
+  // Status
+  status: mysqlEnum("status", ["in_development", "in_production", "post_production", "completed", "released", "archived"]).default("in_development").notNull(),
+  
+  // Financial
+  productionBudget: decimal("productionBudget", { precision: 12, scale: 2 }),
+  totalRevenue: decimal("totalRevenue", { precision: 12, scale: 2 }).default("0.00"),
+  totalRoyaltiesPaid: decimal("totalRoyaltiesPaid", { precision: 12, scale: 2 }).default("0.00"),
+  
+  // Files and assets
+  primaryAssetUrl: text("primaryAssetUrl"),
+  thumbnailUrl: text("thumbnailUrl"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CreativeProduction = typeof creativeProductions.$inferSelect;
+export type InsertCreativeProduction = typeof creativeProductions.$inferInsert;
+
+/**
+ * Production Credits - links artists to productions with their roles
+ */
+export const productionCredits = mysqlTable("production_credits", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  productionId: int("productionId").notNull(),
+  artistId: int("artistId").notNull(),
+  
+  // Role in production
+  role: varchar("role", { length: 255 }).notNull(), // e.g., "Lead Actor", "Director", "Graphic Designer"
+  creditType: mysqlEnum("creditType", [
+    "creator", "performer", "producer", "director", "writer",
+    "designer", "animator", "editor", "composer", "featured"
+  ]).notNull(),
+  
+  // Revenue share for this specific production
+  revenueSharePercentage: decimal("revenueSharePercentage", { precision: 5, scale: 2 }),
+  
+  // Payment details
+  flatFee: decimal("flatFee", { precision: 10, scale: 2 }),
+  flatFeePaid: boolean("flatFeePaid").default(false).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ProductionCredit = typeof productionCredits.$inferSelect;
+export type InsertProductionCredit = typeof productionCredits.$inferInsert;
+
+/**
+ * Artist Revenue Streams - tracks all income sources for artists
+ */
+export const artistRevenueStreams = mysqlTable("artist_revenue_streams", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  artistId: int("artistId").notNull(),
+  
+  // Revenue type
+  revenueType: mysqlEnum("revenueType", [
+    "royalty",           // Ongoing royalties from productions
+    "performance_fee",   // Live performance payment
+    "teaching_fee",      // Academy instruction
+    "commission",        // Design/art commission
+    "licensing_fee",     // IP licensing income
+    "merchandise",       // Merch sales
+    "streaming",         // Streaming royalties
+    "sync_license",      // Music/video sync licensing
+    "nft_sale",          // NFT primary sale
+    "nft_royalty",       // NFT secondary sale royalty
+    "grant",             // Grant funding
+    "sponsorship"        // Sponsorship income
+  ]).notNull(),
+  
+  // Related records
+  productionId: int("productionId"),
+  bookingId: int("bookingId"),
+  
+  // Amount
+  grossAmount: decimal("grossAmount", { precision: 12, scale: 2 }).notNull(),
+  companyShare: decimal("companyShare", { precision: 12, scale: 2 }).notNull(),
+  artistShare: decimal("artistShare", { precision: 12, scale: 2 }).notNull(),
+  
+  // Payment status
+  status: mysqlEnum("status", ["pending", "approved", "paid", "disputed"]).default("pending").notNull(),
+  paidAt: timestamp("paidAt"),
+  paymentMethod: varchar("paymentMethod", { length: 100 }),
+  paymentReference: varchar("paymentReference", { length: 255 }),
+  
+  // Description
+  description: text("description"),
+  periodStart: timestamp("periodStart"),
+  periodEnd: timestamp("periodEnd"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ArtistRevenueStream = typeof artistRevenueStreams.$inferSelect;
+export type InsertArtistRevenueStream = typeof artistRevenueStreams.$inferInsert;
+
+/**
+ * Design Projects - tracks design work for L.A.W.S. Design Department
+ */
+export const designProjects = mysqlTable("design_projects", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Project info
+  projectName: varchar("projectName", { length: 255 }).notNull(),
+  projectType: mysqlEnum("projectType", [
+    "brand_identity",
+    "logo_design",
+    "marketing_materials",
+    "ui_ux_design",
+    "web_design",
+    "app_design",
+    "3d_modeling",
+    "animation",
+    "motion_graphics",
+    "video_editing",
+    "photo_editing",
+    "illustration",
+    "infographic",
+    "presentation",
+    "packaging",
+    "merchandise_design",
+    "nft_collection",
+    "ai_assisted_design"
+  ]).notNull(),
+  
+  // Client (internal entity or external)
+  clientType: mysqlEnum("clientType", ["internal", "external"]).default("internal").notNull(),
+  clientEntityId: int("clientEntityId"), // If internal, which entity
+  clientName: varchar("clientName", { length: 255 }), // If external
+  
+  // Assigned designer(s)
+  leadDesignerId: int("leadDesignerId"),
+  
+  // Project details
+  description: text("description"),
+  requirements: text("requirements"),
+  deliverables: json("deliverables"), // List of expected deliverables
+  
+  // Timeline
+  startDate: timestamp("startDate"),
+  dueDate: timestamp("dueDate"),
+  completedDate: timestamp("completedDate"),
+  
+  // Status
+  status: mysqlEnum("status", ["briefing", "in_progress", "review", "revision", "approved", "delivered", "archived"]).default("briefing").notNull(),
+  
+  // Budget and billing
+  projectBudget: decimal("projectBudget", { precision: 10, scale: 2 }),
+  billingType: mysqlEnum("billingType", ["fixed", "hourly", "internal"]).default("internal").notNull(),
+  hourlyRate: decimal("hourlyRate", { precision: 8, scale: 2 }),
+  hoursLogged: decimal("hoursLogged", { precision: 8, scale: 2 }).default("0.00"),
+  totalBilled: decimal("totalBilled", { precision: 10, scale: 2 }).default("0.00"),
+  
+  // AI tools used
+  aiToolsUsed: json("aiToolsUsed"), // e.g., ["midjourney", "dalle", "stable_diffusion"]
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type DesignProject = typeof designProjects.$inferSelect;
+export type InsertDesignProject = typeof designProjects.$inferInsert;
+
+/**
+ * Design Assets - digital asset management for design department
+ */
+export const designAssets = mysqlTable("design_assets", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Asset info
+  assetName: varchar("assetName", { length: 255 }).notNull(),
+  assetType: mysqlEnum("assetType", [
+    "logo", "icon", "illustration", "photo", "video", "animation",
+    "3d_model", "font", "color_palette", "template", "mockup",
+    "source_file", "export", "nft"
+  ]).notNull(),
+  
+  // Related records
+  projectId: int("projectId"),
+  productionId: int("productionId"),
+  creatorId: int("creatorId"), // Artist who created it
+  
+  // File details
+  fileUrl: text("fileUrl").notNull(),
+  thumbnailUrl: text("thumbnailUrl"),
+  fileFormat: varchar("fileFormat", { length: 50 }),
+  fileSizeBytes: int("fileSizeBytes"),
+  dimensions: varchar("dimensions", { length: 50 }), // e.g., "1920x1080"
+  
+  // Metadata
+  description: text("description"),
+  tags: json("tags"), // Search tags
+  colorPalette: json("colorPalette"), // Extracted colors
+  
+  // Licensing
+  licenseType: mysqlEnum("licenseType", [
+    "internal_only",
+    "client_exclusive",
+    "royalty_free",
+    "rights_managed",
+    "creative_commons",
+    "nft_owned"
+  ]).default("internal_only").notNull(),
+  
+  // NFT details (if applicable)
+  isNft: boolean("isNft").default(false).notNull(),
+  nftContractAddress: varchar("nftContractAddress", { length: 255 }),
+  nftTokenId: varchar("nftTokenId", { length: 100 }),
+  nftChain: varchar("nftChain", { length: 50 }),
+  
+  // Version control
+  version: int("version").default(1).notNull(),
+  parentAssetId: int("parentAssetId"), // For versioning
+  
+  status: mysqlEnum("status", ["draft", "review", "approved", "archived"]).default("draft").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type DesignAsset = typeof designAssets.$inferSelect;
+export type InsertDesignAsset = typeof designAssets.$inferInsert;
+
+/**
+ * Creative Bookings - performance and project scheduling
+ */
+export const creativeBookings = mysqlTable("creative_bookings", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Booking type
+  bookingType: mysqlEnum("bookingType", [
+    "live_performance",
+    "recording_session",
+    "photo_shoot",
+    "video_shoot",
+    "workshop",
+    "teaching",
+    "consultation",
+    "design_session",
+    "event_appearance"
+  ]).notNull(),
+  
+  // Artist(s) booked
+  primaryArtistId: int("primaryArtistId").notNull(),
+  additionalArtists: json("additionalArtists"), // Array of artist IDs
+  
+  // Event details
+  eventName: varchar("eventName", { length: 255 }).notNull(),
+  eventDescription: text("eventDescription"),
+  
+  // Location
+  locationType: mysqlEnum("locationType", ["in_person", "virtual", "hybrid"]).default("in_person").notNull(),
+  venue: varchar("venue", { length: 255 }),
+  address: text("address"),
+  virtualLink: text("virtualLink"),
+  
+  // Timing
+  startDateTime: timestamp("startDateTime").notNull(),
+  endDateTime: timestamp("endDateTime").notNull(),
+  setupTime: int("setupTime"), // Minutes before start
+  
+  // Client/requester
+  clientType: mysqlEnum("clientType", ["internal", "external"]).default("internal").notNull(),
+  clientEntityId: int("clientEntityId"),
+  clientName: varchar("clientName", { length: 255 }),
+  clientContact: varchar("clientContact", { length: 255 }),
+  
+  // Financial
+  bookingFee: decimal("bookingFee", { precision: 10, scale: 2 }),
+  depositAmount: decimal("depositAmount", { precision: 10, scale: 2 }),
+  depositPaid: boolean("depositPaid").default(false).notNull(),
+  finalPaymentPaid: boolean("finalPaymentPaid").default(false).notNull(),
+  
+  // Status
+  status: mysqlEnum("status", ["inquiry", "pending", "confirmed", "in_progress", "completed", "cancelled"]).default("inquiry").notNull(),
+  
+  // Requirements
+  technicalRequirements: text("technicalRequirements"),
+  specialRequests: text("specialRequests"),
+  
+  // Related production (if any)
+  productionId: int("productionId"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CreativeBooking = typeof creativeBookings.$inferSelect;
+export type InsertCreativeBooking = typeof creativeBookings.$inferInsert;
+
+/**
+ * Creative Training Programs - curriculum for artist development
+ */
+export const creativeTrainingPrograms = mysqlTable("creative_training_programs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Program info
+  programName: varchar("programName", { length: 255 }).notNull(),
+  programType: mysqlEnum("programType", [
+    // Performance tracks
+    "acting", "voice_acting", "music_performance", "music_production",
+    "dance", "spoken_word", "theater", "film_production",
+    // Design tracks
+    "graphic_design", "ui_ux", "3d_animation", "motion_graphics",
+    "brand_development", "digital_art", "nft_creation",
+    // Business tracks (required)
+    "business_fundamentals", "financial_literacy", "ip_licensing",
+    "marketing_self", "contract_negotiation"
+  ]).notNull(),
+  
+  // Entity
+  owningEntity: mysqlEnum("owningEntity", ["real_eye_nation", "laws_collective", "academy"]).notNull(),
+  
+  // Description
+  description: text("description"),
+  learningObjectives: json("learningObjectives"),
+  
+  // Requirements
+  prerequisitePrograms: json("prerequisitePrograms"), // Array of program IDs
+  isBusinessFundamental: boolean("isBusinessFundamental").default(false).notNull(), // Required before specialization
+  
+  // Duration
+  durationWeeks: int("durationWeeks"),
+  hoursPerWeek: int("hoursPerWeek"),
+  
+  // Modules
+  modules: json("modules"), // Array of module objects
+  
+  // Completion requirements
+  completionRequirements: json("completionRequirements"),
+  certificateAwarded: boolean("certificateAwarded").default(true).notNull(),
+  
+  // Token rewards
+  completionTokenReward: int("completionTokenReward").default(100).notNull(),
+  
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("draft").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CreativeTrainingProgram = typeof creativeTrainingPrograms.$inferSelect;
+export type InsertCreativeTrainingProgram = typeof creativeTrainingPrograms.$inferInsert;
+
+/**
+ * Artist Training Progress - tracks artist completion of training programs
+ */
+export const artistTrainingProgress = mysqlTable("artist_training_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  artistId: int("artistId").notNull(),
+  programId: int("programId").notNull(),
+  
+  // Progress
+  status: mysqlEnum("status", ["enrolled", "in_progress", "completed", "dropped"]).default("enrolled").notNull(),
+  progressPercentage: int("progressPercentage").default(0).notNull(),
+  
+  // Module completion (JSON object tracking each module)
+  moduleProgress: json("moduleProgress"),
+  
+  // Dates
+  enrolledAt: timestamp("enrolledAt").defaultNow().notNull(),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  
+  // Assessment
+  finalScore: int("finalScore"),
+  certificateIssued: boolean("certificateIssued").default(false).notNull(),
+  certificateUrl: text("certificateUrl"),
+  
+  // Tokens awarded
+  tokensAwarded: int("tokensAwarded").default(0).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ArtistTrainingProgress = typeof artistTrainingProgress.$inferSelect;
+export type InsertArtistTrainingProgress = typeof artistTrainingProgress.$inferInsert;
