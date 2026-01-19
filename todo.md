@@ -4569,3 +4569,16 @@
 - [x] Simplify offer letters to reference catalog instead of listing software
 - [x] Update all 5 manager offer letters with catalog reference
 - [x] Generate PDFs for all updated documents
+
+
+## Phase 144: Remaining Manager Offer Letters
+
+- [x] Create Talbert Cox offer letter - Property Manager ($109,500) with software license management
+- [x] Create Maia Rylandlesesene offer letter - Procurement Manager ($109,500)
+- [x] Create Roshonda Parker offer letter - Contracts Manager ($106,000)
+- [x] Create Latisha Cox offer letter - Purchasing Manager ($106,000)
+- [x] Create Kenneth Coleman offer letter - Real Estate Manager ($108,000)
+- [x] Create Treiva Hunter offer letter - Real Estate Manager ($108,000)
+- [x] Create Christopher Battle Sr. offer letter - Project Controls Manager ($108,000)
+- [x] Corrected Essence E. Hunter to Essence M. Hunter
+- [x] Generate PDFs for all new offer letters

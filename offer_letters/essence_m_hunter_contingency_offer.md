@@ -9,7 +9,7 @@
 
 **Date:** January 19, 2026
 
-**Essence E. Hunter**  
+**Essence M. Hunter**  
 essence@lawscollective.org  
 (870) 329-3354
 
@@ -130,7 +130,7 @@ Please indicate your acceptance by signing below and returning within **14 busin
 **ACCEPTED AND AGREED:**
 
 ___________________________________  
-**Essence E. Hunter**  
+**Essence M. Hunter**  
 Date: _________________
 
 ---
