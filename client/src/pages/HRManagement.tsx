@@ -38,17 +38,18 @@ import {
 // Position data synced with Careers.tsx - includes all open/recruiting positions
 const POSITIONS = [
   // TIER 3: OPEN MANAGER POSITIONS
-  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "standard" },
-  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "standard" },
-  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier3_open", salaryRange: "$80,000 - $110,000", recommendedBenefits: "standard" },
-  { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "standard" },
-  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The L.A.W.S. Collective, LLC", department: "Grants & Proposals", tier: "tier3_open", salaryRange: "$85,000 - $115,000", recommendedBenefits: "grant-compliant" },
+  { id: "health-manager", title: "Health Manager", entity: "The L.A.W.S. Collective, LLC", department: "Health", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The L.A.W.S. Collective, LLC", department: "Grants & Proposals", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "grant-compliant" },
   { id: "platform-admin", title: "Platform Administrator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Technology", tier: "tier3_open", salaryRange: "$95,000 - $130,000", recommendedBenefits: "remote-work" },
   
   // TIER 4: OPERATIONS COORDINATORS - All Open Positions
-  { id: "finance-ops-coordinator", title: "Finance Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Finance", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-education", title: "Education Operations Coordinator", entity: "508-LuvOnPurpose Academy and Outreach", department: "Education", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
-  { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach", tier: "tier4_coordinator", salaryRange: "$65,000 - $85,000", recommendedBenefits: "standard" },
+  { id: "finance-ops-coordinator", title: "Finance Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Finance", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-education", title: "Education Operations Coordinator", entity: "508-LuvOnPurpose Academy and Outreach", department: "Education", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
+  { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
   { id: "content-creator", title: "Content Creator / Media Assistant", entity: "Real-Eye-Nation LLC", department: "Media Production", tier: "tier4_coordinator", salaryRange: "$35,000 - $55,000", recommendedBenefits: "part-time" },
   { id: "academy-instructor", title: "Academy Instructor / Curriculum Developer", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Education", tier: "tier4_coordinator", salaryRange: "$75,000 - $100,000", recommendedBenefits: "standard" },
   { id: "programs-coordinator", title: "Community Programs Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Community Programs", tier: "tier4_coordinator", salaryRange: "$80,000 - $110,000", recommendedBenefits: "grant-compliant" },
@@ -606,7 +607,7 @@ export default function HRManagement() {
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
                     <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted">Manager Positions (Tier 3)</div>
-                    {POSITIONS.filter(p => p.tier === "tier3_open").map((pos) => (
+                    {POSITIONS.filter(p => p.tier === "tier3_open" || p.tier === "tier3_manager").map((pos) => (
                       <SelectItem key={pos.id} value={pos.id}>
                         <span className="flex items-center gap-2">
                           <span>{pos.title}</span>
