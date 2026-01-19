@@ -92,6 +92,9 @@ import { specialistTracksRouter } from "./routers/specialist-tracks";
 import { scholarshipsRouter } from "./routers/scholarships";
 import { creativeEnterpriseRouter } from "./routers/creative-enterprise";
 import { designDepartmentRouter } from "./routers/design-department";
+import { softwareLicensesRouter } from "./routers/software-licenses";
+import { onlineAcademyRouter } from "./routers/online-academy";
+import { gameCenterRouter } from "./routers/game-center";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -196,6 +199,9 @@ export const appRouter = router({
   scholarships: scholarshipsRouter,
   creativeEnterprise: creativeEnterpriseRouter,
   designDepartment: designDepartmentRouter,
+  softwareLicenses: softwareLicensesRouter,
+  onlineAcademy: onlineAcademyRouter,
+  gameCenter: gameCenterRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

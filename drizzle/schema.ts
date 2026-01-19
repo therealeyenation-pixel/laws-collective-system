@@ -10084,3 +10084,355 @@ export const artistTrainingProgress = mysqlTable("artist_training_progress", {
 });
 export type ArtistTrainingProgress = typeof artistTrainingProgress.$inferSelect;
 export type InsertArtistTrainingProgress = typeof artistTrainingProgress.$inferInsert;
+
+
+// ==========================================
+// SOFTWARE LICENSE MANAGEMENT
+// ==========================================
+
+/**
+ * Software license categories for organizing licenses by department/function
+ */
+export const softwareLicenseCategories = mysqlTable("software_license_categories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  department: varchar("department", { length: 100 }), // Creative Enterprise, Design, Executive, etc.
+  icon: varchar("icon", { length: 50 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SoftwareLicenseCategory = typeof softwareLicenseCategories.$inferSelect;
+
+/**
+ * Software licenses tracking
+ */
+export const softwareLicenses = mysqlTable("software_licenses", {
+  id: int("id").autoincrement().primaryKey(),
+  categoryId: int("categoryId"),
+  name: varchar("name", { length: 200 }).notNull(),
+  vendor: varchar("vendor", { length: 100 }).notNull(),
+  version: varchar("version", { length: 50 }),
+  licenseType: mysqlEnum("licenseType", ["subscription", "perpetual", "floating", "site", "open_source"]).default("subscription").notNull(),
+  licenseKey: text("licenseKey"),
+  totalSeats: int("totalSeats").default(1).notNull(),
+  usedSeats: int("usedSeats").default(0).notNull(),
+  costPerSeat: decimal("costPerSeat", { precision: 10, scale: 2 }),
+  totalCost: decimal("totalCost", { precision: 10, scale: 2 }),
+  billingCycle: mysqlEnum("billingCycle", ["monthly", "annual", "one_time"]).default("annual").notNull(),
+  purchaseDate: timestamp("purchaseDate"),
+  renewalDate: timestamp("renewalDate"),
+  expirationDate: timestamp("expirationDate"),
+  status: mysqlEnum("status", ["active", "expired", "cancelled", "pending"]).default("active").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SoftwareLicense = typeof softwareLicenses.$inferSelect;
+
+/**
+ * License assignments to users/departments
+ */
+export const softwareLicenseAssignments = mysqlTable("software_license_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  licenseId: int("licenseId").notNull(),
+  assignedTo: varchar("assignedTo", { length: 200 }).notNull(), // User name or department
+  assignedType: mysqlEnum("assignedType", ["user", "department", "role"]).default("user").notNull(),
+  assignedDate: timestamp("assignedDate").defaultNow().notNull(),
+  revokedDate: timestamp("revokedDate"),
+  status: mysqlEnum("status", ["active", "revoked"]).default("active").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type SoftwareLicenseAssignment = typeof softwareLicenseAssignments.$inferSelect;
+
+/**
+ * Vendor contracts and support agreements
+ */
+export const softwareVendorContracts = mysqlTable("software_vendor_contracts", {
+  id: int("id").autoincrement().primaryKey(),
+  vendorName: varchar("vendorName", { length: 100 }).notNull(),
+  contractType: mysqlEnum("contractType", ["enterprise", "volume", "support", "maintenance"]).default("enterprise").notNull(),
+  contractNumber: varchar("contractNumber", { length: 100 }),
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  annualValue: decimal("annualValue", { precision: 10, scale: 2 }),
+  supportLevel: mysqlEnum("supportLevel", ["basic", "standard", "premium", "enterprise"]).default("standard").notNull(),
+  contactName: varchar("contactName", { length: 100 }),
+  contactEmail: varchar("contactEmail", { length: 200 }),
+  contactPhone: varchar("contactPhone", { length: 50 }),
+  notes: text("notes"),
+  status: mysqlEnum("status", ["active", "expired", "pending_renewal"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SoftwareVendorContract = typeof softwareVendorContracts.$inferSelect;
+
+// ==========================================
+// ONLINE ACADEMY INFRASTRUCTURE
+// ==========================================
+
+/**
+ * Online academy course catalog (extends existing academyCourses with online-specific fields)
+ */
+export const onlineCourseDetails = mysqlTable("online_course_details", {
+  id: int("id").autoincrement().primaryKey(),
+  courseId: int("courseId").notNull(), // Links to existing academyCourses
+  code: varchar("code", { length: 20 }).notNull(),
+  category: mysqlEnum("category", [
+    "financial_sovereignty", "laws_framework", "governance_civics", 
+    "entrepreneurship", "creative_enterprise", "core_academic",
+    "professional_development", "simulator_training"
+  ]).notNull(),
+  gradeLevel: mysqlEnum("gradeLevel", [
+    "k_2", "3_5", "6_8", "9_12", "adult", "all_ages"
+  ]).default("all_ages").notNull(),
+  courseType: mysqlEnum("courseType", ["proprietary", "licensed", "oer", "partnership"]).default("proprietary").notNull(),
+  deliveryMethod: mysqlEnum("deliveryMethod", ["asynchronous", "synchronous", "hybrid", "self_paced"]).default("asynchronous").notNull(),
+  creditHours: decimal("creditHours", { precision: 4, scale: 2 }),
+  duration: varchar("duration", { length: 50 }), // e.g., "8 weeks", "1 semester"
+  syllabus: text("syllabus"),
+  lmsUrl: text("lmsUrl"), // Link to course in LMS
+  approvedBy: int("approvedBy"), // Cornelius approval
+  approvedAt: timestamp("approvedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type OnlineCourseDetail = typeof onlineCourseDetails.$inferSelect;
+
+/**
+ * Curriculum development projects (external contractor work)
+ */
+export const curriculumProjects = mysqlTable("curriculum_projects", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description"),
+  projectType: mysqlEnum("projectType", [
+    "course_development", "assessment_design", "instructor_guide",
+    "accreditation_docs", "lms_setup", "full_curriculum"
+  ]).notNull(),
+  scope: text("scope"),
+  deliverables: json("deliverables"),
+  contractorId: int("contractorId"), // Link to contractor
+  contractorName: varchar("contractorName", { length: 200 }),
+  contractorCompany: varchar("contractorCompany", { length: 200 }),
+  budget: decimal("budget", { precision: 10, scale: 2 }),
+  amountPaid: decimal("amountPaid", { precision: 10, scale: 2 }).default("0"),
+  startDate: timestamp("startDate"),
+  targetEndDate: timestamp("targetEndDate"),
+  actualEndDate: timestamp("actualEndDate"),
+  status: mysqlEnum("status", ["planning", "contracted", "in_progress", "review", "completed", "cancelled"]).default("planning").notNull(),
+  grantFunded: boolean("grantFunded").default(false).notNull(),
+  grantId: int("grantId"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CurriculumProject = typeof curriculumProjects.$inferSelect;
+
+/**
+ * Contracted online instructors
+ */
+export const academyInstructors = mysqlTable("academy_instructors", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  email: varchar("email", { length: 200 }),
+  phone: varchar("phone", { length: 50 }),
+  instructorType: mysqlEnum("instructorType", ["credentialed", "sme_guest", "adjunct", "full_time"]).default("adjunct").notNull(),
+  credentials: json("credentials"), // Array of credential objects
+  specializations: json("specializations"),
+  hourlyRate: decimal("hourlyRate", { precision: 8, scale: 2 }),
+  contractStatus: mysqlEnum("contractStatus", ["active", "inactive", "pending"]).default("pending").notNull(),
+  supervisorId: int("supervisorId"), // Cornelius for most
+  backgroundCheckDate: timestamp("backgroundCheckDate"),
+  backgroundCheckStatus: mysqlEnum("backgroundCheckStatus", ["pending", "cleared", "expired"]).default("pending"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AcademyInstructor = typeof academyInstructors.$inferSelect;
+
+/**
+ * SME (Subject Matter Expert) contributors from founding members
+ */
+export const smeContributors = mysqlTable("sme_contributors", {
+  id: int("id").autoincrement().primaryKey(),
+  familyMemberId: int("familyMemberId"),
+  name: varchar("name", { length: 200 }).notNull(),
+  expertise: json("expertise"), // Array of expertise areas
+  entityAffiliation: varchar("entityAffiliation", { length: 100 }), // Which entity they primarily work for
+  contributionTypes: json("contributionTypes"), // guest_lecture, content_review, case_study, etc.
+  availability: mysqlEnum("availability", ["available", "limited", "unavailable"]).default("available").notNull(),
+  totalContributions: int("totalContributions").default(0).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SmeContributor = typeof smeContributors.$inferSelect;
+
+/**
+ * Physical facility planning (future phase)
+ */
+export const facilityPlans = mysqlTable("facility_plans", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  facilityType: mysqlEnum("facilityType", ["education_center", "training_facility", "mixed_use", "satellite"]).default("education_center").notNull(),
+  description: text("description"),
+  plannedCapacity: int("plannedCapacity"),
+  estimatedCost: decimal("estimatedCost", { precision: 12, scale: 2 }),
+  landRequirements: text("landRequirements"),
+  buildingRequirements: json("buildingRequirements"),
+  status: mysqlEnum("status", ["concept", "planning", "land_search", "land_acquired", "design", "construction", "operational"]).default("concept").notNull(),
+  targetOpenDate: timestamp("targetOpenDate"),
+  linkedLandAcquisitionId: int("linkedLandAcquisitionId"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FacilityPlan = typeof facilityPlans.$inferSelect;
+
+/**
+ * Accreditation tracking
+ */
+export const accreditationRecords = mysqlTable("accreditation_records", {
+  id: int("id").autoincrement().primaryKey(),
+  accreditingBody: varchar("accreditingBody", { length: 200 }).notNull(),
+  accreditationType: mysqlEnum("accreditationType", ["regional", "national", "programmatic", "state"]).notNull(),
+  status: mysqlEnum("status", ["researching", "applying", "pending", "accredited", "probation", "revoked"]).default("researching").notNull(),
+  applicationDate: timestamp("applicationDate"),
+  grantedDate: timestamp("grantedDate"),
+  expirationDate: timestamp("expirationDate"),
+  renewalDate: timestamp("renewalDate"),
+  requirements: json("requirements"),
+  documentsSubmitted: json("documentsSubmitted"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AccreditationRecord = typeof accreditationRecords.$inferSelect;
+
+// Software License Management Tables
+
+// Game Center Tables
+export const gameCenterGames = mysqlTable("game_center_games", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  gameType: mysqlEnum("gameType", ["strategy", "puzzle", "word", "card", "board", "trivia", "mystery", "educational"]).notNull(),
+  ageGroup: mysqlEnum("ageGroup", ["k_5", "6_8", "9_12", "adult", "all_ages"]).default("all_ages").notNull(),
+  minPlayers: int("minPlayers").default(1).notNull(),
+  maxPlayers: int("maxPlayers").default(2).notNull(),
+  estimatedDuration: varchar("estimatedDuration", { length: 50 }),
+  skillsTargeted: json("skillsTargeted"),
+  tokenRewardBase: int("tokenRewardBase").default(10),
+  isActive: boolean("isActive").default(true).notNull(),
+  icon: varchar("icon", { length: 50 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const gameMatches = mysqlTable("game_matches", {
+  id: int("id").primaryKey().autoincrement(),
+  gameId: int("gameId").notNull(),
+  matchType: mysqlEnum("matchType", ["solo", "vs_ai", "vs_player", "tournament"]).default("solo").notNull(),
+  status: mysqlEnum("status", ["waiting", "in_progress", "completed", "abandoned"]).default("waiting").notNull(),
+  player1Id: int("player1Id"),
+  player2Id: int("player2Id"),
+  winnerId: int("winnerId"),
+  player1Score: int("player1Score").default(0),
+  player2Score: int("player2Score").default(0),
+  gameState: json("gameState"),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  tokensAwarded: int("tokensAwarded").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const gameTournaments = mysqlTable("game_tournaments", {
+  id: int("id").primaryKey().autoincrement(),
+  gameId: int("gameId").notNull(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description"),
+  tournamentType: mysqlEnum("tournamentType", ["single_elimination", "double_elimination", "round_robin", "swiss"]).default("single_elimination").notNull(),
+  ageGroup: mysqlEnum("ageGroup", ["k_5", "6_8", "9_12", "adult", "all_ages", "family"]).default("all_ages").notNull(),
+  maxParticipants: int("maxParticipants").default(16),
+  currentParticipants: int("currentParticipants").default(0),
+  entryFee: int("entryFee").default(0),
+  prizePool: int("prizePool").default(0),
+  status: mysqlEnum("status", ["registration", "in_progress", "completed", "cancelled"]).default("registration").notNull(),
+  bracketData: json("bracketData"),
+  registrationDeadline: timestamp("registrationDeadline"),
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const gamePlayerStats = mysqlTable("game_player_stats", {
+  id: int("id").primaryKey().autoincrement(),
+  playerId: int("playerId").notNull(),
+  gameId: int("gameId").notNull(),
+  gamesPlayed: int("gamesPlayed").default(0).notNull(),
+  gamesWon: int("gamesWon").default(0).notNull(),
+  gamesLost: int("gamesLost").default(0).notNull(),
+  gamesTied: int("gamesTied").default(0).notNull(),
+  totalScore: bigint("totalScore", { mode: "number" }).default(0).notNull(),
+  highScore: int("highScore").default(0),
+  currentStreak: int("currentStreak").default(0),
+  bestStreak: int("bestStreak").default(0),
+  rating: int("rating").default(1000),
+  tokensEarned: int("tokensEarned").default(0),
+  lastPlayedAt: timestamp("lastPlayedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const gameAchievements = mysqlTable("game_achievements", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  gameId: int("gameId"),
+  achievementType: mysqlEnum("achievementType", ["milestone", "streak", "skill", "tournament", "special"]).notNull(),
+  requirement: json("requirement"),
+  tokenReward: int("tokenReward").default(0),
+  badgeIcon: varchar("badgeIcon", { length: 100 }),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const gamePlayerAchievements = mysqlTable("game_player_achievements", {
+  id: int("id").primaryKey().autoincrement(),
+  playerId: int("playerId").notNull(),
+  achievementId: int("achievementId").notNull(),
+  earnedAt: timestamp("earnedAt").defaultNow().notNull(),
+  tokensAwarded: int("tokensAwarded").default(0),
+});
+
+export const triviaCategories = mysqlTable("trivia_categories", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  icon: varchar("icon", { length: 50 }),
+  color: varchar("color", { length: 20 }),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const triviaQuestions = mysqlTable("trivia_questions", {
+  id: int("id").primaryKey().autoincrement(),
+  categoryId: int("categoryId").notNull(),
+  question: text("question").notNull(),
+  correctAnswer: text("correctAnswer").notNull(),
+  wrongAnswers: json("wrongAnswers").notNull(),
+  difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard"]).default("medium").notNull(),
+  ageGroup: mysqlEnum("ageGroup", ["k_5", "6_8", "9_12", "adult", "all_ages"]).default("all_ages").notNull(),
+  explanation: text("explanation"),
+  source: varchar("source", { length: 200 }),
+  timesAsked: int("timesAsked").default(0),
+  timesCorrect: int("timesCorrect").default(0),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
