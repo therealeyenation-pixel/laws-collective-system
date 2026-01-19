@@ -85,12 +85,12 @@ export default function HRDashboard() {
     { title: "Project Controls Coordinator", department: "Project Controls", applications: 0, status: "Pending Manager" },
     { title: "Contracts Operations Coordinator", department: "Contracts", applications: 0, status: "Pending Manager" },
     { title: "Education Ops Coordinator (Temple)", department: "Education", applications: 0, status: "Pending Manager" },
-    // Candidate Identified (5)
-    { title: "Purchasing Manager", department: "Purchasing", applications: 0, status: "Candidate Identified" },
-    { title: "Contracts Manager", department: "Contracts", applications: 0, status: "Candidate Identified" },
-    { title: "Procurement Manager (Oversight)", department: "Procurement", applications: 0, status: "Candidate Identified" },
-    { title: "Project Controls Manager", department: "Project Controls", applications: 0, status: "Candidate Identified" },
-    { title: "Purchasing Operations Coordinator", department: "Purchasing", applications: 0, status: "Candidate Identified" },
+    // Candidate Identified (8)
+    { title: "Purchasing Manager (Latisha Cox)", department: "Purchasing", applications: 0, status: "Candidate Identified" },
+    { title: "Contracts Manager (Roshonda Parker)", department: "Contracts", applications: 0, status: "Candidate Identified" },
+    { title: "Procurement Manager (Maia Rylandlesesene)", department: "Procurement", applications: 0, status: "Candidate Identified" },
+    { title: "Project Controls Manager (Christopher Battle Sr.)", department: "Project Controls", applications: 0, status: "Candidate Identified" },
+    { title: "Property Manager (Talbert Cox)", department: "Property", applications: 0, status: "Candidate Identified" },
   ];
 
   return (

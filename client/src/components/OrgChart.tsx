@@ -295,7 +295,8 @@ const staticOrgData: OrgNode = {
     },
     {
       id: "procurement-manager",
-      title: "Procurement Manager (Oversight)",
+      title: "Procurement Manager",
+      name: "Maia Rylandlesesene",
       department: "Procurement",
       entity: "The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
@@ -314,6 +315,7 @@ const staticOrgData: OrgNode = {
     {
       id: "purchasing-manager",
       title: "Purchasing Manager",
+      name: "Latisha Cox",
       department: "Purchasing",
       entity: "The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
@@ -332,6 +334,7 @@ const staticOrgData: OrgNode = {
     {
       id: "contracts-manager",
       title: "Contracts Manager",
+      name: "Roshonda Parker",
       department: "Contracts",
       entity: "The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
@@ -341,6 +344,62 @@ const staticOrgData: OrgNode = {
           id: "contracts-ops-coordinator",
           title: "Contracts Operations Coordinator",
           department: "Contracts",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "property-manager",
+      title: "Property Manager",
+      name: "Talbert Cox",
+      department: "Property",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier2_identified",
+      status: "identified",
+      children: [
+        {
+          id: "property-ops-coordinator",
+          title: "Property Operations Coordinator",
+          department: "Property",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "project-controls-manager",
+      title: "Project Controls Manager",
+      name: "Christopher Battle Sr.",
+      department: "Project Controls",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier2_identified",
+      status: "identified",
+      children: [
+        {
+          id: "project-controls-coordinator",
+          title: "Project Controls Coordinator",
+          department: "Project Controls",
+          entity: "The L.A.W.S. Collective LLC",
+          tier: "tier4_coordinator",
+          status: "open"
+        }
+      ]
+    },
+    {
+      id: "grant-manager",
+      title: "Grant Manager",
+      department: "Grants",
+      entity: "The L.A.W.S. Collective LLC",
+      tier: "tier3_open",
+      status: "open",
+      children: [
+        {
+          id: "grant-coordinator",
+          title: "Grant Coordinator",
+          department: "Grants",
           entity: "The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"

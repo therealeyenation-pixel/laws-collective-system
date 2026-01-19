@@ -139,7 +139,7 @@ const POSITIONS = [
     requirements: ["3+ years purchasing experience", "Negotiation skills", "Spreadsheet proficiency", "Vendor management"],
     category: "operations",
     tier: "tier2_identified",
-    hiringStatus: "Candidate Identified",
+    hiringStatus: "Candidate Identified - Latisha Cox",
   },
   { 
     id: "operations-manager", 
@@ -399,7 +399,7 @@ const POSITIONS = [
     requirements: ["5+ years procurement/supply chain management", "Contract negotiation skills", "Vendor management experience", "Professional certification preferred (CPM, CPSM)"],
     category: "operations",
     tier: "tier2_identified",
-    hiringStatus: "Candidate Identified"
+    hiringStatus: "Candidate Identified - Maia Rylandlesesene"
   },
   { 
     id: "ops-coordinator-procurement", 
@@ -444,7 +444,7 @@ const POSITIONS = [
     requirements: ["5+ years contract management", "Contract law knowledge", "Negotiation skills", "Professional certification preferred"],
     category: "contracts",
     tier: "tier2_identified",
-    hiringStatus: "Candidate Identified"
+    hiringStatus: "Candidate Identified - Roshonda Parker"
   },
   { 
     id: "ops-coordinator-contracts", 
@@ -537,7 +537,7 @@ const POSITIONS = [
     requirements: ["5+ years project controls/scheduling experience", "Primavera P6 or MS Project proficiency", "Earned value management knowledge", "Cost control and budgeting experience", "PMP or similar certification preferred"],
     category: "project_controls",
     tier: "tier2_identified",
-    hiringStatus: "Candidate Identified"
+    hiringStatus: "Candidate Identified - Christopher Battle Sr."
   },
   { 
     id: "ops-coordinator-project-controls", 
@@ -660,7 +660,7 @@ const HIRING_STATUSES = [
   { id: "future_hiring", label: "Future Hiring", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Future Hiring" },
   { id: "pending_manager", label: "Pending Manager", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Pending Manager" },
   { id: "filled_family", label: "Filled (Family)", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Filled") },
-  { id: "candidate_identified", label: "Candidate Identified", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Candidate Identified" },
+  { id: "candidate_identified", label: "Candidate Identified", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Candidate Identified") },
 ];
 
 const CATEGORIES = [

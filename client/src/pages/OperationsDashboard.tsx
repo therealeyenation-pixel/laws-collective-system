@@ -152,7 +152,7 @@ export default function OperationsDashboard() {
       color: "text-amber-600",
       bgColor: "bg-amber-600/10",
       coordinator: "Procurement Operations Coordinator",
-      manager: "Procurement Manager (Oversight)",
+      manager: "Maia Rylandlesesene (Procurement Manager)",
       status: "Identified",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
@@ -163,7 +163,7 @@ export default function OperationsDashboard() {
       color: "text-amber-500",
       bgColor: "bg-amber-500/10",
       coordinator: "Purchasing Operations Coordinator",
-      manager: "Purchasing Manager",
+      manager: "Latisha Cox (Purchasing Manager)",
       status: "Identified",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
@@ -174,7 +174,7 @@ export default function OperationsDashboard() {
       color: "text-indigo-500",
       bgColor: "bg-indigo-500/10",
       coordinator: "Contracts Operations Coordinator",
-      manager: "Contracts Manager",
+      manager: "Roshonda Parker (Contracts Manager)",
       status: "Identified",
       tasks: { completed: 0, pending: 0, total: 0 }
     },
