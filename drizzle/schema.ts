@@ -8625,3 +8625,39 @@ export const pendingHeirPlaceholders = mysqlTable("pending_heir_placeholders", {
 
 export type PendingHeirPlaceholder = typeof pendingHeirPlaceholders.$inferSelect;
 export type InsertPendingHeirPlaceholder = typeof pendingHeirPlaceholders.$inferInsert;
+
+
+// ============================================
+// GRANT APPLICATION HISTORY
+// Track status changes and updates for grant applications
+// ============================================
+
+/**
+ * Grant Application History - Track status changes and updates
+ */
+export const grantApplicationHistory = mysqlTable("grant_application_history", {
+  id: int("id").autoincrement().primaryKey(),
+  applicationId: int("applicationId").notNull(),
+  
+  action: mysqlEnum("action", [
+    "created",
+    "status_changed",
+    "updated",
+    "submitted",
+    "attachment_added",
+    "note_added",
+    "assigned",
+    "feedback_received"
+  ]).notNull(),
+  
+  previousStatus: varchar("previousStatus", { length: 50 }),
+  newStatus: varchar("newStatus", { length: 50 }),
+  description: text("description"),
+  metadata: json("metadata"),
+  
+  performedBy: int("performedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GrantApplicationHistory = typeof grantApplicationHistory.$inferSelect;
+export type InsertGrantApplicationHistory = typeof grantApplicationHistory.$inferInsert;

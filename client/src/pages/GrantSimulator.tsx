@@ -954,6 +954,25 @@ export default function GrantSimulator() {
             <div className="flex flex-col gap-4">
               <div className="flex justify-center gap-4 flex-wrap">
                 <Button variant="outline" className="gap-2"><Download className="w-4 h-4" />Download Certificate</Button>
+                <Button variant="default" className="gap-2" onClick={() => {
+                  // Save to Grant Tracking
+                  const applicationData = {
+                    grantName: selectedGrant?.name || '',
+                    funderName: selectedGrant?.funder || '',
+                    entityName: selectedEntity?.name || '',
+                    projectTitle: data.projectTitle,
+                    requestedAmount: data.budgetItems.reduce((sum, item) => sum + (parseInt(item.amount) || 0), 0),
+                    applicationUrl: selectedGrant?.applicationUrl || '',
+                    status: 'draft',
+                  };
+                  // Store in localStorage for now, can be extended to save to database
+                  const savedApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
+                  savedApplications.push({ ...applicationData, id: Date.now(), createdAt: new Date().toISOString() });
+                  localStorage.setItem('grantApplications', JSON.stringify(savedApplications));
+                  toast.success("Application saved to Grant Tracking");
+                }}>
+                  <Target className="w-4 h-4" />Save to Tracking
+                </Button>
                 <Button variant="outline" className="gap-2" onClick={() => {
                   // Export grant package as summary
                   const packageData = {

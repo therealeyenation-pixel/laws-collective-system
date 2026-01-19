@@ -3955,4 +3955,15 @@
 - [x] Sync JSON business plans to database (L.A.W.S. Collective and LuvOnPurpose Academy)
 - [x] Auto-populate grant application with business plan data (mission, vision, financials, team)
 - [x] Test data flow from business plan to grant application
+- [x] Save checkpoint
+
+## Phase 118: Grant Tracking Dashboard
+- [x] Design grant_applications database table schema (already exists at line 6130)
+- [x] Add grant_application_history table for status tracking
+- [x] Create tRPC procedures for grant application CRUD (grant-tracking.ts router exists)
+- [x] Build Grant Tracking Dashboard UI with status workflow (GrantTracking.tsx exists)
+- [x] Add status transitions (not_started → drafting → review → submitted → under_review → awarded/rejected)
+- [x] Integrate Grant Simulator with Grant Tracking to save completed applications (Save to Tracking button added)
+- [x] Add filtering by entity and status
+- [x] Test grant tracking workflow - 333 tests passed
 - [ ] Save checkpoint
