@@ -401,6 +401,79 @@ export const grantTrackingRouter = router({
       return { success: true };
     }),
 
+  // Create application from simulator (creates opportunity if needed)
+  createFromSimulator: protectedProcedure
+    .input(
+      z.object({
+        grantName: z.string(),
+        funderName: z.string(),
+        entityName: z.string(),
+        projectTitle: z.string(),
+        requestedAmount: z.number(),
+        applicationUrl: z.string().optional(),
+        orgDescription: z.string().optional(),
+        missionStatement: z.string().optional(),
+        needStatement: z.string().optional(),
+        projectGoals: z.string().optional(),
+        projectActivities: z.string().optional(),
+        budgetItems: z.array(z.object({
+          category: z.string(),
+          description: z.string(),
+          amount: z.string(),
+        })).optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // First, check if opportunity exists or create one
+      const existingOpp = await db.execute(
+        sql`SELECT id FROM grant_opportunities WHERE grant_name = ${input.grantName} AND funder_name = ${input.funderName} LIMIT 1`
+      );
+
+      let opportunityId: number;
+
+      if ((existingOpp as any[]).length > 0) {
+        opportunityId = (existingOpp as any[])[0].id;
+      } else {
+        // Create new opportunity
+        const oppResult = await db.execute(
+          sql`INSERT INTO grant_opportunities (grant_name, funder_name, status, application_url, funding_amount_max)
+          VALUES (${input.grantName}, ${input.funderName}, 'applied', ${input.applicationUrl || null}, ${input.requestedAmount})`
+        );
+        opportunityId = (oppResult as any).insertId;
+      }
+
+      // Create the application with full details
+      const projectDescription = [
+        input.orgDescription ? `Organization: ${input.orgDescription}` : '',
+        input.missionStatement ? `Mission: ${input.missionStatement}` : '',
+        input.needStatement ? `Need: ${input.needStatement}` : '',
+        input.projectGoals ? `Goals: ${input.projectGoals}` : '',
+        input.projectActivities ? `Activities: ${input.projectActivities}` : '',
+      ].filter(Boolean).join('\n\n');
+
+      const budgetJson = input.budgetItems ? JSON.stringify(input.budgetItems) : null;
+
+      const result = await db.execute(
+        sql`INSERT INTO grant_applications (
+          opportunity_id, application_name, project_title, project_description,
+          requested_amount, status, assigned_to
+        ) VALUES (
+          ${opportunityId}, 
+          ${`${input.grantName} - ${input.entityName}`}, 
+          ${input.projectTitle},
+          ${projectDescription},
+          ${input.requestedAmount},
+          'drafting',
+          ${input.entityName}
+        )`
+      );
+
+      return { success: true, applicationId: (result as any).insertId, opportunityId };
+    }),
+
   // Get pipeline view (opportunities grouped by status)
   getPipeline: protectedProcedure.query(async () => {
     const db = await getDb();

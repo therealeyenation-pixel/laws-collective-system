@@ -388,6 +388,9 @@ export default function GrantSimulator() {
     { enabled: !!selectedEntity?.name && !autoPopulated }
   );
 
+  // Save to tracking mutation
+  const saveToTracking = trpc.grantTracking.createFromSimulator.useMutation();
+
   // Auto-populate when business plan data is loaded
   useEffect(() => {
     if (businessPlanData && !autoPopulated) {
@@ -954,48 +957,132 @@ export default function GrantSimulator() {
             <div className="flex flex-col gap-4">
               <div className="flex justify-center gap-4 flex-wrap">
                 <Button variant="outline" className="gap-2"><Download className="w-4 h-4" />Download Certificate</Button>
-                <Button variant="default" className="gap-2" onClick={() => {
-                  // Save to Grant Tracking
-                  const applicationData = {
-                    grantName: selectedGrant?.name || '',
-                    funderName: selectedGrant?.funder || '',
-                    entityName: selectedEntity?.name || '',
-                    projectTitle: data.projectTitle,
-                    requestedAmount: data.budgetItems.reduce((sum, item) => sum + (parseInt(item.amount) || 0), 0),
-                    applicationUrl: selectedGrant?.applicationUrl || '',
-                    status: 'draft',
-                  };
-                  // Store in localStorage for now, can be extended to save to database
-                  const savedApplications = JSON.parse(localStorage.getItem('grantApplications') || '[]');
-                  savedApplications.push({ ...applicationData, id: Date.now(), createdAt: new Date().toISOString() });
-                  localStorage.setItem('grantApplications', JSON.stringify(savedApplications));
-                  toast.success("Application saved to Grant Tracking");
-                }}>
-                  <Target className="w-4 h-4" />Save to Tracking
+                <Button variant="default" className="gap-2" onClick={async () => {
+                  try {
+                    const result = await saveToTracking.mutateAsync({
+                      grantName: selectedGrant?.name || '',
+                      funderName: selectedGrant?.funder || '',
+                      entityName: selectedEntity?.name || '',
+                      projectTitle: data.projectTitle,
+                      requestedAmount: data.budgetItems.reduce((sum, item) => sum + (parseInt(item.amount) || 0), 0),
+                      applicationUrl: selectedGrant?.applicationUrl || '',
+                      orgDescription: data.orgDescription,
+                      missionStatement: data.missionStatement,
+                      needStatement: data.needStatement,
+                      projectGoals: data.projectGoals,
+                      projectActivities: data.projectActivities,
+                      budgetItems: data.budgetItems.filter(item => parseInt(item.amount) > 0),
+                    });
+                    toast.success("Application saved to Grant Tracking! View it in the Grant Tracking dashboard.");
+                  } catch (error) {
+                    toast.error("Failed to save application. Please try again.");
+                    console.error(error);
+                  }
+                }} disabled={saveToTracking.isPending}>
+                  {saveToTracking.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Target className="w-4 h-4" />}
+                  {saveToTracking.isPending ? 'Saving...' : 'Save to Tracking'}
                 </Button>
                 <Button variant="outline" className="gap-2" onClick={() => {
-                  // Export grant package as summary
-                  const packageData = {
-                    grant: selectedGrant?.name,
-                    entity: selectedEntity?.name,
-                    projectTitle: data.projectTitle,
-                    requestedAmount: data.budgetItems.reduce((sum, item) => sum + (parseInt(item.amount) || 0), 0),
-                    orgDescription: data.orgDescription,
-                    missionStatement: data.missionStatement,
-                    needStatement: data.needStatement,
-                    projectGoals: data.projectGoals,
-                    projectActivities: data.projectActivities,
-                    budget: data.budgetItems.filter(item => parseInt(item.amount) > 0),
-                  };
-                  const blob = new Blob([JSON.stringify(packageData, null, 2)], { type: 'application/json' });
-                  const url = URL.createObjectURL(blob);
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.download = `grant-package-${selectedGrant?.id || 'application'}.json`;
-                  link.click();
-                  toast.success("Grant package exported");
+                  // Export grant package as professional PDF
+                  const totalBudget = data.budgetItems.reduce((sum, item) => sum + (parseInt(item.amount) || 0), 0);
+                  const budgetRows = data.budgetItems
+                    .filter(item => parseInt(item.amount) > 0)
+                    .map(item => `<tr><td style="padding:8px;border:1px solid #ddd;">${item.category}</td><td style="padding:8px;border:1px solid #ddd;">${item.description}</td><td style="padding:8px;border:1px solid #ddd;text-align:right;">$${parseInt(item.amount).toLocaleString()}</td></tr>`)
+                    .join('');
+                  
+                  const htmlContent = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                      <title>Grant Application Package - ${selectedGrant?.name}</title>
+                      <style>
+                        body { font-family: 'Georgia', serif; max-width: 800px; margin: 0 auto; padding: 40px; color: #333; }
+                        h1 { color: #1a5f2a; border-bottom: 3px solid #1a5f2a; padding-bottom: 10px; }
+                        h2 { color: #1a5f2a; margin-top: 30px; }
+                        .header { text-align: center; margin-bottom: 40px; }
+                        .section { margin-bottom: 25px; }
+                        .label { font-weight: bold; color: #555; margin-bottom: 5px; }
+                        .content { line-height: 1.6; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                        th { background: #1a5f2a; color: white; padding: 10px; text-align: left; }
+                        .total { font-weight: bold; background: #f5f5f5; }
+                        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
+                        @media print { body { padding: 20px; } }
+                      </style>
+                    </head>
+                    <body>
+                      <div class="header">
+                        <h1>Grant Application Package</h1>
+                        <p><strong>${selectedGrant?.name}</strong></p>
+                        <p>Submitted by: ${selectedEntity?.name}</p>
+                        <p>Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      </div>
+                      
+                      <div class="section">
+                        <h2>1. Organization Information</h2>
+                        <div class="label">Organization Name</div>
+                        <div class="content">${selectedEntity?.name}</div>
+                        <div class="label" style="margin-top:15px;">Organization Description</div>
+                        <div class="content">${data.orgDescription || 'N/A'}</div>
+                        <div class="label" style="margin-top:15px;">Mission Statement</div>
+                        <div class="content">${data.missionStatement || 'N/A'}</div>
+                      </div>
+                      
+                      <div class="section">
+                        <h2>2. Project Information</h2>
+                        <div class="label">Project Title</div>
+                        <div class="content">${data.projectTitle || 'N/A'}</div>
+                        <div class="label" style="margin-top:15px;">Statement of Need</div>
+                        <div class="content">${data.needStatement || 'N/A'}</div>
+                        <div class="label" style="margin-top:15px;">Project Goals</div>
+                        <div class="content">${data.projectGoals?.replace(/\n/g, '<br>') || 'N/A'}</div>
+                        <div class="label" style="margin-top:15px;">Project Activities</div>
+                        <div class="content">${data.projectActivities?.replace(/\n/g, '<br>') || 'N/A'}</div>
+                      </div>
+                      
+                      <div class="section">
+                        <h2>3. Budget Summary</h2>
+                        <table>
+                          <thead>
+                            <tr><th>Category</th><th>Description</th><th style="text-align:right;">Amount</th></tr>
+                          </thead>
+                          <tbody>
+                            ${budgetRows}
+                            <tr class="total"><td colspan="2" style="padding:10px;border:1px solid #ddd;"><strong>Total Requested</strong></td><td style="padding:10px;border:1px solid #ddd;text-align:right;"><strong>$${totalBudget.toLocaleString()}</strong></td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                      <div class="section">
+                        <h2>4. Grant Details</h2>
+                        <div class="label">Funder</div>
+                        <div class="content">${selectedGrant?.funder}</div>
+                        <div class="label" style="margin-top:15px;">Grant Amount Range</div>
+                        <div class="content">${selectedGrant?.amount}</div>
+                        <div class="label" style="margin-top:15px;">Application Deadline</div>
+                        <div class="content">${selectedGrant?.deadline}</div>
+                      </div>
+                      
+                      <div class="footer">
+                        <p>This grant application package was prepared using the LuvOnPurpose Financial Automation System.</p>
+                        <p>Generated: ${new Date().toLocaleString()}</p>
+                      </div>
+                    </body>
+                    </html>
+                  `;
+                  
+                  // Open print dialog for PDF export
+                  const printWindow = window.open('', '_blank');
+                  if (printWindow) {
+                    printWindow.document.write(htmlContent);
+                    printWindow.document.close();
+                    printWindow.onload = () => {
+                      printWindow.print();
+                    };
+                  }
+                  toast.success("Grant package ready - use Print to PDF to save");
                 }}>
-                  <FileText className="w-4 h-4" />Export Package
+                  <FileText className="w-4 h-4" />Export PDF
                 </Button>
               </div>
               

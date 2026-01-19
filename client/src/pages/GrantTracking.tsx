@@ -269,6 +269,45 @@ export default function GrantTracking() {
           </Dialog>
         </div>
 
+        {/* Deadline Alert Banner */}
+        {dashboard?.upcomingDeadlines?.some((opp: any) => {
+          const deadline = new Date(opp.deadline);
+          const today = new Date();
+          const daysUntil = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+          return daysUntil <= 7 && daysUntil >= 0;
+        }) && (
+          <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200">
+            <CardContent className="py-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-red-100 rounded-full">
+                  <AlertCircle className="w-5 h-5 text-red-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-red-800">Urgent: Grant Deadlines This Week</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {dashboard?.upcomingDeadlines?.filter((opp: any) => {
+                      const deadline = new Date(opp.deadline);
+                      const today = new Date();
+                      const daysUntil = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                      return daysUntil <= 7 && daysUntil >= 0;
+                    }).map((opp: any) => {
+                      const deadline = new Date(opp.deadline);
+                      const today = new Date();
+                      const daysUntil = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                      return (
+                        <Badge key={opp.id} variant="destructive" className="gap-1">
+                          <Clock className="w-3 h-3" />
+                          {opp.grant_name}: {daysUntil === 0 ? 'TODAY' : daysUntil === 1 ? '1 day' : `${daysUntil} days`}
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Dashboard Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>

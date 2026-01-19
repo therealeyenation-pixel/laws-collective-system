@@ -3938,7 +3938,7 @@
 ## Phase 115: Grant Workflow Improvements
 - [ ] Fix AcademyDashboard JSX closing tag error
 - [ ] Build grant tracking system with status workflow (draft, submitted, pending, approved, denied)
-- [ ] Add PDF export for grant packages
+- [x] Add PDF export for grant packages (professional HTML-to-PDF via print dialog)
 - [ ] Create pre-filled grant application templates from business plans
 - [ ] Test complete grant workflow
 - [ ] Save checkpoint
@@ -3966,4 +3966,12 @@
 - [x] Integrate Grant Simulator with Grant Tracking to save completed applications (Save to Tracking button added)
 - [x] Add filtering by entity and status
 - [x] Test grant tracking workflow - 333 tests passed
+- [x] Save checkpoint
+
+## Phase 119: Grant Tracking Database Integration and PDF Export
+- [x] Connect Save to Tracking button to database via tRPC
+- [x] Create tRPC mutation for saving grant applications from simulator (createFromSimulator)
+- [x] Add PDF export for grant packages (professional HTML-to-PDF via print dialog)
+- [x] Add deadline notifications for grants with upcoming windows (urgent alert banner for deadlines within 7 days)
+- [x] Test complete workflow - 333 tests passed
 - [ ] Save checkpoint
