@@ -151,6 +151,78 @@ Additional family members will be assigned roles through the Family Onboarding p
 
 ---
 
+## Entry-Level Specialist Track Oversight
+
+The Trust oversees the Specialist Track program, which provides structured entry-level pathways for both family members and community candidates into the LuvOnPurpose workforce.
+
+### Program Structure
+
+| Level | Hours | Duration | Requirements |
+|-------|-------|----------|---------------|
+| Specialist I | 20-25/week (Part-time) | 12-18 months | Age 16+, HS diploma or Academy graduation |
+| Specialist II | 25-32/week | 12-18 months | Specialist I completion, maturity assessment |
+| Specialist III | 32-40/week | 12-18 months | Specialist II completion, project ownership |
+| Associate | 40/week (Full-time) | Ongoing | Specialist III completion, advancement approval |
+
+### Maturity-Based Acceleration
+
+The Trust approves accelerated advancement based on demonstrated maturity, not just tenure:
+
+| Criterion | Weight | Assessment Method |
+|-----------|--------|-------------------|
+| Academy Module Completion | 25% | Certification tracking |
+| Simulator Performance | 20% | Business simulator scores |
+| Supervisor Evaluation | 25% | Quarterly reviews |
+| Token Economy Participation | 15% | Engagement metrics |
+| Fiscal Responsibility | 15% | Financial behavior tracking |
+
+### Candidate Types
+
+| Type | Description | Benefits |
+|------|-------------|----------|
+| Family Member | Heirs of founding or current members | Priority placement, House benefits |
+| Community Candidate | External candidates from community | Standard track, scholarship eligible |
+| Academy Graduate | Completed Academy certification | Accelerated entry, credential recognition |
+
+---
+
+## Scholarship Fund Governance
+
+The Trust maintains oversight of the Academy Scholarship Fund, ensuring sustainable funding and equitable distribution.
+
+### Founding Member Heir Benefits
+
+The Trust guarantees free Academy education for heirs of founding members (original Management team from startup) as recognition of their families' foundational contributions.
+
+| Benefit | Scope | Governance |
+|---------|-------|------------|
+| Full Tuition Coverage | All Academy programs | Automatic upon lineage verification |
+| Materials Allowance | Required course materials | Annual allocation per heir |
+| Priority Enrollment | Limited-capacity programs | First-access registration |
+| Generational Limit | Up to 5 generations | Trust review at generation 6+ |
+
+### Scholarship Fund Allocation
+
+The Trust directs scholarship funding according to established policy:
+
+| Source | Allocation | Purpose |
+|--------|------------|----------|
+| Academy Revenue Tithe | 10% of tuition revenue | Ongoing scholarship fund |
+| Trust Annual Contribution | $5,000-$10,000/year | Endowment building |
+| Donor Contributions | 100% to fund | Tax-deductible gifts |
+| Investment Returns | Reinvested | Endowment growth |
+
+### Scholarship Oversight Committee
+
+| Role | Responsibility | Member |
+|------|----------------|--------|
+| Chair | Final approval authority | Trust representative |
+| Education Director | Application review, recommendations | Cornelius |
+| Community Representative | Community perspective | Rotating L.A.W.S. member |
+| Finance Liaison | Fund management, disbursement | CFO/Finance Manager |
+
+---
+
 ## Succession Planning
 
 The Trust includes comprehensive succession planning to ensure continuity across generations:
@@ -166,6 +238,10 @@ Operating entity leadership will transition based on merit, training completion,
 **Knowledge Transfer**
 
 The 508 Academy ensures that each generation receives training in financial literacy, business operations, and family governance. Completion of Academy programs is required for leadership positions.
+
+**Specialist Track Integration**
+
+The Specialist Track serves as a formal succession pipeline, allowing the Trust to identify and develop future leaders through structured progression. Specialists who demonstrate exceptional capability may be fast-tracked for management positions.
 
 ---
 

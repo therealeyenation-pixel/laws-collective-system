@@ -4268,10 +4268,10 @@
 
 ### Business Plan Updates
 - [x] Add Professional Services Budget Template component for grants
-- [ ] Update Real-Eye-Nation business plan with Creative Enterprise Division
-- [ ] Update L.A.W.S. Collective business plan with Design Department
-- [ ] Update LuvOnPurpose Academy business plan with creative curriculum
-- [ ] Update 98 Trust business plan with Specialist Track and Scholarships
+- [x] Update Real-Eye-Nation business plan with Creative Enterprise Division
+- [x] Update L.A.W.S. Collective business plan with Design Department
+- [x] Update LuvOnPurpose Academy business plan with creative curriculum and scholarships
+- [x] Update 98 Trust business plan with Specialist Track and Scholarships governance
 - [ ] Add Creative Enterprise revenue projections
 - [ ] Document artist development pipeline
 

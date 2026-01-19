@@ -269,7 +269,38 @@ export default function SpecialistTracks() {
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <div className="space-y-2">
                       <Label htmlFor="positionTitle">Position Title</Label>
-                      <Input id="positionTitle" name="positionTitle" placeholder="e.g., Operations Specialist I" />
+                      <Select name="positionTitle">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select position track" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="custom">Custom Position</SelectItem>
+                          <SelectItem value="---" disabled>── Operations ──</SelectItem>
+                          <SelectItem value="Operations Specialist">Operations Specialist</SelectItem>
+                          <SelectItem value="Administrative Specialist">Administrative Specialist</SelectItem>
+                          <SelectItem value="Project Support Specialist">Project Support Specialist</SelectItem>
+                          <SelectItem value="---" disabled>── Finance ──</SelectItem>
+                          <SelectItem value="Finance Specialist">Finance Specialist</SelectItem>
+                          <SelectItem value="Accounting Specialist">Accounting Specialist</SelectItem>
+                          <SelectItem value="Grants Specialist">Grants Specialist</SelectItem>
+                          <SelectItem value="---" disabled>── Creative Enterprise ──</SelectItem>
+                          <SelectItem value="Performance Artist Specialist">Performance Artist Specialist</SelectItem>
+                          <SelectItem value="Production Specialist">Production Specialist</SelectItem>
+                          <SelectItem value="Content Creator Specialist">Content Creator Specialist</SelectItem>
+                          <SelectItem value="Event Production Specialist">Event Production Specialist</SelectItem>
+                          <SelectItem value="---" disabled>── Design Department ──</SelectItem>
+                          <SelectItem value="Graphic Design Specialist">Graphic Design Specialist</SelectItem>
+                          <SelectItem value="Digital Art Specialist">Digital Art Specialist</SelectItem>
+                          <SelectItem value="UI/UX Design Specialist">UI/UX Design Specialist</SelectItem>
+                          <SelectItem value="Motion Graphics Specialist">Motion Graphics Specialist</SelectItem>
+                          <SelectItem value="---" disabled>── Education ──</SelectItem>
+                          <SelectItem value="Academy Assistant Specialist">Academy Assistant Specialist</SelectItem>
+                          <SelectItem value="Curriculum Support Specialist">Curriculum Support Specialist</SelectItem>
+                          <SelectItem value="---" disabled>── Community ──</SelectItem>
+                          <SelectItem value="Outreach Specialist">Outreach Specialist</SelectItem>
+                          <SelectItem value="Community Programs Specialist">Community Programs Specialist</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="supervisorName">Supervisor</Label>

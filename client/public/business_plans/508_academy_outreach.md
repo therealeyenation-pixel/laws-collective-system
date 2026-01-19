@@ -122,8 +122,96 @@ The Temple conducts regular spiritual gatherings including weekly teaching sessi
 | Wealth Building Intensive | 12 weeks | Advanced investing, asset protection, legacy | Wealth Builder Certificate |
 | Leadership Development | 8 weeks | Family governance, spiritual leadership | Leadership Certificate |
 | Train the Teacher | 6 weeks | Facilitator skills, curriculum delivery | Certified Teacher |
+| **Creative Enterprise** | 10 weeks | Performance arts, production, creative business | Creative Enterprise Certificate |
+| **Design Fundamentals** | 8 weeks | Digital design, AI tools, portfolio development | Design Certificate |
 
 All programs integrate spiritual principles with practical skills and award completion certificates signed by the Education Director (Cornelius) and Spiritual Leader (LaShanna Russell).
+
+---
+
+## Creative Enterprise Curriculum
+
+The Creative Enterprise Curriculum prepares students for careers in performing arts and creative production while ensuring they develop the business acumen to build sustainable creative careers. This curriculum directly addresses the "starving artist" syndrome by requiring business fundamentals before performance specialization.
+
+### Curriculum Tracks
+
+| Track | Focus | Duration | Prerequisite |
+|-------|-------|----------|---------------|
+| Performance Arts | Acting, music, dance, spoken word | 10 weeks | Spiritual Foundations |
+| Production Arts | Recording, filming, editing, sound | 10 weeks | Spiritual Foundations |
+| Creative Business | IP ownership, licensing, brand management | 6 weeks | Financial Stewardship |
+| Design Fundamentals | Digital design, AI tools, portfolio | 8 weeks | Spiritual Foundations |
+
+### Business-First Approach
+
+All creative students must complete the following before specialization:
+
+| Requirement | Purpose |
+|-------------|----------|
+| Financial Stewardship | Understanding money management as spiritual practice |
+| Business as Ministry | Entity formation, contracts, business planning |
+| IP & Licensing Module | Protecting and monetizing creative work |
+| Revenue Diversification | Multiple income streams (performance, teaching, licensing) |
+
+### Career Pathways
+
+Graduates are prepared for positions in:
+
+| Pathway | Entry Position | Advancement |
+|---------|----------------|-------------|
+| Real-Eye-Nation | Specialist Artist (Part-time) | Professional Artist → Creative Lead |
+| L.A.W.S. Design | Specialist Designer (Part-time) | Junior Designer → Senior Designer |
+| External | Freelance creative, contractor | Independent business owner |
+| Teaching | Academy Assistant | Certified Teacher → Program Lead |
+
+---
+
+## Scholarship Programs
+
+The Academy provides multiple scholarship pathways to ensure education is accessible to all qualified candidates while honoring founding member contributions.
+
+### Founding Member Heir Education Benefits
+
+Heirs of founding members (original Management team from startup) receive free Academy education as a core benefit of their family's contribution to establishing the LuvOnPurpose ecosystem.
+
+| Benefit | Coverage | Eligibility |
+|---------|----------|-------------|
+| Full Tuition | 100% of all Academy programs | Direct heirs up to 5 generations |
+| Materials | All required course materials | Verified through House lineage |
+| Certification | All completion certificates | Automatic upon enrollment |
+| Priority Enrollment | First access to limited programs | Founding member verification |
+
+**Founding Members Defined**: The first line of Managers present from startup and development phase, including the Principal/CEO and original Management team (CFO, COO, CMO, Health Manager, etc.).
+
+### Community Scholarship Program
+
+For community members who are not founding member heirs, the Academy offers merit-based and need-based scholarships.
+
+| Scholarship Type | Coverage | Criteria |
+|------------------|----------|----------|
+| Merit Scholarship | 50-100% tuition | Academic achievement, demonstrated potential |
+| Need-Based | 25-75% tuition | Financial need documentation |
+| Service Scholarship | 50% tuition | Community service commitment (20 hrs/month) |
+| Specialist Track | 100% tuition | Commitment to 2-year employment post-graduation |
+
+### Scholarship Application Process
+
+1. **Application Submission**: Complete scholarship application with required documentation
+2. **Review Committee**: Applications reviewed by Education Director and Scholarship Committee
+3. **Interview**: Qualified candidates interviewed for final selection
+4. **Award Notification**: Recipients notified within 30 days of application deadline
+5. **Acceptance**: Recipients sign scholarship agreement with terms and conditions
+
+### Scholarship Fund Management
+
+The Academy maintains a dedicated Scholarship Fund supported by:
+
+| Source | Description |
+|--------|-------------|
+| Tithe Allocation | 10% of Academy revenue designated for scholarships |
+| Donor Contributions | Tax-deductible donations to scholarship fund |
+| Grant Funding | Foundation grants for educational access |
+| Endowment Growth | Investment returns on scholarship endowment |
 
 **Temple Services**
 
@@ -145,6 +233,7 @@ All programs integrate spiritual principles with practical skills and award comp
 | Youth Development | Age-appropriate spiritual and financial education | Children and teens |
 | Elder Support | Guidance and assistance for seniors | Elderly community members |
 | Re-Entry Support | Holistic support for formerly incarcerated | Justice-involved individuals |
+| Creative Arts Outreach | Free creative workshops for community youth | Young people ages 12-18 |
 
 ---
 
