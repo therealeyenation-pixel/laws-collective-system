@@ -1474,7 +1474,9 @@
           "eligibility": "NGOs, civil society organizations worldwide",
           "url": "https://www.un.org/democracyfund",
           "fitScore": 85,
-          "notes": "Supports grassroots democracy initiatives globally"
+          "notes": "Supports grassroots democracy initiatives globally",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-002",
@@ -1486,7 +1488,9 @@
           "eligibility": "Community organizations, NGOs",
           "url": "https://www.worldbank.org/en/programs/small-grants-program",
           "fitScore": 80,
-          "notes": "Country-specific programs available"
+          "notes": "Country-specific programs available",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-003",
@@ -1498,7 +1502,9 @@
           "eligibility": "Organizations working on systemic change",
           "url": "https://www.fordfoundation.org/work/our-grants",
           "fitScore": 88,
-          "notes": "Global focus on inequality and injustice"
+          "notes": "Global focus on inequality and injustice",
+          "region": "global",
+          "demographics": ["minority", "general"]
         },
         {
           "id": "intl-004",
@@ -1510,7 +1516,9 @@
           "eligibility": "Organizations promoting open society values",
           "url": "https://www.opensocietyfoundations.org/grants",
           "fitScore": 85,
-          "notes": "Global network supporting civil society"
+          "notes": "Global network supporting civil society",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-005",
@@ -1522,7 +1530,9 @@
           "eligibility": "Organizations with global impact potential",
           "url": "https://www.rockefellerfoundation.org",
           "fitScore": 82,
-          "notes": "Focus on scalable solutions to global challenges"
+          "notes": "Focus on scalable solutions to global challenges",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-006",
@@ -1534,7 +1544,9 @@
           "eligibility": "Organizations with proven track record",
           "url": "https://www.gatesfoundation.org",
           "fitScore": 75,
-          "notes": "Primarily invitation-only, but accepts inquiries"
+          "notes": "Primarily invitation-only, but accepts inquiries",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-007",
@@ -1546,7 +1558,9 @@
           "eligibility": "U.S. and international NGOs",
           "url": "https://www.usaid.gov/work-usaid/get-grant-or-contract",
           "fitScore": 80,
-          "notes": "Major funder for international development work"
+          "notes": "Major funder for international development work",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-008",
@@ -1558,7 +1572,9 @@
           "eligibility": "African community groups and enterprises",
           "url": "https://www.usadf.gov",
           "fitScore": 88,
-          "notes": "Excellent for African diaspora connections and expansion"
+          "notes": "Excellent for African diaspora connections and expansion",
+          "region": "africa",
+          "demographics": ["minority", "general"]
         },
         {
           "id": "intl-009",
@@ -1570,7 +1586,9 @@
           "eligibility": "Organizations in Caribbean member countries",
           "url": "https://www.caribank.org",
           "fitScore": 90,
-          "notes": "Directly relevant for Jamaica-based Trust operations"
+          "notes": "Directly relevant for Jamaica-based Trust operations",
+          "region": "caribbean",
+          "demographics": ["general"]
         },
         {
           "id": "intl-010",
@@ -1582,7 +1600,9 @@
           "eligibility": "Community organizations in LAC region",
           "url": "https://www.iaf.gov",
           "fitScore": 85,
-          "notes": "Supports grassroots economic development"
+          "notes": "Supports grassroots economic development",
+          "region": "latam",
+          "demographics": ["general"]
         },
         {
           "id": "intl-011",
@@ -1594,7 +1614,9 @@
           "eligibility": "Women-led organizations outside U.S.",
           "url": "https://www.globalfundforwomen.org",
           "fitScore": 82,
-          "notes": "For international women's initiatives"
+          "notes": "For international women's initiatives",
+          "region": "global",
+          "demographics": ["women"]
         },
         {
           "id": "intl-012",
@@ -1606,7 +1628,9 @@
           "eligibility": "Proven social entrepreneurs with global impact",
           "url": "https://skoll.org",
           "fitScore": 80,
-          "notes": "Prestigious award for social entrepreneurs"
+          "notes": "Prestigious award for social entrepreneurs",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-013",
@@ -1618,7 +1642,9 @@
           "eligibility": "Innovative social entrepreneurs",
           "url": "https://www.ashoka.org/en-us/program/ashoka-fellowship",
           "fitScore": 85,
-          "notes": "Global network of social entrepreneurs"
+          "notes": "Global network of social entrepreneurs",
+          "region": "global",
+          "demographics": ["general"]
         },
         {
           "id": "intl-014",
@@ -1630,7 +1656,9 @@
           "eligibility": "Early-stage social entrepreneurs",
           "url": "https://echoinggreen.org/fellowship",
           "fitScore": 88,
-          "notes": "Seed funding for new social ventures"
+          "notes": "Seed funding for new social ventures",
+          "region": "global",
+          "demographics": ["minority", "general"]
         },
         {
           "id": "intl-015",
@@ -1642,7 +1670,9 @@
           "eligibility": "Organizations in Commonwealth countries (incl. Jamaica)",
           "url": "https://commonwealthfoundation.com",
           "fitScore": 90,
-          "notes": "Directly applicable for Jamaica operations"
+          "notes": "Directly applicable for Jamaica operations",
+          "region": "caribbean",
+          "demographics": ["general"]
         }
       ]
     }

@@ -4115,3 +4115,33 @@
 - [x] Create international operations playbook (MOU → Contractor → EOR → Subsidiary phases)
 - [x] Add contractor vs employee classification guide with risk assessment
 - [x] All 343 tests passing
+
+
+## Phase 128: Foreign Grant Search & Volunteer Program
+- [x] Add foreign grant search field with country/region filter (Global, Africa, Caribbean, Latin America, Europe, Asia)
+- [x] Build international funder database (UN, World Bank, USAID, DFID, Ford Foundation, etc.)
+- [x] Add eligibility checker for international grants by entity type
+- [x] Create compliance checklist for foreign grants (FCPA, SAM.gov)
+- [x] Build volunteer program tracker for domestic opportunities
+- [x] Build volunteer program tracker for international opportunities
+- [x] Track volunteer hours and impact metrics ($31.80/hr Independent Sector rate)
+- [x] Create volunteer opportunity matching based on skills/interests
+- [x] Add volunteer certificates and recognition system
+- [x] Integrate volunteer data into grant applications (community engagement proof)
+- [x] Create VolunteerPage at /volunteer with entity alignment
+- [x] All 343 tests passing
+
+
+## Phase 129: Age-Based Entrepreneurship Framework Integration
+- [ ] Update Academy curriculum with 5-stage age progression (Awareness → Exploration → Foundation → Entrepreneurship → Independence)
+- [ ] Create age-appropriate business tracks for each stage:
+  - [ ] Ages 5-7: Creative House Projects (money basics, cause/effect, creativity)
+  - [ ] Ages 8-10: Learning House Enterprises (small projects, tracking, saving)
+  - [ ] Ages 11-13: Activated House Businesses (branding, business plans, budgeting)
+  - [ ] Ages 14-16: Sovereign House Operations - Supervised (registered businesses, marketing, accountability)
+  - [ ] Ages 17-18: Sovereign House Operations - Full (legal ownership, full authority)
+- [ ] Create age-based token earning tiers (Observer → Apprentice → Builder → Operator → Owner)
+- [ ] Update simulator difficulty scaling by age stage
+- [ ] Add age-appropriate financial literacy modules
+- [ ] Create parent/guardian oversight dashboard for younger stages
+- [ ] Add progression ceremonies/milestones between stages

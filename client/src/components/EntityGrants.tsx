@@ -39,6 +39,8 @@ interface Grant {
   fitScore: number;
   notes: string;
   demographics?: string[];
+  region?: string;
+  country?: string;
 }
 
 interface EntityGrants {
@@ -96,6 +98,7 @@ export default function EntityGrants() {
   const [loading, setLoading] = useState(true);
   const [selectedEntity, setSelectedEntity] = useState<string>("luvonpurpose_temple");
   const [demographicFilter, setDemographicFilter] = useState<string>("all");
+  const [regionFilter, setRegionFilter] = useState<string>("all");
 
   useEffect(() => {
     fetch("/grant_opportunities.json")
@@ -130,6 +133,23 @@ export default function EntityGrants() {
     return grants.filter(
       (grant) => grant.demographics?.includes(demographicFilter)
     );
+  };
+
+  const filterGrantsByRegion = (grants: Grant[]) => {
+    if (regionFilter === "all") return grants;
+    if (regionFilter === "domestic") {
+      return grants.filter((grant) => !grant.region || grant.region === "domestic" || grant.region === "usa");
+    }
+    if (regionFilter === "international") {
+      return grants.filter((grant) => grant.region && grant.region !== "domestic" && grant.region !== "usa");
+    }
+    return grants.filter((grant) => grant.region === regionFilter || grant.country === regionFilter);
+  };
+
+  const applyAllFilters = (grants: Grant[]) => {
+    let filtered = filterGrantsByDemographic(grants);
+    filtered = filterGrantsByRegion(filtered);
+    return filtered;
   };
 
   const getDemographicBadges = (demographics?: string[]) => {
@@ -256,6 +276,24 @@ export default function EntityGrants() {
               </SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Region Filter */}
+          <Select value={regionFilter} onValueChange={setRegionFilter}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="All Regions" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Regions</SelectItem>
+              <SelectItem value="domestic">🇺🇸 Domestic (USA)</SelectItem>
+              <SelectItem value="international">🌍 International</SelectItem>
+              <SelectItem value="caribbean">🌴 Caribbean</SelectItem>
+              <SelectItem value="africa">🌍 Africa</SelectItem>
+              <SelectItem value="europe">🇪🇺 Europe</SelectItem>
+              <SelectItem value="asia">🌏 Asia</SelectItem>
+              <SelectItem value="latam">🌎 Latin America</SelectItem>
+              <SelectItem value="global">🌐 Global/Multi-Region</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Quick Filter Badges */}
@@ -331,7 +369,7 @@ export default function EntityGrants() {
 
         {entityKeys.map((entityKey) => {
           const entity = grantData.entities[entityKey];
-          const filteredGrants = filterGrantsByDemographic(entity.grants);
+          const filteredGrants = applyAllFilters(entity.grants);
 
           return (
             <TabsContent
@@ -406,9 +444,9 @@ export default function EntityGrants() {
                   <Button
                     variant="outline"
                     className="mt-4"
-                    onClick={() => setDemographicFilter("all")}
+                    onClick={() => { setDemographicFilter("all"); setRegionFilter("all"); }}
                   >
-                    Clear Filter
+                    Clear Filters
                   </Button>
                 </Card>
               ) : (
