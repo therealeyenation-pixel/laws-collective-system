@@ -4649,3 +4649,123 @@
 - [x] Ensure organizational structure displays correctly
 - [x] Verify manager information is accurate (12 managers added)
 - [x] Test purchase request workflow (11 tests passed)
+
+
+## Phase 148: Sidebar Navigation Reorganization
+
+### Collapsible Category Structure
+- [ ] Reorganize sidebar into collapsible categories
+- [ ] Dashboard category
+- [ ] My Account category (Profile, House, Getting Started)
+- [ ] Learning & Simulators category
+- [ ] HR & People category (add Offer Letters)
+- [ ] Finance category (add Purchase Requests)
+- [ ] Operations category
+- [ ] Business Setup category
+- [ ] Documents category
+- [ ] Creative & Media category
+- [ ] AI Agents category
+- [ ] Advanced category
+
+### Offer Letters Page
+- [ ] Create OfferLetters.tsx page
+- [ ] Display all 12 manager offer letters
+- [ ] Add download PDF functionality
+- [ ] Add to HR & People category in sidebar
+
+
+## Phase 149: Sidebar Department Reorganization
+
+- [x] Reorganize sidebar by established departments:
+  - Health (Amber S. Hunter)
+  - Design (Essence M. Hunter)
+  - Finance (Craig Russell)
+  - Education (Cornelius Christopher)
+  - Media (Amandes Pearsall IV)
+  - Procurement (Maia Rylandlesesene) - move RFP Generator here
+  - Contracts (Roshonda Parker)
+  - Purchasing (Latisha Cox)
+  - Property (Talbert Cox)
+  - Real Estate (Kenneth Coleman, Treiva Hunter)
+  - Project Controls (Christopher Battle Sr.)
+- [x] Move RFP Generator under Procurement
+- [x] Align sidebar categories with organizational structure
+- [x] Added collapsible category navigation
+- [x] Added Offer Letters page under HR & People
+
+
+## Phase 150: Entity-Based Sidebar Reorganization
+
+- [ ] Reorganize sidebar by business entities:
+  - Trust (Top Level - Governance)
+  - L.A.W.S. Academy (Education Entity)
+  - Real Eye (Media/Creative Entity)
+  - L.A.W.S. Collective (Operating Company with Departments)
+  - My Account (Personal)
+- [ ] Nest departments under L.A.W.S. Collective
+- [ ] Move Academy courses/simulators under Academy entity
+- [ ] Move Design/Media/Creative under Real Eye entity
+- [ ] Trust contains governance and owner functions
+
+
+## Phase 151: Department Dashboards & Sidebar Update
+
+### Missing Departments to Add to Sidebar
+- [ ] QA/QC (Open position)
+- [ ] Legal/Compliance (Open position)
+- [ ] Operations (Open position)
+- [ ] HR (Open position)
+- [ ] Platform Administration (Open position)
+- [ ] Grant Development (Open position)
+
+### Department Dashboards to Create
+- [ ] Health Dashboard (Amber S. Hunter)
+- [ ] Design Dashboard (Essence M. Hunter)
+- [ ] Finance Dashboard (Craig Russell)
+- [ ] Education Dashboard (Cornelius Christopher)
+- [ ] Media Dashboard (Amandes Pearsall IV)
+- [ ] Procurement Dashboard (Maia Rylandlesesene)
+- [ ] Contracts Dashboard (Roshonda Parker)
+- [ ] Purchasing Dashboard (Latisha Cox)
+- [ ] Property Dashboard (Talbert Cox)
+- [ ] Real Estate Dashboard (Kenneth Coleman / Treiva Hunter)
+- [ ] Project Controls Dashboard (Christopher Battle Sr.)
+- [ ] QA/QC Dashboard (Open)
+- [ ] Legal/Compliance Dashboard (Open)
+- [ ] Operations Dashboard (Open)
+- [ ] HR Dashboard (existing, verify)
+- [ ] Platform Admin Dashboard (Open)
+- [ ] Grant Development Dashboard (Open)
+
+
+### Coordinator Simulators for Each Department
+- [ ] Health Coordinator Simulator
+- [ ] Education Coordinator Simulator
+- [ ] Design Coordinator Simulator
+- [ ] Media Coordinator Simulator
+- [ ] Finance Coordinator Simulator
+- [ ] HR Coordinator Simulator
+- [ ] Operations Coordinator Simulator
+- [ ] Procurement Coordinator Simulator
+- [ ] Contracts Coordinator Simulator
+- [ ] Purchasing Coordinator Simulator
+- [ ] Property Coordinator Simulator
+- [ ] Real Estate Coordinator Simulator
+- [ ] Project Controls Coordinator Simulator
+- [ ] QA/QC Coordinator Simulator
+- [ ] Legal Coordinator Simulator
+- [ ] Platform Admin Simulator
+- [ ] Grant Writer Simulator
+
+
+### Business Department (Ground Zero - CEO Managed)
+- [x] Add Business department to sidebar under L.A.W.S. Collective
+- [x] Business Simulator as entry point for W-2 to contractor progression
+- [ ] Business Coordinator Simulator with tangible outputs
+- [ ] Tangible outputs: Business plans, operating agreements, budgets, SWOT analysis
+
+### Simulator Tangible Outputs for W-2 to Contractor Progression
+- [ ] All simulators produce real documents
+- [ ] Outputs become portfolio pieces
+- [ ] Completion unlocks contractor eligibility
+- [ ] Track competency development
