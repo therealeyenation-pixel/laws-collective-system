@@ -388,5 +388,40 @@
       "Generate $1M+ in annual revenue",
       "Expand to multiple states/regions"
     ]
+  },
+  "trustIntegration": {
+    "trustEntity": "Calea Freeman Family Trust",
+    "purpose": "Asset protection, IP holding, and multi-generational wealth preservation",
+    "structure": {
+      "ipLicensing": {
+        "description": "Trust holds intellectual property rights for the L.A.W.S. Business Management Platform and training curriculum",
+        "arrangement": "L.A.W.S. Collective, LLC licenses IP from Trust under exclusive license agreement",
+        "benefits": [
+          "Asset protection - IP separated from business operational liability",
+          "Succession planning - IP transfers to heirs without probate",
+          "Tax efficiency - licensing fees can be structured for optimal tax treatment"
+        ]
+      },
+      "revenueFlow": {
+        "description": "Royalty payments flow from LLC to Trust for IP usage",
+        "structure": "5-15% of SaaS revenue as licensing royalty",
+        "benefits": [
+          "Creates passive income stream for family wealth building",
+          "Separates operational income from investment income",
+          "Provides funding source for family education and development"
+        ]
+      }
+    },
+    "grantCompliance": {
+      "preExistingIP": "IP developed before grant funding remains Trust property - no disclosure required",
+      "grantFundedIP": "New IP developed with grant funds stays with LLC during grant period, then can be assigned to Trust after obligations complete",
+      "disclosure": "Trust ownership of pre-existing assets is not disclosed in grant applications - LLC is the applicant entity",
+      "federalGrants": "SBIR/STTR require invention disclosure for grant-funded work only; Trust structure does not affect eligibility"
+    },
+    "privacyProtection": {
+      "trustPrivacy": "Revocable trust documents are private - not public record",
+      "llcTransparency": "LLC is the public-facing entity for all business operations and grant applications",
+      "separation": "Grant funders audit LLC operations, not personal/family asset structure"
+    }
   }
 }

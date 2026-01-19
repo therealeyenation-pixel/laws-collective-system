@@ -314,5 +314,50 @@
       "Establish cultural preservation center",
       "Generate $1M+ in annual revenue"
     ]
+  },
+  "trustIntegration": {
+    "trustEntity": "Calea Freeman Family Trust",
+    "purpose": "Property holding, endowment management, and long-term sustainability for the Academy",
+    "structure": {
+      "propertyHolding": {
+        "description": "Trust holds real estate assets for Academy facilities (land, buildings, cultural center)",
+        "arrangement": "Academy leases facilities from Trust under long-term lease agreement",
+        "benefits": [
+          "Asset protection - property separated from Academy operational liability",
+          "Succession planning - facilities remain in family control regardless of Academy leadership changes",
+          "Stability - long-term lease provides predictable facility costs"
+        ]
+      },
+      "endowmentFunction": {
+        "description": "Trust can function as endowment fund for Academy sustainability",
+        "structure": "Trust holds investment assets that generate income for Academy operations",
+        "benefits": [
+          "Long-term financial sustainability",
+          "Scholarship funding source",
+          "Emergency reserve for Academy operations"
+        ]
+      },
+      "scholarshipFunding": {
+        "description": "Trust distributions fund student scholarships",
+        "structure": "Annual distributions from Trust to Academy for scholarship program",
+        "targetAmount": "$25,000 - $100,000 annually",
+        "benefits": [
+          "Provides stable scholarship funding independent of annual fundraising",
+          "Tax-efficient distribution structure",
+          "Multi-generational commitment to education access"
+        ]
+      }
+    },
+    "grantCompliance": {
+      "propertyAcquisition": "Real property purchased with grant funds can be held in Trust after grant period obligations complete",
+      "separation": "Academy is the grant applicant entity; Trust relationship does not affect 508(c)(1)(a) status",
+      "disclosure": "Trust ownership of facilities disclosed as lease arrangement in grant applications if required",
+      "faithBasedGrants": "Lilly Endowment and similar funders focus on program outcomes, not asset structure"
+    },
+    "privacyProtection": {
+      "trustPrivacy": "Revocable trust documents are private - not public record",
+      "academyTransparency": "508(c)(1)(a) is the public-facing entity for all educational operations and grant applications",
+      "separation": "Grant funders audit Academy operations and program outcomes, not family asset structure"
+    }
   }
 }
