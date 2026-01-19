@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DocumentAttachment from "@/components/DocumentAttachment";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,8 @@ import {
   Loader2,
   Mail,
   ExternalLink,
+  Paperclip,
+  FolderOpen,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -341,11 +344,20 @@ const steps = [
   { id: 10, title: "Certificate", icon: Award, description: "Training completion certificate" },
 ];
 
+interface AttachedDocument {
+  id: number;
+  fileName: string;
+  category: string;
+  fileUrl: string;
+  uploadedAt: string;
+}
+
 interface ApplicationData {
   selectedGrant: string;
   selectedEntity: string;
   eligibilityChecks: Record<string, boolean>;
   documentChecks: Record<string, boolean>;
+  attachedDocuments: AttachedDocument[];
   orgDescription: string;
   missionStatement: string;
   yearFounded: string;
@@ -366,6 +378,7 @@ const initialData: ApplicationData = {
   selectedEntity: "",
   eligibilityChecks: {},
   documentChecks: {},
+  attachedDocuments: [],
   orgDescription: "",
   missionStatement: "",
   yearFounded: "",
@@ -725,7 +738,7 @@ export default function GrantSimulator() {
                 <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-blue-800 dark:text-blue-200">Training: Document Preparation</p>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Gather all required documents before starting.</p>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">Gather all required documents before starting. You can also attach documents from your Document Center.</p>
                 </div>
               </div>
             </div>
@@ -755,6 +768,42 @@ export default function GrantSimulator() {
                 ))}
               </CardContent>
             </Card>
+
+            {/* Document Attachment Section */}
+            {data.selectedEntity && (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <Paperclip className="w-5 h-5 text-primary" />
+                    <div>
+                      <CardTitle>Attach Documents</CardTitle>
+                      <CardDescription>Link documents from your Document Center to this application</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <DocumentAttachment
+                    entityId={data.selectedEntity}
+                    entityName={selectedEntity?.name}
+                    attachedDocuments={data.attachedDocuments}
+                    onAttach={(docs) => updateData("attachedDocuments", [...data.attachedDocuments, ...docs])}
+                    onRemove={(docId) => updateData("attachedDocuments", data.attachedDocuments.filter(d => d.id !== docId))}
+                    compact={true}
+                  />
+                  <div className="mt-4 pt-4 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open("/grant-documents", "_blank")}
+                      className="gap-2"
+                    >
+                      <FolderOpen className="w-4 h-4" />
+                      Open Document Center
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         );
 
@@ -1002,6 +1051,7 @@ Example: 'Our community of 50,000 residents has only one workforce development c
                       { label: "Entity Selected", complete: !!data.selectedEntity },
                       { label: "Eligibility Verified", complete: Object.values(data.eligibilityChecks).filter(Boolean).length >= 3 },
                       { label: "Documents Ready", complete: Object.values(data.documentChecks).filter(Boolean).length >= 4 },
+                      { label: "Documents Attached", complete: data.attachedDocuments.length > 0 },
                       { label: "Organization Info", complete: data.orgDescription.length > 50 },
                       { label: "Need Statement", complete: data.needStatement.length > 100 },
                       { label: "Project Description", complete: !!data.projectTitle },
@@ -1014,6 +1064,23 @@ Example: 'Our community of 50,000 residents has only one workforce development c
                     ))}
                   </div>
                 </div>
+                {/* Attached Documents Summary */}
+                {data.attachedDocuments.length > 0 && (
+                  <div className="pt-4 border-t">
+                    <p className="text-sm font-medium mb-2 flex items-center gap-2">
+                      <Paperclip className="w-4 h-4" />
+                      Attached Documents ({data.attachedDocuments.length})
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {data.attachedDocuments.map((doc) => (
+                        <div key={doc.id} className="flex items-center gap-2 text-sm p-2 bg-muted/50 rounded">
+                          <FileText className="w-4 h-4 text-primary flex-shrink-0" />
+                          <span className="truncate">{doc.fileName}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -1155,8 +1222,17 @@ Example: 'Our community of 50,000 residents has only one workforce development c
                         </table>
                       </div>
                       
+                      ${data.attachedDocuments.length > 0 ? `
                       <div class="section">
-                        <h2>4. Grant Details</h2>
+                        <h2>4. Attached Documents</h2>
+                        <p style="margin-bottom:10px;">The following documents have been attached to this application:</p>
+                        <ul style="line-height:1.8;">
+                          ${data.attachedDocuments.map(doc => `<li><strong>${doc.category.replace(/_/g, ' ').toUpperCase()}</strong>: ${doc.fileName} <a href="${doc.fileUrl}" target="_blank" style="color:#1a5f2a;">[View]</a></li>`).join('')}
+                        </ul>
+                      </div>` : ''}
+                      
+                      <div class="section">
+                        <h2>${data.attachedDocuments.length > 0 ? '5' : '4'}. Grant Details</h2>
                         <div class="label">Funder</div>
                         <div class="content">${selectedGrant?.funder}</div>
                         <div class="label" style="margin-top:15px;">Grant Amount Range</div>

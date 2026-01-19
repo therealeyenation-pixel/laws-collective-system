@@ -4040,3 +4040,14 @@
 - [x] Register /grant-documents route in App.tsx
 - [x] Write vitest tests for grant documents (10 tests passing)
 - [x] Test complete document upload workflow
+
+
+## Phase 122: Link Documents to Grant Simulator
+- [x] Analyze Grant Simulator workflow for document attachment points
+- [x] Create DocumentAttachment component for selecting uploaded documents
+- [x] Add document attachment step to Grant Simulator (Step 4: Document Checklist)
+- [x] Show document checklist with upload status in simulator
+- [x] Allow attaching documents from library to grant application
+- [x] Update grant application export to include attached document list
+- [ ] Update Save to Tracking to include attached documents (future enhancement)
+- [x] Test complete document attachment workflow
