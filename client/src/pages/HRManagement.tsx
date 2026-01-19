@@ -189,42 +189,8 @@ interface OfferLetter {
   customTerms?: string;
 }
 
-// Sample offer letters for demo
-const SAMPLE_OFFERS: OfferLetter[] = [
-  {
-    id: "offer-001",
-    candidateName: "Jordan Williams",
-    candidateEmail: "jordan.w@email.com",
-    positionId: "grant-writer",
-    positionTitle: "Grant Writer / Proposal Specialist",
-    entity: "The L.A.W.S. Collective, LLC",
-    department: "Grants & Proposals",
-    salaryRange: "$85,000 - $115,000",
-    offeredSalary: "$95,000",
-    benefitsPackage: "grant-compliant",
-    startDate: "2026-02-01",
-    status: "sent",
-    createdAt: "2026-01-10",
-    sentAt: "2026-01-12"
-  },
-  {
-    id: "offer-002",
-    candidateName: "Alex Chen",
-    candidateEmail: "alex.chen@email.com",
-    positionId: "content-creator",
-    positionTitle: "Content Creator / Media Assistant",
-    entity: "Real-Eye-Nation LLC",
-    department: "Media Production",
-    salaryRange: "$35,000 - $55,000",
-    offeredSalary: "$42,000",
-    benefitsPackage: "part-time",
-    startDate: "2026-01-20",
-    status: "accepted",
-    createdAt: "2026-01-05",
-    sentAt: "2026-01-06",
-    respondedAt: "2026-01-08"
-  },
-];
+// No sample offer letters - start with empty state
+const SAMPLE_OFFERS: OfferLetter[] = [];
 
 export default function HRManagement() {
   const [activeTab, setActiveTab] = useState("offers");
