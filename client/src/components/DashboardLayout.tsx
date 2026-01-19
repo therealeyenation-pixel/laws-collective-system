@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, UserCircle, UserPlus, FolderKanban } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Shield, Coins, Activity, BookOpen, GraduationCap, Rocket, FileText, Bot, Share2, Building2, DollarSign, Home, Settings, PieChart, Gavel, Globe2, ArrowLeft, Play, Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, UserCircle, UserPlus, FolderKanban, Award } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -73,6 +73,7 @@ const menuItems: MenuItem[] = [
   { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff", category: "Management" },
   { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff", category: "Management" },
   { icon: ClipboardList, label: "HR Dashboard", path: "/hr-dashboard", minRole: "staff", category: "Management" },
+  { icon: Award, label: "Resume Builder", path: "/resume-builder", minRole: "staff", category: "Management" },
   { icon: UserPlus, label: "Position Requisitions", path: "/requisitions", minRole: "staff", category: "Management" },
   { icon: Users, label: "Employee Directory", path: "/employees", minRole: "staff", category: "Management" },
   { icon: UserPlus, label: "Onboarding", path: "/onboarding", minRole: "staff", category: "Management" },

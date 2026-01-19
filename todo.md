@@ -4145,3 +4145,28 @@
 - [ ] Add age-appropriate financial literacy modules
 - [ ] Create parent/guardian oversight dashboard for younger stages
 - [ ] Add progression ceremonies/milestones between stages
+
+
+## Phase 130: Professional Contingent Offer Packages with Demonstrated Competency
+- [ ] Design demonstrated competency qualification framework (equal to traditional credentials)
+- [ ] Create competency-based resume template for family members
+- [ ] Document competency evidence categories (fiscal stewardship, market research, etc.)
+- [ ] Build offer letter generator with position details and compensation
+- [ ] Create position description document generator
+- [ ] Build compensation schedule with base pay, tokens, revenue share
+- [ ] Create background check authorization form
+- [ ] Create confidentiality agreement (NDA) template
+- [ ] Create non-compete/non-solicitation agreement template
+- [ ] Create direct deposit authorization form
+- [ ] Add W-4/W-9 form references
+- [ ] Add I-9 employment eligibility reference
+- [ ] Create token economy agreement template
+- [ ] Create entity-specific policy acknowledgment
+- [ ] Build complete offer package PDF generator
+- [ ] Add resume upload requirement before offer generation
+- [ ] Integrate with e-signature system for package signing
+- [ ] Test complete offer package workflow
+- [x] Create CompetencyBasedResume component with demonstrated competency framework
+- [x] Create ResumeBuilder page at /resume-builder
+- [x] Add Resume Builder to DashboardLayout navigation under HR section
+- [x] Add route to App.tsx for /resume-builder

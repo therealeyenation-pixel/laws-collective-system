@@ -72,6 +72,7 @@ import TrustVisualization from "./pages/TrustVisualization";
 import FinancialStatements from "./pages/FinancialStatements";
 import BoardResolutions from "./pages/BoardResolutions";
 import ContingencyOffers from "./pages/ContingencyOffers";
+import ResumeBuilder from "./pages/ResumeBuilder";
 import ProcurementCatalog from "./pages/ProcurementCatalog";
 import CompanyCalendar from "./pages/CompanyCalendar";
 import ESignature from "./pages/ESignature";
@@ -216,6 +217,7 @@ function Router() {
       <Route path="/financial-statements">{() => <ProtectedRoute component={FinancialStatements} minRole="staff" />}</Route>
       <Route path="/board-resolutions">{() => <ProtectedRoute component={BoardResolutions} minRole="admin" />}</Route>
       <Route path="/contingency-offers">{() => <ProtectedRoute component={ContingencyOffers} minRole="admin" />}</Route>
+      <Route path="/resume-builder">{() => <ProtectedRoute component={ResumeBuilder} minRole="staff" />}</Route>
       <Route path="/procurement-catalog">{() => <ProtectedRoute component={ProcurementCatalog} minRole="staff" />}</Route>
       <Route path="/calendar">{() => <ProtectedRoute component={CompanyCalendar} minRole="user" />}</Route>
       <Route path="/e-signature">{() => <ProtectedRoute component={ESignature} minRole="staff" />}</Route>
