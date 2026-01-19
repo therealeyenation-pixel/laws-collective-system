@@ -3895,3 +3895,14 @@
 - [x] Update EIN from "Pending" to "41-3683894"
 - [x] Update name control to "LUVO"
 - [x] Verify entity displays correctly in Entity Dashboard
+
+
+## Phase 111: Grant Simulator Apply Link and Application Workflow
+- [x] Investigate current Grant Simulator apply link functionality
+- [x] Identify how simulator data connects to grant applications
+- [x] Add actual grant application URLs to each grant opportunity (13 grants)
+- [x] Add grant funder email addresses for submission (13 grants)
+- [x] Create grant package export feature (JSON export with all application data)
+- [x] Add email submission capability for grant packages (mailto: with pre-filled body)
+- [x] Display application URLs on grant selection cards
+- [x] Test complete apply workflow from simulator to actual grant

@@ -33,6 +33,8 @@ import {
   Info,
   Heart,
   Loader2,
+  Mail,
+  ExternalLink,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -47,6 +49,8 @@ const availableGrants = [
     description: "Monthly grants for women-owned businesses",
     applicationFee: "$15",
     deadline: "Monthly (last day of month)",
+    applicationUrl: "https://ambergrantsforwomen.com/get-an-amber-grant/",
+    contactEmail: "info@womensnet.net",
   },
   {
     id: "herrise",
@@ -57,6 +61,8 @@ const availableGrants = [
     description: "Monthly grants for under-resourced women entrepreneurs",
     applicationFee: "Free",
     deadline: "Monthly",
+    applicationUrl: "https://hersuitespot.com/herrise-microgrant/",
+    contactEmail: "hello@hersuitespot.com",
   },
   {
     id: "naacp",
@@ -67,6 +73,8 @@ const availableGrants = [
     description: "Grants for Black entrepreneurs to support business growth",
     applicationFee: "Free",
     deadline: "Rolling",
+    applicationUrl: "https://naacp.org/find-resources/grants",
+    contactEmail: "info@naacp.org",
   },
   {
     id: "ifundwomen",
@@ -77,6 +85,8 @@ const availableGrants = [
     description: "One application matches you to multiple corporate partner grants",
     applicationFee: "Free",
     deadline: "Rolling",
+    applicationUrl: "https://ifundwomen.com/universal-application",
+    contactEmail: "hello@ifundwomen.com",
   },
   {
     id: "freed",
@@ -87,26 +97,32 @@ const availableGrants = [
     description: "Monthly micro-grants for small business owners",
     applicationFee: "Free",
     deadline: "Monthly",
+    applicationUrl: "https://freedfellowship.com/apply",
+    contactEmail: "info@freedfellowship.com",
   },
   {
     id: "wish",
     name: "Wish Local Empowerment Program",
     funder: "Wish",
-    amount: "$5,000 - $25,000",
+    amount: "$500 - $2,000",
     eligibility: ["black_owned", "small_business"],
     description: "Financial aid and resources for Black-owned small businesses",
     applicationFee: "Free",
     deadline: "Rolling",
+    applicationUrl: "https://www.wish.com/local/empowerment",
+    contactEmail: "localempowerment@wish.com",
   },
   {
     id: "empowher",
     name: "EmpowHer Grant",
-    funder: "EmpowHer Institute",
+    funder: "Boundless Futures Foundation",
     amount: "$2,500 - $10,000",
     eligibility: ["women_owned", "minority_owned"],
-    description: "Grants supporting women entrepreneurs in underserved communities",
+    description: "Quarterly grants supporting women entrepreneurs in underserved communities",
     applicationFee: "Free",
-    deadline: "Quarterly",
+    deadline: "Quarterly (Jan, Apr, Jul, Oct)",
+    applicationUrl: "https://theboundlessfuturesfoundation.submittable.com/",
+    contactEmail: "grants@boundlessfutures.org",
   },
   {
     id: "mbda",
@@ -117,6 +133,8 @@ const availableGrants = [
     description: "Federal grants supporting minority business growth and competitiveness",
     applicationFee: "Free",
     deadline: "Annual cycles",
+    applicationUrl: "https://www.mbda.gov/grants1",
+    contactEmail: "info@mbda.gov",
   },
   {
     id: "lilly",
@@ -127,6 +145,8 @@ const availableGrants = [
     description: "Grants for faith-based organizations and theological education programs",
     applicationFee: "Free",
     deadline: "By invitation/application",
+    applicationUrl: "https://lillyendowment.org/for-grantseekers/",
+    contactEmail: "grantinquiry@lei.org",
   },
   {
     id: "cdbg",
@@ -137,6 +157,8 @@ const availableGrants = [
     description: "Federal block grants for community development benefiting low-to-moderate income populations",
     applicationFee: "Free",
     deadline: "Annual (varies by state)",
+    applicationUrl: "https://dca.georgia.gov/financing-tools/infrastructure/community-development-block-grants-cdbg",
+    contactEmail: "cdbg@dca.ga.gov",
   },
   {
     id: "blank",
@@ -144,9 +166,11 @@ const availableGrants = [
     funder: "Arthur M. Blank Family Foundation",
     amount: "$25,000 - $250,000",
     eligibility: ["community", "nonprofit", "education"],
-    description: "Atlanta-based foundation supporting sustainable and inclusive community development",
+    description: "Atlanta-based foundation supporting sustainable and inclusive community development (invitation only)",
     applicationFee: "Free",
-    deadline: "Rolling",
+    deadline: "By invitation only",
+    applicationUrl: "https://blankfoundation.org/",
+    contactEmail: "info@blankfoundation.org",
   },
   {
     id: "csra",
@@ -157,16 +181,20 @@ const availableGrants = [
     description: "Grants for nonprofits in Georgia and South Carolina for arts, education, and community programs",
     applicationFee: "Free",
     deadline: "Annual cycles",
+    applicationUrl: "https://www.cfcsra.org/nonprofits/grant-opportunities/community-grants/",
+    contactEmail: "info@cfcsra.org",
   },
   {
     id: "rcdi",
     name: "Rural Community Development Initiative",
     funder: "USDA Rural Development",
-    amount: "$50,000 - $250,000",
+    amount: "$50,000 - $500,000",
     eligibility: ["community", "nonprofit"],
     description: "Grants for rural community development organizations serving low-income communities",
     applicationFee: "Free",
-    deadline: "Annual",
+    deadline: "Annual (check grants.gov)",
+    applicationUrl: "https://www.rd.usda.gov/programs-services/community-facilities/rural-community-development-initiative-grants",
+    contactEmail: "rd.webmaster@usda.gov",
   },
 ];
 
@@ -391,6 +419,20 @@ export default function GrantSimulator() {
                       <Badge variant="outline">Fee: {grant.applicationFee}</Badge>
                       <Badge variant="outline">{grant.deadline}</Badge>
                     </div>
+                    {grant.applicationUrl && (
+                      <div className="mt-3 pt-3 border-t flex items-center gap-2 text-xs text-muted-foreground">
+                        <ExternalLink className="w-3 h-3" />
+                        <a 
+                          href={grant.applicationUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="hover:text-primary hover:underline truncate"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {grant.applicationUrl}
+                        </a>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -811,20 +853,86 @@ export default function GrantSimulator() {
                 </div>
               </CardContent>
             </Card>
-            <div className="flex justify-center gap-4">
-              <Button variant="outline" className="gap-2"><Download className="w-4 h-4" />Download Certificate</Button>
-              <Button className="gap-2" onClick={() => {
-                const urls: Record<string, string> = {
-                  amber: "https://ambergrantsforwomen.com/",
-                  herrise: "https://hersuitespot.com/herrise-microgrant/",
-                  naacp: "https://naacp.org/find-resources/grants",
-                  ifundwomen: "https://ifundwomen.com/",
-                  freed: "https://freedfellowship.com/",
-                };
-                if (selectedGrant) window.open(urls[selectedGrant.id], "_blank");
-              }}>
-                Apply to {selectedGrant?.name}<ArrowRight className="w-4 h-4" />
-              </Button>
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-center gap-4 flex-wrap">
+                <Button variant="outline" className="gap-2"><Download className="w-4 h-4" />Download Certificate</Button>
+                <Button variant="outline" className="gap-2" onClick={() => {
+                  // Export grant package as summary
+                  const packageData = {
+                    grant: selectedGrant?.name,
+                    entity: selectedEntity?.name,
+                    projectTitle: data.projectTitle,
+                    requestedAmount: data.budgetItems.reduce((sum, item) => sum + (parseInt(item.amount) || 0), 0),
+                    orgDescription: data.orgDescription,
+                    missionStatement: data.missionStatement,
+                    needStatement: data.needStatement,
+                    projectGoals: data.projectGoals,
+                    projectActivities: data.projectActivities,
+                    budget: data.budgetItems.filter(item => parseInt(item.amount) > 0),
+                  };
+                  const blob = new Blob([JSON.stringify(packageData, null, 2)], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = `grant-package-${selectedGrant?.id || 'application'}.json`;
+                  link.click();
+                  toast.success("Grant package exported");
+                }}>
+                  <FileText className="w-4 h-4" />Export Package
+                </Button>
+              </div>
+              
+              {/* Grant Application Info */}
+              <Card className="bg-muted/50">
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Application Portal</span>
+                      <Button size="sm" className="gap-2" onClick={() => {
+                        if (selectedGrant?.applicationUrl) {
+                          window.open(selectedGrant.applicationUrl, "_blank");
+                        } else {
+                          toast.error("Application URL not available");
+                        }
+                      }}>
+                        Apply Now<ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    {selectedGrant?.applicationUrl && (
+                      <p className="text-xs text-muted-foreground break-all">{selectedGrant.applicationUrl}</p>
+                    )}
+                    <div className="border-t pt-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Contact Funder</span>
+                        {selectedGrant?.contactEmail && (
+                          <Button size="sm" variant="outline" className="gap-2" onClick={() => {
+                            const subject = encodeURIComponent(`Grant Application Inquiry - ${selectedEntity?.name}`);
+                            const body = encodeURIComponent(
+                              `Dear ${selectedGrant.funder} Team,\n\n` +
+                              `I am writing to inquire about the ${selectedGrant.name}.\n\n` +
+                              `Organization: ${selectedEntity?.name}\n` +
+                              `Project: ${data.projectTitle}\n` +
+                              `Requested Amount: $${data.budgetItems.reduce((sum, item) => sum + (parseInt(item.amount) || 0), 0).toLocaleString()}\n\n` +
+                              `Please let me know if you need any additional information.\n\n` +
+                              `Best regards,\nLaShanna Russell\n${selectedEntity?.name}`
+                            );
+                            window.open(`mailto:${selectedGrant.contactEmail}?subject=${subject}&body=${body}`, "_blank");
+                          }}>
+                            <Mail className="w-4 h-4" />Email Funder
+                          </Button>
+                        )}
+                      </div>
+                      {selectedGrant?.contactEmail && (
+                        <p className="text-xs text-muted-foreground mt-1">{selectedGrant.contactEmail}</p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <p className="text-xs text-center text-muted-foreground">
+                Use the "Export Package" button to download your application data, then copy the information into the grant portal.
+              </p>
             </div>
           </div>
         );
