@@ -161,6 +161,8 @@ const availableGrants = [
     deadline: "Monthly",
     applicationUrl: "https://hersuitespot.com/herrise-microgrant/",
     contactEmail: "hello@hersuitespot.com",
+    recommendedFor: ["realeyenation", "luvonpurpose", "laws"],
+    focusArea: "small_business",
   },
   {
     id: "naacp",
@@ -173,6 +175,8 @@ const availableGrants = [
     deadline: "Rolling",
     applicationUrl: "https://naacp.org/find-resources/grants",
     contactEmail: "info@naacp.org",
+    recommendedFor: ["realeyenation", "luvonpurpose", "laws"],
+    focusArea: "small_business",
   },
   {
     id: "ifundwomen",
@@ -185,6 +189,8 @@ const availableGrants = [
     deadline: "Rolling",
     applicationUrl: "https://ifundwomen.com/universal-application",
     contactEmail: "hello@ifundwomen.com",
+    recommendedFor: ["realeyenation", "luvonpurpose", "laws"],
+    focusArea: "small_business",
   },
   {
     id: "freed",
@@ -197,6 +203,8 @@ const availableGrants = [
     deadline: "Monthly",
     applicationUrl: "https://freedfellowship.com/apply",
     contactEmail: "info@freedfellowship.com",
+    recommendedFor: ["realeyenation", "luvonpurpose", "laws"],
+    focusArea: "small_business",
   },
   {
     id: "wish",
@@ -209,6 +217,8 @@ const availableGrants = [
     deadline: "Rolling",
     applicationUrl: "https://www.wish.com/local/empowerment",
     contactEmail: "localempowerment@wish.com",
+    recommendedFor: ["realeyenation", "luvonpurpose"],
+    focusArea: "small_business",
   },
   {
     id: "empowher",
@@ -221,6 +231,8 @@ const availableGrants = [
     deadline: "Quarterly (Jan, Apr, Jul, Oct)",
     applicationUrl: "https://theboundlessfuturesfoundation.submittable.com/",
     contactEmail: "grants@boundlessfutures.org",
+    recommendedFor: ["realeyenation", "luvonpurpose", "laws"],
+    focusArea: "small_business",
   },
   {
     id: "mbda",
@@ -233,6 +245,8 @@ const availableGrants = [
     deadline: "Annual cycles",
     applicationUrl: "https://www.mbda.gov/grants1",
     contactEmail: "info@mbda.gov",
+    recommendedFor: ["realeyenation", "luvonpurpose", "laws"],
+    focusArea: "small_business",
   },
   {
     id: "lilly",
@@ -245,6 +259,8 @@ const availableGrants = [
     deadline: "By invitation/application",
     applicationUrl: "https://lillyendowment.org/for-grantseekers/",
     contactEmail: "grantinquiry@lei.org",
+    recommendedFor: ["508academy"],
+    focusArea: "faith_education",
   },
   {
     id: "cdbg",
@@ -257,6 +273,8 @@ const availableGrants = [
     deadline: "Annual (varies by state)",
     applicationUrl: "https://dca.georgia.gov/financing-tools/infrastructure/community-development-block-grants-cdbg",
     contactEmail: "cdbg@dca.ga.gov",
+    recommendedFor: ["508academy", "laws"],
+    focusArea: "community",
   },
   {
     id: "blank",
@@ -269,6 +287,8 @@ const availableGrants = [
     deadline: "By invitation only",
     applicationUrl: "https://blankfoundation.org/",
     contactEmail: "info@blankfoundation.org",
+    recommendedFor: ["508academy"],
+    focusArea: "community",
   },
   {
     id: "csra",
@@ -281,6 +301,8 @@ const availableGrants = [
     deadline: "Annual cycles",
     applicationUrl: "https://www.cfcsra.org/nonprofits/grant-opportunities/community-grants/",
     contactEmail: "info@cfcsra.org",
+    recommendedFor: ["508academy"],
+    focusArea: "community",
   },
   {
     id: "rcdi",
@@ -293,6 +315,8 @@ const availableGrants = [
     deadline: "Annual (check grants.gov)",
     applicationUrl: "https://www.rd.usda.gov/programs-services/community-facilities/rural-community-development-initiative-grants",
     contactEmail: "rd.webmaster@usda.gov",
+    recommendedFor: ["508academy"],
+    focusArea: "community",
   },
 ];
 
@@ -520,6 +544,22 @@ export default function GrantSimulator() {
                       <Badge variant="outline">Fee: {grant.applicationFee}</Badge>
                       <Badge variant="outline">{grant.deadline}</Badge>
                     </div>
+                    {/* Show which entities this grant is recommended for */}
+                    {grant.recommendedFor && grant.recommendedFor.length > 0 && (
+                      <div className="mt-3 pt-3 border-t">
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Recommended for:</p>
+                        <div className="flex gap-1 flex-wrap">
+                          {grant.recommendedFor.map((entityId: string) => {
+                            const entity = entities.find(e => e.id === entityId);
+                            return entity ? (
+                              <Badge key={entityId} variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                                {entity.name.length > 25 ? entity.name.substring(0, 25) + '...' : entity.name}
+                              </Badge>
+                            ) : null;
+                          })}
+                        </div>
+                      </div>
+                    )}
                     {grant.applicationUrl && (
                       <div className="mt-3 pt-3 border-t flex items-center gap-2 text-xs text-muted-foreground">
                         <ExternalLink className="w-3 h-3" />
@@ -564,21 +604,63 @@ export default function GrantSimulator() {
             <div className="grid gap-4">
               {entities.map((entity) => {
                 const isEligible = selectedGrant?.eligibility.some(e => entity.eligibility.includes(e));
+                const isTrust = entity.id === "trust";
+                const isRecommended = selectedGrant?.recommendedFor?.includes(entity.id);
+                
+                // Trust entities don't apply for grants
+                if (isTrust) {
+                  return (
+                    <Card key={entity.id} className="opacity-60 bg-gray-50">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-semibold text-gray-600">{entity.name}</h3>
+                            <p className="text-sm text-muted-foreground">{entity.type}</p>
+                          </div>
+                          <Badge variant="outline" className="text-gray-500">N/A for Grants</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2 italic">
+                          Family trusts are asset protection structures and typically do not apply for grants directly. 
+                          Use your operating entities (LLCs, nonprofits) for grant applications.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  );
+                }
+                
                 return (
                   <Card
                     key={entity.id}
-                    className={`cursor-pointer transition-all ${data.selectedEntity === entity.id ? "ring-2 ring-primary" : isEligible ? "hover:border-primary/50" : "opacity-50"}`}
+                    className={`cursor-pointer transition-all ${
+                      data.selectedEntity === entity.id 
+                        ? "ring-2 ring-primary border-primary" 
+                        : isRecommended 
+                          ? "border-green-300 bg-green-50/50 hover:border-green-400" 
+                          : isEligible 
+                            ? "hover:border-primary/50" 
+                            : "opacity-50"
+                    }`}
                     onClick={() => isEligible && updateData("selectedEntity", entity.id)}
                   >
-                    <CardContent className="p-4 flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold">{entity.name}</h3>
-                          {data.selectedEntity === entity.id && <CheckCircle2 className="w-5 h-5 text-primary" />}
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold">{entity.name}</h3>
+                            {data.selectedEntity === entity.id && <CheckCircle2 className="w-5 h-5 text-primary" />}
+                            {isRecommended && <Badge className="bg-green-600 text-white text-xs">Recommended</Badge>}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{entity.type}</p>
                         </div>
-                        <p className="text-sm text-muted-foreground">{entity.type}</p>
+                        <Badge className={isEligible ? "bg-green-100 text-green-800" : ""}>
+                          {isEligible ? "Eligible" : "Not Eligible"}
+                        </Badge>
                       </div>
-                      <Badge className={isEligible ? "bg-green-100 text-green-800" : ""}>{isEligible ? "Eligible" : "Not Eligible"}</Badge>
+                      {isRecommended && (
+                        <p className="text-xs text-green-700 mt-2">
+                          This grant is specifically recommended for this entity based on eligibility and focus area.
+                        </p>
+                      )}
                     </CardContent>
                   </Card>
                 );
@@ -762,14 +844,34 @@ export default function GrantSimulator() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Need Statement</Label>
+                <Label>Need Statement * <span className="text-muted-foreground font-normal">(approximately 500 words)</span></Label>
                 <Textarea
-                  placeholder="Explain specifically how this grant will help..."
+                  placeholder="Write a comprehensive need statement that explains the critical challenges your organization addresses and how this grant funding will create meaningful impact. Your statement should include:
+
+1. COMMUNITY NEED: Describe the specific problem or gap in services that exists in your community. What population is affected? How many people? What are the consequences of this unmet need?
+
+2. ROOT CAUSES: Explain the underlying factors contributing to this need. What systemic issues, barriers, or circumstances have created or perpetuated this problem?
+
+3. CURRENT LANDSCAPE: Describe what services currently exist (if any) and why they are insufficient. What makes your approach different or necessary?
+
+4. YOUR SOLUTION: Explain specifically how your organization is positioned to address this need. What unique capabilities, relationships, or expertise do you bring?
+
+5. GRANT IMPACT: Detail exactly how this funding will be used and what measurable outcomes you expect to achieve. Be specific about numbers served, services provided, and timeline.
+
+6. SUSTAINABILITY: Briefly explain how the impact of this grant will continue beyond the funding period.
+
+Example: 'Our community of 50,000 residents has only one workforce development center, leaving over 3,000 unemployed adults without access to job training. The L.A.W.S. Collective's Business Management Platform will provide comprehensive entrepreneurship training to 200 participants annually, with a projected 60% business launch rate within 12 months...'"
                   value={data.needStatement}
                   onChange={(e) => updateData("needStatement", e.target.value)}
-                  rows={6}
+                  rows={20}
+                  className="min-h-[400px]"
                 />
-                <p className="text-xs text-muted-foreground">{data.needStatement.length} characters (aim for 200-500)</p>
+                <div className="flex justify-between text-xs mt-2">
+                  <span className={data.needStatement.length < 2000 ? "text-amber-600" : data.needStatement.length > 3500 ? "text-amber-600" : "text-green-600"}>
+                    {data.needStatement.length} characters (~{Math.round(data.needStatement.split(/\s+/).filter(w => w).length)} words) {data.needStatement.length < 2000 ? "(aim for ~500 words / 2500+ characters)" : data.needStatement.length <= 3500 ? "(good length)" : "(consider trimming to ~500 words)"}
+                  </span>
+                  <span className="text-muted-foreground">Target: ~500 words (2,500-3,000 characters)</span>
+                </div>
               </div>
             </div>
           </div>
