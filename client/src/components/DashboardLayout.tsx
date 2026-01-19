@@ -74,6 +74,8 @@ const menuItems: MenuItem[] = [
   { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff", category: "Management" },
   { icon: ClipboardList, label: "HR Dashboard", path: "/hr-dashboard", minRole: "staff", category: "Management" },
   { icon: Award, label: "Resume Builder", path: "/resume-builder", minRole: "staff", category: "Management" },
+  { icon: Rocket, label: "Specialist Tracks", path: "/specialist-tracks", minRole: "staff", category: "Management" },
+  { icon: GraduationCap, label: "Scholarships", path: "/scholarships", minRole: "staff", category: "Management" },
   { icon: UserPlus, label: "Position Requisitions", path: "/requisitions", minRole: "staff", category: "Management" },
   { icon: Users, label: "Employee Directory", path: "/employees", minRole: "staff", category: "Management" },
   { icon: UserPlus, label: "Onboarding", path: "/onboarding", minRole: "staff", category: "Management" },

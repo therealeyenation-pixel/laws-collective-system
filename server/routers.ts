@@ -87,6 +87,9 @@ import { companyCalendarRouter } from "./routers/company-calendar";
 import { eSignatureRouter } from "./routers/e-signature";
 import { boardGovernanceExtendedRouter } from "./routers/board-governance-extended";
 import { grantDocumentsRouter } from "./routers/grant-documents";
+import { offerPackagesRouter } from "./routers/offer-packages";
+import { specialistTracksRouter } from "./routers/specialist-tracks";
+import { scholarshipsRouter } from "./routers/scholarships";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -185,6 +188,10 @@ export const appRouter = router({
       } as const;
     }),
   }),
+
+  offerPackages: offerPackagesRouter,
+  specialistTracks: specialistTracksRouter,
+  scholarships: scholarshipsRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

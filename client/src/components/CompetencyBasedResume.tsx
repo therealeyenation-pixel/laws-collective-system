@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -117,6 +117,8 @@ const skillLevels = [
 interface CompetencyBasedResumeProps {
   candidateName?: string;
   positionTitle?: string;
+  existingData?: any;
+  isSaving?: boolean;
   onGenerate?: (data: CompetencyResumeData) => void;
   onSave?: (data: CompetencyResumeData) => void;
 }
@@ -124,6 +126,8 @@ interface CompetencyBasedResumeProps {
 export default function CompetencyBasedResume({
   candidateName = "",
   positionTitle = "",
+  existingData,
+  isSaving = false,
   onGenerate,
   onSave,
 }: CompetencyBasedResumeProps) {
@@ -142,6 +146,33 @@ export default function CompetencyBasedResume({
     references: [],
     developmentPlan: "",
   });
+
+  // Load existing data when provided
+  useEffect(() => {
+    if (existingData) {
+      setResumeData({
+        fullName: existingData.fullName || candidateName,
+        title: existingData.title || positionTitle,
+        email: existingData.email || "",
+        phone: existingData.phone || "",
+        location: existingData.location || "",
+        summary: existingData.summary || "",
+        qualificationType: existingData.qualificationType || "demonstrated",
+        education: existingData.education || [],
+        certifications: existingData.certifications || [],
+        competencyEvidence: existingData.competencyEvidence || [],
+        skills: existingData.skills || [],
+        references: existingData.references || [],
+        developmentPlan: existingData.developmentPlan || "",
+      });
+    } else if (candidateName || positionTitle) {
+      setResumeData(prev => ({
+        ...prev,
+        fullName: candidateName || prev.fullName,
+        title: positionTitle || prev.title,
+      }));
+    }
+  }, [existingData, candidateName, positionTitle]);
 
   const addCompetencyEvidence = () => {
     setResumeData({
@@ -721,13 +752,22 @@ export default function CompetencyBasedResume({
 
       {/* Actions */}
       <div className="flex gap-3 justify-end">
-        <Button variant="outline" onClick={() => onSave?.(resumeData)} className="gap-2">
+        <Button 
+          variant="outline" 
+          onClick={() => onSave?.(resumeData)} 
+          className="gap-2"
+          disabled={isSaving}
+        >
           <FileText className="w-4 h-4" />
-          Save Draft
+          {isSaving ? "Saving..." : "Save Draft"}
         </Button>
-        <Button onClick={generateResumeDocument} className="gap-2">
+        <Button 
+          onClick={generateResumeDocument} 
+          className="gap-2"
+          disabled={isSaving}
+        >
           <Download className="w-4 h-4" />
-          Generate Resume
+          {isSaving ? "Saving..." : "Generate Resume"}
         </Button>
       </div>
     </div>

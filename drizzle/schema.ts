@@ -8783,3 +8783,818 @@ export const documentRequirements = mysqlTable("document_requirements", {
 
 export type DocumentRequirement = typeof documentRequirements.$inferSelect;
 export type InsertDocumentRequirement = typeof documentRequirements.$inferInsert;
+
+
+/**
+ * Family Member Resumes - Store competency-based resumes for family members
+ */
+export const familyResumes = mysqlTable("family_resumes", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Family member identification
+  familyMemberId: varchar("familyMemberId", { length: 100 }).notNull(),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  title: varchar("title", { length: 255 }),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 50 }),
+  location: varchar("location", { length: 255 }),
+  
+  // Professional summary
+  summary: text("summary"),
+  
+  // Qualification type
+  qualificationType: mysqlEnum("qualificationType", [
+    "traditional",
+    "demonstrated",
+    "hybrid"
+  ]).default("demonstrated").notNull(),
+  
+  // Structured data stored as JSON
+  education: json("education").$type<Array<{
+    institution: string;
+    degree: string;
+    field: string;
+    year: string;
+  }>>(),
+  
+  certifications: json("certifications").$type<Array<{
+    name: string;
+    issuer: string;
+    year: string;
+    active: boolean;
+  }>>(),
+  
+  competencyEvidence: json("competencyEvidence").$type<Array<{
+    id: string;
+    category: string;
+    description: string;
+    outcome: string;
+    timeframe: string;
+    verifiable: boolean;
+    verificationSource?: string;
+  }>>(),
+  
+  skills: json("skills").$type<Array<{
+    skill: string;
+    level: "foundational" | "proficient" | "advanced" | "expert";
+    evidence: string;
+  }>>(),
+  
+  references: json("references").$type<Array<{
+    name: string;
+    relationship: string;
+    yearsKnown: number;
+    contactInfo: string;
+    attestation: string;
+  }>>(),
+  
+  developmentPlan: text("developmentPlan"),
+  
+  // Status
+  status: mysqlEnum("resumeStatus", [
+    "draft",
+    "complete",
+    "approved"
+  ]).default("draft").notNull(),
+  
+  // Audit
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FamilyResume = typeof familyResumes.$inferSelect;
+export type InsertFamilyResume = typeof familyResumes.$inferInsert;
+
+/**
+ * Offer Packages - Complete employment offer packages for family members
+ */
+export const offerPackages = mysqlTable("offer_packages", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Link to resume (required)
+  resumeId: int("resumeId").notNull(),
+  
+  // Family member info
+  familyMemberId: varchar("familyMemberId", { length: 100 }).notNull(),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  
+  // Position details
+  positionTitle: varchar("positionTitle", { length: 255 }).notNull(),
+  department: varchar("department", { length: 255 }),
+  entityId: varchar("entityId", { length: 100 }).notNull(),
+  entityName: varchar("entityName", { length: 255 }).notNull(),
+  reportsTo: varchar("reportsTo", { length: 255 }),
+  
+  // Employment type
+  employmentType: mysqlEnum("employmentType", [
+    "full_time",
+    "part_time",
+    "contractor",
+    "contingent"
+  ]).default("contingent").notNull(),
+  
+  // Compensation
+  baseSalary: decimal("baseSalary", { precision: 12, scale: 2 }),
+  salaryFrequency: mysqlEnum("salaryFrequency", [
+    "hourly",
+    "weekly",
+    "biweekly",
+    "monthly",
+    "annually"
+  ]).default("annually"),
+  tokenAllocation: int("tokenAllocation"),
+  revenueSharePercent: decimal("revenueSharePercent", { precision: 5, scale: 2 }),
+  
+  // Benefits
+  benefits: json("benefits").$type<{
+    healthInsurance: boolean;
+    dentalVision: boolean;
+    retirement401k: boolean;
+    paidTimeOff: number;
+    tokenEconomy: boolean;
+    revenueSharing: boolean;
+  }>(),
+  
+  // Start date
+  proposedStartDate: timestamp("proposedStartDate"),
+  contingencyConditions: text("contingencyConditions"),
+  
+  // Document status
+  offerLetterGenerated: boolean("offerLetterGenerated").default(false).notNull(),
+  positionDescGenerated: boolean("positionDescGenerated").default(false).notNull(),
+  compensationScheduleGenerated: boolean("compensationScheduleGenerated").default(false).notNull(),
+  ndaGenerated: boolean("ndaGenerated").default(false).notNull(),
+  nonCompeteGenerated: boolean("nonCompeteGenerated").default(false).notNull(),
+  backgroundCheckAuthGenerated: boolean("backgroundCheckAuthGenerated").default(false).notNull(),
+  taxFormsGenerated: boolean("taxFormsGenerated").default(false).notNull(),
+  tokenAgreementGenerated: boolean("tokenAgreementGenerated").default(false).notNull(),
+  
+  // Package status
+  status: mysqlEnum("offerStatus", [
+    "draft",
+    "pending_review",
+    "approved",
+    "sent",
+    "accepted",
+    "declined",
+    "expired"
+  ]).default("draft").notNull(),
+  
+  // Signatures
+  offerSentAt: timestamp("offerSentAt"),
+  offerAcceptedAt: timestamp("offerAcceptedAt"),
+  signatureId: varchar("signatureId", { length: 255 }),
+  
+  // Audit
+  createdBy: int("createdBy"),
+  approvedBy: int("approvedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OfferPackage = typeof offerPackages.$inferSelect;
+export type InsertOfferPackage = typeof offerPackages.$inferInsert;
+
+/**
+ * Offer Package Documents - Individual documents within an offer package
+ */
+export const offerPackageDocuments = mysqlTable("offer_package_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  offerId: int("offerId").notNull(),
+  
+  documentType: mysqlEnum("offerDocType", [
+    "offer_letter",
+    "position_description",
+    "compensation_schedule",
+    "nda",
+    "non_compete",
+    "background_check_auth",
+    "direct_deposit",
+    "w4",
+    "w9",
+    "i9",
+    "token_agreement",
+    "policy_acknowledgment",
+    "resume"
+  ]).notNull(),
+  
+  // Document content
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content"),
+  
+  // S3 storage (for generated PDFs)
+  s3Key: varchar("s3Key", { length: 1000 }),
+  s3Url: varchar("s3Url", { length: 2000 }),
+  
+  // Signature tracking
+  requiresSignature: boolean("requiresSignature").default(false).notNull(),
+  signedAt: timestamp("signedAt"),
+  signatureData: text("signatureData"),
+  
+  // Status
+  status: mysqlEnum("offerDocStatus", [
+    "draft",
+    "generated",
+    "sent",
+    "signed",
+    "rejected"
+  ]).default("draft").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OfferPackageDocument = typeof offerPackageDocuments.$inferSelect;
+export type InsertOfferPackageDocument = typeof offerPackageDocuments.$inferInsert;
+
+
+/**
+ * Specialist Tracks - Entry-level career progression for family members
+ * 
+ * Designed for younger family members (16-18) entering the workforce with:
+ * - Age-based eligibility (16+ with work permit, 18+ full)
+ * - Education requirement (HS diploma OR Academy graduation)
+ * - Part-time start (20-25 hrs/week) progressing to full-time
+ * - 3-5 year progression timeline with acceleration options
+ */
+export const specialistTracks = mysqlTable("specialist_tracks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Link to family member
+  familyMemberId: varchar("familyMemberId", { length: 100 }).notNull(),
+  userId: int("userId"),
+  
+  // Personal info
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  dateOfBirth: timestamp("dateOfBirth"),
+  currentAge: int("currentAge"),
+  
+  // Eligibility
+  hasWorkPermit: boolean("hasWorkPermit").default(false).notNull(),
+  workPermitExpiry: timestamp("workPermitExpiry"),
+  educationStatus: mysqlEnum("educationStatus", [
+    "in_high_school",
+    "high_school_diploma",
+    "academy_enrolled",
+    "academy_graduate",
+    "ged",
+    "college_enrolled",
+    "college_graduate"
+  ]).default("in_high_school").notNull(),
+  educationVerifiedAt: timestamp("educationVerifiedAt"),
+  
+  // Current level in the track
+  currentLevel: mysqlEnum("specialistLevel", [
+    "specialist_i",    // Entry - Part-time, supervised, learning fundamentals
+    "specialist_ii",   // Developing - Increased hours, more autonomy
+    "specialist_iii",  // Proficient - Full-time eligible, project ownership
+    "associate"        // Bridge - Transition to standard career track
+  ]).default("specialist_i").notNull(),
+  
+  // Employment details
+  employmentType: mysqlEnum("specialistEmploymentType", [
+    "part_time_20",    // 20 hours/week
+    "part_time_25",    // 25 hours/week
+    "part_time_30",    // 30 hours/week
+    "full_time"        // 40 hours/week
+  ]).default("part_time_20").notNull(),
+  
+  // Position assignment
+  entityId: varchar("entityId", { length: 100 }),
+  entityName: varchar("entityName", { length: 255 }),
+  department: varchar("department", { length: 100 }),
+  positionTitle: varchar("positionTitle", { length: 255 }),
+  supervisorId: varchar("supervisorId", { length: 100 }),
+  supervisorName: varchar("supervisorName", { length: 255 }),
+  
+  // Compensation (90% initial per policy)
+  hourlyRate: decimal("hourlyRate", { precision: 10, scale: 2 }),
+  tokenAllocationMonthly: int("tokenAllocationMonthly").default(0),
+  
+  // Progression tracking
+  trackStartDate: timestamp("trackStartDate"),
+  currentLevelStartDate: timestamp("currentLevelStartDate"),
+  expectedGraduationDate: timestamp("expectedGraduationDate"),
+  acceleratedTrack: boolean("acceleratedTrack").default(false).notNull(),
+  
+  // Maturity score (0-100, calculated from assessments)
+  maturityScore: int("maturityScore").default(0).notNull(),
+  lastMaturityAssessment: timestamp("lastMaturityAssessment"),
+  
+  // Status
+  status: mysqlEnum("specialistTrackStatus", [
+    "pending_eligibility",
+    "active",
+    "on_hold",
+    "graduated",
+    "terminated",
+    "transferred"
+  ]).default("pending_eligibility").notNull(),
+  
+  // Notes
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SpecialistTrack = typeof specialistTracks.$inferSelect;
+export type InsertSpecialistTrack = typeof specialistTracks.$inferInsert;
+
+/**
+ * Specialist Maturity Assessments - Track advancement criteria
+ * 
+ * Assessments are conducted quarterly and measure:
+ * - Academy module completions
+ * - Simulator performance
+ * - Supervisor evaluations
+ * - Token economy participation
+ * - Fiscal responsibility demonstrations
+ */
+export const specialistMaturityAssessments = mysqlTable("specialist_maturity_assessments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  specialistTrackId: int("specialistTrackId").notNull(),
+  
+  // Assessment period
+  assessmentPeriod: varchar("assessmentPeriod", { length: 20 }).notNull(), // e.g., "2026-Q1"
+  assessmentDate: timestamp("assessmentDate").defaultNow().notNull(),
+  assessorId: varchar("assessorId", { length: 100 }),
+  assessorName: varchar("assessorName", { length: 255 }),
+  
+  // Academy Performance (0-20 points)
+  academyModulesCompleted: int("academyModulesCompleted").default(0).notNull(),
+  academyModulesTarget: int("academyModulesTarget").default(3).notNull(),
+  academyScore: int("academyScore").default(0).notNull(),
+  academyNotes: text("academyNotes"),
+  
+  // Simulator Performance (0-20 points)
+  simulatorSessionsCompleted: int("simulatorSessionsCompleted").default(0).notNull(),
+  simulatorAverageScore: int("simulatorAverageScore").default(0).notNull(),
+  simulatorScore: int("simulatorScore").default(0).notNull(),
+  simulatorNotes: text("simulatorNotes"),
+  
+  // Supervisor Evaluation (0-25 points)
+  attendanceRating: int("attendanceRating").default(0).notNull(), // 1-5
+  punctualityRating: int("punctualityRating").default(0).notNull(), // 1-5
+  initiativeRating: int("initiativeRating").default(0).notNull(), // 1-5
+  teamworkRating: int("teamworkRating").default(0).notNull(), // 1-5
+  qualityOfWorkRating: int("qualityOfWorkRating").default(0).notNull(), // 1-5
+  supervisorScore: int("supervisorScore").default(0).notNull(),
+  supervisorComments: text("supervisorComments"),
+  
+  // Token Economy Participation (0-15 points)
+  tokensEarned: int("tokensEarned").default(0).notNull(),
+  tokensSpentWisely: boolean("tokensSpentWisely").default(false).notNull(),
+  tokenSavingsRate: decimal("tokenSavingsRate", { precision: 5, scale: 2 }), // percentage
+  tokenEconomyScore: int("tokenEconomyScore").default(0).notNull(),
+  tokenEconomyNotes: text("tokenEconomyNotes"),
+  
+  // Fiscal Responsibility (0-20 points)
+  budgetAdherence: boolean("budgetAdherence").default(false).notNull(),
+  expenseReportingAccuracy: int("expenseReportingAccuracy").default(0).notNull(), // percentage
+  financialGoalsMet: int("financialGoalsMet").default(0).notNull(), // count
+  fiscalScore: int("fiscalScore").default(0).notNull(),
+  fiscalNotes: text("fiscalNotes"),
+  
+  // Total Score (0-100)
+  totalScore: int("totalScore").default(0).notNull(),
+  
+  // Advancement recommendation
+  recommendsAdvancement: boolean("recommendsAdvancement").default(false).notNull(),
+  recommendedLevel: mysqlEnum("recommendedSpecialistLevel", [
+    "specialist_i",
+    "specialist_ii",
+    "specialist_iii",
+    "associate"
+  ]),
+  advancementJustification: text("advancementJustification"),
+  
+  // Status
+  status: mysqlEnum("assessmentStatus", [
+    "draft",
+    "submitted",
+    "reviewed",
+    "approved",
+    "contested"
+  ]).default("draft").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SpecialistMaturityAssessment = typeof specialistMaturityAssessments.$inferSelect;
+export type InsertSpecialistMaturityAssessment = typeof specialistMaturityAssessments.$inferInsert;
+
+/**
+ * Specialist Progression Milestones - Track achievements and ceremonies
+ */
+export const specialistMilestones = mysqlTable("specialist_milestones", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  specialistTrackId: int("specialistTrackId").notNull(),
+  
+  // Milestone details
+  milestoneType: mysqlEnum("milestoneType", [
+    "level_advancement",
+    "hours_milestone",      // 500, 1000, 2000 hours
+    "academy_completion",
+    "simulator_mastery",
+    "first_project_lead",
+    "mentorship_start",
+    "full_time_transition",
+    "graduation_ceremony"
+  ]).notNull(),
+  
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Achievement details
+  achievedAt: timestamp("achievedAt").defaultNow().notNull(),
+  previousLevel: varchar("previousLevel", { length: 50 }),
+  newLevel: varchar("newLevel", { length: 50 }),
+  
+  // Recognition
+  certificateIssued: boolean("certificateIssued").default(false).notNull(),
+  certificateId: int("certificateId"),
+  tokenBonus: int("tokenBonus").default(0).notNull(),
+  
+  // Ceremony tracking
+  ceremonyScheduled: boolean("ceremonyScheduled").default(false).notNull(),
+  ceremonyDate: timestamp("ceremonyDate"),
+  ceremonyNotes: text("ceremonyNotes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type SpecialistMilestone = typeof specialistMilestones.$inferSelect;
+export type InsertSpecialistMilestone = typeof specialistMilestones.$inferInsert;
+
+
+/**
+ * Founding Members - Track original founding members for heir benefits
+ * 
+ * Founding members' heirs receive free Academy education as a core benefit.
+ * Verified through House lineage system.
+ */
+export const foundingMembers = mysqlTable("founding_members", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Member identification
+  userId: int("userId"),
+  houseId: varchar("houseId", { length: 100 }),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  
+  // Founding details
+  foundingDate: timestamp("foundingDate").notNull(),
+  foundingRole: mysqlEnum("foundingRole", [
+    "primary_founder",      // Original founder (e.g., Calea Freeman)
+    "co_founder",           // Co-founding family member
+    "charter_member",       // Early charter member
+    "founding_investor"     // Initial financial contributor
+  ]).notNull(),
+  
+  // Entity association
+  entityId: varchar("entityId", { length: 100 }),
+  entityName: varchar("entityName", { length: 255 }),
+  
+  // Benefits
+  heirEducationBenefit: boolean("heirEducationBenefit").default(true).notNull(),
+  benefitGenerations: int("benefitGenerations").default(3).notNull(), // How many generations get benefits
+  
+  // Verification
+  verificationStatus: mysqlEnum("verificationStatus", [
+    "verified",
+    "pending",
+    "disputed"
+  ]).default("verified").notNull(),
+  verifiedBy: varchar("verifiedBy", { length: 255 }),
+  verifiedAt: timestamp("verifiedAt"),
+  
+  // Status
+  status: mysqlEnum("foundingMemberStatus", [
+    "active",
+    "deceased",
+    "inactive"
+  ]).default("active").notNull(),
+  
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FoundingMember = typeof foundingMembers.$inferSelect;
+export type InsertFoundingMember = typeof foundingMembers.$inferInsert;
+
+/**
+ * Heir Education Benefits - Track free Academy access for founding member heirs
+ */
+export const heirEducationBenefits = mysqlTable("heir_education_benefits", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Heir identification
+  heirUserId: int("heirUserId"),
+  heirHouseId: varchar("heirHouseId", { length: 100 }),
+  heirFullName: varchar("heirFullName", { length: 255 }).notNull(),
+  
+  // Lineage to founding member
+  foundingMemberId: int("foundingMemberId").notNull(),
+  generationFromFounder: int("generationFromFounder").notNull(), // 1 = child, 2 = grandchild, etc.
+  lineagePath: text("lineagePath"), // JSON array of ancestors
+  
+  // Benefit details
+  benefitType: mysqlEnum("benefitType", [
+    "full_tuition",         // 100% free
+    "partial_tuition",      // Reduced rate
+    "materials_only",       // Free materials, pay tuition
+    "priority_enrollment"   // Priority but not free
+  ]).default("full_tuition").notNull(),
+  
+  coveragePercentage: int("coveragePercentage").default(100).notNull(),
+  
+  // Enrollment tracking
+  academyEnrollmentId: int("academyEnrollmentId"),
+  enrollmentDate: timestamp("enrollmentDate"),
+  expectedGraduation: timestamp("expectedGraduation"),
+  
+  // Value tracking
+  tuitionValue: decimal("tuitionValue", { precision: 10, scale: 2 }),
+  totalBenefitUsed: decimal("totalBenefitUsed", { precision: 10, scale: 2 }).default("0"),
+  
+  // Status
+  status: mysqlEnum("heirBenefitStatus", [
+    "eligible",
+    "enrolled",
+    "graduated",
+    "expired",
+    "revoked"
+  ]).default("eligible").notNull(),
+  
+  // Verification
+  lineageVerified: boolean("lineageVerified").default(false).notNull(),
+  verifiedBy: varchar("verifiedBy", { length: 255 }),
+  verifiedAt: timestamp("verifiedAt"),
+  
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type HeirEducationBenefit = typeof heirEducationBenefits.$inferSelect;
+export type InsertHeirEducationBenefit = typeof heirEducationBenefits.$inferInsert;
+
+/**
+ * Scholarship Programs - Define available scholarship programs for community
+ */
+export const scholarshipPrograms = mysqlTable("scholarship_programs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Program details
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Type and eligibility
+  scholarshipType: mysqlEnum("scholarshipType", [
+    "merit_based",          // Academic/achievement based
+    "need_based",           // Financial need based
+    "community_service",    // Service hours based
+    "entrepreneurship",     // Business/innovation based
+    "legacy",               // Multi-generational participation
+    "diversity",            // Underrepresented groups
+    "stem",                 // Science/tech focus
+    "arts",                 // Creative arts focus
+    "full_ride"             // Complete coverage
+  ]).notNull(),
+  
+  // Coverage
+  coverageType: mysqlEnum("coverageType", [
+    "full_tuition",
+    "partial_tuition",
+    "stipend",
+    "materials",
+    "comprehensive"         // Tuition + materials + stipend
+  ]).notNull(),
+  
+  coverageAmount: decimal("coverageAmount", { precision: 10, scale: 2 }),
+  coveragePercentage: int("coveragePercentage"),
+  
+  // Eligibility criteria
+  minAge: int("minAge"),
+  maxAge: int("maxAge"),
+  minGPA: decimal("minGPA", { precision: 3, scale: 2 }),
+  requiredCommunityHours: int("requiredCommunityHours"),
+  incomeThreshold: decimal("incomeThreshold", { precision: 10, scale: 2 }),
+  eligibilityCriteria: json("eligibilityCriteria"), // Additional JSON criteria
+  
+  // Application period
+  applicationStartDate: timestamp("applicationStartDate"),
+  applicationEndDate: timestamp("applicationEndDate"),
+  awardDate: timestamp("awardDate"),
+  
+  // Capacity
+  totalSlots: int("totalSlots").default(10).notNull(),
+  filledSlots: int("filledSlots").default(0).notNull(),
+  waitlistEnabled: boolean("waitlistEnabled").default(true).notNull(),
+  
+  // Funding
+  fundingSource: varchar("fundingSource", { length: 255 }),
+  totalBudget: decimal("totalBudget", { precision: 12, scale: 2 }),
+  remainingBudget: decimal("remainingBudget", { precision: 12, scale: 2 }),
+  
+  // Renewal
+  renewable: boolean("renewable").default(true).notNull(),
+  maxRenewalYears: int("maxRenewalYears").default(4),
+  renewalCriteria: text("renewalCriteria"),
+  
+  // Status
+  status: mysqlEnum("scholarshipProgramStatus", [
+    "draft",
+    "active",
+    "closed",
+    "suspended",
+    "archived"
+  ]).default("draft").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ScholarshipProgram = typeof scholarshipPrograms.$inferSelect;
+export type InsertScholarshipProgram = typeof scholarshipPrograms.$inferInsert;
+
+/**
+ * Scholarship Applications - Track community scholarship applications
+ */
+export const scholarshipApplications = mysqlTable("scholarship_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Applicant info
+  applicantUserId: int("applicantUserId"),
+  applicantFullName: varchar("applicantFullName", { length: 255 }).notNull(),
+  applicantEmail: varchar("applicantEmail", { length: 320 }),
+  applicantPhone: varchar("applicantPhone", { length: 20 }),
+  applicantAddress: text("applicantAddress"),
+  dateOfBirth: timestamp("dateOfBirth"),
+  
+  // Program applied to
+  scholarshipProgramId: int("scholarshipProgramId").notNull(),
+  
+  // Academic info
+  currentEducationLevel: mysqlEnum("currentEducationLevel", [
+    "middle_school",
+    "high_school",
+    "ged_program",
+    "community_college",
+    "university",
+    "graduate_school",
+    "academy_enrolled",
+    "other"
+  ]),
+  schoolName: varchar("schoolName", { length: 255 }),
+  gpa: decimal("gpa", { precision: 3, scale: 2 }),
+  expectedGraduation: timestamp("expectedGraduation"),
+  
+  // Financial info (for need-based)
+  householdIncome: decimal("householdIncome", { precision: 10, scale: 2 }),
+  householdSize: int("householdSize"),
+  financialNeedStatement: text("financialNeedStatement"),
+  
+  // Community service (for service-based)
+  communityServiceHours: int("communityServiceHours"),
+  communityServiceDescription: text("communityServiceDescription"),
+  
+  // Essays/statements
+  personalStatement: text("personalStatement"),
+  goalsStatement: text("goalsStatement"),
+  
+  // Supporting documents (S3 keys)
+  transcriptUrl: varchar("transcriptUrl", { length: 2000 }),
+  recommendationLetters: json("recommendationLetters"), // Array of URLs
+  additionalDocuments: json("additionalDocuments"),
+  
+  // Scoring
+  academicScore: int("academicScore"),
+  needScore: int("needScore"),
+  serviceScore: int("serviceScore"),
+  essayScore: int("essayScore"),
+  totalScore: int("totalScore"),
+  
+  // Review
+  reviewStatus: mysqlEnum("reviewStatus", [
+    "submitted",
+    "under_review",
+    "committee_review",
+    "approved",
+    "denied",
+    "waitlisted",
+    "withdrawn"
+  ]).default("submitted").notNull(),
+  
+  reviewedBy: varchar("reviewedBy", { length: 255 }),
+  reviewedAt: timestamp("reviewedAt"),
+  reviewNotes: text("reviewNotes"),
+  
+  // Award
+  awardAmount: decimal("awardAmount", { precision: 10, scale: 2 }),
+  awardedAt: timestamp("awardedAt"),
+  awardLetter: text("awardLetter"),
+  
+  // Acceptance
+  acceptedAt: timestamp("acceptedAt"),
+  declinedAt: timestamp("declinedAt"),
+  declineReason: text("declineReason"),
+  
+  submittedAt: timestamp("submittedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ScholarshipApplication = typeof scholarshipApplications.$inferSelect;
+export type InsertScholarshipApplication = typeof scholarshipApplications.$inferInsert;
+
+/**
+ * Scholarship Fund - Track scholarship fund balances and transactions
+ */
+export const scholarshipFund = mysqlTable("scholarship_fund", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Fund identification
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Fund type
+  fundType: mysqlEnum("fundType", [
+    "general",              // General scholarship fund
+    "endowment",            // Endowed fund (interest only)
+    "annual",               // Annual giving fund
+    "memorial",             // Named memorial fund
+    "corporate",            // Corporate sponsored
+    "community"             // Community contributions
+  ]).notNull(),
+  
+  // Balances
+  principalBalance: decimal("principalBalance", { precision: 12, scale: 2 }).default("0").notNull(),
+  availableBalance: decimal("availableBalance", { precision: 12, scale: 2 }).default("0").notNull(),
+  committedBalance: decimal("committedBalance", { precision: 12, scale: 2 }).default("0").notNull(),
+  
+  // For endowments
+  isEndowed: boolean("isEndowed").default(false).notNull(),
+  endowmentMinimum: decimal("endowmentMinimum", { precision: 12, scale: 2 }),
+  annualSpendingRate: decimal("annualSpendingRate", { precision: 5, scale: 4 }), // e.g., 0.05 for 5%
+  
+  // Linked programs
+  linkedProgramIds: json("linkedProgramIds"), // Array of scholarship program IDs
+  
+  // Status
+  status: mysqlEnum("fundStatus", [
+    "active",
+    "building",             // Still accumulating to minimum
+    "suspended",
+    "closed"
+  ]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ScholarshipFund = typeof scholarshipFund.$inferSelect;
+export type InsertScholarshipFund = typeof scholarshipFund.$inferInsert;
+
+/**
+ * Scholarship Fund Transactions - Track all fund movements
+ */
+export const scholarshipFundTransactions = mysqlTable("scholarship_fund_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  fundId: int("fundId").notNull(),
+  
+  // Transaction details
+  transactionType: mysqlEnum("transactionType", [
+    "donation",
+    "grant_deposit",
+    "interest_earned",
+    "award_disbursement",
+    "transfer_in",
+    "transfer_out",
+    "fee",
+    "adjustment"
+  ]).notNull(),
+  
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  
+  // Related records
+  donorName: varchar("donorName", { length: 255 }),
+  donorId: int("donorId"),
+  applicationId: int("applicationId"),
+  programId: int("programId"),
+  
+  // Details
+  description: text("description"),
+  referenceNumber: varchar("referenceNumber", { length: 100 }),
+  
+  // Balance after transaction
+  balanceAfter: decimal("balanceAfter", { precision: 12, scale: 2 }),
+  
+  processedAt: timestamp("processedAt").defaultNow().notNull(),
+  processedBy: varchar("processedBy", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ScholarshipFundTransaction = typeof scholarshipFundTransactions.$inferSelect;
+export type InsertScholarshipFundTransaction = typeof scholarshipFundTransactions.$inferInsert;

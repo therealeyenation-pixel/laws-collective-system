@@ -26,7 +26,9 @@ import {
   Zap,
   AlertCircle,
   TrendingUp,
+  Package,
 } from "lucide-react";
+import OfferPackageGenerator from "@/components/OfferPackageGenerator";
 
 /**
  * Contingency Offers Management
@@ -430,6 +432,10 @@ export default function ContingencyOffers() {
               <Users className="w-4 h-4" />
               Batch Import
             </TabsTrigger>
+            <TabsTrigger value="package" className="gap-2">
+              <Package className="w-4 h-4" />
+              Offer Package
+            </TabsTrigger>
           </TabsList>
 
           {/* Dashboard */}
@@ -825,6 +831,25 @@ export default function ContingencyOffers() {
                 </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Offer Package Generator */}
+          <TabsContent value="package" className="space-y-4">
+            <Card className="bg-gradient-to-br from-primary/5 to-accent/5">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <Package className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <p className="font-medium">Complete Offer Package Generator</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Generate comprehensive offer packages including offer letter, position description,
+                      compensation schedule, NDA, and more. Requires a completed resume.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <OfferPackageGenerator />
           </TabsContent>
         </Tabs>
       </div>

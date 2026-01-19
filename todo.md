@@ -4170,3 +4170,58 @@
 - [x] Create ResumeBuilder page at /resume-builder
 - [x] Add Resume Builder to DashboardLayout navigation under HR section
 - [x] Add route to App.tsx for /resume-builder
+
+## Phase 131: Full System Diagnostic Test
+- [ ] Run comprehensive diagnostic to identify system gaps
+- [ ] Check all navigation links work correctly
+- [ ] Verify all database tables are properly connected
+- [ ] Test all tRPC routes respond correctly
+- [ ] Identify missing features from todo items
+- [ ] Check for broken imports or unused code
+- [ ] Verify all 343+ tests still pass
+- [ ] Document gaps and prioritize fixes
+
+
+## Phase 132: Entry-Level Specialist Track (Family & External Candidates)
+- [x] Design Specialist Track progression levels (Specialist I → II → III → Associate)
+- [x] Add specialist_tracks database table with progression tracking
+- [x] Add specialist_maturity_assessments table for advancement criteria
+- [x] Create age-based eligibility rules (16+ with permit, 18+ full)
+- [x] Create education requirement validation (HS diploma OR Academy graduation)
+- [x] Build part-time to full-time progression logic (20-25 hrs → 40 hrs)
+- [x] Define standard progression timeline (3-5 years to Associate)
+- [x] Create accelerated advancement criteria based on demonstrated maturity:
+  - [x] Academy module completion tracking
+  - [x] Simulator performance scores
+  - [x] Supervisor evaluation system
+  - [x] Token economy participation metrics
+  - [x] Fiscal responsibility demonstrations
+- [x] Build Specialist Track router with CRUD operations
+- [x] Create progression recommendation engine
+- [x] Build Specialist Track UI page at /specialist-tracks
+- [x] Create maturity assessment interface for supervisors
+- [x] Add progression milestone celebrations/ceremonies
+- [ ] Integrate with Resume Builder for Specialist positions
+- [ ] Add Specialist-specific offer package templates
+- [x] Add tests for specialist tracks router (18 tests passing)
+
+
+## Phase 133: Founding Member Heir Education Benefits & Community Scholarships
+- [x] Add founding_members table to track original Management team from startup
+- [x] Add heir_education_benefits table for free Academy access tracking
+- [x] Add scholarship_programs table for community scholarships
+- [x] Add scholarship_applications table with review workflow
+- [x] Add scholarship_funds table for tracking available funds
+- [x] Create founding member verification logic via House lineage
+- [x] Build automatic free enrollment for founding member heirs
+- [x] Create merit-based scholarship criteria and scoring
+- [x] Create need-based scholarship criteria and documentation
+- [x] Build scholarship application form and submission
+- [x] Create scholarship review committee workflow
+- [x] Build scholarship award notification system
+- [x] Create scholarship fund disbursement tracking
+- [x] Build Scholarships UI page at /scholarships with all tabs
+- [x] Add scholarships router with full CRUD operations
+- [x] Add tests for scholarships router (18 tests passing)
+- [ ] Integrate scholarships with Academy enrollment
+- [ ] Add scholarship reporting and analytics

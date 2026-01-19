@@ -76,6 +76,8 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import ProcurementCatalog from "./pages/ProcurementCatalog";
 import CompanyCalendar from "./pages/CompanyCalendar";
 import ESignature from "./pages/ESignature";
+import SpecialistTracks from "./pages/SpecialistTracks";
+import Scholarships from "./pages/Scholarships";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -221,6 +223,8 @@ function Router() {
       <Route path="/procurement-catalog">{() => <ProtectedRoute component={ProcurementCatalog} minRole="staff" />}</Route>
       <Route path="/calendar">{() => <ProtectedRoute component={CompanyCalendar} minRole="user" />}</Route>
       <Route path="/e-signature">{() => <ProtectedRoute component={ESignature} minRole="staff" />}</Route>
+      <Route path="/specialist-tracks">{() => <ProtectedRoute component={SpecialistTracks} minRole="staff" />}</Route>
+      <Route path="/scholarships">{() => <ProtectedRoute component={Scholarships} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>
