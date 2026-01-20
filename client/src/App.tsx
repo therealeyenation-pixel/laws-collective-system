@@ -84,6 +84,24 @@ import GameCenter from "./pages/GameCenter";
 import SoftwareLicenses from "./pages/SoftwareLicenses";
 import PurchaseRequests from "./pages/PurchaseRequests";
 import TaxModule from "./pages/TaxModule";
+import HealthSimulator from "./pages/simulators/HealthSimulator";
+import EducationSimulator from "./pages/simulators/EducationSimulator";
+import DesignSimulator from "./pages/simulators/DesignSimulator";
+import MediaSimulator from "./pages/simulators/MediaSimulator";
+import FinanceSimulator from "./pages/simulators/FinanceSimulator";
+import HRSimulator from "./pages/simulators/HRSimulator";
+import OperationsSimulator from "./pages/simulators/OperationsSimulator";
+import ProcurementSimulator from "./pages/simulators/ProcurementSimulator";
+import ContractsSimulator from "./pages/simulators/ContractsSimulator";
+import PurchasingSimulator from "./pages/simulators/PurchasingSimulator";
+import PropertySimulator from "./pages/simulators/PropertySimulator";
+import RealEstateSimulator from "./pages/simulators/RealEstateSimulator";
+import ProjectControlsSimulator from "./pages/simulators/ProjectControlsSimulator";
+import QAQCSimulator from "./pages/simulators/QAQCSimulator";
+import LegalSimulator from "./pages/simulators/LegalSimulator";
+import ITSimulator from "./pages/simulators/ITSimulator";
+import PlatformSimulator from "./pages/simulators/PlatformSimulator";
+import GrantsSimulator from "./pages/simulators/GrantsSimulator";
 import OfferLetters from "@/pages/OfferLetters";
 import BusinessDashboard from "@/pages/BusinessDashboard";
 import HealthDashboard from "@/pages/HealthDashboard";
@@ -209,6 +227,24 @@ function Router() {
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} minRole="user" />}</Route>
       <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>
       <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} minRole="user" />}</Route>
+      <Route path="/health-simulator">{() => <ProtectedRoute component={HealthSimulator} minRole="staff" />}</Route>
+      <Route path="/education-simulator">{() => <ProtectedRoute component={EducationSimulator} minRole="staff" />}</Route>
+      <Route path="/design-simulator">{() => <ProtectedRoute component={DesignSimulator} minRole="staff" />}</Route>
+      <Route path="/media-simulator">{() => <ProtectedRoute component={MediaSimulator} minRole="staff" />}</Route>
+      <Route path="/finance-simulator">{() => <ProtectedRoute component={FinanceSimulator} minRole="staff" />}</Route>
+      <Route path="/hr-simulator">{() => <ProtectedRoute component={HRSimulator} minRole="staff" />}</Route>
+      <Route path="/operations-simulator">{() => <ProtectedRoute component={OperationsSimulator} minRole="staff" />}</Route>
+      <Route path="/procurement-simulator">{() => <ProtectedRoute component={ProcurementSimulator} minRole="staff" />}</Route>
+      <Route path="/contracts-simulator">{() => <ProtectedRoute component={ContractsSimulator} minRole="staff" />}</Route>
+      <Route path="/purchasing-simulator">{() => <ProtectedRoute component={PurchasingSimulator} minRole="staff" />}</Route>
+      <Route path="/property-simulator">{() => <ProtectedRoute component={PropertySimulator} minRole="staff" />}</Route>
+      <Route path="/real-estate-simulator">{() => <ProtectedRoute component={RealEstateSimulator} minRole="staff" />}</Route>
+      <Route path="/project-controls-simulator">{() => <ProtectedRoute component={ProjectControlsSimulator} minRole="staff" />}</Route>
+      <Route path="/qaqc-simulator">{() => <ProtectedRoute component={QAQCSimulator} minRole="staff" />}</Route>
+      <Route path="/legal-simulator">{() => <ProtectedRoute component={LegalSimulator} minRole="staff" />}</Route>
+      <Route path="/it-simulator">{() => <ProtectedRoute component={ITSimulator} minRole="staff" />}</Route>
+      <Route path="/platform-simulator">{() => <ProtectedRoute component={PlatformSimulator} minRole="admin" />}</Route>
+      <Route path="/grants-simulator">{() => <ProtectedRoute component={GrantsSimulator} minRole="staff" />}</Route>
       
       {/* Staff routes - management level */}
       <Route path="/dashboard">{() => <ProtectedRoute component={Dashboard} minRole="staff" />}</Route>

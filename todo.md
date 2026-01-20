@@ -4872,3 +4872,20 @@
 - [x] Verify Quarterly Estimates tab works
 - [x] Verify Tax Projection calculator works
 - [x] Verify Categories tab works
+
+
+## Phase 76: Business Formation & HR Dashboard Fixes
+- [x] Add S-Corp to Business Formation Training options
+- [x] Add other missing business entity types (C-Corp, Partnership, Sole Proprietorship)
+- [x] Lock 98 Trust option in Business Formation Training (coming soon)
+- [x] Lock 508(c)(1)(A) Nonprofit option in Business Formation Training (coming soon)
+- [x] Keep LLC, Family Trust, and Collective/Cooperative accessible
+- [x] HR Dashboard correctly shows 0 offers extended (Contingency Offers are separate)
+- [x] Audit and fix broken navigation links across the application
+- [x] Tax Simulator working correctly
+- [x] Contract Simulator - added Coming Soon placeholder
+- [x] Fix all broken simulator links - added 18 Coming Soon placeholder pages
+- [x] Audit sidebar paths vs App.tsx routes
+- [x] Add missing routes to App.tsx (18 new simulator routes)
+- [ ] Fix Amber offer letter download 404 error
+- [ ] Fix Document Vault document viewer/download 404 error
