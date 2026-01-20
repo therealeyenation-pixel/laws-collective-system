@@ -52,6 +52,8 @@ import {
   Filter,
   Building2,
   FolderOpen,
+  Upload,
+  Eye,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -129,6 +131,9 @@ export default function DocumentAdmin() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState<any>(null);
   const [formData, setFormData] = useState<ProcedureFormData>(initialFormData);
+  const [isBulkImportOpen, setIsBulkImportOpen] = useState(false);
+  const [bulkImportData, setBulkImportData] = useState<string>("");
+  const [bulkImportPreview, setBulkImportPreview] = useState<any[]>([]);
 
   const { data: procedures, isLoading, refetch } = trpc.procedures.list.useQuery({
     department: filterDepartment || undefined,
@@ -180,6 +185,64 @@ export default function DocumentAdmin() {
       toast.error("Failed to approve procedure: " + error.message);
     },
   });
+
+  const bulkImportMutation = trpc.procedures.bulkImport.useMutation({
+    onSuccess: (result) => {
+      toast.success(`Imported ${result.success} procedures successfully${result.failed > 0 ? `, ${result.failed} failed` : ""}`);
+      setIsBulkImportOpen(false);
+      setBulkImportData("");
+      setBulkImportPreview([]);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error("Failed to import procedures: " + error.message);
+    },
+  });
+
+  const parseCsvData = (csvText: string) => {
+    const lines = csvText.trim().split("\n");
+    if (lines.length < 2) return [];
+    
+    const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+    const procedures = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(",").map(v => v.trim().replace(/^"|"$/g, ""));
+      const proc: any = {};
+      
+      headers.forEach((header, idx) => {
+        if (header === "title") proc.title = values[idx];
+        else if (header === "description") proc.description = values[idx];
+        else if (header === "documentnumber" || header === "document_number") proc.documentNumber = values[idx];
+        else if (header === "category") proc.category = values[idx] || "sop";
+        else if (header === "department") proc.department = values[idx];
+        else if (header === "content") proc.content = values[idx];
+        else if (header === "fileurl" || header === "file_url") proc.fileUrl = values[idx];
+        else if (header === "version") proc.version = values[idx];
+        else if (header === "status") proc.status = values[idx];
+      });
+      
+      if (proc.title) {
+        proc.category = proc.category || "sop";
+        procedures.push(proc);
+      }
+    }
+    
+    return procedures;
+  };
+
+  const handleBulkImportPreview = () => {
+    const parsed = parseCsvData(bulkImportData);
+    setBulkImportPreview(parsed);
+  };
+
+  const handleBulkImport = () => {
+    if (bulkImportPreview.length === 0) {
+      toast.error("No valid procedures to import");
+      return;
+    }
+    bulkImportMutation.mutate({ procedures: bulkImportPreview });  
+  };
 
   const handleCreate = () => {
     createMutation.mutate({
@@ -413,6 +476,59 @@ export default function DocumentAdmin() {
                 </Button>
                 <Button onClick={handleCreate} disabled={!formData.title || createMutation.isPending}>
                   {createMutation.isPending ? "Creating..." : "Create Procedure"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={isBulkImportOpen} onOpenChange={setIsBulkImportOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Upload className="w-4 h-4" />
+                Bulk Import
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Bulk Import Procedures</DialogTitle>
+                <DialogDescription>
+                  Import multiple procedures from CSV format. Required columns: title, category. Optional: description, documentNumber, department, content, fileUrl, version, status.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>CSV Data</Label>
+                  <Textarea
+                    placeholder={"title,category,department,description\nEmployee Handbook,policy,HR,Complete employee handbook\nIT Security Policy,policy,IT,Security guidelines"}
+                    value={bulkImportData}
+                    onChange={(e) => setBulkImportData(e.target.value)}
+                    rows={8}
+                    className="font-mono text-sm"
+                  />
+                </div>
+                <Button variant="outline" onClick={handleBulkImportPreview} className="gap-2">
+                  <Eye className="w-4 h-4" />
+                  Preview Import
+                </Button>
+                {bulkImportPreview.length > 0 && (
+                  <div className="border rounded-lg p-4">
+                    <p className="font-medium mb-2">{bulkImportPreview.length} procedures to import:</p>
+                    <div className="max-h-48 overflow-y-auto space-y-1">
+                      {bulkImportPreview.map((proc, idx) => (
+                        <div key={idx} className="text-sm flex justify-between">
+                          <span>{proc.title}</span>
+                          <Badge variant="outline">{proc.category}</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsBulkImportOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleBulkImport} disabled={bulkImportPreview.length === 0 || bulkImportMutation.isPending}>
+                  {bulkImportMutation.isPending ? "Importing..." : `Import ${bulkImportPreview.length} Procedures`}
                 </Button>
               </DialogFooter>
             </DialogContent>

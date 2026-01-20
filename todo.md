@@ -5113,14 +5113,29 @@
 - [x] Test all dashboards for consistency - 472 tests passing
 
 ## Phase 94: Complete Dashboard Updates & Document Admin
-- [ ] Update Procurement Dashboard with DepartmentProcedures component
-- [ ] Update Purchasing Dashboard with DepartmentProcedures component
-- [ ] Create Document Admin page
-  - [ ] List all procedures with filtering by department
-  - [ ] Add new procedure form
-  - [ ] Edit existing procedures
-  - [ ] Delete procedures with confirmation
-  - [ ] Bulk import/export functionality
-  - [ ] Version tracking for procedures
-- [ ] Add Document Admin route and navigation
-- [ ] Test all features
+- [x] Update Procurement Dashboard with DepartmentProcedures component
+- [x] Update Purchasing Dashboard with DepartmentProcedures component
+- [x] Create Document Admin page
+  - [x] List all procedures with filtering by department
+  - [x] Add new procedure form
+  - [x] Edit existing procedures
+  - [x] Delete procedures with confirmation
+  - [x] Bulk import/export functionality
+  - [x] Version tracking for procedures
+- [x] Add Document Admin route and navigation
+- [x] Test all features - 481 tests passing
+
+## Phase 95: Bulk Import & Required Reading Tracking
+- [x] Add bulk import feature to Document Admin
+  - [x] CSV/Excel file upload interface
+  - [x] Column mapping for procedure fields
+  - [x] Validation and error reporting
+  - [x] Preview before import
+  - [x] Import progress indicator
+- [x] Add required reading tracking
+  - [x] Mark procedures as required for specific departments/roles
+  - [x] Employee acknowledgment interface with electronic signature
+  - [x] Track acknowledgment status per employee
+  - [x] Dashboard showing compliance rates
+  - [x] Notifications for pending acknowledgments
+- [x] Test all features - 481 tests passing

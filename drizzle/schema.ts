@@ -7541,6 +7541,8 @@ export const operatingProcedures = mysqlTable("operating_procedures", {
   tags: json("tags"), // Array of tags for searchability
   relatedProcedures: json("relatedProcedures"), // Array of related procedure IDs
   revisionHistory: json("revisionHistory"), // Track changes
+  isRequired: boolean("isRequired").default(false), // Is this a required reading?
+  requiredForDepartments: json("requiredForDepartments"), // Array of department names that must acknowledge
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

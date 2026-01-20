@@ -521,4 +521,144 @@ export const proceduresRouter = router({
 
     return pending;
   }),
+  // Bulk import procedures
+  bulkImport: protectedProcedure
+    .input(z.object({
+      procedures: z.array(z.object({
+        title: z.string().min(1),
+        description: z.string().optional(),
+        documentNumber: z.string().optional(),
+        category: z.enum(["sop", "manual", "policy", "guide", "training", "checklist", "template", "form"]),
+        department: z.string().optional(),
+        content: z.string().optional(),
+        fileUrl: z.string().optional(),
+        version: z.string().optional(),
+        status: z.enum(["draft", "review", "approved", "archived", "superseded"]).optional(),
+        isRequired: z.boolean().optional(),
+        requiredForDepartments: z.array(z.string()).optional(),
+      })),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      const results = { success: 0, failed: 0, errors: [] as string[] };
+
+      for (const proc of input.procedures) {
+        try {
+          await db.insert(operatingProcedures).values({
+            title: proc.title,
+            description: proc.description,
+            documentNumber: proc.documentNumber,
+            category: proc.category,
+            department: proc.department,
+            content: proc.content,
+            fileUrl: proc.fileUrl,
+            version: proc.version || "1.0",
+            status: proc.status || "draft",
+            isRequired: proc.isRequired || false,
+            requiredForDepartments: proc.requiredForDepartments ? JSON.stringify(proc.requiredForDepartments) : null,
+            createdBy: ctx.user.id,
+          });
+          results.success++;
+        } catch (error: any) {
+          results.failed++;
+          results.errors.push(`Failed to import "${proc.title}": ${error.message}`);
+        }
+      }
+
+      return results;
+    }),
+
+  // Update procedure to mark as required
+  setRequired: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      isRequired: z.boolean(),
+      requiredForDepartments: z.array(z.string()).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      await db
+        .update(operatingProcedures)
+        .set({
+          isRequired: input.isRequired,
+          requiredForDepartments: input.requiredForDepartments ? JSON.stringify(input.requiredForDepartments) : null,
+        })
+        .where(eq(operatingProcedures.id, input.id));
+
+      return { message: "Procedure requirement updated successfully" };
+    }),
+
+  // Get required procedures for a department
+  getRequiredByDepartment: protectedProcedure
+    .input(z.object({
+      department: z.string(),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const procedures = await db
+        .select()
+        .from(operatingProcedures)
+        .where(
+          and(
+            eq(operatingProcedures.isRequired, true),
+            eq(operatingProcedures.status, "approved")
+          )
+        );
+
+      // Filter by department
+      return procedures.filter(p => {
+        if (!p.requiredForDepartments) return true; // Required for all
+        const depts = JSON.parse(p.requiredForDepartments as string);
+        return depts.includes(input.department) || depts.includes("all");
+      });
+    }),
+
+  // Get acknowledgment compliance stats
+  getComplianceStats: protectedProcedure
+    .input(z.object({
+      department: z.string().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { totalRequired: 0, totalAcknowledged: 0, complianceRate: 0, byProcedure: [] };
+
+      // Get required procedures
+      const requiredProcs = await db
+        .select()
+        .from(operatingProcedures)
+        .where(
+          and(
+            eq(operatingProcedures.isRequired, true),
+            eq(operatingProcedures.status, "approved")
+          )
+        );
+
+      // Get all acknowledgments
+      const acknowledgments = await db
+        .select()
+        .from(procedureAcknowledgments);
+
+      const byProcedure = requiredProcs.map(proc => {
+        const acks = acknowledgments.filter(a => a.procedureId === proc.id && a.version === proc.version);
+        return {
+          id: proc.id,
+          title: proc.title,
+          documentNumber: proc.documentNumber,
+          acknowledgedCount: acks.length,
+        };
+      });
+
+      const totalRequired = requiredProcs.length;
+      const totalAcknowledged = byProcedure.filter(p => p.acknowledgedCount > 0).length;
+      const complianceRate = totalRequired > 0 ? Math.round((totalAcknowledged / totalRequired) * 100) : 0;
+
+      return { totalRequired, totalAcknowledged, complianceRate, byProcedure };
+    }),
+
 });
