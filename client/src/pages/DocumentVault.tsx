@@ -276,13 +276,27 @@ export default function DocumentVault() {
 
             {/* Document Content */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              {viewingDocument.fileUrl ? (
+              {/* Prioritize content if available, only use fileUrl for actual uploaded files */}
+              {viewingDocument.content ? (
+                <div className="p-6 md:p-8">
+                  <div className="prose prose-green max-w-none">
+                    <div className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
+                      {viewingDocument.content.split(';').map((line, idx) => (
+                        <p key={idx} className={line.startsWith('##') ? 'font-bold text-lg mt-4 mb-2' : line.startsWith('###') ? 'font-semibold mt-3 mb-1' : 'mb-2'}>
+                          {line.replace(/^#+\s*/, '').replace(/\*\*/g, '')}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : viewingDocument.fileUrl && viewingDocument.fileUrl.startsWith('http') ? (
                 <div className="w-full">
-                  {/* PDF Viewer */}
+                  {/* PDF Viewer - only for valid URLs */}
                   <iframe
                     src={viewingDocument.fileUrl}
                     className="w-full h-[70vh] border-0"
                     title={viewingDocument.title}
+                    onError={() => console.log('Failed to load document')}
                   />
                   <div className="p-4 bg-gray-50 border-t border-gray-200">
                     <a
@@ -294,14 +308,6 @@ export default function DocumentVault() {
                       <Download className="w-4 h-4" />
                       Open in new tab or download
                     </a>
-                  </div>
-                </div>
-              ) : viewingDocument.content ? (
-                <div className="p-6 md:p-8">
-                  <div className="prose prose-green max-w-none">
-                    <pre className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
-                      {viewingDocument.content}
-                    </pre>
                   </div>
                 </div>
               ) : (
