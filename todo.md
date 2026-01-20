@@ -4975,3 +4975,23 @@
 - [x] Add report generation by funding source, charge code, date range
 - [x] Add CSV export for funder submissions
 - [x] Write tests for grant labor reports - 5 tests passing
+
+## Phase 85: Payroll Integration & PDF Export
+- [ ] Design payroll calculation logic from approved timesheets
+- [ ] Create payroll database tables (pay_periods, payroll_runs, pay_stubs)
+- [ ] Create payroll backend router with wage calculations
+- [ ] Build Payroll Dashboard UI with pay period management
+- [x] Add PDF export to Grant Labor Reports
+- [ ] Write tests for payroll and PDF export
+
+## Phase 86: Location-Based Tax Withholding & Payroll Integration
+- [x] Create state_tax_rates table with all 50 US states
+- [x] Create local_tax_rates table for city/county taxes
+- [x] Design international-ready structure (country field, currency support)
+- [x] Populate all 50 state tax brackets (2024 rates)
+- [x] Add local tax rates for major cities (NYC, Philadelphia, etc.)
+- [x] Update payroll router to use location-based tax rates
+- [x] Create autonomous tax calculator module
+- [x] Integrate timekeeping approved hours into payroll calculations
+- [x] Add PDF export to Grant Labor Reports
+- [ ] Test all payroll and tax features

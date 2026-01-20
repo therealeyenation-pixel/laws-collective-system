@@ -101,6 +101,146 @@ export default function GrantLaborReports() {
     }
   };
 
+  // PDF export mutation
+  const generatePdfMutation = trpc.grantLaborReports.generatePdfReport.useMutation({
+    onSuccess: (data) => {
+      if (data.success && data.pdfContent) {
+        // Generate PDF using the data
+        const pdfData = data.pdfContent;
+        
+        // Create a printable HTML document
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>${pdfData.reportType === 'sf425' ? 'SF-425 Federal Financial Report' : pdfData.reportType === 'dol_eta_9130' ? 'DOL ETA-9130 Report' : 'Grant Labor Cost Report'}</title>
+              <style>
+                body { font-family: Arial, sans-serif; margin: 40px; }
+                h1 { color: #1a1a1a; border-bottom: 2px solid #333; padding-bottom: 10px; }
+                h2 { color: #333; margin-top: 30px; }
+                .header-info { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+                .header-info p { margin: 5px 0; }
+                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                th { background: #f0f0f0; font-weight: bold; }
+                .summary-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+                .summary-item { background: #f9f9f9; padding: 15px; border-radius: 5px; text-align: center; }
+                .summary-item .value { font-size: 24px; font-weight: bold; color: #2563eb; }
+                .summary-item .label { color: #666; font-size: 14px; }
+                .certification { margin-top: 40px; padding: 20px; border: 1px solid #ddd; background: #fafafa; }
+                .signature-line { margin-top: 40px; border-top: 1px solid #333; width: 300px; padding-top: 5px; }
+                .footer { margin-top: 40px; text-align: center; color: #666; font-size: 12px; }
+                @media print { body { margin: 20px; } }
+              </style>
+            </head>
+            <body>
+              <h1>${pdfData.reportType === 'sf425' ? 'SF-425 Federal Financial Report' : pdfData.reportType === 'dol_eta_9130' ? 'DOL ETA-9130 Financial Status Report' : 'Grant Labor Cost Report'}</h1>
+              
+              <div class="header-info">
+                <p><strong>Report Period:</strong> ${pdfData.reportPeriod.start} to ${pdfData.reportPeriod.end}</p>
+                <p><strong>Funding Source:</strong> ${pdfData.grantInfo.fundingSource}</p>
+                <p><strong>Grant Number:</strong> ${pdfData.grantInfo.grantNumber}</p>
+                <p><strong>Grantor:</strong> ${pdfData.grantInfo.grantorName}</p>
+                <p><strong>Generated:</strong> ${new Date(pdfData.generatedAt).toLocaleString()}</p>
+              </div>
+              
+              <h2>Summary</h2>
+              <div class="summary-box">
+                <div class="summary-item">
+                  <div class="value">${pdfData.summary.totalHours.toFixed(2)}</div>
+                  <div class="label">Total Hours</div>
+                </div>
+                <div class="summary-item">
+                  <div class="value">$${pdfData.summary.totalCost.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                  <div class="label">Total Labor Cost</div>
+                </div>
+                <div class="summary-item">
+                  <div class="value">$${pdfData.summary.averageHourlyRate.toFixed(2)}</div>
+                  <div class="label">Avg Hourly Rate</div>
+                </div>
+              </div>
+              
+              <table>
+                <tr>
+                  <th>Category</th>
+                  <th>Hours</th>
+                  <th>Cost</th>
+                </tr>
+                <tr>
+                  <td>Employee Labor</td>
+                  <td>${pdfData.summary.employeeHours.toFixed(2)}</td>
+                  <td>$${pdfData.summary.employeeCost.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                </tr>
+                <tr>
+                  <td>Contractor Labor</td>
+                  <td>${pdfData.summary.contractorHours.toFixed(2)}</td>
+                  <td>$${pdfData.summary.contractorCost.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                </tr>
+                <tr style="font-weight: bold; background: #f0f0f0;">
+                  <td>Total</td>
+                  <td>${pdfData.summary.totalHours.toFixed(2)}</td>
+                  <td>$${pdfData.summary.totalCost.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                </tr>
+              </table>
+              
+              <h2>Labor by Worker</h2>
+              <table>
+                <tr>
+                  <th>Worker Name</th>
+                  <th>Type</th>
+                  <th>Hours</th>
+                  <th>Cost</th>
+                </tr>
+                ${pdfData.workerSummary.map(w => `
+                  <tr>
+                    <td>${w.name}</td>
+                    <td>${w.type}</td>
+                    <td>${w.hours.toFixed(2)}</td>
+                    <td>$${w.cost.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                  </tr>
+                `).join('')}
+              </table>
+              
+              ${pdfData.includeSignatureLine ? `
+                <div class="certification">
+                  <p><strong>Certification:</strong></p>
+                  <p>${pdfData.certificationText}</p>
+                  <div class="signature-line">Authorized Signature / Date</div>
+                </div>
+              ` : ''}
+              
+              <div class="footer">
+                <p>Generated by LuvOnPurpose Autonomous Wealth System</p>
+                <p>Report ID: ${Date.now()}</p>
+              </div>
+            </body>
+            </html>
+          `);
+          printWindow.document.close();
+          printWindow.print();
+        }
+        toast.success("PDF report generated");
+      } else {
+        toast.error(data.error || "Failed to generate PDF");
+      }
+    },
+    onError: (error) => {
+      toast.error(`Failed to generate PDF: ${error.message}`);
+    },
+  });
+
+  const handleExportPDF = () => {
+    generatePdfMutation.mutate({
+      fundingSourceId: selectedFundingSource !== "all" ? parseInt(selectedFundingSource) : undefined,
+      startDate,
+      endDate,
+      reportType: selectedReportType as "summary" | "detailed" | "sf425" | "dol_eta_9130",
+      includeSignatureLine: true,
+    });
+  };
+
   const handlePrint = () => {
     window.print();
     toast.success("Print dialog opened");
@@ -131,6 +271,10 @@ export default function GrantLaborReports() {
             <Button variant="outline" onClick={handlePrint}>
               <Printer className="w-4 h-4 mr-2" />
               Print
+            </Button>
+            <Button variant="outline" onClick={handleExportPDF} disabled={generatePdfMutation.isPending}>
+              <FileText className="w-4 h-4 mr-2" />
+              {generatePdfMutation.isPending ? "Generating..." : "Export PDF"}
             </Button>
             <Button onClick={handleExportCSV}>
               <Download className="w-4 h-4 mr-2" />

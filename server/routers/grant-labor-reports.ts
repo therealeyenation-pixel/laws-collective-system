@@ -449,4 +449,167 @@ export const grantLaborReportsRouter = router({
       },
     ];
   }),
+
+  // Generate PDF report
+  generatePdfReport: publicProcedure
+    .input(
+      z.object({
+        fundingSourceId: z.number().optional(),
+        startDate: z.string(),
+        endDate: z.string(),
+        reportType: z.enum(["summary", "detailed", "sf425", "dol_eta_9130"]),
+        includeSignatureLine: z.boolean().default(true),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        return {
+          success: false,
+          error: "Database unavailable",
+          pdfContent: null,
+        };
+      }
+
+      const { fundingSourceId, startDate, endDate, reportType, includeSignatureLine } = input;
+
+      // Get funding source name if specified
+      let fundingSourceName = "All Funding Sources";
+      let grantNumber = "N/A";
+      let grantorName = "N/A";
+      if (fundingSourceId) {
+        const fs = await db
+          .select()
+          .from(fundingSources)
+          .where(eq(fundingSources.id, fundingSourceId))
+          .limit(1);
+        if (fs.length > 0) {
+          fundingSourceName = fs[0].name;
+          grantNumber = fs[0].grantNumber || "N/A";
+          grantorName = fs[0].grantorName || "N/A";
+        }
+      }
+
+      // Get all entries
+      const entries = await db
+        .select({
+          workerId: timeEntries.workerId,
+          hours: timeEntries.hoursWorked,
+          hourlyRate: timeEntries.billingRate,
+          date: timeEntries.entryDate,
+          workerFirstName: timekeepingWorkers.firstName,
+          workerLastName: timekeepingWorkers.lastName,
+          workerType: timekeepingWorkers.workerType,
+          chargeCode: chargeCodes.code,
+          chargeCodeName: chargeCodes.name,
+          fundingSourceName: fundingSources.name,
+        })
+        .from(timeEntries)
+        .innerJoin(timekeepingWorkers, eq(timeEntries.workerId, timekeepingWorkers.id))
+        .innerJoin(chargeCodes, eq(timeEntries.chargeCodeId, chargeCodes.id))
+        .innerJoin(fundingSources, eq(chargeCodes.fundingSourceId, fundingSources.id))
+        .where(
+          and(
+            gte(timeEntries.entryDate, new Date(startDate)),
+            lte(timeEntries.entryDate, new Date(endDate)),
+            fundingSourceId ? eq(chargeCodes.fundingSourceId, fundingSourceId) : undefined
+          )
+        )
+        .orderBy(desc(timeEntries.entryDate));
+
+      // Calculate totals
+      let totalHours = 0;
+      let totalCost = 0;
+      let employeeHours = 0;
+      let employeeCost = 0;
+      let contractorHours = 0;
+      let contractorCost = 0;
+
+      const processedEntries = entries.map((entry) => {
+        const hours = Number(entry.hours);
+        const rate = Number(entry.hourlyRate || 0);
+        const cost = hours * rate;
+
+        totalHours += hours;
+        totalCost += cost;
+
+        if (entry.workerType === "employee") {
+          employeeHours += hours;
+          employeeCost += cost;
+        } else {
+          contractorHours += hours;
+          contractorCost += cost;
+        }
+
+        return {
+          date: entry.date instanceof Date ? entry.date.toISOString().split('T')[0] : String(entry.date),
+          workerName: `${entry.workerFirstName} ${entry.workerLastName}`,
+          workerType: entry.workerType,
+          chargeCode: entry.chargeCode,
+          chargeCodeName: entry.chargeCodeName,
+          hours,
+          hourlyRate: rate,
+          totalCost: cost,
+        };
+      });
+
+      // Group by worker for summary
+      const workerSummary = new Map<number, { name: string; type: string; hours: number; cost: number }>();
+      entries.forEach((entry) => {
+        const hours = Number(entry.hours);
+        const cost = hours * Number(entry.hourlyRate || 0);
+        const existing = workerSummary.get(entry.workerId);
+        if (existing) {
+          existing.hours += hours;
+          existing.cost += cost;
+        } else {
+          workerSummary.set(entry.workerId, {
+            name: `${entry.workerFirstName} ${entry.workerLastName}`,
+            type: entry.workerType,
+            hours,
+            cost,
+          });
+        }
+      });
+
+      // Generate PDF content structure (to be rendered by frontend)
+      const pdfData = {
+        reportType,
+        generatedAt: new Date().toISOString(),
+        reportPeriod: {
+          start: startDate,
+          end: endDate,
+        },
+        grantInfo: {
+          fundingSource: fundingSourceName,
+          grantNumber,
+          grantorName,
+        },
+        summary: {
+          totalHours: Math.round(totalHours * 100) / 100,
+          totalCost: Math.round(totalCost * 100) / 100,
+          employeeHours: Math.round(employeeHours * 100) / 100,
+          employeeCost: Math.round(employeeCost * 100) / 100,
+          contractorHours: Math.round(contractorHours * 100) / 100,
+          contractorCost: Math.round(contractorCost * 100) / 100,
+          averageHourlyRate: totalHours > 0 ? Math.round((totalCost / totalHours) * 100) / 100 : 0,
+        },
+        workerSummary: Array.from(workerSummary.values()).map((w) => ({
+          ...w,
+          hours: Math.round(w.hours * 100) / 100,
+          cost: Math.round(w.cost * 100) / 100,
+        })),
+        detailedEntries: processedEntries,
+        includeSignatureLine,
+        certificationText: reportType === "sf425" || reportType === "dol_eta_9130"
+          ? "I certify to the best of my knowledge and belief that this report is correct and complete and that all expenditures are for the purposes set forth in the award documents."
+          : "This report has been prepared in accordance with the terms and conditions of the grant agreement.",
+      };
+
+      return {
+        success: true,
+        pdfContent: pdfData,
+        error: null,
+      };
+    }),
 });

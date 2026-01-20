@@ -1,9 +1,13 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
+import { calculateAllTaxes, getAllStates, getLocalitiesForState } from "./tax-calculator";
 import { getDb } from "../db";
 import {
   w2Workers,
   payrollRuns,
+  timesheets,
+  timeEntries,
+  timekeepingWorkers,
   houses,
 } from "../../drizzle/schema";
 import { eq, and, desc, sql, gte, lte } from "drizzle-orm";
@@ -429,8 +433,18 @@ export const payrollRouter = router({
       }
       const federalWithholding = federalTax / periodsPerYear;
 
-      // State tax (simplified - 5% flat rate as placeholder)
-      const stateWithholding = grossPay * 0.05;
+      // State and local tax using autonomous tax calculator
+      const taxResult = await calculateAllTaxes({
+        grossPay,
+        annualizedIncome,
+        periodsPerYear,
+        filingStatus,
+        stateCode: w.state || 'TX', // Default to Texas (no state tax) if not set
+        localityName: w.city || undefined,
+        countryCode: 'USA',
+      });
+      const stateWithholding = taxResult.stateWithholding;
+      const localWithholding = taxResult.localWithholding;
 
       // Social Security
       const socialSecurityWithholding = Math.min(
@@ -451,7 +465,7 @@ export const payrollRouter = router({
       const totalDeductions = input.deductions.reduce((sum, d) => sum + d.amount, 0);
 
       // Net pay
-      const totalWithholdings = federalWithholding + stateWithholding + 
+      const totalWithholdings = federalWithholding + stateWithholding + localWithholding +
         socialSecurityWithholding + medicareWithholding + additionalWithholding;
       const netPay = grossPay - totalWithholdings - totalDeductions;
 
@@ -464,10 +478,12 @@ export const payrollRouter = router({
           grossPay,
           federalWithholding,
           stateWithholding,
+          localWithholding,
           socialSecurityWithholding,
           medicareWithholding,
           additionalWithholding,
           totalWithholdings,
+          taxDetails: taxResult.taxDetails,
           deductions: input.deductions,
           totalDeductions,
           netPay,
@@ -732,6 +748,205 @@ export const payrollRouter = router({
           box17: box17StateTax,
           box16: box1WagesTips, // State wages (same as federal for simplicity)
         },
+      };
+    }),
+
+  // ============================================
+  // TAX LOOKUP ENDPOINTS
+  // Autonomous tax data - no external API required
+  // ============================================
+
+  getStates: protectedProcedure
+    .input(z.object({ countryCode: z.string().default("USA") }).optional())
+    .query(async ({ input }) => {
+      const countryCode = input?.countryCode || "USA";
+      return getAllStates(countryCode);
+    }),
+
+  getLocalities: protectedProcedure
+    .input(z.object({
+      stateCode: z.string(),
+      countryCode: z.string().default("USA"),
+    }))
+    .query(async ({ input }) => {
+      return getLocalitiesForState(input.stateCode, input.countryCode);
+    }),
+
+  previewTaxCalculation: protectedProcedure
+    .input(z.object({
+      grossPay: z.number(),
+      annualizedIncome: z.number(),
+      periodsPerYear: z.number(),
+      filingStatus: z.string(),
+      stateCode: z.string(),
+      localityName: z.string().optional(),
+      countryCode: z.string().default("USA"),
+    }))
+    .query(async ({ input }) => {
+      return calculateAllTaxes(input);
+    }),
+
+  // ============================================
+  // TIMEKEEPING INTEGRATION
+  // Pull approved hours from timekeeping system
+  // ============================================
+
+  getApprovedTimesheets: protectedProcedure
+    .input(z.object({
+      payPeriodStart: z.date(),
+      payPeriodEnd: z.date(),
+      workerId: z.number().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      // Get approved timesheets for the pay period
+      const approvedTimesheets = await db
+        .select({
+          id: timesheets.id,
+          workerId: timesheets.workerId,
+          periodStart: timesheets.periodStart,
+          periodEnd: timesheets.periodEnd,
+          totalRegularHours: timesheets.totalRegularHours,
+          totalOvertimeHours: timesheets.totalOvertimeHours,
+          totalBillableHours: timesheets.totalBillableHours,
+          status: timesheets.status,
+        })
+        .from(timesheets)
+        .where(
+          and(
+            eq(timesheets.status, "approved"),
+            gte(timesheets.periodStart, input.payPeriodStart),
+            lte(timesheets.periodEnd, input.payPeriodEnd),
+            input.workerId ? eq(timesheets.workerId, input.workerId) : sql`1=1`
+          )
+        );
+
+      return approvedTimesheets.map(ts => ({
+        ...ts,
+        totalRegularHours: Number(ts.totalRegularHours),
+        totalOvertimeHours: Number(ts.totalOvertimeHours),
+        totalBillableHours: Number(ts.totalBillableHours),
+      }));
+    }),
+
+  calculatePayrollFromTimesheets: protectedProcedure
+    .input(z.object({
+      payPeriodStart: z.date(),
+      payPeriodEnd: z.date(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      const userId = ctx.user.id;
+
+      const userHouse = await db
+        .select()
+        .from(houses)
+        .where(eq(houses.ownerUserId, userId))
+        .limit(1);
+
+      if (!userHouse.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "House not found" });
+      }
+
+      // Get all approved timesheets for the period
+      const approvedTimesheets = await db
+        .select()
+        .from(timesheets)
+        .where(
+          and(
+            eq(timesheets.status, "approved"),
+            gte(timesheets.periodStart, input.payPeriodStart),
+            lte(timesheets.periodEnd, input.payPeriodEnd)
+          )
+        );
+
+      const payrollCalculations = [];
+
+      for (const ts of approvedTimesheets) {
+        // Get the worker from timekeeping system
+        const tkWorker = await db
+          .select()
+          .from(timekeepingWorkers)
+          .where(eq(timekeepingWorkers.id, ts.workerId))
+          .limit(1);
+
+        if (!tkWorker.length) continue;
+
+        const worker = tkWorker[0];
+        const regularHours = Number(ts.totalRegularHours) || 0;
+        const overtimeHours = Number(ts.totalOvertimeHours) || 0;
+        const hourlyRate = Number(worker.hourlyRate) || 0;
+
+        // Calculate gross pay
+        const regularPay = regularHours * hourlyRate;
+        const overtimePay = overtimeHours * hourlyRate * 1.5;
+        const grossPay = regularPay + overtimePay;
+
+        // Determine pay frequency and annualized income
+        const periodsPerYear = 26; // Bi-weekly default
+        const annualizedIncome = grossPay * periodsPerYear;
+
+        // Calculate taxes using autonomous tax calculator
+        const taxResult = await calculateAllTaxes({
+          grossPay,
+          annualizedIncome,
+          periodsPerYear,
+          filingStatus: "single", // Default, should come from worker profile
+          stateCode: "TX", // Default, should come from worker profile
+          countryCode: "USA",
+        });
+
+        const netPay = grossPay - taxResult.totalWithholdings;
+
+        payrollCalculations.push({
+          timesheetId: ts.id,
+          workerId: ts.workerId,
+          workerName: `${worker.firstName} ${worker.lastName}`,
+          workerType: worker.workerType,
+          periodStart: ts.periodStart,
+          periodEnd: ts.periodEnd,
+          regularHours,
+          overtimeHours,
+          hourlyRate,
+          regularPay,
+          overtimePay,
+          grossPay,
+          federalWithholding: taxResult.federalWithholding,
+          stateWithholding: taxResult.stateWithholding,
+          localWithholding: taxResult.localWithholding,
+          socialSecurityWithholding: taxResult.socialSecurityWithholding,
+          medicareWithholding: taxResult.medicareWithholding,
+          totalWithholdings: taxResult.totalWithholdings,
+          netPay,
+          taxDetails: taxResult.taxDetails,
+        });
+      }
+
+      // Summary
+      const summary = {
+        totalWorkers: payrollCalculations.length,
+        totalGrossPay: payrollCalculations.reduce((sum, p) => sum + p.grossPay, 0),
+        totalNetPay: payrollCalculations.reduce((sum, p) => sum + p.netPay, 0),
+        totalFederalTax: payrollCalculations.reduce((sum, p) => sum + p.federalWithholding, 0),
+        totalStateTax: payrollCalculations.reduce((sum, p) => sum + p.stateWithholding, 0),
+        totalLocalTax: payrollCalculations.reduce((sum, p) => sum + p.localWithholding, 0),
+        totalSocialSecurity: payrollCalculations.reduce((sum, p) => sum + p.socialSecurityWithholding, 0),
+        totalMedicare: payrollCalculations.reduce((sum, p) => sum + p.medicareWithholding, 0),
+        totalWithholdings: payrollCalculations.reduce((sum, p) => sum + p.totalWithholdings, 0),
+        totalRegularHours: payrollCalculations.reduce((sum, p) => sum + p.regularHours, 0),
+        totalOvertimeHours: payrollCalculations.reduce((sum, p) => sum + p.overtimeHours, 0),
+      };
+
+      return {
+        payPeriod: {
+          start: input.payPeriodStart,
+          end: input.payPeriodEnd,
+        },
+        calculations: payrollCalculations,
+        summary,
       };
     }),
 });
