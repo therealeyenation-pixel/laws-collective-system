@@ -62,7 +62,7 @@
           "Web3/blockchain financial operations"
         ],
         "reportsTo": "CEO",
-        "directReports": ["Grant Writer", "Bookkeeper (future)"],
+        "directReports": ["Grant Writer", "Accounts Payable Coordinator", "Bookkeeper (future)"],
         "salaryRange": "$95,000 - $120,000"
       },
       {
@@ -156,7 +156,7 @@
           "Token economy management"
         ],
         "reportsTo": "CEO",
-        "directReports": ["Finance Operations Coordinator"]
+        "directReports": ["Finance Operations Coordinator", "Accounts Payable Coordinator"]
       },
       {
         "name": "Cornelius Christopher",
@@ -389,7 +389,7 @@
         "name": "Finance",
         "lead": "Craig Russell",
         "servesEntities": ["All"],
-        "functions": ["Budgeting", "Reporting", "Grant Finance", "Token Economy", "Blockchain Operations"]
+        "functions": ["Budgeting", "Reporting", "Grant Finance", "Token Economy", "Blockchain Operations", "Accounts Payable", "Contractor Invoicing"]
       },
       {
         "name": "Grant Development",
@@ -543,6 +543,7 @@
         "Design Operations Coordinator (reports to Essence M. Hunter)",
         "Media Operations Coordinator (reports to Amandes Pearsall IV)",
         "Finance Operations Coordinator (reports to Craig Russell)",
+        "Accounts Payable Coordinator (reports to Craig Russell)",
         "Procurement Operations Coordinator (reports to Maia Rylandlesesene)",
         "Contracts Operations Coordinator (reports to Roshonda Parker)",
         "Purchasing Operations Coordinator (reports to Latisha Cox)",

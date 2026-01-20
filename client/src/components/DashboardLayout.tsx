@@ -239,6 +239,7 @@ const menuCategories: MenuCategory[] = [
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },
           { icon: CreditCard, label: "Pricing", path: "/pricing", minRole: "admin" },
           { icon: Play, label: "Finance Simulator", path: "/finance-simulator", minRole: "staff" },
+          { icon: Clipboard, label: "Timekeeping", path: "/dept/finance/timekeeping", minRole: "staff" },
           { icon: Users, label: "Team", path: "/finance-team", minRole: "staff" },
           { icon: FolderOpen, label: "Documents", path: "/finance-documents", minRole: "staff" },
         ]

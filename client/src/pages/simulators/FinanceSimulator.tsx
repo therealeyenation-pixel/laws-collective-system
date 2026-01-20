@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,15 +10,18 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 import {
   DollarSign, TrendingUp, PieChart, ArrowRight, ArrowLeft,
   CheckCircle2, Circle, Award, Target, Wallet,
-  AlertTriangle, Lightbulb, BookOpen, RotateCcw
+  AlertTriangle, Lightbulb, BookOpen, RotateCcw, Loader2
 } from "lucide-react";
+
+const SIMULATOR_ID = "finance";
 
 const FINANCE_MODULES = [
   {
-    id: "budget-basics",
+    id: 0,
     title: "Business Budgeting Fundamentals",
     description: "Learn to create and manage a business budget that drives profitability.",
     duration: "15 min",
@@ -30,7 +33,7 @@ const FINANCE_MODULES = [
     ]
   },
   {
-    id: "cash-flow",
+    id: 1,
     title: "Cash Flow Management",
     description: "Master the art of managing money coming in and going out of your business.",
     duration: "20 min",
@@ -42,7 +45,7 @@ const FINANCE_MODULES = [
     ]
   },
   {
-    id: "tax-planning",
+    id: 2,
     title: "Tax Planning Strategies",
     description: "Learn legal strategies to minimize your tax burden and maximize deductions.",
     duration: "25 min",
@@ -54,7 +57,7 @@ const FINANCE_MODULES = [
     ]
   },
   {
-    id: "financial-statements",
+    id: 3,
     title: "Reading Financial Statements",
     description: "Understand income statements, balance sheets, and cash flow statements.",
     duration: "30 min",
@@ -66,7 +69,7 @@ const FINANCE_MODULES = [
     ]
   },
   {
-    id: "pricing-strategy",
+    id: 4,
     title: "Pricing Your Services",
     description: "Learn how to price your products and services for profitability.",
     duration: "20 min",
@@ -78,7 +81,7 @@ const FINANCE_MODULES = [
     ]
   },
   {
-    id: "financial-ratios",
+    id: 5,
     title: "Key Financial Ratios",
     description: "Master the ratios that reveal your business health.",
     duration: "20 min",
@@ -125,7 +128,7 @@ export default function FinanceSimulator() {
   const [currentModule, setCurrentModule] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [moduleProgress, setModuleProgress] = useState<Record<string, { completed: boolean; score: number }>>({});
+  const [moduleProgress, setModuleProgress] = useState<Record<number, { completed: boolean; score: number }>>({});
   const [showResults, setShowResults] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [totalTokensEarned, setTotalTokensEarned] = useState(0);
@@ -136,13 +139,51 @@ export default function FinanceSimulator() {
   const [accountsReceivable, setAccountsReceivable] = useState(5000);
   const [accountsPayable, setAccountsPayable] = useState(3000);
 
+  // Fetch saved progress from database
+  const { data: savedProgress, isLoading: progressLoading } = trpc.simulatorProgress.getProgress.useQuery(
+    { simulatorId: SIMULATOR_ID }
+  );
+
+  // Fetch token balance
+  const { data: tokenBalance } = trpc.simulatorProgress.getTokenBalance.useQuery();
+
+  // Fetch certificates
+  const { data: certificates } = trpc.simulatorProgress.getCertificates.useQuery();
+
+  // Save progress mutation
+  const saveProgressMutation = trpc.simulatorProgress.saveModuleProgress.useMutation();
+
+  // Issue certificate mutation
+  const issueCertificateMutation = trpc.simulatorProgress.checkAndIssueCertificate.useMutation();
+
+  // Load saved progress into state
+  useEffect(() => {
+    if (savedProgress) {
+      const progressMap: Record<number, { completed: boolean; score: number }> = {};
+      let totalTokens = 0;
+
+      savedProgress.forEach((p) => {
+        progressMap[p.moduleId] = {
+          completed: p.isCompleted,
+          score: p.questionsAnswered > 0 
+            ? Math.round((p.correctAnswers / p.questionsAnswered) * 100) 
+            : 0,
+        };
+        totalTokens += p.tokensEarned;
+      });
+
+      setModuleProgress(progressMap);
+      setTotalTokensEarned(totalTokens);
+    }
+  }, [savedProgress]);
+
   const module = FINANCE_MODULES[currentModule];
   const quiz = module?.quiz || [];
   const question = quiz[currentQuestion];
 
   const handleAnswerSelect = (index: number) => setSelectedAnswer(index);
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (selectedAnswer === null) { toast.error("Please select an answer"); return; }
     const isCorrect = selectedAnswer === question.correct;
     if (isCorrect) { setQuizScore(prev => prev + 1); toast.success("Correct!"); }
@@ -154,12 +195,41 @@ export default function FinanceSimulator() {
     } else {
       const finalScore = quizScore + (isCorrect ? 1 : 0);
       const percentage = Math.round((finalScore / quiz.length) * 100);
-      if (percentage >= 70) {
-        setTotalTokensEarned(prev => prev + module.tokensReward);
-        toast.success(`Module completed! You earned ${module.tokensReward} tokens!`);
+      
+      // Save progress to database
+      try {
+        const result = await saveProgressMutation.mutateAsync({
+          simulatorId: SIMULATOR_ID,
+          moduleId: module.id,
+          questionsAnswered: quiz.length,
+          correctAnswers: finalScore,
+          isCompleted: percentage >= 70,
+        });
+
+        if (result.tokensAwarded > 0) {
+          setTotalTokensEarned(prev => prev + result.tokensAwarded);
+          toast.success(`Module completed! You earned ${result.tokensAwarded} tokens!`);
+        }
+      } catch (error) {
+        console.error("Failed to save progress:", error);
       }
-      setModuleProgress(prev => ({ ...prev, [module.id]: { completed: true, score: percentage } }));
+
+      setModuleProgress(prev => ({ ...prev, [module.id]: { completed: percentage >= 70, score: percentage } }));
       setShowResults(true);
+
+      // Check if all modules completed for certificate
+      const completedCount = Object.values(moduleProgress).filter(m => m.completed).length + (percentage >= 70 ? 1 : 0);
+      if (completedCount >= FINANCE_MODULES.length) {
+        const hasCert = certificates?.some(c => c.simulatorId === SIMULATOR_ID);
+        if (!hasCert) {
+          try {
+            await issueCertificateMutation.mutateAsync({ simulatorId: SIMULATOR_ID });
+            toast.success("Congratulations! You've earned your Finance Simulator Certificate!");
+          } catch (error) {
+            console.error("Failed to issue certificate:", error);
+          }
+        }
+      }
     }
   };
 
@@ -180,6 +250,17 @@ export default function FinanceSimulator() {
   const cashFlowRatio = monthlyExpenses > 0 ? monthlyRevenue / monthlyExpenses : 0;
   const daysReceivable = monthlyRevenue > 0 ? Math.round((accountsReceivable / monthlyRevenue) * 30) : 0;
   const daysPayable = monthlyExpenses > 0 ? Math.round((accountsPayable / monthlyExpenses) * 30) : 0;
+  const hasCertificate = certificates?.some(c => c.simulatorId === SIMULATOR_ID);
+
+  if (progressLoading) {
+    return (
+      <DashboardLayout>
+        <div className="container py-6 flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -193,8 +274,16 @@ export default function FinanceSimulator() {
             <p className="text-muted-foreground">Master financial management for your business</p>
           </div>
           <div className="flex items-center gap-4">
+            {hasCertificate && (
+              <Badge className="bg-amber-500">
+                <Award className="w-4 h-4 mr-1" />Certified
+              </Badge>
+            )}
             <Badge variant="outline" className="text-emerald-600 border-emerald-300">
               <Award className="w-4 h-4 mr-1" />{totalTokensEarned} Tokens Earned
+            </Badge>
+            <Badge variant="outline" className="text-blue-600 border-blue-300">
+              <Wallet className="w-4 h-4 mr-1" />{tokenBalance?.totalTokens || 0} Total Balance
             </Badge>
             <Button variant="outline" asChild><Link href="/dept/finance"><ArrowLeft className="w-4 h-4 mr-2" />Back to Finance</Link></Button>
           </div>
@@ -267,8 +356,12 @@ export default function FinanceSimulator() {
                             ))}
                           </RadioGroup>
                         </div>
-                        <Button onClick={handleNextQuestion} className="w-full">
-                          {currentQuestion < quiz.length - 1 ? "Next Question" : "Complete Module"}<ArrowRight className="w-4 h-4 ml-2" />
+                        <Button onClick={handleNextQuestion} className="w-full" disabled={saveProgressMutation.isPending}>
+                          {saveProgressMutation.isPending ? (
+                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving...</>
+                          ) : (
+                            <>{currentQuestion < quiz.length - 1 ? "Next Question" : "Complete Module"}<ArrowRight className="w-4 h-4 ml-2" /></>
+                          )}
                         </Button>
                       </div>
                     ) : (

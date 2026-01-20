@@ -4924,3 +4924,32 @@
 - [x] Build functional IT Simulator (replace Coming Soon)
 - [x] Build functional Platform Simulator (replace Coming Soon)
 - [x] Build functional Grants Simulator (replace Coming Soon)
+
+
+## Phase 80: Simulator Progress Persistence & Improvements
+- [x] Add database schema for simulator_progress table
+- [x] Add database schema for user_tokens table
+- [x] Add database schema for simulator_certificates table
+- [x] Create simulator progress router with save/load endpoints
+- [x] Update simulator components to persist progress to database (Finance Simulator updated)
+- [x] Implement token earning persistence
+- [x] Implement certificate generation for completed simulators
+- [ ] Add R&D Simulator to complete department coverage
+- [ ] Test all persistence features
+
+## Phase 81: 501(c)(3) & Timekeeping Dashboard
+- [x] Add 501(c)(3) nonprofit entity to Business Formation Training page
+- [x] Design database schema for timekeeping with charge codes
+- [x] Create charge_codes table (linked to funding sources and projects)
+- [x] Create time_entries table (employee hours by charge code)
+- [x] Create timesheets table (weekly/bi-weekly submission)
+- [x] Create timesheet_approvals table (manager approval workflow)
+- [x] Create timekeeping backend router with CRUD operations
+- [x] Build Timekeeping Dashboard UI
+- [x] Implement time entry form with charge code selection
+- [x] Add timesheet submission and approval workflow
+- [x] Build reports by charge code, project, funding source, and date range
+- [x] Add budget tracking (actual vs. budgeted hours per charge code)
+- [x] Test all timekeeping features - 22 tests passing
+
+- [x] Add Accounts Payable position under Finance department

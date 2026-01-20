@@ -10541,3 +10541,340 @@ export const purchaseRequestComments = mysqlTable("purchase_request_comments", {
 
 export type PurchaseRequestComment = typeof purchaseRequestComments.$inferSelect;
 export type InsertPurchaseRequestComment = typeof purchaseRequestComments.$inferInsert;
+
+
+/**
+ * Department Simulator Progress - Track user progress through department training simulators
+ */
+export const departmentSimulatorProgress = mysqlTable("department_simulator_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  simulatorId: varchar("simulatorId", { length: 50 }).notNull(), // e.g., "finance", "hr", "legal"
+  moduleId: int("moduleId").notNull(), // Which module (0-5)
+  questionsAnswered: int("questionsAnswered").default(0).notNull(),
+  correctAnswers: int("correctAnswers").default(0).notNull(),
+  isCompleted: boolean("isCompleted").default(false).notNull(),
+  tokensEarned: int("tokensEarned").default(0).notNull(),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DepartmentSimulatorProgress = typeof departmentSimulatorProgress.$inferSelect;
+export type InsertDepartmentSimulatorProgress = typeof departmentSimulatorProgress.$inferInsert;
+
+/**
+ * User Token Balance - Track total tokens earned across all simulators
+ */
+export const userTokenBalance = mysqlTable("user_token_balance", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  totalTokens: int("totalTokens").default(0).notNull(),
+  lifetimeTokensEarned: int("lifetimeTokensEarned").default(0).notNull(),
+  tokensSpent: int("tokensSpent").default(0).notNull(),
+  lastEarnedAt: timestamp("lastEarnedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserTokenBalance = typeof userTokenBalance.$inferSelect;
+export type InsertUserTokenBalance = typeof userTokenBalance.$inferInsert;
+
+/**
+ * Token Transactions - Log all token earning and spending events
+ */
+export const tokenTransactionLog = mysqlTable("token_transaction_log", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  amount: int("amount").notNull(), // Positive for earned, negative for spent
+  transactionType: mysqlEnum("transactionType", ["earned", "spent", "bonus", "adjustment"]).notNull(),
+  source: varchar("source", { length: 100 }).notNull(), // e.g., "finance_simulator_module_1"
+  description: text("description"),
+  balanceAfter: int("balanceAfter").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TokenTransactionLog = typeof tokenTransactionLog.$inferSelect;
+export type InsertTokenTransactionLog = typeof tokenTransactionLog.$inferInsert;
+
+/**
+ * Simulator Certificates - Certificates issued upon completing all modules in a simulator
+ */
+export const simulatorCertificates = mysqlTable("simulator_certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  simulatorId: varchar("simulatorId", { length: 50 }).notNull(),
+  simulatorName: varchar("simulatorName", { length: 255 }).notNull(),
+  totalModulesCompleted: int("totalModulesCompleted").notNull(),
+  totalTokensEarned: int("totalTokensEarned").notNull(),
+  averageScore: decimal("averageScore", { precision: 5, scale: 2 }).notNull(),
+  certificateHash: varchar("certificateHash", { length: 64 }).notNull().unique(),
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  verificationUrl: text("verificationUrl"),
+});
+
+export type SimulatorCertificate = typeof simulatorCertificates.$inferSelect;
+export type InsertSimulatorCertificate = typeof simulatorCertificates.$inferInsert;
+
+
+// ==========================================
+// TIMEKEEPING & CHARGE CODE SYSTEM
+// ==========================================
+
+/**
+ * Funding Sources - Track different funding streams (grants, contracts, internal)
+ */
+export const fundingSources = mysqlTable("funding_sources", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  code: varchar("code", { length: 50 }).notNull().unique(), // e.g., "GRANT-2024-001"
+  type: mysqlEnum("type", ["grant", "contract", "internal", "donation", "revenue"]).notNull(),
+  description: text("description"),
+  funderName: varchar("funderName", { length: 255 }),
+  totalBudget: decimal("totalBudget", { precision: 15, scale: 2 }),
+  laborBudget: decimal("laborBudget", { precision: 15, scale: 2 }), // Budget allocated for labor
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  status: mysqlEnum("status", ["active", "pending", "closed", "expired"]).default("active").notNull(),
+  requiresTimeTracking: boolean("requiresTimeTracking").default(true).notNull(),
+  reportingFrequency: mysqlEnum("reportingFrequency", ["weekly", "biweekly", "monthly", "quarterly", "annually"]).default("monthly"),
+  entityId: int("entityId"), // Which business entity this funding is for
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FundingSource = typeof fundingSources.$inferSelect;
+export type InsertFundingSource = typeof fundingSources.$inferInsert;
+
+/**
+ * Charge Codes - Billable codes tied to funding sources and projects
+ */
+export const chargeCodes = mysqlTable("charge_codes", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(), // e.g., "PROJ-001-LABOR"
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  fundingSourceId: int("fundingSourceId"), // Links to funding source
+  projectId: int("projectId"), // Links to project if applicable
+  departmentId: int("departmentId"), // Which department owns this code
+  entityId: int("entityId"), // Which business entity
+  budgetedHours: decimal("budgetedHours", { precision: 10, scale: 2 }), // Total hours budgeted
+  hourlyRate: decimal("hourlyRate", { precision: 10, scale: 2 }), // Default billing rate
+  isActive: boolean("isActive").default(true).notNull(),
+  isBillable: boolean("isBillable").default(true).notNull(),
+  requiresApproval: boolean("requiresApproval").default(true).notNull(),
+  allowOvertime: boolean("allowOvertime").default(false).notNull(),
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ChargeCode = typeof chargeCodes.$inferSelect;
+export type InsertChargeCode = typeof chargeCodes.$inferInsert;
+
+/**
+ * Workers - Unified table for both employees and contractors who track time
+ */
+export const timekeepingWorkers = mysqlTable("timekeeping_workers", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"), // Links to users table if they have system access
+  employeeId: int("employeeId"), // Links to employees table if W-2
+  contractorId: int("contractorId"), // Links to contractor record if 1099
+  workerType: mysqlEnum("workerType", ["employee", "contractor", "volunteer"]).notNull(),
+  firstName: varchar("firstName", { length: 100 }).notNull(),
+  lastName: varchar("lastName", { length: 100 }).notNull(),
+  email: varchar("email", { length: 320 }),
+  departmentId: int("departmentId"),
+  entityId: int("entityId"), // Primary entity they work for
+  supervisorId: int("supervisorId"), // Who approves their timesheets
+  defaultChargeCodeId: int("defaultChargeCodeId"), // Default charge code
+  hourlyRate: decimal("hourlyRate", { precision: 10, scale: 2 }), // For contractors
+  standardHoursPerWeek: decimal("standardHoursPerWeek", { precision: 5, scale: 2 }).default("40.00"),
+  overtimeEligible: boolean("overtimeEligible").default(true),
+  status: mysqlEnum("status", ["active", "inactive", "terminated"]).default("active").notNull(),
+  hireDate: timestamp("hireDate"),
+  terminationDate: timestamp("terminationDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TimekeepingWorker = typeof timekeepingWorkers.$inferSelect;
+export type InsertTimekeepingWorker = typeof timekeepingWorkers.$inferInsert;
+
+/**
+ * Worker Charge Code Assignments - Which charge codes a worker can bill to
+ */
+export const workerChargeCodeAssignments = mysqlTable("worker_charge_code_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  workerId: int("workerId").notNull(),
+  chargeCodeId: int("chargeCodeId").notNull(),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+  assignedBy: int("assignedBy"),
+  maxHoursPerWeek: decimal("maxHoursPerWeek", { precision: 5, scale: 2 }), // Optional limit
+  effectiveFrom: timestamp("effectiveFrom"),
+  effectiveTo: timestamp("effectiveTo"),
+  isActive: boolean("isActive").default(true).notNull(),
+});
+
+export type WorkerChargeCodeAssignment = typeof workerChargeCodeAssignments.$inferSelect;
+export type InsertWorkerChargeCodeAssignment = typeof workerChargeCodeAssignments.$inferInsert;
+
+/**
+ * Time Entries - Individual time records
+ */
+export const timeEntries = mysqlTable("time_entries", {
+  id: int("id").autoincrement().primaryKey(),
+  workerId: int("workerId").notNull(),
+  chargeCodeId: int("chargeCodeId").notNull(),
+  timesheetId: int("timesheetId"), // Links to parent timesheet
+  entryDate: timestamp("entryDate").notNull(), // The date the work was performed
+  hoursWorked: decimal("hoursWorked", { precision: 5, scale: 2 }).notNull(),
+  overtimeHours: decimal("overtimeHours", { precision: 5, scale: 2 }).default("0.00"),
+  description: text("description"), // What work was done
+  taskReference: varchar("taskReference", { length: 100 }), // Optional task/ticket reference
+  projectId: int("projectId"), // Optional project link
+  isBillable: boolean("isBillable").default(true).notNull(),
+  billingRate: decimal("billingRate", { precision: 10, scale: 2 }), // Rate at time of entry
+  status: mysqlEnum("status", ["draft", "submitted", "approved", "rejected", "invoiced"]).default("draft").notNull(),
+  rejectionReason: text("rejectionReason"),
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  clockInTime: timestamp("clockInTime"), // Optional clock in/out
+  clockOutTime: timestamp("clockOutTime"),
+  breakMinutes: int("breakMinutes").default(0),
+  location: varchar("location", { length: 255 }), // Where work was performed
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TimeEntry = typeof timeEntries.$inferSelect;
+export type InsertTimeEntry = typeof timeEntries.$inferInsert;
+
+/**
+ * Timesheets - Weekly/bi-weekly time submission
+ */
+export const timesheets = mysqlTable("timesheets", {
+  id: int("id").autoincrement().primaryKey(),
+  workerId: int("workerId").notNull(),
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd").notNull(),
+  periodType: mysqlEnum("periodType", ["weekly", "biweekly", "semimonthly", "monthly"]).default("biweekly").notNull(),
+  totalRegularHours: decimal("totalRegularHours", { precision: 6, scale: 2 }).default("0.00"),
+  totalOvertimeHours: decimal("totalOvertimeHours", { precision: 6, scale: 2 }).default("0.00"),
+  totalBillableHours: decimal("totalBillableHours", { precision: 6, scale: 2 }).default("0.00"),
+  totalNonBillableHours: decimal("totalNonBillableHours", { precision: 6, scale: 2 }).default("0.00"),
+  status: mysqlEnum("status", ["draft", "submitted", "pending_approval", "approved", "rejected", "processed"]).default("draft").notNull(),
+  submittedAt: timestamp("submittedAt"),
+  submittedBy: int("submittedBy"), // Usually the worker, but could be admin
+  workerSignature: text("workerSignature"), // Electronic signature
+  workerSignedAt: timestamp("workerSignedAt"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Timesheet = typeof timesheets.$inferSelect;
+export type InsertTimesheet = typeof timesheets.$inferInsert;
+
+/**
+ * Timesheet Approvals - Multi-level approval workflow
+ */
+export const timesheetApprovals = mysqlTable("timesheet_approvals", {
+  id: int("id").autoincrement().primaryKey(),
+  timesheetId: int("timesheetId").notNull(),
+  approverId: int("approverId").notNull(), // User who approved/rejected
+  approverRole: mysqlEnum("approverRole", ["supervisor", "department_head", "finance", "admin"]).notNull(),
+  approvalLevel: int("approvalLevel").default(1).notNull(), // For multi-level approval
+  action: mysqlEnum("action", ["approved", "rejected", "returned_for_revision"]).notNull(),
+  comments: text("comments"),
+  approverSignature: text("approverSignature"),
+  actionAt: timestamp("actionAt").defaultNow().notNull(),
+});
+
+export type TimesheetApproval = typeof timesheetApprovals.$inferSelect;
+export type InsertTimesheetApproval = typeof timesheetApprovals.$inferInsert;
+
+/**
+ * Charge Code Budgets - Track budget consumption by period
+ */
+export const chargeCodeBudgets = mysqlTable("charge_code_budgets", {
+  id: int("id").autoincrement().primaryKey(),
+  chargeCodeId: int("chargeCodeId").notNull(),
+  fiscalYear: int("fiscalYear").notNull(),
+  fiscalPeriod: int("fiscalPeriod"), // Month or quarter
+  budgetedHours: decimal("budgetedHours", { precision: 10, scale: 2 }).notNull(),
+  budgetedAmount: decimal("budgetedAmount", { precision: 15, scale: 2 }).notNull(),
+  actualHours: decimal("actualHours", { precision: 10, scale: 2 }).default("0.00"),
+  actualAmount: decimal("actualAmount", { precision: 15, scale: 2 }).default("0.00"),
+  variance: decimal("variance", { precision: 15, scale: 2 }).default("0.00"),
+  lastUpdated: timestamp("lastUpdated").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ChargeCodeBudget = typeof chargeCodeBudgets.$inferSelect;
+export type InsertChargeCodeBudget = typeof chargeCodeBudgets.$inferInsert;
+
+/**
+ * Time Off Requests - PTO, sick leave, etc.
+ */
+export const timeOffRequests = mysqlTable("time_off_requests", {
+  id: int("id").autoincrement().primaryKey(),
+  workerId: int("workerId").notNull(),
+  requestType: mysqlEnum("requestType", ["pto", "sick", "personal", "bereavement", "jury_duty", "military", "unpaid", "other"]).notNull(),
+  startDate: timestamp("startDate").notNull(),
+  endDate: timestamp("endDate").notNull(),
+  totalHours: decimal("totalHours", { precision: 6, scale: 2 }).notNull(),
+  reason: text("reason"),
+  status: mysqlEnum("status", ["pending", "approved", "rejected", "cancelled"]).default("pending").notNull(),
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  rejectionReason: text("rejectionReason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TimeOffRequest = typeof timeOffRequests.$inferSelect;
+export type InsertTimeOffRequest = typeof timeOffRequests.$inferInsert;
+
+/**
+ * Contractor Invoices - Link time entries to contractor invoices
+ */
+export const contractorInvoices = mysqlTable("contractor_invoices", {
+  id: int("id").autoincrement().primaryKey(),
+  workerId: int("workerId").notNull(), // Contractor
+  invoiceNumber: varchar("invoiceNumber", { length: 50 }).notNull(),
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd").notNull(),
+  totalHours: decimal("totalHours", { precision: 8, scale: 2 }).notNull(),
+  totalAmount: decimal("totalAmount", { precision: 15, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["draft", "submitted", "under_review", "approved", "paid", "disputed"]).default("draft").notNull(),
+  submittedAt: timestamp("submittedAt"),
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  paidAt: timestamp("paidAt"),
+  paymentReference: varchar("paymentReference", { length: 100 }),
+  notes: text("notes"),
+  attachmentUrl: text("attachmentUrl"), // Uploaded invoice document
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContractorInvoice = typeof contractorInvoices.$inferSelect;
+export type InsertContractorInvoice = typeof contractorInvoices.$inferInsert;
+
+/**
+ * Invoice Line Items - Break down invoice by charge code
+ */
+export const invoiceLineItems = mysqlTable("invoice_line_items", {
+  id: int("id").autoincrement().primaryKey(),
+  invoiceId: int("invoiceId").notNull(),
+  chargeCodeId: int("chargeCodeId").notNull(),
+  description: text("description"),
+  hours: decimal("hours", { precision: 6, scale: 2 }).notNull(),
+  rate: decimal("rate", { precision: 10, scale: 2 }).notNull(),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+});
+
+export type InvoiceLineItem = typeof invoiceLineItems.$inferSelect;
+export type InsertInvoiceLineItem = typeof invoiceLineItems.$inferInsert;

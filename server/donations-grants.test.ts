@@ -114,8 +114,8 @@ describe("Real Estate Positions", () => {
     const content = await fs.readFile(orgStructurePath, "utf-8");
     
     // Check for Georgia and North Carolina in the content
-    expect(content).toContain("Real Estate Manager (Georgia)");
-    expect(content).toContain("Real Estate Manager (North Carolina)");
+    expect(content).toContain("Real Estate Manager GA");
+    expect(content).toContain("Real Estate Manager NC");
     expect(content).toContain("Georgia Real Estate Commission");
     expect(content).toContain("North Carolina Real Estate Commission");
   });

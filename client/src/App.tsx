@@ -84,6 +84,7 @@ import GameCenter from "./pages/GameCenter";
 import SoftwareLicenses from "./pages/SoftwareLicenses";
 import PurchaseRequests from "./pages/PurchaseRequests";
 import TaxModule from "./pages/TaxModule";
+import TimekeepingDashboard from "./pages/TimekeepingDashboard";
 import HealthSimulator from "./pages/simulators/HealthSimulator";
 import EducationSimulator from "./pages/simulators/EducationSimulator";
 import DesignSimulator from "./pages/simulators/DesignSimulator";
@@ -300,6 +301,7 @@ function Router() {
       <Route path="/dept/media">{() => <ProtectedRoute component={MediaDashboard} minRole="staff" />}</Route>
       <Route path="/dept/finance">{() => <ProtectedRoute component={FinanceDashboard} minRole="staff" />}</Route>
       <Route path="/dept/finance/tax">{() => <ProtectedRoute component={TaxModule} minRole="staff" />}</Route>
+      <Route path="/dept/finance/timekeeping">{() => <ProtectedRoute component={TimekeepingDashboard} minRole="staff" />}</Route>
       <Route path="/dept/procurement">{() => <ProtectedRoute component={ProcurementDashboard} minRole="staff" />}</Route>
       <Route path="/dept/contracts">{() => <ProtectedRoute component={ContractsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/purchasing">{() => <ProtectedRoute component={PurchasingDashboard} minRole="staff" />}</Route>
