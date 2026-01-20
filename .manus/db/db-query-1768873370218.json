@@ -1,0 +1,40 @@
+{
+  "query": "SHOW CREATE TABLE signatures;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SHOW CREATE TABLE signatures;",
+  "rows": [
+    {
+      "Table": "signatures",
+      "Create Table": "CREATE TABLE `signatures` ("
+    }
+  ],
+  "messages": [
+    "  `id` int(11) NOT NULL AUTO_INCREMENT,",
+    "  `signerId` int(11) NOT NULL,",
+    "  `signatureRequestId` int(11) NOT NULL,",
+    "  `signatureType` enum('drawn','typed','uploaded','initials') NOT NULL,",
+    "  `signatureData` text DEFAULT NULL,",
+    "  `signatureText` varchar(255) DEFAULT NULL,",
+    "  `signatureImageUrl` text DEFAULT NULL,",
+    "  `pageNumber` int(11) DEFAULT '1',",
+    "  `positionX` decimal(10,2) DEFAULT NULL,",
+    "  `positionY` decimal(10,2) DEFAULT NULL,",
+    "  `width` decimal(10,2) DEFAULT NULL,",
+    "  `height` decimal(10,2) DEFAULT NULL,",
+    "  `legalAcknowledgment` tinyint(1) DEFAULT '0',",
+    "  `acknowledgmentText` text DEFAULT NULL,",
+    "  `capturedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,",
+    "  `capturedIp` varchar(45) NOT NULL,",
+    "  `capturedUserAgent` text DEFAULT NULL,",
+    "  `capturedTimezone` varchar(100) DEFAULT NULL,",
+    "  `signatureHash` varchar(128) DEFAULT NULL,",
+    "  `verified` tinyint(1) DEFAULT '0',",
+    "  `verifiedAt` timestamp NULL DEFAULT NULL,",
+    "  `verifiedBy` int(11) DEFAULT NULL,",
+    "  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,",
+    "  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */",
+    ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin"
+  ],
+  "stdout": "Table\tCreate Table\nsignatures\tCREATE TABLE `signatures` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `signerId` int(11) NOT NULL,\n  `signatureRequestId` int(11) NOT NULL,\n  `signatureType` enum('drawn','typed','uploaded','initials') NOT NULL,\n  `signatureData` text DEFAULT NULL,\n  `signatureText` varchar(255) DEFAULT NULL,\n  `signatureImageUrl` text DEFAULT NULL,\n  `pageNumber` int(11) DEFAULT '1',\n  `positionX` decimal(10,2) DEFAULT NULL,\n  `positionY` decimal(10,2) DEFAULT NULL,\n  `width` decimal(10,2) DEFAULT NULL,\n  `height` decimal(10,2) DEFAULT NULL,\n  `legalAcknowledgment` tinyint(1) DEFAULT '0',\n  `acknowledgmentText` text DEFAULT NULL,\n  `capturedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `capturedIp` varchar(45) NOT NULL,\n  `capturedUserAgent` text DEFAULT NULL,\n  `capturedTimezone` varchar(100) DEFAULT NULL,\n  `signatureHash` varchar(128) DEFAULT NULL,\n  `verified` tinyint(1) DEFAULT '0',\n  `verifiedAt` timestamp NULL DEFAULT NULL,\n  `verifiedBy` int(11) DEFAULT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin\n",
+  "stderr": "",
+  "execution_time_ms": 82
+}

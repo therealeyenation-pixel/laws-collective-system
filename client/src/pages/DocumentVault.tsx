@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import EntityDocuments from "../components/EntityDocuments";
+import { SignatureCapture } from "../components/SignatureCapture";
 import { trpc } from "../lib/trpc";
 import { 
   FileText, 
@@ -17,7 +18,9 @@ import {
   Filter,
   X,
   Save,
-  ChevronLeft
+  ChevronLeft,
+  PenTool,
+  CheckCircle
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -72,6 +75,7 @@ export default function DocumentVault() {
   const [viewingDocument, setViewingDocument] = useState<Document | null>(null);
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
   const [editContent, setEditContent] = useState("");
+  const [signingDocument, setSigningDocument] = useState<Document | null>(null);
   const [newDocument, setNewDocument] = useState({
     title: "",
     description: "",
@@ -126,6 +130,18 @@ export default function DocumentVault() {
     },
   });
 
+  const signDocumentMutation = trpc.eSignature.signVaultDocument.useMutation({
+    onSuccess: () => {
+      setSigningDocument(null);
+      setViewingDocument(null);
+      refetchDocs();
+      toast.success("Document signed successfully! Signature recorded with timestamp.");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to sign document");
+    },
+  });
+
   const seedDocumentsMutation = trpc.documentVault.seedDocuments.useMutation({
     onSuccess: (data) => {
       if (data.count > 0) {
@@ -171,7 +187,18 @@ export default function DocumentVault() {
   };
 
   const handleSignDocument = (doc: Document) => {
-    toast.info("Document signing feature coming soon");
+    setSigningDocument(doc);
+  };
+
+  const handleSignatureComplete = (signatureData: string, signatureType: "typed" | "drawn" | "uploaded") => {
+    if (!signingDocument) return;
+    signDocumentMutation.mutate({
+      documentId: signingDocument.id,
+      signatureType,
+      signatureData,
+      signerName: "Trust Authority", // This would come from user context
+      signerTitle: "Trustee",
+    });
   };
 
   const handleDownloadDocument = (doc: Document) => {
@@ -208,6 +235,76 @@ export default function DocumentVault() {
       deleteDocumentMutation.mutate({ documentId: doc.id });
     }
   };
+
+  // Document Signing Modal
+  if (signingDocument) {
+    return (
+      <DashboardLayout>
+        <div className="p-4 md:p-6 min-h-screen bg-gray-50">
+          <div className="max-w-2xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <button
+                onClick={() => setSigningDocument(null)}
+                className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <div className="flex-1">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900">Sign Document</h1>
+                <p className="text-sm text-gray-600">{signingDocument.title}</p>
+              </div>
+            </div>
+
+            {/* Document Preview */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-purple-100 rounded-lg">
+                  <PenTool className="w-6 h-6 text-purple-700" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{signingDocument.title}</h3>
+                  <p className="text-sm text-gray-600 mt-1">{signingDocument.description}</p>
+                  <div className="flex gap-2 mt-3">
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${documentTypeColors[signingDocument.documentType as DocumentType]}`}>
+                      {documentTypeLabels[signingDocument.documentType as DocumentType]}
+                    </span>
+                    <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                      Version {signingDocument.version}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Legal Notice */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+              <p className="text-sm text-amber-800">
+                <strong>Legal Notice:</strong> By signing this document electronically, you agree that your electronic signature 
+                is the legal equivalent of your manual signature. This signature will be timestamped and recorded in the 
+                LuvLedger for permanent verification.
+              </p>
+            </div>
+
+            {/* Signature Capture */}
+            <SignatureCapture
+              onSign={handleSignatureComplete}
+              onCancel={() => setSigningDocument(null)}
+              signerName="Trust Authority"
+              signerTitle="Trustee"
+            />
+
+            {signDocumentMutation.isPending && (
+              <div className="mt-4 flex items-center justify-center gap-2 text-gray-600">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-700"></div>
+                <span>Recording signature...</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   // Document Viewer Modal
   if (viewingDocument) {

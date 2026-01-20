@@ -1,0 +1,18 @@
+{
+  "query": "SELECT s.id, s.signatureText, s.signatureType, s.createdAt, sr.documentId, sr.documentTitle FROM signatures s JOIN signature_requests sr ON s.signatureRequestId = sr.id ORDER BY s.id DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT s.id, s.signatureText, s.signatureType, s.createdAt, sr.documentId, sr.documentTitle FROM signatures s JOIN signature_requests sr ON s.signatureRequestId = sr.id ORDER BY s.id DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "signatureText": "Trust Authority",
+      "signatureType": "typed",
+      "createdAt": "2026-01-20 01:44:43",
+      "documentId": "90001",
+      "documentTitle": "Vault Document Signature"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tsignatureText\tsignatureType\tcreatedAt\tdocumentId\tdocumentTitle\n1\tTrust Authority\ttyped\t2026-01-20 01:44:43\t90001\tVault Document Signature\n",
+  "stderr": "",
+  "execution_time_ms": 75
+}

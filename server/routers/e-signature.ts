@@ -209,51 +209,60 @@ export const eSignatureRouter = router({
       signerTitle: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
+      console.log('[signVaultDocument] Starting with input:', JSON.stringify({ ...input, signatureData: input.signatureData.substring(0, 50) + '...' }));
       const db = await getDb();
       if (!db) throw new Error("Database not available");
+      console.log('[signVaultDocument] Database connected');
       
-      // Create signature request for vault document
-      const [request] = await db.execute(sql`
-        INSERT INTO signature_requests (documentId, documentType, documentTitle, requestedBy, status, createdAt, updatedAt)
-        VALUES (${input.documentId}, 'vault_document', 'Vault Document Signature', ${ctx.user.id}, 'pending', NOW(), NOW())
-      `);
+      try {
+        // Create signature request for vault document
+        console.log('[signVaultDocument] Creating signature request...');
+        const [request] = await db.execute(sql`
+          INSERT INTO signature_requests (documentId, documentType, documentTitle, requestedBy, status, createdAt, updatedAt)
+          VALUES (${input.documentId}, 'trust_document', 'Vault Document Signature', ${ctx.user.id}, 'pending', NOW(), NOW())
+        `);
+        console.log('[signVaultDocument] Signature request created');
 
-      const requestId = (request as any).insertId;
+        const requestId = (request as any).insertId;
+        console.log('[signVaultDocument] Request ID:', requestId);
 
-      // Create signature record
-      const [sig] = await db.execute(sql`
-        INSERT INTO signatures (requestId, signerId, signerName, signerTitle, status, createdAt)
-        VALUES (${requestId}, ${ctx.user.id}, ${input.signerName}, ${input.signerTitle || null}, 'pending', NOW())
-      `);
+        // Create signature record with actual signature data
+        console.log('[signVaultDocument] Creating signature record...');
+        const ipAddress = "127.0.0.1";
+        const [sig] = await db.execute(sql`
+          INSERT INTO signatures (signatureRequestId, signerId, signatureType, signatureText, signatureData, capturedIp, capturedUserAgent, legalAcknowledgment)
+          VALUES (${requestId}, ${ctx.user.id}, ${input.signatureType}, ${input.signerName}, ${input.signatureData || null}, ${ipAddress}, ${'Manus System'}, 1)
+        `);
+        console.log('[signVaultDocument] Signature record created');
 
-      const signatureId = (sig as any).insertId;
+        const signatureId = (sig as any).insertId;
+        console.log('[signVaultDocument] Signature ID:', signatureId);
 
-      // Sign immediately
-      const ipAddress = "127.0.0.1";
-      await db.execute(sql`
-        UPDATE signatures 
-        SET signatureType = ${input.signatureType}, 
-            signatureData = ${input.signatureData},
-            signedAt = NOW(),
-            ipAddress = ${ipAddress},
-            status = 'signed'
-        WHERE id = ${signatureId}
-      `);
+        // Mark request as completed
+        console.log('[signVaultDocument] Marking request as completed...');
+        await db.execute(sql`
+          UPDATE signature_requests 
+          SET status = 'completed', completedAt = NOW(), updatedAt = NOW()
+          WHERE id = ${requestId}
+        `);
+        console.log('[signVaultDocument] Request completed');
 
-      // Mark request as completed
-      await db.execute(sql`
-        UPDATE signature_requests 
-        SET status = 'completed', completedAt = NOW(), updatedAt = NOW()
-        WHERE id = ${requestId}
-      `);
+        // Log access - wrapped in try/catch to not fail the main operation
+        try {
+          await db.execute(sql`
+            INSERT INTO vault_access_logs (vault_id, document_id, user_id, action, created_at)
+            VALUES (1, ${input.documentId}, ${ctx.user.id}, 'sign', NOW())
+          `);
+        } catch (logError) {
+          console.warn('Failed to log vault access:', logError);
+        }
 
-      // Log access
-      await db.execute(sql`
-        INSERT INTO vault_access_logs (vault_id, document_id, user_id, action, created_at)
-        VALUES (1, ${input.documentId}, ${ctx.user.id}, 'sign', NOW())
-      `);
-
-      return { success: true, signatureId, message: "Document signed successfully" };
+        console.log('[signVaultDocument] Success!');
+        return { success: true, signatureId, message: "Document signed successfully" };
+      } catch (error) {
+        console.error('[signVaultDocument] Error:', error);
+        throw error;
+      }
     }),
 
   // Get vault document signatures
