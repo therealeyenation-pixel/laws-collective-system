@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO secure_documents (\n  ownerId,\n  entityId,\n  folderId,\n  documentType,\n  title,\n  description,\n  fileName,\n  fileUrl,\n  fileSize,\n  mimeType,\n  content,\n  version,\n  status,\n  isTemplate,\n  accessLevel,\n  blockchainHash\n) VALUES (\n  1,\n  1,\n  NULL,\n  'other',\n  'What Is The LuvOnPurpose System? - Plain Language Explanation',\n  'A simple, easy-to-understand explanation of the LuvOnPurpose Autonomous Wealth System for family members, partners, and anyone who wants to understand what we have built.',\n  'What_Is_The_LuvOnPurpose_System_Plain_Language.md',\n  '/documents/trust/What_Is_The_LuvOnPurpose_System_Plain_Language.md',\n  12000,\n  'text/markdown',\n  NULL,\n  1,\n  'final',\n  0,\n  'owner_only',\n  NULL\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO secure_documents (\n  ownerId,\n  entityId,\n  folderId,\n  documentType,\n  title,\n  description,\n  fileName,\n  fileUrl,\n  fileSize,\n  mimeType,\n  content,\n  version,\n  status,\n  isTemplate,\n  accessLevel,\n  blockchainHash\n) VALUES (\n  1,\n  1,\n  NULL,\n  'other',\n  'What Is The LuvOnPurpose System? - Plain Language Explanation',\n  'A simple, easy-to-understand explanation of the LuvOnPurpose Autonomous Wealth System for family members, partners, and anyone who wants to understand what we have built.',\n  'What_Is_The_LuvOnPurpose_System_Plain_Language.md',\n  '/documents/trust/What_Is_The_LuvOnPurpose_System_Plain_Language.md',\n  12000,\n  'text/markdown',\n  NULL,\n  1,\n  'final',\n  0,\n  'owner_only',\n  NULL\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 80
-}
