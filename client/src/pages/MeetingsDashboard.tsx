@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { useSSE, useTypingIndicator, ChatEvent } from "@/hooks/useSSE";
 import { 
   Video, 
   VideoOff, 
@@ -68,7 +69,60 @@ export default function MeetingsDashboard() {
   const [activeChatId, setActiveChatId] = useState<number | null>(null);
   const [messageInput, setMessageInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [typingUsers, setTypingUsers] = useState<Map<number, { userId: number; userName: string }>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // SSE event handlers
+  const handleNewMessage = useCallback((event: ChatEvent) => {
+    // If the message is for the active chat, refetch messages
+    if (event.chatId === activeChatId) {
+      refetchActiveChat();
+    }
+    // Also refetch chat list to update last message preview
+    refetchChats();
+  }, [activeChatId, refetchActiveChat, refetchChats]);
+
+  const handleTyping = useCallback((event: ChatEvent) => {
+    const { userId, userName, isTyping, chatId } = event.data as {
+      userId: number;
+      userName: string;
+      isTyping: boolean;
+      chatId?: number;
+    };
+    
+    if (event.chatId === activeChatId) {
+      setTypingUsers(prev => {
+        const next = new Map(prev);
+        if (isTyping) {
+          next.set(userId, { userId, userName });
+        } else {
+          next.delete(userId);
+        }
+        return next;
+      });
+    }
+  }, [activeChatId]);
+
+  const handlePresence = useCallback((event: ChatEvent) => {
+    // Could update online status indicators
+    refetchChats();
+  }, [refetchChats]);
+
+  // Connect to SSE
+  const { isConnected, connectionError } = useSSE({
+    onMessage: handleNewMessage,
+    onTyping: handleTyping,
+    onPresence: handlePresence,
+    enabled: activeTab === "chat",
+  });
+
+  // Typing indicator
+  const sendTypingMutation = trpc.chat.sendTypingIndicator.useMutation();
+  const sendTyping = useCallback((chatId: number, isTyping: boolean) => {
+    sendTypingMutation.mutate({ chatId, isTyping });
+  }, [sendTypingMutation]);
+  
+  const { startTyping, stopTyping } = useTypingIndicator(activeChatId, sendTyping);
 
   // Form state for new meeting
   const [newMeeting, setNewMeeting] = useState({
@@ -751,6 +805,27 @@ export default function MeetingsDashboard() {
                         </ScrollArea>
                       </CardContent>
                       <div className="p-4 border-t">
+                        {/* Typing indicator */}
+                        {typingUsers.size > 0 && (
+                          <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
+                            <span className="flex gap-0.5">
+                              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                              <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                            </span>
+                            <span>
+                              {Array.from(typingUsers.values()).map(u => u.userName).join(', ')}
+                              {typingUsers.size === 1 ? ' is' : ' are'} typing...
+                            </span>
+                          </div>
+                        )}
+                        {/* Connection status */}
+                        {connectionError && (
+                          <div className="text-xs text-amber-600 mb-2 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {connectionError}
+                          </div>
+                        )}
                         <div className="flex items-center gap-2">
                           <Button variant="ghost" size="sm">
                             <Paperclip className="w-4 h-4" />
@@ -758,13 +833,18 @@ export default function MeetingsDashboard() {
                           <Input
                             placeholder="Type a message..."
                             value={messageInput}
-                            onChange={(e) => setMessageInput(e.target.value)}
+                            onChange={(e) => {
+                              setMessageInput(e.target.value);
+                              if (e.target.value) startTyping();
+                            }}
                             onKeyDown={(e) => {
                               if (e.key === "Enter" && !e.shiftKey) {
                                 e.preventDefault();
+                                stopTyping();
                                 handleSendMessage();
                               }
                             }}
+                            onBlur={stopTyping}
                           />
                           <Button variant="ghost" size="sm">
                             <Smile className="w-4 h-4" />

@@ -11,6 +11,7 @@ import {
 } from "../../drizzle/schema";
 import { eq, and, desc, asc, or, sql, inArray, gte, isNull } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { broadcastMessage, broadcastTyping, broadcastPresence, broadcastReaction } from "../services/chatSSE";
 
 // Helper to get or create direct chat between two users
 async function getOrCreateDirectChat(userId1: number, userId2: number): Promise<number> {
@@ -344,10 +345,32 @@ export const chatRouter = router({
       // Increment unread counts for other participants
       await incrementUnreadCounts(input.chatId, ctx.user.id);
       
+      // Get all participant IDs for broadcasting
+      const participants = await db
+        .select({ userId: chatParticipants.userId })
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, input.chatId),
+          isNull(chatParticipants.leftAt)
+        ));
+      
+      const participantIds = participants.map(p => p.userId);
+      const createdAt = new Date();
+      
+      // Broadcast message via SSE
+      broadcastMessage(input.chatId, participantIds, {
+        id: messageId,
+        senderId: ctx.user.id,
+        senderName: ctx.user.name || "Unknown",
+        content: input.content,
+        contentType: input.contentType,
+        createdAt,
+      });
+      
       return { 
         id: messageId, 
         message: "Message sent",
-        createdAt: new Date(),
+        createdAt,
       };
     }),
 
@@ -798,5 +821,50 @@ export const chatRouter = router({
         .limit(input.limit);
       
       return { messages };
+    }),
+
+  // Send typing indicator
+  sendTypingIndicator: protectedProcedure
+    .input(z.object({
+      chatId: z.number(),
+      isTyping: z.boolean(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Check if user is participant
+      const [participant] = await db
+        .select()
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, input.chatId),
+          eq(chatParticipants.userId, ctx.user.id),
+          isNull(chatParticipants.leftAt)
+        ))
+        .limit(1);
+      
+      if (!participant) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a member of this chat" });
+      }
+      
+      // Get all participant IDs for broadcasting
+      const participants = await db
+        .select({ userId: chatParticipants.userId })
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, input.chatId),
+          isNull(chatParticipants.leftAt)
+        ));
+      
+      const participantIds = participants.map(p => p.userId);
+      
+      // Broadcast typing indicator via SSE
+      broadcastTyping(
+        input.chatId,
+        participantIds,
+        ctx.user.id,
+        ctx.user.name || "Unknown",
+        input.isTyping
+      );
+      
+      return { success: true };
     }),
 });
