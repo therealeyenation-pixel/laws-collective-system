@@ -5063,3 +5063,37 @@
   - [x] Property comparison analytics
 - [x] Complete Direct Deposit tab in Payroll Dashboard
 - [x] Complete ACH Batches tab in Payroll Dashboard
+
+## Phase 91: Property & Grant Charge Code Setup
+- [ ] Add real property to Property Management system
+  - [ ] Gather property details (address, type, acquisition info)
+  - [ ] Create property record with full details
+  - [ ] Add initial project if applicable
+  - [ ] Test property workflow (view, edit, add maintenance)
+- [ ] Set up grant charge codes in Timekeeping
+  - [ ] Identify grants and their requirements
+  - [ ] Create charge codes for each grant
+  - [ ] Link charge codes to funding sources
+  - [ ] Test time entry with grant charge codes
+
+## Phase 92: Dashboard Audit & Single Source of Truth Architecture
+- [x] Audit all dashboards for shared data
+  - [x] Review each department dashboard
+  - [x] Identify procedures, required reading, and documents
+  - [x] Map data relationships between dashboards
+  - [x] Identify duplicated or inconsistent data
+- [x] Design centralized data model
+  - [x] Central procedures table (company-wide and department-specific) - using existing operatingProcedures
+  - [x] Required reading/training materials table - using procedureAcknowledgments
+  - [x] Department documents with proper categorization
+  - [x] Link tables to associate content with departments
+- [x] Implement single source of truth
+  - [x] Create central content management tables - already exist in schema
+  - [x] Build content management router - procedures.ts with getByDepartment
+  - [x] Create admin UI for managing shared content - DepartmentProcedures component
+- [x] Update dashboards to use centralized data
+  - [x] Replace hardcoded documents in ITDashboard
+  - [x] Replace hardcoded documents in LegalDashboard
+  - [x] Replace hardcoded documents in PlatformAdminDashboard
+  - [x] Add proper references to central tables via DepartmentProcedures component
+- [x] Test data consistency across all dashboards - 472 tests passing

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function ITDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -58,19 +59,7 @@ export default function ITDashboard() {
     { title: "Email Configuration", priority: "Low", requester: "New Employee", age: "4 hours" },
   ];
 
-  const documents = [
-    { name: "IT Security Policy", type: "Policy", date: "Jan 2026", size: "345 KB" },
-    { name: "Disaster Recovery Plan", type: "Procedure", date: "Dec 2025", size: "567 KB" },
-    { name: "Network Architecture Diagram", type: "Technical", date: "Jan 2026", size: "1.2 MB" },
-    { name: "Software Inventory", type: "Inventory", date: "Jan 2026", size: "234 KB" },
-    { name: "User Access Guidelines", type: "Policy", date: "Dec 2025", size: "189 KB" },
-    { name: "Backup Procedures", type: "Procedure", date: "Jan 2026", size: "156 KB" },
-  ];
-
-  const filteredDocuments = documents.filter(doc =>
-    doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doc.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Documents now pulled from centralized procedures system via DepartmentProcedures component
 
   const handleUpload = () => {
     toast.info("Document upload feature coming soon");
@@ -283,56 +272,13 @@ export default function ITDashboard() {
           </TabsContent>
 
           <TabsContent value="documents" className="space-y-4 mt-4">
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-foreground">IT Document Repository</h3>
-                <Button className="gap-2" onClick={handleUpload}>
-                  <Upload className="w-4 h-4" />
-                  Upload Document
-                </Button>
-              </div>
-              
-              {/* Search */}
-              <div className="relative mb-4">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search documents..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-
-              {/* Document List */}
-              <div className="space-y-3">
-                {filteredDocuments.map((doc, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                        <FileText className="w-5 h-5 text-purple-500" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-foreground">{doc.name}</p>
-                        <p className="text-sm text-muted-foreground">{doc.type} • {doc.date} • {doc.size}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
-                        <Download className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">View</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {filteredDocuments.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
-                  <FolderOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p>No documents found matching your search</p>
-                </div>
-              )}
-            </Card>
+            <DepartmentProcedures 
+              department="IT" 
+              title="IT Document Repository"
+              description="Policies, procedures, and technical documentation for the IT department"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
 
           <TabsContent value="team" className="space-y-4 mt-4">

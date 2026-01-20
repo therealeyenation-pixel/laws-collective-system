@@ -52,6 +52,49 @@ export const proceduresRouter = router({
       return procedures;
     }),
 
+  // Get procedures by department (for dashboard use)
+  getByDepartment: protectedProcedure
+    .input(z.object({
+      department: z.string(),
+      includeCompanyWide: z.boolean().default(true),
+      category: z.enum(["sop", "manual", "policy", "guide", "training", "checklist", "template", "form"]).optional(),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const conditions = [
+        or(
+          eq(operatingProcedures.status, "approved"),
+          eq(operatingProcedures.status, "published" as any)
+        )
+      ];
+
+      if (input.includeCompanyWide) {
+        conditions.push(
+          or(
+            eq(operatingProcedures.department, input.department),
+            sql`${operatingProcedures.department} IS NULL`,
+            eq(operatingProcedures.department, "all")
+          )
+        );
+      } else {
+        conditions.push(eq(operatingProcedures.department, input.department));
+      }
+
+      if (input.category) {
+        conditions.push(eq(operatingProcedures.category, input.category));
+      }
+
+      const procedures = await db
+        .select()
+        .from(operatingProcedures)
+        .where(and(...conditions))
+        .orderBy(asc(operatingProcedures.category), asc(operatingProcedures.title));
+
+      return procedures;
+    }),
+
   // Get a single procedure by ID
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
