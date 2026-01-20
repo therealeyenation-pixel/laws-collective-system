@@ -11659,3 +11659,89 @@ export const signatureAuditLog = mysqlTable("signature_audit_log", {
 
 export type SignatureAuditLog = typeof signatureAuditLog.$inferSelect;
 export type InsertSignatureAuditLog = typeof signatureAuditLog.$inferInsert;
+
+
+// ============================================
+// SYSTEM SCHEDULED JOBS
+// ============================================
+
+/**
+ * System Job Executions - Persistent history of scheduled job runs
+ */
+export const systemJobExecutions = mysqlTable("system_job_executions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Job identification
+  jobName: varchar("job_name", { length: 100 }).notNull(),
+  jobType: mysqlEnum("job_type", [
+    "signature_expiration_notifications",
+    "daily_summary_report",
+    "weekly_compliance_audit",
+    "monthly_data_cleanup",
+    "custom"
+  ]).notNull(),
+  
+  // Execution timing
+  startedAt: timestamp("started_at").notNull(),
+  completedAt: timestamp("completed_at"),
+  durationMs: int("duration_ms"),
+  
+  // Status
+  status: mysqlEnum("status", ["running", "completed", "failed"]).default("running").notNull(),
+  
+  // Results
+  result: json("result"), // Detailed execution results
+  errorMessage: text("error_message"),
+  errorStack: text("error_stack"),
+  
+  // Metrics
+  itemsProcessed: int("items_processed").default(0),
+  itemsSucceeded: int("items_succeeded").default(0),
+  itemsFailed: int("items_failed").default(0),
+  
+  // Trigger info
+  triggeredBy: mysqlEnum("triggered_by", ["scheduled", "manual", "api"]).default("scheduled").notNull(),
+  triggeredByUserId: int("triggered_by_user_id"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type SystemJobExecution = typeof systemJobExecutions.$inferSelect;
+export type InsertSystemJobExecution = typeof systemJobExecutions.$inferInsert;
+
+/**
+ * System Job Configurations - Store job schedules and settings
+ */
+export const systemJobConfigurations = mysqlTable("system_job_configurations", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  jobName: varchar("job_name", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  
+  // Schedule (cron expression)
+  cronSchedule: varchar("cron_schedule", { length: 50 }).notNull(),
+  timezone: varchar("timezone", { length: 50 }).default("America/Chicago").notNull(),
+  
+  // Status
+  isActive: boolean("is_active").default(true).notNull(),
+  
+  // Last execution info
+  lastRunAt: timestamp("last_run_at"),
+  lastRunStatus: mysqlEnum("last_run_status", ["completed", "failed"]),
+  nextScheduledRun: timestamp("next_scheduled_run"),
+  
+  // Notification settings
+  notifyOnSuccess: boolean("notify_on_success").default(false).notNull(),
+  notifyOnFailure: boolean("notify_on_failure").default(true).notNull(),
+  notificationRecipients: json("notification_recipients").$type<string[]>(),
+  
+  // Retry settings
+  maxRetries: int("max_retries").default(3).notNull(),
+  retryDelaySeconds: int("retry_delay_seconds").default(300).notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SystemJobConfiguration = typeof systemJobConfigurations.$inferSelect;
+export type InsertSystemJobConfiguration = typeof systemJobConfigurations.$inferInsert;

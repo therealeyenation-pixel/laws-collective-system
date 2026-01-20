@@ -5216,3 +5216,20 @@
   - [x] External scheduler setup instructions
 - [x] Add route at /admin/system-jobs
 - [x] Test admin dashboard functionality - 507 tests passing
+
+## Phase 101: Job History Persistence & Additional Scheduled Jobs
+- [x] Create job execution history database table
+  - [x] Add systemJobExecutions table to schema
+  - [x] Add systemJobConfigurations table for job settings
+  - [x] Store job name, status, timestamps, duration, result, errors
+  - [x] Push schema changes to database
+- [x] Add more scheduled jobs
+  - [x] Daily summary report generation (7 AM daily)
+  - [x] Weekly compliance audit (6 AM Monday)
+  - [x] Monthly data cleanup (3 AM 1st of month)
+- [x] Update scheduledJobs service for database persistence
+  - [x] Save execution history to database with createJobExecution
+  - [x] Query history from database with getJobHistory
+  - [x] Added getJobStats for execution statistics
+  - [x] Track triggeredBy (scheduled/manual/api) and user ID
+- [x] Test job history persistence - 509 tests passing

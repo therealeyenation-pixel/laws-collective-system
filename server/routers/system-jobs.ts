@@ -5,6 +5,7 @@ import {
   getAvailableJobs,
   getJobHistory,
   isJobRunning,
+  getJobStats,
 } from "../services/scheduledJobs";
 
 /**
@@ -22,7 +23,7 @@ export const systemJobsRouter = router({
   }),
 
   /**
-   * Get job execution history
+   * Get job execution history from database
    */
   getJobHistory: protectedProcedure
     .input(
@@ -49,6 +50,13 @@ export const systemJobsRouter = router({
     }),
 
   /**
+   * Get job execution statistics
+   */
+  getJobStats: protectedProcedure.query(async () => {
+    return getJobStats();
+  }),
+
+  /**
    * Run a job manually
    */
   runJob: protectedProcedure
@@ -57,17 +65,40 @@ export const systemJobsRouter = router({
         jobName: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
-      const result = await runJob(input.jobName);
+    .mutation(async ({ input, ctx }) => {
+      const result = await runJob(input.jobName, "manual", ctx.user?.id);
       return result;
     }),
 
   /**
    * Run signature expiration notification job
-   * Convenience endpoint for the most common job
    */
-  runSignatureExpirationJob: protectedProcedure.mutation(async () => {
-    const result = await runJob("signature_expiration_notifications");
+  runSignatureExpirationJob: protectedProcedure.mutation(async ({ ctx }) => {
+    const result = await runJob("signature_expiration_notifications", "manual", ctx.user?.id);
+    return result;
+  }),
+
+  /**
+   * Run daily summary report job
+   */
+  runDailySummaryReport: protectedProcedure.mutation(async ({ ctx }) => {
+    const result = await runJob("daily_summary_report", "manual", ctx.user?.id);
+    return result;
+  }),
+
+  /**
+   * Run weekly compliance audit job
+   */
+  runWeeklyComplianceAudit: protectedProcedure.mutation(async ({ ctx }) => {
+    const result = await runJob("weekly_compliance_audit", "manual", ctx.user?.id);
+    return result;
+  }),
+
+  /**
+   * Run monthly data cleanup job
+   */
+  runMonthlyDataCleanup: protectedProcedure.mutation(async ({ ctx }) => {
+    const result = await runJob("monthly_data_cleanup", "manual", ctx.user?.id);
     return result;
   }),
 });
