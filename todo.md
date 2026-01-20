@@ -4962,3 +4962,16 @@
 - [x] Create External Software Integration page with guides
 - [x] Add integration documentation for each supported system
 - [x] Test all export functionality - 16 tests passing
+
+## Phase 83: Grant Tracking Update
+- [ ] Check current grant tracking database
+- [ ] Add the two grants user applied for to tracking system
+- [ ] Verify grants appear in Grant Tracking UI
+
+## Phase 84: Grant Labor Cost Reports
+- [x] Design grant labor cost report structure
+- [x] Create backend router for grant labor cost reports
+- [x] Build Grant Labor Reports UI page
+- [x] Add report generation by funding source, charge code, date range
+- [x] Add CSV export for funder submissions
+- [x] Write tests for grant labor reports - 5 tests passing
