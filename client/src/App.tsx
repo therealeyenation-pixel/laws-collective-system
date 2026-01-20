@@ -87,6 +87,7 @@ import TaxModule from "./pages/TaxModule";
 import TimekeepingDashboard from "./pages/TimekeepingDashboard";
 import ExternalIntegrations from "./pages/ExternalIntegrations";
 import GrantLaborReports from "./pages/GrantLaborReports";
+import PayrollDashboard from "./pages/PayrollDashboard";
 import HealthSimulator from "./pages/simulators/HealthSimulator";
 import EducationSimulator from "./pages/simulators/EducationSimulator";
 import DesignSimulator from "./pages/simulators/DesignSimulator";
@@ -306,6 +307,7 @@ function Router() {
       <Route path="/dept/finance/timekeeping">{() => <ProtectedRoute component={TimekeepingDashboard} minRole="staff" />}</Route>
       <Route path="/dept/finance/integrations">{() => <ProtectedRoute component={ExternalIntegrations} minRole="staff" />}</Route>
       <Route path="/dept/finance/grant-labor-reports">{() => <ProtectedRoute component={GrantLaborReports} minRole="staff" />}</Route>
+      <Route path="/dept/finance/payroll">{() => <ProtectedRoute component={PayrollDashboard} minRole="staff" />}</Route>
       <Route path="/dept/procurement">{() => <ProtectedRoute component={ProcurementDashboard} minRole="staff" />}</Route>
       <Route path="/dept/contracts">{() => <ProtectedRoute component={ContractsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/purchasing">{() => <ProtectedRoute component={PurchasingDashboard} minRole="staff" />}</Route>

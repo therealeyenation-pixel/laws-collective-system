@@ -29,7 +29,8 @@ import {
   TrendingUp,
   Download,
   Filter,
-  Search
+  Search,
+  RefreshCw
 } from "lucide-react";
 
 export default function TimekeepingDashboard() {
@@ -135,6 +136,15 @@ export default function TimekeepingDashboard() {
     onError: (err) => toast.error(err.message),
   });
 
+  // Sync workers from HR mutation
+  const syncFromHR = trpc.timekeeping.syncAllFromHR.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Synced ${data.created} new workers, updated ${data.updated} existing workers from HR`);
+      refetchWorkers();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
   const approveTimesheet = trpc.timekeeping.approveTimesheet.useMutation({
     onSuccess: (_, variables) => {
       toast.success(variables.action === "approved" ? "Timesheet approved" : "Timesheet rejected");
@@ -230,6 +240,19 @@ export default function TimekeepingDashboard() {
             <p className="text-muted-foreground mt-1">Track hours by charge code for grant compliance and project cost allocation</p>
           </div>
           <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              className="gap-2" 
+              onClick={() => syncFromHR.mutate()}
+              disabled={syncFromHR.isPending}
+            >
+              {syncFromHR.isPending ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
+              Sync from HR
+            </Button>
             <Dialog open={showNewEntryDialog} onOpenChange={setShowNewEntryDialog}>
               <DialogTrigger asChild>
                 <Button className="gap-2">

@@ -5003,3 +5003,14 @@
 - [x] Update invoicing to pull contractor info from HR
 - [x] Migrate existing timekeeping workers to HR references (syncAllFromHR endpoint added)
 - [x] Test all integrations - 458 tests passing
+
+## Phase 88: Payroll Dashboard & Worker Sync
+- [x] Build Payroll Dashboard UI
+  - [x] Pay periods view (current, past periods)
+  - [x] Run payroll functionality
+  - [x] Generate pay stubs
+  - [x] View employee payroll details
+- [x] Add Worker Sync button to Timekeeping Dashboard
+  - [x] One-click sync from HR
+  - [x] Show sync status/results
+- [x] Write tests for new features - 458 tests passing
