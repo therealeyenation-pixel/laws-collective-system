@@ -58,6 +58,7 @@ import ContractorAgreement from "./pages/ContractorAgreement";
 import ContractorTransitions from "./pages/ContractorTransitions";
 import CareerPathPlanner from "./pages/CareerPathPlanner";
 import BenefitsComparison from "./pages/BenefitsComparison";
+import SignatureVerification from "./pages/SignatureVerification";
 import BoardGovernance from "./pages/BoardGovernance";
 import ContractorNetwork from "./pages/ContractorNetwork";
 import TransitionTraining from "./pages/TransitionTraining";
@@ -223,6 +224,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
+      <Route path="/verify-signature" component={SignatureVerification} />
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>

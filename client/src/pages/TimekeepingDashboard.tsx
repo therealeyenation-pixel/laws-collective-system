@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { ElectronicSignature } from "@/components/ElectronicSignature";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -597,16 +598,16 @@ export default function TimekeepingDashboard() {
                           </TableCell>
                           <TableCell>
                             {ts.status === "submitted" && (
-                              <div className="flex gap-1">
-                                <Button 
-                                  size="sm" 
-                                  variant="default"
-                                  className="gap-1"
-                                  onClick={() => handleApproveTimesheet(ts.id, "approved")}
-                                >
-                                  <CheckCircle className="w-3 h-3" />
-                                  Approve
-                                </Button>
+                              <div className="flex gap-1 items-center">
+                                <ElectronicSignature
+                                  documentType="timesheet_approval"
+                                  documentId={ts.id.toString()}
+                                  documentTitle={`Timesheet for ${ts.workerName || 'Worker'} - Week of ${ts.periodStart ? new Date(ts.periodStart).toLocaleDateString() : 'N/A'}`}
+                                  onSigned={() => handleApproveTimesheet(ts.id, "approved")}
+                                  buttonText="Sign & Approve"
+                                  buttonSize="sm"
+                                  legalText={`I certify that I have reviewed this timesheet for ${ts.totalRegularHours || 0} regular hours and ${ts.totalOvertimeHours || 0} overtime hours, and approve it for payroll processing.`}
+                                />
                                 <Button 
                                   size="sm" 
                                   variant="destructive"

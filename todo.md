@@ -5160,3 +5160,20 @@
   - [x] Contract approvals
   - [x] Invoice approvals (placeholder)
 - [x] Test all signature functionality - 486 tests passing
+
+## Phase 97: Extended E-Signature Features
+- [x] Add e-signature to time entry approvals
+  - [x] Integrate ElectronicSignature into timesheet submission
+  - [x] Supervisor sign-off on employee hours
+  - [x] Track approval signatures in timekeeping system
+- [x] Create public signature verification page
+  - [x] Public route for verification code lookup (/verify-signature)
+  - [x] Display signature details (signer, document, timestamp)
+  - [x] Show verification status and hash
+  - [x] QR code placeholder for easy verification
+- [x] Implement signature expiration and re-acknowledgment
+  - [x] Add expiresAt and requiresReAcknowledgment fields to signatures
+  - [x] Annual re-acknowledgment for critical procedures
+  - [x] Expiring soon notifications in ElectronicSignature component
+  - [x] SignatureComplianceDashboard showing compliance status
+- [x] Test all extended e-signature features - 492 tests passing

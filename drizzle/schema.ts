@@ -11636,6 +11636,8 @@ export const electronicSignatures = mysqlTable("electronic_signatures", {
   signedAt: timestamp("signed_at").defaultNow().notNull(),
   verificationCode: varchar("verification_code", { length: 32 }).notNull(),
   isVerified: boolean("is_verified").default(true).notNull(),
+  expiresAt: timestamp("expires_at"),
+  requiresReAcknowledgment: boolean("requires_re_acknowledgment").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
