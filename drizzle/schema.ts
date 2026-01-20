@@ -11745,3 +11745,294 @@ export const systemJobConfigurations = mysqlTable("system_job_configurations", {
 
 export type SystemJobConfiguration = typeof systemJobConfigurations.$inferSelect;
 export type InsertSystemJobConfiguration = typeof systemJobConfigurations.$inferInsert;
+
+// ============================================
+// VIDEO MEETINGS & CHAT SYSTEM
+// ============================================
+
+/**
+ * Meetings - Video conference scheduling and management
+ * Supports Daily.co integration with future Microsoft Teams compatibility
+ */
+export const meetings = mysqlTable("meetings", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  hostId: int("hostId").notNull(),
+  
+  // Scheduling
+  scheduledAt: timestamp("scheduledAt").notNull(),
+  duration: int("duration").default(60).notNull(), // minutes
+  timezone: varchar("timezone", { length: 50 }).default("America/New_York"),
+  
+  // Meeting status
+  status: mysqlEnum("status", ["scheduled", "in_progress", "completed", "cancelled"]).default("scheduled").notNull(),
+  
+  // Video provider integration
+  provider: mysqlEnum("provider", ["daily", "teams", "custom"]).default("daily").notNull(),
+  roomUrl: text("roomUrl"), // Daily.co room URL or Teams meeting link
+  roomName: varchar("roomName", { length: 255 }), // Daily.co room name
+  providerMeetingId: varchar("providerMeetingId", { length: 255 }), // External meeting ID
+  
+  // Meeting settings
+  isRecorded: boolean("isRecorded").default(false),
+  recordingUrl: text("recordingUrl"),
+  waitingRoomEnabled: boolean("waitingRoomEnabled").default(false),
+  maxParticipants: int("maxParticipants").default(100),
+  
+  // Recurrence (for recurring meetings)
+  isRecurring: boolean("isRecurring").default(false),
+  recurrenceRule: varchar("recurrenceRule", { length: 255 }), // iCal RRULE format
+  parentMeetingId: int("parentMeetingId"), // For recurring instances
+  
+  // Metadata
+  metadata: json("metadata"), // Additional provider-specific data
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  startedAt: timestamp("startedAt"),
+  endedAt: timestamp("endedAt"),
+});
+
+export type Meeting = typeof meetings.$inferSelect;
+export type InsertMeeting = typeof meetings.$inferInsert;
+
+/**
+ * Meeting Participants - Track who is invited/joined meetings
+ */
+export const meetingParticipants = mysqlTable("meeting_participants", {
+  id: int("id").autoincrement().primaryKey(),
+  meetingId: int("meetingId").notNull(),
+  userId: int("userId"), // Null for external guests
+  
+  // Guest info (for non-users)
+  guestEmail: varchar("guestEmail", { length: 320 }),
+  guestName: varchar("guestName", { length: 255 }),
+  
+  // Role and status
+  role: mysqlEnum("role", ["host", "co_host", "presenter", "attendee"]).default("attendee").notNull(),
+  inviteStatus: mysqlEnum("inviteStatus", ["pending", "accepted", "declined", "tentative"]).default("pending").notNull(),
+  
+  // Attendance tracking
+  joinedAt: timestamp("joinedAt"),
+  leftAt: timestamp("leftAt"),
+  totalDuration: int("totalDuration"), // seconds in meeting
+  
+  // Permissions
+  canShareScreen: boolean("canShareScreen").default(true),
+  canUnmute: boolean("canUnmute").default(true),
+  canChat: boolean("canChat").default(true),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MeetingParticipant = typeof meetingParticipants.$inferSelect;
+export type InsertMeetingParticipant = typeof meetingParticipants.$inferInsert;
+
+/**
+ * Chats - Direct messages and group conversations
+ */
+export const chats = mysqlTable("chats", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Chat type
+  chatType: mysqlEnum("chatType", ["direct", "group", "channel", "meeting"]).default("direct").notNull(),
+  
+  // For group chats
+  name: varchar("name", { length: 255 }),
+  description: text("description"),
+  avatarUrl: text("avatarUrl"),
+  
+  // Associated meeting (for meeting chats)
+  meetingId: int("meetingId"),
+  
+  // Settings
+  isArchived: boolean("isArchived").default(false),
+  isPinned: boolean("isPinned").default(false),
+  
+  // Creator
+  createdById: int("createdById").notNull(),
+  
+  // Last activity for sorting
+  lastMessageAt: timestamp("lastMessageAt"),
+  lastMessagePreview: varchar("lastMessagePreview", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Chat = typeof chats.$inferSelect;
+export type InsertChat = typeof chats.$inferInsert;
+
+/**
+ * Chat Participants - Members of a chat
+ */
+export const chatParticipants = mysqlTable("chat_participants", {
+  id: int("id").autoincrement().primaryKey(),
+  chatId: int("chatId").notNull(),
+  userId: int("userId").notNull(),
+  
+  // Role in chat
+  role: mysqlEnum("role", ["owner", "admin", "member"]).default("member").notNull(),
+  
+  // User preferences for this chat
+  isMuted: boolean("isMuted").default(false),
+  isPinned: boolean("isPinned").default(false),
+  
+  // Read tracking
+  lastReadAt: timestamp("lastReadAt"),
+  lastReadMessageId: int("lastReadMessageId"),
+  unreadCount: int("unreadCount").default(0),
+  
+  // Notification settings
+  notificationLevel: mysqlEnum("notificationLevel", ["all", "mentions", "none"]).default("all"),
+  
+  joinedAt: timestamp("joinedAt").defaultNow().notNull(),
+  leftAt: timestamp("leftAt"),
+});
+
+export type ChatParticipant = typeof chatParticipants.$inferSelect;
+export type InsertChatParticipant = typeof chatParticipants.$inferInsert;
+
+/**
+ * Chat Messages - Individual messages in chats
+ */
+export const chatMessages = mysqlTable("chat_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  chatId: int("chatId").notNull(),
+  senderId: int("senderId").notNull(),
+  
+  // Message content
+  content: text("content").notNull(),
+  contentType: mysqlEnum("contentType", ["text", "html", "markdown", "system"]).default("text").notNull(),
+  
+  // Reply threading
+  replyToId: int("replyToId"), // Parent message for threads
+  threadId: int("threadId"), // Root message of thread
+  
+  // Attachments
+  hasAttachments: boolean("hasAttachments").default(false),
+  
+  // Message status
+  isEdited: boolean("isEdited").default(false),
+  editedAt: timestamp("editedAt"),
+  isDeleted: boolean("isDeleted").default(false),
+  deletedAt: timestamp("deletedAt"),
+  
+  // Mentions
+  mentions: json("mentions"), // Array of user IDs mentioned
+  
+  // Reactions (stored as JSON for flexibility)
+  reactions: json("reactions"), // { emoji: [userId, userId], ... }
+  
+  // Metadata
+  metadata: json("metadata"), // For rich content (links, embeds, etc.)
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ChatMessage = typeof chatMessages.$inferSelect;
+export type InsertChatMessage = typeof chatMessages.$inferInsert;
+
+/**
+ * Chat Attachments - Files attached to messages
+ */
+export const chatAttachments = mysqlTable("chat_attachments", {
+  id: int("id").autoincrement().primaryKey(),
+  messageId: int("messageId").notNull(),
+  chatId: int("chatId").notNull(),
+  uploaderId: int("uploaderId").notNull(),
+  
+  // File info
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  fileType: varchar("fileType", { length: 100 }).notNull(),
+  fileSize: int("fileSize").notNull(), // bytes
+  mimeType: varchar("mimeType", { length: 100 }),
+  
+  // Storage
+  storageKey: varchar("storageKey", { length: 500 }).notNull(),
+  storageUrl: text("storageUrl").notNull(),
+  thumbnailUrl: text("thumbnailUrl"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ChatAttachment = typeof chatAttachments.$inferSelect;
+export type InsertChatAttachment = typeof chatAttachments.$inferInsert;
+
+/**
+ * User Presence - Online/offline status tracking
+ */
+export const userPresence = mysqlTable("user_presence", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  
+  // Status
+  status: mysqlEnum("status", ["online", "away", "busy", "offline"]).default("offline").notNull(),
+  statusMessage: varchar("statusMessage", { length: 255 }),
+  
+  // Activity tracking
+  lastActiveAt: timestamp("lastActiveAt").defaultNow().notNull(),
+  lastSeenAt: timestamp("lastSeenAt").defaultNow().notNull(),
+  
+  // Current activity
+  currentActivity: mysqlEnum("currentActivity", ["none", "in_meeting", "presenting", "typing"]).default("none"),
+  currentMeetingId: int("currentMeetingId"),
+  currentChatId: int("currentChatId"),
+  
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserPresence = typeof userPresence.$inferSelect;
+export type InsertUserPresence = typeof userPresence.$inferInsert;
+
+/**
+ * Meeting Chat Integration - Link meetings to their chat rooms
+ * Allows chat to persist after meeting ends
+ */
+export const meetingChats = mysqlTable("meeting_chats", {
+  id: int("id").autoincrement().primaryKey(),
+  meetingId: int("meetingId").notNull(),
+  chatId: int("chatId").notNull(),
+  
+  // Settings
+  persistAfterMeeting: boolean("persistAfterMeeting").default(true),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MeetingChat = typeof meetingChats.$inferSelect;
+export type InsertMeetingChat = typeof meetingChats.$inferInsert;
+
+/**
+ * Video Provider Configurations - Store API keys and settings for video providers
+ * Prepared for future Microsoft Teams integration
+ */
+export const videoProviderConfigs = mysqlTable("video_provider_configs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  provider: mysqlEnum("provider", ["daily", "teams", "zoom", "custom"]).notNull().unique(),
+  isEnabled: boolean("isEnabled").default(false).notNull(),
+  isDefault: boolean("isDefault").default(false),
+  
+  // Configuration (encrypted in production)
+  apiKey: text("apiKey"),
+  apiSecret: text("apiSecret"),
+  webhookSecret: text("webhookSecret"),
+  
+  // OAuth tokens for Teams
+  accessToken: text("accessToken"),
+  refreshToken: text("refreshToken"),
+  tokenExpiresAt: timestamp("tokenExpiresAt"),
+  
+  // Provider-specific settings
+  settings: json("settings"),
+  
+  // Tenant info (for Teams)
+  tenantId: varchar("tenantId", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VideoProviderConfig = typeof videoProviderConfigs.$inferSelect;
+export type InsertVideoProviderConfig = typeof videoProviderConfigs.$inferInsert;
