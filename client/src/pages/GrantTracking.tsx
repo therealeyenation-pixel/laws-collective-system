@@ -117,7 +117,8 @@ export default function GrantTracking() {
     });
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string | null | undefined) => {
+    if (!status) return <Badge className="bg-gray-100">Unknown</Badge>;
     const styles: Record<string, string> = {
       researching: "bg-gray-100 text-gray-800",
       eligible: "bg-blue-100 text-blue-800",
@@ -136,7 +137,8 @@ export default function GrantTracking() {
     return <Badge className={styles[status] || "bg-gray-100"}>{status.replace(/_/g, " ")}</Badge>;
   };
 
-  const getPriorityBadge = (priority: string) => {
+  const getPriorityBadge = (priority: string | null | undefined) => {
+    if (!priority) return <Badge className="bg-gray-100">N/A</Badge>;
     const styles: Record<string, string> = {
       low: "bg-gray-100 text-gray-800",
       medium: "bg-blue-100 text-blue-800",
