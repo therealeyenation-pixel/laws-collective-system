@@ -5111,3 +5111,16 @@
   - [x] Foundation Dashboard
   - [x] Education Dashboard
 - [x] Test all dashboards for consistency - 472 tests passing
+
+## Phase 94: Complete Dashboard Updates & Document Admin
+- [ ] Update Procurement Dashboard with DepartmentProcedures component
+- [ ] Update Purchasing Dashboard with DepartmentProcedures component
+- [ ] Create Document Admin page
+  - [ ] List all procedures with filtering by department
+  - [ ] Add new procedure form
+  - [ ] Edit existing procedures
+  - [ ] Delete procedures with confirmation
+  - [ ] Bulk import/export functionality
+  - [ ] Version tracking for procedures
+- [ ] Add Document Admin route and navigation
+- [ ] Test all features

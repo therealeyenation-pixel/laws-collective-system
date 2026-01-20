@@ -415,6 +415,7 @@ const menuCategories: MenuCategory[] = [
         minRole: "admin",
         items: [
           { icon: Settings, label: "Platform Dashboard", path: "/dept/platform-admin", minRole: "admin" },
+          { icon: FileText, label: "Document Admin", path: "/admin/documents", minRole: "admin" },
           { icon: Settings, label: "System Settings", path: "/system-settings", minRole: "admin" },
           { icon: Users, label: "User Management", path: "/user-management", minRole: "admin" },
           { icon: Play, label: "Platform Simulator", path: "/platform-simulator", minRole: "admin" },

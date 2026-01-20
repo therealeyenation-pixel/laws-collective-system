@@ -17,6 +17,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function PurchasingDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -107,6 +108,7 @@ export default function PurchasingDashboard() {
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="inventory">Inventory</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -290,6 +292,16 @@ export default function PurchasingDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Purchasing" 
+              title="Purchasing Document Repository"
+              description="Purchase order templates, inventory policies, supplier agreements, and supply chain procedures"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

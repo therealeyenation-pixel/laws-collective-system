@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import DocumentAdmin from "./pages/DocumentAdmin";
 import SystemDashboard from "./pages/SystemDashboard";
 import AcademyDashboard from "./pages/AcademyDashboard";
 import DocumentVault from "./pages/DocumentVault";
@@ -283,6 +284,7 @@ function Router() {
       <Route path="/volunteer">{() => <ProtectedRoute component={VolunteerPage} minRole="user" />}</Route>
       <Route path="/financial-statements">{() => <ProtectedRoute component={FinancialStatements} minRole="staff" />}</Route>
       <Route path="/board-resolutions">{() => <ProtectedRoute component={BoardResolutions} minRole="admin" />}</Route>
+      <Route path="/admin/documents">{() => <ProtectedRoute component={DocumentAdmin} minRole="admin" />}</Route>
       <Route path="/contingency-offers">{() => <ProtectedRoute component={ContingencyOffers} minRole="admin" />}</Route>
       <Route path="/resume-builder">{() => <ProtectedRoute component={ResumeBuilder} minRole="staff" />}</Route>
       <Route path="/procurement-catalog">{() => <ProtectedRoute component={ProcurementCatalog} minRole="staff" />}</Route>

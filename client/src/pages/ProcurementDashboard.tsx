@@ -18,6 +18,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function ProcurementDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -113,6 +114,7 @@ export default function ProcurementDashboard() {
             <TabsTrigger value="rfps">RFPs</TabsTrigger>
             <TabsTrigger value="vendors">Vendors</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -279,6 +281,16 @@ export default function ProcurementDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Procurement" 
+              title="Procurement Document Repository"
+              description="RFP templates, vendor evaluation criteria, procurement policies, and sourcing guidelines"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>
