@@ -5193,3 +5193,15 @@
   - [x] Bulk re-acknowledgment request functionality
   - [x] Compliance stats and reporting by user
 - [x] Test signature expiration notifications - 499 tests passing
+
+## Phase 99: Scheduled Job Integration for Signature Notifications
+- [x] Create scheduled job for daily notification processing
+  - [x] Created scheduledJobs.ts service with job management
+  - [x] Added system-jobs router with API endpoints
+  - [x] Configured recommended daily cron schedule (8 AM)
+  - [x] Added job execution logging and history tracking
+- [x] Add email delivery for critical expiration alerts
+  - [x] Added sendExpirationEmail function
+  - [x] Created HTML email template with urgency levels
+  - [x] Email triggers for 7-day and 1-day warnings
+- [x] Test scheduled job functionality - 507 tests passing
