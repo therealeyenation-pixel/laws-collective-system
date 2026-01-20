@@ -5304,3 +5304,20 @@ Three main approaches available:
   - [x] Show connection status and errors
   - [x] Handle reconnection with exponential backoff
 - [x] Test real-time messaging functionality - 550 tests passing
+
+## Phase 105: Message Threading
+- [x] Update database schema for threading
+  - [x] replyToId column already exists in chat_messages table
+  - [x] threadId column available for future nested threading
+- [x] Update chat router for threading
+  - [x] replyToId parameter in sendMessage mutation
+  - [x] getThreadReplies endpoint for viewing thread
+  - [x] getReplyCountsBatch endpoint for efficient reply counts
+  - [x] getMessageWithContext endpoint for reply context
+- [x] Update MeetingsDashboard UI for threaded replies
+  - [x] Reply button on hover for each message
+  - [x] Reply preview banner when composing reply
+  - [x] Thread indicators showing reply count
+  - [x] Thread view dialog with parent message and replies
+  - [x] Reply context indicator on messages that are replies
+- [x] Test message threading functionality - 595 tests passing

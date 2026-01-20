@@ -43,6 +43,10 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
+  Reply,
+  CornerDownRight,
+  X,
+  MessageCircle,
 } from "lucide-react";
 
 // Meeting status badge colors
@@ -71,6 +75,15 @@ export default function MeetingsDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [typingUsers, setTypingUsers] = useState<Map<number, { userId: number; userName: string }>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Reply state for message threading
+  const [replyingTo, setReplyingTo] = useState<{
+    id: number;
+    content: string;
+    senderName: string | null;
+  } | null>(null);
+  const [showThreadView, setShowThreadView] = useState(false);
+  const [threadParentId, setThreadParentId] = useState<number | null>(null);
 
   // SSE event handlers
   const handleNewMessage = useCallback((event: ChatEvent) => {
@@ -210,12 +223,26 @@ export default function MeetingsDashboard() {
   const sendMessage = trpc.chat.sendMessage.useMutation({
     onSuccess: () => {
       setMessageInput("");
+      setReplyingTo(null); // Clear reply state after sending
       refetchActiveChat();
     },
     onError: (error) => {
       toast.error(error.message);
     },
   });
+
+  // Query for thread replies
+  const { data: threadData, refetch: refetchThread } = trpc.chat.getThreadReplies.useQuery(
+    { messageId: threadParentId! },
+    { enabled: !!threadParentId && showThreadView }
+  );
+
+  // Get reply counts for messages in active chat
+  const messageIds = activeChat?.messages?.map(m => m.id) || [];
+  const { data: replyCounts } = trpc.chat.getReplyCountsBatch.useQuery(
+    { messageIds },
+    { enabled: messageIds.length > 0 }
+  );
 
   const markAsRead = trpc.chat.markAsRead.useMutation();
 
@@ -264,7 +291,29 @@ export default function MeetingsDashboard() {
     sendMessage.mutate({
       chatId: activeChatId,
       content: messageInput.trim(),
+      replyToId: replyingTo?.id,
     });
+  };
+
+  // Handle reply to a message
+  const handleReply = (message: { id: number; content: string; senderName: string | null }) => {
+    setReplyingTo({
+      id: message.id,
+      content: message.content.length > 100 ? message.content.substring(0, 100) + "..." : message.content,
+      senderName: message.senderName,
+    });
+  };
+
+  // Open thread view for a message
+  const handleViewThread = (messageId: number) => {
+    setThreadParentId(messageId);
+    setShowThreadView(true);
+  };
+
+  // Close thread view
+  const handleCloseThread = () => {
+    setShowThreadView(false);
+    setThreadParentId(null);
   };
 
   const formatDateTime = (date: Date | string) => {
@@ -776,7 +825,14 @@ export default function MeetingsDashboard() {
                                         {getInitials(message.senderName || "?")}
                                       </AvatarFallback>
                                     </Avatar>
-                                    <div className="flex-1">
+                                    <div className="flex-1 group">
+                                      {/* Reply context if this is a reply */}
+                                      {message.replyToId && (
+                                        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1 pl-2 border-l-2 border-muted">
+                                          <CornerDownRight className="w-3 h-3" />
+                                          <span>Replying to a message</span>
+                                        </div>
+                                      )}
                                       <div className="flex items-center gap-2">
                                         <span className="font-medium text-sm">
                                           {message.senderName}
@@ -789,12 +845,32 @@ export default function MeetingsDashboard() {
                                             (edited)
                                           </span>
                                         )}
+                                        {/* Reply button - appears on hover */}
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-6 px-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                          onClick={() => handleReply(message)}
+                                        >
+                                          <Reply className="w-3 h-3 mr-1" />
+                                          Reply
+                                        </Button>
                                       </div>
                                       <p className={`text-sm ${
                                         message.isDeleted ? "text-muted-foreground italic" : ""
                                       }`}>
                                         {message.content}
                                       </p>
+                                      {/* Thread indicator if message has replies */}
+                                      {replyCounts?.counts[message.id] && replyCounts.counts[message.id] > 0 && (
+                                        <button
+                                          className="flex items-center gap-1 text-xs text-primary hover:underline mt-1"
+                                          onClick={() => handleViewThread(message.id)}
+                                        >
+                                          <MessageCircle className="w-3 h-3" />
+                                          {replyCounts.counts[message.id]} {replyCounts.counts[message.id] === 1 ? 'reply' : 'replies'}
+                                        </button>
+                                      )}
                                     </div>
                                   </>
                                 )}
@@ -824,6 +900,27 @@ export default function MeetingsDashboard() {
                           <div className="text-xs text-amber-600 mb-2 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" />
                             {connectionError}
+                          </div>
+                        )}
+                        {/* Reply preview */}
+                        {replyingTo && (
+                          <div className="flex items-center gap-2 mb-2 p-2 bg-muted rounded-md">
+                            <div className="flex-1 border-l-2 border-primary pl-2">
+                              <p className="text-xs font-medium text-primary">
+                                Replying to {replyingTo.senderName || "Unknown"}
+                              </p>
+                              <p className="text-xs text-muted-foreground truncate">
+                                {replyingTo.content}
+                              </p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              onClick={() => setReplyingTo(null)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
                           </div>
                         )}
                         <div className="flex items-center gap-2">
@@ -876,6 +973,104 @@ export default function MeetingsDashboard() {
           </Tabs>
         </div>
       </div>
+
+      {/* Thread View Dialog */}
+      <Dialog open={showThreadView} onOpenChange={setShowThreadView}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <MessageCircle className="w-5 h-5" />
+              Thread
+            </DialogTitle>
+            <DialogDescription>
+              View and reply to this conversation thread
+            </DialogDescription>
+          </DialogHeader>
+          {threadData && (
+            <div className="space-y-4">
+              {/* Parent message */}
+              <div className="p-3 bg-muted rounded-lg">
+                <p className="text-sm font-medium mb-1">Original message</p>
+                <p className="text-sm">{threadData.parentMessage.content}</p>
+              </div>
+              
+              {/* Replies */}
+              <ScrollArea className="h-[200px]">
+                <div className="space-y-3">
+                  {threadData.replies.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      No replies yet. Be the first to reply!
+                    </p>
+                  ) : (
+                    threadData.replies.map((reply) => (
+                      <div key={reply.id} className="flex gap-2">
+                        <Avatar className="w-6 h-6">
+                          <AvatarFallback className="text-xs">
+                            {getInitials(reply.senderName || "?")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium">{reply.senderName}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {formatTime(reply.createdAt)}
+                            </span>
+                          </div>
+                          <p className="text-sm">{reply.content}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+              
+              {/* Reply input */}
+              <div className="flex items-center gap-2 pt-2 border-t">
+                <Input
+                  placeholder="Reply to thread..."
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey && messageInput.trim() && activeChatId) {
+                      e.preventDefault();
+                      sendMessage.mutate({
+                        chatId: activeChatId,
+                        content: messageInput.trim(),
+                        replyToId: threadParentId || undefined,
+                      }, {
+                        onSuccess: () => {
+                          setMessageInput("");
+                          refetchThread();
+                        },
+                      });
+                    }
+                  }}
+                />
+                <Button
+                  size="sm"
+                  disabled={!messageInput.trim() || sendMessage.isPending}
+                  onClick={() => {
+                    if (messageInput.trim() && activeChatId) {
+                      sendMessage.mutate({
+                        chatId: activeChatId,
+                        content: messageInput.trim(),
+                        replyToId: threadParentId || undefined,
+                      }, {
+                        onSuccess: () => {
+                          setMessageInput("");
+                          refetchThread();
+                        },
+                      });
+                    }
+                  }}
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }

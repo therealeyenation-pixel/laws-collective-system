@@ -823,6 +823,190 @@ export const chatRouter = router({
       return { messages };
     }),
 
+  // Get thread replies for a message
+  getThreadReplies: protectedProcedure
+    .input(z.object({
+      messageId: z.number(),
+      limit: z.number().min(1).max(100).default(50),
+    }))
+    .query(async ({ ctx, input }) => {
+      // Get the parent message to verify access
+      const [parentMessage] = await db
+        .select()
+        .from(chatMessages)
+        .where(eq(chatMessages.id, input.messageId))
+        .limit(1);
+      
+      if (!parentMessage) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Message not found" });
+      }
+      
+      // Check if user is participant
+      const [participant] = await db
+        .select()
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, parentMessage.chatId),
+          eq(chatParticipants.userId, ctx.user.id),
+          isNull(chatParticipants.leftAt)
+        ))
+        .limit(1);
+      
+      if (!participant) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a member of this chat" });
+      }
+      
+      // Get replies to this message
+      const replies = await db
+        .select({
+          id: chatMessages.id,
+          chatId: chatMessages.chatId,
+          senderId: chatMessages.senderId,
+          content: chatMessages.content,
+          contentType: chatMessages.contentType,
+          hasAttachments: chatMessages.hasAttachments,
+          isEdited: chatMessages.isEdited,
+          isDeleted: chatMessages.isDeleted,
+          reactions: chatMessages.reactions,
+          createdAt: chatMessages.createdAt,
+          senderName: users.name,
+        })
+        .from(chatMessages)
+        .leftJoin(users, eq(chatMessages.senderId, users.id))
+        .where(eq(chatMessages.replyToId, input.messageId))
+        .orderBy(asc(chatMessages.createdAt))
+        .limit(input.limit);
+      
+      return {
+        parentMessage: {
+          id: parentMessage.id,
+          content: parentMessage.content,
+          senderId: parentMessage.senderId,
+        },
+        replies,
+        replyCount: replies.length,
+      };
+    }),
+
+  // Get reply counts for multiple messages
+  getReplyCountsBatch: protectedProcedure
+    .input(z.object({
+      messageIds: z.array(z.number()).max(100),
+    }))
+    .query(async ({ input }) => {
+      if (input.messageIds.length === 0) {
+        return { counts: {} };
+      }
+      
+      const results = await db
+        .select({
+          replyToId: chatMessages.replyToId,
+          count: sql<number>`COUNT(*)`.as("count"),
+        })
+        .from(chatMessages)
+        .where(and(
+          inArray(chatMessages.replyToId, input.messageIds),
+          eq(chatMessages.isDeleted, false)
+        ))
+        .groupBy(chatMessages.replyToId);
+      
+      const counts: Record<number, number> = {};
+      for (const r of results) {
+        if (r.replyToId) {
+          counts[r.replyToId] = Number(r.count);
+        }
+      }
+      
+      return { counts };
+    }),
+
+  // Get message with its reply context (parent message preview)
+  getMessageWithContext: protectedProcedure
+    .input(z.object({
+      messageId: z.number(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const [message] = await db
+        .select({
+          id: chatMessages.id,
+          chatId: chatMessages.chatId,
+          senderId: chatMessages.senderId,
+          content: chatMessages.content,
+          contentType: chatMessages.contentType,
+          replyToId: chatMessages.replyToId,
+          hasAttachments: chatMessages.hasAttachments,
+          isEdited: chatMessages.isEdited,
+          isDeleted: chatMessages.isDeleted,
+          reactions: chatMessages.reactions,
+          createdAt: chatMessages.createdAt,
+          senderName: users.name,
+        })
+        .from(chatMessages)
+        .leftJoin(users, eq(chatMessages.senderId, users.id))
+        .where(eq(chatMessages.id, input.messageId))
+        .limit(1);
+      
+      if (!message) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Message not found" });
+      }
+      
+      // Check if user is participant
+      const [participant] = await db
+        .select()
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, message.chatId),
+          eq(chatParticipants.userId, ctx.user.id),
+          isNull(chatParticipants.leftAt)
+        ))
+        .limit(1);
+      
+      if (!participant) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a member of this chat" });
+      }
+      
+      // Get parent message if this is a reply
+      let parentMessage = null;
+      if (message.replyToId) {
+        const [parent] = await db
+          .select({
+            id: chatMessages.id,
+            content: chatMessages.content,
+            senderId: chatMessages.senderId,
+            senderName: users.name,
+            isDeleted: chatMessages.isDeleted,
+          })
+          .from(chatMessages)
+          .leftJoin(users, eq(chatMessages.senderId, users.id))
+          .where(eq(chatMessages.id, message.replyToId))
+          .limit(1);
+        
+        if (parent) {
+          parentMessage = {
+            id: parent.id,
+            content: parent.isDeleted ? "[Message deleted]" : parent.content,
+            senderId: parent.senderId,
+            senderName: parent.senderName,
+          };
+        }
+      }
+      
+      // Get reply count
+      const [replyCountResult] = await db
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(chatMessages)
+        .where(and(
+          eq(chatMessages.replyToId, input.messageId),
+          eq(chatMessages.isDeleted, false)
+        ));
+      
+      return {
+        message,
+        parentMessage,
+        replyCount: Number(replyCountResult?.count || 0),
+      };
+    }),
+
   // Send typing indicator
   sendTypingIndicator: protectedProcedure
     .input(z.object({
