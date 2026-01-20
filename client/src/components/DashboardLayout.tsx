@@ -330,6 +330,7 @@ const menuCategories: MenuCategory[] = [
         minRole: "staff",
         items: [
           { icon: Building, label: "Property Dashboard", path: "/dept/property", minRole: "staff" },
+          { icon: Building, label: "Property Management", path: "/dept/property/management", minRole: "staff" },
           { icon: Package, label: "Software Licenses", path: "/software-licenses", minRole: "staff" },
           { icon: Clipboard, label: "Asset Tracking", path: "/asset-tracking", minRole: "staff" },
           { icon: Play, label: "Property Simulator", path: "/property-simulator", minRole: "staff" },

@@ -4119,6 +4119,126 @@ export const workerTaxWithholdings = mysqlTable("worker_tax_withholdings", {
 export type WorkerTaxWithholding = typeof workerTaxWithholdings.$inferSelect;
 export type InsertWorkerTaxWithholding = typeof workerTaxWithholdings.$inferInsert;
 
+/**
+ * Worker Bank Accounts
+ * Store bank account information for direct deposit
+ */
+export const workerBankAccounts = mysqlTable("worker_bank_accounts", {
+  id: int("id").primaryKey().autoincrement(),
+  workerId: int("worker_id").notNull(),
+  
+  // Account info
+  accountName: varchar("account_name", { length: 100 }).notNull(), // e.g., "Primary Checking"
+  bankName: varchar("bank_name", { length: 100 }).notNull(),
+  routingNumber: varchar("routing_number", { length: 9 }).notNull(), // ABA routing number
+  accountNumber: varchar("account_number", { length: 17 }).notNull(), // Encrypted/masked
+  accountType: mysqlEnum("account_type", ["checking", "savings"]).default("checking").notNull(),
+  
+  // Deposit allocation
+  depositType: mysqlEnum("deposit_type", [
+    "full",        // 100% of net pay
+    "fixed",       // Fixed dollar amount
+    "percentage"   // Percentage of net pay
+  ]).default("full").notNull(),
+  depositAmount: decimal("deposit_amount", { precision: 18, scale: 2 }), // For fixed/percentage
+  priority: int("priority").default(1).notNull(), // Order for split deposits
+  
+  // Status
+  isActive: boolean("is_active").default(true).notNull(),
+  isPrimary: boolean("is_primary").default(false).notNull(),
+  verifiedAt: timestamp("verified_at"),
+  
+  // Audit
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WorkerBankAccount = typeof workerBankAccounts.$inferSelect;
+export type InsertWorkerBankAccount = typeof workerBankAccounts.$inferInsert;
+
+/**
+ * ACH Batches
+ * Track ACH file generation batches
+ */
+export const achBatches = mysqlTable("ach_batches", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Batch info
+  batchNumber: varchar("batch_number", { length: 50 }).notNull().unique(),
+  payrollPeriodId: int("payroll_period_id"),
+  
+  // Company info (originator)
+  companyName: varchar("company_name", { length: 16 }).notNull(),
+  companyId: varchar("company_id", { length: 10 }).notNull(), // Tax ID or assigned ID
+  
+  // Batch totals
+  totalCredits: decimal("total_credits", { precision: 18, scale: 2 }).default("0").notNull(),
+  totalDebits: decimal("total_debits", { precision: 18, scale: 2 }).default("0").notNull(),
+  entryCount: int("entry_count").default(0).notNull(),
+  
+  // Dates
+  effectiveDate: timestamp("effective_date").notNull(),
+  fileCreatedAt: timestamp("file_created_at"),
+  
+  // Status
+  status: mysqlEnum("ach_batch_status", [
+    "draft",
+    "generated",
+    "submitted",
+    "accepted",
+    "rejected",
+    "processed"
+  ]).default("draft").notNull(),
+  
+  // File info
+  fileName: varchar("file_name", { length: 255 }),
+  fileUrl: text("file_url"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AchBatch = typeof achBatches.$inferSelect;
+export type InsertAchBatch = typeof achBatches.$inferInsert;
+
+/**
+ * ACH Entries
+ * Individual payment entries within an ACH batch
+ */
+export const achEntries = mysqlTable("ach_entries", {
+  id: int("id").primaryKey().autoincrement(),
+  batchId: int("batch_id").notNull(),
+  payrollRunId: int("payroll_run_id"),
+  workerId: int("worker_id").notNull(),
+  bankAccountId: int("bank_account_id").notNull(),
+  
+  // Entry details
+  transactionCode: varchar("transaction_code", { length: 2 }).notNull(), // 22=checking credit, 32=savings credit
+  routingNumber: varchar("routing_number", { length: 9 }).notNull(),
+  accountNumber: varchar("account_number", { length: 17 }).notNull(),
+  amount: decimal("amount", { precision: 18, scale: 2 }).notNull(),
+  
+  // Identification
+  individualId: varchar("individual_id", { length: 15 }).notNull(), // Employee ID or SSN
+  individualName: varchar("individual_name", { length: 22 }).notNull(),
+  
+  // Status
+  status: mysqlEnum("ach_entry_status", [
+    "pending",
+    "included",
+    "returned",
+    "settled"
+  ]).default("pending").notNull(),
+  returnCode: varchar("return_code", { length: 3 }), // R01, R02, etc.
+  returnReason: text("return_reason"),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AchEntry = typeof achEntries.$inferSelect;
+export type InsertAchEntry = typeof achEntries.$inferInsert;
+
 // ============================================
 // TAX PREPARATION TOOLS
 // Income tracking, deductions, and tax filing
@@ -10878,3 +10998,615 @@ export const invoiceLineItems = mysqlTable("invoice_line_items", {
 
 export type InvoiceLineItem = typeof invoiceLineItems.$inferSelect;
 export type InsertInvoiceLineItem = typeof invoiceLineItems.$inferInsert;
+
+
+// ============================================
+// PROPERTY MANAGEMENT SYSTEM
+// Comprehensive property tracking with project management
+// ============================================
+
+/**
+ * Properties - Core property records
+ */
+export const properties = mysqlTable("properties", {
+  id: int("id").autoincrement().primaryKey(),
+  houseId: int("houseId"), // Link to House for ownership tracking
+  entityId: int("entityId"), // Business entity that owns the property
+  
+  // Property identification
+  propertyName: varchar("propertyName", { length: 255 }).notNull(),
+  propertyCode: varchar("propertyCode", { length: 50 }), // Internal reference code
+  
+  // Address
+  streetAddress: varchar("streetAddress", { length: 255 }).notNull(),
+  unit: varchar("unit", { length: 50 }),
+  city: varchar("city", { length: 100 }).notNull(),
+  state: varchar("state", { length: 50 }).notNull(),
+  zipCode: varchar("zipCode", { length: 20 }).notNull(),
+  county: varchar("county", { length: 100 }),
+  country: varchar("country", { length: 100 }).default("USA"),
+  
+  // Property details
+  propertyType: mysqlEnum("propertyType", [
+    "single_family", "multi_family", "condo", "townhouse", 
+    "commercial", "industrial", "land", "mixed_use", "other"
+  ]).notNull(),
+  propertySubType: varchar("propertySubType", { length: 100 }),
+  yearBuilt: int("yearBuilt"),
+  squareFootage: int("squareFootage"),
+  lotSize: decimal("lotSize", { precision: 10, scale: 2 }), // acres
+  bedrooms: int("bedrooms"),
+  bathrooms: decimal("bathrooms", { precision: 3, scale: 1 }),
+  stories: int("stories"),
+  garageSpaces: int("garageSpaces"),
+  
+  // Status and classification
+  status: mysqlEnum("status", [
+    "active", "vacant", "under_renovation", "for_sale", 
+    "for_rent", "pending_acquisition", "sold", "archived"
+  ]).default("active").notNull(),
+  occupancyStatus: mysqlEnum("occupancyStatus", [
+    "owner_occupied", "tenant_occupied", "vacant", "under_construction"
+  ]).default("vacant"),
+  
+  // Financial info
+  purchasePrice: decimal("purchasePrice", { precision: 15, scale: 2 }),
+  purchaseDate: timestamp("purchaseDate"),
+  currentValue: decimal("currentValue", { precision: 15, scale: 2 }),
+  lastValuationDate: timestamp("lastValuationDate"),
+  
+  // Mortgage/financing
+  hasMortgage: boolean("hasMortgage").default(false),
+  mortgageBalance: decimal("mortgageBalance", { precision: 15, scale: 2 }),
+  mortgagePayment: decimal("mortgagePayment", { precision: 10, scale: 2 }),
+  mortgageLender: varchar("mortgageLender", { length: 255 }),
+  mortgageInterestRate: decimal("mortgageInterestRate", { precision: 5, scale: 3 }),
+  mortgageMaturityDate: timestamp("mortgageMaturityDate"),
+  
+  // Insurance
+  insuranceProvider: varchar("insuranceProvider", { length: 255 }),
+  insurancePolicyNumber: varchar("insurancePolicyNumber", { length: 100 }),
+  insurancePremium: decimal("insurancePremium", { precision: 10, scale: 2 }),
+  insuranceRenewalDate: timestamp("insuranceRenewalDate"),
+  
+  // Tax info
+  parcelNumber: varchar("parcelNumber", { length: 100 }),
+  annualPropertyTax: decimal("annualPropertyTax", { precision: 10, scale: 2 }),
+  taxAssessedValue: decimal("taxAssessedValue", { precision: 15, scale: 2 }),
+  
+  // Legal
+  deedType: varchar("deedType", { length: 100 }),
+  titleCompany: varchar("titleCompany", { length: 255 }),
+  zoningClassification: varchar("zoningClassification", { length: 100 }),
+  
+  // Additional info
+  description: text("description"),
+  notes: text("notes"),
+  tags: json("tags"), // Array of tags for categorization
+  
+  // Photos
+  primaryPhotoUrl: text("primaryPhotoUrl"),
+  photoUrls: json("photoUrls"), // Array of photo URLs
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Property = typeof properties.$inferSelect;
+export type InsertProperty = typeof properties.$inferInsert;
+
+/**
+ * Property Projects - Renovations, improvements, maintenance projects
+ */
+export const propertyProjects = mysqlTable("property_projects", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(),
+  
+  // Project identification
+  projectName: varchar("projectName", { length: 255 }).notNull(),
+  projectCode: varchar("projectCode", { length: 50 }),
+  projectType: mysqlEnum("projectType", [
+    "renovation", "repair", "maintenance", "improvement",
+    "addition", "landscaping", "inspection", "compliance", "other"
+  ]).notNull(),
+  
+  // Description
+  description: text("description"),
+  scope: text("scope"),
+  objectives: text("objectives"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "planning", "approved", "in_progress", "on_hold",
+    "completed", "cancelled"
+  ]).default("planning").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium"),
+  
+  // Timeline
+  plannedStartDate: timestamp("plannedStartDate"),
+  plannedEndDate: timestamp("plannedEndDate"),
+  actualStartDate: timestamp("actualStartDate"),
+  actualEndDate: timestamp("actualEndDate"),
+  
+  // Budget
+  estimatedBudget: decimal("estimatedBudget", { precision: 15, scale: 2 }),
+  approvedBudget: decimal("approvedBudget", { precision: 15, scale: 2 }),
+  actualCost: decimal("actualCost", { precision: 15, scale: 2 }).default("0"),
+  contingencyAmount: decimal("contingencyAmount", { precision: 15, scale: 2 }),
+  
+  // Progress
+  percentComplete: int("percentComplete").default(0),
+  
+  // Contractor info
+  primaryContractorId: int("primaryContractorId"),
+  contractorName: varchar("contractorName", { length: 255 }),
+  contractorContact: varchar("contractorContact", { length: 255 }),
+  contractNumber: varchar("contractNumber", { length: 100 }),
+  
+  // Permits
+  requiresPermit: boolean("requiresPermit").default(false),
+  permitNumber: varchar("permitNumber", { length: 100 }),
+  permitStatus: mysqlEnum("permitStatus", [
+    "not_required", "pending", "approved", "denied", "expired"
+  ]).default("not_required"),
+  permitDate: timestamp("permitDate"),
+  
+  // Approval
+  approvedBy: int("approvedBy"),
+  approvalDate: timestamp("approvalDate"),
+  
+  // Grant/funding linkage
+  grantId: int("grantId"), // Link to grant if funded by grant
+  fundingSourceId: int("fundingSourceId"),
+  chargeCodeId: int("chargeCodeId"),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyProject = typeof propertyProjects.$inferSelect;
+export type InsertPropertyProject = typeof propertyProjects.$inferInsert;
+
+/**
+ * Project Milestones - Key milestones within projects
+ */
+export const propertyProjectMilestones = mysqlTable("property_project_milestones", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  
+  milestoneName: varchar("milestoneName", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Timeline
+  targetDate: timestamp("targetDate"),
+  completedDate: timestamp("completedDate"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "pending", "in_progress", "completed", "delayed", "cancelled"
+  ]).default("pending").notNull(),
+  
+  // Dependencies
+  dependsOnMilestoneId: int("dependsOnMilestoneId"),
+  
+  // Deliverables
+  deliverables: text("deliverables"),
+  
+  sortOrder: int("sortOrder").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyProjectMilestone = typeof propertyProjectMilestones.$inferSelect;
+export type InsertPropertyProjectMilestone = typeof propertyProjectMilestones.$inferInsert;
+
+/**
+ * Project Tasks - Individual tasks within projects
+ */
+export const propertyProjectTasks = mysqlTable("property_project_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  milestoneId: int("milestoneId"),
+  parentTaskId: int("parentTaskId"), // For subtasks
+  
+  taskName: varchar("taskName", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Assignment
+  assignedToId: int("assignedToId"),
+  assignedToName: varchar("assignedToName", { length: 255 }),
+  
+  // Timeline
+  startDate: timestamp("startDate"),
+  dueDate: timestamp("dueDate"),
+  completedDate: timestamp("completedDate"),
+  estimatedHours: decimal("estimatedHours", { precision: 8, scale: 2 }),
+  actualHours: decimal("actualHours", { precision: 8, scale: 2 }),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "not_started", "in_progress", "blocked", "completed", "cancelled"
+  ]).default("not_started").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium"),
+  
+  // Cost
+  estimatedCost: decimal("estimatedCost", { precision: 10, scale: 2 }),
+  actualCost: decimal("actualCost", { precision: 10, scale: 2 }),
+  
+  sortOrder: int("sortOrder").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyProjectTask = typeof propertyProjectTasks.$inferSelect;
+export type InsertPropertyProjectTask = typeof propertyProjectTasks.$inferInsert;
+
+/**
+ * Project Expenses - Track all expenses for projects
+ */
+export const propertyProjectExpenses = mysqlTable("property_project_expenses", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  taskId: int("taskId"),
+  
+  // Expense details
+  expenseDate: timestamp("expenseDate").notNull(),
+  category: mysqlEnum("category", [
+    "labor", "materials", "equipment", "permits", "inspection",
+    "subcontractor", "supplies", "travel", "other"
+  ]).notNull(),
+  description: varchar("description", { length: 500 }).notNull(),
+  
+  // Vendor
+  vendorName: varchar("vendorName", { length: 255 }),
+  vendorId: int("vendorId"),
+  invoiceNumber: varchar("invoiceNumber", { length: 100 }),
+  
+  // Amount
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  taxAmount: decimal("taxAmount", { precision: 10, scale: 2 }),
+  totalAmount: decimal("totalAmount", { precision: 15, scale: 2 }).notNull(),
+  
+  // Payment
+  paymentStatus: mysqlEnum("paymentStatus", [
+    "pending", "approved", "paid", "rejected"
+  ]).default("pending"),
+  paymentDate: timestamp("paymentDate"),
+  paymentMethod: varchar("paymentMethod", { length: 100 }),
+  checkNumber: varchar("checkNumber", { length: 50 }),
+  
+  // Approval
+  approvedBy: int("approvedBy"),
+  approvalDate: timestamp("approvalDate"),
+  
+  // Receipts
+  receiptUrl: text("receiptUrl"),
+  attachmentUrls: json("attachmentUrls"),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyProjectExpense = typeof propertyProjectExpenses.$inferSelect;
+export type InsertPropertyProjectExpense = typeof propertyProjectExpenses.$inferInsert;
+
+/**
+ * Property Financials - Monthly/recurring financial tracking
+ */
+export const propertyFinancials = mysqlTable("property_financials", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(),
+  
+  // Period
+  year: int("year").notNull(),
+  month: int("month").notNull(),
+  
+  // Income
+  rentalIncome: decimal("rentalIncome", { precision: 15, scale: 2 }).default("0"),
+  otherIncome: decimal("otherIncome", { precision: 15, scale: 2 }).default("0"),
+  totalIncome: decimal("totalIncome", { precision: 15, scale: 2 }).default("0"),
+  
+  // Expenses
+  mortgagePayment: decimal("mortgagePayment", { precision: 10, scale: 2 }).default("0"),
+  propertyTax: decimal("propertyTax", { precision: 10, scale: 2 }).default("0"),
+  insurance: decimal("insurance", { precision: 10, scale: 2 }).default("0"),
+  utilities: decimal("utilities", { precision: 10, scale: 2 }).default("0"),
+  maintenance: decimal("maintenance", { precision: 10, scale: 2 }).default("0"),
+  repairs: decimal("repairs", { precision: 10, scale: 2 }).default("0"),
+  managementFees: decimal("managementFees", { precision: 10, scale: 2 }).default("0"),
+  hoaFees: decimal("hoaFees", { precision: 10, scale: 2 }).default("0"),
+  landscaping: decimal("landscaping", { precision: 10, scale: 2 }).default("0"),
+  otherExpenses: decimal("otherExpenses", { precision: 10, scale: 2 }).default("0"),
+  totalExpenses: decimal("totalExpenses", { precision: 15, scale: 2 }).default("0"),
+  
+  // Net
+  netOperatingIncome: decimal("netOperatingIncome", { precision: 15, scale: 2 }).default("0"),
+  cashFlow: decimal("cashFlow", { precision: 15, scale: 2 }).default("0"),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyFinancial = typeof propertyFinancials.$inferSelect;
+export type InsertPropertyFinancial = typeof propertyFinancials.$inferInsert;
+
+/**
+ * Property Documents - Document storage for properties
+ */
+export const propertyDocuments = mysqlTable("property_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(),
+  projectId: int("projectId"), // Optional link to project
+  
+  // Document info
+  documentName: varchar("documentName", { length: 255 }).notNull(),
+  documentType: mysqlEnum("documentType", [
+    "deed", "title", "survey", "appraisal", "inspection",
+    "insurance", "tax", "lease", "contract", "permit",
+    "photo", "floor_plan", "receipt", "invoice", "other"
+  ]).notNull(),
+  description: text("description"),
+  
+  // File
+  fileUrl: text("fileUrl").notNull(),
+  fileName: varchar("fileName", { length: 255 }),
+  fileSize: int("fileSize"),
+  mimeType: varchar("mimeType", { length: 100 }),
+  
+  // Dates
+  documentDate: timestamp("documentDate"),
+  expirationDate: timestamp("expirationDate"),
+  
+  // Metadata
+  tags: json("tags"),
+  isConfidential: boolean("isConfidential").default(false),
+  
+  uploadedBy: int("uploadedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyDocument = typeof propertyDocuments.$inferSelect;
+export type InsertPropertyDocument = typeof propertyDocuments.$inferInsert;
+
+/**
+ * Property Tenants - Tenant/occupant tracking
+ */
+export const propertyTenants = mysqlTable("property_tenants", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(),
+  
+  // Tenant info
+  tenantType: mysqlEnum("tenantType", ["individual", "family", "business"]).default("individual"),
+  firstName: varchar("firstName", { length: 100 }),
+  lastName: varchar("lastName", { length: 100 }),
+  businessName: varchar("businessName", { length: 255 }),
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  
+  // Lease info
+  leaseStartDate: timestamp("leaseStartDate"),
+  leaseEndDate: timestamp("leaseEndDate"),
+  monthlyRent: decimal("monthlyRent", { precision: 10, scale: 2 }),
+  securityDeposit: decimal("securityDeposit", { precision: 10, scale: 2 }),
+  leaseType: mysqlEnum("leaseType", ["month_to_month", "annual", "multi_year"]).default("annual"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "active", "pending", "past", "evicted"
+  ]).default("active").notNull(),
+  
+  // Move dates
+  moveInDate: timestamp("moveInDate"),
+  moveOutDate: timestamp("moveOutDate"),
+  
+  // Emergency contact
+  emergencyContactName: varchar("emergencyContactName", { length: 255 }),
+  emergencyContactPhone: varchar("emergencyContactPhone", { length: 50 }),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyTenant = typeof propertyTenants.$inferSelect;
+export type InsertPropertyTenant = typeof propertyTenants.$inferInsert;
+
+/**
+ * Property Inspections - Inspection tracking
+ */
+export const propertyInspections = mysqlTable("property_inspections", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(),
+  projectId: int("projectId"),
+  
+  // Inspection info
+  inspectionType: mysqlEnum("inspectionType", [
+    "move_in", "move_out", "annual", "quarterly",
+    "maintenance", "safety", "code_compliance", "appraisal", "other"
+  ]).notNull(),
+  inspectionDate: timestamp("inspectionDate").notNull(),
+  
+  // Inspector
+  inspectorName: varchar("inspectorName", { length: 255 }),
+  inspectorCompany: varchar("inspectorCompany", { length: 255 }),
+  inspectorLicense: varchar("inspectorLicense", { length: 100 }),
+  
+  // Results
+  overallCondition: mysqlEnum("overallCondition", [
+    "excellent", "good", "fair", "poor", "critical"
+  ]),
+  passedInspection: boolean("passedInspection"),
+  
+  // Findings
+  findings: text("findings"),
+  recommendations: text("recommendations"),
+  requiredRepairs: text("requiredRepairs"),
+  estimatedRepairCost: decimal("estimatedRepairCost", { precision: 15, scale: 2 }),
+  
+  // Follow-up
+  followUpRequired: boolean("followUpRequired").default(false),
+  followUpDate: timestamp("followUpDate"),
+  followUpNotes: text("followUpNotes"),
+  
+  // Report
+  reportUrl: text("reportUrl"),
+  photoUrls: json("photoUrls"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyInspection = typeof propertyInspections.$inferSelect;
+export type InsertPropertyInspection = typeof propertyInspections.$inferInsert;
+
+/**
+ * Property Maintenance Log - Track all maintenance activities
+ */
+export const propertyMaintenanceLogs = mysqlTable("property_maintenance_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(),
+  projectId: int("projectId"),
+  inspectionId: int("inspectionId"),
+  
+  // Maintenance info
+  maintenanceType: mysqlEnum("maintenanceType", [
+    "preventive", "corrective", "emergency", "routine", "upgrade"
+  ]).notNull(),
+  category: mysqlEnum("category", [
+    "plumbing", "electrical", "hvac", "roofing", "flooring",
+    "appliances", "exterior", "interior", "landscaping",
+    "pest_control", "cleaning", "safety", "other"
+  ]).notNull(),
+  
+  // Description
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Dates
+  reportedDate: timestamp("reportedDate").notNull(),
+  scheduledDate: timestamp("scheduledDate"),
+  completedDate: timestamp("completedDate"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "reported", "scheduled", "in_progress", "completed", "cancelled"
+  ]).default("reported").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "emergency"]).default("medium"),
+  
+  // Service provider
+  serviceProviderName: varchar("serviceProviderName", { length: 255 }),
+  serviceProviderPhone: varchar("serviceProviderPhone", { length: 50 }),
+  
+  // Cost
+  estimatedCost: decimal("estimatedCost", { precision: 10, scale: 2 }),
+  actualCost: decimal("actualCost", { precision: 10, scale: 2 }),
+  
+  // Resolution
+  resolution: text("resolution"),
+  partsReplaced: text("partsReplaced"),
+  warrantyInfo: text("warrantyInfo"),
+  
+  // Photos
+  beforePhotoUrls: json("beforePhotoUrls"),
+  afterPhotoUrls: json("afterPhotoUrls"),
+  
+  reportedBy: varchar("reportedBy", { length: 255 }),
+  completedBy: varchar("completedBy", { length: 255 }),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyMaintenanceLog = typeof propertyMaintenanceLogs.$inferSelect;
+export type InsertPropertyMaintenanceLog = typeof propertyMaintenanceLogs.$inferInsert;
+
+/**
+ * Property Vendors - Track vendors/contractors for properties
+ */
+export const propertyVendors = mysqlTable("property_vendors", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Vendor info
+  vendorName: varchar("vendorName", { length: 255 }).notNull(),
+  vendorType: mysqlEnum("vendorType", [
+    "contractor", "plumber", "electrician", "hvac", "landscaper",
+    "cleaner", "property_manager", "inspector", "appraiser",
+    "insurance", "legal", "other"
+  ]).notNull(),
+  
+  // Contact
+  contactName: varchar("contactName", { length: 255 }),
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  website: varchar("website", { length: 255 }),
+  
+  // Address
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 50 }),
+  zipCode: varchar("zipCode", { length: 20 }),
+  
+  // Business info
+  licenseNumber: varchar("licenseNumber", { length: 100 }),
+  insuranceInfo: text("insuranceInfo"),
+  taxId: varchar("taxId", { length: 50 }),
+  
+  // Rating
+  rating: int("rating"), // 1-5
+  
+  // Status
+  status: mysqlEnum("status", ["active", "inactive", "blacklisted"]).default("active"),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyVendor = typeof propertyVendors.$inferSelect;
+export type InsertPropertyVendor = typeof propertyVendors.$inferInsert;
+
+/**
+ * Property Utilities - Track utility accounts
+ */
+export const propertyUtilities = mysqlTable("property_utilities", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(),
+  
+  // Utility info
+  utilityType: mysqlEnum("utilityType", [
+    "electric", "gas", "water", "sewer", "trash",
+    "internet", "cable", "phone", "solar", "other"
+  ]).notNull(),
+  providerName: varchar("providerName", { length: 255 }).notNull(),
+  accountNumber: varchar("accountNumber", { length: 100 }),
+  
+  // Contact
+  providerPhone: varchar("providerPhone", { length: 50 }),
+  providerWebsite: varchar("providerWebsite", { length: 255 }),
+  
+  // Billing
+  billingDay: int("billingDay"),
+  averageMonthlyBill: decimal("averageMonthlyBill", { precision: 10, scale: 2 }),
+  
+  // Responsibility
+  paidBy: mysqlEnum("paidBy", ["owner", "tenant", "split"]).default("owner"),
+  
+  // Status
+  status: mysqlEnum("status", ["active", "inactive", "transferred"]).default("active"),
+  
+  // Meter info
+  meterNumber: varchar("meterNumber", { length: 100 }),
+  meterLocation: varchar("meterLocation", { length: 255 }),
+  
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyUtility = typeof propertyUtilities.$inferSelect;
+export type InsertPropertyUtility = typeof propertyUtilities.$inferInsert;

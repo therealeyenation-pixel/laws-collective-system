@@ -121,6 +121,8 @@ export const employeesRouter = router({
       linkedinUrl: z.string().max(255).optional(),
       status: z.enum(["active", "on_leave", "terminated", "pending"]).default("active"),
       userId: z.number().optional(),
+      workerType: z.enum(["employee", "contractor", "volunteer"]).default("employee"),
+      hourlyRate: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -145,6 +147,8 @@ export const employeesRouter = router({
         linkedinUrl: input.linkedinUrl,
         status: input.status,
         userId: input.userId,
+        workerType: input.workerType,
+        hourlyRate: input.hourlyRate,
       });
 
       return { 

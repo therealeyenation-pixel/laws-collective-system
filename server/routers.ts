@@ -101,6 +101,9 @@ import { simulatorProgressRouter } from "./routers/simulator-progress";
 import { timekeepingRouter } from "./routers/timekeeping";
 import { dataExportRouter } from "./routers/data-export";
 import { grantLaborReportsRouter } from "./routers/grant-labor-reports";
+import { bankAccountsRouter } from "./routers/bankAccounts";
+import { achRouter } from "./routers/ach";
+import { propertyManagementRouter } from "./routers/propertyManagement";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -214,6 +217,9 @@ export const appRouter = router({
   timekeeping: timekeepingRouter,
   dataExport: dataExportRouter,
   grantLaborReports: grantLaborReportsRouter,
+  bankAccounts: bankAccountsRouter,
+  ach: achRouter,
+  propertyManagement: propertyManagementRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

@@ -117,6 +117,7 @@ import ProcurementDashboard from "@/pages/ProcurementDashboard";
 import ContractsDashboard from "@/pages/ContractsDashboard";
 import PurchasingDashboard from "@/pages/PurchasingDashboard";
 import PropertyDashboard from "@/pages/PropertyDashboard";
+import PropertyManagementDashboard from "@/pages/PropertyManagementDashboard";
 import RealEstateDashboard from "@/pages/RealEstateDashboard";
 import ProjectControlsDashboard from "@/pages/ProjectControlsDashboard";
 import QAQCDashboard from "@/pages/QAQCDashboard";
@@ -312,6 +313,7 @@ function Router() {
       <Route path="/dept/contracts">{() => <ProtectedRoute component={ContractsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/purchasing">{() => <ProtectedRoute component={PurchasingDashboard} minRole="staff" />}</Route>
       <Route path="/dept/property">{() => <ProtectedRoute component={PropertyDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/property/management">{() => <ProtectedRoute component={PropertyManagementDashboard} minRole="staff" />}</Route>
       <Route path="/dept/real-estate">{() => <ProtectedRoute component={RealEstateDashboard} minRole="staff" />}</Route>
       <Route path="/dept/project-controls">{() => <ProtectedRoute component={ProjectControlsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/qaqc">{() => <ProtectedRoute component={QAQCDashboard} minRole="staff" />}</Route>

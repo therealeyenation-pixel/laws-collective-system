@@ -5014,3 +5014,52 @@
   - [x] One-click sync from HR
   - [x] Show sync status/results
 - [x] Write tests for new features - 458 tests passing
+
+## P## Phase 89: Sample Payroll Workflow & Direct Deposit
+- [x] Create sample employees for payroll testing
+  - [x] Add 3-5 employees with different pay rates
+  - [x] Include mix of hourly and salaried workers
+- [x] Sync test employees to timekeeping system
+- [x] Log sample time entries for test employees
+- [x] Run test payroll calculation
+- [x] Add direct deposit schema
+  - [x] Bank account table (routing, account number, account type)
+  - [x] Link to workers/employees
+  - [x] Secure storage of banking info
+- [x] Build bank account management UI
+  - [x] Add/edit bank accounts for employees
+  - [x] Support multiple accounts per employee (split deposits)
+- [x] Implement ACH file generation
+  - [x] NACHA format compliance
+  - [x] Batch header/control records
+  - [x] Entry detail records for each payment
+  - [x] Download ACH file for bank upload
+- [x] Test full payroll workflow end-to-end - 472 tests passing end-to-end
+
+## Phase 90: Property Management Dashboard
+- [x] Design comprehensive property management schema
+  - [x] Properties table (address, type, status, acquisition details)
+  - [x] Property projects table (renovations, maintenance, improvements)
+  - [x] Project tasks and milestones
+  - [x] Project budgets and expenses
+  - [x] Property financials (rent, mortgage, taxes, insurance)
+  - [x] Property documents and photos
+  - [x] Tenant/occupant tracking
+  - [x] Property inspections and maintenance logs
+- [x] Build Property Management router
+  - [x] CRUD for properties
+  - [x] Project management endpoints
+  - [x] Financial tracking endpoints
+  - [x] Document management endpoints
+  - [x] Inspection and maintenance endpoints
+- [x] Create Property Management Dashboard UI
+  - [x] Property portfolio overview
+  - [x] Individual property detail pages
+  - [x] Project tracking with Gantt-style timeline
+  - [x] Budget vs actual expense tracking
+  - [x] Maintenance schedule and history
+  - [x] Document vault per property
+  - [x] Financial performance metrics
+  - [x] Property comparison analytics
+- [x] Complete Direct Deposit tab in Payroll Dashboard
+- [x] Complete ACH Batches tab in Payroll Dashboard

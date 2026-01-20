@@ -29,7 +29,12 @@ import {
   Building2,
   RefreshCw,
   Play,
-  Eye
+  Eye,
+  CreditCard,
+  Landmark,
+  Send,
+  Trash2,
+  Edit
 } from "lucide-react";
 
 // Format currency
@@ -67,6 +72,580 @@ const getStatusBadge = (status: string) => {
     </Badge>
   );
 };
+
+// Direct Deposit Tab Component
+function DirectDepositTab({ workers }: { workers: any[] }) {
+  const [showAddAccountDialog, setShowAddAccountDialog] = useState(false);
+  const [selectedWorkerId, setSelectedWorkerId] = useState<number | null>(null);
+  const [newAccount, setNewAccount] = useState({
+    accountName: "",
+    bankName: "",
+    routingNumber: "",
+    accountNumber: "",
+    accountType: "checking" as "checking" | "savings",
+    depositType: "full" as "full" | "fixed" | "percentage",
+    depositAmount: "",
+  });
+
+  const { data: allAccounts, refetch: refetchAccounts } = trpc.bankAccounts.listAll.useQuery();
+  const { data: workersWithoutAccounts } = trpc.bankAccounts.getWorkersWithoutAccounts.useQuery();
+  
+  const createAccount = trpc.bankAccounts.create.useMutation({
+    onSuccess: () => {
+      toast.success("Bank account added successfully");
+      setShowAddAccountDialog(false);
+      setNewAccount({
+        accountName: "",
+        bankName: "",
+        routingNumber: "",
+        accountNumber: "",
+        accountType: "checking",
+        depositType: "full",
+        depositAmount: "",
+      });
+      refetchAccounts();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const deleteAccount = trpc.bankAccounts.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Bank account removed");
+      refetchAccounts();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const handleAddAccount = () => {
+    if (!selectedWorkerId) {
+      toast.error("Please select a worker");
+      return;
+    }
+    createAccount.mutate({
+      workerId: selectedWorkerId,
+      ...newAccount,
+      isPrimary: true,
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Workers without bank accounts alert */}
+      {workersWithoutAccounts && workersWithoutAccounts.length > 0 && (
+        <Card className="border-yellow-500/50 bg-yellow-500/10">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-yellow-500" />
+              Workers Missing Direct Deposit
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-2">
+              {workersWithoutAccounts.length} worker(s) do not have bank accounts set up:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {workersWithoutAccounts.map((w: any) => (
+                <Badge key={w.id} variant="outline">
+                  {w.firstName} {w.lastName}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Add Account Button */}
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Bank Accounts</h3>
+        <Button onClick={() => setShowAddAccountDialog(true)}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Bank Account
+        </Button>
+      </div>
+
+      {/* Bank Accounts Table */}
+      <Card>
+        <CardContent className="pt-6">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Worker</TableHead>
+                <TableHead>Account Name</TableHead>
+                <TableHead>Bank</TableHead>
+                <TableHead>Account</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Deposit</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {allAccounts?.map((account: any) => (
+                <TableRow key={account.id}>
+                  <TableCell className="font-medium">{account.workerName}</TableCell>
+                  <TableCell>{account.accountName}</TableCell>
+                  <TableCell>{account.bankName}</TableCell>
+                  <TableCell className="font-mono">{account.accountNumberMasked}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{account.accountType}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    {account.depositType === "full" ? "100%" : 
+                     account.depositType === "percentage" ? `${account.depositAmount}%` :
+                     formatCurrency(account.depositAmount || 0)}
+                  </TableCell>
+                  <TableCell>
+                    {account.isPrimary ? (
+                      <Badge>Primary</Badge>
+                    ) : (
+                      <Badge variant="secondary">Secondary</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => deleteAccount.mutate({ id: account.id })}
+                    >
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {(!allAccounts || allAccounts.length === 0) && (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                    No bank accounts configured. Add bank accounts to enable direct deposit.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Add Account Dialog */}
+      <Dialog open={showAddAccountDialog} onOpenChange={setShowAddAccountDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Bank Account</DialogTitle>
+            <DialogDescription>
+              Add a bank account for direct deposit payments
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Worker</Label>
+              <Select 
+                value={selectedWorkerId?.toString() || ""} 
+                onValueChange={(v) => setSelectedWorkerId(parseInt(v))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select worker" />
+                </SelectTrigger>
+                <SelectContent>
+                  {workers.map((w: any) => (
+                    <SelectItem key={w.id} value={w.id.toString()}>
+                      {w.firstName} {w.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Account Name</Label>
+                <Input 
+                  placeholder="e.g., Primary Checking"
+                  value={newAccount.accountName}
+                  onChange={(e) => setNewAccount({ ...newAccount, accountName: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Bank Name</Label>
+                <Input 
+                  placeholder="e.g., Chase Bank"
+                  value={newAccount.bankName}
+                  onChange={(e) => setNewAccount({ ...newAccount, bankName: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Routing Number</Label>
+                <Input 
+                  placeholder="9 digits"
+                  maxLength={9}
+                  value={newAccount.routingNumber}
+                  onChange={(e) => setNewAccount({ ...newAccount, routingNumber: e.target.value.replace(/\D/g, "") })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Account Number</Label>
+                <Input 
+                  placeholder="Account number"
+                  value={newAccount.accountNumber}
+                  onChange={(e) => setNewAccount({ ...newAccount, accountNumber: e.target.value.replace(/\D/g, "") })}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Account Type</Label>
+                <Select 
+                  value={newAccount.accountType} 
+                  onValueChange={(v: "checking" | "savings") => setNewAccount({ ...newAccount, accountType: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="checking">Checking</SelectItem>
+                    <SelectItem value="savings">Savings</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Deposit Type</Label>
+                <Select 
+                  value={newAccount.depositType} 
+                  onValueChange={(v: "full" | "fixed" | "percentage") => setNewAccount({ ...newAccount, depositType: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="full">Full Amount (100%)</SelectItem>
+                    <SelectItem value="percentage">Percentage</SelectItem>
+                    <SelectItem value="fixed">Fixed Amount</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {newAccount.depositType !== "full" && (
+              <div className="space-y-2">
+                <Label>{newAccount.depositType === "percentage" ? "Percentage" : "Fixed Amount"}</Label>
+                <Input 
+                  placeholder={newAccount.depositType === "percentage" ? "e.g., 50" : "e.g., 500.00"}
+                  value={newAccount.depositAmount}
+                  onChange={(e) => setNewAccount({ ...newAccount, depositAmount: e.target.value })}
+                />
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddAccountDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddAccount} disabled={createAccount.isPending}>
+              {createAccount.isPending ? "Adding..." : "Add Account"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// ACH Batches Tab Component
+function ACHBatchesTab({ payrollHistory }: { payrollHistory: any[] }) {
+  const [showCreateBatchDialog, setShowCreateBatchDialog] = useState(false);
+  const [showGenerateFileDialog, setShowGenerateFileDialog] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState<any>(null);
+  const [selectedPayrollIds, setSelectedPayrollIds] = useState<number[]>([]);
+  const [batchConfig, setBatchConfig] = useState({
+    companyId: "",
+    immediateDestination: "",
+    immediateDestinationName: "",
+    originatingDFI: "",
+  });
+
+  const { data: batches, refetch: refetchBatches } = trpc.ach.listBatches.useQuery({});
+  
+  const createBatch = trpc.ach.createBatch.useMutation({
+    onSuccess: (data) => {
+      toast.success(`ACH batch created with ${data.entryCount} entries`);
+      setShowCreateBatchDialog(false);
+      setSelectedPayrollIds([]);
+      refetchBatches();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const generateFile = trpc.ach.generateFile.useMutation({
+    onSuccess: (data) => {
+      // Download the file
+      const blob = new Blob([data.fileContent], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = data.fileName;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      toast.success(`ACH file generated: ${data.fileName}`);
+      setShowGenerateFileDialog(false);
+      refetchBatches();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const updateStatus = trpc.ach.updateStatus.useMutation({
+    onSuccess: () => {
+      toast.success("Batch status updated");
+      refetchBatches();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const handleCreateBatch = () => {
+    if (selectedPayrollIds.length === 0) {
+      toast.error("Please select payroll runs to include");
+      return;
+    }
+    createBatch.mutate({
+      payrollRunIds: selectedPayrollIds,
+      effectiveDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+      companyId: batchConfig.companyId || "1234567890",
+    });
+  };
+
+  const handleGenerateFile = () => {
+    if (!selectedBatch) return;
+    generateFile.mutate({
+      batchId: selectedBatch.id,
+      immediateDestination: batchConfig.immediateDestination,
+      immediateDestinationName: batchConfig.immediateDestinationName,
+      originatingDFI: batchConfig.originatingDFI,
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+      draft: "outline",
+      generated: "secondary",
+      submitted: "default",
+      accepted: "default",
+      rejected: "destructive",
+      processed: "default",
+    };
+    return <Badge variant={variants[status] || "outline"}>{status}</Badge>;
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">ACH Payment Batches</h3>
+        <Button onClick={() => setShowCreateBatchDialog(true)}>
+          <Plus className="w-4 h-4 mr-2" />
+          Create ACH Batch
+        </Button>
+      </div>
+
+      {/* Batches Table */}
+      <Card>
+        <CardContent className="pt-6">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Batch #</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead>Effective Date</TableHead>
+                <TableHead>Entries</TableHead>
+                <TableHead className="text-right">Total Amount</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {batches?.map((batch: any) => (
+                <TableRow key={batch.id}>
+                  <TableCell className="font-mono">{batch.batchNumber}</TableCell>
+                  <TableCell>{formatDate(batch.createdAt)}</TableCell>
+                  <TableCell>{formatDate(batch.effectiveDate)}</TableCell>
+                  <TableCell>{batch.entryCount}</TableCell>
+                  <TableCell className="text-right font-medium">
+                    {formatCurrency(batch.totalCredits)}
+                  </TableCell>
+                  <TableCell>{getStatusBadge(batch.status)}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      {batch.status === "draft" && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            setSelectedBatch(batch);
+                            setShowGenerateFileDialog(true);
+                          }}
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      )}
+                      {batch.status === "generated" && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => updateStatus.mutate({ batchId: batch.id, status: "submitted" })}
+                        >
+                          <Send className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {(!batches || batches.length === 0) && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                    No ACH batches created yet. Create a batch from processed payroll runs.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Create Batch Dialog */}
+      <Dialog open={showCreateBatchDialog} onOpenChange={setShowCreateBatchDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Create ACH Batch</DialogTitle>
+            <DialogDescription>
+              Select payroll runs to include in the ACH payment batch
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Company Tax ID (EIN)</Label>
+              <Input 
+                placeholder="e.g., 12-3456789"
+                value={batchConfig.companyId}
+                onChange={(e) => setBatchConfig({ ...batchConfig, companyId: e.target.value.replace(/[^0-9-]/g, "") })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Select Payroll Runs</Label>
+              <div className="border rounded-lg max-h-60 overflow-y-auto">
+                {payrollHistory.filter((r: any) => r.status === "processed").map((run: any) => (
+                  <div 
+                    key={run.id} 
+                    className="flex items-center gap-3 p-3 border-b last:border-b-0 hover:bg-secondary/30 cursor-pointer"
+                    onClick={() => {
+                      setSelectedPayrollIds(prev => 
+                        prev.includes(run.id) 
+                          ? prev.filter(id => id !== run.id)
+                          : [...prev, run.id]
+                      );
+                    }}
+                  >
+                    <input 
+                      type="checkbox" 
+                      checked={selectedPayrollIds.includes(run.id)}
+                      onChange={() => {}}
+                      className="w-4 h-4"
+                    />
+                    <div className="flex-1">
+                      <p className="font-medium">Worker #{run.workerId}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDate(run.createdAt)} - Net: {formatCurrency(run.netPay)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                {payrollHistory.filter((r: any) => r.status === "processed").length === 0 && (
+                  <p className="p-4 text-center text-muted-foreground">
+                    No processed payroll runs available
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {selectedPayrollIds.length > 0 && (
+              <div className="p-3 bg-secondary/30 rounded-lg">
+                <p className="text-sm">
+                  <strong>{selectedPayrollIds.length}</strong> payroll run(s) selected
+                </p>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCreateBatchDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateBatch} disabled={createBatch.isPending}>
+              {createBatch.isPending ? "Creating..." : "Create Batch"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Generate File Dialog */}
+      <Dialog open={showGenerateFileDialog} onOpenChange={setShowGenerateFileDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Generate ACH File</DialogTitle>
+            <DialogDescription>
+              Configure bank routing information for NACHA file generation
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Destination Bank Routing Number</Label>
+              <Input 
+                placeholder="9 digits"
+                maxLength={9}
+                value={batchConfig.immediateDestination}
+                onChange={(e) => setBatchConfig({ ...batchConfig, immediateDestination: e.target.value.replace(/\D/g, "") })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Destination Bank Name</Label>
+              <Input 
+                placeholder="e.g., FIRST NATIONAL BANK"
+                maxLength={23}
+                value={batchConfig.immediateDestinationName}
+                onChange={(e) => setBatchConfig({ ...batchConfig, immediateDestinationName: e.target.value.toUpperCase() })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Originating DFI (First 8 digits of your routing)</Label>
+              <Input 
+                placeholder="8 digits"
+                maxLength={8}
+                value={batchConfig.originatingDFI}
+                onChange={(e) => setBatchConfig({ ...batchConfig, originatingDFI: e.target.value.replace(/\D/g, "") })}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowGenerateFileDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleGenerateFile} disabled={generateFile.isPending}>
+              {generateFile.isPending ? "Generating..." : "Generate & Download"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
 
 export default function PayrollDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -299,6 +878,8 @@ NET PAY: ${formatCurrency(selectedPayStub.netPay)}
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="workers">Workers</TabsTrigger>
             <TabsTrigger value="history">Payroll History</TabsTrigger>
+            <TabsTrigger value="directDeposit">Direct Deposit</TabsTrigger>
+            <TabsTrigger value="ach">ACH Batches</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
@@ -565,6 +1146,16 @@ NET PAY: ${formatCurrency(selectedPayStub.netPay)}
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* Direct Deposit Tab */}
+          <TabsContent value="directDeposit" className="space-y-4">
+            <DirectDepositTab workers={workers} />
+          </TabsContent>
+
+          {/* ACH Batches Tab */}
+          <TabsContent value="ach" className="space-y-4">
+            <ACHBatchesTab payrollHistory={records} />
           </TabsContent>
         </Tabs>
 
