@@ -19,6 +19,7 @@ import {
   ArrowDownRight,
   Coins,
   Landmark,
+  Calculator,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -81,6 +82,12 @@ export default function FinanceDashboard() {
               <Button variant="outline" className="gap-2">
                 <Play className="w-4 h-4" />
                 Finance Simulator
+              </Button>
+            </Link>
+            <Link href="/dept/finance/tax">
+              <Button variant="outline" className="gap-2">
+                <Calculator className="w-4 h-4" />
+                Tax Module
               </Button>
             </Link>
             <Link href="/financial-automation">

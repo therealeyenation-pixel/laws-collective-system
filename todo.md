@@ -4862,3 +4862,13 @@
 
 ## Phase 154: Bug Fixes
 - [x] Fix Grants Tracker page error - unexpected error on page load (fixed null/undefined status handling)
+
+
+## Phase 75: Tax Module Re-Integration
+- [x] Fix DashboardLayout import in TaxModule.tsx (use default export)
+- [x] Add TaxModule route to App.tsx at /dept/finance/tax
+- [x] Add Tax Module link button to Finance Dashboard
+- [x] Verify Tax Summary tab works
+- [x] Verify Quarterly Estimates tab works
+- [x] Verify Tax Projection calculator works
+- [x] Verify Categories tab works
