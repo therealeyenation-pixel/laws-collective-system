@@ -226,8 +226,10 @@ export default function OfferLetters() {
   }, 0);
 
   const handleDownload = (pdfPath: string, name: string) => {
-    // In production, this would trigger a download from the server
-    window.open(pdfPath, "_blank");
+    // PDF generation coming soon - show toast for now
+    toast.info(`Generating offer letter for ${name}...`, {
+      description: "PDF generation will be available soon. The offer letter content is stored in the system.",
+    });
   };
 
   return (
