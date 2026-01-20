@@ -4780,21 +4780,44 @@
 - [x] All positions are salaried (high-level entry point)
 
 ### Department Dashboards (18 total)
-- [ ] Business Dashboard (CEO - LaShanna K. Russell)
-- [ ] Health Dashboard (Amber S. Hunter)
-- [ ] Education Dashboard (Cornelius Christopher)
-- [ ] Design Dashboard (Essence M. Hunter)
-- [ ] Media Dashboard (Amandes Pearsall IV)
-- [ ] Finance Dashboard (Craig Russell)
-- [ ] HR Dashboard (Open)
-- [ ] Operations Dashboard (Open)
-- [ ] Procurement Dashboard (Maia Rylandlesesene)
-- [ ] Contracts Dashboard (Roshonda Parker)
-- [ ] Purchasing Dashboard (Latisha Cox)
-- [ ] Property Dashboard (Talbert Cox)
-- [ ] Real Estate Dashboard (Kenneth Coleman / Treiva Hunter)
-- [ ] Project Controls Dashboard (Christopher Battle Sr.)
-- [ ] QA/QC Dashboard (Open)
-- [ ] Legal/Compliance Dashboard (Open)
-- [ ] Platform Admin Dashboard (Open)
-- [ ] Grants Dashboard (Open)
+- [x] Business Dashboard (CEO - LaShanna K. Russell) - /dept/business
+- [x] Health Dashboard (Amber S. Hunter) - /dept/health
+- [x] Education Dashboard (Cornelius Christopher) - /dept/education
+- [x] Design Dashboard (Essence M. Hunter) - /dept/design
+- [x] Media Dashboard (Amandes Pearsall IV) - /dept/media
+- [x] Finance Dashboard (Craig Russell) - /dept/finance
+- [x] HR Dashboard (Open) - /dept/hr
+- [x] Operations Dashboard (Open) - /dept/operations
+- [x] Procurement Dashboard (Maia Rylandlesesene) - /dept/procurement
+- [x] Contracts Dashboard (Roshonda Parker) - /dept/contracts
+- [x] Purchasing Dashboard (Latisha Cox) - /dept/purchasing
+- [x] Property Dashboard (Talbert Cox) - /dept/property
+- [x] Real Estate Dashboard (Kenneth Coleman / Treiva Hunter) - /dept/real-estate
+- [x] Project Controls Dashboard (Christopher Battle Sr.) - /dept/project-controls
+- [x] QA/QC Dashboard (Open) - /dept/qaqc
+- [x] Legal/Compliance Dashboard (Atty. Tiffany Crutcher) - /dept/legal
+- [x] IT Dashboard (Amandes Pearsall IV) - /dept/it
+- [x] Platform Admin Dashboard (Open) - /dept/platform-admin
+- [ ] Grants Dashboard (Open) - pending
+
+## Phase 40: Department Document Repositories
+- [ ] Add Documents tab with upload/repository to each department dashboard
+- [ ] BusinessDashboard - document upload and repository
+- [ ] HealthDashboard - document upload and repository
+- [ ] EducationDashboard - document upload and repository
+- [ ] DesignDashboard - document upload and repository
+- [ ] MediaDashboard - document upload and repository
+- [ ] FinanceDashboard - document upload and repository
+- [ ] ProcurementDashboard - document upload and repository
+- [ ] ContractsDashboard - document upload and repository
+- [ ] PurchasingDashboard - document upload and repository
+- [ ] PropertyDashboard - document upload and repository
+- [ ] RealEstateDashboard - document upload and repository
+- [ ] ProjectControlsDashboard - document upload and repository
+- [ ] QAQCDashboard - document upload and repository
+- [ ] HRDashboard - document upload and repository
+- [ ] OperationsDashboard - document upload and repository
+- [ ] PlatformAdminDashboard - document upload and repository
+- [ ] LegalDashboard - document upload and repository
+- [ ] ITDashboard - document upload and repository
+

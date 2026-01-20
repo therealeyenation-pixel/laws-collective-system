@@ -158,7 +158,7 @@ const menuCategories: MenuCategory[] = [
         label: "Business",
         minRole: "user",
         items: [
-          { icon: Briefcase, label: "Business Dashboard", path: "/business-department-dashboard", minRole: "user" },
+          { icon: Briefcase, label: "Business Dashboard", path: "/dept/business", minRole: "user" },
           { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user" },
           { icon: FileText, label: "Business Plans", path: "/business-plans", minRole: "user" },
           { icon: Building2, label: "Business Formation", path: "/business-formation", minRole: "user" },
@@ -174,7 +174,7 @@ const menuCategories: MenuCategory[] = [
         label: "Health",
         minRole: "staff",
         items: [
-          { icon: Heart, label: "Health Dashboard", path: "/health-dashboard", minRole: "staff" },
+          { icon: Heart, label: "Health Dashboard", path: "/dept/health", minRole: "staff" },
           { icon: Users, label: "Wellness Programs", path: "/wellness-programs", minRole: "staff" },
           { icon: Play, label: "Health Simulator", path: "/health-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/health-team", minRole: "staff" },
@@ -187,7 +187,7 @@ const menuCategories: MenuCategory[] = [
         label: "Education",
         minRole: "staff",
         items: [
-          { icon: GraduationCap, label: "Education Dashboard", path: "/education-dashboard", minRole: "staff" },
+          { icon: GraduationCap, label: "Education Dashboard", path: "/dept/education", minRole: "staff" },
           { icon: BookOpen, label: "Curriculum", path: "/curriculum", minRole: "staff" },
           { icon: Users, label: "Instructors", path: "/instructors", minRole: "staff" },
           { icon: Play, label: "Education Simulator", path: "/education-simulator", minRole: "staff" },
@@ -201,7 +201,7 @@ const menuCategories: MenuCategory[] = [
         label: "Design",
         minRole: "staff",
         items: [
-          { icon: Palette, label: "Design Dashboard", path: "/design-dashboard", minRole: "staff" },
+          { icon: Palette, label: "Design Dashboard", path: "/dept/design", minRole: "staff" },
           { icon: Palette, label: "Brand Assets", path: "/brand-assets", minRole: "staff" },
           { icon: Play, label: "Design Simulator", path: "/design-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/design-team", minRole: "staff" },
@@ -214,7 +214,7 @@ const menuCategories: MenuCategory[] = [
         label: "Media",
         minRole: "staff",
         items: [
-          { icon: Music, label: "Media Dashboard", path: "/media-dashboard", minRole: "staff" },
+          { icon: Music, label: "Media Dashboard", path: "/dept/media", minRole: "staff" },
           { icon: Share2, label: "Content Calendar", path: "/content-calendar", minRole: "staff" },
           { icon: Play, label: "Media Simulator", path: "/media-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/media-team", minRole: "staff" },
@@ -227,7 +227,7 @@ const menuCategories: MenuCategory[] = [
         label: "Finance",
         minRole: "staff",
         items: [
-          { icon: DollarSign, label: "Finance Dashboard", path: "/finance-dashboard", minRole: "staff" },
+          { icon: DollarSign, label: "Finance Dashboard", path: "/dept/finance", minRole: "staff" },
           { icon: DollarSign, label: "Financial Automation", path: "/financial-automation", minRole: "staff" },
           { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff" },
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },
@@ -243,7 +243,7 @@ const menuCategories: MenuCategory[] = [
         label: "HR & People",
         minRole: "staff",
         items: [
-          { icon: Users, label: "HR Dashboard", path: "/hr-dashboard", minRole: "staff" },
+          { icon: Users, label: "HR Dashboard", path: "/dept/hr", minRole: "staff" },
           { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff" },
           { icon: Users, label: "Employee Directory", path: "/employees", minRole: "staff" },
           { icon: Users, label: "Position Management", path: "/positions", minRole: "staff" },
@@ -263,7 +263,7 @@ const menuCategories: MenuCategory[] = [
         label: "Operations",
         minRole: "staff",
         items: [
-          { icon: Wrench, label: "Operations Dept Dashboard", path: "/operations-dept-dashboard", minRole: "staff" },
+          { icon: Wrench, label: "Operations Dashboard", path: "/dept/operations", minRole: "staff" },
           { icon: FileText, label: "Operating Procedures", path: "/procedures", minRole: "staff" },
           { icon: Play, label: "Operations Simulator", path: "/operations-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/operations-team", minRole: "staff" },
@@ -276,7 +276,7 @@ const menuCategories: MenuCategory[] = [
         label: "Procurement",
         minRole: "staff",
         items: [
-          { icon: ShoppingCart, label: "Procurement Dashboard", path: "/procurement-dashboard", minRole: "staff" },
+          { icon: ShoppingCart, label: "Procurement Dashboard", path: "/dept/procurement", minRole: "staff" },
           { icon: ShoppingCart, label: "Purchase Requests", path: "/purchase-requests", minRole: "staff" },
           { icon: FileText, label: "RFP Generator", path: "/rfp-generator", minRole: "staff" },
           { icon: Package, label: "Procurement Catalog", path: "/procurement-catalog", minRole: "staff" },
@@ -292,7 +292,7 @@ const menuCategories: MenuCategory[] = [
         label: "Contracts",
         minRole: "staff",
         items: [
-          { icon: FileCheck, label: "Contracts Dashboard", path: "/contracts-dashboard", minRole: "staff" },
+          { icon: FileCheck, label: "Contracts Dashboard", path: "/dept/contracts", minRole: "staff" },
           { icon: FileCheck, label: "Contract Management", path: "/contract-management", minRole: "staff" },
           { icon: FileText, label: "Contractor Agreements", path: "/contractor-agreements", minRole: "staff" },
           { icon: Play, label: "Contracts Simulator", path: "/contracts-simulator", minRole: "staff" },
@@ -306,7 +306,7 @@ const menuCategories: MenuCategory[] = [
         label: "Purchasing",
         minRole: "staff",
         items: [
-          { icon: Truck, label: "Purchasing Dashboard", path: "/purchasing-dashboard", minRole: "staff" },
+          { icon: Truck, label: "Purchasing Dashboard", path: "/dept/purchasing", minRole: "staff" },
           { icon: Package, label: "Inventory", path: "/inventory", minRole: "staff" },
           { icon: Play, label: "Purchasing Simulator", path: "/purchasing-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/purchasing-team", minRole: "staff" },
@@ -319,7 +319,7 @@ const menuCategories: MenuCategory[] = [
         label: "Property",
         minRole: "staff",
         items: [
-          { icon: Building, label: "Property Dashboard", path: "/property-dashboard", minRole: "staff" },
+          { icon: Building, label: "Property Dashboard", path: "/dept/property", minRole: "staff" },
           { icon: Package, label: "Software Licenses", path: "/software-licenses", minRole: "staff" },
           { icon: Clipboard, label: "Asset Tracking", path: "/asset-tracking", minRole: "staff" },
           { icon: Play, label: "Property Simulator", path: "/property-simulator", minRole: "staff" },
@@ -333,7 +333,7 @@ const menuCategories: MenuCategory[] = [
         label: "Real Estate",
         minRole: "staff",
         items: [
-          { icon: MapPin, label: "Real Estate Dashboard", path: "/real-estate-dashboard", minRole: "staff" },
+          { icon: MapPin, label: "Real Estate Dashboard", path: "/dept/real-estate", minRole: "staff" },
           { icon: Building2, label: "Properties", path: "/properties", minRole: "staff" },
           { icon: Play, label: "Real Estate Simulator", path: "/real-estate-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/real-estate-team", minRole: "staff" },
@@ -346,7 +346,7 @@ const menuCategories: MenuCategory[] = [
         label: "Project Controls",
         minRole: "staff",
         items: [
-          { icon: FolderKanban, label: "Project Controls Dashboard", path: "/project-controls-dashboard", minRole: "staff" },
+          { icon: FolderKanban, label: "Project Controls Dashboard", path: "/dept/project-controls", minRole: "staff" },
           { icon: FolderKanban, label: "Project Controls", path: "/project-controls", minRole: "staff" },
           { icon: BarChart3, label: "Progress Reporting", path: "/progress-reporting", minRole: "staff" },
           { icon: Play, label: "Project Controls Simulator", path: "/project-controls-simulator", minRole: "staff" },
@@ -360,7 +360,7 @@ const menuCategories: MenuCategory[] = [
         label: "QA/QC",
         minRole: "staff",
         items: [
-          { icon: CheckCircle, label: "QA/QC Dashboard", path: "/qaqc-dashboard", minRole: "staff" },
+          { icon: CheckCircle, label: "QA/QC Dashboard", path: "/dept/qaqc", minRole: "staff" },
           { icon: ClipboardList, label: "Quality Standards", path: "/quality-standards", minRole: "staff" },
           { icon: FileCheck, label: "Audits", path: "/audits", minRole: "staff" },
           { icon: Play, label: "QA/QC Simulator", path: "/qaqc-simulator", minRole: "staff" },
@@ -374,7 +374,7 @@ const menuCategories: MenuCategory[] = [
         label: "Legal/Compliance",
         minRole: "staff",
         items: [
-          { icon: Scale, label: "Legal Dashboard", path: "/legal-dashboard", minRole: "staff" },
+          { icon: Scale, label: "Legal Dashboard", path: "/dept/legal", minRole: "staff" },
           { icon: AlertTriangle, label: "Compliance", path: "/compliance", minRole: "staff" },
           { icon: Gavel, label: "Legal Documents", path: "/legal-documents", minRole: "staff" },
           { icon: Play, label: "Legal Simulator", path: "/legal-simulator", minRole: "staff" },
@@ -382,13 +382,27 @@ const menuCategories: MenuCategory[] = [
           { icon: FolderOpen, label: "Documents", path: "/legal-documents", minRole: "staff" },
         ]
       },
-      // Platform Administration (Open)
+      // IT Department (Amandes Pearsall IV)
       {
         icon: Monitor,
+        label: "IT",
+        minRole: "staff",
+        items: [
+          { icon: Monitor, label: "IT Dashboard", path: "/dept/it", minRole: "staff" },
+          { icon: Settings, label: "System Administration", path: "/system-admin", minRole: "staff" },
+          { icon: Shield, label: "Security Center", path: "/security-center", minRole: "staff" },
+          { icon: Play, label: "IT Simulator", path: "/it-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/it-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/it-documents", minRole: "staff" },
+        ]
+      },
+      // Platform Administration (Open)
+      {
+        icon: Settings,
         label: "Platform Admin",
         minRole: "admin",
         items: [
-          { icon: Monitor, label: "Platform Dashboard", path: "/platform-dashboard", minRole: "admin" },
+          { icon: Settings, label: "Platform Dashboard", path: "/dept/platform-admin", minRole: "admin" },
           { icon: Settings, label: "System Settings", path: "/system-settings", minRole: "admin" },
           { icon: Users, label: "User Management", path: "/user-management", minRole: "admin" },
           { icon: Play, label: "Platform Simulator", path: "/platform-simulator", minRole: "admin" },

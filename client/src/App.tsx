@@ -83,7 +83,23 @@ import DesignDepartment from "./pages/DesignDepartment";
 import GameCenter from "./pages/GameCenter";
 import SoftwareLicenses from "./pages/SoftwareLicenses";
 import PurchaseRequests from "./pages/PurchaseRequests";
-import OfferLetters from "./pages/OfferLetters";
+import OfferLetters from "@/pages/OfferLetters";
+import BusinessDashboard from "@/pages/BusinessDashboard";
+import HealthDashboard from "@/pages/HealthDashboard";
+import EducationDashboard from "@/pages/EducationDashboard";
+import DesignDashboard from "@/pages/DesignDashboard";
+import MediaDashboard from "@/pages/MediaDashboard";
+import FinanceDashboard from "@/pages/FinanceDashboard";
+import ProcurementDashboard from "@/pages/ProcurementDashboard";
+import ContractsDashboard from "@/pages/ContractsDashboard";
+import PurchasingDashboard from "@/pages/PurchasingDashboard";
+import PropertyDashboard from "@/pages/PropertyDashboard";
+import RealEstateDashboard from "@/pages/RealEstateDashboard";
+import ProjectControlsDashboard from "@/pages/ProjectControlsDashboard";
+import QAQCDashboard from "@/pages/QAQCDashboard";
+import LegalDashboard from "@/pages/LegalDashboard";
+import ITDashboard from "@/pages/ITDashboard";
+import PlatformAdminDashboard from "@/pages/PlatformAdminDashboard";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -237,6 +253,26 @@ function Router() {
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/purchase-requests">{() => <ProtectedRoute component={PurchaseRequests} minRole="staff" />}</Route>
       <Route path="/offer-letters">{() => <ProtectedRoute component={OfferLetters} minRole="staff" />}</Route>
+      
+      {/* Department Dashboards */}
+      <Route path="/dept/business">{() => <ProtectedRoute component={BusinessDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/health">{() => <ProtectedRoute component={HealthDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/education">{() => <ProtectedRoute component={EducationDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/design">{() => <ProtectedRoute component={DesignDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/media">{() => <ProtectedRoute component={MediaDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/finance">{() => <ProtectedRoute component={FinanceDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/procurement">{() => <ProtectedRoute component={ProcurementDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/contracts">{() => <ProtectedRoute component={ContractsDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/purchasing">{() => <ProtectedRoute component={PurchasingDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/property">{() => <ProtectedRoute component={PropertyDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/real-estate">{() => <ProtectedRoute component={RealEstateDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/project-controls">{() => <ProtectedRoute component={ProjectControlsDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/qaqc">{() => <ProtectedRoute component={QAQCDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/hr">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/operations">{() => <ProtectedRoute component={OperationsDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/platform-admin">{() => <ProtectedRoute component={PlatformAdminDashboard} minRole="admin" />}</Route>
+      <Route path="/dept/legal">{() => <ProtectedRoute component={LegalDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/it">{() => <ProtectedRoute component={ITDashboard} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>
