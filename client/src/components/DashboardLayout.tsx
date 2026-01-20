@@ -240,6 +240,7 @@ const menuCategories: MenuCategory[] = [
           { icon: CreditCard, label: "Pricing", path: "/pricing", minRole: "admin" },
           { icon: Play, label: "Finance Simulator", path: "/finance-simulator", minRole: "staff" },
           { icon: Clipboard, label: "Timekeeping", path: "/dept/finance/timekeeping", minRole: "staff" },
+          { icon: Share2, label: "External Integrations", path: "/dept/finance/integrations", minRole: "staff" },
           { icon: Users, label: "Team", path: "/finance-team", minRole: "staff" },
           { icon: FolderOpen, label: "Documents", path: "/finance-documents", minRole: "staff" },
         ]
