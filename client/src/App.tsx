@@ -78,6 +78,7 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import ProcurementCatalog from "./pages/ProcurementCatalog";
 import CompanyCalendar from "./pages/CompanyCalendar";
 import ESignature from "./pages/ESignature";
+import SignatureComplianceAdmin from "./pages/SignatureComplianceAdmin";
 import SpecialistTracks from "./pages/SpecialistTracks";
 import Scholarships from "./pages/Scholarships";
 import CreativeEnterprise from "./pages/CreativeEnterprise";
@@ -225,6 +226,7 @@ function Router() {
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
       <Route path="/verify-signature" component={SignatureVerification} />
+      <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>

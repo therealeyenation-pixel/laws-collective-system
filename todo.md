@@ -5177,3 +5177,19 @@
   - [x] Expiring soon notifications in ElectronicSignature component
   - [x] SignatureComplianceDashboard showing compliance status
 - [x] Test all extended e-signature features - 492 tests passing
+
+## Phase 98: Signature Expiration Notifications
+- [x] Create signature expiration notification system
+  - [x] Notification service (signatureExpirationNotifier.ts)
+  - [x] Create notification templates for expiring signatures
+  - [x] Implement notification triggers at 30/14/7/1 days before expiration
+- [x] Add notification scheduling and tracking
+  - [x] Track which notifications have been sent via metadata
+  - [x] Prevent duplicate notifications with wasNotificationSent check
+  - [x] Add notification history to signature records (getNotificationHistory endpoint)
+- [x] Create admin dashboard for expiring signatures
+  - [x] SignatureComplianceAdmin page at /admin/signature-compliance
+  - [x] List all signatures expiring within configurable timeframe
+  - [x] Bulk re-acknowledgment request functionality
+  - [x] Compliance stats and reporting by user
+- [x] Test signature expiration notifications - 499 tests passing

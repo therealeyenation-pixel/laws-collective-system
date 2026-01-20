@@ -1,9 +1,14 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { electronicSignatures, signatureAuditLog, operatingProcedures } from "../../drizzle/schema";
-import { eq, and, desc, lt, isNotNull, sql } from "drizzle-orm";
+import { electronicSignatures, signatureAuditLog, operatingProcedures, notifications } from "../../drizzle/schema";
+import { eq, and, desc, lt, isNotNull, sql, gte, lte, inArray } from "drizzle-orm";
 import crypto from "crypto";
+import {
+  processExpirationNotifications,
+  getUsersWithExpiringSignatures,
+  sendBulkReAcknowledgmentRequests,
+} from "../services/signatureExpirationNotifier";
 
 // Generate a unique verification code
 function generateVerificationCode(): string {
@@ -499,5 +504,106 @@ export const electronicSignatureRouter = router({
         .orderBy(desc(signatureAuditLog.createdAt));
 
       return logs;
+    }),
+
+  // Process expiration notifications (admin/scheduled job)
+  processExpirationNotifications: protectedProcedure
+    .mutation(async () => {
+      const result = await processExpirationNotifications();
+      return result;
+    }),
+
+  // Get users with expiring signatures (admin dashboard)
+  getUsersWithExpiringSignatures: protectedProcedure
+    .input(
+      z.object({
+        daysAhead: z.number().optional().default(30),
+      })
+    )
+    .query(async ({ input }) => {
+      const result = await getUsersWithExpiringSignatures(input.daysAhead);
+      return result;
+    }),
+
+  // Send bulk re-acknowledgment requests (admin)
+  sendBulkReAcknowledgmentRequests: protectedProcedure
+    .input(
+      z.object({
+        signatureIds: z.array(z.number()),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const result = await sendBulkReAcknowledgmentRequests(input.signatureIds);
+      return result;
+    }),
+
+  // Get notification history for a signature
+  getNotificationHistory: protectedProcedure
+    .input(
+      z.object({
+        signatureId: z.number(),
+      })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+
+      const notifs = await db
+        .select()
+        .from(notifications)
+        .where(
+          and(
+            eq(notifications.referenceType, "signature"),
+            eq(notifications.referenceId, input.signatureId)
+          )
+        )
+        .orderBy(desc(notifications.createdAt));
+
+      return notifs;
+    }),
+
+  // Get all expiring signatures for admin dashboard
+  getAllExpiring: protectedProcedure
+    .input(
+      z.object({
+        daysAhead: z.number().optional().default(30),
+        includeExpired: z.boolean().optional().default(true),
+      })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      
+      const now = new Date();
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + input.daysAhead);
+
+      let conditions;
+      if (input.includeExpired) {
+        conditions = and(
+          eq(electronicSignatures.requiresReAcknowledgment, true),
+          isNotNull(electronicSignatures.expiresAt),
+          lte(electronicSignatures.expiresAt, futureDate)
+        );
+      } else {
+        conditions = and(
+          eq(electronicSignatures.requiresReAcknowledgment, true),
+          isNotNull(electronicSignatures.expiresAt),
+          gte(electronicSignatures.expiresAt, now),
+          lte(electronicSignatures.expiresAt, futureDate)
+        );
+      }
+
+      const signatures = await db
+        .select()
+        .from(electronicSignatures)
+        .where(conditions)
+        .orderBy(electronicSignatures.expiresAt);
+
+      return signatures.map(sig => ({
+        ...sig,
+        isExpired: sig.expiresAt ? new Date(sig.expiresAt) < now : false,
+        daysUntilExpiration: sig.expiresAt
+          ? Math.ceil((new Date(sig.expiresAt).getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+          : null,
+      }));
     }),
 });
