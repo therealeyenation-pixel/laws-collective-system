@@ -14,6 +14,7 @@ export const softwareLicensesRouter = router({
   // Categories
   getCategories: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(softwareLicenseCategories).orderBy(softwareLicenseCategories.name);
   }),
 
@@ -26,12 +27,14 @@ export const softwareLicensesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const [result] = await db.insert(softwareLicenseCategories).values(input);
       return { id: result.insertId, ...input };
     }),
 
   seedCategories: protectedProcedure.mutation(async () => {
     const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const existing = await db.select().from(softwareLicenseCategories);
     if (existing.length > 0) {
       return { message: "Categories already seeded", count: existing.length };
@@ -60,6 +63,7 @@ export const softwareLicensesRouter = router({
   // Licenses
   getLicenses: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(softwareLicenses).orderBy(desc(softwareLicenses.createdAt));
   }),
 
@@ -67,6 +71,7 @@ export const softwareLicensesRouter = router({
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const [license] = await db.select().from(softwareLicenses).where(eq(softwareLicenses.id, input.id));
       if (!license) throw new TRPCError({ code: "NOT_FOUND", message: "License not found" });
       return license;
@@ -92,6 +97,7 @@ export const softwareLicensesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         costPerSeat: input.costPerSeat?.toString(),
@@ -126,6 +132,7 @@ export const softwareLicensesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const { id, ...updates } = input;
       const values: any = { ...updates };
       if (updates.costPerSeat !== undefined) values.costPerSeat = updates.costPerSeat.toString();
@@ -142,6 +149,7 @@ export const softwareLicensesRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       await db.delete(softwareLicenses).where(eq(softwareLicenses.id, input.id));
       return { success: true };
     }),
@@ -151,6 +159,7 @@ export const softwareLicensesRouter = router({
     .input(z.object({ licenseId: z.number().optional() }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) return [];
       if (input?.licenseId) {
         return db.select().from(softwareLicenseAssignments)
           .where(eq(softwareLicenseAssignments.licenseId, input.licenseId))
@@ -168,6 +177,7 @@ export const softwareLicensesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const [license] = await db.select().from(softwareLicenses).where(eq(softwareLicenses.id, input.licenseId));
       if (!license) throw new TRPCError({ code: "NOT_FOUND", message: "License not found" });
@@ -188,6 +198,7 @@ export const softwareLicensesRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const [assignment] = await db.select().from(softwareLicenseAssignments)
         .where(eq(softwareLicenseAssignments.id, input.id));
@@ -211,6 +222,7 @@ export const softwareLicensesRouter = router({
   // Vendor Contracts
   getContracts: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(softwareVendorContracts).orderBy(desc(softwareVendorContracts.createdAt));
   }),
 
@@ -231,6 +243,7 @@ export const softwareLicensesRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         annualValue: input.annualValue?.toString(),
@@ -244,6 +257,22 @@ export const softwareLicensesRouter = router({
   // Stats
   getStats: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) {
+      return {
+        totalLicenses: 0,
+        activeLicenses: 0,
+        totalSeats: 0,
+        usedSeats: 0,
+        availableSeats: 0,
+        monthlyTotal: 0,
+        annualTotal: 0,
+        totalAnnualCost: 0,
+        activeContracts: 0,
+        contractValue: 0,
+        expiringLicenses: 0,
+        totalCategories: 0,
+      };
+    }
     const licenses = await db.select().from(softwareLicenses);
     const contracts = await db.select().from(softwareVendorContracts);
     const categories = await db.select().from(softwareLicenseCategories);
@@ -263,7 +292,6 @@ export const softwareLicensesRouter = router({
 
     const activeContracts = contracts.filter(c => c.status === "active").length;
     const contractValue = contracts
-      .filter(c => c.status === "active")
       .reduce((sum, c) => sum + parseFloat(c.annualValue?.toString() || "0"), 0);
 
     const now = new Date();
@@ -292,6 +320,16 @@ export const softwareLicensesRouter = router({
 
   getBudgetForecast: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) {
+      return {
+        monthlyLicenseCost: 0,
+        annualLicenseCost: 0,
+        contractCost: 0,
+        totalAnnualCost: 0,
+        monthlyAverage: 0,
+        quarterlyForecast: [0, 0, 0, 0],
+      };
+    }
     const licenses = await db.select().from(softwareLicenses);
     const contracts = await db.select().from(softwareVendorContracts);
 
@@ -308,19 +346,20 @@ export const softwareLicensesRouter = router({
       .reduce((sum, c) => sum + parseFloat(c.annualValue?.toString() || "0"), 0);
 
     const totalAnnualCost = (monthlyLicenseCost * 12) + annualLicenseCost + contractCost;
+    const monthlyAverage = totalAnnualCost / 12;
 
     return {
       monthlyLicenseCost,
       annualLicenseCost,
       contractCost,
       totalAnnualCost,
-      grantLineItem: {
-        category: "Technology & Equipment",
-        subcategory: "Software Licenses & Subscriptions",
-        amount: totalAnnualCost,
-        description: "Software licenses and vendor contracts for creative production, design, and business operations",
-        justification: "Essential tools for program delivery, content creation, and organizational management",
-      },
+      monthlyAverage,
+      quarterlyForecast: [
+        monthlyAverage * 3,
+        monthlyAverage * 3,
+        monthlyAverage * 3,
+        monthlyAverage * 3,
+      ],
     };
   }),
 });

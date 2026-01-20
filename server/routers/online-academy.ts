@@ -16,6 +16,7 @@ export const onlineAcademyRouter = router({
   // Course Details
   getCourses: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(onlineCourseDetails).orderBy(desc(onlineCourseDetails.createdAt));
   }),
 
@@ -23,6 +24,7 @@ export const onlineAcademyRouter = router({
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const [course] = await db.select().from(onlineCourseDetails).where(eq(onlineCourseDetails.id, input.id));
       if (!course) throw new TRPCError({ code: "NOT_FOUND", message: "Course not found" });
       return course;
@@ -43,6 +45,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         creditHours: input.creditHours?.toString(),
@@ -67,6 +70,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const { id, ...updates } = input;
       const values: any = { ...updates };
       if (updates.creditHours !== undefined) values.creditHours = updates.creditHours.toString();
@@ -79,6 +83,7 @@ export const onlineAcademyRouter = router({
   // Curriculum Projects
   getProjects: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(curriculumProjects).orderBy(desc(curriculumProjects.createdAt));
   }),
 
@@ -102,6 +107,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         budget: input.budget?.toString(),
@@ -136,6 +142,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const { id, ...updates } = input;
       const values: any = { ...updates };
       if (updates.budget !== undefined) values.budget = updates.budget.toString();
@@ -153,6 +160,7 @@ export const onlineAcademyRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       await db.delete(curriculumProjects).where(eq(curriculumProjects.id, input.id));
       return { success: true };
     }),
@@ -160,6 +168,7 @@ export const onlineAcademyRouter = router({
   // Academy Instructors
   getInstructors: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(academyInstructors).orderBy(desc(academyInstructors.createdAt));
   }),
 
@@ -183,6 +192,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         hourlyRate: input.hourlyRate?.toString(),
@@ -216,6 +226,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const { id, ...updates } = input;
       const values: any = { ...updates };
       if (updates.hourlyRate !== undefined) values.hourlyRate = updates.hourlyRate.toString();
@@ -230,6 +241,7 @@ export const onlineAcademyRouter = router({
   // SME Contributors (Founding Members as Subject Matter Experts)
   getSMEContributors: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(smeContributors).orderBy(desc(smeContributors.createdAt));
   }),
 
@@ -245,6 +257,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         expertise: input.expertise ? JSON.stringify(input.expertise) : null,
@@ -267,6 +280,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const { id, ...updates } = input;
       const values: any = { ...updates };
       if (updates.expertise) values.expertise = JSON.stringify(updates.expertise);
@@ -279,6 +293,7 @@ export const onlineAcademyRouter = router({
   // Facility Plans
   getFacilityPlans: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(facilityPlans).orderBy(desc(facilityPlans.createdAt));
   }),
 
@@ -304,6 +319,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         estimatedCost: input.estimatedCost?.toString(),
@@ -337,6 +353,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const { id, ...updates } = input;
       const values: any = { ...updates };
       if (updates.estimatedCost !== undefined) values.estimatedCost = updates.estimatedCost.toString();
@@ -350,6 +367,7 @@ export const onlineAcademyRouter = router({
   // Accreditation Records
   getAccreditations: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) return [];
     return db.select().from(accreditationRecords).orderBy(desc(accreditationRecords.createdAt));
   }),
 
@@ -368,6 +386,7 @@ export const onlineAcademyRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       const values: any = {
         ...input,
         requirements: input.requirements ? JSON.stringify(input.requirements) : null,
@@ -384,6 +403,36 @@ export const onlineAcademyRouter = router({
   // Academy Stats
   getStats: protectedProcedure.query(async () => {
     const db = await getDb();
+    if (!db) {
+      return {
+        totalCourses: 0,
+        coursesByCategory: {
+          financial_sovereignty: 0,
+          laws_framework: 0,
+          governance_civics: 0,
+          entrepreneurship: 0,
+          creative_enterprise: 0,
+          core_academic: 0,
+          professional_development: 0,
+          simulator_training: 0,
+        },
+        totalProjects: 0,
+        activeProjects: 0,
+        completedProjects: 0,
+        totalProjectBudget: 0,
+        totalPaid: 0,
+        remainingBudget: 0,
+        totalInstructors: 0,
+        activeInstructors: 0,
+        credentialedInstructors: 0,
+        totalSMEs: 0,
+        availableSMEs: 0,
+        totalFacilityPlans: 0,
+        facilitiesInProgress: 0,
+        totalAccreditations: 0,
+        activeAccreditations: 0,
+      };
+    }
     const courses = await db.select().from(onlineCourseDetails);
     const projects = await db.select().from(curriculumProjects);
     const instructors = await db.select().from(academyInstructors);
@@ -432,6 +481,7 @@ export const onlineAcademyRouter = router({
   // Seed default Academy Director (Cornelius)
   seedAcademyDirector: protectedProcedure.mutation(async () => {
     const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const existing = await db.select().from(academyInstructors);
     const hasDirector = existing.some(i => i.instructorType === "credentialed" && i.name.includes("Cornelius"));
     

@@ -83,13 +83,29 @@ export const taxModuleRouter = router({
       year: z.number().default(new Date().getFullYear()),
     }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { year } = input;
+      
+      if (!db) {
+        return {
+          year,
+          totalIncome: 0,
+          totalDeductions: 0,
+          taxableIncome: 0,
+          estimatedFederalTax: 0,
+          selfEmploymentTax: 0,
+          totalEstimatedTax: 0,
+          contractorPayments: 0,
+          effectiveTaxRate: 0,
+          transactionCount: 0,
+        };
+      }
       
       const startDate = new Date(year, 0, 1);
       const endDate = new Date(year, 11, 31, 23, 59, 59);
       
       // Get all transactions for the year
+      // Schema columns: id, fromAccountId, toAccountId, amount, transactionType, description, blockchainHash, status, createdAt, confirmedAt
       const transactions = await db
         .select()
         .from(luvLedgerTransactions)
@@ -101,18 +117,21 @@ export const taxModuleRouter = router({
         )
         .orderBy(desc(luvLedgerTransactions.createdAt));
       
-      // Calculate totals
+      // Calculate totals based on transactionType
       let totalIncome = 0;
       let totalDeductions = 0;
       let contractorPayments = 0;
       
       for (const tx of transactions) {
         const amount = Number(tx.amount) || 0;
-        if (tx.type === "income" || tx.type === "revenue") {
+        // transactionType enum: "income", "allocation", "distribution", "fee", "adjustment"
+        if (tx.transactionType === "income") {
           totalIncome += amount;
-        } else if (tx.type === "expense" || tx.type === "deduction") {
+        } else if (tx.transactionType === "fee" || tx.transactionType === "distribution") {
           totalDeductions += amount;
-          if (tx.category === "contractor" || tx.category === "1099") {
+          // Check description for contractor payments
+          const desc = (tx.description || "").toLowerCase();
+          if (desc.includes("contractor") || desc.includes("1099")) {
             contractorPayments += amount;
           }
         }
@@ -145,7 +164,20 @@ export const taxModuleRouter = router({
     .query(async ({ input }) => {
       const { year } = input;
       const dueDates = getQuarterlyDueDates(year);
-      const db = getDb();
+      const db = await getDb();
+      
+      if (!db) {
+        return dueDates.map(q => ({
+          quarter: q.quarter,
+          period: q.period,
+          dueDate: q.dueDate,
+          income: 0,
+          deductions: 0,
+          taxableIncome: 0,
+          estimatedTax: 0,
+          isPastDue: new Date() > q.dueDate,
+        }));
+      }
       
       const quarters = [];
       
@@ -172,9 +204,9 @@ export const taxModuleRouter = router({
         
         for (const tx of transactions) {
           const amount = Number(tx.amount) || 0;
-          if (tx.type === "income" || tx.type === "revenue") {
+          if (tx.transactionType === "income") {
             income += amount;
-          } else if (tx.type === "expense" || tx.type === "deduction") {
+          } else if (tx.transactionType === "fee" || tx.transactionType === "distribution") {
             deductions += amount;
           }
         }
@@ -203,20 +235,29 @@ export const taxModuleRouter = router({
       year: z.number().default(new Date().getFullYear()),
     }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { year } = input;
+      
+      if (!db) {
+        return {
+          year,
+          contractors: [],
+          totalContractorPayments: 0,
+          contractorsRequiring1099: 0,
+        };
+      }
       
       const startDate = new Date(year, 0, 1);
       const endDate = new Date(year, 11, 31, 23, 59, 59);
       
+      // Get fee/distribution transactions and filter for contractor payments by description
       const transactions = await db
         .select()
         .from(luvLedgerTransactions)
         .where(
           and(
             gte(luvLedgerTransactions.createdAt, startDate),
-            lte(luvLedgerTransactions.createdAt, endDate),
-            eq(luvLedgerTransactions.category, "contractor")
+            lte(luvLedgerTransactions.createdAt, endDate)
           )
         )
         .orderBy(desc(luvLedgerTransactions.createdAt));
@@ -224,9 +265,14 @@ export const taxModuleRouter = router({
       const payeeMap = new Map<string, number>();
       
       for (const tx of transactions) {
-        const payee = tx.description || "Unknown Contractor";
-        const amount = Number(tx.amount) || 0;
-        payeeMap.set(payee, (payeeMap.get(payee) || 0) + amount);
+        if (tx.transactionType === "fee" || tx.transactionType === "distribution") {
+          const desc = (tx.description || "").toLowerCase();
+          if (desc.includes("contractor") || desc.includes("1099")) {
+            const payee = tx.description || "Unknown Contractor";
+            const amount = Number(tx.amount) || 0;
+            payeeMap.set(payee, (payeeMap.get(payee) || 0) + amount);
+          }
+        }
       }
       
       const contractors = Array.from(payeeMap.entries())
