@@ -21,6 +21,7 @@ import {
   Apple,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function HealthDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -113,6 +114,7 @@ export default function HealthDashboard() {
             <TabsTrigger value="programs">Programs</TabsTrigger>
             <TabsTrigger value="events">Events</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -268,6 +270,16 @@ export default function HealthDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Health" 
+              title="Health & Wellness Document Repository"
+              description="Wellness programs, health policies, safety protocols, and wellness resources"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

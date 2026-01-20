@@ -19,6 +19,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function HRDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -144,6 +145,7 @@ export default function HRDashboard() {
             <TabsTrigger value="applications">Recent Applications</TabsTrigger>
             <TabsTrigger value="positions">Open Positions</TabsTrigger>
             <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -318,6 +320,16 @@ export default function HRDashboard() {
                 </p>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="HR" 
+              title="HR Document Repository"
+              description="Employee handbooks, policies, onboarding materials, and HR procedures"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

@@ -26,8 +26,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
-type TabType = "overview" | "houses" | "modules" | "languages" | "courses" | "simulators";
+type TabType = "overview" | "houses" | "modules" | "languages" | "courses" | "simulators" | "documents";
 
 const moduleIcons: Record<string, React.ReactNode> = {
   "science-origin-observation": <TreePine className="w-5 h-5" />,
@@ -65,6 +66,7 @@ export default function AcademyDashboard() {
     { id: "languages" as TabType, label: "Languages", icon: <Globe2 className="w-4 h-4" /> },
     { id: "courses" as TabType, label: "Courses", icon: <GraduationCap className="w-4 h-4" /> },
     { id: "simulators" as TabType, label: "Simulators", icon: <Calculator className="w-4 h-4" /> },
+    { id: "documents" as TabType, label: "Documents", icon: <FileText className="w-4 h-4" /> },
   ];
 
   return (
@@ -751,6 +753,17 @@ export default function AcademyDashboard() {
                   </div>
                 </div>
               </div>
+            )}
+
+            {/* Documents Tab */}
+            {activeTab === "documents" && (
+              <DepartmentProcedures 
+                department="Academy" 
+                title="Academy Document Repository"
+                description="Curriculum guides, teaching materials, student handbooks, and educational resources"
+                showCategories={true}
+                showSearch={true}
+              />
             )}
           </>
         )}

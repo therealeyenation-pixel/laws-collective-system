@@ -29,6 +29,7 @@ import {
   Package,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function OperationsDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -274,6 +275,7 @@ export default function OperationsDashboard() {
             <TabsTrigger value="departments">Departments</TabsTrigger>
             <TabsTrigger value="tasks">Tasks</TabsTrigger>
             <TabsTrigger value="activity">Activity Log</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -473,6 +475,16 @@ export default function OperationsDashboard() {
                 ))}
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Operations" 
+              title="Operations Document Repository"
+              description="SOPs, operational procedures, workflow guides, and process documentation"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

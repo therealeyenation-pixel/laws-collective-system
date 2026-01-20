@@ -20,6 +20,7 @@ import {
   XCircle
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function FoundationDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -166,12 +167,13 @@ export default function FoundationDashboard() {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="requests">Requests</TabsTrigger>
           <TabsTrigger value="assets">Assets</TabsTrigger>
           <TabsTrigger value="risks">Risks</TabsTrigger>
           <TabsTrigger value="metrics">M&E</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -537,6 +539,16 @@ export default function FoundationDashboard() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="documents">
+          <DepartmentProcedures 
+            department="Foundation" 
+            title="Foundation Document Repository"
+            description="Governance documents, bylaws, compliance records, and foundation policies"
+            showCategories={true}
+            showSearch={true}
+          />
         </TabsContent>
       </Tabs>
     </div>

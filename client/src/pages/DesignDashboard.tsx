@@ -19,6 +19,7 @@ import {
   PenTool,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function DesignDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -115,6 +116,7 @@ export default function DesignDashboard() {
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="assets">Brand Assets</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -258,6 +260,16 @@ export default function DesignDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Design" 
+              title="Design Document Repository"
+              description="Brand guidelines, style guides, design templates, and creative assets documentation"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

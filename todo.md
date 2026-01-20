@@ -5097,3 +5097,17 @@
   - [x] Replace hardcoded documents in PlatformAdminDashboard
   - [x] Add proper references to central tables via DepartmentProcedures component
 - [x] Test data consistency across all dashboards - 472 tests passing
+
+## Phase 93: Extend DepartmentProcedures to All Dashboards
+- [x] Update HR Dashboard with DepartmentProcedures component
+- [x] Update Finance Dashboard with DepartmentProcedures component
+- [x] Update Operations Dashboard with DepartmentProcedures component
+- [x] Update remaining dashboards with documents tabs
+  - [x] Academy Dashboard
+  - [x] Business Dashboard
+  - [x] Design Dashboard
+  - [x] Media Dashboard
+  - [x] Health Dashboard
+  - [x] Foundation Dashboard
+  - [x] Education Dashboard
+- [x] Test all dashboards for consistency - 472 tests passing

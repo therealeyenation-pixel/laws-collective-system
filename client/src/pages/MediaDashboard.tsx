@@ -19,6 +19,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function MediaDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -111,6 +112,7 @@ export default function MediaDashboard() {
             <TabsTrigger value="productions">Productions</TabsTrigger>
             <TabsTrigger value="calendar">Content Calendar</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -283,6 +285,16 @@ export default function MediaDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Media" 
+              title="Media Document Repository"
+              description="Production guidelines, content calendars, brand voice guides, and media policies"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

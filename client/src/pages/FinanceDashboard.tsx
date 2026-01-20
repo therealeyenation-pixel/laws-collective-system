@@ -22,6 +22,7 @@ import {
   Calculator,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function FinanceDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -135,6 +136,7 @@ export default function FinanceDashboard() {
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="budget">Budget</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -308,6 +310,16 @@ export default function FinanceDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Finance" 
+              title="Finance Document Repository"
+              description="Financial policies, accounting procedures, budget templates, and compliance documents"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

@@ -21,6 +21,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function BusinessDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -117,6 +118,7 @@ export default function BusinessDashboard() {
             <TabsTrigger value="entities">Entities</TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -278,6 +280,16 @@ export default function BusinessDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Business" 
+              title="Business Document Repository"
+              description="Business plans, entity documents, strategic plans, and corporate governance"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>

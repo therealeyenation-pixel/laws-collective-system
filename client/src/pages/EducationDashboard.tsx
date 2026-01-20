@@ -19,6 +19,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Link } from "wouter";
+import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 
 export default function EducationDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -111,6 +112,7 @@ export default function EducationDashboard() {
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="schedule">Schedule</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -277,6 +279,16 @@ export default function EducationDashboard() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <DepartmentProcedures 
+              department="Education" 
+              title="Education Document Repository"
+              description="Curriculum materials, course outlines, training guides, and educational resources"
+              showCategories={true}
+              showSearch={true}
+            />
           </TabsContent>
         </Tabs>
       </div>
