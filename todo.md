@@ -4821,3 +4821,40 @@
 - [ ] LegalDashboard - document upload and repository
 - [ ] ITDashboard - document upload and repository
 
+
+## Phase 153: Navigation Reorganization & Procedures Dashboard
+
+### Navigation Reorganization
+- [x] Move Business Setup items under Business department in sidebar
+- [x] Remove standalone Business Setup category from sidebar
+
+### Procedures Dashboard (under QA/QC)
+- [x] Create Procedures Dashboard page with cross-department links
+- [x] Add Procedures link to QA/QC department in sidebar
+- [x] Link procedures to relevant departments (HR, Operations, Finance, etc.)
+
+### System Check
+- [x] Run comprehensive check on all 18 department dashboard pages
+- [x] Verify all routes load correctly
+- [x] Confirm sidebar navigation works properly
+
+### Verified Department Dashboards (All Working)
+- [x] Business (/dept/business)
+- [x] Health (/dept/health)
+- [x] Education (/dept/education)
+- [x] Design (/dept/design)
+- [x] Media (/dept/media)
+- [x] Finance (/dept/finance)
+- [x] HR (/dept/hr)
+- [x] Operations (/dept/operations)
+- [x] Procurement (/dept/procurement)
+- [x] Contracts (/dept/contracts)
+- [x] Purchasing (/dept/purchasing)
+- [x] Property (/dept/property)
+- [x] Real Estate (/dept/real-estate)
+- [x] Project Controls (/dept/project-controls)
+- [x] QA/QC (/dept/qaqc)
+- [x] Legal (/dept/legal)
+- [x] IT (/dept/it)
+- [x] Platform Admin (/dept/platform-admin)
+- [x] Procedures (/procedures)

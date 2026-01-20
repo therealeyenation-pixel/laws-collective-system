@@ -164,6 +164,12 @@ const menuCategories: MenuCategory[] = [
           { icon: Building2, label: "Business Formation", path: "/business-formation", minRole: "user" },
           { icon: FileText, label: "Operating Agreements", path: "/operating-agreements", minRole: "user" },
           { icon: BarChart3, label: "SWOT Analysis", path: "/swot-analysis", minRole: "user" },
+          { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin" },
+          { icon: Building2, label: "Business Setup", path: "/business-setup", minRole: "admin" },
+          { icon: FileText, label: "Upload Business Plan", path: "/business-plan-upload", minRole: "admin" },
+          { icon: Gavel, label: "Board Meetings", path: "/board-meetings", minRole: "admin" },
+          { icon: Globe2, label: "International Business", path: "/international-business", minRole: "admin" },
+          { icon: Landmark, label: "Foundation", path: "/foundation", minRole: "admin" },
           { icon: Users, label: "Team", path: "/business-team", minRole: "staff" },
           { icon: FolderOpen, label: "Documents", path: "/business-documents", minRole: "staff" },
         ]
@@ -362,6 +368,7 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: CheckCircle, label: "QA/QC Dashboard", path: "/dept/qaqc", minRole: "staff" },
           { icon: ClipboardList, label: "Quality Standards", path: "/quality-standards", minRole: "staff" },
+          { icon: FileText, label: "Procedures", path: "/procedures", minRole: "staff" },
           { icon: FileCheck, label: "Audits", path: "/audits", minRole: "staff" },
           { icon: Play, label: "QA/QC Simulator", path: "/qaqc-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/qaqc-team", minRole: "staff" },
@@ -443,21 +450,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Bot, label: "Agents", path: "/agents", minRole: "staff" },
         ]
       },
-      // Business Setup
-      {
-        icon: Building2,
-        label: "Business Setup",
-        minRole: "admin",
-        items: [
-          { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin" },
-          { icon: Building2, label: "Business Formation", path: "/business-formation", minRole: "admin" },
-          { icon: Building2, label: "Business Setup", path: "/business-setup", minRole: "admin" },
-          { icon: FileText, label: "Upload Business Plan", path: "/business-plan-upload", minRole: "admin" },
-          { icon: Gavel, label: "Board Meetings", path: "/board-meetings", minRole: "admin" },
-          { icon: Globe2, label: "International Business", path: "/international-business", minRole: "admin" },
-          { icon: Landmark, label: "Foundation", path: "/foundation", minRole: "admin" },
-        ]
-      },
+
     ]
   },
 

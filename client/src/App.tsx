@@ -100,6 +100,7 @@ import QAQCDashboard from "@/pages/QAQCDashboard";
 import LegalDashboard from "@/pages/LegalDashboard";
 import ITDashboard from "@/pages/ITDashboard";
 import PlatformAdminDashboard from "@/pages/PlatformAdminDashboard";
+import Procedures from "@/pages/Procedures";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -268,6 +269,7 @@ function Router() {
       <Route path="/dept/real-estate">{() => <ProtectedRoute component={RealEstateDashboard} minRole="staff" />}</Route>
       <Route path="/dept/project-controls">{() => <ProtectedRoute component={ProjectControlsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/qaqc">{() => <ProtectedRoute component={QAQCDashboard} minRole="staff" />}</Route>
+      <Route path="/procedures">{() => <ProtectedRoute component={Procedures} minRole="staff" />}</Route>
       <Route path="/dept/hr">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
       <Route path="/dept/operations">{() => <ProtectedRoute component={OperationsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/platform-admin">{() => <ProtectedRoute component={PlatformAdminDashboard} minRole="admin" />}</Route>
