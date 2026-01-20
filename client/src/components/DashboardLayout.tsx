@@ -234,6 +234,7 @@ const menuCategories: MenuCategory[] = [
         minRole: "staff",
         items: [
           { icon: DollarSign, label: "Finance Dashboard", path: "/dept/finance", minRole: "staff" },
+          { icon: Calculator, label: "Tax Module", path: "/tax-module", minRole: "staff" },
           { icon: DollarSign, label: "Financial Automation", path: "/financial-automation", minRole: "staff" },
           { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff" },
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },

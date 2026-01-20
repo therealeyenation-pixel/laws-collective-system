@@ -101,6 +101,7 @@ import LegalDashboard from "@/pages/LegalDashboard";
 import ITDashboard from "@/pages/ITDashboard";
 import PlatformAdminDashboard from "@/pages/PlatformAdminDashboard";
 import Procedures from "@/pages/Procedures";
+import TaxModule from "@/pages/TaxModule";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -262,6 +263,7 @@ function Router() {
       <Route path="/dept/design">{() => <ProtectedRoute component={DesignDashboard} minRole="staff" />}</Route>
       <Route path="/dept/media">{() => <ProtectedRoute component={MediaDashboard} minRole="staff" />}</Route>
       <Route path="/dept/finance">{() => <ProtectedRoute component={FinanceDashboard} minRole="staff" />}</Route>
+      <Route path="/tax-module">{() => <ProtectedRoute component={TaxModule} minRole="staff" />}</Route>
       <Route path="/dept/procurement">{() => <ProtectedRoute component={ProcurementDashboard} minRole="staff" />}</Route>
       <Route path="/dept/contracts">{() => <ProtectedRoute component={ContractsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/purchasing">{() => <ProtectedRoute component={PurchasingDashboard} minRole="staff" />}</Route>
