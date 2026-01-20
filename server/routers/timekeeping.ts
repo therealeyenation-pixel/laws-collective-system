@@ -14,6 +14,7 @@ import {
   timeOffRequests,
   contractorInvoices,
   invoiceLineItems,
+  employees,
 } from "../../drizzle/schema";
 import { eq, and, gte, lte, desc, sql, inArray } from "drizzle-orm";
 
@@ -737,5 +738,372 @@ export const timekeepingRouter = router({
       }
       
       return Object.values(summary);
+    }),
+
+  // ==========================================
+  // HR INTEGRATION - Master Record Sync
+  // ==========================================
+  
+  // Get HR employees to sync as timekeeping workers
+  getHREmployees: protectedProcedure
+    .input(z.object({
+      status: z.enum(["active", "on_leave", "terminated", "pending"]).optional(),
+      workerType: z.enum(["employee", "contractor", "volunteer"]).optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      
+      let query = db.select().from(employees);
+      
+      if (input?.status) {
+        query = query.where(eq(employees.status, input.status)) as typeof query;
+      }
+      if (input?.workerType) {
+        query = query.where(eq(employees.workerType, input.workerType)) as typeof query;
+      }
+      
+      return await query.orderBy(employees.lastName, employees.firstName);
+    }),
+
+  // Sync an HR employee to timekeeping (creates or updates timekeeping worker)
+  syncFromHR: protectedProcedure
+    .input(z.object({
+      employeeId: z.number(),
+      supervisorId: z.number().optional(),
+      defaultChargeCodeId: z.number().optional(),
+      standardHoursPerWeek: z.string().optional(),
+      overtimeEligible: z.boolean().default(true),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      
+      // Get the HR employee record
+      const [employee] = await db.select().from(employees).where(eq(employees.id, input.employeeId));
+      if (!employee) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Employee not found in HR system" });
+      }
+      
+      // Check if already synced
+      const [existingWorker] = await db.select()
+        .from(timekeepingWorkers)
+        .where(eq(timekeepingWorkers.employeeId, input.employeeId));
+      
+      if (existingWorker) {
+        // Update existing worker from HR data
+        await db.update(timekeepingWorkers)
+          .set({
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            email: employee.email,
+            workerType: employee.workerType,
+            entityId: employee.entityId,
+            hourlyRate: employee.hourlyRate,
+            supervisorId: input.supervisorId,
+            defaultChargeCodeId: input.defaultChargeCodeId,
+            standardHoursPerWeek: input.standardHoursPerWeek || "40.00",
+            overtimeEligible: input.overtimeEligible,
+            status: employee.status === "active" ? "active" : employee.status === "terminated" ? "terminated" : "inactive",
+            hireDate: employee.startDate,
+            terminationDate: employee.endDate,
+          })
+          .where(eq(timekeepingWorkers.id, existingWorker.id));
+        
+        return { success: true, id: existingWorker.id, action: "updated" };
+      } else {
+        // Create new timekeeping worker from HR data
+        const result = await db.insert(timekeepingWorkers).values({
+          userId: employee.userId,
+          employeeId: employee.id,
+          contractorId: employee.workerType === "contractor" ? employee.id : undefined,
+          workerType: employee.workerType,
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          email: employee.email,
+          entityId: employee.entityId,
+          supervisorId: input.supervisorId,
+          defaultChargeCodeId: input.defaultChargeCodeId,
+          hourlyRate: employee.hourlyRate,
+          standardHoursPerWeek: input.standardHoursPerWeek || "40.00",
+          overtimeEligible: input.overtimeEligible,
+          status: employee.status === "active" ? "active" : "inactive",
+          hireDate: employee.startDate,
+          terminationDate: employee.endDate,
+        });
+        
+        return { success: true, id: result[0].insertId, action: "created" };
+      }
+    }),
+
+  // Bulk sync all active HR employees to timekeeping
+  syncAllFromHR: protectedProcedure
+    .mutation(async () => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      
+      // Get all active HR employees
+      const hrEmployees = await db.select()
+        .from(employees)
+        .where(eq(employees.status, "active"));
+      
+      // Get existing timekeeping workers with employeeId
+      const existingWorkers = await db.select().from(timekeepingWorkers);
+      const syncedEmployeeIds = new Set(existingWorkers.filter(w => w.employeeId).map(w => w.employeeId));
+      
+      let created = 0;
+      let updated = 0;
+      let skipped = 0;
+      
+      for (const employee of hrEmployees) {
+        const existingWorker = existingWorkers.find(w => w.employeeId === employee.id);
+        
+        if (existingWorker) {
+          // Update existing
+          await db.update(timekeepingWorkers)
+            .set({
+              firstName: employee.firstName,
+              lastName: employee.lastName,
+              email: employee.email,
+              workerType: employee.workerType,
+              entityId: employee.entityId,
+              hourlyRate: employee.hourlyRate,
+              status: "active",
+              hireDate: employee.startDate,
+            })
+            .where(eq(timekeepingWorkers.id, existingWorker.id));
+          updated++;
+        } else {
+          // Create new
+          await db.insert(timekeepingWorkers).values({
+            userId: employee.userId,
+            employeeId: employee.id,
+            contractorId: employee.workerType === "contractor" ? employee.id : undefined,
+            workerType: employee.workerType,
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            email: employee.email,
+            entityId: employee.entityId,
+            hourlyRate: employee.hourlyRate,
+            standardHoursPerWeek: "40.00",
+            overtimeEligible: true,
+            status: "active",
+            hireDate: employee.startDate,
+          });
+          created++;
+        }
+      }
+      
+      return { success: true, created, updated, skipped, total: hrEmployees.length };
+    }),
+
+  // Get worker with full HR details
+  getWorkerWithHRDetails: protectedProcedure
+    .input(z.object({ workerId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      
+      const [worker] = await db.select().from(timekeepingWorkers).where(eq(timekeepingWorkers.id, input.workerId));
+      if (!worker) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Worker not found" });
+      }
+      
+      let hrEmployee = null;
+      if (worker.employeeId) {
+        const [emp] = await db.select().from(employees).where(eq(employees.id, worker.employeeId));
+        hrEmployee = emp || null;
+      }
+      
+      return {
+        worker,
+        hrEmployee,
+        isLinkedToHR: !!worker.employeeId,
+      };
+    }),
+
+  // ==========================================
+  // CONTRACTOR INVOICING - HR Integration
+  // ==========================================
+  
+  // Get contractor invoices with HR data
+  getContractorInvoicesWithHR: protectedProcedure
+    .input(z.object({
+      status: z.enum(["draft", "submitted", "under_review", "approved", "paid", "disputed"]).optional(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      
+      let conditions = [];
+      if (input?.status) conditions.push(eq(contractorInvoices.status, input.status));
+      if (input?.startDate) conditions.push(gte(contractorInvoices.periodStart, new Date(input.startDate)));
+      if (input?.endDate) conditions.push(lte(contractorInvoices.periodEnd, new Date(input.endDate)));
+      
+      let query = db.select().from(contractorInvoices);
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions)) as typeof query;
+      }
+      
+      const invoices = await query.orderBy(desc(contractorInvoices.createdAt));
+      
+      // Enrich with HR data
+      const enrichedInvoices = [];
+      for (const invoice of invoices) {
+        // Get timekeeping worker
+        const [worker] = await db.select()
+          .from(timekeepingWorkers)
+          .where(eq(timekeepingWorkers.id, invoice.workerId));
+        
+        // Get HR employee if linked
+        let hrContractor = null;
+        if (worker?.employeeId) {
+          const [emp] = await db.select()
+            .from(employees)
+            .where(eq(employees.id, worker.employeeId));
+          hrContractor = emp || null;
+        }
+        
+        // Use HR data if available
+        const contractorData = hrContractor ? {
+          contractorName: `${hrContractor.firstName} ${hrContractor.lastName}`,
+          contractorEmail: hrContractor.email,
+          contractorPhone: hrContractor.phone,
+          contractorAddress: hrContractor.address,
+          contractorCity: hrContractor.city,
+          contractorState: hrContractor.state,
+          contractorZip: hrContractor.zipCode,
+          contractorTaxId: hrContractor.taxId,
+          contractorHourlyRate: hrContractor.hourlyRate,
+          is1099: hrContractor.is1099,
+        } : worker ? {
+          contractorName: `${worker.firstName} ${worker.lastName}`,
+          contractorEmail: worker.email,
+          contractorPhone: null,
+          contractorAddress: null,
+          contractorCity: null,
+          contractorState: null,
+          contractorZip: null,
+          contractorTaxId: null,
+          contractorHourlyRate: worker.hourlyRate,
+          is1099: worker.workerType === "contractor",
+        } : {
+          contractorName: "Unknown",
+          contractorEmail: null,
+          contractorPhone: null,
+          contractorAddress: null,
+          contractorCity: null,
+          contractorState: null,
+          contractorZip: null,
+          contractorTaxId: null,
+          contractorHourlyRate: null,
+          is1099: false,
+        };
+        
+        enrichedInvoices.push({
+          ...invoice,
+          ...contractorData,
+          isLinkedToHR: !!(worker?.employeeId),
+          employeeId: worker?.employeeId || null,
+        });
+      }
+      
+      return enrichedInvoices;
+    }),
+
+  // Create contractor invoice with HR data auto-populated
+  createContractorInvoiceFromHR: protectedProcedure
+    .input(z.object({
+      employeeId: z.number(),
+      invoiceNumber: z.string(),
+      periodStart: z.string(),
+      periodEnd: z.string(),
+      notes: z.string().optional(),
+      attachmentUrl: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      
+      // Get HR employee (contractor)
+      const [hrContractor] = await db.select()
+        .from(employees)
+        .where(eq(employees.id, input.employeeId));
+      
+      if (!hrContractor) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Contractor not found in HR system" });
+      }
+      
+      if (hrContractor.workerType !== "contractor") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Only contractors can have invoices created" });
+      }
+      
+      // Find or create timekeeping worker
+      let [tkWorker] = await db.select()
+        .from(timekeepingWorkers)
+        .where(eq(timekeepingWorkers.employeeId, input.employeeId));
+      
+      if (!tkWorker) {
+        // Create timekeeping worker from HR
+        const result = await db.insert(timekeepingWorkers).values({
+          userId: hrContractor.userId,
+          employeeId: hrContractor.id,
+          contractorId: hrContractor.id,
+          workerType: "contractor",
+          firstName: hrContractor.firstName,
+          lastName: hrContractor.lastName,
+          email: hrContractor.email,
+          entityId: hrContractor.entityId,
+          hourlyRate: hrContractor.hourlyRate,
+          standardHoursPerWeek: "40.00",
+          overtimeEligible: false,
+          status: "active",
+          hireDate: hrContractor.startDate,
+        });
+        
+        [tkWorker] = await db.select()
+          .from(timekeepingWorkers)
+          .where(eq(timekeepingWorkers.id, result[0].insertId));
+      }
+      
+      // Calculate hours from approved time entries in period
+      const timeEntriesInPeriod = await db.select()
+        .from(timeEntries)
+        .where(and(
+          eq(timeEntries.workerId, tkWorker.id),
+          eq(timeEntries.status, "approved"),
+          gte(timeEntries.entryDate, new Date(input.periodStart)),
+          lte(timeEntries.entryDate, new Date(input.periodEnd))
+        ));
+      
+      const totalHours = timeEntriesInPeriod.reduce((sum, entry) => {
+        return sum + parseFloat(entry.hoursWorked || "0") + parseFloat(entry.overtimeHours || "0");
+      }, 0);
+      
+      const hourlyRate = parseFloat(hrContractor.hourlyRate || tkWorker.hourlyRate || "0");
+      const totalAmount = totalHours * hourlyRate;
+      
+      // Create invoice
+      const result = await db.insert(contractorInvoices).values({
+        workerId: tkWorker.id,
+        invoiceNumber: input.invoiceNumber,
+        periodStart: new Date(input.periodStart),
+        periodEnd: new Date(input.periodEnd),
+        totalHours: totalHours.toFixed(2),
+        totalAmount: totalAmount.toFixed(2),
+        notes: input.notes,
+        attachmentUrl: input.attachmentUrl,
+        status: "draft",
+      });
+      
+      return { 
+        success: true, 
+        id: result[0].insertId,
+        totalHours: totalHours.toFixed(2),
+        totalAmount: totalAmount.toFixed(2),
+        hourlyRate: hourlyRate.toFixed(2),
+      };
     }),
 });

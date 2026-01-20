@@ -9,6 +9,7 @@ import {
   timeEntries,
   timekeepingWorkers,
   houses,
+  employees,
 } from "../../drizzle/schema";
 import { eq, and, desc, sql, gte, lte } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -948,6 +949,173 @@ export const payrollRouter = router({
         calculations: payrollCalculations,
         summary,
       };
+    }),
+
+  // ==========================================
+  // HR INTEGRATION - Pull Employee Data
+  // ==========================================
+  
+  // Get payroll data enriched with HR employee details
+  getPayrollWithHRData: protectedProcedure
+    .input(z.object({
+      payPeriodStart: z.date(),
+      payPeriodEnd: z.date(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      // Get approved timesheets for the period
+      const approvedTimesheets = await db
+        .select()
+        .from(timesheets)
+        .where(
+          and(
+            eq(timesheets.status, "approved"),
+            gte(timesheets.periodStart, input.payPeriodStart),
+            lte(timesheets.periodEnd, input.payPeriodEnd)
+          )
+        );
+
+      const enrichedData = [];
+
+      for (const ts of approvedTimesheets) {
+        // Get timekeeping worker
+        const [tkWorker] = await db
+          .select()
+          .from(timekeepingWorkers)
+          .where(eq(timekeepingWorkers.id, ts.workerId));
+
+        if (!tkWorker) continue;
+
+        // Get HR employee data if linked
+        let hrEmployee = null;
+        if (tkWorker.employeeId) {
+          const [emp] = await db
+            .select()
+            .from(employees)
+            .where(eq(employees.id, tkWorker.employeeId));
+          hrEmployee = emp || null;
+        }
+
+        // Use HR data if available, fall back to timekeeping data
+        const workerData = hrEmployee ? {
+          firstName: hrEmployee.firstName,
+          lastName: hrEmployee.lastName,
+          email: hrEmployee.email,
+          department: hrEmployee.department,
+          jobTitle: hrEmployee.jobTitle,
+          entityId: hrEmployee.entityId,
+          workerType: hrEmployee.workerType,
+          hourlyRate: hrEmployee.hourlyRate || tkWorker.hourlyRate,
+          startDate: hrEmployee.startDate,
+          is1099: hrEmployee.is1099,
+        } : {
+          firstName: tkWorker.firstName,
+          lastName: tkWorker.lastName,
+          email: tkWorker.email,
+          department: null,
+          jobTitle: null,
+          entityId: tkWorker.entityId,
+          workerType: tkWorker.workerType,
+          hourlyRate: tkWorker.hourlyRate,
+          startDate: tkWorker.hireDate,
+          is1099: tkWorker.workerType === "contractor",
+        };
+
+        enrichedData.push({
+          timesheetId: ts.id,
+          workerId: ts.workerId,
+          employeeId: tkWorker.employeeId,
+          isLinkedToHR: !!tkWorker.employeeId,
+          ...workerData,
+          periodStart: ts.periodStart,
+          periodEnd: ts.periodEnd,
+          regularHours: Number(ts.totalRegularHours) || 0,
+          overtimeHours: Number(ts.totalOvertimeHours) || 0,
+          billableHours: Number(ts.totalBillableHours) || 0,
+        });
+      }
+
+      return enrichedData;
+    }),
+
+  // Sync W-2 worker from HR employee record
+  syncW2WorkerFromHR: protectedProcedure
+    .input(z.object({
+      employeeId: z.number(),
+      payFrequency: z.enum(["weekly", "bi_weekly", "semi_monthly", "monthly"]).default("bi_weekly"),
+      filingStatus: z.enum(["single", "married_filing_jointly", "married_filing_separately", "head_of_household", "qualifying_widow"]).default("single"),
+      federalAllowances: z.number().default(0),
+      stateAllowances: z.number().default(0),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      // Get HR employee
+      const [hrEmployee] = await db
+        .select()
+        .from(employees)
+        .where(eq(employees.id, input.employeeId));
+
+      if (!hrEmployee) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Employee not found in HR system" });
+      }
+
+      if (hrEmployee.workerType !== "employee") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Only W-2 employees can be synced to payroll" });
+      }
+
+      // Check if already exists in W-2 workers
+      const [existingW2] = await db
+        .select()
+        .from(w2Workers)
+        .where(eq(w2Workers.employeeId, input.employeeId));
+
+      if (existingW2) {
+        // Update existing W-2 worker from HR
+        await db.update(w2Workers)
+          .set({
+            firstName: hrEmployee.firstName,
+            lastName: hrEmployee.lastName,
+            email: hrEmployee.email,
+            department: hrEmployee.department,
+            jobTitle: hrEmployee.jobTitle,
+            payFrequency: input.payFrequency,
+            filingStatus: input.filingStatus,
+            federalAllowances: input.federalAllowances,
+            stateAllowances: input.stateAllowances,
+            status: hrEmployee.status === "active" ? "active" : "inactive",
+          })
+          .where(eq(w2Workers.id, existingW2.id));
+
+        return { success: true, id: existingW2.id, action: "updated" };
+      } else {
+        // Create new W-2 worker from HR
+        const result = await db.insert(w2Workers).values({
+          houseId: hrEmployee.entityId,
+          userId: hrEmployee.userId,
+          employeeId: hrEmployee.id,
+          firstName: hrEmployee.firstName,
+          lastName: hrEmployee.lastName,
+          email: hrEmployee.email,
+          department: hrEmployee.department,
+          jobTitle: hrEmployee.jobTitle,
+          employmentType: hrEmployee.employmentType === "full_time" ? "full_time" : 
+                          hrEmployee.employmentType === "part_time" ? "part_time" : "full_time",
+          payType: "hourly",
+          hourlyRate: hrEmployee.hourlyRate || "0",
+          payFrequency: input.payFrequency,
+          filingStatus: input.filingStatus,
+          federalAllowances: input.federalAllowances,
+          stateAllowances: input.stateAllowances,
+          status: "active",
+          hireDate: hrEmployee.startDate,
+        });
+
+        return { success: true, id: result[0].insertId, action: "created" };
+      }
     }),
 });
 

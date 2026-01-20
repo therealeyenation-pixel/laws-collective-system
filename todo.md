@@ -4995,3 +4995,11 @@
 - [x] Integrate timekeeping approved hours into payroll calculations
 - [x] Add PDF export to Grant Labor Reports
 - [ ] Test all payroll and tax features
+
+## Phase 87: HR as Master Record Integration
+- [x] Analyze current HR and timekeeping data structures - employees table already has employeeId/contractorId fields
+- [x] Update timekeeping workers to reference HR employee records
+- [x] Update payroll to pull employee data from HR
+- [x] Update invoicing to pull contractor info from HR
+- [x] Migrate existing timekeeping workers to HR references (syncAllFromHR endpoint added)
+- [x] Test all integrations - 458 tests passing
