@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { ElectronicSignature } from "@/components/ElectronicSignature";
 
 interface RequiredReadingTrackerProps {
   department?: string;
@@ -176,14 +177,16 @@ export default function RequiredReadingTracker({
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => handleAcknowledge(procedure.id, procedure.version || "1.0")}
-                          disabled={acknowledgeMutation.isPending}
-                        >
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          Acknowledge
-                        </Button>
+                        <ElectronicSignature
+                          documentType="procedure"
+                          documentId={procedure.id}
+                          documentTitle={procedure.title}
+                          signatureStatement={`I have read, understand, and agree to comply with the procedure: ${procedure.title}`}
+                          compact={true}
+                          onSigned={() => {
+                            handleAcknowledge(procedure.id, procedure.version || "1.0");
+                          }}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

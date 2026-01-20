@@ -11612,3 +11612,48 @@ export const propertyUtilities = mysqlTable("property_utilities", {
 
 export type PropertyUtility = typeof propertyUtilities.$inferSelect;
 export type InsertPropertyUtility = typeof propertyUtilities.$inferInsert;
+
+
+// ==========================================
+// Electronic Signature System
+// ==========================================
+
+/**
+ * Electronic Signatures - captures legally binding e-signatures
+ */
+export const electronicSignatures = mysqlTable("electronic_signatures", {
+  id: int("id").autoincrement().primaryKey(),
+  signerId: int("signer_id").notNull(),
+  signerName: varchar("signer_name", { length: 255 }).notNull(),
+  signerEmail: varchar("signer_email", { length: 255 }),
+  documentType: varchar("document_type", { length: 100 }).notNull(),
+  documentId: int("document_id").notNull(),
+  documentTitle: varchar("document_title", { length: 500 }),
+  signatureData: text("signature_data").notNull(),
+  signatureHash: varchar("signature_hash", { length: 64 }).notNull(),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+  signedAt: timestamp("signed_at").defaultNow().notNull(),
+  verificationCode: varchar("verification_code", { length: 32 }).notNull(),
+  isVerified: boolean("is_verified").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type ElectronicSignature = typeof electronicSignatures.$inferSelect;
+export type InsertElectronicSignature = typeof electronicSignatures.$inferInsert;
+
+/**
+ * Signature Audit Log - tracks all signature-related actions
+ */
+export const signatureAuditLog = mysqlTable("signature_audit_log", {
+  id: int("id").autoincrement().primaryKey(),
+  signatureId: int("signature_id").notNull(),
+  action: varchar("action", { length: 50 }).notNull(),
+  actionBy: int("action_by"),
+  actionDetails: text("action_details"),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type SignatureAuditLog = typeof signatureAuditLog.$inferSelect;
+export type InsertSignatureAuditLog = typeof signatureAuditLog.$inferInsert;

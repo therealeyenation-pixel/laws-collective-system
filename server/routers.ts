@@ -57,6 +57,7 @@ import { interCompanyRouter } from "./routers/inter-company";
 import { businessFormationRouter } from "./routers/business-formation";
 import { bankingCreditRouter } from "./routers/banking-credit";
 import { digitalSignaturesRouter } from "./routers/digital-signatures";
+import { electronicSignatureRouter } from "./routers/electronicSignature";
 import { exchangeRatesRouter } from "./routers/exchange-rates";
 import { grantManagementRouter } from "./routers/grant-management";
 import { businessPlanRouter } from "./routers/business-plan";
@@ -162,6 +163,7 @@ export const appRouter = router({
   businessFormation: businessFormationRouter,
   bankingCredit: bankingCreditRouter,
   digitalSignatures: digitalSignaturesRouter,
+  electronicSignature: electronicSignatureRouter,
   exchangeRates: exchangeRatesRouter,
   grantManagement: grantManagementRouter,
   businessPlan: businessPlanRouter,

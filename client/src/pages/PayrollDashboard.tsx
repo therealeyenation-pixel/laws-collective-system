@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { ElectronicSignature } from "@/components/ElectronicSignature";
 import { 
   DollarSign, 
   Calendar, 
@@ -1242,18 +1243,24 @@ NET PAY: ${formatCurrency(selectedPayStub.netPay)}
               </div>
             )}
 
+            {/* E-Signature for Payroll Approval */}
+            <div className="border-t pt-4">
+              <ElectronicSignature
+                documentType="payroll_approval"
+                documentId={selectedPeriod?.periodId || Date.now()}
+                documentTitle={`Payroll Approval - ${formatDate(periodStart)} to ${formatDate(periodEnd)}`}
+                signatureStatement={`I certify that I have reviewed the payroll calculations for the period ${formatDate(periodStart)} to ${formatDate(periodEnd)} totaling ${formatCurrency(selectedPeriod?.summary?.totalNetPay || 0)} and authorize the processing of these payments.`}
+                onSigned={() => {
+                  selectedPeriod?.calculations?.forEach((calc: any) => handleProcessWorkerPayroll(calc));
+                  setShowRunPayrollDialog(false);
+                  toast.success("Payroll approved and processing");
+                }}
+              />
+            </div>
+
             <DialogFooter>
               <Button variant="outline" onClick={() => setShowRunPayrollDialog(false)}>
                 Close
-              </Button>
-              <Button 
-                onClick={() => {
-                  selectedPeriod?.calculations?.forEach((calc: any) => handleProcessWorkerPayroll(calc));
-                  setShowRunPayrollDialog(false);
-                }}
-                disabled={processPayroll.isPending}
-              >
-                Process All
               </Button>
             </DialogFooter>
           </DialogContent>

@@ -17,6 +17,7 @@ import {
   Building2,
 } from "lucide-react";
 import { Link } from "wouter";
+import { ElectronicSignature } from "@/components/ElectronicSignature";
 
 export default function ContractsDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -232,6 +233,15 @@ export default function ContractsDashboard() {
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{contract.status}</Badge>
                       <Button variant="outline" size="sm">Review</Button>
+                      {contract.status === "Pending Signature" && (
+                        <ElectronicSignature
+                          documentType="contract"
+                          documentId={idx + 1000}
+                          documentTitle={contract.name}
+                          signatureStatement={`I have reviewed and agree to the terms of ${contract.name} with ${contract.party}.`}
+                          compact={true}
+                        />
+                      )}
                     </div>
                   </div>
                 ))}
