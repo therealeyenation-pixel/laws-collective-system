@@ -1,0 +1,13 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'business_positions' AND COLUMN_NAME LIKE '%salary%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'business_positions' AND COLUMN_NAME LIKE '%salary%';",
+  "rows": [
+    {
+      "COLUMN_NAME": "salaryAmount"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nsalaryAmount\n",
+  "stderr": "",
+  "execution_time_ms": 70
+}

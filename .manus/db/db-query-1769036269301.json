@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE business_positions SET salaryAmount = 55000 WHERE title LIKE '%Specialist%' OR title LIKE '%Writer%' OR title LIKE '%Creator%' OR title LIKE '%Assistant%' OR title LIKE '%Instructor%' OR title LIKE '%Administrator%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE business_positions SET salaryAmount = 55000 WHERE title LIKE '%Specialist%' OR title LIKE '%Writer%' OR title LIKE '%Creator%' OR title LIKE '%Assistant%' OR title LIKE '%Instructor%' OR title LIKE '%Administrator%';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 63
+}

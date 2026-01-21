@@ -146,7 +146,7 @@ export default function PositionManagement() {
                             <p className="text-sm text-muted-foreground">{position.description}</p>
                             <div className="flex items-center gap-4 mt-2">
                               {getTypeBadge(position.positionType)}
-                              <span className="text-sm">${position.compensationAmount?.toLocaleString()} / {position.compensationType}</span>
+                              <span className="text-sm">${(position.salaryAmount || position.compensationAmount || 0).toLocaleString()} / {position.compensationType}</span>
                             </div>
                           </div>
                         </div>
