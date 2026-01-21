@@ -25,8 +25,18 @@ export default function HRDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
 
   const { data: applications, isLoading: applicationsLoading } = trpc.jobApplications.list.useQuery({});
+  const { data: positionsData, isLoading: positionsLoading } = trpc.positionManagement.getAllPositions.useQuery();
   // Employees endpoint not yet implemented
   const employees: any[] = [];
+
+  // Map database positions to display format
+  const openPositions = (positionsData || []).filter((p: any) => p.status === 'open').map((p: any) => ({
+    title: p.title,
+    department: p.department || 'General',
+    applications: 0, // TODO: count applications per position
+    status: 'Open Position',
+    salary: p.salaryAmount,
+  }));
 
   // Calculate metrics from applications
   const totalApplications = applications?.length || 0;
@@ -53,46 +63,7 @@ export default function HRDashboard() {
     { label: "Rejected", value: rejected, icon: XCircle, color: "text-red-500" },
   ];
 
-  const openPositions = [
-    // Actively Recruiting (5)
-    { title: "Outreach Coordinator", department: "Community Outreach", applications: 0, status: "Actively Recruiting" },
-    { title: "Content Creator / Media Assistant", department: "Media Production", applications: 0, status: "Actively Recruiting" },
-    { title: "Academy Instructor", department: "Education", applications: 0, status: "Actively Recruiting" },
-    { title: "Grant Writer / Proposal Specialist", department: "Grants", applications: 0, status: "Actively Recruiting" },
-    { title: "Community Programs Coordinator", department: "Community", applications: 0, status: "Actively Recruiting" },
-    // Open Positions - Manager Level
-    { title: "HR Manager", department: "Human Resources", applications: 0, status: "Open Position" },
-    { title: "QA/QC Manager", department: "Quality Assurance", applications: 0, status: "Open Position" },
-    { title: "Operations Manager", department: "Operations", applications: 0, status: "Open Position" },
-    { title: "Technology Manager", department: "Technology", applications: 0, status: "Open Position" },
-    { title: "Legal Manager", department: "Legal", applications: 0, status: "Open Position" },
-    { title: "Real Estate Manager - SC (Treiva Hunter)", department: "Real Estate", applications: 0, status: "Candidate Identified" },
-    { title: "Real Estate Manager - GA (Kenneth Coleman)", department: "Real Estate", applications: 0, status: "Candidate Identified" },
-    // Open Positions - Coordinator Level
-    { title: "Education Operations Coordinator", department: "Education", applications: 0, status: "Open Position" },
-    { title: "HR Operations Coordinator", department: "Human Resources", applications: 0, status: "Open Position" },
-    { title: "QA/QC Operations Coordinator", department: "Quality Assurance", applications: 0, status: "Open Position" },
-    { title: "Operations Coordinator", department: "Operations", applications: 0, status: "Open Position" },
-    { title: "Platform Administrator", department: "Technology", applications: 0, status: "Open Position" },
-    { title: "Legal Operations Coordinator", department: "Legal", applications: 0, status: "Open Position" },
-    { title: "Real Estate Operations Coordinator - SC", department: "Real Estate", applications: 0, status: "Open Position" },
-    { title: "Real Estate Operations Coordinator - GA", department: "Real Estate", applications: 0, status: "Open Position" },
-    // Ready to Hire (3)
-    { title: "Media Operations Coordinator", department: "Media Production", applications: 0, status: "Ready to Hire" },
-    { title: "Design Operations Coordinator", department: "Design", applications: 0, status: "Ready to Hire" },
-    { title: "Health Operations Coordinator", department: "Health & Wellness", applications: 0, status: "Ready to Hire" },
-    // Pending Manager (4)
-    { title: "Finance Operations Coordinator", department: "Finance", applications: 0, status: "Pending Manager" },
-    { title: "Project Controls Coordinator", department: "Project Controls", applications: 0, status: "Pending Manager" },
-    { title: "Contracts Operations Coordinator", department: "Contracts", applications: 0, status: "Pending Manager" },
-    { title: "Education Ops Coordinator (Temple)", department: "Education", applications: 0, status: "Pending Manager" },
-    // Candidate Identified (8)
-    { title: "Purchasing Manager (Latisha Cox)", department: "Purchasing", applications: 0, status: "Candidate Identified" },
-    { title: "Contracts Manager (Roshonda Parker)", department: "Contracts", applications: 0, status: "Candidate Identified" },
-    { title: "Procurement Manager (Maia Rylandlesesene)", department: "Procurement", applications: 0, status: "Candidate Identified" },
-    { title: "Project Controls Manager (Christopher Battle Sr.)", department: "Project Controls", applications: 0, status: "Candidate Identified" },
-    { title: "Property Manager (Talbert Cox)", department: "Property", applications: 0, status: "Candidate Identified" },
-  ];
+  // Positions are now fetched from database via positionsData
 
   return (
     <DashboardLayout>
@@ -112,7 +83,7 @@ export default function HRDashboard() {
                 View Applications
               </Button>
             </Link>
-            <Link href="/careers">
+            <Link href="/positions">
               <Button className="gap-2">
                 <UserPlus className="w-4 h-4" />
                 Job Postings
@@ -204,7 +175,7 @@ export default function HRDashboard() {
                     Review Applications
                   </Button>
                 </Link>
-                <Link href="/careers">
+                <Link href="/positions">
                   <Button variant="outline" className="w-full gap-2">
                     <Briefcase className="w-4 h-4" />
                     Manage Postings
@@ -302,7 +273,7 @@ export default function HRDashboard() {
                 ))}
               </div>
               <div className="mt-4">
-                <Link href="/careers">
+                <Link href="/positions">
                   <Button variant="outline" className="w-full">Manage All Positions</Button>
                 </Link>
               </div>

@@ -116,6 +116,20 @@ export const positionManagementRouter = router({
     }),
 
   /**
+   * Get all positions across all entities
+   */
+  getAllPositions: protectedProcedure
+    .query(async () => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const positions = await db.select().from(businessPositions)
+        .orderBy(desc(businessPositions.createdAt));
+
+      return positions;
+    }),
+
+  /**
    * Get all positions for a business entity
    */
   getPositionsByEntity: protectedProcedure
