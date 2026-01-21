@@ -295,10 +295,11 @@ export default function Chat() {
       .slice(0, 2);
   };
 
-  // Filter chats by search
-  const filteredChats = chatsList?.filter(chat => 
+  // Filter chats by search - handle nested chats array from API
+  const chatsArray = Array.isArray(chatsList) ? chatsList : (chatsList?.chats || []);
+  const filteredChats = chatsArray.filter((chat: any) => 
     chat.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  );
 
   // Group messages by date
   const groupedMessages = activeChat?.messages?.reduce((groups: any, message: any) => {

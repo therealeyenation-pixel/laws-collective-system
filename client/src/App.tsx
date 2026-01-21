@@ -133,6 +133,19 @@ import MeetingsDashboard from "@/pages/MeetingsDashboard";
 import Downloads from "@/pages/Downloads";
 import OwnerActionList from "@/pages/OwnerActionList";
 import Chat from "@/pages/Chat";
+import {
+  BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
+  FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
+  PurchasingDocuments, PropertyDocuments, RealEstateDocuments, ProjectControlsDocuments,
+  QAQCDocuments, LegalDocuments, ITDocuments, PlatformDocuments, GrantsDocuments,
+  BusinessTeam, HealthTeam, EducationTeam, DesignTeam, MediaTeam, FinanceTeam, HRTeam,
+  OperationsTeam, ProcurementTeam, ContractsTeam, PurchasingTeam, PropertyTeam, RealEstateTeam,
+  ProjectControlsTeam, QAQCTeam, LegalTeam, ITTeam, PlatformTeam, GrantsTeam,
+  AssetTracking, Audits, BrandAssets, BusinessPlans, Compliance, ContentCalendar, Curriculum,
+  GrantsDashboard, Instructors, Inventory, OperatingAgreements, ProgressReporting, Properties,
+  QualityStandards, RealEyeDashboard, SecurityCenter, SWOTAnalysis, SystemAdmin, SystemSettings,
+  UserManagement, VendorManagement, WellnessPrograms
+} from "@/pages/placeholders";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -365,6 +378,73 @@ function Router() {
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
       <Route path="/training-content">{() => <ProtectedRoute component={TrainingContentManager} minRole="admin" />}</Route>
+      
+      {/* Placeholder routes - Department Documents */}
+      <Route path="/business-documents">{() => <ProtectedRoute component={BusinessDocuments} minRole="staff" />}</Route>
+      <Route path="/health-documents">{() => <ProtectedRoute component={HealthDocuments} minRole="staff" />}</Route>
+      <Route path="/education-documents">{() => <ProtectedRoute component={EducationDocuments} minRole="staff" />}</Route>
+      <Route path="/design-documents">{() => <ProtectedRoute component={DesignDocuments} minRole="staff" />}</Route>
+      <Route path="/media-documents">{() => <ProtectedRoute component={MediaDocuments} minRole="staff" />}</Route>
+      <Route path="/finance-documents">{() => <ProtectedRoute component={FinanceDocuments} minRole="staff" />}</Route>
+      <Route path="/hr-documents">{() => <ProtectedRoute component={HRDocuments} minRole="staff" />}</Route>
+      <Route path="/operations-documents">{() => <ProtectedRoute component={OperationsDocuments} minRole="staff" />}</Route>
+      <Route path="/procurement-documents">{() => <ProtectedRoute component={ProcurementDocuments} minRole="staff" />}</Route>
+      <Route path="/contracts-documents">{() => <ProtectedRoute component={ContractsDocuments} minRole="staff" />}</Route>
+      <Route path="/purchasing-documents">{() => <ProtectedRoute component={PurchasingDocuments} minRole="staff" />}</Route>
+      <Route path="/property-documents">{() => <ProtectedRoute component={PropertyDocuments} minRole="staff" />}</Route>
+      <Route path="/real-estate-documents">{() => <ProtectedRoute component={RealEstateDocuments} minRole="staff" />}</Route>
+      <Route path="/project-controls-documents">{() => <ProtectedRoute component={ProjectControlsDocuments} minRole="staff" />}</Route>
+      <Route path="/qaqc-documents">{() => <ProtectedRoute component={QAQCDocuments} minRole="staff" />}</Route>
+      <Route path="/legal-documents">{() => <ProtectedRoute component={LegalDocuments} minRole="staff" />}</Route>
+      <Route path="/it-documents">{() => <ProtectedRoute component={ITDocuments} minRole="staff" />}</Route>
+      <Route path="/platform-documents">{() => <ProtectedRoute component={PlatformDocuments} minRole="admin" />}</Route>
+      <Route path="/grants-documents">{() => <ProtectedRoute component={GrantsDocuments} minRole="staff" />}</Route>
+      
+      {/* Placeholder routes - Department Teams */}
+      <Route path="/business-team">{() => <ProtectedRoute component={BusinessTeam} minRole="staff" />}</Route>
+      <Route path="/health-team">{() => <ProtectedRoute component={HealthTeam} minRole="staff" />}</Route>
+      <Route path="/education-team">{() => <ProtectedRoute component={EducationTeam} minRole="staff" />}</Route>
+      <Route path="/design-team">{() => <ProtectedRoute component={DesignTeam} minRole="staff" />}</Route>
+      <Route path="/media-team">{() => <ProtectedRoute component={MediaTeam} minRole="staff" />}</Route>
+      <Route path="/finance-team">{() => <ProtectedRoute component={FinanceTeam} minRole="staff" />}</Route>
+      <Route path="/hr-team">{() => <ProtectedRoute component={HRTeam} minRole="staff" />}</Route>
+      <Route path="/operations-team">{() => <ProtectedRoute component={OperationsTeam} minRole="staff" />}</Route>
+      <Route path="/procurement-team">{() => <ProtectedRoute component={ProcurementTeam} minRole="staff" />}</Route>
+      <Route path="/contracts-team">{() => <ProtectedRoute component={ContractsTeam} minRole="staff" />}</Route>
+      <Route path="/purchasing-team">{() => <ProtectedRoute component={PurchasingTeam} minRole="staff" />}</Route>
+      <Route path="/property-team">{() => <ProtectedRoute component={PropertyTeam} minRole="staff" />}</Route>
+      <Route path="/real-estate-team">{() => <ProtectedRoute component={RealEstateTeam} minRole="staff" />}</Route>
+      <Route path="/project-controls-team">{() => <ProtectedRoute component={ProjectControlsTeam} minRole="staff" />}</Route>
+      <Route path="/qaqc-team">{() => <ProtectedRoute component={QAQCTeam} minRole="staff" />}</Route>
+      <Route path="/legal-team">{() => <ProtectedRoute component={LegalTeam} minRole="staff" />}</Route>
+      <Route path="/it-team">{() => <ProtectedRoute component={ITTeam} minRole="staff" />}</Route>
+      <Route path="/platform-team">{() => <ProtectedRoute component={PlatformTeam} minRole="admin" />}</Route>
+      <Route path="/grants-team">{() => <ProtectedRoute component={GrantsTeam} minRole="staff" />}</Route>
+      
+      {/* Placeholder routes - Feature Pages */}
+      <Route path="/asset-tracking">{() => <ProtectedRoute component={AssetTracking} minRole="staff" />}</Route>
+      <Route path="/audits">{() => <ProtectedRoute component={Audits} minRole="staff" />}</Route>
+      <Route path="/brand-assets">{() => <ProtectedRoute component={BrandAssets} minRole="staff" />}</Route>
+      <Route path="/business-plans">{() => <ProtectedRoute component={BusinessPlans} minRole="user" />}</Route>
+      <Route path="/compliance">{() => <ProtectedRoute component={Compliance} minRole="staff" />}</Route>
+      <Route path="/content-calendar">{() => <ProtectedRoute component={ContentCalendar} minRole="staff" />}</Route>
+      <Route path="/curriculum">{() => <ProtectedRoute component={Curriculum} minRole="staff" />}</Route>
+      <Route path="/grants-dashboard">{() => <ProtectedRoute component={GrantsDashboard} minRole="staff" />}</Route>
+      <Route path="/instructors">{() => <ProtectedRoute component={Instructors} minRole="staff" />}</Route>
+      <Route path="/inventory">{() => <ProtectedRoute component={Inventory} minRole="staff" />}</Route>
+      <Route path="/operating-agreements">{() => <ProtectedRoute component={OperatingAgreements} minRole="user" />}</Route>
+      <Route path="/progress-reporting">{() => <ProtectedRoute component={ProgressReporting} minRole="staff" />}</Route>
+      <Route path="/properties">{() => <ProtectedRoute component={Properties} minRole="staff" />}</Route>
+      <Route path="/quality-standards">{() => <ProtectedRoute component={QualityStandards} minRole="staff" />}</Route>
+      <Route path="/real-eye-dashboard">{() => <ProtectedRoute component={RealEyeDashboard} minRole="staff" />}</Route>
+      <Route path="/security-center">{() => <ProtectedRoute component={SecurityCenter} minRole="staff" />}</Route>
+      <Route path="/swot-analysis">{() => <ProtectedRoute component={SWOTAnalysis} minRole="user" />}</Route>
+      <Route path="/system-admin">{() => <ProtectedRoute component={SystemAdmin} minRole="staff" />}</Route>
+      <Route path="/system-settings">{() => <ProtectedRoute component={SystemSettings} minRole="admin" />}</Route>
+      <Route path="/user-management">{() => <ProtectedRoute component={UserManagement} minRole="admin" />}</Route>
+      <Route path="/vendor-management">{() => <ProtectedRoute component={VendorManagement} minRole="staff" />}</Route>
+      <Route path="/wellness-programs">{() => <ProtectedRoute component={WellnessPrograms} minRole="staff" />}</Route>
+      
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
