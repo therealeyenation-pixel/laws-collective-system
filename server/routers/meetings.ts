@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../_core/trpc";
-import { db } from "../db";
+import { getDb } from "../db";
 import { 
   meetings, 
   meetingParticipants, 
@@ -24,6 +24,9 @@ function generateRoomName(): string {
 
 // Helper to create meeting chat
 async function createMeetingChat(meetingId: number, hostId: number, title: string) {
+  const db = await getDb();
+  if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
   // Create a chat for the meeting
   const [chat] = await db.insert(chats).values({
     chatType: "meeting",
@@ -32,7 +35,7 @@ async function createMeetingChat(meetingId: number, hostId: number, title: strin
     createdById: hostId,
   });
   
-  const chatId = chat.insertId;
+  const chatId = (chat as any).insertId;
   
   // Add host as chat owner
   await db.insert(chatParticipants).values({
@@ -71,6 +74,9 @@ export const meetingsRouter = router({
       })).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const roomName = generateRoomName();
       
       // Create the meeting
@@ -88,7 +94,7 @@ export const meetingsRouter = router({
         maxParticipants: input.maxParticipants,
       });
       
-      const meetingId = Number(result.insertId);
+      const meetingId = Number((result as any).insertId);
       
       // Add host as participant
       await db.insert(meetingParticipants).values({
@@ -126,6 +132,9 @@ export const meetingsRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [meeting] = await db
         .select()
         .from(meetings)
@@ -195,15 +204,18 @@ export const meetingsRouter = router({
       offset: z.number().min(0).default(0),
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return { meetings: [], total: 0 };
+
       // Get meetings where user is host or participant
       const participantMeetingIds = await db
         .select({ meetingId: meetingParticipants.meetingId })
         .from(meetingParticipants)
         .where(eq(meetingParticipants.userId, ctx.user.id));
       
-      const meetingIds = participantMeetingIds.map(p => p.meetingId);
+      const meetingIds = participantMeetingIds.map((p: any) => p.meetingId);
       
-      let query = db
+      const results = await db
         .select({
           id: meetings.id,
           title: meetings.title,
@@ -233,22 +245,20 @@ export const meetingsRouter = router({
         .limit(input.limit)
         .offset(input.offset);
       
-      const results = await query;
-      
       // Filter by status if not "all"
       let filteredResults = results;
       if (input.status !== "all") {
-        filteredResults = results.filter(m => m.status === input.status);
+        filteredResults = results.filter((m: any) => m.status === input.status);
       }
       
       // Filter by date range
       if (input.startDate) {
         const startDate = new Date(input.startDate);
-        filteredResults = filteredResults.filter(m => m.scheduledAt >= startDate);
+        filteredResults = filteredResults.filter((m: any) => m.scheduledAt >= startDate);
       }
       if (input.endDate) {
         const endDate = new Date(input.endDate);
-        filteredResults = filteredResults.filter(m => m.scheduledAt <= endDate);
+        filteredResults = filteredResults.filter((m: any) => m.scheduledAt <= endDate);
       }
       
       return {
@@ -263,6 +273,9 @@ export const meetingsRouter = router({
       limit: z.number().min(1).max(50).default(10),
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
       const now = new Date();
       
       // Get meeting IDs where user is participant
@@ -271,7 +284,7 @@ export const meetingsRouter = router({
         .from(meetingParticipants)
         .where(eq(meetingParticipants.userId, ctx.user.id));
       
-      const meetingIds = participantMeetingIds.map(p => p.meetingId);
+      const meetingIds = participantMeetingIds.map((p: any) => p.meetingId);
       
       const results = await db
         .select({
@@ -318,6 +331,9 @@ export const meetingsRouter = router({
       maxParticipants: z.number().min(2).max(1000).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const { id, ...updates } = input;
       
       // Check if user is host
@@ -355,6 +371,9 @@ export const meetingsRouter = router({
   cancel: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [meeting] = await db
         .select()
         .from(meetings)
@@ -383,6 +402,9 @@ export const meetingsRouter = router({
       roomUrl: z.string().url().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [meeting] = await db
         .select()
         .from(meetings)
@@ -429,6 +451,9 @@ export const meetingsRouter = router({
   end: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [meeting] = await db
         .select()
         .from(meetings)
@@ -457,6 +482,9 @@ export const meetingsRouter = router({
   join: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [meeting] = await db
         .select()
         .from(meetings)
@@ -508,6 +536,9 @@ export const meetingsRouter = router({
   leave: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [participant] = await db
         .select()
         .from(meetingParticipants)
@@ -542,6 +573,9 @@ export const meetingsRouter = router({
       role: z.enum(["co_host", "presenter", "attendee"]).default("attendee"),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [meeting] = await db
         .select()
         .from(meetings)
@@ -575,6 +609,9 @@ export const meetingsRouter = router({
       participantId: z.number(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [meeting] = await db
         .select()
         .from(meetings)
@@ -602,6 +639,9 @@ export const meetingsRouter = router({
       response: z.enum(["accepted", "declined", "tentative"]),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [participant] = await db
         .select()
         .from(meetingParticipants)
@@ -625,6 +665,9 @@ export const meetingsRouter = router({
   // Get meeting statistics
   stats: protectedProcedure
     .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return { upcoming: 0, completed: 0, hostedThisMonth: 0, totalMinutes: 0, totalMeetings: 0 };
+
       const now = new Date();
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       
@@ -634,7 +677,7 @@ export const meetingsRouter = router({
         .from(meetingParticipants)
         .where(eq(meetingParticipants.userId, ctx.user.id));
       
-      const meetingIds = participantMeetingIds.map(p => p.meetingId);
+      const meetingIds = participantMeetingIds.map((p: any) => p.meetingId);
       
       const allMeetings = await db
         .select()
@@ -648,21 +691,21 @@ export const meetingsRouter = router({
             : eq(meetings.hostId, ctx.user.id)
         );
       
-      const upcoming = allMeetings.filter(m => 
+      const upcoming = allMeetings.filter((m: any) => 
         m.status === "scheduled" && m.scheduledAt >= now
       ).length;
       
-      const completed = allMeetings.filter(m => 
+      const completed = allMeetings.filter((m: any) => 
         m.status === "completed"
       ).length;
       
-      const hostedThisMonth = allMeetings.filter(m => 
+      const hostedThisMonth = allMeetings.filter((m: any) => 
         m.hostId === ctx.user.id && m.scheduledAt >= thirtyDaysAgo
       ).length;
       
       const totalMinutes = allMeetings
-        .filter(m => m.status === "completed")
-        .reduce((sum, m) => sum + (m.duration || 0), 0);
+        .filter((m: any) => m.status === "completed")
+        .reduce((sum: number, m: any) => sum + (m.duration || 0), 0);
       
       return {
         upcoming,

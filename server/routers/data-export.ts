@@ -8,7 +8,7 @@ import {
   fundingSources,
   timesheets,
 } from "../../drizzle/schema";
-import { eq, and, gte, lte, desc } from "drizzle-orm";
+import { eq, and, gte, lte, desc, sql } from "drizzle-orm";
 
 // Export formats for different external systems
 const EXPORT_FORMATS = {
@@ -39,6 +39,13 @@ const EXPORT_FORMATS = {
   },
 };
 
+// Helper to convert any value to string for CSV
+function toStr(val: any): string {
+  if (val === null || val === undefined) return "";
+  if (val instanceof Date) return val.toISOString().split("T")[0];
+  return String(val);
+}
+
 export const dataExportRouter = router({
   // Get available export formats
   getExportFormats: publicProcedure.query(() => {
@@ -65,10 +72,10 @@ export const dataExportRouter = router({
       // Build query conditions
       const conditions: any[] = [];
       if (input.startDate) {
-        conditions.push(gte(timeEntries.entryDate, input.startDate));
+        conditions.push(sql`${timeEntries.entryDate} >= ${input.startDate}`);
       }
       if (input.endDate) {
-        conditions.push(lte(timeEntries.entryDate, input.endDate));
+        conditions.push(sql`${timeEntries.entryDate} <= ${input.endDate}`);
       }
       if (input.workerId) {
         conditions.push(eq(timeEntries.workerId, input.workerId));
@@ -109,8 +116,8 @@ export const dataExportRouter = router({
             const code = codeMap.get(e.chargeCodeId);
             return [
               worker ? `${worker.firstName} ${worker.lastName}` : "",
-              e.entryDate,
-              e.hoursWorked || "0",
+              toStr(e.entryDate),
+              toStr(e.hoursWorked) || "0",
               code?.name || "",
               e.description || "",
             ];
@@ -123,11 +130,11 @@ export const dataExportRouter = router({
             const worker = workerMap.get(e.workerId);
             const code = codeMap.get(e.chargeCodeId);
             return [
-              worker?.employeeId || worker?.id?.toString() || "",
+              toStr((worker as any)?.employeeId || worker?.id),
               code?.code || "",
-              e.entryDate,
-              e.hoursWorked || "0",
-              e.overtimeHours || "0",
+              toStr(e.entryDate),
+              toStr(e.hoursWorked) || "0",
+              toStr(e.overtimeHours) || "0",
               e.description || "",
             ];
           });
@@ -139,10 +146,10 @@ export const dataExportRouter = router({
             const worker = workerMap.get(e.workerId);
             const code = codeMap.get(e.chargeCodeId);
             return [
-              worker?.employeeId || worker?.id?.toString() || "",
-              e.entryDate,
-              e.hoursWorked || "0",
-              e.overtimeHours || "0",
+              toStr((worker as any)?.employeeId || worker?.id),
+              toStr(e.entryDate),
+              toStr(e.hoursWorked) || "0",
+              toStr(e.overtimeHours) || "0",
               code?.name || "General",
             ];
           });
@@ -154,9 +161,9 @@ export const dataExportRouter = router({
             const worker = workerMap.get(e.workerId);
             return [
               worker?.email || "",
-              e.hoursWorked || "0",
-              e.entryDate,
-              e.entryDate,
+              toStr(e.hoursWorked) || "0",
+              toStr(e.entryDate),
+              toStr(e.entryDate),
             ];
           });
           break;
@@ -188,9 +195,9 @@ export const dataExportRouter = router({
               worker?.email || "",
               code?.code || "",
               code?.name || "",
-              e.entryDate,
-              e.hoursWorked || "0",
-              e.overtimeHours || "0",
+              toStr(e.entryDate),
+              toStr(e.hoursWorked) || "0",
+              toStr(e.overtimeHours) || "0",
               e.isBillable ? "Yes" : "No",
               e.description || "",
             ];
@@ -238,24 +245,24 @@ export const dataExportRouter = router({
       switch (input.format) {
         case "gusto":
           headers = ["First Name", "Last Name", "Email", "Hourly Rate", "Start Date"];
-          csvData = workers.map((w) => [
+          csvData = workers.map((w: any) => [
             w.firstName,
             w.lastName,
             w.email || "",
-            w.hourlyRate || "",
-            w.startDate || "",
+            toStr(w.hourlyRate),
+            toStr(w.startDate),
           ]);
           break;
 
         case "adp":
           headers = ["Employee ID", "First Name", "Last Name", "Email", "Department", "Hourly Rate"];
-          csvData = workers.map((w) => [
-            w.employeeId || w.id.toString(),
+          csvData = workers.map((w: any) => [
+            toStr(w.employeeId || w.id),
             w.firstName,
             w.lastName,
             w.email || "",
-            w.department || "",
-            w.hourlyRate || "",
+            toStr(w.departmentId) || "",
+            toStr(w.hourlyRate),
           ]);
           break;
 
@@ -275,18 +282,18 @@ export const dataExportRouter = router({
             "Start Date",
             "Status",
           ];
-          csvData = workers.map((w) => [
+          csvData = workers.map((w: any) => [
             w.id.toString(),
-            w.employeeId || "",
+            toStr(w.employeeId),
             w.firstName,
             w.lastName,
             w.email || "",
             w.workerType,
-            w.department || "",
-            w.position || "",
-            w.hourlyRate || "",
-            w.standardHoursPerWeek?.toString() || "40",
-            w.startDate || "",
+            toStr(w.departmentId),
+            toStr(w.positionId),
+            toStr(w.hourlyRate),
+            toStr(w.standardHoursPerWeek) || "40",
+            toStr(w.hireDate),
             w.status,
           ]);
           break;
@@ -317,8 +324,8 @@ export const dataExportRouter = router({
     if (!db) throw new Error("Database not available");
 
     const codes = await db.select().from(chargeCodes);
-    const fundingSources = await db.select().from(timekeepingFundingSources);
-    const fsMap = new Map(fundingSources.map((fs) => [fs.id, fs]));
+    const sources = await db.select().from(fundingSources);
+    const fsMap = new Map(sources.map((fs) => [fs.id, fs]));
 
     const headers = [
       "Code",
@@ -331,7 +338,7 @@ export const dataExportRouter = router({
       "Is Active",
     ];
 
-    const csvData = codes.map((c) => {
+    const csvData = codes.map((c: any) => {
       const fs = c.fundingSourceId ? fsMap.get(c.fundingSourceId) : null;
       return [
         c.code,
@@ -339,8 +346,8 @@ export const dataExportRouter = router({
         c.description || "",
         fs?.code || "",
         fs?.name || "",
-        c.budgetedHours || "",
-        c.hourlyRate || "",
+        toStr(c.budgetedHours),
+        toStr(c.hourlyRate),
         c.isActive ? "Yes" : "No",
       ];
     });
@@ -383,15 +390,15 @@ export const dataExportRouter = router({
       "Status",
     ];
 
-    const csvData = sources.map((s) => [
+    const csvData = sources.map((s: any) => [
       s.code,
       s.name,
       s.type,
       s.funderName || "",
-      s.totalBudget || "",
-      s.laborBudget || "",
-      s.startDate || "",
-      s.endDate || "",
+      toStr(s.totalBudget),
+      toStr(s.laborBudget),
+      toStr(s.startDate),
+      toStr(s.endDate),
       s.status,
     ]);
 
@@ -445,98 +452,91 @@ export const dataExportRouter = router({
         exportFormats: ["deltek"],
         importInstructions: [
           "1. Export timekeeping data using 'Deltek Costpoint' format",
-          "2. In Costpoint, navigate to Time & Expense > Import Timesheets",
-          "3. Select 'CSV Import' and upload the file",
-          "4. Validate charge codes match your Costpoint setup",
-          "5. Submit for approval workflow",
+          "2. In Costpoint, navigate to Labor > Import Timesheet",
+          "3. Select the CSV file and validate charge codes",
+          "4. Submit for approval workflow",
         ],
         dataMapping: {
-          "Employee ID": "Maps to Costpoint Employee ID",
-          "Charge Code": "Maps to Project/Task/Org structure",
-          "Regular Hours": "Maps to straight time",
-          "OT Hours": "Maps to overtime categories",
+          "Employee ID": "Maps to Costpoint employee number",
+          "Charge Code": "Maps to project/task code",
+          "Regular Hours": "Maps to regular labor hours",
+          "OT Hours": "Maps to overtime labor hours",
         },
         website: "https://www.deltek.com/en/products/project-erp/costpoint",
-        complianceNotes: "Ensure charge codes align with your indirect rate structure for DCAA compliance",
-      },
-      {
-        id: "gusto",
-        name: "Gusto Payroll",
-        category: "Payroll Processing",
-        description: "Modern payroll platform for small to medium businesses",
-        exportFormats: ["gusto"],
-        importInstructions: [
-          "1. Export worker data using 'Gusto' format",
-          "2. In Gusto, go to People > Add employees > Bulk import",
-          "3. For time entries, use Gusto's time tracking integration",
-          "4. Or manually enter hours from your export",
-        ],
-        dataMapping: {
-          "Employee Email": "Primary identifier in Gusto",
-          "Hours Worked": "Maps to regular hours",
-          "Pay Period": "Maps to pay period dates",
-        },
-        website: "https://gusto.com",
+        complianceNotes: "DCAA-compliant timekeeping format. Ensures proper labor distribution and audit trail for federal contracts.",
       },
       {
         id: "adp",
         name: "ADP Workforce Now",
         category: "Enterprise HR & Payroll",
-        description: "Comprehensive HR and payroll solution for larger organizations",
-        exportFormats: ["adp"],
+        description: "Enterprise payroll and HR management platform",
+        exportFormats: ["adp", "generic_csv"],
         importInstructions: [
           "1. Export data using 'ADP Workforce' format",
           "2. In ADP, go to Payroll > Import Hours",
-          "3. Use the ADP Data Import tool to map columns",
-          "4. Validate employee IDs match ADP records",
+          "3. Upload the CSV and verify employee matching",
+          "4. Process payroll with imported hours",
         ],
         dataMapping: {
-          "Employee ID": "Maps to ADP File Number",
-          "Regular Hours": "Maps to REG earnings code",
-          "Overtime Hours": "Maps to OT earnings code",
-          "Department": "Maps to ADP department code",
+          "Employee ID": "Maps to ADP file number",
+          "Regular Hours": "Maps to regular earnings",
+          "Overtime Hours": "Maps to overtime earnings",
         },
         website: "https://www.adp.com",
+      },
+      {
+        id: "gusto",
+        name: "Gusto Payroll",
+        category: "Payroll Processing",
+        description: "Modern payroll platform for small businesses",
+        exportFormats: ["gusto", "generic_csv"],
+        importInstructions: [
+          "1. Export data using 'Gusto Payroll' format",
+          "2. In Gusto, go to Payroll > Run Payroll",
+          "3. Click 'Import hours' and upload CSV",
+          "4. Review and submit payroll",
+        ],
+        dataMapping: {
+          "Employee Email": "Matches Gusto employee by email",
+          "Hours Worked": "Maps to regular hours",
+        },
+        website: "https://gusto.com",
       },
       {
         id: "sage",
         name: "Sage Intacct",
         category: "Nonprofit Accounting",
-        description: "Cloud financial management for nonprofits with grant tracking",
+        description: "Cloud-based financial management for nonprofits and growing businesses",
         exportFormats: ["generic_csv"],
         importInstructions: [
           "1. Export data using 'Generic CSV' format",
-          "2. In Sage Intacct, go to Company > Import Data",
-          "3. Select 'Time & Expense' import template",
-          "4. Map columns to Sage Intacct fields",
-          "5. Assign to appropriate grant/fund dimensions",
+          "2. In Sage Intacct, go to Applications > Imports",
+          "3. Select Time & Expense import template",
+          "4. Upload CSV and map fields",
         ],
         dataMapping: {
-          "Charge Code": "Maps to Project/Grant dimension",
-          "Hours": "Maps to quantity for time entries",
-          "Worker": "Maps to Employee record",
+          "Employee ID": "Maps to Sage employee record",
+          "Hours": "Maps to time entry hours",
+          "Project": "Maps to dimension/project",
         },
-        website: "https://www.sage.com/en-us/products/sage-intacct/",
-        complianceNotes: "Ideal for nonprofit grant tracking and fund accounting",
+        website: "https://www.sage.com/en-us/sage-intacct/",
       },
       {
         id: "bamboohr",
         name: "BambooHR",
         category: "Human Resources",
-        description: "HR software for employee management and onboarding",
+        description: "HR software for small and medium businesses",
         exportFormats: ["generic_csv"],
         importInstructions: [
-          "1. Export worker data using 'Generic CSV' format",
+          "1. Export data using 'Generic CSV' format",
           "2. In BambooHR, go to Settings > Data Import",
-          "3. Upload CSV and map to BambooHR fields",
-          "4. Review and confirm employee records",
+          "3. Select Time Off or Time Tracking import",
+          "4. Upload CSV and verify mapping",
         ],
         dataMapping: {
-          "First Name": "Maps to First Name field",
-          "Last Name": "Maps to Last Name field",
-          "Email": "Maps to Work Email",
-          "Start Date": "Maps to Hire Date",
-          "Department": "Maps to Department field",
+          "Employee Email": "Matches BambooHR employee by email",
+          "Hours": "Maps to time tracking hours",
+          "Date": "Maps to entry date",
         },
         website: "https://www.bamboohr.com",
       },

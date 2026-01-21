@@ -197,12 +197,12 @@ async function seedPayrollTestData() {
 
     await db.insert(timekeepingWorkers).values({
       employeeId: empId,
-      workerType: emp.workerType,
+      workerType: emp.workerType as "employee" | "contractor" | "volunteer",
       firstName: emp.firstName,
       lastName: emp.lastName,
       email: emp.email,
       entityId: emp.entityId,
-      department: emp.department,
+      // department field doesn't exist in schema - using departmentId if available
       hourlyRate: emp.hourlyRate,
       standardHoursPerWeek: "40.00",
       overtimeEligible: true,

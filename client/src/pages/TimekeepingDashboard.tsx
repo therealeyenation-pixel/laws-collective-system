@@ -602,7 +602,7 @@ export default function TimekeepingDashboard() {
                                 <ElectronicSignature
                                   documentType="timesheet_approval"
                                   documentId={ts.id.toString()}
-                                  documentTitle={`Timesheet for ${ts.workerName || 'Worker'} - Week of ${ts.periodStart ? new Date(ts.periodStart).toLocaleDateString() : 'N/A'}`}
+                                  documentTitle={`Timesheet for ${(ts as any).workerName || 'Worker'} - Week of ${ts.periodStart ? new Date(ts.periodStart).toLocaleDateString() : 'N/A'}`}
                                   onSigned={() => handleApproveTimesheet(ts.id, "approved")}
                                   buttonText="Sign & Approve"
                                   buttonSize="sm"

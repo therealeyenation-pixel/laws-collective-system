@@ -60,6 +60,7 @@ export const grantLaborReportsRouter = router({
     )
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) return [];
 
       const { fundingSourceId, startDate, endDate } = input;
@@ -122,6 +123,7 @@ export const grantLaborReportsRouter = router({
     )
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) return [];
 
       const { fundingSourceId, startDate, endDate } = input;
@@ -230,6 +232,7 @@ export const grantLaborReportsRouter = router({
   // Get all funding sources for filter dropdown
   getFundingSources: publicProcedure.query(async () => {
     const db = await getDb();
+   if (!db) throw new Error("Database not available");
     if (!db) return [];
 
     const sources = await db
@@ -257,6 +260,7 @@ export const grantLaborReportsRouter = router({
     )
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) {
         return {
           reportTitle: "Grant Labor Cost Report",
@@ -463,6 +467,7 @@ export const grantLaborReportsRouter = router({
     )
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) {
         return {
           success: false,
@@ -484,9 +489,10 @@ export const grantLaborReportsRouter = router({
           .where(eq(fundingSources.id, fundingSourceId))
           .limit(1);
         if (fs.length > 0) {
-          fundingSourceName = fs[0].name;
-          grantNumber = fs[0].grantNumber || "N/A";
-          grantorName = fs[0].grantorName || "N/A";
+          const fsData = fs[0] as any;
+          fundingSourceName = fsData.name;
+          grantNumber = fsData.grantNumber || fsData.code || "N/A";
+          grantorName = fsData.grantorName || fsData.funderName || "N/A";
         }
       }
 

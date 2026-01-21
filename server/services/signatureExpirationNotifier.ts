@@ -31,6 +31,8 @@ export async function getSignaturesExpiringInDays(
 ): Promise<ExpiringSignature[]> {
   const db = await getDb();
   
+  if (!db) throw new Error("Database not available");
+  
   const now = new Date();
   const targetDate = new Date();
   targetDate.setDate(targetDate.getDate() + daysFromNow);
@@ -82,6 +84,8 @@ export async function createExpirationNotification(
 ): Promise<void> {
   const db = await getDb();
   
+  if (!db) throw new Error("Database not available");
+  
   const urgencyLevel = daysUntilExpiration <= 1 
     ? "alert" 
     : daysUntilExpiration <= 7 
@@ -128,6 +132,8 @@ export async function wasNotificationSent(
   daysUntilExpiration: number
 ): Promise<boolean> {
   const db = await getDb();
+  
+  if (!db) throw new Error("Database not available");
   
   // Check for existing notification with same signature and interval
   const existing = await db
@@ -206,6 +212,8 @@ export async function getUsersWithExpiringSignatures(
 }[]> {
   const db = await getDb();
   
+  if (!db) throw new Error("Database not available");
+  
   const now = new Date();
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + daysAhead);
@@ -230,7 +238,7 @@ export async function getUsersWithExpiringSignatures(
     );
 
   // Get user details
-  const userIds = [...new Set(signatures.map(s => s.signerId))];
+  const userIds = Array.from(new Set(signatures.map(s => s.signerId)));
   
   if (userIds.length === 0) return [];
   
@@ -292,6 +300,7 @@ export async function sendBulkReAcknowledgmentRequests(
   errors: string[];
 }> {
   const db = await getDb();
+  if (!db) throw new Error("Database not available");
   const errors: string[] = [];
   let sent = 0;
 
@@ -341,6 +350,8 @@ export async function sendExpirationEmail(
   daysUntilExpiration: number
 ): Promise<{ sent: boolean; error?: string }> {
   const db = await getDb();
+  
+  if (!db) throw new Error("Database not available");
   
   // Get user email
   const [user] = await db

@@ -41,6 +41,16 @@ export async function runDailySummaryReport(): Promise<JobExecutionResult> {
   const errors: string[] = [];
   const details: Record<string, any> = {};
   
+  if (!db) {
+    return {
+      processed: 0,
+      succeeded: 0,
+      failed: 1,
+      details,
+      errors: ["Database not available"],
+    };
+  }
+  
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   
@@ -132,6 +142,16 @@ export async function runWeeklyComplianceAudit(): Promise<JobExecutionResult> {
   let succeeded = 0;
   let failed = 0;
   
+  if (!db) {
+    return {
+      processed: 0,
+      succeeded: 0,
+      failed: 1,
+      details,
+      errors: ["Database not available"],
+    };
+  }
+  
   try {
     // Check for expired signatures
     const now = new Date();
@@ -157,12 +177,12 @@ export async function runWeeklyComplianceAudit(): Promise<JobExecutionResult> {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const [proceduresResult] = await db
-      .select({ count: sql<number>`COUNT(*)` })
-      .from(operatingProcedures)
-      .where(eq(operatingProcedures.isActive, true));
+    // Use raw SQL for isActive column that may not exist in schema
+    const proceduresResult = await db.execute(
+      sql`SELECT COUNT(*) as count FROM operating_procedures WHERE isActive = true`
+    );
     
-    details.totalActiveProcedures = proceduresResult?.count || 0;
+    details.totalActiveProcedures = (proceduresResult as any)[0]?.count || 0;
     processed++;
     succeeded++;
     
@@ -252,33 +272,36 @@ export async function runMonthlyDataCleanup(): Promise<JobExecutionResult> {
   let succeeded = 0;
   let failed = 0;
   
+  if (!db) {
+    return {
+      processed: 0,
+      succeeded: 0,
+      failed: 1,
+      details,
+      errors: ["Database not available"],
+    };
+  }
+  
   try {
     // Archive old read notifications (older than 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const archiveResult = await db
-      .update(notifications)
-      .set({ isArchived: true })
-      .where(
-        and(
-          eq(notifications.isRead, true),
-          lt(notifications.createdAt, thirtyDaysAgo),
-          eq(notifications.isArchived, false)
-        )
-      );
+    // Use raw SQL for isArchived column that may not exist in schema
+    await db.execute(
+      sql`UPDATE notifications SET isArchived = true WHERE isRead = true AND createdAt < ${thirtyDaysAgo} AND (isArchived IS NULL OR isArchived = false)`
+    );
     
     details.notificationsArchived = 0; // Would need to track affected rows
     processed++;
     succeeded++;
     
-    // Count total archived notifications
-    const [archivedCount] = await db
-      .select({ count: sql<number>`COUNT(*)` })
-      .from(notifications)
-      .where(eq(notifications.isArchived, true));
+    // Count total archived notifications using raw SQL
+    const archivedResult = await db.execute(
+      sql`SELECT COUNT(*) as count FROM notifications WHERE isArchived = true`
+    );
     
-    details.totalArchivedNotifications = archivedCount?.count || 0;
+    details.totalArchivedNotifications = (archivedResult as any)[0]?.count || 0;
     processed++;
     succeeded++;
     

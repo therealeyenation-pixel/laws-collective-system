@@ -76,6 +76,7 @@ export const payrollRouter = router({
 
   getWorkers: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
+   if (!db) throw new Error("Database not available");
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user.id;
 
@@ -122,6 +123,7 @@ export const payrollRouter = router({
     .input(z.object({ workerId: z.number() }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -236,6 +238,7 @@ export const payrollRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -303,6 +306,7 @@ export const payrollRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -369,6 +373,7 @@ export const payrollRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -527,6 +532,7 @@ export const payrollRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -598,6 +604,7 @@ export const payrollRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -659,6 +666,7 @@ export const payrollRouter = router({
     .input(z.object({ workerId: z.number(), taxYear: z.number() }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -800,6 +808,7 @@ export const payrollRouter = router({
     }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       // Get approved timesheets for the pay period
@@ -839,6 +848,7 @@ export const payrollRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
       const userId = ctx.user.id;
 
@@ -963,6 +973,7 @@ export const payrollRouter = router({
     }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       // Get approved timesheets for the period
@@ -1051,6 +1062,7 @@ export const payrollRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
 
       // Get HR employee
@@ -1071,7 +1083,7 @@ export const payrollRouter = router({
       const [existingW2] = await db
         .select()
         .from(w2Workers)
-        .where(eq(w2Workers.employeeId, input.employeeId));
+        .where(eq(w2Workers.id, input.employeeId));
 
       if (existingW2) {
         // Update existing W-2 worker from HR
@@ -1083,10 +1095,10 @@ export const payrollRouter = router({
             department: hrEmployee.department,
             jobTitle: hrEmployee.jobTitle,
             payFrequency: input.payFrequency,
-            filingStatus: input.filingStatus,
+            federalFilingStatus: input.filingStatus as any,
             federalAllowances: input.federalAllowances,
             stateAllowances: input.stateAllowances,
-            status: hrEmployee.status === "active" ? "active" : "inactive",
+            status: hrEmployee.status === "active" ? "active" : "terminated",
           })
           .where(eq(w2Workers.id, existingW2.id));
 
@@ -1095,8 +1107,6 @@ export const payrollRouter = router({
         // Create new W-2 worker from HR
         const result = await db.insert(w2Workers).values({
           houseId: hrEmployee.entityId,
-          userId: hrEmployee.userId,
-          employeeId: hrEmployee.id,
           firstName: hrEmployee.firstName,
           lastName: hrEmployee.lastName,
           email: hrEmployee.email,
@@ -1105,14 +1115,14 @@ export const payrollRouter = router({
           employmentType: hrEmployee.employmentType === "full_time" ? "full_time" : 
                           hrEmployee.employmentType === "part_time" ? "part_time" : "full_time",
           payType: "hourly",
-          hourlyRate: hrEmployee.hourlyRate || "0",
+          payRate: hrEmployee.hourlyRate || "0",
           payFrequency: input.payFrequency,
-          filingStatus: input.filingStatus,
+          federalFilingStatus: input.filingStatus as any,
           federalAllowances: input.federalAllowances,
           stateAllowances: input.stateAllowances,
           status: "active",
-          hireDate: hrEmployee.startDate,
-        });
+          hireDate: hrEmployee.startDate || new Date(),
+        } as any);
 
         return { success: true, id: result[0].insertId, action: "created" };
       }

@@ -9,7 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { addClient, removeClient, clearUserTyping } from "../services/chatSSE";
 import { sdk } from "./sdk";
-import { db } from "../db";
+import { getDb } from "../db";
 import { users } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -66,6 +66,11 @@ async function startServer() {
       }
       
       // Get user from database
+      const db = await getDb();
+      if (!db) {
+        res.status(500).json({ error: "Database not available" });
+        return;
+      }
       const [user] = await db
         .select()
         .from(users)

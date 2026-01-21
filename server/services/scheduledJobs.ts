@@ -54,6 +54,8 @@ async function createJobExecution(
 ): Promise<number> {
   const db = await getDb();
   
+  if (!db) throw new Error("Database not available");
+  
   const result = await db.insert(systemJobExecutions).values({
     jobName,
     jobType,
@@ -78,6 +80,7 @@ async function updateJobExecution(
   metrics?: { processed: number; succeeded: number; failed: number }
 ): Promise<void> {
   const db = await getDb();
+  if (!db) throw new Error("Database not available");
   const completedAt = new Date();
   
   // Get the start time to calculate duration
@@ -118,6 +121,8 @@ export function isJobRunning(jobName: string): boolean {
  */
 export async function getJobHistory(jobName?: string, limit: number = 20): Promise<JobLog[]> {
   const db = await getDb();
+  
+  if (!db) throw new Error("Database not available");
   
   let query = db
     .select({
@@ -216,6 +221,7 @@ export async function runSignatureExpirationJob(
     // Notify admin if there were errors
     if (result.errors.length > 0) {
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const admins = await db
         .select({ id: users.id })
         .from(users)
@@ -625,6 +631,8 @@ export async function getJobStats(): Promise<{
   lastExecutionTime?: Date;
 }> {
   const db = await getDb();
+  
+  if (!db) throw new Error("Database not available");
   
   const [stats] = await db
     .select({

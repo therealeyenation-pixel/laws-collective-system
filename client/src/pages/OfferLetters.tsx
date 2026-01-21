@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -208,8 +209,8 @@ export default function OfferLetters() {
   const [filterDepartment, setFilterDepartment] = useState<string>("all");
   const [filterRelationship, setFilterRelationship] = useState<string>("all");
 
-  const departments = [...new Set(offerLetters.map(o => o.department))];
-  const relationships = [...new Set(offerLetters.map(o => o.relationship))];
+  const departments = Array.from(new Set(offerLetters.map(o => o.department)));
+  const relationships = Array.from(new Set(offerLetters.map(o => o.relationship)));
 
   const filteredOffers = offerLetters.filter(offer => {
     const matchesSearch = offer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

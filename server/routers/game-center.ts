@@ -17,6 +17,7 @@ import { TRPCError } from "@trpc/server";
 // Helper to ensure db is not null
 const ensureDb = async () => {
   const db = await getDb();
+ if (!db) throw new Error("Database not available");
   if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
   return db;
 };
@@ -239,7 +240,7 @@ export const gameCenterRouter = router({
         ));
 
       if (existing) {
-        const newStreak = input.won ? existing.currentStreak + 1 : 0;
+        const newStreak = input.won ? (existing.currentStreak || 0) + 1 : 0;
         await db.update(gamePlayerStats).set({
           gamesPlayed: existing.gamesPlayed + 1,
           gamesWon: input.won ? existing.gamesWon + 1 : existing.gamesWon,
@@ -248,7 +249,7 @@ export const gameCenterRouter = router({
           highScore: Math.max(existing.highScore || 0, input.score),
           currentStreak: newStreak,
           bestStreak: Math.max(existing.bestStreak || 0, newStreak),
-          tokensEarned: existing.tokensEarned + input.tokensEarned,
+          tokensEarned: (existing.tokensEarned || 0) + input.tokensEarned,
           lastPlayedAt: new Date(),
         }).where(eq(gamePlayerStats.id, existing.id));
       } else {

@@ -3,7 +3,7 @@
  * Handles integration with Daily.co and prepares for future Microsoft Teams integration
  */
 
-import { db } from "../db";
+import { getDb } from "../db";
 import { videoProviderConfigs } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -61,6 +61,8 @@ interface DailyMeetingTokenResponse {
  * Get the configured video provider
  */
 export async function getActiveProvider(): Promise<"daily" | "teams" | "custom" | null> {
+  const db = await getDb();
+  if (!db) return "daily";
   const [config] = await db
     .select()
     .from(videoProviderConfigs)
@@ -68,7 +70,10 @@ export async function getActiveProvider(): Promise<"daily" | "teams" | "custom" 
     .limit(1);
   
   if (config && config.isEnabled) {
-    return config.provider;
+    // Filter out zoom as it's not in the return type
+    const provider = config.provider;
+    if (provider === "zoom") return "daily";
+    return provider as "daily" | "teams" | "custom";
   }
   
   // Default to Daily.co if no config
@@ -79,6 +84,8 @@ export async function getActiveProvider(): Promise<"daily" | "teams" | "custom" 
  * Get provider configuration
  */
 export async function getProviderConfig(provider: "daily" | "teams" | "zoom" | "custom") {
+  const db = await getDb();
+  if (!db) return null;
   const [config] = await db
     .select()
     .from(videoProviderConfigs)

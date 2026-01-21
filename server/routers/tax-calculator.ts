@@ -107,6 +107,7 @@ export async function getStateTaxRate(
   hasLocalTax: boolean;
 } | null> {
   const db = await getDb();
+ if (!db) throw new Error("Database not available");
   if (!db) return null;
 
   const result = await db.execute(sql`
@@ -120,7 +121,7 @@ export async function getStateTaxRate(
     LIMIT 1
   `);
 
-  const rows = result[0] as any[];
+  const rows = (result as unknown as any[][])[0] || [];
   if (!rows || rows.length === 0) return null;
 
   return {
@@ -140,6 +141,7 @@ export async function getLocalTaxRate(
   countryCode: string = "USA"
 ): Promise<number | null> {
   const db = await getDb();
+ if (!db) throw new Error("Database not available");
   if (!db) return null;
 
   const result = await db.execute(sql`
@@ -154,7 +156,7 @@ export async function getLocalTaxRate(
     LIMIT 1
   `);
 
-  const rows = result[0] as any[];
+  const rows = (result as unknown as any[][])[0] || [];
   if (!rows || rows.length === 0) return null;
 
   return Number(rows[0].tax_rate);
@@ -168,6 +170,7 @@ export async function getLocalitiesForState(
   countryCode: string = "USA"
 ): Promise<Array<{ name: string; type: string; rate: number }>> {
   const db = await getDb();
+ if (!db) throw new Error("Database not available");
   if (!db) return [];
 
   const result = await db.execute(sql`
@@ -180,7 +183,7 @@ export async function getLocalitiesForState(
     ORDER BY locality_name
   `);
 
-  const rows = result[0] as any[];
+  const rows = (result as unknown as any[][])[0] || [];
   return rows.map((r: any) => ({
     name: r.locality_name,
     type: r.locality_type,
@@ -417,6 +420,7 @@ export async function getAllStates(
   hasLocalTax: boolean;
 }>> {
   const db = await getDb();
+ if (!db) throw new Error("Database not available");
   if (!db) return [];
 
   const result = await db.execute(sql`
@@ -428,7 +432,7 @@ export async function getAllStates(
     ORDER BY state_name
   `);
 
-  const rows = result[0] as any[];
+  const rows = (result as unknown as any[][])[0] || [];
   return rows.map((r: any) => ({
     stateCode: r.state_code,
     stateName: r.state_name,

@@ -257,25 +257,25 @@ export default function RequiredReadingTracker({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">
-                  {complianceStats.compliantUsers || 0}
+                  {(complianceStats as any).compliantUsers || 0}
                 </div>
                 <div className="text-xs text-muted-foreground">Fully Compliant</div>
               </div>
               <div className="text-center p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
                 <div className="text-2xl font-bold text-amber-600">
-                  {complianceStats.partialUsers || 0}
+                  {(complianceStats as any).partialUsers || 0}
                 </div>
                 <div className="text-xs text-muted-foreground">Partially Compliant</div>
               </div>
               <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                 <div className="text-2xl font-bold text-red-600">
-                  {complianceStats.nonCompliantUsers || 0}
+                  {(complianceStats as any).nonCompliantUsers || 0}
                 </div>
                 <div className="text-xs text-muted-foreground">Non-Compliant</div>
               </div>
               <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">
-                  {complianceStats.overallRate || 0}%
+                  {(complianceStats as any).overallRate || complianceStats.complianceRate || 0}%
                 </div>
                 <div className="text-xs text-muted-foreground">Overall Rate</div>
               </div>

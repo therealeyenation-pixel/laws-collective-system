@@ -37,10 +37,15 @@ import { format } from "date-fns";
 export default function TaxModule() {
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
-  const [projectionInputs, setProjectionInputs] = useState({
+  const [projectionInputs, setProjectionInputs] = useState<{
+    grossIncome: number;
+    deductions: number;
+    filingStatus: "single" | "married_joint" | "married_separate" | "head_of_household";
+    selfEmployed: boolean;
+  }>({
     grossIncome: 100000,
     deductions: 0,
-    filingStatus: "single" as const,
+    filingStatus: "single",
     selfEmployed: true,
   });
 

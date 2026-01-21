@@ -68,6 +68,7 @@ export const electronicSignatureRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const user = ctx.user;
       const timestamp = new Date().toISOString();
 
@@ -154,6 +155,8 @@ export const electronicSignatureRouter = router({
     .query(async ({ input }) => {
       const db = await getDb();
 
+      if (!db) throw new Error("Database not available");
+
       const [signature] = await db
         .select()
         .from(electronicSignatures)
@@ -210,6 +213,8 @@ export const electronicSignatureRouter = router({
     .query(async ({ ctx, input }) => {
       const db = await getDb();
 
+      if (!db) throw new Error("Database not available");
+
       const signatures = await db
         .select()
         .from(electronicSignatures)
@@ -238,6 +243,8 @@ export const electronicSignatureRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+
+      if (!db) throw new Error("Database not available");
 
       const [signature] = await db
         .select()
@@ -272,6 +279,8 @@ export const electronicSignatureRouter = router({
     .query(async ({ ctx, input }) => {
       const db = await getDb();
 
+      if (!db) throw new Error("Database not available");
+
       const signatures = await db
         .select()
         .from(electronicSignatures)
@@ -295,6 +304,8 @@ export const electronicSignatureRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const db = await getDb();
+      
+      if (!db) throw new Error("Database not available");
       
       const now = new Date();
       const futureDate = new Date();
@@ -326,6 +337,8 @@ export const electronicSignatureRouter = router({
     .query(async ({ ctx }) => {
       const db = await getDb();
       
+      if (!db) throw new Error("Database not available");
+      
       const now = new Date();
 
       const signatures = await db
@@ -348,6 +361,8 @@ export const electronicSignatureRouter = router({
   getComplianceStats: protectedProcedure
     .query(async ({ ctx }) => {
       const db = await getDb();
+      
+      if (!db) throw new Error("Database not available");
       
       const now = new Date();
       const thirtyDaysFromNow = new Date();
@@ -398,6 +413,7 @@ export const electronicSignatureRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const user = ctx.user;
 
       // Get the original signature
@@ -497,6 +513,8 @@ export const electronicSignatureRouter = router({
     .query(async ({ input }) => {
       const db = await getDb();
 
+      if (!db) throw new Error("Database not available");
+
       const logs = await db
         .select()
         .from(signatureAuditLog)
@@ -547,6 +565,8 @@ export const electronicSignatureRouter = router({
     .query(async ({ input }) => {
       const db = await getDb();
 
+      if (!db) throw new Error("Database not available");
+
       const notifs = await db
         .select()
         .from(notifications)
@@ -571,6 +591,8 @@ export const electronicSignatureRouter = router({
     )
     .query(async ({ input }) => {
       const db = await getDb();
+      
+      if (!db) throw new Error("Database not available");
       
       const now = new Date();
       const futureDate = new Date();

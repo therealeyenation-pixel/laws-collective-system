@@ -354,18 +354,22 @@ export default function GameCenter() {
                         </Button>
                       </div>
 
-                      {game.skillsTargeted && (
+                      {game.skillsTargeted ? (
                         <div className="flex flex-wrap gap-1">
-                          {((typeof game.skillsTargeted === "string"
-                            ? JSON.parse(game.skillsTargeted)
-                            : game.skillsTargeted
-                          ) as string[]).slice(0, 3).map((skill: string, idx: number) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {skill.replace(/-/g, " ")}
-                            </Badge>
-                          ))}
+                          {(() => {
+                            const skills: string[] = Array.isArray(game.skillsTargeted)
+                              ? game.skillsTargeted as string[]
+                              : typeof game.skillsTargeted === "string"
+                              ? JSON.parse(game.skillsTargeted)
+                              : [];
+                            return skills.slice(0, 3).map((skill: string, idx: number) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {skill.replace(/-/g, " ")}
+                              </Badge>
+                            ));
+                          })()}
                         </div>
-                      )}
+                      ) : null}
                     </CardContent>
                   </Card>
                 ))}

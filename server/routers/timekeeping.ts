@@ -25,6 +25,7 @@ export const timekeepingRouter = router({
   
   getFundingSources: protectedProcedure.query(async () => {
     const db = await getDb();
+   if (!db) throw new Error("Database not available");
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     
     return await db.select().from(fundingSources).orderBy(desc(fundingSources.createdAt));
@@ -46,6 +47,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(fundingSources).values({
@@ -76,6 +78,7 @@ export const timekeepingRouter = router({
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let query = db.select().from(chargeCodes);
@@ -109,6 +112,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(chargeCodes).values({
@@ -143,6 +147,7 @@ export const timekeepingRouter = router({
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let query = db.select().from(timekeepingWorkers);
@@ -180,6 +185,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(timekeepingWorkers).values({
@@ -211,6 +217,7 @@ export const timekeepingRouter = router({
     .input(z.object({ workerId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       return await db.select()
@@ -232,6 +239,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(workerChargeCodeAssignments).values({
@@ -261,6 +269,7 @@ export const timekeepingRouter = router({
     }))
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let conditions = [];
@@ -300,6 +309,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(timeEntries).values({
@@ -336,6 +346,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const { id, ...updates } = input;
@@ -370,6 +381,7 @@ export const timekeepingRouter = router({
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let conditions = [];
@@ -397,6 +409,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(timesheets).values({
@@ -417,6 +430,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input, ctx }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       // Calculate totals from time entries
@@ -473,6 +487,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input, ctx }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       // Create approval record
@@ -513,6 +528,7 @@ export const timekeepingRouter = router({
     .input(z.object({ timesheetId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       return await db.select()
@@ -532,6 +548,7 @@ export const timekeepingRouter = router({
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let conditions = [];
@@ -557,6 +574,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(timeOffRequests).values({
@@ -582,6 +600,7 @@ export const timekeepingRouter = router({
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let conditions = [];
@@ -609,6 +628,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const result = await db.insert(contractorInvoices).values({
@@ -637,6 +657,7 @@ export const timekeepingRouter = router({
     }))
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       // Get all time entries in date range
@@ -688,6 +709,7 @@ export const timekeepingRouter = router({
     }))
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       // Get all workers
@@ -752,6 +774,7 @@ export const timekeepingRouter = router({
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let query = db.select().from(employees);
@@ -777,6 +800,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       // Get the HR employee record
@@ -840,6 +864,7 @@ export const timekeepingRouter = router({
   syncAllFromHR: protectedProcedure
     .mutation(async () => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       // Get all active HR employees
@@ -902,6 +927,7 @@ export const timekeepingRouter = router({
     .input(z.object({ workerId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       const [worker] = await db.select().from(timekeepingWorkers).where(eq(timekeepingWorkers.id, input.workerId));
@@ -935,6 +961,7 @@ export const timekeepingRouter = router({
     }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       let conditions = [];
@@ -966,18 +993,19 @@ export const timekeepingRouter = router({
           hrContractor = emp || null;
         }
         
-        // Use HR data if available
+        // Use HR data if available - cast to any for optional fields
+        const hrData = hrContractor as any;
         const contractorData = hrContractor ? {
           contractorName: `${hrContractor.firstName} ${hrContractor.lastName}`,
           contractorEmail: hrContractor.email,
           contractorPhone: hrContractor.phone,
-          contractorAddress: hrContractor.address,
-          contractorCity: hrContractor.city,
-          contractorState: hrContractor.state,
-          contractorZip: hrContractor.zipCode,
-          contractorTaxId: hrContractor.taxId,
-          contractorHourlyRate: hrContractor.hourlyRate,
-          is1099: hrContractor.is1099,
+          contractorAddress: hrData?.address || null,
+          contractorCity: hrData?.city || null,
+          contractorState: hrData?.state || null,
+          contractorZip: hrData?.zipCode || null,
+          contractorTaxId: hrData?.taxId || null,
+          contractorHourlyRate: hrData?.hourlyRate || null,
+          is1099: hrData?.is1099 || false,
         } : worker ? {
           contractorName: `${worker.firstName} ${worker.lastName}`,
           contractorEmail: worker.email,
@@ -1025,6 +1053,7 @@ export const timekeepingRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
+     if (!db) throw new Error("Database not available");
       if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
       
       // Get HR employee (contractor)

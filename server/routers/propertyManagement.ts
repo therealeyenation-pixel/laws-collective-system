@@ -18,7 +18,7 @@ export const propertyManagementRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const filters = input || {};
+      const filters = input || { limit: 50, offset: 0 };
       const rows = await db.execute(
         sql`SELECT * FROM properties 
             WHERE 1=1 
@@ -26,7 +26,7 @@ export const propertyManagementRouter = router({
             ${filters.propertyType ? sql`AND propertyType = ${filters.propertyType}` : sql``}
             ${filters.search ? sql`AND (propertyName LIKE ${`%${filters.search}%`} OR streetAddress LIKE ${`%${filters.search}%`} OR city LIKE ${`%${filters.search}%`})` : sql``}
             ORDER BY createdAt DESC 
-            LIMIT ${filters.limit} OFFSET ${filters.offset}`
+            LIMIT ${filters.limit || 50} OFFSET ${filters.offset || 0}`
       );
       
       const countResult = await db.execute(
@@ -225,7 +225,7 @@ export const propertyManagementRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const filters = input || {};
+      const filters = input || { limit: 50, offset: 0 };
       const rows = await db.execute(
         sql`SELECT pp.*, p.propertyName, p.streetAddress, p.city 
             FROM property_projects pp 
@@ -235,7 +235,7 @@ export const propertyManagementRouter = router({
             ${filters.status ? sql`AND pp.status = ${filters.status}` : sql``}
             ${filters.projectType ? sql`AND pp.projectType = ${filters.projectType}` : sql``}
             ORDER BY pp.createdAt DESC 
-            LIMIT ${filters.limit} OFFSET ${filters.offset}`
+            LIMIT ${filters.limit || 50} OFFSET ${filters.offset || 0}`
       );
       return rows as any[];
     }),
@@ -317,14 +317,14 @@ export const propertyManagementRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const filters = input || {};
+      const filters = input || { limit: 50, offset: 0 };
       const rows = await db.execute(
         sql`SELECT * FROM property_vendors 
             WHERE 1=1
             ${filters.vendorType ? sql`AND vendorType = ${filters.vendorType}` : sql``}
             ${filters.status ? sql`AND status = ${filters.status}` : sql``}
             ORDER BY vendorName ASC 
-            LIMIT ${filters.limit} OFFSET ${filters.offset}`
+            LIMIT ${filters.limit || 50} OFFSET ${filters.offset || 0}`
       );
       return rows as any[];
     }),
@@ -376,7 +376,7 @@ export const propertyManagementRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const filters = input || {};
+      const filters = input || { limit: 50, offset: 0 };
       const rows = await db.execute(
         sql`SELECT m.*, p.propertyName, p.streetAddress 
             FROM property_maintenance_logs m 
@@ -386,7 +386,7 @@ export const propertyManagementRouter = router({
             ${filters.status ? sql`AND m.status = ${filters.status}` : sql``}
             ${filters.priority ? sql`AND m.priority = ${filters.priority}` : sql``}
             ORDER BY m.reportedDate DESC 
-            LIMIT ${filters.limit} OFFSET ${filters.offset}`
+            LIMIT ${filters.limit || 50} OFFSET ${filters.offset || 0}`
       );
       return rows as any[];
     }),
@@ -432,7 +432,7 @@ export const propertyManagementRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const filters = input || {};
+      const filters = input || { limit: 50, offset: 0 };
       const rows = await db.execute(
         sql`SELECT t.*, p.propertyName, p.streetAddress 
             FROM property_tenants t 
@@ -441,7 +441,7 @@ export const propertyManagementRouter = router({
             ${filters.propertyId ? sql`AND t.propertyId = ${filters.propertyId}` : sql``}
             ${filters.status ? sql`AND t.status = ${filters.status}` : sql``}
             ORDER BY t.createdAt DESC 
-            LIMIT ${filters.limit} OFFSET ${filters.offset}`
+            LIMIT ${filters.limit || 50} OFFSET ${filters.offset || 0}`
       );
       return rows as any[];
     }),

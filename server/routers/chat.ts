@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../_core/trpc";
-import { db } from "../db";
+import { getDb } from "../db";
 import { 
   chats, 
   chatParticipants, 
@@ -15,13 +15,16 @@ import { broadcastMessage, broadcastTyping, broadcastPresence, broadcastReaction
 
 // Helper to get or create direct chat between two users
 async function getOrCreateDirectChat(userId1: number, userId2: number): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
   // Find existing direct chat between these users
   const user1Chats = await db
     .select({ chatId: chatParticipants.chatId })
     .from(chatParticipants)
     .where(eq(chatParticipants.userId, userId1));
   
-  const user1ChatIds = user1Chats.map(c => c.chatId);
+  const user1ChatIds = user1Chats.map((c: { chatId: number }) => c.chatId);
   
   if (user1ChatIds.length > 0) {
     const existingChat = await db
@@ -46,7 +49,7 @@ async function getOrCreateDirectChat(userId1: number, userId2: number): Promise<
     createdById: userId1,
   });
   
-  const chatId = Number(result.insertId);
+  const chatId = Number((result as any).insertId);
   
   // Add both users as participants
   await db.insert(chatParticipants).values([
@@ -59,6 +62,9 @@ async function getOrCreateDirectChat(userId1: number, userId2: number): Promise<
 
 // Helper to update chat's last message
 async function updateChatLastMessage(chatId: number, content: string) {
+  const db = await getDb();
+  if (!db) return;
+  
   const preview = content.length > 100 ? content.substring(0, 100) + "..." : content;
   await db.update(chats)
     .set({ 
@@ -70,6 +76,9 @@ async function updateChatLastMessage(chatId: number, content: string) {
 
 // Helper to increment unread count for other participants
 async function incrementUnreadCounts(chatId: number, senderId: number) {
+  const db = await getDb();
+  if (!db) return;
+  
   await db.execute(sql`
     UPDATE chat_participants 
     SET unreadCount = unreadCount + 1 
@@ -86,6 +95,9 @@ export const chatRouter = router({
       participantIds: z.array(z.number()).min(1),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [result] = await db.insert(chats).values({
         chatType: "group",
         name: input.name,
@@ -93,7 +105,7 @@ export const chatRouter = router({
         createdById: ctx.user.id,
       });
       
-      const chatId = Number(result.insertId);
+      const chatId = Number((result as any).insertId);
       
       // Add creator as owner
       await db.insert(chatParticipants).values({
@@ -138,6 +150,9 @@ export const chatRouter = router({
       offset: z.number().min(0).default(0),
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return { chats: [], total: 0 };
+
       // Get chat IDs where user is participant
       const userChats = await db
         .select({
@@ -157,8 +172,8 @@ export const chatRouter = router({
         return { chats: [], total: 0 };
       }
       
-      const chatIds = userChats.map(c => c.chatId);
-      const chatMap = new Map(userChats.map(c => [c.chatId, c]));
+      const chatIds = userChats.map((c: any) => c.chatId);
+      const chatMap = new Map(userChats.map((c: any) => [c.chatId, c]));
       
       // Get chat details
       let chatResults = await db
@@ -171,11 +186,11 @@ export const chatRouter = router({
       
       // Filter by type if specified
       if (input.type !== "all") {
-        chatResults = chatResults.filter(c => c.chatType === input.type);
+        chatResults = chatResults.filter((c: any) => c.chatType === input.type);
       }
       
       // Get participant info for each chat
-      const enrichedChats = await Promise.all(chatResults.map(async (chat) => {
+      const enrichedChats = await Promise.all(chatResults.map(async (chat: any) => {
         const participants = await db
           .select({
             id: chatParticipants.id,
@@ -191,12 +206,12 @@ export const chatRouter = router({
             isNull(chatParticipants.leftAt)
           ));
         
-        const userChatInfo = chatMap.get(chat.id);
+        const userChatInfo = chatMap.get(chat.id) as any;
         
         // For direct chats, get the other user's name
         let displayName = chat.name;
         if (chat.chatType === "direct") {
-          const otherUser = participants.find(p => p.userId !== ctx.user.id);
+          const otherUser = participants.find((p: any) => p.userId !== ctx.user.id);
           displayName = otherUser?.userName || "Unknown User";
         }
         
@@ -224,6 +239,9 @@ export const chatRouter = router({
       messageLimit: z.number().min(1).max(100).default(50),
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       // Check if user is participant
       const [participant] = await db
         .select()
@@ -313,6 +331,9 @@ export const chatRouter = router({
       replyToId: z.number().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       // Check if user is participant
       const [participant] = await db
         .select()
@@ -337,7 +358,7 @@ export const chatRouter = router({
         replyToId: input.replyToId,
       });
       
-      const messageId = Number(result.insertId);
+      const messageId = Number((result as any).insertId);
       
       // Update chat's last message
       await updateChatLastMessage(input.chatId, input.content);
@@ -354,7 +375,7 @@ export const chatRouter = router({
           isNull(chatParticipants.leftAt)
         ));
       
-      const participantIds = participants.map(p => p.userId);
+      const participantIds = participants.map((p: any) => p.userId);
       const createdAt = new Date();
       
       // Broadcast message via SSE
@@ -383,6 +404,9 @@ export const chatRouter = router({
       afterId: z.number().optional(), // For new messages
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return { messages: [], hasMore: false };
+
       // Check if user is participant
       const [participant] = await db
         .select()
@@ -398,7 +422,7 @@ export const chatRouter = router({
         throw new TRPCError({ code: "FORBIDDEN", message: "You are not a member of this chat" });
       }
       
-      let query = db
+      const messages = await db
         .select({
           id: chatMessages.id,
           chatId: chatMessages.chatId,
@@ -419,15 +443,13 @@ export const chatRouter = router({
         .orderBy(desc(chatMessages.id))
         .limit(input.limit);
       
-      const messages = await query;
-      
       // Filter by beforeId or afterId if provided
       let filteredMessages = messages;
       if (input.beforeId) {
-        filteredMessages = messages.filter(m => m.id < input.beforeId!);
+        filteredMessages = messages.filter((m: any) => m.id < input.beforeId!);
       }
       if (input.afterId) {
-        filteredMessages = messages.filter(m => m.id > input.afterId!);
+        filteredMessages = messages.filter((m: any) => m.id > input.afterId!);
       }
       
       return {
@@ -443,6 +465,9 @@ export const chatRouter = router({
       content: z.string().min(1).max(10000),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [message] = await db
         .select()
         .from(chatMessages)
@@ -472,6 +497,9 @@ export const chatRouter = router({
   deleteMessage: protectedProcedure
     .input(z.object({ messageId: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [message] = await db
         .select()
         .from(chatMessages)
@@ -504,6 +532,9 @@ export const chatRouter = router({
       emoji: z.string().max(10),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [message] = await db
         .select()
         .from(chatMessages)
@@ -537,6 +568,9 @@ export const chatRouter = router({
       emoji: z.string().max(10),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [message] = await db
         .select()
         .from(chatMessages)
@@ -566,6 +600,9 @@ export const chatRouter = router({
   markAsRead: protectedProcedure
     .input(z.object({ chatId: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       await db.update(chatParticipants)
         .set({ 
           lastReadAt: new Date(),
@@ -588,6 +625,9 @@ export const chatRouter = router({
       currentChatId: z.number().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [existing] = await db
         .select()
         .from(userPresence)
@@ -623,9 +663,12 @@ export const chatRouter = router({
       userIds: z.array(z.number()).optional(),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
       
-      let query = db
+      const results = await db
         .select({
           userId: userPresence.userId,
           status: userPresence.status,
@@ -638,11 +681,9 @@ export const chatRouter = router({
         .leftJoin(users, eq(userPresence.userId, users.id))
         .where(gte(userPresence.lastActiveAt, fiveMinutesAgo));
       
-      const results = await query;
-      
       // Filter by userIds if provided
       if (input.userIds && input.userIds.length > 0) {
-        return results.filter(r => input.userIds!.includes(r.userId));
+        return results.filter((r: any) => input.userIds!.includes(r.userId));
       }
       
       return results;
@@ -652,6 +693,9 @@ export const chatRouter = router({
   leaveChat: protectedProcedure
     .input(z.object({ chatId: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [chat] = await db
         .select()
         .from(chats)
@@ -691,6 +735,9 @@ export const chatRouter = router({
       userId: z.number(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       // Check if user is admin/owner
       const [participant] = await db
         .select()
@@ -753,6 +800,9 @@ export const chatRouter = router({
   // Get unread count across all chats
   getUnreadCount: protectedProcedure
     .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return { totalUnread: 0, chatsWithUnread: 0, perChat: [] };
+
       const results = await db
         .select({
           chatId: chatParticipants.chatId,
@@ -764,13 +814,13 @@ export const chatRouter = router({
           isNull(chatParticipants.leftAt)
         ));
       
-      const totalUnread = results.reduce((sum, r) => sum + (r.unreadCount || 0), 0);
-      const chatsWithUnread = results.filter(r => (r.unreadCount || 0) > 0).length;
+      const totalUnread = results.reduce((sum: number, r: any) => sum + (r.unreadCount || 0), 0);
+      const chatsWithUnread = results.filter((r: any) => (r.unreadCount || 0) > 0).length;
       
       return {
         totalUnread,
         chatsWithUnread,
-        perChat: results.filter(r => (r.unreadCount || 0) > 0),
+        perChat: results.filter((r: any) => (r.unreadCount || 0) > 0),
       };
     }),
 
@@ -782,6 +832,9 @@ export const chatRouter = router({
       limit: z.number().min(1).max(50).default(20),
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return { messages: [] };
+
       // Get user's chat IDs
       const userChats = await db
         .select({ chatId: chatParticipants.chatId })
@@ -791,7 +844,7 @@ export const chatRouter = router({
           isNull(chatParticipants.leftAt)
         ));
       
-      const chatIds = userChats.map(c => c.chatId);
+      const chatIds = userChats.map((c: any) => c.chatId);
       
       if (chatIds.length === 0) {
         return { messages: [] };
@@ -830,6 +883,9 @@ export const chatRouter = router({
       limit: z.number().min(1).max(100).default(50),
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       // Get the parent message to verify access
       const [parentMessage] = await db
         .select()
@@ -894,6 +950,9 @@ export const chatRouter = router({
       messageIds: z.array(z.number()).max(100),
     }))
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { counts: {} };
+
       if (input.messageIds.length === 0) {
         return { counts: {} };
       }
@@ -926,6 +985,9 @@ export const chatRouter = router({
       messageId: z.number(),
     }))
     .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       const [message] = await db
         .select({
           id: chatMessages.id,
@@ -1014,6 +1076,9 @@ export const chatRouter = router({
       isTyping: z.boolean(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
       // Check if user is participant
       const [participant] = await db
         .select()
@@ -1038,7 +1103,7 @@ export const chatRouter = router({
           isNull(chatParticipants.leftAt)
         ));
       
-      const participantIds = participants.map(p => p.userId);
+      const participantIds = participants.map((p: any) => p.userId);
       
       // Broadcast typing indicator via SSE
       broadcastTyping(
