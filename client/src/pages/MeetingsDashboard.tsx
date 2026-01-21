@@ -253,21 +253,16 @@ export default function MeetingsDashboard() {
 
   const updatePresence = trpc.chat.updatePresence.useMutation();
 
-  // File upload mutations - placeholder until implemented
-  const uploadAttachment = {
-    mutateAsync: async (data: any) => {
-      console.log("File upload not yet implemented", data);
-      return { url: "" };
+  // File upload mutations
+  const uploadAttachment = trpc.chat.uploadAttachment.useMutation();
+  const sendMessageWithAttachment = trpc.chat.sendMessageWithAttachment.useMutation({
+    onSuccess: () => {
+      refetchActiveChat();
     },
-    isPending: false,
-  };
-  const sendMessageWithAttachment = {
-    mutate: (data: any) => {
-      // Use regular sendMessage for now
-      sendMessage.mutate({ chatId: data.chatId, content: data.content });
+    onError: (error) => {
+      toast.error(error.message);
     },
-    isPending: false,
-  };
+  });
 
   // Update presence on mount
   useEffect(() => {
@@ -392,6 +387,10 @@ export default function MeetingsDashboard() {
           sendMessageWithAttachment.mutate({
             chatId: activeChatId,
             content: `Shared a file: ${file.name}`,
+            attachmentUrl: result.url,
+            attachmentName: result.fileName,
+            attachmentType: result.mimeType,
+            attachmentSize: result.fileSize,
           });
 
           toast.success(`File ${file.name} uploaded successfully`);

@@ -93,6 +93,7 @@ const menuCategories: MenuCategory[] = [
     defaultOpen: false,
     items: [
       { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
+      { icon: CheckCircle, label: "Owner Action List", path: "/owner-actions", minRole: "owner" },
       { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "admin" },
       { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
       { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner" },
@@ -447,6 +448,16 @@ const menuCategories: MenuCategory[] = [
           { icon: Play, label: "Grants Simulator", path: "/grants-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/grants-team", minRole: "staff" },
           { icon: FolderOpen, label: "Documents", path: "/grants-documents", minRole: "staff" },
+        ]
+      },
+      // Communication
+      {
+        icon: MessageSquare,
+        label: "Communication",
+        minRole: "user",
+        items: [
+          { icon: MessageSquare, label: "Chat", path: "/chat", minRole: "user" },
+          { icon: Video, label: "Meetings", path: "/meetings", minRole: "user" },
         ]
       },
       // Documents

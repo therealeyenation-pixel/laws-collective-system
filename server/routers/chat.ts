@@ -1116,4 +1116,159 @@ export const chatRouter = router({
       
       return { success: true };
     }),
+
+  // Upload file attachment
+  uploadAttachment: protectedProcedure
+    .input(z.object({
+      chatId: z.number(),
+      fileName: z.string(),
+      fileData: z.string(), // Base64 encoded
+      mimeType: z.string(),
+      fileSize: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Check if user is participant
+      const [participant] = await db
+        .select()
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, input.chatId),
+          eq(chatParticipants.userId, ctx.user.id),
+          isNull(chatParticipants.leftAt)
+        ))
+        .limit(1);
+      
+      if (!participant) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a member of this chat" });
+      }
+
+      // Validate file size (25MB max)
+      if (input.fileSize > 25 * 1024 * 1024) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "File size exceeds 25MB limit" });
+      }
+
+      try {
+        // Import storage helper
+        const { storagePut } = await import("../storage");
+        
+        // Generate unique file key
+        const timestamp = Date.now();
+        const randomSuffix = Math.random().toString(36).substring(2, 8);
+        const fileKey = `chat-attachments/${input.chatId}/${timestamp}-${randomSuffix}-${input.fileName}`;
+        
+        // Convert base64 to buffer
+        const fileBuffer = Buffer.from(input.fileData, "base64");
+        
+        // Upload to S3
+        const { url } = await storagePut(fileKey, fileBuffer, input.mimeType);
+        
+        return {
+          url,
+          fileKey,
+          fileName: input.fileName,
+          mimeType: input.mimeType,
+          fileSize: input.fileSize,
+        };
+      } catch (error) {
+        console.error("File upload error:", error);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload file" });
+      }
+    }),
+
+  // Send message with attachment
+  sendMessageWithAttachment: protectedProcedure
+    .input(z.object({
+      chatId: z.number(),
+      content: z.string().max(10000).default(""),
+      attachmentUrl: z.string(),
+      attachmentName: z.string(),
+      attachmentType: z.string(),
+      attachmentSize: z.number(),
+      replyToId: z.number().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Check if user is participant
+      const [participant] = await db
+        .select()
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, input.chatId),
+          eq(chatParticipants.userId, ctx.user.id),
+          isNull(chatParticipants.leftAt)
+        ))
+        .limit(1);
+      
+      if (!participant) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a member of this chat" });
+      }
+
+      // Create message with attachment flag
+      const messageContent = input.content || `Shared a file: ${input.attachmentName}`;
+      const [result] = await db.insert(chatMessages).values({
+        chatId: input.chatId,
+        senderId: ctx.user.id,
+        content: messageContent,
+        contentType: "file",
+        hasAttachments: true,
+        replyToId: input.replyToId || null,
+      });
+      
+      const messageId = Number((result as any).insertId);
+      
+      // Create attachment record
+      await db.insert(chatAttachments).values({
+        messageId,
+        fileName: input.attachmentName,
+        fileUrl: input.attachmentUrl,
+        fileType: input.attachmentType,
+        fileSize: input.attachmentSize,
+        uploadedById: ctx.user.id,
+      });
+      
+      // Update chat last message
+      await updateChatLastMessage(input.chatId, messageContent);
+      
+      // Increment unread counts
+      await incrementUnreadCounts(input.chatId, ctx.user.id);
+      
+      // Get all participant IDs for broadcasting
+      const participants = await db
+        .select({ userId: chatParticipants.userId })
+        .from(chatParticipants)
+        .where(and(
+          eq(chatParticipants.chatId, input.chatId),
+          isNull(chatParticipants.leftAt)
+        ));
+      
+      const participantIds = participants.map((p: any) => p.userId);
+      
+      // Broadcast new message via SSE
+      broadcastMessage(input.chatId, participantIds, {
+        id: messageId,
+        chatId: input.chatId,
+        senderId: ctx.user.id,
+        senderName: ctx.user.name || "Unknown",
+        content: messageContent,
+        contentType: "file",
+        hasAttachments: true,
+        createdAt: new Date(),
+        attachment: {
+          fileName: input.attachmentName,
+          fileUrl: input.attachmentUrl,
+          fileType: input.attachmentType,
+          fileSize: input.attachmentSize,
+        },
+      });
+      
+      return { 
+        id: messageId,
+        success: true,
+      };
+    }),
 });
