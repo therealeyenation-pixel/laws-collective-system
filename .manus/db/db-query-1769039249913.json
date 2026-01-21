@@ -1,0 +1,58 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'grant_opportunities' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'grant_opportunities' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "funder_name"
+    },
+    {
+      "COLUMN_NAME": "grant_name"
+    },
+    {
+      "COLUMN_NAME": "description"
+    },
+    {
+      "COLUMN_NAME": "funding_amount_min"
+    },
+    {
+      "COLUMN_NAME": "funding_amount_max"
+    },
+    {
+      "COLUMN_NAME": "deadline"
+    },
+    {
+      "COLUMN_NAME": "application_url"
+    },
+    {
+      "COLUMN_NAME": "eligibility_requirements"
+    },
+    {
+      "COLUMN_NAME": "focus_areas"
+    },
+    {
+      "COLUMN_NAME": "grant_type"
+    },
+    {
+      "COLUMN_NAME": "status"
+    },
+    {
+      "COLUMN_NAME": "priority"
+    },
+    {
+      "COLUMN_NAME": "notes"
+    },
+    {
+      "COLUMN_NAME": "created_at"
+    },
+    {
+      "COLUMN_NAME": "updated_at"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\nfunder_name\ngrant_name\ndescription\nfunding_amount_min\nfunding_amount_max\ndeadline\napplication_url\neligibility_requirements\nfocus_areas\ngrant_type\nstatus\npriority\nnotes\ncreated_at\nupdated_at\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

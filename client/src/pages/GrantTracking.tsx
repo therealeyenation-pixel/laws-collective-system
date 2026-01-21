@@ -33,13 +33,13 @@ export default function GrantTracking() {
   const [showNewOpportunity, setShowNewOpportunity] = useState(false);
   const [showNewApplication, setShowNewApplication] = useState(false);
   const [selectedOpportunityId, setSelectedOpportunityId] = useState<number | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [typeFilter, setTypeFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
 
   const { data: dashboard, refetch: refetchDashboard } = trpc.grantTracking.getDashboard.useQuery();
   const { data: opportunities, refetch: refetchOpportunities } = trpc.grantTracking.getOpportunities.useQuery({
-    status: statusFilter || undefined,
-    grantType: typeFilter || undefined,
+    status: statusFilter === "all" ? undefined : statusFilter || undefined,
+    grantType: typeFilter === "all" ? undefined : typeFilter || undefined,
   });
   const { data: applications, refetch: refetchApplications } = trpc.grantTracking.getApplications.useQuery({});
   const { data: pipeline } = trpc.grantTracking.getPipeline.useQuery();
@@ -482,7 +482,7 @@ export default function GrantTracking() {
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Statuses</SelectItem>
+                  <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="researching">Researching</SelectItem>
                   <SelectItem value="eligible">Eligible</SelectItem>
                   <SelectItem value="not_eligible">Not Eligible</SelectItem>
@@ -495,7 +495,7 @@ export default function GrantTracking() {
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
+                  <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="federal">Federal</SelectItem>
                   <SelectItem value="state">State</SelectItem>
                   <SelectItem value="local">Local</SelectItem>

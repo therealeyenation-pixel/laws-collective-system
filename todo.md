@@ -5503,3 +5503,30 @@ Three main approaches available:
 - [x] Apply 85% family discount for family members ($102,000 for family managers)
 - [x] Verify Position Management page displays all 47 positions correctly
 
+
+
+## Phase 58: Grant Application Tracking
+- [ ] Research WomensNet Amber Grant details (deadline, amount, requirements)
+- [ ] Research Freed Fellowship Grant details (deadline, amount, requirements)
+- [ ] Add WomensNet Amber Grant application to database (applied Jan 19, 2026, $15 fee)
+- [ ] Add Freed Fellowship Grant application to database (applied Jan 19, 2026, $19 fee)
+- [ ] Verify grants appear in Grant Tracking UI
+
+
+## Phase 58: Grant Application Tracking (COMPLETED)
+- [x] Add WomensNet Amber Grant to grant_opportunities table
+- [x] Add Freed Fellowship Grant to grant_opportunities table
+- [x] Create grant_applications records for both submitted applications
+- [x] Fixed SelectItem empty value error in GrantTracking.tsx
+- [x] Grants visible in Opportunities tab (2 cards showing)
+
+### Grant Application Action Items
+1. **WomensNet Amber Grant** - Applied Jan 19, 2026 (Receipt #1532-9613)
+   - Award announcement: End of month (check late January)
+   - If selected: Eligible for $50,000 year-end grant
+   - Follow-up: Check email for winner announcement
+
+2. **Freed Fellowship Grant** - Applied Jan 19, 2026 (Receipt #1168-6343)
+   - Award announcement: Monthly winners announced
+   - If selected: Eligible for $2,500 year-end grant + mentoring
+   - Follow-up: Check email for feedback and winner announcement
