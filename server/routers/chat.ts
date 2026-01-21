@@ -12,6 +12,7 @@ import {
 import { eq, and, desc, asc, or, sql, inArray, gte, isNull } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { broadcastMessage, broadcastTyping, broadcastPresence, broadcastReaction } from "../services/chatSSE";
+import { sendChatMessageNotification } from "../services/emailNotifications";
 
 // Helper to get or create direct chat between two users
 async function getOrCreateDirectChat(userId1: number, userId2: number): Promise<number> {
@@ -387,6 +388,15 @@ export const chatRouter = router({
         contentType: input.contentType,
         createdAt,
       });
+      
+      // Send email notifications (async, don't wait)
+      sendChatMessageNotification({
+        chatId: input.chatId,
+        messageId,
+        senderId: ctx.user.id,
+        senderName: ctx.user.name || "Unknown",
+        content: input.content,
+      }).catch(err => console.error("Failed to send chat email notifications:", err));
       
       return { 
         id: messageId, 

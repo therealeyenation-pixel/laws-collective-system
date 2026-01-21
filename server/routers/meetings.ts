@@ -11,6 +11,7 @@ import {
 } from "../../drizzle/schema";
 import { eq, and, gte, lte, desc, asc, or, sql, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { sendMeetingInvitation, sendMeetingReminder } from "../services/emailNotifications";
 
 // Helper to generate a unique room name
 function generateRoomName(): string {
@@ -120,6 +121,28 @@ export const meetingsRouter = router({
       
       // Create meeting chat
       await createMeetingChat(meetingId, ctx.user.id, input.title);
+      
+      // Send email invitations to participants (async, don't wait)
+      if (input.participants && input.participants.length > 0) {
+        const participantUserIds = input.participants
+          .filter(p => p.userId)
+          .map(p => p.userId as number);
+        
+        const endTime = new Date(new Date(input.scheduledAt).getTime() + input.duration * 60000);
+        
+        sendMeetingInvitation(
+          {
+            meetingId,
+            title: input.title,
+            description: input.description,
+            startTime: new Date(input.scheduledAt),
+            endTime,
+            organizerName: ctx.user.name || "Meeting Organizer",
+            meetingLink: `${process.env.VITE_APP_URL || ""}/meetings?join=${roomName}`,
+          },
+          participantUserIds
+        ).catch(err => console.error("Failed to send meeting invitations:", err));
+      }
       
       return { 
         id: meetingId, 
