@@ -142,7 +142,33 @@ export const positionManagementRouter = router({
         .where(eq(businessPositions.businessEntityId, input.businessEntityId))
         .orderBy(desc(businessPositions.createdAt));
 
-      return positions;
+      // Get position holders for each filled position
+      const positionsWithHolders = await Promise.all(
+        positions.map(async (position) => {
+          if (position.status === 'filled') {
+            const [holder] = await db.select().from(positionHolders)
+              .where(and(
+                eq(positionHolders.positionId, position.id),
+                eq(positionHolders.status, 'active')
+              ))
+              .limit(1);
+            
+            return {
+              ...position,
+              assignedEmployee: holder ? {
+                id: holder.id,
+                name: holder.fullName,
+                email: holder.email,
+                startDate: holder.startDate,
+                relationshipType: holder.relationshipType,
+              } : null
+            };
+          }
+          return { ...position, assignedEmployee: null };
+        })
+      );
+
+      return positionsWithHolders;
     }),
 
   /**
