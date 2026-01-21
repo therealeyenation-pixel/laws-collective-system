@@ -76,6 +76,11 @@ export default function MeetingsDashboard() {
   const [typingUsers, setTypingUsers] = useState<Map<number, { userId: number; userName: string }>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
+  // Drag and drop state
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragCounter, setDragCounter] = useState(0);
+  const chatAreaRef = useRef<HTMLDivElement>(null);
+
   // Reply state for message threading
   const [replyingTo, setReplyingTo] = useState<{
     id: number;
@@ -248,6 +253,15 @@ export default function MeetingsDashboard() {
 
   const updatePresence = trpc.chat.updatePresence.useMutation();
 
+  // File upload mutations
+  const uploadAttachment = trpc.chat.uploadAttachment.useMutation();
+  const sendMessageWithAttachment = trpc.chat.sendMessageWithAttachment.useMutation({
+    onSuccess: () => {
+      refetchActiveChat();
+      refetchChats();
+    },
+  });
+
   // Update presence on mount
   useEffect(() => {
     updatePresence.mutate({ status: "online" });
@@ -302,6 +316,85 @@ export default function MeetingsDashboard() {
       content: message.content.length > 100 ? message.content.substring(0, 100) + "..." : message.content,
       senderName: message.senderName,
     });
+  };
+
+  // Drag and drop handlers
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragCounter(prev => prev + 1);
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragCounter(prev => {
+      const newCount = prev - 1;
+      if (newCount === 0) {
+        setIsDragging(false);
+      }
+      return newCount;
+    });
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    setDragCounter(0);
+
+    if (!activeChatId) {
+      toast.error("Please select a chat first");
+      return;
+    }
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length === 0) return;
+
+    // Process each file
+    for (const file of files) {
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error(`File ${file.name} is too large. Maximum size is 25MB.`);
+        continue;
+      }
+
+      try {
+        // Convert file to base64
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const base64 = (reader.result as string).split(",")[1];
+          
+          // Upload the file
+          const result = await uploadAttachment.mutateAsync({
+            chatId: activeChatId,
+            fileName: file.name,
+            fileData: base64,
+            mimeType: file.type || "application/octet-stream",
+            fileSize: file.size,
+          });
+
+          // Send message with attachment
+          await sendMessageWithAttachment.mutateAsync({
+            chatId: activeChatId,
+            content: `Shared a file: ${file.name}`,
+            attachmentId: result.id,
+          });
+
+          toast.success(`File ${file.name} uploaded successfully`);
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
   };
 
   // Open thread view for a message
@@ -769,7 +862,24 @@ export default function MeetingsDashboard() {
                 </Card>
 
                 {/* Chat Window */}
-                <Card className="lg:col-span-2 flex flex-col">
+                <Card 
+                  className="lg:col-span-2 flex flex-col relative"
+                  ref={chatAreaRef}
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                >
+                  {/* Drag overlay */}
+                  {isDragging && (
+                    <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-lg z-50 flex items-center justify-center">
+                      <div className="text-center">
+                        <Paperclip className="w-12 h-12 mx-auto mb-2 text-primary" />
+                        <p className="text-lg font-medium text-primary">Drop files here</p>
+                        <p className="text-sm text-muted-foreground">Files will be shared in this chat</p>
+                      </div>
+                    </div>
+                  )}
                   {activeChatId && activeChat ? (
                     <>
                       <CardHeader className="pb-2 border-b">

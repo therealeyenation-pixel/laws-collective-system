@@ -5321,3 +5321,22 @@ Three main approaches available:
   - [x] Thread view dialog with parent message and replies
   - [x] Reply context indicator on messages that are replies
 - [x] Test message threading functionality - 595 tests passing
+
+## Phase 106: Drag-and-Drop File Upload & Document Download Center
+- [x] Add drag-and-drop file upload to chat
+  - [x] Create drop zone overlay for chat area
+  - [x] Handle dragover, dragleave, and drop events
+  - [x] Support multiple file drops
+  - [x] Visual feedback during drag with icon and text
+- [x] Create document download center
+  - [x] Create Downloads page at /downloads
+  - [x] 6 categories: Policies, Legal, Financial, HR, Business, Training
+  - [x] 30 documents with metadata (size, version, date)
+  - [x] Search and filter by category
+  - [x] File type icons and category badges
+  - [x] Quick stats cards
+- [x] Add Communications section to sidebar
+  - [x] Meetings link at /meetings
+  - [x] Team Chat link
+  - [x] Downloads link at /downloads
+- [x] Test features - 595 tests passing

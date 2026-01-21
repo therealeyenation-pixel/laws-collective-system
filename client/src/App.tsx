@@ -130,6 +130,7 @@ import ITDashboard from "@/pages/ITDashboard";
 import PlatformAdminDashboard from "@/pages/PlatformAdminDashboard";
 import Procedures from "@/pages/Procedures";
 import MeetingsDashboard from "@/pages/MeetingsDashboard";
+import Downloads from "@/pages/Downloads";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
@@ -335,7 +336,8 @@ function Router() {
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>
-      <Route path="/meetings">{() => <ProtectedRoute component={MeetingsDashboard} minRole="staff" />}</Route>
+      <Route path="/meetings">{() => <ProtectedRoute component={MeetingsDashboard} minRole="user" />}</Route>
+      <Route path="/downloads">{() => <ProtectedRoute component={Downloads} minRole="user" />}</Route>
       <Route path="/proposal-simulator">{() => <ProtectedRoute component={ProposalSimulator} minRole="staff" />}</Route>
       <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} minRole="staff" />}</Route>
       

@@ -38,7 +38,7 @@ import {
   Gamepad2, ChevronRight, ShoppingCart, FileSignature, FolderOpen,
   CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye,
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
-  Wrench, Clipboard
+  Wrench, Clipboard, Video, MessageSquare, Download
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -150,6 +150,17 @@ const menuCategories: MenuCategory[] = [
           { icon: Briefcase, label: "Executive Dashboard", path: "/executive-dashboard", minRole: "admin" },
           { icon: LayoutDashboard, label: "Business Dashboard", path: "/dashboard", minRole: "staff" },
           { icon: BarChart3, label: "Operations Dashboard", path: "/operations-dashboard", minRole: "staff" },
+        ]
+      },
+      // Communications & Meetings
+      {
+        icon: Video,
+        label: "Communications",
+        minRole: "user",
+        items: [
+          { icon: Video, label: "Meetings", path: "/meetings", minRole: "user" },
+          { icon: MessageSquare, label: "Team Chat", path: "/meetings?tab=chat", minRole: "user" },
+          { icon: Download, label: "Downloads", path: "/downloads", minRole: "user" },
         ]
       },
       // Business Department (LaShanna K. Russell - CEO) - Ground Zero
