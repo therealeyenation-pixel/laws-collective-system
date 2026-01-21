@@ -12036,3 +12036,16 @@ export const videoProviderConfigs = mysqlTable("video_provider_configs", {
 
 export type VideoProviderConfig = typeof videoProviderConfigs.$inferSelect;
 export type InsertVideoProviderConfig = typeof videoProviderConfigs.$inferInsert;
+
+/**
+ * Meeting Reminders - Tracks sent reminders to avoid duplicates
+ */
+export const meetingReminders = mysqlTable("meeting_reminders", {
+  id: int("id").autoincrement().primaryKey(),
+  meetingId: int("meetingId").notNull(),
+  reminderType: mysqlEnum("reminderType", ["15_min", "1_hour", "24_hour"]).notNull(),
+  sentAt: timestamp("sentAt").defaultNow().notNull(),
+  recipientCount: int("recipientCount").default(0),
+});
+export type MeetingReminder = typeof meetingReminders.$inferSelect;
+export type InsertMeetingReminder = typeof meetingReminders.$inferInsert;
