@@ -1,0 +1,40 @@
+{
+  "query": "SELECT id, businessEntityId, houseId, title FROM business_positions LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, businessEntityId, houseId, title FROM business_positions LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "businessEntityId": "6",
+      "houseId": "1",
+      "title": "Executive Director"
+    },
+    {
+      "id": "2",
+      "businessEntityId": "6",
+      "houseId": "1",
+      "title": "Chief Financial Officer"
+    },
+    {
+      "id": "3",
+      "businessEntityId": "6",
+      "houseId": "1",
+      "title": "Operations Manager"
+    },
+    {
+      "id": "4",
+      "businessEntityId": "6",
+      "houseId": "1",
+      "title": "Marketing Director"
+    },
+    {
+      "id": "5",
+      "businessEntityId": "6",
+      "houseId": "1",
+      "title": "Technology Director"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tbusinessEntityId\thouseId\ttitle\n1\t6\t1\tExecutive Director\n2\t6\t1\tChief Financial Officer\n3\t6\t1\tOperations Manager\n4\t6\t1\tMarketing Director\n5\t6\t1\tTechnology Director\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}
