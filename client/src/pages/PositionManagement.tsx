@@ -219,9 +219,14 @@ export default function PositionManagement() {
                           <h4 className="font-medium">{record.employeeName}</h4>
                           <p className="text-sm text-muted-foreground">{new Date(record.payPeriodStart).toLocaleDateString()} - {new Date(record.payPeriodEnd).toLocaleDateString()}</p>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold">${record.netPay?.toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground">Gross: ${record.grossPay?.toLocaleString()}</p>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="font-bold">${record.netPay?.toLocaleString()}</p>
+                            <p className="text-xs text-muted-foreground">Gross: ${record.grossPay?.toLocaleString()}</p>
+                          </div>
+                          <Button variant="outline" size="sm" onClick={() => window.open(`/api/payroll/paystub/${record.id}`, '_blank')}>
+                            <FileText className="w-4 h-4 mr-1" /> Pay Stub
+                          </Button>
                         </div>
                       </div>
                     ))}
