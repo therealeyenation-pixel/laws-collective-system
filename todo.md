@@ -5606,3 +5606,11 @@ Three main approaches available:
 - [x] Add Export to PDF button in SWOT UI
 - [x] Link SWOT analyses to Business Plan Simulator
 - [ ] Test PDF export functionality
+
+
+## Phase: SWOT Comparison View
+- [x] Design comparison view UI with side-by-side layout
+- [x] Add comparison tab to SWOT Analysis page
+- [x] Create timeline chart for score trends over time
+- [x] Add analysis selection for comparison
+- [x] Test comparison functionality

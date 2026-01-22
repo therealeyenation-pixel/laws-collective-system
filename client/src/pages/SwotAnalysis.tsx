@@ -543,6 +543,10 @@ export default function SwotAnalysis() {
                       <FileText className="w-4 h-4 mr-2" />
                       List View
                     </TabsTrigger>
+                    <TabsTrigger value="compare">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Compare
+                    </TabsTrigger>
                   </TabsList>
                   <div className="flex gap-2">
                     <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
@@ -666,6 +670,151 @@ export default function SwotAnalysis() {
                           );
                         })}
                       </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="compare">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <TrendingUp className="w-5 h-5" />
+                        SWOT Comparison Over Time
+                      </CardTitle>
+                      <CardDescription>
+                        Compare how your strategic factors have evolved across multiple analyses
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {analyses && analyses.length > 1 ? (
+                        <div className="space-y-6">
+                          {/* Score Trend Chart */}
+                          <div className="bg-muted/30 rounded-lg p-4">
+                            <h4 className="font-semibold mb-4">Score Trends</h4>
+                            <div className="grid grid-cols-4 gap-4 mb-4">
+                              {["Strengths", "Weaknesses", "Opportunities", "Threats"].map((label, idx) => (
+                                <div key={label} className="text-center">
+                                  <div className={`text-2xl font-bold ${
+                                    idx === 0 ? "text-green-600" :
+                                    idx === 1 ? "text-red-600" :
+                                    idx === 2 ? "text-blue-600" : "text-amber-600"
+                                  }`}>
+                                    {idx === 0 ? selectedAnalysis?.strengthScore || 0 :
+                                     idx === 1 ? selectedAnalysis?.weaknessScore || 0 :
+                                     idx === 2 ? selectedAnalysis?.opportunityScore || 0 :
+                                     selectedAnalysis?.threatScore || 0}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">{label}</div>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="h-32 flex items-end justify-around gap-2">
+                              {analyses.slice(0, 5).map((a, idx) => (
+                                <div key={a.id} className="flex-1 flex flex-col items-center gap-1">
+                                  <div className="w-full flex gap-0.5 items-end h-24">
+                                    <div 
+                                      className="flex-1 bg-green-500 rounded-t" 
+                                      style={{ height: `${Math.min((a.strengthScore || 0) * 10, 100)}%` }}
+                                    />
+                                    <div 
+                                      className="flex-1 bg-red-500 rounded-t" 
+                                      style={{ height: `${Math.min((a.weaknessScore || 0) * 10, 100)}%` }}
+                                    />
+                                    <div 
+                                      className="flex-1 bg-blue-500 rounded-t" 
+                                      style={{ height: `${Math.min((a.opportunityScore || 0) * 10, 100)}%` }}
+                                    />
+                                    <div 
+                                      className="flex-1 bg-amber-500 rounded-t" 
+                                      style={{ height: `${Math.min((a.threatScore || 0) * 10, 100)}%` }}
+                                    />
+                                  </div>
+                                  <span className={`text-xs truncate max-w-full ${
+                                    a.id === selectedAnalysisId ? "font-bold text-primary" : "text-muted-foreground"
+                                  }`}>
+                                    {a.title.slice(0, 10)}{a.title.length > 10 ? "..." : ""}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Comparison Table */}
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b">
+                                  <th className="text-left py-2 px-3">Analysis</th>
+                                  <th className="text-center py-2 px-3 text-green-600">S</th>
+                                  <th className="text-center py-2 px-3 text-red-600">W</th>
+                                  <th className="text-center py-2 px-3 text-blue-600">O</th>
+                                  <th className="text-center py-2 px-3 text-amber-600">T</th>
+                                  <th className="text-center py-2 px-3">Total</th>
+                                  <th className="text-center py-2 px-3">Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {analyses.map((a) => {
+                                  const total = (a.strengthScore || 0) + (a.opportunityScore || 0) - (a.weaknessScore || 0) - (a.threatScore || 0);
+                                  return (
+                                    <tr 
+                                      key={a.id} 
+                                      className={`border-b hover:bg-muted/50 cursor-pointer ${
+                                        a.id === selectedAnalysisId ? "bg-primary/5" : ""
+                                      }`}
+                                      onClick={() => setSelectedAnalysisId(a.id)}
+                                    >
+                                      <td className="py-2 px-3 font-medium">{a.title}</td>
+                                      <td className="text-center py-2 px-3">{a.strengthScore || 0}</td>
+                                      <td className="text-center py-2 px-3">{a.weaknessScore || 0}</td>
+                                      <td className="text-center py-2 px-3">{a.opportunityScore || 0}</td>
+                                      <td className="text-center py-2 px-3">{a.threatScore || 0}</td>
+                                      <td className={`text-center py-2 px-3 font-semibold ${
+                                        total > 0 ? "text-green-600" : total < 0 ? "text-red-600" : "text-muted-foreground"
+                                      }`}>
+                                        {total > 0 ? "+" : ""}{total}
+                                      </td>
+                                      <td className="text-center py-2 px-3">
+                                        <Badge variant={a.status === "active" ? "default" : "secondary"}>
+                                          {a.status}
+                                        </Badge>
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {/* Legend */}
+                          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <div className="w-3 h-3 bg-green-500 rounded" />
+                              <span>Strengths</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <div className="w-3 h-3 bg-red-500 rounded" />
+                              <span>Weaknesses</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <div className="w-3 h-3 bg-blue-500 rounded" />
+                              <span>Opportunities</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <div className="w-3 h-3 bg-amber-500 rounded" />
+                              <span>Threats</span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <TrendingUp className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                          <h3 className="text-lg font-semibold mb-2">Need More Data</h3>
+                          <p className="text-muted-foreground">
+                            Create at least 2 SWOT analyses to compare trends over time.
+                          </p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </TabsContent>
