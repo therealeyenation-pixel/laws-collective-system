@@ -143,6 +143,10 @@ export default function GameCenter() {
       window.location.href = "/games/financial-literacy";
       return;
     }
+    if (gameSlug === "business-tycoon" || gameSlug === "startup-sim") {
+      window.location.href = "/games/business-tycoon";
+      return;
+    }
     toast.info(`Game "${gameSlug}" coming soon! Full gameplay implementation in progress.`);
   };
 
