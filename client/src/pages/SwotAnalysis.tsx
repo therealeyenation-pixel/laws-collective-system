@@ -12,7 +12,7 @@ import { trpc } from "@/lib/trpc";
 import { 
   Plus, Trash2, Target, Shield, AlertTriangle, 
   TrendingUp, Lightbulb, ChevronRight, BarChart3, FileText,
-  CheckCircle, Clock, XCircle, Sparkles, Loader2, Download
+  CheckCircle, Clock, XCircle, Sparkles, Loader2, Download, Calendar, Filter
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -115,6 +115,7 @@ export default function SwotAnalysis() {
   const [isAIGenerating, setIsAIGenerating] = useState(false);
   const [aiContext, setAIContext] = useState("");
   const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
+  const [dateFilter, setDateFilter] = useState<"all" | "quarter" | "year" | "custom">("all");
 
   const utils = trpc.useUtils();
   
@@ -320,6 +321,59 @@ export default function SwotAnalysis() {
     } else {
       toast.error("Please allow popups to export PDF");
     }
+  };
+
+  // Filter analyses by date
+  const getFilteredAnalyses = () => {
+    if (!analyses) return [];
+    const now = new Date();
+    
+    switch (dateFilter) {
+      case "quarter": {
+        const quarterStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+        return analyses.filter(a => new Date(a.createdAt || 0) >= quarterStart);
+      }
+      case "year": {
+        const yearStart = new Date(now.getFullYear(), 0, 1);
+        return analyses.filter(a => new Date(a.createdAt || 0) >= yearStart);
+      }
+      default:
+        return analyses;
+    }
+  };
+
+  const filteredAnalyses = getFilteredAnalyses();
+
+  const handleExportComparison = () => {
+    if (!filteredAnalyses || filteredAnalyses.length === 0) {
+      toast.error("No analyses to export");
+      return;
+    }
+
+    // Generate CSV content
+    const headers = ["Analysis", "Strengths", "Weaknesses", "Opportunities", "Threats", "Net Score", "Status"];
+    const rows = filteredAnalyses.map(a => {
+      const total = (a.strengthScore || 0) + (a.opportunityScore || 0) - (a.weaknessScore || 0) - (a.threatScore || 0);
+      return [
+        a.title,
+        a.strengthScore || 0,
+        a.weaknessScore || 0,
+        a.opportunityScore || 0,
+        a.threatScore || 0,
+        total,
+        a.status
+      ].join(",");
+    });
+
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `swot-comparison-${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success("Comparison exported to CSV");
   };
 
   const getItemsByCategory = (category: SwotCategory): SwotItem[] => {
@@ -677,17 +731,51 @@ export default function SwotAnalysis() {
                 <TabsContent value="compare">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <TrendingUp className="w-5 h-5" />
-                        SWOT Comparison Over Time
-                      </CardTitle>
-                      <CardDescription>
-                        Compare how your strategic factors have evolved across multiple analyses
-                      </CardDescription>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="flex items-center gap-2">
+                            <TrendingUp className="w-5 h-5" />
+                            SWOT Comparison Over Time
+                          </CardTitle>
+                          <CardDescription>
+                            Compare how your strategic factors have evolved across multiple analyses
+                          </CardDescription>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Select value={dateFilter} onValueChange={(v: "all" | "quarter" | "year" | "custom") => setDateFilter(v)}>
+                            <SelectTrigger className="w-[140px]">
+                              <Filter className="w-4 h-4 mr-2" />
+                              <SelectValue placeholder="Filter" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Time</SelectItem>
+                              <SelectItem value="quarter">This Quarter</SelectItem>
+                              <SelectItem value="year">This Year</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleExportComparison()}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Export
+                          </Button>
+                        </div>
+                      </div>
                     </CardHeader>
                     <CardContent>
-                      {analyses && analyses.length > 1 ? (
+                      {filteredAnalyses && filteredAnalyses.length > 1 ? (
                         <div className="space-y-6">
+                          {/* Date Filter Info */}
+                          {dateFilter !== "all" && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-3 py-2 rounded-lg">
+                              <Calendar className="w-4 h-4" />
+                              <span>
+                                Showing {filteredAnalyses.length} {filteredAnalyses.length === 1 ? "analysis" : "analyses"} from {dateFilter === "quarter" ? "this quarter" : "this year"}
+                              </span>
+                            </div>
+                          )}
                           {/* Score Trend Chart */}
                           <div className="bg-muted/30 rounded-lg p-4">
                             <h4 className="font-semibold mb-4">Score Trends</h4>
@@ -709,7 +797,7 @@ export default function SwotAnalysis() {
                               ))}
                             </div>
                             <div className="h-32 flex items-end justify-around gap-2">
-                              {analyses.slice(0, 5).map((a, idx) => (
+                              {filteredAnalyses.slice(0, 5).map((a, idx) => (
                                 <div key={a.id} className="flex-1 flex flex-col items-center gap-1">
                                   <div className="w-full flex gap-0.5 items-end h-24">
                                     <div 
@@ -754,7 +842,7 @@ export default function SwotAnalysis() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {analyses.map((a) => {
+                                {filteredAnalyses.map((a) => {
                                   const total = (a.strengthScore || 0) + (a.opportunityScore || 0) - (a.weaknessScore || 0) - (a.threatScore || 0);
                                   return (
                                     <tr 

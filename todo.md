@@ -5614,3 +5614,10 @@ Three main approaches available:
 - [x] Create timeline chart for score trends over time
 - [x] Add analysis selection for comparison
 - [x] Test comparison functionality
+
+
+## Phase: SWOT Date Filtering & Export
+- [x] Add date range filter dropdown to comparison view
+- [x] Filter analyses by quarterly/yearly periods
+- [x] Add export comparison report as PDF/CSV
+- [x] Test filtering and export functionality
