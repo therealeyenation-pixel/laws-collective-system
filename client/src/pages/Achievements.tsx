@@ -39,6 +39,12 @@ import {
   Calendar,
   ChevronUp,
   Sparkles,
+  Link2,
+  ExternalLink,
+  Hexagon,
+  Image,
+  Verified,
+  Hash,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -243,7 +249,7 @@ export default function Achievements() {
 
         {/* Main Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="achievements" className="gap-2">
               <Trophy className="w-4 h-4" />
               Achievements
@@ -251,6 +257,14 @@ export default function Achievements() {
             <TabsTrigger value="challenges" className="gap-2">
               <Target className="w-4 h-4" />
               Challenges
+            </TabsTrigger>
+            <TabsTrigger value="nfts" className="gap-2">
+              <Hexagon className="w-4 h-4" />
+              NFTs
+            </TabsTrigger>
+            <TabsTrigger value="blockchain" className="gap-2">
+              <Link2 className="w-4 h-4" />
+              Blockchain
             </TabsTrigger>
             <TabsTrigger value="leaderboard" className="gap-2">
               <Crown className="w-4 h-4" />
@@ -536,6 +550,16 @@ export default function Achievements() {
             </div>
           </TabsContent>
 
+          {/* NFTs Tab */}
+          <TabsContent value="nfts">
+            <NftGalleryTab />
+          </TabsContent>
+
+          {/* Blockchain Tab */}
+          <TabsContent value="blockchain">
+            <BlockchainTab />
+          </TabsContent>
+
           {/* Leaderboard Tab */}
           <TabsContent value="leaderboard">
             <Card>
@@ -667,5 +691,524 @@ export default function Achievements() {
         </Dialog>
       </div>
     </DashboardLayout>
+  );
+}
+
+// NFT Gallery Tab Component
+function NftGalleryTab() {
+  const [mintDialogOpen, setMintDialogOpen] = useState(false);
+  const [selectedForMint, setSelectedForMint] = useState<any>(null);
+  
+  // Fetch player's NFTs
+  const { data: playerNfts, isLoading: loadingNfts, refetch: refetchNfts } = trpc.achievements.getPlayerNfts.useQuery();
+  
+  // Fetch NFT gallery
+  const { data: nftGallery, isLoading: loadingGallery } = trpc.achievements.getNftGallery.useQuery({ limit: 20 });
+  
+  // Fetch blockchain stats
+  const { data: blockchainStats } = trpc.achievements.getBlockchainStats.useQuery();
+  
+  // Fetch player achievements with tiers (to find platinum achievements)
+  const { data: playerAchievements } = trpc.achievements.getPlayerAchievementsWithTiers.useQuery();
+  
+  // Mint NFT mutation
+  const mintNftMutation = trpc.achievements.mintPlatinumNft.useMutation({
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(data.message);
+        refetchNfts();
+        setMintDialogOpen(false);
+      } else {
+        toast.error(data.message);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  
+  // Find platinum achievements that don't have NFTs yet
+  const platinumAchievements = playerAchievements?.filter(
+    pa => pa.currentTier === "platinum" && !playerNfts?.some(nft => nft.achievementId === pa.achievementId)
+  ) || [];
+  
+  return (
+    <div className="space-y-6">
+      {/* Stats Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Hexagon className="w-8 h-8 mx-auto mb-2 text-purple-500" />
+            <div className="text-2xl font-bold">{playerNfts?.length || 0}</div>
+            <p className="text-sm text-muted-foreground">Your NFTs</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Image className="w-8 h-8 mx-auto mb-2 text-blue-500" />
+            <div className="text-2xl font-bold">{blockchainStats?.totalNftsMinted || 0}</div>
+            <p className="text-sm text-muted-foreground">Total Minted</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Sparkles className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
+            <div className="text-2xl font-bold">{platinumAchievements.length}</div>
+            <p className="text-sm text-muted-foreground">Mintable</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Link2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
+            <div className="text-2xl font-bold truncate text-xs">{blockchainStats?.chainId || "luvchain"}</div>
+            <p className="text-sm text-muted-foreground">Chain</p>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Mint NFT Section */}
+      {platinumAchievements.length > 0 && (
+        <Card className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border-purple-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-500" />
+              Mint Champion NFTs
+            </CardTitle>
+            <CardDescription>
+              You have {platinumAchievements.length} platinum achievement(s) eligible for NFT minting!
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {platinumAchievements.map((pa) => (
+                <Card key={pa.id} className="border-purple-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white">
+                        {iconMap[pa.definition?.badgeIcon || "star"] || <Star className="w-6 h-6" />}
+                      </div>
+                      <div>
+                        <h4 className="font-bold">{pa.definition?.name}</h4>
+                        <Badge className="bg-gradient-to-r from-purple-400 to-pink-400 text-white">Platinum</Badge>
+                      </div>
+                    </div>
+                    <Button 
+                      className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                      onClick={() => {
+                        setSelectedForMint(pa);
+                        setMintDialogOpen(true);
+                      }}
+                    >
+                      <Hexagon className="w-4 h-4 mr-2" />
+                      Mint NFT
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      
+      {/* Your NFTs */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Hexagon className="w-5 h-5 text-purple-500" />
+            Your Champion NFTs
+          </CardTitle>
+          <CardDescription>NFTs you've earned through achievements</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingNfts ? (
+            <div className="text-center py-8">
+              <Hexagon className="w-8 h-8 animate-pulse mx-auto text-purple-500" />
+            </div>
+          ) : playerNfts && playerNfts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {playerNfts.map((nft) => (
+                <Card key={nft.id} className="overflow-hidden border-2 border-purple-200 dark:border-purple-800">
+                  <div className="aspect-square bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <Hexagon className="w-16 h-16 mx-auto mb-2" />
+                      <p className="font-bold text-lg">{nft.name}</p>
+                      <Badge className="bg-white/20 text-white">{nft.rarity}</Badge>
+                    </div>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Hash className="w-3 h-3" />
+                        <span className="truncate">{nft.tokenId}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Verified className="w-3 h-3 text-green-500" />
+                        <span>Verified on LuvChain</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {(nft.attributes as any[])?.slice(0, 3).map((attr: any, i: number) => (
+                          <Badge key={i} variant="outline" className="text-xs">
+                            {attr.trait_type}: {attr.value}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Hexagon className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">No NFTs yet. Reach platinum tier on any achievement to mint your first NFT!</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      
+      {/* NFT Gallery */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Image className="w-5 h-5 text-blue-500" />
+            Community NFT Gallery
+          </CardTitle>
+          <CardDescription>Recently minted champion NFTs</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingGallery ? (
+            <div className="text-center py-8">
+              <Image className="w-8 h-8 animate-pulse mx-auto text-blue-500" />
+            </div>
+          ) : nftGallery && nftGallery.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {nftGallery.map((nft) => (
+                <Card key={nft.id} className="overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
+                    <Hexagon className="w-10 h-10 text-white" />
+                  </div>
+                  <CardContent className="p-2">
+                    <p className="font-medium text-sm truncate">{nft.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{nft.ownerName}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Image className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">No NFTs minted yet. Be the first champion!</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      
+      {/* Mint Dialog */}
+      <Dialog open={mintDialogOpen} onOpenChange={setMintDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mint Champion NFT</DialogTitle>
+            <DialogDescription>
+              Mint a unique NFT for your platinum achievement on LuvChain
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="p-4 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-200">
+              <div className="flex items-center gap-3">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-white">
+                  {iconMap[selectedForMint?.definition?.badgeIcon || "star"] || <Star className="w-8 h-8" />}
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg">{selectedForMint?.definition?.name}</h4>
+                  <p className="text-sm text-muted-foreground">{selectedForMint?.definition?.description}</p>
+                  <div className="flex gap-2 mt-1">
+                    <Badge className="bg-gradient-to-r from-purple-400 to-pink-400 text-white">Platinum</Badge>
+                    <Badge variant="outline">Legendary NFT</Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Chain</span>
+                <span className="font-medium">LuvChain</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Rarity</span>
+                <span className="font-medium text-purple-500">Legendary</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Gas Fee</span>
+                <span className="font-medium text-green-500">Free</span>
+              </div>
+            </div>
+            
+            <Button 
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              onClick={() => selectedForMint && mintNftMutation.mutate({ playerAchievementId: selectedForMint.id })}
+              disabled={mintNftMutation.isPending}
+            >
+              {mintNftMutation.isPending ? (
+                <><Hexagon className="w-4 h-4 mr-2 animate-spin" /> Minting...</>
+              ) : (
+                <><Hexagon className="w-4 h-4 mr-2" /> Confirm Mint</>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// Blockchain Tab Component
+function BlockchainTab() {
+  const [verifyCode, setVerifyCode] = useState("");
+  const [verifyResult, setVerifyResult] = useState<any>(null);
+  
+  // Fetch blockchain stats
+  const { data: blockchainStats } = trpc.achievements.getBlockchainStats.useQuery();
+  
+  // Fetch player's blockchain records
+  const { data: blockchainRecords, isLoading: loadingRecords, refetch: refetchRecords } = trpc.achievements.getPlayerBlockchainRecords.useQuery();
+  
+  // Fetch player achievements
+  const { data: playerAchievements } = trpc.achievements.getPlayerAchievements.useQuery();
+  
+  // Record to blockchain mutation
+  const recordToBlockchainMutation = trpc.achievements.recordToBlockchain.useMutation({
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(data.message);
+        refetchRecords();
+      } else {
+        toast.info(data.message);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  
+  // Verify blockchain record query
+  const verifyQuery = trpc.achievements.verifyBlockchainRecord.useQuery(
+    { verificationCode: verifyCode },
+    { enabled: false }
+  );
+  
+  const handleVerify = async () => {
+    if (!verifyCode.trim()) {
+      toast.error("Please enter a verification code");
+      return;
+    }
+    const result = await verifyQuery.refetch();
+    setVerifyResult(result.data);
+  };
+  
+  // Find achievements not yet recorded on blockchain
+  const unrecordedAchievements = playerAchievements?.filter(
+    pa => !blockchainRecords?.some(br => br.playerAchievementId === pa.id)
+  ) || [];
+  
+  return (
+    <div className="space-y-6">
+      {/* Blockchain Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Link2 className="w-8 h-8 mx-auto mb-2 text-green-500" />
+            <div className="text-2xl font-bold">{blockchainStats?.totalBlockchainRecords || 0}</div>
+            <p className="text-sm text-muted-foreground">Total Records</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Hash className="w-8 h-8 mx-auto mb-2 text-blue-500" />
+            <div className="text-2xl font-bold">{blockchainRecords?.length || 0}</div>
+            <p className="text-sm text-muted-foreground">Your Records</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Verified className="w-8 h-8 mx-auto mb-2 text-purple-500" />
+            <div className="text-2xl font-bold">{unrecordedAchievements.length}</div>
+            <p className="text-sm text-muted-foreground">Pending</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Hexagon className="w-8 h-8 mx-auto mb-2 text-orange-500" />
+            <div className="text-xs font-mono truncate">{blockchainStats?.latestBlockchainHash?.slice(0, 12) || "N/A"}...</div>
+            <p className="text-sm text-muted-foreground">Latest Hash</p>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Record Achievements */}
+      {unrecordedAchievements.length > 0 && (
+        <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Link2 className="w-5 h-5 text-green-500" />
+              Record to Blockchain
+            </CardTitle>
+            <CardDescription>
+              {unrecordedAchievements.length} achievement(s) can be permanently recorded on LuvChain
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {unrecordedAchievements.slice(0, 6).map((pa) => (
+                <Card key={pa.id} className="border-green-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white">
+                        <CheckCircle2 className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm truncate">Achievement #{pa.achievementId}</h4>
+                        <p className="text-xs text-muted-foreground">+{pa.tokensAwarded} tokens</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-green-300 text-green-700 hover:bg-green-50"
+                      onClick={() => recordToBlockchainMutation.mutate({ playerAchievementId: pa.id })}
+                      disabled={recordToBlockchainMutation.isPending}
+                    >
+                      <Link2 className="w-3 h-3 mr-2" />
+                      Record
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      
+      {/* Verify Achievement */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Verified className="w-5 h-5 text-purple-500" />
+            Verify Achievement
+          </CardTitle>
+          <CardDescription>Enter a verification code to verify an achievement on the blockchain</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Enter verification code..."
+              className="flex-1 px-3 py-2 border rounded-md text-sm"
+              value={verifyCode}
+              onChange={(e) => setVerifyCode(e.target.value)}
+            />
+            <Button onClick={handleVerify} disabled={verifyQuery.isFetching}>
+              {verifyQuery.isFetching ? "Verifying..." : "Verify"}
+            </Button>
+          </div>
+          
+          {verifyResult && (
+            <div className={`mt-4 p-4 rounded-lg ${verifyResult.verified ? "bg-green-50 dark:bg-green-950/20 border border-green-200" : "bg-red-50 dark:bg-red-950/20 border border-red-200"}`}>
+              {verifyResult.verified ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-green-600">
+                    <Verified className="w-5 h-5" />
+                    <span className="font-bold">Verified on Blockchain</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Achievement:</span>
+                      <p className="font-medium">{verifyResult.achievementName}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Player:</span>
+                      <p className="font-medium">{verifyResult.playerName}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Tier:</span>
+                      <p className="font-medium capitalize">{verifyResult.tier}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Tokens:</span>
+                      <p className="font-medium">{verifyResult.tokensAwarded}</p>
+                    </div>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    <Hash className="w-3 h-3 inline mr-1" />
+                    {verifyResult.blockchainHash}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-red-600">
+                  <Lock className="w-5 h-5" />
+                  <span>Record not found</span>
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      
+      {/* Your Blockchain Records */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Hash className="w-5 h-5 text-blue-500" />
+            Your Blockchain Records
+          </CardTitle>
+          <CardDescription>Achievements permanently recorded on LuvChain</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingRecords ? (
+            <div className="text-center py-8">
+              <Link2 className="w-8 h-8 animate-pulse mx-auto text-blue-500" />
+            </div>
+          ) : blockchainRecords && blockchainRecords.length > 0 ? (
+            <div className="space-y-3">
+              {blockchainRecords.map((record) => (
+                <div key={record.id} className="p-4 rounded-lg border bg-background">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="font-medium">{record.achievementName}</h4>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge variant="outline" className="capitalize">{record.tier}</Badge>
+                        <Badge variant="outline">{record.recordType.replace("_", " ")}</Badge>
+                        <span className="text-xs text-muted-foreground">
+                          +{record.tokensAwarded} tokens
+                        </span>
+                      </div>
+                    </div>
+                    <Verified className="w-5 h-5 text-green-500" />
+                  </div>
+                  <div className="mt-3 space-y-1 text-xs text-muted-foreground font-mono">
+                    <div className="flex items-center gap-1">
+                      <Hash className="w-3 h-3" />
+                      <span className="truncate">{record.blockchainHash}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <ExternalLink className="w-3 h-3" />
+                      <span className="truncate">{record.transactionHash}</span>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-muted-foreground">
+                    Recorded: {new Date(record.recordedAt).toLocaleDateString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Link2 className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">No blockchain records yet. Record your achievements to make them permanent!</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

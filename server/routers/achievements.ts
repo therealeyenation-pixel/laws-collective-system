@@ -1,9 +1,39 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { gameAchievements, gamePlayerAchievements, users } from "../../drizzle/schema";
+import { 
+  gameAchievements, 
+  gamePlayerAchievements, 
+  users,
+  achievementBlockchainRecords,
+  championNfts,
+  nftMintQueue,
+} from "../../drizzle/schema";
 import { desc, eq, and, sql, isNull } from "drizzle-orm";
 import crypto from "crypto";
+
+// Blockchain helper functions
+function generateBlockchainHash(data: object): string {
+  const dataString = JSON.stringify(data) + Date.now().toString();
+  return crypto.createHash('sha256').update(dataString).digest('hex');
+}
+
+function generateVerificationCode(): string {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+function generateNftTokenId(): string {
+  return `LAWS-NFT-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+}
+
+// NFT Contract address (simulated for LuvChain)
+const LUVCHAIN_NFT_CONTRACT = "0xLAWS_CHAMPION_NFT_CONTRACT_V1";
+
+// NFT Image generation helper
+function generateNftImageUrl(achievement: { name: string; tier: string; badgeIcon: string }): string {
+  // In production, this would generate actual NFT artwork
+  return `/api/nft/image/${achievement.badgeIcon}/${achievement.tier}`;
+}
 
 // Tier definitions
 export const TIER_LEVELS = ["bronze", "silver", "gold", "platinum"] as const;
@@ -727,6 +757,407 @@ export const achievementsRouter = router({
       silver: stats.find(s => s.tier === "silver")?.count || 0,
       gold: stats.find(s => s.tier === "gold")?.count || 0,
       platinum: stats.find(s => s.tier === "platinum")?.count || 0,
+    };
+  }),
+
+  // ============================================
+  // BLOCKCHAIN RECORDING
+  // ============================================
+
+  // Record achievement to blockchain
+  recordToBlockchain: protectedProcedure
+    .input(z.object({ playerAchievementId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      // Get the player achievement
+      const [playerAchievement] = await db.select()
+        .from(gamePlayerAchievements)
+        .where(and(
+          eq(gamePlayerAchievements.id, input.playerAchievementId),
+          eq(gamePlayerAchievements.playerId, ctx.user.id)
+        ))
+        .limit(1);
+      
+      if (!playerAchievement) {
+        throw new Error("Achievement not found");
+      }
+      
+      // Check if already recorded
+      if (playerAchievement.blockchainHash) {
+        return {
+          success: false,
+          message: "Achievement already recorded on blockchain",
+          blockchainHash: playerAchievement.blockchainHash,
+        };
+      }
+      
+      const definition = ACHIEVEMENT_DEFINITIONS[playerAchievement.achievementId - 1];
+      
+      // Get previous blockchain record for chain linking
+      const [lastRecord] = await db.select()
+        .from(achievementBlockchainRecords)
+        .orderBy(desc(achievementBlockchainRecords.id))
+        .limit(1);
+      
+      // Generate blockchain hash
+      const blockchainData = {
+        playerId: ctx.user.id,
+        achievementId: playerAchievement.achievementId,
+        achievementName: definition?.name || "Achievement",
+        tier: playerAchievement.currentTier || "bronze",
+        tokensAwarded: playerAchievement.tokensAwarded || 0,
+        earnedAt: playerAchievement.earnedAt,
+        previousHash: lastRecord?.blockchainHash || "GENESIS",
+      };
+      
+      const blockchainHash = generateBlockchainHash(blockchainData);
+      const verificationCode = generateVerificationCode();
+      const transactionHash = generateBlockchainHash({ ...blockchainData, type: "transaction" });
+      
+      // Create blockchain record
+      await db.insert(achievementBlockchainRecords).values({
+        playerId: ctx.user.id,
+        playerAchievementId: playerAchievement.id,
+        achievementId: playerAchievement.achievementId,
+        blockchainHash,
+        previousHash: lastRecord?.blockchainHash || null,
+        transactionHash,
+        recordType: "achievement_unlock",
+        achievementName: definition?.name || "Achievement",
+        tier: playerAchievement.currentTier || "bronze",
+        tokensAwarded: playerAchievement.tokensAwarded || 0,
+        verificationCode,
+        metadata: JSON.stringify(blockchainData),
+      });
+      
+      // Update player achievement with blockchain hash
+      await db.update(gamePlayerAchievements)
+        .set({
+          blockchainHash,
+          blockchainRecordedAt: new Date(),
+        })
+        .where(eq(gamePlayerAchievements.id, playerAchievement.id));
+      
+      return {
+        success: true,
+        blockchainHash,
+        transactionHash,
+        verificationCode,
+        message: "Achievement recorded on blockchain",
+      };
+    }),
+
+  // Verify blockchain record
+  verifyBlockchainRecord: publicProcedure
+    .input(z.object({ verificationCode: z.string() }))
+    .query(async ({ input }) => {
+      const db = getDb();
+      
+      const [record] = await db.select()
+        .from(achievementBlockchainRecords)
+        .where(eq(achievementBlockchainRecords.verificationCode, input.verificationCode))
+        .limit(1);
+      
+      if (!record) {
+        return { verified: false, message: "Record not found" };
+      }
+      
+      // Get player name
+      const [player] = await db.select({ name: users.name })
+        .from(users)
+        .where(eq(users.id, record.playerId))
+        .limit(1);
+      
+      return {
+        verified: record.isVerified,
+        blockchainHash: record.blockchainHash,
+        transactionHash: record.transactionHash,
+        achievementName: record.achievementName,
+        tier: record.tier,
+        tokensAwarded: record.tokensAwarded,
+        playerName: player?.name || "Anonymous",
+        recordedAt: record.recordedAt,
+        recordType: record.recordType,
+      };
+    }),
+
+  // Get player's blockchain records
+  getPlayerBlockchainRecords: protectedProcedure.query(async ({ ctx }) => {
+    const db = getDb();
+    
+    const records = await db.select()
+      .from(achievementBlockchainRecords)
+      .where(eq(achievementBlockchainRecords.playerId, ctx.user.id))
+      .orderBy(desc(achievementBlockchainRecords.recordedAt));
+    
+    return records;
+  }),
+
+  // ============================================
+  // NFT MINTING
+  // ============================================
+
+  // Mint NFT for platinum achievement
+  mintPlatinumNft: protectedProcedure
+    .input(z.object({ playerAchievementId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      // Get the player achievement
+      const [playerAchievement] = await db.select()
+        .from(gamePlayerAchievements)
+        .where(and(
+          eq(gamePlayerAchievements.id, input.playerAchievementId),
+          eq(gamePlayerAchievements.playerId, ctx.user.id)
+        ))
+        .limit(1);
+      
+      if (!playerAchievement) {
+        throw new Error("Achievement not found");
+      }
+      
+      // Check if already has NFT
+      if (playerAchievement.nftTokenId) {
+        return {
+          success: false,
+          message: "NFT already minted for this achievement",
+          nftTokenId: playerAchievement.nftTokenId,
+        };
+      }
+      
+      // Check if platinum tier
+      if (playerAchievement.currentTier !== "platinum") {
+        return {
+          success: false,
+          message: "Only platinum tier achievements can be minted as NFTs",
+          currentTier: playerAchievement.currentTier,
+        };
+      }
+      
+      const definition = ACHIEVEMENT_DEFINITIONS[playerAchievement.achievementId - 1];
+      
+      // Generate NFT data
+      const tokenId = generateNftTokenId();
+      const transactionHash = generateBlockchainHash({
+        type: "nft_mint",
+        tokenId,
+        playerId: ctx.user.id,
+        achievementId: playerAchievement.achievementId,
+      });
+      
+      const nftAttributes = [
+        { trait_type: "Achievement", value: definition?.name || "Achievement" },
+        { trait_type: "Tier", value: "Platinum" },
+        { trait_type: "Tokens Earned", value: playerAchievement.tokensAwarded || 0 },
+        { trait_type: "Progress Count", value: playerAchievement.progressCount || 1 },
+        { trait_type: "Game Type", value: definition?.gameType || "all" },
+        { trait_type: "Rarity", value: "Legendary" },
+      ];
+      
+      // Create NFT record
+      const [nft] = await db.insert(championNfts).values({
+        ownerId: ctx.user.id,
+        tokenId,
+        contractAddress: LUVCHAIN_NFT_CONTRACT,
+        transactionHash,
+        nftType: "platinum_achievement",
+        achievementId: playerAchievement.achievementId,
+        name: `${definition?.name || "Achievement"} - Platinum Champion`,
+        description: `Platinum tier achievement NFT for ${definition?.name}. Earned by reaching the highest tier through dedication and skill.`,
+        imageUrl: generateNftImageUrl({
+          name: definition?.name || "Achievement",
+          tier: "platinum",
+          badgeIcon: definition?.badgeIcon || "star",
+        }),
+        attributes: JSON.stringify(nftAttributes),
+        rarity: "legendary",
+        chainId: "luvchain",
+      }).$returningId();
+      
+      // Update player achievement with NFT info
+      await db.update(gamePlayerAchievements)
+        .set({
+          nftTokenId: tokenId,
+          nftContractAddress: LUVCHAIN_NFT_CONTRACT,
+          nftMintedAt: new Date(),
+          nftTransactionHash: transactionHash,
+        })
+        .where(eq(gamePlayerAchievements.id, playerAchievement.id));
+      
+      // Record to blockchain
+      const blockchainHash = generateBlockchainHash({
+        type: "nft_mint",
+        tokenId,
+        nftId: nft.id,
+      });
+      
+      await db.insert(achievementBlockchainRecords).values({
+        playerId: ctx.user.id,
+        playerAchievementId: playerAchievement.id,
+        achievementId: playerAchievement.achievementId,
+        blockchainHash,
+        transactionHash,
+        recordType: "nft_mint",
+        achievementName: definition?.name || "Achievement",
+        tier: "platinum",
+        tokensAwarded: playerAchievement.tokensAwarded || 0,
+        verificationCode: generateVerificationCode(),
+        metadata: JSON.stringify({ nftTokenId: tokenId, nftId: nft.id }),
+      });
+      
+      return {
+        success: true,
+        nftTokenId: tokenId,
+        transactionHash,
+        contractAddress: LUVCHAIN_NFT_CONTRACT,
+        message: "NFT minted successfully!",
+      };
+    }),
+
+  // Get player's NFTs
+  getPlayerNfts: protectedProcedure.query(async ({ ctx }) => {
+    const db = getDb();
+    
+    const nfts = await db.select()
+      .from(championNfts)
+      .where(eq(championNfts.ownerId, ctx.user.id))
+      .orderBy(desc(championNfts.mintedAt));
+    
+    return nfts.map(nft => ({
+      ...nft,
+      attributes: nft.attributes ? JSON.parse(nft.attributes as string) : [],
+    }));
+  }),
+
+  // Get NFT by token ID
+  getNftByTokenId: publicProcedure
+    .input(z.object({ tokenId: z.string() }))
+    .query(async ({ input }) => {
+      const db = getDb();
+      
+      const [nft] = await db.select()
+        .from(championNfts)
+        .where(eq(championNfts.tokenId, input.tokenId))
+        .limit(1);
+      
+      if (!nft) {
+        return null;
+      }
+      
+      // Get owner name
+      const [owner] = await db.select({ name: users.name })
+        .from(users)
+        .where(eq(users.id, nft.ownerId))
+        .limit(1);
+      
+      return {
+        ...nft,
+        attributes: nft.attributes ? JSON.parse(nft.attributes as string) : [],
+        ownerName: owner?.name || "Anonymous",
+      };
+    }),
+
+  // Queue NFT mint for leaderboard champion
+  queueChampionNft: protectedProcedure
+    .input(z.object({
+      gameType: z.string(),
+      leaderboardPeriod: z.string(),
+      rank: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      // Only top 3 get champion NFTs
+      if (input.rank > 3) {
+        return {
+          success: false,
+          message: "Only top 3 leaderboard positions earn champion NFTs",
+        };
+      }
+      
+      const rarityByRank: Record<number, string> = {
+        1: "legendary",
+        2: "epic",
+        3: "rare",
+      };
+      
+      const titleByRank: Record<number, string> = {
+        1: "Champion",
+        2: "Runner-Up",
+        3: "Bronze Medalist",
+      };
+      
+      // Queue the NFT mint
+      await db.insert(nftMintQueue).values({
+        requesterId: ctx.user.id,
+        nftType: "leaderboard_champion",
+        name: `${input.gameType} ${titleByRank[input.rank]} - ${input.leaderboardPeriod}`,
+        description: `Awarded for achieving rank #${input.rank} on the ${input.gameType} leaderboard for ${input.leaderboardPeriod}.`,
+        attributes: JSON.stringify([
+          { trait_type: "Game", value: input.gameType },
+          { trait_type: "Period", value: input.leaderboardPeriod },
+          { trait_type: "Rank", value: input.rank },
+          { trait_type: "Rarity", value: rarityByRank[input.rank] },
+        ]),
+      });
+      
+      return {
+        success: true,
+        message: `Champion NFT queued for minting. You achieved rank #${input.rank}!`,
+      };
+    }),
+
+  // Get NFT gallery (all NFTs)
+  getNftGallery: publicProcedure
+    .input(z.object({ 
+      limit: z.number().default(20),
+      nftType: z.string().optional(),
+    }))
+    .query(async ({ input }) => {
+      const db = getDb();
+      
+      let query = db.select({
+        nft: championNfts,
+        ownerName: users.name,
+      })
+        .from(championNfts)
+        .leftJoin(users, eq(championNfts.ownerId, users.id))
+        .orderBy(desc(championNfts.mintedAt))
+        .limit(input.limit);
+      
+      const nfts = await query;
+      
+      return nfts.map(({ nft, ownerName }) => ({
+        ...nft,
+        attributes: nft.attributes ? JSON.parse(nft.attributes as string) : [],
+        ownerName: ownerName || "Anonymous",
+      }));
+    }),
+
+  // Get blockchain stats
+  getBlockchainStats: publicProcedure.query(async () => {
+    const db = getDb();
+    
+    const [recordCount] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(achievementBlockchainRecords);
+    
+    const [nftCount] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(championNfts);
+    
+    const [latestRecord] = await db.select()
+      .from(achievementBlockchainRecords)
+      .orderBy(desc(achievementBlockchainRecords.id))
+      .limit(1);
+    
+    return {
+      totalBlockchainRecords: recordCount?.count || 0,
+      totalNftsMinted: nftCount?.count || 0,
+      latestBlockchainHash: latestRecord?.blockchainHash || null,
+      chainId: "luvchain",
+      contractAddress: LUVCHAIN_NFT_CONTRACT,
     };
   }),
 });

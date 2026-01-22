@@ -5703,3 +5703,16 @@ Three main approaches available:
 - [x] Add social sharing buttons (Twitter, Facebook, LinkedIn, copy link)
 - [x] Track share count (timesShared field)
 - [x] Build share dialog component in Achievements page
+
+
+## Phase: Blockchain Achievements & Champion NFTs (COMPLETED)
+- [x] Design achievement_blockchain_records table for immutable logging
+- [x] Design champion_nfts table for NFT metadata and ownership (with nft_mint_queue)
+- [x] Create blockchain logging for all achievement unlocks (recordToBlockchain procedure)
+- [x] Implement NFT minting for platinum tier achievements (mintPlatinumNft procedure)
+- [x] Create Champion NFT collection for leaderboard winners (queueChampionNft procedure)
+- [x] Build NFT gallery page to display earned NFTs (NFTs tab with personal collection + community gallery)
+- [x] Add blockchain verification UI for achievements (Blockchain tab with verification code lookup)
+- [x] Integrate NFT minting with achievement tier upgrades (platinum tier triggers NFT eligibility)
+- [x] Add NFT transfer functionality between wallets (via blockchain records)
+- [x] Write unit tests for blockchain and NFT features (32 new tests, 671 total passing)

@@ -10540,6 +10540,14 @@ export const gamePlayerAchievements = mysqlTable("game_player_achievements", {
   // Sharing
   shareCode: varchar("shareCode", { length: 32 }), // Unique code for sharing
   timesShared: int("timesShared").default(0),
+  // Blockchain recording
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  blockchainRecordedAt: timestamp("blockchainRecordedAt"),
+  // NFT minting (for platinum tier achievements)
+  nftTokenId: varchar("nftTokenId", { length: 100 }),
+  nftContractAddress: varchar("nftContractAddress", { length: 255 }),
+  nftMintedAt: timestamp("nftMintedAt"),
+  nftTransactionHash: varchar("nftTransactionHash", { length: 255 }),
 });
 
 /**
@@ -12337,3 +12345,166 @@ export const gameScores = mysqlTable("game_scores", {
 
 export type GameScore = typeof gameScores.$inferSelect;
 export type InsertGameScore = typeof gameScores.$inferInsert;
+
+
+// ============================================
+// CHAMPION NFT SYSTEM
+// ============================================
+
+/**
+ * Champion NFT Collection - NFTs minted for platinum tier achievements and leaderboard champions
+ */
+export const championNfts = mysqlTable("champion_nfts", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Owner info
+  ownerId: int("ownerId").notNull(),
+  ownerWalletAddress: varchar("ownerWalletAddress", { length: 255 }),
+  
+  // NFT identification
+  tokenId: varchar("tokenId", { length: 100 }).notNull().unique(),
+  contractAddress: varchar("contractAddress", { length: 255 }).notNull(),
+  transactionHash: varchar("transactionHash", { length: 255 }).notNull(),
+  
+  // NFT metadata
+  nftType: mysqlEnum("nftType", [
+    "platinum_achievement",  // Earned by reaching platinum tier
+    "leaderboard_champion",  // Weekly/monthly leaderboard winner
+    "tournament_winner",     // Tournament champion
+    "special_event",         // Special event NFT
+    "founder"               // Early adopter/founder NFT
+  ]).notNull(),
+  
+  // Achievement/game reference
+  achievementId: int("achievementId"),
+  gameType: varchar("gameType", { length: 50 }),
+  leaderboardPeriod: varchar("leaderboardPeriod", { length: 50 }), // e.g., "2026-W03" for week 3
+  
+  // NFT content
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  imageUrl: text("imageUrl"),
+  animationUrl: text("animationUrl"),
+  externalUrl: text("externalUrl"),
+  
+  // Attributes (for marketplace display)
+  attributes: json("attributes"), // [{ trait_type: "Tier", value: "Platinum" }, ...]
+  
+  // Rarity
+  rarity: mysqlEnum("rarity", ["common", "uncommon", "rare", "epic", "legendary"]).default("rare").notNull(),
+  edition: int("edition").default(1), // Edition number if multiple
+  maxEditions: int("maxEditions"), // Max editions (null = unlimited)
+  
+  // Blockchain info
+  chainId: varchar("chainId", { length: 50 }).default("luvchain").notNull(),
+  blockNumber: int("blockNumber"),
+  mintedAt: timestamp("mintedAt").defaultNow().notNull(),
+  
+  // Transfer history
+  previousOwners: json("previousOwners"), // Array of previous owner addresses
+  lastTransferAt: timestamp("lastTransferAt"),
+  
+  // Status
+  status: mysqlEnum("nftStatus", ["minted", "transferred", "burned"]).default("minted").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ChampionNft = typeof championNfts.$inferSelect;
+export type InsertChampionNft = typeof championNfts.$inferInsert;
+
+/**
+ * Achievement Blockchain Records - Immutable record of all achievements on blockchain
+ */
+export const achievementBlockchainRecords = mysqlTable("achievement_blockchain_records", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Player and achievement reference
+  playerId: int("playerId").notNull(),
+  playerAchievementId: int("playerAchievementId").notNull(),
+  achievementId: int("achievementId").notNull(),
+  
+  // Blockchain record
+  blockchainHash: varchar("blockchainHash", { length: 255 }).notNull().unique(),
+  previousHash: varchar("previousHash", { length: 255 }),
+  blockNumber: int("blockNumber"),
+  transactionHash: varchar("transactionHash", { length: 255 }),
+  
+  // Record data
+  recordType: mysqlEnum("recordType", [
+    "achievement_unlock",
+    "tier_upgrade",
+    "nft_mint",
+    "challenge_complete"
+  ]).notNull(),
+  
+  // Achievement details at time of recording
+  achievementName: varchar("achievementName", { length: 255 }).notNull(),
+  tier: mysqlEnum("tier", ["bronze", "silver", "gold", "platinum"]),
+  tokensAwarded: int("tokensAwarded").default(0),
+  
+  // Verification
+  signature: text("signature"), // Digital signature for verification
+  verificationCode: varchar("verificationCode", { length: 64 }).notNull().unique(),
+  isVerified: boolean("isVerified").default(true).notNull(),
+  
+  // Metadata
+  metadata: json("metadata"),
+  
+  recordedAt: timestamp("recordedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AchievementBlockchainRecord = typeof achievementBlockchainRecords.$inferSelect;
+export type InsertAchievementBlockchainRecord = typeof achievementBlockchainRecords.$inferInsert;
+
+/**
+ * NFT Mint Queue - Queue for pending NFT mints
+ */
+export const nftMintQueue = mysqlTable("nft_mint_queue", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Request info
+  requesterId: int("requesterId").notNull(),
+  playerAchievementId: int("playerAchievementId"),
+  
+  // NFT details
+  nftType: mysqlEnum("nftType", [
+    "platinum_achievement",
+    "leaderboard_champion",
+    "tournament_winner",
+    "special_event",
+    "founder"
+  ]).notNull(),
+  
+  // Metadata to mint
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  imageUrl: text("imageUrl"),
+  attributes: json("attributes"),
+  
+  // Status
+  status: mysqlEnum("queueStatus", [
+    "pending",
+    "processing",
+    "minted",
+    "failed",
+    "cancelled"
+  ]).default("pending").notNull(),
+  
+  // Processing info
+  attempts: int("attempts").default(0).notNull(),
+  lastAttemptAt: timestamp("lastAttemptAt"),
+  errorMessage: text("errorMessage"),
+  
+  // Result
+  mintedNftId: int("mintedNftId"),
+  transactionHash: varchar("transactionHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NftMintQueue = typeof nftMintQueue.$inferSelect;
+export type InsertNftMintQueue = typeof nftMintQueue.$inferInsert;
