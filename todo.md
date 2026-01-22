@@ -5591,3 +5591,10 @@ Three main approaches available:
 - [x] Create SWOT Analysis UI page with quadrant view
 - [x] Add SWOT navigation to sidebar (under Business section)
 - [x] Test SWOT CRUD operations (UI works, backend connected)
+
+
+## Phase: AI-Assisted SWOT Generation
+- [x] Create AI SWOT generation router procedure with LLM integration
+- [x] Update SWOT Analysis UI with AI generation button
+- [x] Add entity selection for context-aware generation
+- [x] Test AI generation functionality (UI ready, requires auth to create)

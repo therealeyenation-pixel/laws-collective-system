@@ -12,7 +12,7 @@ import { trpc } from "@/lib/trpc";
 import { 
   Plus, Trash2, Target, Shield, AlertTriangle, 
   TrendingUp, Lightbulb, ChevronRight, BarChart3, FileText,
-  CheckCircle, Clock, XCircle
+  CheckCircle, Clock, XCircle, Sparkles, Loader2
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -112,6 +112,9 @@ export default function SwotAnalysis() {
     actionRequired: false,
     actionPlan: "",
   });
+  const [isAIGenerating, setIsAIGenerating] = useState(false);
+  const [aiContext, setAIContext] = useState("");
+  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
 
   const utils = trpc.useUtils();
   
@@ -173,6 +176,29 @@ export default function SwotAnalysis() {
       toast.error(error.message);
     },
   });
+
+  const generateWithAI = trpc.swotAnalysis.generateWithAI.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setIsAIDialogOpen(false);
+      setAIContext("");
+      setIsAIGenerating(false);
+      utils.swotAnalysis.get.invalidate({ id: selectedAnalysisId! });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setIsAIGenerating(false);
+    },
+  });
+
+  const handleAIGenerate = () => {
+    if (!selectedAnalysisId) return;
+    setIsAIGenerating(true);
+    generateWithAI.mutate({
+      swotAnalysisId: selectedAnalysisId,
+      context: aiContext || undefined,
+    });
+  };
 
   const handleCreateAnalysis = () => {
     if (!newAnalysis.title.trim()) {
@@ -418,18 +444,74 @@ export default function SwotAnalysis() {
                       List View
                     </TabsTrigger>
                   </TabsList>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      if (confirm("Are you sure you want to delete this analysis?")) {
-                        deleteAnalysis.mutate({ id: selectedAnalysisId });
-                      }
-                    }}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete Analysis
-                  </Button>
+                  <div className="flex gap-2">
+                    <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Generate with AI
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>AI-Assisted SWOT Generation</DialogTitle>
+                          <DialogDescription>
+                            Let AI analyze your business context and generate strategic SWOT items.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="aiContext">Additional Context (optional)</Label>
+                            <Textarea
+                              id="aiContext"
+                              placeholder="Provide any additional context about your business, industry, or specific focus areas..."
+                              value={aiContext}
+                              onChange={(e) => setAIContext(e.target.value)}
+                              rows={4}
+                            />
+                          </div>
+                          <div className="bg-muted/50 p-3 rounded-lg text-sm text-muted-foreground">
+                            <p className="font-medium mb-1">What AI will generate:</p>
+                            <ul className="list-disc list-inside space-y-1">
+                              <li>3-5 items for each SWOT category</li>
+                              <li>Priority levels and impact scores</li>
+                              <li>Action plans for items requiring attention</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsAIDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAIGenerate} disabled={isAIGenerating}>
+                            {isAIGenerating ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-4 h-4 mr-2" />
+                                Generate
+                              </>
+                            )}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        if (confirm("Are you sure you want to delete this analysis?")) {
+                          deleteAnalysis.mutate({ id: selectedAnalysisId });
+                        }
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
                 </div>
 
                 <TabsContent value="matrix">

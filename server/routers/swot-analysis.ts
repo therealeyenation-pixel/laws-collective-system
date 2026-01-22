@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
 import { db } from "../db";
-import { swotAnalyses, swotItems } from "../../drizzle/schema";
+import { swotAnalyses, swotItems, businessEntities } from "../../drizzle/schema";
 import { eq, and, desc, asc } from "drizzle-orm";
+import { invokeLLM } from "../_core/llm";
 
 export const swotAnalysisRouter = router({
   // Get all SWOT analyses for the current user
@@ -103,6 +104,222 @@ export const swotAnalysisRouter = router({
         ));
       
       return { success: true };
+    }),
+
+  // AI-assisted SWOT generation
+  generateWithAI: protectedProcedure
+    .input(z.object({
+      swotAnalysisId: z.number(),
+      businessEntityId: z.number().optional(),
+      context: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify ownership of the analysis
+      const [analysis] = await db.select().from(swotAnalyses)
+        .where(and(
+          eq(swotAnalyses.id, input.swotAnalysisId),
+          eq(swotAnalyses.userId, ctx.user.id)
+        ));
+      
+      if (!analysis) {
+        throw new Error("SWOT analysis not found");
+      }
+
+      // Get business entity context if provided
+      let entityContext = "";
+      if (input.businessEntityId) {
+        const [entity] = await db.select().from(businessEntities)
+          .where(eq(businessEntities.id, input.businessEntityId));
+        
+        if (entity) {
+          entityContext = `
+Business Entity Information:
+- Name: ${entity.name}
+- Type: ${entity.entityType || "Not specified"}
+- Description: ${entity.description || "Not provided"}
+- Industry: ${entity.industry || "Not specified"}
+- Status: ${entity.status || "Active"}
+`;
+        }
+      }
+
+      const additionalContext = input.context ? `\nAdditional Context: ${input.context}` : "";
+
+      const systemPrompt = `You are a strategic business analyst specializing in SWOT analysis. 
+Generate comprehensive SWOT items for the given business context.
+
+For each category (Strengths, Weaknesses, Opportunities, Threats), provide 3-5 specific, actionable items.
+
+Each item should have:
+- A concise title (max 50 characters)
+- A detailed description (1-2 sentences)
+- A priority level (low, medium, high, or critical)
+- An impact score (1-10)
+- Whether action is required (true/false)
+- If action is required, a brief action plan
+
+Focus on:
+- Strengths: Internal positive attributes, competitive advantages, unique resources
+- Weaknesses: Internal areas for improvement, resource gaps, operational challenges
+- Opportunities: External favorable factors, market trends, growth potential
+- Threats: External challenges, competitive pressures, regulatory risks
+
+Consider the L.A.W.S. framework (Land, Air, Water, Self) and multi-generational wealth building principles where applicable.`;
+
+      const userPrompt = `Generate a SWOT analysis for:
+
+Analysis Title: ${analysis.title}
+Analysis Description: ${analysis.description || "General business analysis"}
+${entityContext}${additionalContext}
+
+Provide the analysis in JSON format.`;
+
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "swot_analysis",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                strengths: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      title: { type: "string" },
+                      description: { type: "string" },
+                      priority: { type: "string", enum: ["low", "medium", "high", "critical"] },
+                      impact: { type: "number" },
+                      actionRequired: { type: "boolean" },
+                      actionPlan: { type: "string" },
+                    },
+                    required: ["title", "description", "priority", "impact", "actionRequired", "actionPlan"],
+                    additionalProperties: false,
+                  },
+                },
+                weaknesses: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      title: { type: "string" },
+                      description: { type: "string" },
+                      priority: { type: "string", enum: ["low", "medium", "high", "critical"] },
+                      impact: { type: "number" },
+                      actionRequired: { type: "boolean" },
+                      actionPlan: { type: "string" },
+                    },
+                    required: ["title", "description", "priority", "impact", "actionRequired", "actionPlan"],
+                    additionalProperties: false,
+                  },
+                },
+                opportunities: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      title: { type: "string" },
+                      description: { type: "string" },
+                      priority: { type: "string", enum: ["low", "medium", "high", "critical"] },
+                      impact: { type: "number" },
+                      actionRequired: { type: "boolean" },
+                      actionPlan: { type: "string" },
+                    },
+                    required: ["title", "description", "priority", "impact", "actionRequired", "actionPlan"],
+                    additionalProperties: false,
+                  },
+                },
+                threats: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      title: { type: "string" },
+                      description: { type: "string" },
+                      priority: { type: "string", enum: ["low", "medium", "high", "critical"] },
+                      impact: { type: "number" },
+                      actionRequired: { type: "boolean" },
+                      actionPlan: { type: "string" },
+                    },
+                    required: ["title", "description", "priority", "impact", "actionRequired", "actionPlan"],
+                    additionalProperties: false,
+                  },
+                },
+              },
+              required: ["strengths", "weaknesses", "opportunities", "threats"],
+              additionalProperties: false,
+            },
+          },
+        },
+      });
+
+      const content = response.choices[0]?.message?.content;
+      if (!content || typeof content !== "string") {
+        throw new Error("Failed to generate SWOT analysis");
+      }
+
+      const generatedSwot = JSON.parse(content) as {
+        strengths: Array<{ title: string; description: string; priority: string; impact: number; actionRequired: boolean; actionPlan: string }>;
+        weaknesses: Array<{ title: string; description: string; priority: string; impact: number; actionRequired: boolean; actionPlan: string }>;
+        opportunities: Array<{ title: string; description: string; priority: string; impact: number; actionRequired: boolean; actionPlan: string }>;
+        threats: Array<{ title: string; description: string; priority: string; impact: number; actionRequired: boolean; actionPlan: string }>;
+      };
+
+      // Insert all generated items
+      const categories = [
+        { key: "strengths", category: "strength" as const },
+        { key: "weaknesses", category: "weakness" as const },
+        { key: "opportunities", category: "opportunity" as const },
+        { key: "threats", category: "threat" as const },
+      ];
+
+      let totalInserted = 0;
+
+      for (const { key, category } of categories) {
+        const items = generatedSwot[key as keyof typeof generatedSwot];
+        
+        // Get current max sort order for this category
+        const existingItems = await db.select().from(swotItems)
+          .where(and(
+            eq(swotItems.swotAnalysisId, input.swotAnalysisId),
+            eq(swotItems.category, category)
+          ));
+        
+        let sortOrder = existingItems.reduce((max, item) => 
+          Math.max(max, item.sortOrder || 0), 0);
+
+        for (const item of items) {
+          sortOrder++;
+          await db.insert(swotItems).values({
+            swotAnalysisId: input.swotAnalysisId,
+            category,
+            title: item.title.slice(0, 255),
+            description: item.description,
+            priority: item.priority as "low" | "medium" | "high" | "critical",
+            impact: Math.min(10, Math.max(1, Math.round(item.impact))),
+            actionRequired: item.actionRequired,
+            actionPlan: item.actionRequired ? item.actionPlan : null,
+            actionStatus: item.actionRequired ? "pending" : null,
+            sortOrder,
+          });
+          totalInserted++;
+        }
+      }
+
+      // Update analysis scores
+      await updateAnalysisScores(input.swotAnalysisId);
+
+      return { 
+        success: true, 
+        itemsGenerated: totalInserted,
+        message: `Generated ${totalInserted} SWOT items across all categories`
+      };
     }),
 
   // SWOT Items operations
