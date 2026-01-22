@@ -5538,3 +5538,8 @@ Three main approaches available:
 - [x] Checked items show green background and strikethrough
 - [x] State persisted to localStorage (survives page refresh)
 - [x] Separate checklists for LLC, Trust, and Nonprofit entities
+
+
+## Phase 60: Add Tax Link to Finance Navigation (COMPLETED)
+- [x] Add Tax submenu item under Finance in sidebar
+- [x] Verify Tax link navigates to /dept/finance/tax

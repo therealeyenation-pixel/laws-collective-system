@@ -255,6 +255,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Share2, label: "External Integrations", path: "/dept/finance/integrations", minRole: "staff" },
           { icon: FileText, label: "Grant Labor Reports", path: "/dept/finance/grant-labor-reports", minRole: "staff" },
           { icon: DollarSign, label: "Payroll", path: "/dept/finance/payroll", minRole: "staff" },
+          { icon: Calculator, label: "Tax", path: "/dept/finance/tax", minRole: "staff" },
           { icon: Users, label: "Team", path: "/finance-team", minRole: "staff" },
           { icon: FolderOpen, label: "Documents", path: "/finance-documents", minRole: "staff" },
         ]
