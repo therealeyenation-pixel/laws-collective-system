@@ -5621,3 +5621,13 @@ Three main approaches available:
 - [x] Filter analyses by quarterly/yearly periods
 - [x] Add export comparison report as PDF/CSV
 - [x] Test filtering and export functionality
+
+
+## Phase: 360-Degree Feedback System
+- [x] Create peer_feedback table in database schema
+- [x] Create feedback_requests table for tracking who needs to provide feedback
+- [x] Implement feedback router with anonymous submission
+- [x] Add 360 feedback tab to Performance Reviews UI
+- [x] Create feedback request workflow (manager selects reviewers)
+- [x] Build anonymous feedback aggregation view
+- [x] Test 360-degree feedback workflow (UI verified)

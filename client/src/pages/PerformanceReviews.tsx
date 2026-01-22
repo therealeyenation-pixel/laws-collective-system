@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Plus, ClipboardCheck, User, Calendar, Star, CheckCircle } from "lucide-react";
+import { Plus, ClipboardCheck, User, Calendar, Star, CheckCircle, Users, MessageSquare, Send } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 
 const statusColors: Record<string, string> = {
@@ -33,6 +33,12 @@ const statusLabels: Record<string, string> = {
 export default function PerformanceReviews() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState("reviews");
+  const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
+  const [feedbackReviewers, setFeedbackReviewers] = useState<Array<{name: string; email: string; relationship: string}>>([]);
+  const [newReviewerName, setNewReviewerName] = useState("");
+  const [newReviewerEmail, setNewReviewerEmail] = useState("");
+  const [newReviewerRelationship, setNewReviewerRelationship] = useState("peer");
   
   // Form state
   const [employeeName, setEmployeeName] = useState("");
@@ -256,10 +262,11 @@ export default function PerformanceReviews() {
                 <div className="text-center py-8 text-muted-foreground">Loading review details...</div>
               ) : (
                 <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
+                  <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="self">Self Assessment</TabsTrigger>
                     <TabsTrigger value="manager">Manager Review</TabsTrigger>
+                    <TabsTrigger value="360feedback">360° Feedback</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="overview" className="space-y-4 mt-4">
@@ -357,6 +364,141 @@ export default function PerformanceReviews() {
                           <div key={item.label}>
                             <Label className="text-muted-foreground text-xs">{item.label}</Label>
                             <p className="text-yellow-500 text-sm">{getRatingStars(item.value)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="360feedback" className="space-y-4 mt-4">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-medium flex items-center gap-2">
+                            <Users className="w-4 h-4" />
+                            360-Degree Feedback
+                          </h3>
+                          <p className="text-sm text-muted-foreground">Collect anonymous feedback from peers, direct reports, and cross-functional partners</p>
+                        </div>
+                        <Dialog open={feedbackDialogOpen} onOpenChange={setFeedbackDialogOpen}>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="gap-2">
+                              <Send className="w-4 h-4" />
+                              Request Feedback
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Request 360° Feedback</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <p className="text-sm text-muted-foreground">Add reviewers who will provide anonymous feedback for {reviewDetails.employeeName}</p>
+                              <div className="space-y-2">
+                                <Label>Reviewer Name</Label>
+                                <Input
+                                  placeholder="Enter name"
+                                  value={newReviewerName}
+                                  onChange={(e) => setNewReviewerName(e.target.value)}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Email</Label>
+                                <Input
+                                  type="email"
+                                  placeholder="reviewer@example.com"
+                                  value={newReviewerEmail}
+                                  onChange={(e) => setNewReviewerEmail(e.target.value)}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Relationship</Label>
+                                <Select value={newReviewerRelationship} onValueChange={setNewReviewerRelationship}>
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="peer">Peer</SelectItem>
+                                    <SelectItem value="direct_report">Direct Report</SelectItem>
+                                    <SelectItem value="manager">Manager</SelectItem>
+                                    <SelectItem value="cross_functional">Cross-Functional</SelectItem>
+                                    <SelectItem value="external">External Partner</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <Button
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => {
+                                  if (newReviewerName && newReviewerEmail) {
+                                    setFeedbackReviewers([...feedbackReviewers, {
+                                      name: newReviewerName,
+                                      email: newReviewerEmail,
+                                      relationship: newReviewerRelationship
+                                    }]);
+                                    setNewReviewerName("");
+                                    setNewReviewerEmail("");
+                                  }
+                                }}
+                              >
+                                Add Reviewer
+                              </Button>
+                              {feedbackReviewers.length > 0 && (
+                                <div className="border rounded-lg p-3 space-y-2">
+                                  <Label>Added Reviewers ({feedbackReviewers.length})</Label>
+                                  {feedbackReviewers.map((r, i) => (
+                                    <div key={i} className="flex items-center justify-between text-sm">
+                                      <span>{r.name} ({r.relationship})</span>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setFeedbackReviewers(feedbackReviewers.filter((_, idx) => idx !== i))}
+                                      >
+                                        Remove
+                                      </Button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              <div className="flex justify-end gap-2 pt-4">
+                                <DialogClose asChild>
+                                  <Button variant="outline">Cancel</Button>
+                                </DialogClose>
+                                <Button
+                                  onClick={() => {
+                                    toast.success(`Feedback requests sent to ${feedbackReviewers.length} reviewers`);
+                                    setFeedbackReviewers([]);
+                                    setFeedbackDialogOpen(false);
+                                  }}
+                                  disabled={feedbackReviewers.length === 0}
+                                >
+                                  Send Requests
+                                </Button>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+
+                      <Card className="bg-muted/30">
+                        <CardContent className="pt-4">
+                          <div className="text-center py-8">
+                            <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
+                            <p className="text-muted-foreground">No feedback collected yet</p>
+                            <p className="text-sm text-muted-foreground mt-1">Request feedback from colleagues to get started</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <div className="grid grid-cols-5 gap-4">
+                        {[
+                          { label: "Communication", score: "—" },
+                          { label: "Teamwork", score: "—" },
+                          { label: "Leadership", score: "—" },
+                          { label: "Technical", score: "—" },
+                          { label: "Problem Solving", score: "—" },
+                        ].map((item) => (
+                          <div key={item.label} className="text-center p-3 bg-muted/30 rounded-lg">
+                            <p className="text-2xl font-bold text-muted-foreground">{item.score}</p>
+                            <p className="text-xs text-muted-foreground">{item.label}</p>
                           </div>
                         ))}
                       </div>

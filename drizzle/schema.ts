@@ -12219,3 +12219,55 @@ export const performanceGoals = mysqlTable("performance_goals", {
 });
 export type PerformanceGoal = typeof performanceGoals.$inferSelect;
 export type InsertPerformanceGoal = typeof performanceGoals.$inferInsert;
+
+
+// 360-Degree Feedback Tables
+export const peerFeedback = mysqlTable("peer_feedback", {
+  id: int("id").autoincrement().primaryKey(),
+  reviewId: int("reviewId").notNull(), // Links to performance_reviews
+  requesterId: int("requesterId").notNull(), // Manager who requested feedback
+  responderId: int("responderId"), // Person providing feedback (null if anonymous)
+  responderName: varchar("responderName", { length: 255 }), // Name for display
+  responderEmail: varchar("responderEmail", { length: 320 }),
+  relationship: mysqlEnum("relationship", ["peer", "direct_report", "manager", "cross_functional", "external"]).notNull(),
+  status: mysqlEnum("status", ["pending", "submitted", "declined"]).default("pending").notNull(),
+  // Feedback ratings (1-5 scale)
+  communicationRating: int("communicationRating"),
+  teamworkRating: int("teamworkRating"),
+  leadershipRating: int("leadershipRating"),
+  technicalRating: int("technicalRating"),
+  problemSolvingRating: int("problemSolvingRating"),
+  // Qualitative feedback
+  strengths: text("strengths"),
+  areasForImprovement: text("areasForImprovement"),
+  additionalComments: text("additionalComments"),
+  // Anonymity settings
+  isAnonymous: boolean("isAnonymous").default(true).notNull(),
+  // Timestamps
+  requestedAt: timestamp("requestedAt").defaultNow().notNull(),
+  submittedAt: timestamp("submittedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PeerFeedback = typeof peerFeedback.$inferSelect;
+export type InsertPeerFeedback = typeof peerFeedback.$inferInsert;
+
+export const feedbackRequests = mysqlTable("feedback_requests", {
+  id: int("id").autoincrement().primaryKey(),
+  reviewId: int("reviewId").notNull(),
+  requesterId: int("requesterId").notNull(),
+  requesterName: varchar("requesterName", { length: 255 }).notNull(),
+  employeeName: varchar("employeeName", { length: 255 }).notNull(),
+  dueDate: timestamp("dueDate"),
+  remindersSent: int("remindersSent").default(0).notNull(),
+  lastReminderAt: timestamp("lastReminderAt"),
+  totalRequested: int("totalRequested").default(0).notNull(),
+  totalSubmitted: int("totalSubmitted").default(0).notNull(),
+  status: mysqlEnum("status", ["open", "closed", "cancelled"]).default("open").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FeedbackRequest = typeof feedbackRequests.$inferSelect;
+export type InsertFeedbackRequest = typeof feedbackRequests.$inferInsert;
