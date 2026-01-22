@@ -133,6 +133,7 @@ import MeetingsDashboard from "@/pages/MeetingsDashboard";
 import Downloads from "@/pages/Downloads";
 import OwnerActionList from "@/pages/OwnerActionList";
 import Chat from "@/pages/Chat";
+import SwotAnalysis from "@/pages/SwotAnalysis";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -143,7 +144,7 @@ import {
   ProjectControlsTeam, QAQCTeam, LegalTeam, ITTeam, PlatformTeam, GrantsTeam,
   AssetTracking, Audits, BrandAssets, BusinessPlans, Compliance, ContentCalendar, Curriculum,
   GrantsDashboard, Instructors, Inventory, OperatingAgreements, ProgressReporting, Properties,
-  QualityStandards, RealEyeDashboard, SecurityCenter, SWOTAnalysis, SystemAdmin, SystemSettings,
+  QualityStandards, RealEyeDashboard, SecurityCenter, SystemAdmin, SystemSettings,
   UserManagement, VendorManagement, WellnessPrograms
 } from "@/pages/placeholders";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -438,7 +439,7 @@ function Router() {
       <Route path="/quality-standards">{() => <ProtectedRoute component={QualityStandards} minRole="staff" />}</Route>
       <Route path="/real-eye-dashboard">{() => <ProtectedRoute component={RealEyeDashboard} minRole="staff" />}</Route>
       <Route path="/security-center">{() => <ProtectedRoute component={SecurityCenter} minRole="staff" />}</Route>
-      <Route path="/swot-analysis">{() => <ProtectedRoute component={SWOTAnalysis} minRole="user" />}</Route>
+      <Route path="/swot-analysis">{() => <ProtectedRoute component={SwotAnalysis} minRole="user" />}</Route>
       <Route path="/system-admin">{() => <ProtectedRoute component={SystemAdmin} minRole="staff" />}</Route>
       <Route path="/system-settings">{() => <ProtectedRoute component={SystemSettings} minRole="admin" />}</Route>
       <Route path="/user-management">{() => <ProtectedRoute component={UserManagement} minRole="admin" />}</Route>

@@ -12049,3 +12049,68 @@ export const meetingReminders = mysqlTable("meeting_reminders", {
 });
 export type MeetingReminder = typeof meetingReminders.$inferSelect;
 export type InsertMeetingReminder = typeof meetingReminders.$inferInsert;
+
+
+/**
+ * SWOT Analysis - Strategic planning tool for business entities
+ */
+export const swotAnalyses = mysqlTable("swot_analyses", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  businessEntityId: int("businessEntityId"),
+  userId: int("userId").notNull(),
+  
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  status: mysqlEnum("swotStatus", ["draft", "active", "archived"]).default("draft").notNull(),
+  
+  // Analysis metadata
+  analysisDate: timestamp("analysisDate").defaultNow().notNull(),
+  reviewDate: timestamp("reviewDate"),
+  
+  // Summary scores (calculated from items)
+  strengthScore: int("strengthScore").default(0),
+  weaknessScore: int("weaknessScore").default(0),
+  opportunityScore: int("opportunityScore").default(0),
+  threatScore: int("threatScore").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SwotAnalysis = typeof swotAnalyses.$inferSelect;
+export type InsertSwotAnalysis = typeof swotAnalyses.$inferInsert;
+
+/**
+ * SWOT Items - Individual items within a SWOT analysis
+ */
+export const swotItems = mysqlTable("swot_items", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  swotAnalysisId: int("swotAnalysisId").notNull(),
+  
+  category: mysqlEnum("swotCategory", ["strength", "weakness", "opportunity", "threat"]).notNull(),
+  
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Priority and impact scoring
+  priority: mysqlEnum("swotPriority", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  impact: int("impact").default(5), // 1-10 scale
+  
+  // Action items
+  actionRequired: boolean("actionRequired").default(false),
+  actionPlan: text("actionPlan"),
+  actionStatus: mysqlEnum("actionStatus", ["pending", "in_progress", "completed", "cancelled"]).default("pending"),
+  actionDueDate: timestamp("actionDueDate"),
+  
+  // Display order within category
+  sortOrder: int("sortOrder").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SwotItem = typeof swotItems.$inferSelect;
+export type InsertSwotItem = typeof swotItems.$inferInsert;

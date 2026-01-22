@@ -5562,3 +5562,32 @@ Three main approaches available:
 - [x] Show progress bar for completion percentage
 - [x] Persist checked state to localStorage
 - [x] View All button links to full Formation Checklists page
+
+
+## Phase: SWOT Analysis Implementation
+
+### Database & Backend
+- [ ] Create SWOT analysis database tables (swot_analyses, swot_items)
+- [ ] Push SWOT schema to database
+- [ ] Create SWOT router with CRUD procedures
+- [ ] Add procedures for creating/updating/deleting SWOT items
+
+### UI Components
+- [ ] Create SwotAnalysis page component
+- [ ] Build SWOT matrix visualization (4 quadrants)
+- [ ] Add item creation/editing forms
+- [ ] Implement drag-and-drop for item reordering
+- [ ] Add entity selector for multi-entity SWOT
+
+### Integration
+- [ ] Add SWOT Analysis to navigation sidebar
+- [ ] Register route in App.tsx
+- [ ] Test SWOT functionality end-to-end
+
+
+## Phase: SWOT Analysis Implementation
+- [x] Create SWOT database schema (swot_analyses, swot_items tables)
+- [x] Implement SWOT router procedures (list, get, create, update, delete, items)
+- [x] Create SWOT Analysis UI page with quadrant view
+- [x] Add SWOT navigation to sidebar (under Business section)
+- [x] Test SWOT CRUD operations (UI works, backend connected)
