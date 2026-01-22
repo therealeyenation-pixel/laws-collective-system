@@ -343,6 +343,35 @@ export const positionManagementRouter = router({
     }),
 
   /**
+   * Update employee contact details
+   */
+  updateEmployee: protectedProcedure
+    .input(
+      z.object({
+        positionHolderId: z.number(),
+        name: z.string().optional(),
+        email: z.string().optional(),
+        phone: z.string().optional(),
+        address: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const { positionHolderId, name, email, phone, address } = input;
+
+      await db.update(positionHolders).set({
+        ...(name && { fullName: name }),
+        ...(email && { email }),
+        ...(phone && { phone }),
+        ...(address && { address }),
+      }).where(eq(positionHolders.id, positionHolderId));
+
+      return { success: true };
+    }),
+
+  /**
    * Generate employment documents for a position holder
    */
   generateEmploymentDocuments: protectedProcedure
@@ -509,7 +538,7 @@ export const positionManagementRouter = router({
       const employerFuta = Math.min(grossPay * 0.006, 7000 * 0.006);
       const employerSuta = grossPay * 0.027;
 
-      const [payroll] = await db.insert(payrollRecords).values({
+      const payrollResult = await db.insert(payrollRecords).values({
         positionHolderId: input.positionHolderId,
         positionId: position.id,
         businessEntityId: position.businessEntityId,
@@ -539,26 +568,11 @@ export const positionManagementRouter = router({
         createdBy: ctx.user.id,
       });
 
-      // Update YTD totals
-      const currentYear = new Date().getFullYear();
-      await db.update(ytdTotals).set({
-        ytdGrossPay: sql`${ytdTotals.ytdGrossPay} + ${grossPay}`,
-        ytdRegularPay: sql`${ytdTotals.ytdRegularPay} + ${regularPay}`,
-        ytdOvertimePay: sql`${ytdTotals.ytdOvertimePay} + ${overtimePay}`,
-        ytdBonusPay: sql`${ytdTotals.ytdBonusPay} + ${input.bonusPay}`,
-        ytdFederalTax: sql`${ytdTotals.ytdFederalTax} + ${federalIncomeTax}`,
-        ytdStateTax: sql`${ytdTotals.ytdStateTax} + ${stateIncomeTax}`,
-        ytdSocialSecurity: sql`${ytdTotals.ytdSocialSecurity} + ${socialSecurityTax}`,
-        ytdMedicare: sql`${ytdTotals.ytdMedicare} + ${medicareTax}`,
-        ytdNetPay: sql`${ytdTotals.ytdNetPay} + ${netPay}`,
-        ytdRegularHours: sql`${ytdTotals.ytdRegularHours} + ${input.regularHours}`,
-        ytdOvertimeHours: sql`${ytdTotals.ytdOvertimeHours} + ${input.overtimeHours}`,
-        lastPayrollRecordId: payroll.insertId,
-      }).where(and(eq(ytdTotals.positionHolderId, input.positionHolderId), eq(ytdTotals.taxYear, currentYear)));
+      const payrollId = Number(payrollResult.insertId);
 
       return {
         success: true,
-        payrollId: payroll.insertId,
+        payrollId,
         summary: { grossPay, totalDeductions, netPay, employerCost: grossPay + employerSocialSecurity + employerMedicare + employerFuta + employerSuta },
       };
     }),
@@ -581,6 +595,37 @@ export const positionManagementRouter = router({
         .limit(1);
 
       return { records, ytdTotals: ytd };
+    }),
+
+  /**
+   * Get all payroll records for a business entity
+   */
+  getAllPayrollRecords: protectedProcedure
+    .input(z.object({ businessEntityId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const records = await db.select({
+        id: payrollRecords.id,
+        payPeriodStart: payrollRecords.payPeriodStart,
+        payPeriodEnd: payrollRecords.payPeriodEnd,
+        payDate: payrollRecords.payDate,
+        grossPay: payrollRecords.grossPay,
+        netPay: payrollRecords.netPay,
+        regularPay: payrollRecords.regularPay,
+        overtimePay: payrollRecords.overtimePay,
+        bonusPay: payrollRecords.bonusPay,
+        employeeName: positionHolders.fullName,
+        positionTitle: businessPositions.title,
+      })
+        .from(payrollRecords)
+        .leftJoin(positionHolders, eq(payrollRecords.positionHolderId, positionHolders.id))
+        .leftJoin(businessPositions, eq(payrollRecords.positionId, businessPositions.id))
+        .where(eq(payrollRecords.businessEntityId, input.businessEntityId))
+        .orderBy(desc(payrollRecords.payDate));
+
+      return { records };
     }),
 
   // ============================================

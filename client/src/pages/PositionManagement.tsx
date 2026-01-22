@@ -11,17 +11,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Users, Briefcase, DollarSign, FileText, Plus, Loader2, Clock, UserPlus, Calendar } from "lucide-react";
+import { Users, Briefcase, DollarSign, FileText, Plus, Loader2, Clock, UserPlus, Calendar, Mail, Phone, Edit } from "lucide-react";
 
 export default function PositionManagement() {
   const [activeTab, setActiveTab] = useState("positions");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
   const [showPayrollDialog, setShowPayrollDialog] = useState(false);
+  const [showEditEmployeeDialog, setShowEditEmployeeDialog] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<any>(null);
+  const [editEmployeeData, setEditEmployeeData] = useState({ positionHolderId: 0, name: "", email: "", phone: "", address: "" });
 
   const { data: positions, isLoading, refetch: refetchPositions } = trpc.positionManagement.getPositionsByEntity.useQuery({ businessEntityId: 1 });
   const { data: dashboard } = trpc.positionManagement.getDashboard.useQuery();
+  const { data: payrollData2, refetch: refetchPayroll } = trpc.positionManagement.getAllPayrollRecords.useQuery({ businessEntityId: 1 });
   const positionTypes = [
     { type: "w2_employee", name: "W-2 Employee" },
     { type: "w2_officer", name: "W-2 Officer" },
@@ -42,7 +45,12 @@ export default function PositionManagement() {
   });
 
   const recordPayrollMutation = trpc.positionManagement.recordPayroll.useMutation({
-    onSuccess: () => { toast.success("Payroll recorded"); setShowPayrollDialog(false); },
+    onSuccess: () => { toast.success("Payroll recorded"); refetchPayroll(); setShowPayrollDialog(false); },
+    onError: (error: any) => toast.error(error.message),
+  });
+
+  const updateEmployeeMutation = trpc.positionManagement.updateEmployee.useMutation({
+    onSuccess: () => { toast.success("Employee updated"); refetchPositions(); setShowEditEmployeeDialog(false); },
     onError: (error: any) => toast.error(error.message),
   });
 
@@ -53,9 +61,11 @@ export default function PositionManagement() {
   const handleCreatePosition = () => { createPositionMutation.mutate(positionData); };
   const handleAssignEmployee = () => { assignEmployeeMutation.mutate(assignData); };
   const handleRecordPayroll = () => { recordPayrollMutation.mutate(payrollData); };
+  const handleUpdateEmployee = () => { updateEmployeeMutation.mutate(editEmployeeData); };
 
   const openAssignDialog = (position: any) => { setSelectedPosition(position); setAssignData({ ...assignData, positionId: Number(position.id) }); setShowAssignDialog(true); };
-  const openPayrollDialog = (holder: any) => { setSelectedPosition(holder); setPayrollData({ ...payrollData, positionHolderId: Number(holder.id) }); setShowPayrollDialog(true); };
+  const openPayrollDialog = (position: any) => { setSelectedPosition(position); setPayrollData({ ...payrollData, positionHolderId: Number(position.assignedEmployee?.id || 0) }); setShowPayrollDialog(true); };
+  const openEditEmployeeDialog = (position: any) => { setSelectedPosition(position); setEditEmployeeData({ positionHolderId: Number(position.assignedEmployee?.id || 0), name: position.assignedEmployee?.name || "", email: position.assignedEmployee?.email || "", phone: position.assignedEmployee?.phone || "", address: position.assignedEmployee?.address || "" }); setShowEditEmployeeDialog(true); };
 
   const getTypeBadge = (type: string) => {
     switch (type) {
@@ -73,8 +83,8 @@ export default function PositionManagement() {
 
   const filledPositions = positions?.filter((p: any) => p.status === "filled") || [];
   const openPositions = positions?.filter((p: any) => p.status === "open") || [];
-  const totalPayroll = 0; // Will be calculated from actual payroll records
-  const payrollRecords: any[] = []; // Payroll records loaded separately when needed
+  const payrollRecords = payrollData2?.records || [];
+  const totalPayroll = payrollRecords.reduce((sum: number, r: any) => sum + parseFloat(r.grossPay || "0"), 0);
 
   return (
     <DashboardLayout>
@@ -179,10 +189,15 @@ export default function PositionManagement() {
                             <p className="text-sm text-muted-foreground">{position.title}</p>
                             <div className="flex items-center gap-4 mt-2 text-sm">
                               <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />Started: {position.assignedEmployee?.startDate ? new Date(position.assignedEmployee.startDate).toLocaleDateString() : "N/A"}</span>
+                              {position.assignedEmployee?.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3" />{position.assignedEmployee.email}</span>}
+                              {position.assignedEmployee?.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{position.assignedEmployee.phone}</span>}
                             </div>
                           </div>
                         </div>
-                        {getTypeBadge(position.positionType)}
+                        <div className="flex items-center gap-2">
+                          {getTypeBadge(position.positionType)}
+                          <Button variant="outline" size="sm" onClick={() => openEditEmployeeDialog(position)}><Edit className="w-4 h-4 mr-1" />Edit</Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -202,7 +217,7 @@ export default function PositionManagement() {
                       <div key={index} className="flex items-center justify-between p-4 rounded-lg border">
                         <div>
                           <h4 className="font-medium">{record.employeeName}</h4>
-                          <p className="text-sm text-muted-foreground">{record.payPeriodStart} - {record.payPeriodEnd}</p>
+                          <p className="text-sm text-muted-foreground">{new Date(record.payPeriodStart).toLocaleDateString()} - {new Date(record.payPeriodEnd).toLocaleDateString()}</p>
                         </div>
                         <div className="text-right">
                           <p className="font-bold">${record.netPay?.toLocaleString()}</p>
@@ -279,6 +294,23 @@ export default function PositionManagement() {
             <DialogFooter>
               <Button variant="outline" onClick={() => setShowPayrollDialog(false)}>Cancel</Button>
               <Button onClick={handleRecordPayroll} disabled={recordPayrollMutation.isPending}>{recordPayrollMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Record Payroll</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Employee Dialog */}
+        <Dialog open={showEditEmployeeDialog} onOpenChange={setShowEditEmployeeDialog}>
+          <DialogContent>
+            <DialogHeader><DialogTitle>Edit Employee Details</DialogTitle><DialogDescription>Update contact information for {editEmployeeData.name}</DialogDescription></DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2"><Label>Full Name</Label><Input value={editEmployeeData.name} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, name: e.target.value })} placeholder="Full name" /></div>
+              <div className="space-y-2"><Label>Email</Label><Input type="email" value={editEmployeeData.email} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, email: e.target.value })} placeholder="employee@email.com" /></div>
+              <div className="space-y-2"><Label>Phone</Label><Input type="tel" value={editEmployeeData.phone} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, phone: e.target.value })} placeholder="(555) 123-4567" /></div>
+              <div className="space-y-2"><Label>Address</Label><Textarea value={editEmployeeData.address} onChange={(e) => setEditEmployeeData({ ...editEmployeeData, address: e.target.value })} placeholder="Street address, city, state, zip" /></div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowEditEmployeeDialog(false)}>Cancel</Button>
+              <Button onClick={handleUpdateEmployee} disabled={updateEmployeeMutation.isPending}>{updateEmployeeMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Save Changes</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

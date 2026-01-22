@@ -5538,3 +5538,19 @@ Three main approaches available:
 - [x] Checked items show green background and strikethrough
 - [x] State persisted to localStorage (survives page refresh)
 - [x] Separate checklists for LLC, Trust, and Nonprofit entities
+
+
+## Phase 62: Payroll Recording Bug Fix
+- [ ] Debug payroll recording 500 error
+- [ ] Fix the database/code mismatch causing the error
+- [ ] Test payroll recording works correctly
+- [ ] Verify Payroll tab displays recorded payroll
+
+
+## Phase 62: Payroll Recording Fix & Employee Contact Details (COMPLETED)
+- [x] Debug payroll recording 500 error - was passing position.id instead of assignedEmployee.id
+- [x] Fix payroll recording issue - updated openPayrollDialog to use correct positionHolderId
+- [x] Test payroll recording works - recorded payroll for LaShanna and Amber, shows in Payroll tab
+- [x] Set up employee contact details input feature - Edit button on Employees tab with name/email/phone/address fields
+- [x] Fixed 60/40 Inter-House Distribution on Trust Structure page (was reversed)
+- [x] Fixed Date rendering issue in Payroll tab (was trying to render Date objects directly)
