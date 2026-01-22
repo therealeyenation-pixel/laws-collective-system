@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -211,6 +212,36 @@ export default function BusinessFormation() {
 
   const [formData, setFormData] = useState({ businessName: "", entityType: "llc" as "llc" | "corporation" | "trust" | "collective", stateCode: "GA" });
   const [importData, setImportData] = useState({ businessName: "", entityType: "llc" as "llc" | "corporation" | "trust" | "collective", stateCode: "GA", dateOfFormation: "", federalEIN: "", registeredAgentName: "", principalAddress: "" });
+  
+  // Checklist state - persisted to localStorage
+  const [checklistState, setChecklistState] = useState<Record<string, Record<string, boolean>>>({});
+  
+  // Load checklist state from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('businessFormationChecklist');
+    if (saved) {
+      setChecklistState(JSON.parse(saved));
+    }
+  }, []);
+  
+  // Save checklist state to localStorage when it changes
+  const toggleChecklistItem = (entityType: string, itemId: string) => {
+    const newState = {
+      ...checklistState,
+      [entityType]: {
+        ...(checklistState[entityType] || {}),
+        [itemId]: !checklistState[entityType]?.[itemId]
+      }
+    };
+    setChecklistState(newState);
+    localStorage.setItem('businessFormationChecklist', JSON.stringify(newState));
+  };
+  
+  // Calculate completion percentage for a checklist
+  const getChecklistCompletion = (entityType: string, items: { id: string }[]) => {
+    const completed = items.filter(item => checklistState[entityType]?.[item.id]).length;
+    return Math.round((completed / items.length) * 100);
+  };
 
   const handleCreateEntity = () => { createEntityMutation.mutate(formData); };
   const handleImportEntity = () => { toast.success("Entity imported - feature coming soon"); setShowImportDialog(false); };
@@ -628,16 +659,25 @@ export default function BusinessFormation() {
                       </div>
                     </CardHeader>
                     <CardContent>
+                      <div className="mb-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm text-muted-foreground">Progress</span>
+                          <span className="text-sm font-medium">{getChecklistCompletion(type, checklist.items)}%</span>
+                        </div>
+                        <Progress value={getChecklistCompletion(type, checklist.items)} className="h-2" />
+                      </div>
                       <div className="space-y-2">
                         {checklist.items.map((item) => (
                           <div 
                             key={item.id} 
-                            className="flex items-center gap-3 p-2 rounded hover:bg-muted/50"
+                            className={`flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer ${checklistState[type]?.[item.id] ? 'bg-green-500/10' : ''}`}
+                            onClick={() => toggleChecklistItem(type, item.id)}
                           >
-                            <div className="w-5 h-5 rounded border-2 border-muted-foreground/30 flex items-center justify-center">
-                              {/* Checkbox placeholder - would be interactive in full implementation */}
-                            </div>
-                            <span className="flex-1">{item.label}</span>
+                            <Checkbox 
+                              checked={checklistState[type]?.[item.id] || false}
+                              onCheckedChange={() => toggleChecklistItem(type, item.id)}
+                            />
+                            <span className={`flex-1 ${checklistState[type]?.[item.id] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
                             {item.required && (
                               <Badge variant="outline" className="text-xs">Required</Badge>
                             )}
