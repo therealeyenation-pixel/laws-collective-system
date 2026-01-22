@@ -417,6 +417,25 @@ export default function BusinessTycoonGame() {
     },
   });
 
+  // Achievement checking
+  const checkAchievementsMutation = trpc.achievements.checkAndUnlock.useMutation({
+    onSuccess: (data) => {
+      if (data.newlyUnlocked.length > 0) {
+        data.newlyUnlocked.forEach((achievement) => {
+          toast.success(
+            <div className="flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <div>
+                <p className="font-bold">Achievement Unlocked!</p>
+                <p className="text-sm">{achievement.name} - +{achievement.tokenReward} tokens</p>
+              </div>
+            </div>
+          );
+        });
+      }
+    },
+  });
+
   const calculateFinalScore = () => {
     return Math.floor(
       stats.cash / 1000 +
@@ -465,6 +484,23 @@ export default function BusinessTycoonGame() {
         totalQuestions: maxTurns,
         maxStreak: 0,
         tokensEarned: Math.floor(finalScore / 100),
+      });
+      
+      // Check for achievements
+      const highRiskCount = history.filter((h) => h.decision.risk === "high").length;
+      const lowRiskOnly = history.every((h) => h.decision.risk === "low");
+      checkAchievementsMutation.mutate({
+        gameType: "business-tycoon",
+        gameResult: {
+          score: finalScore,
+          cash: stats.cash,
+          reputation: stats.reputation,
+          employees: stats.employees,
+          assets: stats.assets,
+          highRiskDecisions: highRiskCount,
+          lowRiskOnly: lowRiskOnly,
+          gamesCompleted: 1,
+        },
       });
       return;
     }

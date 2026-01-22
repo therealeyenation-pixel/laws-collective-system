@@ -5667,3 +5667,15 @@ Three main approaches available:
 - [x] Create turn-based progression system
 - [x] Integrate with leaderboard for score tracking
 - [x] Test game functionality (verified working)
+
+
+## Phase: Achievement System (COMPLETED)
+- [x] Design achievement database schema (gameAchievements, gamePlayerAchievements tables)
+- [x] Create achievements tRPC router with 24 achievement definitions
+- [x] Implement achievement tracking logic (checkAndUnlock mutation)
+- [x] Build Achievements page UI with progress tracking and leaderboard
+- [x] Integrate with Financial Literacy Game (auto-check on game completion)
+- [x] Integrate with Business Tycoon Simulator (auto-check on game completion)
+- [x] Add achievement notifications (toast notifications on unlock)
+- [x] Add Achievements button to Game Center
+- [x] Write unit tests for achievements (11 tests passing)

@@ -47,7 +47,9 @@ import {
   Globe,
   DollarSign,
   FlaskConical,
+  Award,
 } from "lucide-react";
+import { Link } from "wouter";
 
 const gameIcons: Record<string, React.ReactNode> = {
   crown: <Crown className="w-6 h-6" />,
@@ -165,6 +167,12 @@ export default function GameCenter() {
             </p>
           </div>
           <div className="flex gap-2">
+            <Link href="/achievements">
+              <Button variant="outline" className="gap-2">
+                <Award className="w-4 h-4 text-yellow-500" />
+                Achievements
+              </Button>
+            </Link>
             <Button
               variant="outline"
               onClick={() => seedGamesMutation.mutate()}

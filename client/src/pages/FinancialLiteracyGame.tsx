@@ -324,6 +324,25 @@ export default function FinancialLiteracyGame() {
     }
   });
 
+  // Achievement checking
+  const checkAchievementsMutation = trpc.achievements.checkAndUnlock.useMutation({
+    onSuccess: (data) => {
+      if (data.newlyUnlocked.length > 0) {
+        data.newlyUnlocked.forEach((achievement) => {
+          toast.success(
+            <div className="flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              <div>
+                <p className="font-bold">Achievement Unlocked!</p>
+                <p className="text-sm">{achievement.name} - +{achievement.tokenReward} tokens</p>
+              </div>
+            </div>
+          );
+        });
+      }
+    },
+  });
+
   // Filter and shuffle questions based on difficulty
   const gameQuestions = useMemo(() => {
     let filtered = QUESTIONS;
@@ -420,6 +439,19 @@ export default function FinancialLiteracyGame() {
         totalQuestions: gameQuestions.length,
         maxStreak: maxStreak,
         tokensEarned: tokensEarned,
+      });
+      
+      // Check for achievements
+      checkAchievementsMutation.mutate({
+        gameType: "financial-literacy",
+        gameResult: {
+          score: score,
+          correctAnswers: correctCount,
+          totalQuestions: gameQuestions.length,
+          maxStreak: maxStreak,
+          difficulty: difficulty,
+          gamesCompleted: 1,
+        },
       });
       return;
     }
