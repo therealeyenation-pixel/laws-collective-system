@@ -507,11 +507,11 @@ export default function HouseManagement() {
                     </p>
                     <div className="flex gap-2 mt-2">
                       <div className="flex-1 bg-primary/20 p-2 rounded text-center">
-                        <p className="text-xs text-muted-foreground">Collective</p>
+                        <p className="text-xs text-muted-foreground">House</p>
                         <p className="font-bold">60%</p>
                       </div>
                       <div className="flex-1 bg-secondary p-2 rounded text-center">
-                        <p className="text-xs text-muted-foreground">House</p>
+                        <p className="text-xs text-muted-foreground">Collective</p>
                         <p className="font-bold">40%</p>
                       </div>
                     </div>

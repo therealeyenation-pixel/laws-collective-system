@@ -347,19 +347,19 @@ export default function TrustVisualization() {
                         </div>
                         <ArrowRight className="w-6 h-6 text-muted-foreground" />
                         <div className="text-center">
-                          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <Shield className="w-8 h-8 text-green-600" />
-                          </div>
-                          <p className="text-sm font-medium">60%</p>
-                          <p className="text-xs text-muted-foreground">Collective Pool</p>
-                        </div>
-                        <ArrowRight className="w-6 h-6 text-muted-foreground" />
-                        <div className="text-center">
                           <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
                             <Home className="w-8 h-8 text-blue-600" />
                           </div>
-                          <p className="text-sm font-medium">40%</p>
+                          <p className="text-sm font-medium">60%</p>
                           <p className="text-xs text-muted-foreground">Source House</p>
+                        </div>
+                        <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <Shield className="w-8 h-8 text-green-600" />
+                          </div>
+                          <p className="text-sm font-medium">40%</p>
+                          <p className="text-xs text-muted-foreground">Collective Pool</p>
                         </div>
                       </div>
                     </div>
