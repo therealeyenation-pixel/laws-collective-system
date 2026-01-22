@@ -8,7 +8,6 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { addClient, removeClient, clearUserTyping } from "../services/chatSSE";
-import paystubRouter from "../routers/paystub";
 import { sdk } from "./sdk";
 import { getDb } from "../db";
 import { users } from "../../drizzle/schema";
@@ -102,9 +101,6 @@ async function startServer() {
       res.status(500).json({ error: "Internal server error" });
     }
   });
-  // Pay stub route
-  app.use("/api/payroll", paystubRouter);
-
   // tRPC API
   app.use(
     "/api/trpc",
