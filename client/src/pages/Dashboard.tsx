@@ -37,6 +37,7 @@ import InsuranceCourse from "@/components/InsuranceCourse";
 import TokenChainProgress from "@/components/TokenChainProgress";
 import DBATrademarkCourse from "@/components/DBATrademarkCourse";
 import PostActivationProgress from "@/components/PostActivationProgress";
+import FormationChecklist from "@/components/FormationChecklist";
 
 type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
@@ -639,6 +640,25 @@ export default function Dashboard() {
             </div>
           </Card>
         </div>
+
+        {/* Business Formation Checklist */}
+        <Card className="p-6 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-amber-200 dark:border-amber-800">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <FileCheck className="w-8 h-8 text-amber-600" />
+              <div>
+                <h3 className="font-bold text-foreground">Business Formation Checklist</h3>
+                <p className="text-sm text-muted-foreground">
+                  Track your progress on essential formation tasks
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => window.location.href = '/business-formation'}>
+              View All <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+          <FormationChecklist />
+        </Card>
 
         {/* Main Tabs */}
         <Tabs defaultValue="courses" className="w-full">

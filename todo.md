@@ -5554,3 +5554,11 @@ Three main approaches available:
 - [x] Set up employee contact details input feature - Edit button on Employees tab with name/email/phone/address fields
 - [x] Fixed 60/40 Inter-House Distribution on Trust Structure page (was reversed)
 - [x] Fixed Date rendering issue in Payroll tab (was trying to render Date objects directly)
+
+
+## Phase 63: Add Formation Checklist to Dashboard (COMPLETED)
+- [x] Add Business Formation Checklist component to main Dashboard
+- [x] Display checklist with interactive checkboxes (6 priority items visible)
+- [x] Show progress bar for completion percentage
+- [x] Persist checked state to localStorage
+- [x] View All button links to full Formation Checklists page
