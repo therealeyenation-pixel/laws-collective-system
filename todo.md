@@ -5598,3 +5598,11 @@ Three main approaches available:
 - [x] Update SWOT Analysis UI with AI generation button
 - [x] Add entity selection for context-aware generation
 - [x] Test AI generation functionality (UI ready, requires auth to create)
+
+
+## Phase: SWOT PDF Export & Business Plan Integration
+- [x] Add PDF export endpoint to SWOT router
+- [x] Create PDF generation utility for SWOT reports
+- [x] Add Export to PDF button in SWOT UI
+- [x] Link SWOT analyses to Business Plan Simulator
+- [ ] Test PDF export functionality

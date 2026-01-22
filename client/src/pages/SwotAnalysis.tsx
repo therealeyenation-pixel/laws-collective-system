@@ -12,7 +12,7 @@ import { trpc } from "@/lib/trpc";
 import { 
   Plus, Trash2, Target, Shield, AlertTriangle, 
   TrendingUp, Lightbulb, ChevronRight, BarChart3, FileText,
-  CheckCircle, Clock, XCircle, Sparkles, Loader2
+  CheckCircle, Clock, XCircle, Sparkles, Loader2, Download
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -220,6 +220,106 @@ export default function SwotAnalysis() {
       category: selectedCategory,
       ...newItem,
     });
+  };
+
+  const handleExportPDF = () => {
+    if (!selectedAnalysis) return;
+    
+    // Generate PDF content as HTML
+    const items = selectedAnalysis.items || [];
+    const strengths = items.filter(i => i.category === "strength");
+    const weaknesses = items.filter(i => i.category === "weakness");
+    const opportunities = items.filter(i => i.category === "opportunity");
+    const threats = items.filter(i => i.category === "threat");
+    
+    const renderItems = (categoryItems: SwotItem[]) => {
+      if (categoryItems.length === 0) return "<p style='color: #666; font-style: italic;'>No items</p>";
+      return categoryItems.map(item => `
+        <div style="margin-bottom: 12px; padding: 8px; background: #f9f9f9; border-radius: 4px;">
+          <div style="font-weight: 600;">${item.title}</div>
+          ${item.description ? `<div style="color: #666; font-size: 12px; margin-top: 4px;">${item.description}</div>` : ""}
+          <div style="margin-top: 4px; font-size: 11px;">
+            <span style="background: #e0e0e0; padding: 2px 6px; border-radius: 3px;">${item.priority}</span>
+            <span style="margin-left: 8px;">Impact: ${item.impact || 5}/10</span>
+          </div>
+        </div>
+      `).join("");
+    };
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>SWOT Analysis - ${selectedAnalysis.title}</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 40px; }
+          h1 { color: #1a5f1a; border-bottom: 2px solid #1a5f1a; padding-bottom: 10px; }
+          .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+          .quadrant { border: 2px solid; border-radius: 8px; padding: 16px; }
+          .strengths { border-color: #22c55e; background: #f0fdf4; }
+          .weaknesses { border-color: #ef4444; background: #fef2f2; }
+          .opportunities { border-color: #3b82f6; background: #eff6ff; }
+          .threats { border-color: #f59e0b; background: #fffbeb; }
+          .quadrant h2 { margin-top: 0; font-size: 18px; }
+          .strengths h2 { color: #15803d; }
+          .weaknesses h2 { color: #dc2626; }
+          .opportunities h2 { color: #2563eb; }
+          .threats h2 { color: #d97706; }
+          .scores { margin-top: 30px; display: flex; gap: 20px; justify-content: center; }
+          .score-box { text-align: center; padding: 10px 20px; border-radius: 8px; }
+          .footer { margin-top: 40px; text-align: center; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <h1>SWOT Analysis: ${selectedAnalysis.title}</h1>
+        ${selectedAnalysis.description ? `<p style="color: #666;">${selectedAnalysis.description}</p>` : ""}
+        <p style="font-size: 12px; color: #888;">Generated: ${new Date().toLocaleDateString()}</p>
+        
+        <div class="scores">
+          <div class="score-box" style="background: #dcfce7;"><strong>Strengths:</strong> ${selectedAnalysis.strengthScore || 0}</div>
+          <div class="score-box" style="background: #fee2e2;"><strong>Weaknesses:</strong> ${selectedAnalysis.weaknessScore || 0}</div>
+          <div class="score-box" style="background: #dbeafe;"><strong>Opportunities:</strong> ${selectedAnalysis.opportunityScore || 0}</div>
+          <div class="score-box" style="background: #fef3c7;"><strong>Threats:</strong> ${selectedAnalysis.threatScore || 0}</div>
+        </div>
+        
+        <div class="grid">
+          <div class="quadrant strengths">
+            <h2>Strengths</h2>
+            ${renderItems(strengths)}
+          </div>
+          <div class="quadrant weaknesses">
+            <h2>Weaknesses</h2>
+            ${renderItems(weaknesses)}
+          </div>
+          <div class="quadrant opportunities">
+            <h2>Opportunities</h2>
+            ${renderItems(opportunities)}
+          </div>
+          <div class="quadrant threats">
+            <h2>Threats</h2>
+            ${renderItems(threats)}
+          </div>
+        </div>
+        
+        <div class="footer">
+          <p>L.A.W.S. Collective - Multi-Generational Wealth Building</p>
+          <p>This SWOT analysis is part of the strategic planning framework.</p>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    // Open print dialog with the HTML content
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.onload = () => {
+        printWindow.print();
+      };
+    } else {
+      toast.error("Please allow popups to export PDF");
+    }
   };
 
   const getItemsByCategory = (category: SwotCategory): SwotItem[] => {
@@ -499,6 +599,14 @@ export default function SwotAnalysis() {
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleExportPDF()}
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Export PDF
+                    </Button>
                     <Button
                       variant="destructive"
                       size="sm"

@@ -479,6 +479,49 @@ Provide the analysis in JSON format.`;
         return { success: true };
       }),
   }),
+  // Export SWOT analysis to PDF format data
+  exportToPDF: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const [analysis] = await db.select().from(swotAnalyses)
+        .where(and(
+          eq(swotAnalyses.id, input.id),
+          eq(swotAnalyses.userId, ctx.user.id)
+        ));
+      
+      if (!analysis) {
+        throw new Error("SWOT analysis not found");
+      }
+      
+      const items = await db.select().from(swotItems)
+        .where(eq(swotItems.swotAnalysisId, input.id))
+        .orderBy(asc(swotItems.sortOrder));
+      
+      // Group items by category
+      const groupedItems = {
+        strengths: items.filter(i => i.category === "strength"),
+        weaknesses: items.filter(i => i.category === "weakness"),
+        opportunities: items.filter(i => i.category === "opportunity"),
+        threats: items.filter(i => i.category === "threat"),
+      };
+      
+      // Get business entity name if linked
+      let entityName = null;
+      if (analysis.businessEntityId) {
+        const [entity] = await db.select().from(businessEntities)
+          .where(eq(businessEntities.id, analysis.businessEntityId));
+        entityName = entity?.name || null;
+      }
+      
+      return {
+        analysis: {
+          ...analysis,
+          entityName,
+        },
+        items: groupedItems,
+        exportDate: new Date().toISOString(),
+      };
+    }),
 });
 
 // Helper function to update analysis scores
