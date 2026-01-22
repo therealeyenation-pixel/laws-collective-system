@@ -417,6 +417,25 @@ export default function BusinessTycoonGame() {
     },
   });
 
+  // Challenge progress tracking
+  const updateChallengeMutation = trpc.challenges.updateProgress.useMutation({
+    onSuccess: (data) => {
+      if (data.completedChallenges.length > 0) {
+        data.completedChallenges.forEach((challenge) => {
+          toast.success(
+            <div className="flex items-center gap-2">
+              <Target className="w-5 h-5 text-blue-500" />
+              <div>
+                <p className="font-bold">Challenge Complete!</p>
+                <p className="text-sm">{challenge.name} - +{challenge.tokenReward} tokens</p>
+              </div>
+            </div>
+          );
+        });
+      }
+    },
+  });
+
   // Achievement checking
   const checkAchievementsMutation = trpc.achievements.checkAndUnlock.useMutation({
     onSuccess: (data) => {
@@ -499,6 +518,18 @@ export default function BusinessTycoonGame() {
           assets: stats.assets,
           highRiskDecisions: highRiskCount,
           lowRiskOnly: lowRiskOnly,
+          gamesCompleted: 1,
+        },
+      });
+      
+      // Update challenge progress
+      updateChallengeMutation.mutate({
+        gameType: "business-tycoon",
+        gameResult: {
+          score: finalScore,
+          cash: stats.cash,
+          reputation: stats.reputation,
+          highRiskDecisions: highRiskCount,
           gamesCompleted: 1,
         },
       });

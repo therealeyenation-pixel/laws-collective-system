@@ -324,6 +324,25 @@ export default function FinancialLiteracyGame() {
     }
   });
 
+  // Challenge progress tracking
+  const updateChallengeMutation = trpc.challenges.updateProgress.useMutation({
+    onSuccess: (data) => {
+      if (data.completedChallenges.length > 0) {
+        data.completedChallenges.forEach((challenge) => {
+          toast.success(
+            <div className="flex items-center gap-2">
+              <Target className="w-5 h-5 text-blue-500" />
+              <div>
+                <p className="font-bold">Challenge Complete!</p>
+                <p className="text-sm">{challenge.name} - +{challenge.tokenReward} tokens</p>
+              </div>
+            </div>
+          );
+        });
+      }
+    },
+  });
+
   // Achievement checking
   const checkAchievementsMutation = trpc.achievements.checkAndUnlock.useMutation({
     onSuccess: (data) => {
@@ -450,6 +469,18 @@ export default function FinancialLiteracyGame() {
           totalQuestions: gameQuestions.length,
           maxStreak: maxStreak,
           difficulty: difficulty,
+          gamesCompleted: 1,
+        },
+      });
+      
+      // Update challenge progress
+      updateChallengeMutation.mutate({
+        gameType: "financial-literacy",
+        gameResult: {
+          score: score,
+          correctAnswers: correctCount,
+          totalQuestions: gameQuestions.length,
+          maxStreak: maxStreak,
           gamesCompleted: 1,
         },
       });

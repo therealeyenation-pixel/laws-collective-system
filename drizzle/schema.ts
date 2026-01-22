@@ -10519,6 +10519,10 @@ export const gameAchievements = mysqlTable("game_achievements", {
   requirement: json("requirement"),
   tokenReward: int("tokenReward").default(0),
   badgeIcon: varchar("badgeIcon", { length: 100 }),
+  // Tier support - achievements can be upgraded through repeated accomplishments
+  hasTiers: boolean("hasTiers").default(false).notNull(),
+  tierRequirements: json("tierRequirements"), // { bronze: 1, silver: 3, gold: 5, platinum: 10 }
+  tierRewards: json("tierRewards"), // { bronze: 10, silver: 25, gold: 50, platinum: 100 }
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
@@ -10529,7 +10533,51 @@ export const gamePlayerAchievements = mysqlTable("game_player_achievements", {
   achievementId: int("achievementId").notNull(),
   earnedAt: timestamp("earnedAt").defaultNow().notNull(),
   tokensAwarded: int("tokensAwarded").default(0),
+  // Tier tracking
+  currentTier: mysqlEnum("currentTier", ["bronze", "silver", "gold", "platinum"]).default("bronze"),
+  progressCount: int("progressCount").default(1).notNull(), // How many times achieved
+  tierUpgradedAt: timestamp("tierUpgradedAt"),
+  // Sharing
+  shareCode: varchar("shareCode", { length: 32 }), // Unique code for sharing
+  timesShared: int("timesShared").default(0),
 });
+
+/**
+ * Daily/Weekly Challenges
+ */
+export const gameChallenges = mysqlTable("game_challenges", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  challengeType: mysqlEnum("challengeType", ["daily", "weekly"]).notNull(),
+  gameType: varchar("gameType", { length: 50 }), // null = applies to all games
+  requirement: json("requirement").notNull(), // { type: "score", value: 500 }
+  tokenReward: int("tokenReward").default(25).notNull(),
+  badgeIcon: varchar("badgeIcon", { length: 100 }),
+  isActive: boolean("isActive").default(true).notNull(),
+  // Rotation - which day/week this challenge appears
+  rotationSlot: int("rotationSlot"), // 0-6 for daily (day of week), 0-3 for weekly (week of month)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const gamePlayerChallenges = mysqlTable("game_player_challenges", {
+  id: int("id").primaryKey().autoincrement(),
+  playerId: int("playerId").notNull(),
+  challengeId: int("challengeId").notNull(),
+  periodStart: timestamp("periodStart").notNull(), // Start of the day/week
+  periodEnd: timestamp("periodEnd").notNull(), // End of the day/week
+  currentProgress: int("currentProgress").default(0).notNull(),
+  targetProgress: int("targetProgress").notNull(),
+  isCompleted: boolean("isCompleted").default(false).notNull(),
+  completedAt: timestamp("completedAt"),
+  tokensAwarded: int("tokensAwarded").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GameChallenge = typeof gameChallenges.$inferSelect;
+export type InsertGameChallenge = typeof gameChallenges.$inferInsert;
+export type GamePlayerChallenge = typeof gamePlayerChallenges.$inferSelect;
+export type InsertGamePlayerChallenge = typeof gamePlayerChallenges.$inferInsert;
 
 export const triviaCategories = mysqlTable("trivia_categories", {
   id: int("id").primaryKey().autoincrement(),

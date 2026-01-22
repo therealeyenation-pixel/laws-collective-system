@@ -5679,3 +5679,27 @@ Three main approaches available:
 - [x] Add achievement notifications (toast notifications on unlock)
 - [x] Add Achievements button to Game Center
 - [x] Write unit tests for achievements (11 tests passing)
+
+
+## Phase: Daily/Weekly Challenges (COMPLETED)
+- [x] Add game_challenges table for challenge definitions
+- [x] Add game_player_challenges table for player progress
+- [x] Create challenge router with daily/weekly reset logic (7 daily + 4 weekly challenges)
+- [x] Build challenge UI component in Achievements page (Challenges tab)
+- [x] Integrate challenge completion with games (Financial Literacy + Business Tycoon)
+- [x] Add challenge notifications (toast on completion)
+- [x] Write unit tests for challenges (13 tests passing)
+
+## Phase: Achievement Tiers (COMPLETED)
+- [x] Update gamePlayerAchievements schema to support tiers (bronze/silver/gold/platinum)
+- [x] Add progressCount field for tracking repeated accomplishments
+- [x] Create tier progression logic (upgradeTier mutation)
+- [x] Update Achievements UI to display tier badges with colors
+- [x] Add tier upgrade notifications
+
+## Phase: Achievement Sharing (COMPLETED)
+- [x] Add shareCode field to gamePlayerAchievements
+- [x] Create generateShareCode mutation for unique share URLs
+- [x] Add social sharing buttons (Twitter, Facebook, LinkedIn, copy link)
+- [x] Track share count (timesShared field)
+- [x] Build share dialog component in Achievements page

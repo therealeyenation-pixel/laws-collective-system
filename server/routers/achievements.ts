@@ -2,7 +2,37 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { gameAchievements, gamePlayerAchievements, users } from "../../drizzle/schema";
-import { desc, eq, and, sql } from "drizzle-orm";
+import { desc, eq, and, sql, isNull } from "drizzle-orm";
+import crypto from "crypto";
+
+// Tier definitions
+export const TIER_LEVELS = ["bronze", "silver", "gold", "platinum"] as const;
+export type TierLevel = typeof TIER_LEVELS[number];
+
+export const DEFAULT_TIER_REQUIREMENTS = {
+  bronze: 1,
+  silver: 3,
+  gold: 5,
+  platinum: 10,
+};
+
+export const DEFAULT_TIER_REWARDS = {
+  bronze: 10,
+  silver: 25,
+  gold: 50,
+  platinum: 100,
+};
+
+export const TIER_COLORS = {
+  bronze: "#CD7F32",
+  silver: "#C0C0C0",
+  gold: "#FFD700",
+  platinum: "#E5E4E2",
+};
+
+function generateShareCode(): string {
+  return crypto.randomBytes(16).toString("hex");
+}
 
 // Achievement definitions - these are the possible achievements players can earn
 export const ACHIEVEMENT_DEFINITIONS = [
@@ -496,4 +526,229 @@ export const achievementsRouter = router({
         totalTokens: entry.totalTokens || 0,
       }));
     }),
+
+  // Get player's achievements with tier information
+  getPlayerAchievementsWithTiers: protectedProcedure.query(async ({ ctx }) => {
+    const db = getDb();
+    const playerAchievements = await db.select()
+      .from(gamePlayerAchievements)
+      .where(eq(gamePlayerAchievements.playerId, ctx.user.id))
+      .orderBy(desc(gamePlayerAchievements.earnedAt));
+    
+    return playerAchievements.map(pa => {
+      const definition = ACHIEVEMENT_DEFINITIONS[pa.achievementId - 1];
+      return {
+        ...pa,
+        definition,
+        currentTier: pa.currentTier || "bronze",
+        progressCount: pa.progressCount || 1,
+        nextTier: getNextTier(pa.currentTier || "bronze"),
+        progressToNextTier: getProgressToNextTier(pa.progressCount || 1, pa.currentTier || "bronze"),
+      };
+    });
+  }),
+
+  // Upgrade achievement tier
+  upgradeTier: protectedProcedure
+    .input(z.object({ achievementId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      // Get the player's achievement
+      const [playerAchievement] = await db.select()
+        .from(gamePlayerAchievements)
+        .where(and(
+          eq(gamePlayerAchievements.playerId, ctx.user.id),
+          eq(gamePlayerAchievements.achievementId, input.achievementId)
+        ))
+        .limit(1);
+      
+      if (!playerAchievement) {
+        throw new Error("Achievement not found");
+      }
+      
+      const currentTier = playerAchievement.currentTier || "bronze";
+      const progressCount = playerAchievement.progressCount || 1;
+      const nextTier = getNextTier(currentTier);
+      
+      if (!nextTier) {
+        return { success: false, message: "Already at maximum tier" };
+      }
+      
+      const requiredProgress = DEFAULT_TIER_REQUIREMENTS[nextTier];
+      if (progressCount < requiredProgress) {
+        return { 
+          success: false, 
+          message: `Need ${requiredProgress - progressCount} more completions to upgrade`,
+          currentProgress: progressCount,
+          required: requiredProgress,
+        };
+      }
+      
+      // Calculate bonus tokens for tier upgrade
+      const bonusTokens = DEFAULT_TIER_REWARDS[nextTier] - DEFAULT_TIER_REWARDS[currentTier];
+      
+      // Update the achievement
+      await db.update(gamePlayerAchievements)
+        .set({
+          currentTier: nextTier,
+          tierUpgradedAt: new Date(),
+          tokensAwarded: (playerAchievement.tokensAwarded || 0) + bonusTokens,
+        })
+        .where(eq(gamePlayerAchievements.id, playerAchievement.id));
+      
+      return {
+        success: true,
+        newTier: nextTier,
+        bonusTokens,
+        message: `Upgraded to ${nextTier} tier! +${bonusTokens} tokens`,
+      };
+    }),
+
+  // Generate share link for achievement
+  generateShareLink: protectedProcedure
+    .input(z.object({ achievementId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      // Get the player's achievement
+      const [playerAchievement] = await db.select()
+        .from(gamePlayerAchievements)
+        .where(and(
+          eq(gamePlayerAchievements.playerId, ctx.user.id),
+          eq(gamePlayerAchievements.achievementId, input.achievementId)
+        ))
+        .limit(1);
+      
+      if (!playerAchievement) {
+        throw new Error("Achievement not found");
+      }
+      
+      // Generate or return existing share code
+      let shareCode = playerAchievement.shareCode;
+      if (!shareCode) {
+        shareCode = generateShareCode();
+        await db.update(gamePlayerAchievements)
+          .set({ shareCode })
+          .where(eq(gamePlayerAchievements.id, playerAchievement.id));
+      }
+      
+      const definition = ACHIEVEMENT_DEFINITIONS[playerAchievement.achievementId - 1];
+      
+      return {
+        shareCode,
+        shareUrl: `/achievements/share/${shareCode}`,
+        achievement: {
+          name: definition?.name || "Achievement",
+          description: definition?.description || "",
+          tier: playerAchievement.currentTier || "bronze",
+          badgeIcon: definition?.badgeIcon || "star",
+        },
+      };
+    }),
+
+  // Get shared achievement by code
+  getSharedAchievement: publicProcedure
+    .input(z.object({ shareCode: z.string() }))
+    .query(async ({ input }) => {
+      const db = getDb();
+      
+      const [playerAchievement] = await db.select()
+        .from(gamePlayerAchievements)
+        .where(eq(gamePlayerAchievements.shareCode, input.shareCode))
+        .limit(1);
+      
+      if (!playerAchievement) {
+        return null;
+      }
+      
+      // Get player name
+      const [player] = await db.select({ name: users.name })
+        .from(users)
+        .where(eq(users.id, playerAchievement.playerId))
+        .limit(1);
+      
+      const definition = ACHIEVEMENT_DEFINITIONS[playerAchievement.achievementId - 1];
+      
+      // Increment share count
+      await db.update(gamePlayerAchievements)
+        .set({ timesShared: (playerAchievement.timesShared || 0) + 1 })
+        .where(eq(gamePlayerAchievements.id, playerAchievement.id));
+      
+      return {
+        playerName: player?.name || "Anonymous",
+        achievement: {
+          name: definition?.name || "Achievement",
+          description: definition?.description || "",
+          tier: playerAchievement.currentTier || "bronze",
+          badgeIcon: definition?.badgeIcon || "star",
+          tokenReward: definition?.tokenReward || 0,
+        },
+        earnedAt: playerAchievement.earnedAt,
+        progressCount: playerAchievement.progressCount || 1,
+      };
+    }),
+
+  // Record share action
+  recordShare: protectedProcedure
+    .input(z.object({ 
+      achievementId: z.number(),
+      platform: z.enum(["twitter", "facebook", "linkedin", "copy"]),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = getDb();
+      
+      await db.update(gamePlayerAchievements)
+        .set({ 
+          timesShared: sql`${gamePlayerAchievements.timesShared} + 1`,
+        })
+        .where(and(
+          eq(gamePlayerAchievements.playerId, ctx.user.id),
+          eq(gamePlayerAchievements.achievementId, input.achievementId)
+        ));
+      
+      return { success: true };
+    }),
+
+  // Get tier statistics
+  getTierStats: publicProcedure.query(async () => {
+    const db = getDb();
+    
+    const stats = await db
+      .select({
+        tier: gamePlayerAchievements.currentTier,
+        count: sql<number>`COUNT(*)`,
+      })
+      .from(gamePlayerAchievements)
+      .groupBy(gamePlayerAchievements.currentTier);
+    
+    return {
+      bronze: stats.find(s => s.tier === "bronze")?.count || 0,
+      silver: stats.find(s => s.tier === "silver")?.count || 0,
+      gold: stats.find(s => s.tier === "gold")?.count || 0,
+      platinum: stats.find(s => s.tier === "platinum")?.count || 0,
+    };
+  }),
 });
+
+// Helper functions
+function getNextTier(currentTier: string): TierLevel | null {
+  const currentIndex = TIER_LEVELS.indexOf(currentTier as TierLevel);
+  if (currentIndex === -1 || currentIndex >= TIER_LEVELS.length - 1) {
+    return null;
+  }
+  return TIER_LEVELS[currentIndex + 1];
+}
+
+function getProgressToNextTier(progressCount: number, currentTier: string): { current: number; required: number; percentage: number } {
+  const nextTier = getNextTier(currentTier);
+  if (!nextTier) {
+    return { current: progressCount, required: progressCount, percentage: 100 };
+  }
+  const required = DEFAULT_TIER_REQUIREMENTS[nextTier];
+  return {
+    current: progressCount,
+    required,
+    percentage: Math.min(100, Math.round((progressCount / required) * 100)),
+  };
+}
