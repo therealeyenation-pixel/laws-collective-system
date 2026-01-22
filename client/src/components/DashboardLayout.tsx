@@ -38,7 +38,7 @@ import {
   Gamepad2, ChevronRight, ShoppingCart, FileSignature, FolderOpen,
   CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye,
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
-  Wrench, Clipboard, Video, MessageSquare, Download
+  Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -266,6 +266,7 @@ const menuCategories: MenuCategory[] = [
         minRole: "staff",
         items: [
           { icon: Users, label: "HR Dashboard", path: "/dept/hr", minRole: "staff" },
+          { icon: ClipboardCheck, label: "Performance Reviews", path: "/performance-reviews", minRole: "staff" },
           { icon: Users, label: "HR Management", path: "/hr-management", minRole: "staff" },
           { icon: Users, label: "Employee Directory", path: "/employees", minRole: "staff" },
           { icon: Users, label: "Position Management", path: "/positions", minRole: "staff" },

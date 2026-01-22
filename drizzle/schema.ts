@@ -12114,3 +12114,108 @@ export const swotItems = mysqlTable("swot_items", {
 
 export type SwotItem = typeof swotItems.$inferSelect;
 export type InsertSwotItem = typeof swotItems.$inferInsert;
+
+
+/**
+ * Performance Reviews - Annual/Quarterly employee performance evaluations
+ */
+export const performanceReviews = mysqlTable("performance_reviews", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Review subject
+  employeeId: int("employeeId").notNull(),
+  employeeName: varchar("employeeName", { length: 255 }).notNull(),
+  employeeRole: varchar("employeeRole", { length: 255 }),
+  department: varchar("department", { length: 100 }),
+  
+  // Review metadata
+  reviewPeriod: varchar("reviewPeriod", { length: 50 }).notNull(),
+  reviewType: mysqlEnum("reviewType", ["annual", "quarterly", "probationary", "project"]).default("annual").notNull(),
+  reviewCycle: mysqlEnum("reviewCycle", ["mid_year", "year_end", "quarterly"]).default("year_end").notNull(),
+  
+  // Review participants
+  reviewerId: int("reviewerId"),
+  reviewerName: varchar("reviewerName", { length: 255 }),
+  
+  // Status tracking
+  status: mysqlEnum("perfReviewStatus", ["draft", "self_assessment", "manager_review", "calibration", "completed", "acknowledged"]).default("draft").notNull(),
+  
+  // Self-assessment scores (1-5 scale)
+  selfPerformanceRating: int("selfPerformanceRating"),
+  selfAccomplishments: text("selfAccomplishments"),
+  selfChallenges: text("selfChallenges"),
+  selfDevelopmentAreas: text("selfDevelopmentAreas"),
+  selfGoalsProgress: text("selfGoalsProgress"),
+  
+  // Manager assessment scores (1-5 scale)
+  managerPerformanceRating: int("managerPerformanceRating"),
+  managerFeedback: text("managerFeedback"),
+  managerStrengths: text("managerStrengths"),
+  managerImprovementAreas: text("managerImprovementAreas"),
+  
+  // Competency ratings (1-5 scale)
+  qualityOfWork: int("qualityOfWork"),
+  productivity: int("productivity"),
+  communication: int("communication"),
+  teamwork: int("teamwork"),
+  initiative: int("initiative"),
+  reliability: int("reliability"),
+  adaptability: int("adaptability"),
+  leadership: int("leadership"),
+  
+  // Overall assessment
+  overallRating: int("overallRating"),
+  ratingJustification: text("ratingJustification"),
+  promotionRecommendation: mysqlEnum("promotionRec", ["not_ready", "developing", "ready", "highly_recommended"]),
+  
+  // Goals for next period
+  nextPeriodGoals: text("nextPeriodGoals"),
+  developmentPlan: text("developmentPlan"),
+  trainingNeeds: text("trainingNeeds"),
+  
+  // Employee acknowledgment
+  employeeAcknowledged: boolean("employeeAcknowledged").default(false),
+  employeeAcknowledgedAt: timestamp("employeeAcknowledgedAt"),
+  employeeComments: text("employeeComments"),
+  
+  // Dates
+  reviewDueDate: timestamp("reviewDueDate"),
+  selfAssessmentDueDate: timestamp("selfAssessmentDueDate"),
+  completedAt: timestamp("completedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PerformanceReview = typeof performanceReviews.$inferSelect;
+export type InsertPerformanceReview = typeof performanceReviews.$inferInsert;
+
+/**
+ * Performance Goals - Individual goals within a performance review
+ */
+export const performanceGoals = mysqlTable("performance_goals", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  performanceReviewId: int("performanceReviewId").notNull(),
+  
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  category: mysqlEnum("goalCategory", ["performance", "development", "project", "behavioral"]).default("performance").notNull(),
+  
+  measurableTarget: text("measurableTarget"),
+  targetDate: timestamp("targetDate"),
+  weight: int("weight").default(1),
+  
+  status: mysqlEnum("goalStatus", ["not_started", "in_progress", "completed", "exceeded", "not_met", "cancelled"]).default("not_started").notNull(),
+  progressPercent: int("progressPercent").default(0),
+  progressNotes: text("progressNotes"),
+  
+  selfRating: int("selfRating"),
+  managerRating: int("managerRating"),
+  managerComments: text("managerComments"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PerformanceGoal = typeof performanceGoals.$inferSelect;
+export type InsertPerformanceGoal = typeof performanceGoals.$inferInsert;

@@ -40,6 +40,7 @@ import TrainingContentManager from "@/pages/TrainingContentManager";
 import HRManagement from "@/pages/HRManagement";
 import HRApplications from "@/pages/HRApplications";
 import HRDashboard from "@/pages/HRDashboard";
+import PerformanceReviews from "@/pages/PerformanceReviews";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
 import Careers from "@/pages/Careers";
@@ -283,6 +284,7 @@ function Router() {
       <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} minRole="staff" />}</Route>
       <Route path="/hr-applications">{() => <ProtectedRoute component={HRApplications} minRole="staff" />}</Route>
       <Route path="/hr-dashboard">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
+      <Route path="/performance-reviews">{() => <ProtectedRoute component={PerformanceReviews} minRole="staff" />}</Route>
       <Route path="/contractor-transition">{() => <ProtectedRoute component={ContractorTransition} minRole="staff" />}</Route>
       <Route path="/contractor-transitions">{() => <ProtectedRoute component={ContractorTransitions} minRole="staff" />}</Route>
       <Route path="/career-path-planner">{() => <ProtectedRoute component={CareerPathPlanner} minRole="staff" />}</Route>
