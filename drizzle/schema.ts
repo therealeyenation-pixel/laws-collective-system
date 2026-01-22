@@ -12271,3 +12271,21 @@ export const feedbackRequests = mysqlTable("feedback_requests", {
 
 export type FeedbackRequest = typeof feedbackRequests.$inferSelect;
 export type InsertFeedbackRequest = typeof feedbackRequests.$inferInsert;
+
+
+// Game Leaderboard
+export const gameScores = mysqlTable("game_scores", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  gameType: varchar("gameType", { length: 50 }).notNull(), // e.g., "financial-literacy"
+  score: int("score").notNull(),
+  difficulty: varchar("difficulty", { length: 20 }).notNull(), // easy, medium, hard, mixed
+  correctAnswers: int("correctAnswers").notNull(),
+  totalQuestions: int("totalQuestions").notNull(),
+  maxStreak: int("maxStreak").default(0).notNull(),
+  tokensEarned: int("tokensEarned").default(0).notNull(),
+  completedAt: timestamp("completedAt").defaultNow().notNull(),
+});
+
+export type GameScore = typeof gameScores.$inferSelect;
+export type InsertGameScore = typeof gameScores.$inferInsert;

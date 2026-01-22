@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +24,9 @@ import {
   Sparkles,
   RotateCcw,
   Home,
+  Medal,
+  Crown,
+  Award,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -290,6 +294,7 @@ const difficultyColors: Record<string, string> = {
 type GameState = "menu" | "playing" | "result" | "review";
 
 export default function FinancialLiteracyGame() {
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [gameState, setGameState] = useState<GameState>("menu");
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard" | "mixed">("mixed");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -303,6 +308,21 @@ export default function FinancialLiteracyGame() {
   const [timeLeft, setTimeLeft] = useState(30);
   const [timerActive, setTimerActive] = useState(false);
   const [tokensEarned, setTokensEarned] = useState(0);
+
+  // Leaderboard queries
+  const { data: topScores, refetch: refetchLeaderboard } = trpc.leaderboard.getTopScores.useQuery(
+    { gameType: "financial-literacy", limit: 10 },
+    { enabled: showLeaderboard }
+  );
+  const submitScoreMutation = trpc.leaderboard.submitScore.useMutation({
+    onSuccess: () => {
+      refetchLeaderboard();
+      toast.success("Score submitted to leaderboard!");
+    },
+    onError: () => {
+      // Silently fail - user might not be logged in
+    }
+  });
 
   // Filter and shuffle questions based on difficulty
   const gameQuestions = useMemo(() => {
@@ -390,6 +410,17 @@ export default function FinancialLiteracyGame() {
   const nextQuestion = () => {
     if (lives <= 0 || currentQuestionIndex >= gameQuestions.length - 1) {
       setGameState("result");
+      // Submit score to leaderboard
+      const correctCount = answers.filter(a => a.correct).length + (selectedAnswer === currentQuestion?.correctAnswer ? 1 : 0);
+      submitScoreMutation.mutate({
+        gameType: "financial-literacy",
+        score: score,
+        difficulty: difficulty,
+        correctAnswers: correctCount,
+        totalQuestions: gameQuestions.length,
+        maxStreak: maxStreak,
+        tokensEarned: tokensEarned,
+      });
       return;
     }
     
@@ -486,6 +517,69 @@ export default function FinancialLiteracyGame() {
           </Button>
         </div>
       </div>
+
+      {/* Leaderboard Button */}
+      <div className="text-center">
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => setShowLeaderboard(!showLeaderboard)}
+          className="gap-2"
+        >
+          <Trophy className="w-5 h-5 text-yellow-500" />
+          {showLeaderboard ? "Hide Leaderboard" : "View Leaderboard"}
+        </Button>
+      </div>
+
+      {/* Leaderboard Display */}
+      {showLeaderboard && (
+        <Card className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Trophy className="w-6 h-6 text-yellow-500" />
+            <h2 className="text-xl font-semibold">Top 10 Scores</h2>
+          </div>
+          {topScores && topScores.length > 0 ? (
+            <div className="space-y-2">
+              {topScores.map((entry, index) => (
+                <div
+                  key={entry.id}
+                  className={`flex items-center justify-between p-3 rounded-lg ${
+                    index === 0 ? "bg-yellow-50 border border-yellow-200" :
+                    index === 1 ? "bg-gray-50 border border-gray-200" :
+                    index === 2 ? "bg-orange-50 border border-orange-200" :
+                    "bg-muted/50"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="w-8 h-8 flex items-center justify-center font-bold text-lg">
+                      {index === 0 ? <Crown className="w-6 h-6 text-yellow-500" /> :
+                       index === 1 ? <Medal className="w-6 h-6 text-gray-400" /> :
+                       index === 2 ? <Award className="w-6 h-6 text-orange-400" /> :
+                       `#${entry.rank}`}
+                    </span>
+                    <div>
+                      <p className="font-medium">{entry.playerName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {entry.correctAnswers}/{entry.totalQuestions} correct • {entry.difficulty}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xl font-bold text-green-600">{entry.score}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(entry.completedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">
+              No scores yet. Be the first to play!
+            </p>
+          )}
+        </Card>
+      )}
     </div>
   );
 
