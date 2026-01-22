@@ -138,6 +138,11 @@ export default function GameCenter() {
   });
 
   const handlePlayGame = (gameSlug: string) => {
+    // Route to implemented games
+    if (gameSlug === "stock-sim" || gameSlug === "property-empire") {
+      window.location.href = "/games/financial-literacy";
+      return;
+    }
     toast.info(`Game "${gameSlug}" coming soon! Full gameplay implementation in progress.`);
   };
 

@@ -41,6 +41,7 @@ import HRManagement from "@/pages/HRManagement";
 import HRApplications from "@/pages/HRApplications";
 import HRDashboard from "@/pages/HRDashboard";
 import PerformanceReviews from "@/pages/PerformanceReviews";
+import FinancialLiteracyGame from "@/pages/FinancialLiteracyGame";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
 import Careers from "@/pages/Careers";
@@ -321,6 +322,7 @@ function Router() {
       <Route path="/creative-enterprise">{() => <ProtectedRoute component={CreativeEnterprise} minRole="staff" />}</Route>
       <Route path="/design-department">{() => <ProtectedRoute component={DesignDepartment} minRole="staff" />}</Route>
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
+      <Route path="/games/financial-literacy">{() => <ProtectedRoute component={FinancialLiteracyGame} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/purchase-requests">{() => <ProtectedRoute component={PurchaseRequests} minRole="staff" />}</Route>
       <Route path="/offer-letters">{() => <ProtectedRoute component={OfferLetters} minRole="staff" />}</Route>
