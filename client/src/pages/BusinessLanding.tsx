@@ -34,6 +34,7 @@ import {
   Sparkles,
   Heart,
   Scale,
+  Globe,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -606,6 +607,276 @@ export default function BusinessLanding() {
                     <p className="text-xs text-muted-foreground">{stage.desc}</p>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Partner/Affiliate Benefits Section */}
+        <section>
+          <div className="text-center mb-8">
+            <Badge className="mb-4 bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+              Partnership Benefits
+            </Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+              What You Get as a Partner/Affiliate
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              When you affiliate with the LuvOnPurpose Academy and Outreach Trust, your business becomes a "House" with access to powerful management tools and collective benefits.
+            </p>
+          </div>
+
+          {/* Partnership Process Flowchart */}
+          <Card className="mb-8 border-2 border-purple-200 dark:border-purple-800">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ArrowRight className="w-5 h-5 text-purple-600" />
+                How Partnership Works
+              </CardTitle>
+              <CardDescription>
+                A clear, step-by-step journey from application to full House activation
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="relative">
+                {/* Desktop Flowchart */}
+                <div className="hidden md:block">
+                  <div className="flex items-center justify-between relative">
+                    {/* Connecting Line */}
+                    <div className="absolute top-8 left-[10%] right-[10%] h-1 bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 z-0"></div>
+                    
+                    {[
+                      { step: "1", title: "Apply", desc: "Submit your business information and affiliation request", icon: FileText, color: "bg-purple-400" },
+                      { step: "2", title: "Review", desc: "Our team reviews your application for alignment", icon: Search, color: "bg-purple-500" },
+                      { step: "3", title: "Affiliate", desc: "Sign the Trust Affiliation Agreement", icon: Scale, color: "bg-purple-600" },
+                      { step: "4", title: "Activate House", desc: "Complete Genesis ceremony and token chain initialization", icon: Flame, color: "bg-purple-700" },
+                      { step: "5", title: "Access Features", desc: "Full access to House Management System", icon: Crown, color: "bg-purple-800" },
+                    ].map((item, idx) => (
+                      <div key={idx} className="relative z-10 flex flex-col items-center text-center w-1/5">
+                        <div className={`w-16 h-16 rounded-full ${item.color} flex items-center justify-center shadow-lg mb-3`}>
+                          <item.icon className="w-7 h-7 text-white" />
+                        </div>
+                        <Badge variant="outline" className="mb-1 bg-background">Step {item.step}</Badge>
+                        <h4 className="font-semibold text-sm mb-1">{item.title}</h4>
+                        <p className="text-xs text-muted-foreground px-2">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Mobile Flowchart */}
+                <div className="md:hidden space-y-4">
+                  {[
+                    { step: "1", title: "Apply", desc: "Submit your business information and affiliation request", icon: FileText },
+                    { step: "2", title: "Review", desc: "Our team reviews your application for alignment", icon: Search },
+                    { step: "3", title: "Affiliate", desc: "Sign the Trust Affiliation Agreement", icon: Scale },
+                    { step: "4", title: "Activate House", desc: "Complete Genesis ceremony and token chain initialization", icon: Flame },
+                    { step: "5", title: "Access Features", desc: "Full access to House Management System", icon: Crown },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-4 p-4 rounded-lg bg-muted/50">
+                      <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
+                        <item.icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge variant="outline" className="text-xs">Step {item.step}</Badge>
+                          <h4 className="font-semibold text-sm">{item.title}</h4>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Trust Structure Visual */}
+          <Card className="mb-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-green-600" />
+                Trust Structure: How It Works
+              </CardTitle>
+              <CardDescription>
+                LuvOnPurpose Academy and Outreach is a 508(c)(1)(a) Trust that serves as the umbrella for all affiliated Houses
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col items-center">
+                {/* Trust at top */}
+                <div className="p-4 rounded-xl bg-green-600 text-white text-center mb-4 w-full max-w-md">
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    <Crown className="w-5 h-5" />
+                    <span className="font-bold">LuvOnPurpose Academy and Outreach</span>
+                  </div>
+                  <p className="text-xs text-green-100">508(c)(1)(a) Trust • Tax-Exempt • Asset Protection</p>
+                </div>
+                
+                {/* Connecting lines */}
+                <div className="flex items-center justify-center gap-8 mb-4">
+                  <div className="w-px h-8 bg-green-400"></div>
+                </div>
+                
+                {/* Functions row */}
+                <div className="grid grid-cols-3 gap-4 mb-4 w-full max-w-2xl">
+                  <div className="p-3 rounded-lg bg-green-100 dark:bg-green-900/30 text-center">
+                    <BookOpen className="w-5 h-5 mx-auto mb-1 text-green-600" />
+                    <p className="text-xs font-medium">Academy</p>
+                    <p className="text-xs text-muted-foreground">Education & Training</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-green-100 dark:bg-green-900/30 text-center">
+                    <Heart className="w-5 h-5 mx-auto mb-1 text-green-600" />
+                    <p className="text-xs font-medium">Outreach</p>
+                    <p className="text-xs text-muted-foreground">Community Programs</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-green-100 dark:bg-green-900/30 text-center">
+                    <Globe className="w-5 h-5 mx-auto mb-1 text-green-600" />
+                    <p className="text-xs font-medium">Foreign Ops</p>
+                    <p className="text-xs text-muted-foreground">International Partnerships</p>
+                  </div>
+                </div>
+                
+                {/* Connecting lines to houses */}
+                <div className="flex items-center justify-center gap-8 mb-4">
+                  <div className="w-px h-8 bg-green-400"></div>
+                </div>
+                
+                {/* Houses row */}
+                <div className="grid grid-cols-4 gap-3 w-full max-w-2xl">
+                  {["House 1", "House 2", "House 3", "House N..."].map((house, i) => (
+                    <div key={i} className="p-3 rounded-lg bg-background border border-green-200 dark:border-green-800 text-center">
+                      <Home className="w-4 h-4 mx-auto mb-1 text-green-600" />
+                      <p className="text-xs font-medium">{house}</p>
+                      <p className="text-xs text-muted-foreground">LLC/Corp</p>
+                    </div>
+                  ))}
+                </div>
+                
+                <p className="text-xs text-muted-foreground mt-4 text-center max-w-md">
+                  Each House maintains its own legal identity while benefiting from Trust umbrella protection, foreign operation access, and collective resources.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* House Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {[
+              {
+                icon: Home,
+                title: "Dedicated House Dashboard",
+                desc: "Your own command center for managing all House operations, finances, and team members",
+                features: ["Real-time analytics", "Operation monitoring", "Team management"],
+              },
+              {
+                icon: FileText,
+                title: "LuvLedger Blockchain Recording",
+                desc: "Every transaction, decision, and milestone is immutably recorded on the LuvLedger blockchain",
+                features: ["Immutable records", "Audit trail", "Verification system"],
+              },
+              {
+                icon: Coins,
+                title: "Token Economy Participation",
+                desc: "Earn and use MIRROR, GIFT, SPARK, and HOUSE tokens within the ecosystem",
+                features: ["Token earning", "Redemption system", "Crypto conversion"],
+              },
+              {
+                icon: Scale,
+                title: "Governance Voting Rights",
+                desc: "Participate in collective decisions that shape the direction of the trust and ecosystem",
+                features: ["Proposal voting", "Policy input", "Board participation"],
+              },
+              {
+                icon: TrendingUp,
+                title: "Distribution Framework Access",
+                desc: "Benefit from the 70/30 and 60/40 distribution models for sustainable wealth building",
+                features: ["Revenue sharing", "Profit distribution", "Reinvestment pools"],
+              },
+              {
+                icon: Users,
+                title: "Heir Designation Tools",
+                desc: "Plan for generational wealth transfer with built-in succession and heir management",
+                features: ["Successor naming", "Transition planning", "Legacy protection"],
+              },
+              {
+                icon: Shield,
+                title: "Compliance Tracking",
+                desc: "Automated reminders and tracking for all regulatory filings and deadlines",
+                features: ["Deadline alerts", "Filing tracking", "Multi-state support"],
+              },
+              {
+                icon: Lock,
+                title: "Secure Document Vault",
+                desc: "Store and manage all business documents with role-based access control",
+                features: ["Encrypted storage", "Version control", "Access logs"],
+              },
+              {
+                icon: Zap,
+                title: "Autonomous Operations Support",
+                desc: "AI-powered business operations that run automatically with human oversight",
+                features: ["Auto-decisions", "Smart workflows", "Human approval gates"],
+              },
+              {
+                icon: Globe,
+                title: "Foreign Business Operations",
+                desc: "Access international markets through Trust-established foreign partnerships and subsidiaries",
+                features: ["Global market access", "International banking", "Cross-border operations"],
+              },
+              {
+                icon: Building2,
+                title: "Trust Umbrella Protection",
+                desc: "Operate under the 508(c)(1)(a) Trust umbrella while maintaining your own legal entity",
+                features: ["Tax-exempt benefits", "Collective resources", "Shared services"],
+              },
+            ].map((feature, idx) => (
+              <Card key={idx} className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30">
+                      <feature.icon className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <CardTitle className="text-base">{feature.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">{feature.desc}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {feature.features.map((f, i) => (
+                      <Badge key={i} variant="secondary" className="text-xs">
+                        {f}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* CTA for Partnership */}
+          <Card className="bg-gradient-to-r from-purple-600 to-purple-800 text-white border-0">
+            <CardContent className="py-8">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Ready to Become a Partner?</h3>
+                  <p className="text-purple-100 text-sm">
+                    Join the LuvOnPurpose ecosystem and unlock the full power of the House Management System.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/genesis">
+                    <Button size="lg" className="bg-white text-purple-800 hover:bg-purple-50 gap-2">
+                      <Flame className="w-5 h-5" />
+                      Start Partnership
+                    </Button>
+                  </Link>
+                  <Link href="/contact">
+                    <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 gap-2">
+                      <Users className="w-5 h-5" />
+                      Contact Us
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </CardContent>
           </Card>

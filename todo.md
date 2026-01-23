@@ -5953,3 +5953,23 @@ Three main approaches available:
 - [ ] Add "Join as Existing Business" option to Business Landing page
 - [ ] Create onboarding wizard for established businesses to affiliate with trust
 - [ ] Ensure legal compliance with affiliation model (no ownership transfer required)
+
+
+## Phase: Partner/Affiliate Benefits Section
+- [ ] Create "What Partners Get" section on Business Landing page
+- [ ] Show House Management System features available to affiliates
+- [ ] Include: Dedicated House Dashboard, LuvLedger Blockchain Recording, Token Economy Participation
+- [ ] Include: Governance Voting Rights, Distribution Framework Access, Heir Designation Tools
+- [ ] Include: Compliance Tracking, Document Vault, Autonomous Operations Support
+- [ ] Create visual flowchart showing partnership process (Apply → Review → Affiliate → Activate House → Access Features)
+- [ ] Add step-by-step partnership journey visualization
+- [ ] Show benefits comparison between Independent vs Affiliated operations
+
+
+## Phase: Trust Structure Clarification & Foreign Operations
+- [x] Clarify that LuvOnPurpose Academy and Outreach IS the 508(c)(1)(a) Trust
+- [x] Academy is a function within the Trust, not a separate gateway
+- [x] Businesses affiliate directly with the Trust to become Houses
+- [x] Add foreign business operations as a flow-down benefit from Trust to Houses
+- [x] Update Partner/Affiliate Benefits section with international capabilities
+- [x] Add visual showing Trust umbrella with Houses underneath
