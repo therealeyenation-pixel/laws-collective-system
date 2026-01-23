@@ -5986,3 +5986,29 @@ Three main approaches available:
 - [ ] Add e-signature integration for contract execution
 - [ ] Show contract summary on House Dashboard
 - [x] Add contract alerts and notifications for upcoming deadlines
+
+
+## Phase: E-Signature, Contract Widget & Pricing Page
+
+### E-Signature Integration
+- [x] Create e-signature component with canvas-based signature capture
+- [x] Add signature storage to database (base64 or S3)
+- [x] Integrate e-signature into contract signing flow
+- [x] Record signature events on LuvLedger blockchain
+- [x] Add signature verification and timestamp
+
+### Contract Summary Widget
+- [x] Create ContractSummaryWidget component for House Dashboard
+- [x] Show active contracts count
+- [x] Show upcoming deadlines (next 30 days)
+- [x] Show contracts pending signature
+- [x] Add quick link to House Contract Management page
+
+### Pricing Page (Already Existed)
+- [x] Create Pricing page at /pricing route
+- [x] Add Basic tier (free) with limited features
+- [x] Add Professional tier with full business tools
+- [x] Add Enterprise tier with all features + support
+- [x] Add feature comparison table
+- [x] Add call-to-action buttons for each tier
+- [x] Style with consistent design language

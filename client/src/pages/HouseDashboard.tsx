@@ -2,6 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
+import { ContractSummaryWidget } from "@/components/ContractSummaryWidget";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -242,6 +243,9 @@ export default function HouseDashboard() {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Contract Summary Widget */}
+            <ContractSummaryWidget className="" />
 
             {/* House Identity Card */}
             <Card>

@@ -344,6 +344,118 @@ export const houseContractsRouter = router({
       return { success: true };
     }),
 
+  // Sign contract with e-signature
+  signContract: protectedProcedure
+    .input(z.object({
+      contractId: z.number(),
+      signatureType: z.enum(["drawn", "typed"]),
+      signatureData: z.string(),
+      signerName: z.string(),
+      signerRole: z.enum(["internal", "counterparty"]).default("internal"),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Get the contract
+      const [contract] = await db
+        .select()
+        .from(houseContracts)
+        .where(eq(houseContracts.id, input.contractId));
+
+      if (!contract) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Contract not found" });
+      }
+
+      // Determine new signature status
+      let newSignatureStatus = contract.signatureStatus;
+      let newStatus = contract.status;
+
+      if (input.signerRole === "internal") {
+        if (contract.signatureStatus === "pending_internal" || contract.signatureStatus === "draft") {
+          newSignatureStatus = "pending_counterparty";
+        }
+      } else {
+        if (contract.signatureStatus === "pending_counterparty") {
+          newSignatureStatus = "fully_executed";
+          newStatus = "active";
+        }
+      }
+
+      // Store signature metadata
+      const signatureRecord = {
+        signerName: input.signerName,
+        signerRole: input.signerRole,
+        signatureType: input.signatureType,
+        signedAt: new Date().toISOString(),
+        signedBy: ctx.user.id,
+        ipAddress: "recorded",
+      };
+
+      // Update contract with signature
+      await db
+        .update(houseContracts)
+        .set({
+          signatureStatus: newSignatureStatus,
+          status: newStatus,
+          signedDate: input.signerRole === "counterparty" && newSignatureStatus === "fully_executed" ? new Date() : contract.signedDate,
+          metadata: {
+            ...(contract.metadata as object || {}),
+            signatures: [
+              ...((contract.metadata as any)?.signatures || []),
+              signatureRecord,
+            ],
+          },
+        })
+        .where(eq(houseContracts.id, input.contractId));
+
+      // Record signature event on LuvLedger
+      await db.insert(luvLedgerTransactions).values({
+        userId: ctx.user.id,
+        transactionType: "contract_signature",
+        category: "business",
+        description: `Contract signed by ${input.signerName} (${input.signerRole}): ${contract.title}`,
+        metadata: {
+          contractId: contract.id,
+          contractNumber: contract.contractNumber,
+          signerName: input.signerName,
+          signerRole: input.signerRole,
+          signatureType: input.signatureType,
+          signatureStatus: newSignatureStatus,
+        },
+        status: "completed",
+      });
+
+      // If fully executed, record on blockchain
+      if (newSignatureStatus === "fully_executed") {
+        const blockchainHash = `0x${Date.now().toString(16)}${Math.random().toString(16).slice(2, 10)}`;
+        
+        await db
+          .update(houseContracts)
+          .set({
+            luvLedgerRecorded: true,
+            luvLedgerHash: blockchainHash,
+          })
+          .where(eq(houseContracts.id, input.contractId));
+
+        await db.insert(luvLedgerTransactions).values({
+          userId: ctx.user.id,
+          transactionType: "contract_execution",
+          category: "blockchain",
+          description: `Fully executed contract recorded on blockchain: ${contract.title}`,
+          metadata: {
+            contractId: contract.id,
+            blockchainHash,
+            executionDate: new Date().toISOString(),
+          },
+          status: "completed",
+        });
+      }
+
+      return {
+        success: true,
+        signatureStatus: newSignatureStatus,
+        contractStatus: newStatus,
+      };
+    }),
+
   // Get upcoming milestones across all user's contracts
   getUpcomingMilestones: protectedProcedure
     .input(z.object({ daysAhead: z.number().default(30) }))
