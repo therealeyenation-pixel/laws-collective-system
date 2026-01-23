@@ -5856,3 +5856,16 @@ Three main approaches available:
 - [x] Add filing timeline tab with pre/post registration phases
 - [x] Add compliance/trademark/filing event types to Company Calendar
 - [x] Link trademark status to entity cards (status badges, progress bars)
+
+
+## Phase: Legal Entity Navigation Restructure (COMPLETED)
+- [x] Move Design Department from L.A.W.S. Collective to Real-Eye-Nation LLC
+- [x] Remove duplicate Design section from L.A.W.S. Collective (replaced with Marketing)
+- [x] Add Marketing Department to L.A.W.S. Collective (strategy, campaigns, lead tracking)
+- [x] Update Real Eye section with full Design capabilities (Design + Operations subcategories)
+- [x] Create Marketing Dashboard page (/dept/marketing)
+- [ ] Create Marketing Plan Builder page (pulls from Business Plan) - future
+- [ ] Add Marketing Simulator - future
+- [x] Ensure proper entity separation in navigation structure
+- [x] Added Real-Eye-Nation notice on Marketing Dashboard for design request workflow
+

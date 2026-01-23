@@ -38,7 +38,8 @@ import {
   Gamepad2, ChevronRight, ShoppingCart, FileSignature, FolderOpen,
   CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye,
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
-  Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck
+  Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
+  Target, TrendingUp
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -124,17 +125,40 @@ const menuCategories: MenuCategory[] = [
     ]
   },
 
-  // REAL EYE - Media/Creative Entity
+  // REAL-EYE-NATION LLC - Media/Creative Entity (GA - EIN: 84-4976416)
   {
     icon: Eye,
-    label: "Real Eye",
+    label: "Real-Eye-Nation",
     minRole: "staff",
     defaultOpen: false,
-    items: [
-      { icon: Eye, label: "Real Eye Dashboard", path: "/real-eye-dashboard", minRole: "staff" },
-      { icon: Palette, label: "Design Department", path: "/design-department", minRole: "staff" },
-      { icon: Music, label: "Creative Enterprise", path: "/creative-enterprise", minRole: "staff" },
-      { icon: Share2, label: "Social Media", path: "/social-media", minRole: "staff" },
+    subCategories: [
+      // Real Eye Operations
+      {
+        icon: Eye,
+        label: "Operations",
+        minRole: "staff",
+        items: [
+          { icon: Eye, label: "Real Eye Dashboard", path: "/real-eye-dashboard", minRole: "staff" },
+          { icon: Music, label: "Creative Enterprise", path: "/creative-enterprise", minRole: "staff" },
+          { icon: Video, label: "Documentary Production", path: "/documentary-production", minRole: "staff" },
+          { icon: Music, label: "Podcast Network", path: "/podcast-network", minRole: "staff" },
+          { icon: Share2, label: "Social Media", path: "/social-media", minRole: "staff" },
+        ]
+      },
+      // Design Department (serves Real Eye and external clients)
+      {
+        icon: Palette,
+        label: "Design",
+        minRole: "staff",
+        items: [
+          { icon: Palette, label: "Design Dashboard", path: "/dept/design", minRole: "staff" },
+          { icon: Palette, label: "Brand Assets", path: "/brand-assets", minRole: "staff" },
+          { icon: Palette, label: "Client Projects", path: "/design-projects", minRole: "staff" },
+          { icon: Play, label: "Design Simulator", path: "/design-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/design-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/design-documents", minRole: "staff" },
+        ]
+      },
     ]
   },
 
@@ -216,17 +240,19 @@ const menuCategories: MenuCategory[] = [
           { icon: FolderOpen, label: "Documents", path: "/education-documents", minRole: "staff" },
         ]
       },
-      // Design Department (Essence M. Hunter)
+      // Marketing Department (contracts with Real-Eye-Nation for creative)
       {
-        icon: Palette,
-        label: "Design",
+        icon: TrendingUp,
+        label: "Marketing",
         minRole: "staff",
         items: [
-          { icon: Palette, label: "Design Dashboard", path: "/dept/design", minRole: "staff" },
-          { icon: Palette, label: "Brand Assets", path: "/brand-assets", minRole: "staff" },
-          { icon: Play, label: "Design Simulator", path: "/design-simulator", minRole: "staff" },
-          { icon: Users, label: "Team", path: "/design-team", minRole: "staff" },
-          { icon: FolderOpen, label: "Documents", path: "/design-documents", minRole: "staff" },
+          { icon: TrendingUp, label: "Marketing Dashboard", path: "/dept/marketing", minRole: "staff" },
+          { icon: Target, label: "Marketing Strategy", path: "/marketing-strategy", minRole: "staff" },
+          { icon: BarChart3, label: "Campaigns", path: "/marketing-campaigns", minRole: "staff" },
+          { icon: Users, label: "Lead Tracking", path: "/lead-tracking", minRole: "staff" },
+          { icon: Play, label: "Marketing Simulator", path: "/marketing-simulator", minRole: "staff" },
+          { icon: Users, label: "Team", path: "/marketing-team", minRole: "staff" },
+          { icon: FolderOpen, label: "Documents", path: "/marketing-documents", minRole: "staff" },
         ]
       },
       // Media Department (Amandes Pearsall IV)
