@@ -12,6 +12,7 @@ import { sdk } from "./sdk";
 import { getDb } from "../db";
 import { users } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
+import { handleStripeWebhook } from "../stripe/webhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -38,6 +39,9 @@ async function startServer() {
   
   // Trust proxy for proper HTTPS detection behind load balancers/proxies
   app.set("trust proxy", 1);
+  
+  // Stripe webhook - MUST be before body parser to get raw body
+  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
   
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));

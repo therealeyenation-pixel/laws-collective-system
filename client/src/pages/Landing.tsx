@@ -23,6 +23,8 @@ import {
   Loader2,
   Menu,
   X,
+  Crown,
+  Sparkles,
 } from "lucide-react";
 
 export default function Landing() {
@@ -131,6 +133,73 @@ export default function Landing() {
     },
   ];
 
+  const membershipTiers = [
+    {
+      name: "Community Member",
+      price: "Free",
+      period: "",
+      description: "Start your journey with access to basic resources",
+      features: [
+        "L.A.W.S. Framework introduction",
+        "Community forum access",
+        "Basic financial literacy content",
+        "Newsletter updates",
+      ],
+      cta: "Join Free",
+      popular: false,
+    },
+    {
+      name: "Academy Member",
+      price: "$29",
+      period: "/month",
+      description: "Full access to education and training programs",
+      features: [
+        "All Community features",
+        "Complete Academy curriculum",
+        "Business simulators",
+        "Certificate programs",
+        "Live workshops",
+        "Priority support",
+      ],
+      cta: "Start Learning",
+      popular: true,
+    },
+    {
+      name: "House Builder",
+      price: "$99",
+      period: "/month",
+      description: "Build your family's sovereign business structure",
+      features: [
+        "All Academy features",
+        "House registration & setup",
+        "Trust formation guidance",
+        "Business entity creation",
+        "Document vault (unlimited)",
+        "Revenue tracking dashboard",
+        "1-on-1 consultation (monthly)",
+      ],
+      cta: "Build Your House",
+      popular: false,
+    },
+    {
+      name: "Founding Member",
+      price: "$299",
+      period: "/month",
+      description: "Full partnership with governance rights",
+      features: [
+        "All House Builder features",
+        "Decision Board voting rights",
+        "Network Pool participation",
+        "Branded merchandise discounts",
+        "Grant application support",
+        "Dedicated success manager",
+        "Early access to new features",
+      ],
+      cta: "Become a Founder",
+      popular: false,
+    },
+  ];
+
   const services = [
     "Trust & Entity Formation",
     "Business Plan Development",
@@ -159,6 +228,8 @@ export default function Landing() {
             <div className="hidden md:flex items-center gap-8">
               <a href="#about" className="text-stone-600 hover:text-stone-900 transition">About</a>
               <a href="#services" className="text-stone-600 hover:text-stone-900 transition">Services</a>
+              <a href="#pricing" className="text-stone-600 hover:text-stone-900 transition">Pricing</a>
+              <Link href="/shop" className="text-stone-600 hover:text-stone-900 transition">Shop</Link>
               <a href="#laws" className="text-stone-600 hover:text-stone-900 transition">L.A.W.S.</a>
               <a href="#contact" className="text-stone-600 hover:text-stone-900 transition">Contact</a>
               <a href={getLoginUrl("/dashboard")}>
@@ -183,6 +254,8 @@ export default function Landing() {
               <div className="flex flex-col gap-4">
                 <a href="#about" className="text-stone-600 hover:text-stone-900">About</a>
                 <a href="#services" className="text-stone-600 hover:text-stone-900">Services</a>
+                <a href="#pricing" className="text-stone-600 hover:text-stone-900">Pricing</a>
+                <Link href="/shop" className="text-stone-600 hover:text-stone-900">Shop</Link>
                 <a href="#laws" className="text-stone-600 hover:text-stone-900">L.A.W.S.</a>
                 <a href="#contact" className="text-stone-600 hover:text-stone-900">Contact</a>
                 <a href={getLoginUrl("/dashboard")}>
@@ -303,8 +376,63 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-stone-900">
+              Choose Your Path to Sovereignty
+            </h2>
+            <p className="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
+              Start free and grow at your own pace. Every tier builds on the previous one.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {membershipTiers.map((tier, index) => (
+              <Card 
+                key={index} 
+                className={`p-6 relative ${tier.popular ? 'border-2 border-green-500 shadow-lg' : ''}`}
+              >
+                {tier.popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" /> Most Popular
+                    </span>
+                  </div>
+                )}
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-semibold text-stone-900">{tier.name}</h3>
+                  <div className="mt-4">
+                    <span className="text-4xl font-bold text-stone-900">{tier.price}</span>
+                    <span className="text-stone-500">{tier.period}</span>
+                  </div>
+                  <p className="mt-2 text-sm text-stone-600">{tier.description}</p>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  {tier.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-stone-600">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a href={getLoginUrl("/dashboard")}>
+                  <Button 
+                    className={`w-full ${tier.popular ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                    variant={tier.popular ? 'default' : 'outline'}
+                  >
+                    {tier.cta}
+                  </Button>
+                </a>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* L.A.W.S. Framework Section */}
-      <section id="laws" className="py-20 bg-white">
+      <section id="laws" className="py-20 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-stone-900">

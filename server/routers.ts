@@ -126,6 +126,7 @@ import { autoDiagnosticRouter } from "./routers/auto-diagnostic";
 import { investorManagementRouter } from "./routers/investor-management";
 import { houseDocumentsRouter } from "./routers/house-documents";
 import { revenueFlowRouter } from "./routers/revenue-flow";
+import { paymentsRouter } from "./routers/payments";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -264,6 +265,7 @@ export const appRouter = router({
   investorManagement: investorManagementRouter,
   houseDocuments: houseDocumentsRouter,
   revenueFlow: revenueFlowRouter,
+  payments: paymentsRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

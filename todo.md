@@ -6070,3 +6070,15 @@ Three main approaches available:
 - [x] Add ChatWidget to TrustDashboard
 - [x] Add MeetingWidget to BusinessDashboard
 - [x] Add ChatWidget to BusinessDashboard
+
+## L.A.W.S. Collective 90% Functionality (Priority Focus)
+- [x] Polish public landing page with clear CTA for member signup
+- [ ] Add Stripe payment integration for merchandise/memberships
+- [ ] Create merchandise store page with product catalog
+- [ ] Build shopping cart and checkout flow
+- [ ] Create member onboarding wizard (signup → House registration)
+- [ ] Add membership tiers with pricing
+- [ ] Create member dashboard showing House status and revenue
+- [ ] Connect merchandise purchases to revenue flow system
+- [ ] Test complete member journey in sandbox
+- [ ] Verify revenue → split → distribution cycle works end-to-end

@@ -18,6 +18,9 @@ import HouseDashboard from "./pages/HouseDashboard";
 import OwnerHouseSetup from "./pages/OwnerHouseSetup";
 import GenesisCeremony from "./pages/GenesisCeremony";
 import Landing from "./pages/Landing";
+import Shop from "./pages/Shop";
+import MemberOnboarding from "./pages/MemberOnboarding";
+import RevenueCycleDashboard from "./pages/RevenueCycleDashboard";
 import BankingCredit from "./pages/BankingCredit";
 import BusinessFormation from "./pages/BusinessFormation";
 import PositionManagement from "./pages/PositionManagement";
@@ -347,6 +350,9 @@ function Router() {
       
       {/* Business Landing */}
       <Route path="/business-landing">{() => <BusinessLanding />}</Route>
+      <Route path="/shop">{() => <Shop />}</Route>
+      <Route path="/onboard">{() => <ProtectedRoute component={MemberOnboarding} minRole="user" />}</Route>
+      <Route path="/revenue-cycle">{() => <ProtectedRoute component={RevenueCycleDashboard} minRole="admin" />}</Route>
 
       {/* Department Dashboards */}
       <Route path="/dept/business">{() => <ProtectedRoute component={BusinessDashboard} minRole="staff" />}</Route>
