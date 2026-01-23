@@ -89,6 +89,7 @@ import Scholarships from "./pages/Scholarships";
 import CreativeEnterprise from "./pages/CreativeEnterprise";
 import DesignDepartment from "./pages/DesignDepartment";
 import GameCenter from "./pages/GameCenter";
+import Sandbox from "./pages/Sandbox";
 import SoftwareLicenses from "./pages/SoftwareLicenses";
 import PurchaseRequests from "./pages/PurchaseRequests";
 import TaxModule from "./pages/TaxModule";
@@ -324,6 +325,7 @@ function Router() {
       <Route path="/creative-enterprise">{() => <ProtectedRoute component={CreativeEnterprise} minRole="staff" />}</Route>
       <Route path="/design-department">{() => <ProtectedRoute component={DesignDepartment} minRole="staff" />}</Route>
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
+      <Route path="/sandbox">{() => <ProtectedRoute component={Sandbox} minRole="user" />}</Route>
       <Route path="/games/financial-literacy">{() => <ProtectedRoute component={FinancialLiteracyGame} minRole="user" />}</Route>
       <Route path="/games/business-tycoon">{() => <ProtectedRoute component={BusinessTycoonGame} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>

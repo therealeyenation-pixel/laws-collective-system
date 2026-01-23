@@ -12649,3 +12649,146 @@ export const splitConfigurationHistory = mysqlTable("split_configuration_history
 
 export type SplitConfigurationHistory = typeof splitConfigurationHistory.$inferSelect;
 export type InsertSplitConfigurationHistory = typeof splitConfigurationHistory.$inferInsert;
+
+
+// ============================================
+// SANDBOX ENVIRONMENT TABLES
+// ============================================
+
+/**
+ * Sandbox sessions for testing system features
+ * Allows users to experiment without affecting production data
+ */
+export const sandboxSessions = mysqlTable("sandbox_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  sessionName: varchar("sessionName", { length: 255 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["active", "paused", "completed", "expired"]).default("active").notNull(),
+  sandboxType: mysqlEnum("sandboxType", [
+    "financial", // Test financial operations, splits, allocations
+    "business", // Test business entity operations
+    "game", // Test game mechanics and achievements
+    "curriculum", // Test curriculum and course generation
+    "full" // Full system sandbox
+  ]).default("full").notNull(),
+  // Sandbox configuration
+  initialBalance: decimal("initialBalance", { precision: 15, scale: 2 }).default("100000.00"),
+  timeMultiplier: decimal("timeMultiplier", { precision: 5, scale: 2 }).default("1.00"), // Speed up time for testing
+  enabledFeatures: json("enabledFeatures").$type<string[]>(), // Which features are enabled
+  // Sandbox state
+  currentBalance: decimal("currentBalance", { precision: 15, scale: 2 }).default("100000.00"),
+  totalTransactions: int("totalTransactions").default(0),
+  totalOperations: int("totalOperations").default(0),
+  // Timestamps
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  lastActivityAt: timestamp("lastActivityAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/**
+ * Sandbox transactions - isolated from production
+ */
+export const sandboxTransactions = mysqlTable("sandbox_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  userId: int("userId").notNull(),
+  transactionType: mysqlEnum("transactionType", [
+    "deposit", "withdrawal", "transfer", "split_allocation",
+    "token_earn", "token_spend", "investment", "dividend",
+    "fee", "refund", "adjustment"
+  ]).notNull(),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  balanceBefore: decimal("balanceBefore", { precision: 15, scale: 2 }).notNull(),
+  balanceAfter: decimal("balanceAfter", { precision: 15, scale: 2 }).notNull(),
+  description: text("description"),
+  metadata: json("metadata"),
+  // Reference to what triggered this transaction
+  sourceType: varchar("sourceType", { length: 100 }),
+  sourceId: varchar("sourceId", { length: 100 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+/**
+ * Sandbox entities - test business entities
+ */
+export const sandboxEntities = mysqlTable("sandbox_entities", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  userId: int("userId").notNull(),
+  entityName: varchar("entityName", { length: 255 }).notNull(),
+  entityType: mysqlEnum("entityType", ["trust", "llc", "corporation", "collective", "508c1a"]).notNull(),
+  status: mysqlEnum("status", ["draft", "active", "paused", "archived"]).default("active").notNull(),
+  balance: decimal("balance", { precision: 15, scale: 2 }).default("0.00"),
+  // Sandbox-specific settings
+  interHouseSplit: int("interHouseSplit").default(60), // 60% house, 40% collective
+  intraHouseSplit: int("intraHouseSplit").default(70), // 70% house, 30% inheritance
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/**
+ * Sandbox operations log - track all sandbox activities
+ */
+export const sandboxOperations = mysqlTable("sandbox_operations", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  userId: int("userId").notNull(),
+  operationType: varchar("operationType", { length: 100 }).notNull(),
+  operationName: varchar("operationName", { length: 255 }).notNull(),
+  inputData: json("inputData"),
+  outputData: json("outputData"),
+  status: mysqlEnum("status", ["pending", "success", "failed", "rolled_back"]).default("pending").notNull(),
+  errorMessage: text("errorMessage"),
+  executionTimeMs: int("executionTimeMs"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+/**
+ * Sandbox snapshots - save and restore sandbox states
+ */
+export const sandboxSnapshots = mysqlTable("sandbox_snapshots", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  userId: int("userId").notNull(),
+  snapshotName: varchar("snapshotName", { length: 255 }).notNull(),
+  description: text("description"),
+  // Snapshot data
+  sessionState: json("sessionState").notNull(), // Full session state
+  entitiesState: json("entitiesState"), // All sandbox entities
+  transactionsCount: int("transactionsCount").default(0),
+  operationsCount: int("operationsCount").default(0),
+  // Metadata
+  isAutoSave: boolean("isAutoSave").default(false),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+/**
+ * Sandbox templates - pre-configured sandbox scenarios
+ */
+export const sandboxTemplates = mysqlTable("sandbox_templates", {
+  id: int("id").autoincrement().primaryKey(),
+  templateName: varchar("templateName", { length: 255 }).notNull(),
+  description: text("description"),
+  sandboxType: mysqlEnum("sandboxType", [
+    "financial", "business", "game", "curriculum", "full"
+  ]).default("full").notNull(),
+  // Template configuration
+  initialBalance: decimal("initialBalance", { precision: 15, scale: 2 }).default("100000.00"),
+  timeMultiplier: decimal("timeMultiplier", { precision: 5, scale: 2 }).default("1.00"),
+  enabledFeatures: json("enabledFeatures").$type<string[]>(),
+  preloadedEntities: json("preloadedEntities"), // Entities to create on start
+  preloadedScenarios: json("preloadedScenarios"), // Scenarios to run
+  // Template metadata
+  difficulty: mysqlEnum("difficulty", ["beginner", "intermediate", "advanced", "expert"]).default("beginner"),
+  estimatedDuration: int("estimatedDuration"), // Minutes
+  learningObjectives: json("learningObjectives").$type<string[]>(),
+  isPublic: boolean("isPublic").default(true),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
