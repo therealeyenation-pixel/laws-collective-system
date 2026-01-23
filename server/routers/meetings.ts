@@ -73,6 +73,12 @@ export const meetingsRouter = router({
         name: z.string().optional(),
         role: z.enum(["co_host", "presenter", "attendee"]).default("attendee"),
       })).optional(),
+      // Entity context for linking to Trust/Business dashboards
+      houseId: z.number().optional(),
+      trustId: z.number().optional(),
+      businessId: z.number().optional(),
+      entityType: z.enum(["house", "trust", "business", "network", "general"]).default("general"),
+      entityName: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
@@ -80,7 +86,7 @@ export const meetingsRouter = router({
 
       const roomName = generateRoomName();
       
-      // Create the meeting
+      // Create the meeting with entity context
       const [result] = await db.insert(meetings).values({
         title: input.title,
         description: input.description,
@@ -93,6 +99,11 @@ export const meetingsRouter = router({
         isRecorded: input.isRecorded,
         waitingRoomEnabled: input.waitingRoomEnabled,
         maxParticipants: input.maxParticipants,
+        houseId: input.houseId || null,
+        trustId: input.trustId || null,
+        businessId: input.businessId || null,
+        entityType: input.entityType || "general",
+        entityName: input.entityName || null,
       });
       
       const meetingId = Number((result as any).insertId);
@@ -946,6 +957,127 @@ export const meetingsRouter = router({
       `);
 
       return { success: true, proposalId, proposalNumber };
+    }),
+
+  // Get meetings by entity (House, Trust, or Business)
+  getByEntity: protectedProcedure
+    .input(z.object({
+      entityType: z.enum(["house", "trust", "business", "network", "general"]),
+      entityId: z.number().optional(),
+      limit: z.number().min(1).max(100).default(20),
+      offset: z.number().min(0).default(0),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return { meetings: [], total: 0 };
+
+      let query = `
+        SELECT m.*, u.name as hostName, u.email as hostEmail
+        FROM meetings m
+        LEFT JOIN users u ON m.hostId = u.id
+        WHERE m.entityType = ?
+      `;
+      const params: any[] = [input.entityType];
+
+      if (input.entityId) {
+        if (input.entityType === 'house') {
+          query += ` AND m.house_id = ?`;
+        } else if (input.entityType === 'trust') {
+          query += ` AND m.trust_id = ?`;
+        } else if (input.entityType === 'business') {
+          query += ` AND m.business_id = ?`;
+        }
+        params.push(input.entityId);
+      }
+
+      query += ` ORDER BY m.scheduledAt DESC LIMIT ? OFFSET ?`;
+      params.push(input.limit, input.offset);
+
+      const result = await db.execute(sql.raw(query, params));
+      const meetingsList = (result[0] as any[]) || [];
+
+      // Get total count
+      let countQuery = `SELECT COUNT(*) as total FROM meetings WHERE entityType = ?`;
+      const countParams: any[] = [input.entityType];
+      if (input.entityId) {
+        if (input.entityType === 'house') countQuery += ` AND house_id = ?`;
+        else if (input.entityType === 'trust') countQuery += ` AND trust_id = ?`;
+        else if (input.entityType === 'business') countQuery += ` AND business_id = ?`;
+        countParams.push(input.entityId);
+      }
+      const countResult = await db.execute(sql.raw(countQuery, countParams));
+      const total = (countResult[0] as any[])?.[0]?.total || 0;
+
+      return { meetings: meetingsList, total };
+    }),
+
+  // Get upcoming meetings for a specific House
+  getHouseMeetings: protectedProcedure
+    .input(z.object({
+      houseId: z.number(),
+      includeCompleted: z.boolean().default(false),
+      limit: z.number().min(1).max(50).default(10),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const statusFilter = input.includeCompleted ? '' : "AND m.status != 'completed'";
+      const result = await db.execute(sql`
+        SELECT m.*, u.name as hostName
+        FROM meetings m
+        LEFT JOIN users u ON m.hostId = u.id
+        WHERE m.house_id = ${input.houseId} ${sql.raw(statusFilter)}
+        ORDER BY m.scheduledAt ASC
+        LIMIT ${input.limit}
+      `);
+      return (result[0] as any[]) || [];
+    }),
+
+  // Get upcoming meetings for a specific Trust
+  getTrustMeetings: protectedProcedure
+    .input(z.object({
+      trustId: z.number(),
+      includeCompleted: z.boolean().default(false),
+      limit: z.number().min(1).max(50).default(10),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const statusFilter = input.includeCompleted ? '' : "AND m.status != 'completed'";
+      const result = await db.execute(sql`
+        SELECT m.*, u.name as hostName
+        FROM meetings m
+        LEFT JOIN users u ON m.hostId = u.id
+        WHERE m.trust_id = ${input.trustId} ${sql.raw(statusFilter)}
+        ORDER BY m.scheduledAt ASC
+        LIMIT ${input.limit}
+      `);
+      return (result[0] as any[]) || [];
+    }),
+
+  // Get upcoming meetings for a specific Business
+  getBusinessMeetings: protectedProcedure
+    .input(z.object({
+      businessId: z.number(),
+      includeCompleted: z.boolean().default(false),
+      limit: z.number().min(1).max(50).default(10),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const statusFilter = input.includeCompleted ? '' : "AND m.status != 'completed'";
+      const result = await db.execute(sql`
+        SELECT m.*, u.name as hostName
+        FROM meetings m
+        LEFT JOIN users u ON m.hostId = u.id
+        WHERE m.business_id = ${input.businessId} ${sql.raw(statusFilter)}
+        ORDER BY m.scheduledAt ASC
+        LIMIT ${input.limit}
+      `);
+      return (result[0] as any[]) || [];
     }),
 
   // Get meeting statistics

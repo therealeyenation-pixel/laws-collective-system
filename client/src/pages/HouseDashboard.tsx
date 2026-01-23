@@ -3,6 +3,8 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
 import { ContractSummaryWidget } from "@/components/ContractSummaryWidget";
+import { MeetingWidget } from "@/components/widgets/MeetingWidget";
+import { ChatWidget } from "@/components/widgets/ChatWidget";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -246,6 +248,22 @@ export default function HouseDashboard() {
 
             {/* Contract Summary Widget */}
             <ContractSummaryWidget className="" />
+
+            {/* Meeting & Chat Widgets */}
+            {house?.id && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <MeetingWidget
+                  entityType="house"
+                  entityId={house.id}
+                  entityName={house.name}
+                />
+                <ChatWidget
+                  entityType="house"
+                  entityId={house.id}
+                  entityName={house.name}
+                />
+              </div>
+            )}
 
             {/* House Identity Card */}
             <Card>

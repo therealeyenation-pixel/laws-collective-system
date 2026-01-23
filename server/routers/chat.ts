@@ -94,6 +94,12 @@ export const chatRouter = router({
       name: z.string().min(1).max(255),
       description: z.string().optional(),
       participantIds: z.array(z.number()).min(1),
+      // Entity context for linking to Trust/Business dashboards
+      houseId: z.number().optional(),
+      trustId: z.number().optional(),
+      businessId: z.number().optional(),
+      entityType: z.enum(["house", "trust", "business", "network", "general"]).default("general"),
+      entityName: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
@@ -104,6 +110,11 @@ export const chatRouter = router({
         name: input.name,
         description: input.description,
         createdById: ctx.user.id,
+        houseId: input.houseId || null,
+        trustId: input.trustId || null,
+        businessId: input.businessId || null,
+        entityType: input.entityType || "general",
+        entityName: input.entityName || null,
       });
       
       const chatId = Number((result as any).insertId);
@@ -1280,5 +1291,130 @@ export const chatRouter = router({
         id: messageId,
         success: true,
       };
+    }),
+
+  // Get chats by entity (House, Trust, or Business)
+  getByEntity: protectedProcedure
+    .input(z.object({
+      entityType: z.enum(["house", "trust", "business", "network", "general"]),
+      entityId: z.number().optional(),
+      limit: z.number().min(1).max(100).default(20),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const result = await db.execute(sql`
+        SELECT c.*, 
+               (SELECT COUNT(*) FROM chat_participants cp WHERE cp.chatId = c.id AND cp.leftAt IS NULL) as memberCount
+        FROM chats c
+        WHERE c.entityType = ${input.entityType}
+        ${input.entityId && input.entityType === 'house' ? sql`AND c.house_id = ${input.entityId}` : sql``}
+        ${input.entityId && input.entityType === 'trust' ? sql`AND c.trust_id = ${input.entityId}` : sql``}
+        ${input.entityId && input.entityType === 'business' ? sql`AND c.business_id = ${input.entityId}` : sql``}
+        ORDER BY c.lastMessageAt DESC
+        LIMIT ${input.limit}
+      `);
+      return (result[0] as any[]) || [];
+    }),
+
+  // Get House chat channels
+  getHouseChats: protectedProcedure
+    .input(z.object({
+      houseId: z.number(),
+      limit: z.number().min(1).max(50).default(10),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const result = await db.execute(sql`
+        SELECT c.*, 
+               (SELECT COUNT(*) FROM chat_participants cp WHERE cp.chatId = c.id AND cp.leftAt IS NULL) as memberCount
+        FROM chats c
+        WHERE c.house_id = ${input.houseId}
+        ORDER BY c.lastMessageAt DESC
+        LIMIT ${input.limit}
+      `);
+      return (result[0] as any[]) || [];
+    }),
+
+  // Get Trust chat channels
+  getTrustChats: protectedProcedure
+    .input(z.object({
+      trustId: z.number(),
+      limit: z.number().min(1).max(50).default(10),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const result = await db.execute(sql`
+        SELECT c.*, 
+               (SELECT COUNT(*) FROM chat_participants cp WHERE cp.chatId = c.id AND cp.leftAt IS NULL) as memberCount
+        FROM chats c
+        WHERE c.trust_id = ${input.trustId}
+        ORDER BY c.lastMessageAt DESC
+        LIMIT ${input.limit}
+      `);
+      return (result[0] as any[]) || [];
+    }),
+
+  // Get Business chat channels
+  getBusinessChats: protectedProcedure
+    .input(z.object({
+      businessId: z.number(),
+      limit: z.number().min(1).max(50).default(10),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const result = await db.execute(sql`
+        SELECT c.*, 
+               (SELECT COUNT(*) FROM chat_participants cp WHERE cp.chatId = c.id AND cp.leftAt IS NULL) as memberCount
+        FROM chats c
+        WHERE c.business_id = ${input.businessId}
+        ORDER BY c.lastMessageAt DESC
+        LIMIT ${input.limit}
+      `);
+      return (result[0] as any[]) || [];
+    }),
+
+  // Create entity channel (auto-add relevant members)
+  createEntityChannel: protectedProcedure
+    .input(z.object({
+      name: z.string().min(1).max(255),
+      description: z.string().optional(),
+      entityType: z.enum(["house", "trust", "business"]),
+      entityId: z.number(),
+      entityName: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      const [result] = await db.insert(chats).values({
+        chatType: "channel",
+        name: input.name,
+        description: input.description,
+        createdById: ctx.user.id,
+        houseId: input.entityType === "house" ? input.entityId : null,
+        trustId: input.entityType === "trust" ? input.entityId : null,
+        businessId: input.entityType === "business" ? input.entityId : null,
+        entityType: input.entityType,
+        entityName: input.entityName || null,
+      });
+      
+      const chatId = Number((result as any).insertId);
+      
+      // Add creator as owner
+      await db.insert(chatParticipants).values({
+        chatId,
+        userId: ctx.user.id,
+        role: "owner",
+      });
+      
+      return { id: chatId, message: "Entity channel created" };
     }),
 });

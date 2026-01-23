@@ -6052,3 +6052,15 @@ Three main approaches available:
 - [ ] Create Lineage Registration Form
 - [ ] Create Investment Protection Addendum
 - [x] Add template download functionality to UI
+
+## Meeting & Chat Dashboard Integration
+- [x] Add entity linkage columns to meetings table (house_id, trust_id, business_id)
+- [x] Add entity linkage columns to chat_rooms table
+- [x] Update meetings router with entity context filtering
+- [x] Update chat router with entity-specific channels
+- [x] Add Meeting widget to House Dashboard
+- [x] Add Chat widget to House Dashboard
+- [ ] Add Meeting widget to Business Dashboard
+- [ ] Add Chat widget to Trust Dashboard
+- [ ] Entity-based access control for meetings
+- [ ] Entity-based access control for chat rooms
