@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO diagnostic_schedules (name, cron_expression, enabled, categories, notify_on_failure, notify_on_warning)\nVALUES \n  ('Daily Health Check', '0 0 6 * * *', TRUE, '[\"database\", \"entity\", \"token\", \"compliance\"]', TRUE, FALSE),\n  ('Hourly API Check', '0 0 * * * *', TRUE, '[\"api\", \"performance\"]', TRUE, FALSE),\n  ('Weekly Security Audit', '0 0 0 * * 0', TRUE, '[\"security\", \"integration\"]', TRUE, TRUE);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO diagnostic_schedules (name, cron_expression, enabled, categories, notify_on_failure, notify_on_warning)\nVALUES \n  ('Daily Health Check', '0 0 6 * * *', TRUE, '[\"database\", \"entity\", \"token\", \"compliance\"]', TRUE, FALSE),\n  ('Hourly API Check', '0 0 * * * *', TRUE, '[\"api\", \"performance\"]', TRUE, FALSE),\n  ('Weekly Security Audit', '0 0 0 * * 0', TRUE, '[\"security\", \"integration\"]', TRUE, TRUE);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 65
+}

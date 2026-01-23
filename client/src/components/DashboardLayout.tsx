@@ -465,6 +465,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Users, label: "Team", path: "/platform-team", minRole: "admin" },
           { icon: FolderOpen, label: "Documents", path: "/platform-documents", minRole: "admin" },
           { icon: FileText, label: "Changelog", path: "/changelog", minRole: "admin" },
+          { icon: Activity, label: "System Diagnostics", path: "/system-diagnostics", minRole: "admin" },
         ]
       },
       // Grants & Funding

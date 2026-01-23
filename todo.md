@@ -5891,3 +5891,24 @@ Three main approaches available:
 - [x] Create inter-entity service agreement template (L.A.W.S. ↔ Real-Eye-Nation) at /documents/inter-entity-service-agreement.md
 - [x] Add service agreement to document templates
 
+
+
+## Phase: Auto-Diagnostic & Self-Correction System (COMPLETED)
+- [x] Create system_diagnostics database table (health checks, issues, resolutions)
+- [x] Create diagnostic_runs table (scheduled and manual runs)
+- [x] Create diagnostic_corrections table (auto-fix history)
+- [x] Create diagnostic_schedules table (cron-based scheduling)
+- [x] Build diagnostics router with health check procedures (8 categories)
+- [x] Implement database connectivity checks
+- [x] Implement API endpoint health checks
+- [x] Implement entity data integrity checks
+- [x] Implement token economy balance validation
+- [x] Implement compliance deadline monitoring
+- [x] Build self-correction logic for common issues (cache clear, token refresh, compliance reminders)
+- [x] Create scheduled diagnostic jobs (Daily 6AM, Hourly, Weekly Sunday)
+- [x] Add manual trigger option for diagnostics (Run Diagnostics button)
+- [x] Build diagnostics dashboard UI (/system-diagnostics)
+- [x] Show system health status (overall status card with color coding)
+- [x] Display diagnostic history (Run History tab)
+- [x] Show self-correction actions taken (Self-Corrections tab)
+- [x] Add schedule management (Schedules tab with enable/disable)
