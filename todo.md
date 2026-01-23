@@ -5826,3 +5826,10 @@ Three main approaches available:
 - [x] Add state jurisdiction indicators (GA, DE badges)
 - [x] Include entity type classifications (Trust, LLC, Collective, System)
 - [x] Add route (/entity-structure) and navigation link (Trust menu)
+
+## Phase: Entity Structure Enhancements (COMPLETED)
+- [x] Add compliance deadlines to entity cards (GA Annual Registration, DE Franchise Tax, etc.)
+- [x] Add financial flow visualization showing fund movement between entities (new Financial Flow tab)
+- [x] Include state-specific filing requirements (GA Apr 1, DE Jun 1)
+- [x] Add Upcoming Deadlines card to page
+- [x] Show compliance status badges (upcoming, completed, due-soon, overdue)
