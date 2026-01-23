@@ -44,6 +44,7 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { NotificationCenter } from "./NotificationCenter";
+import { WhatsNewButton } from "./WhatsNew";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -867,7 +868,10 @@ function DashboardLayoutContent({
                 </div>
               </div>
             </div>
-            <NotificationCenter />
+            <div className="flex items-center gap-2">
+              <WhatsNewButton />
+              <NotificationCenter />
+            </div>
           </div>
         )}
         <main className="flex-1 p-4">{children}</main>
