@@ -77,14 +77,14 @@ describe("House Activation Flow", () => {
       expect(treasuryAmount + houseAmount).toBe(inflow);
     });
 
-    it("should apply 60/40 house split on house portion", () => {
-      const houseAmount = 700; // 70% of 1000
-      const reserveAmount = houseAmount * 0.60; // 60% to reserve
-      const circulationAmount = houseAmount * 0.40; // 40% to circulation
+    it("should apply 70/30 house internal split on house portion (70% house, 30% inheritance)", () => {
+      const houseAmount = 700; // 70% of 1000 from treasury split
+      const houseOperations = houseAmount * 0.70; // 70% for house operations
+      const inheritancePool = houseAmount * 0.30; // 30% to inheritance pool
 
-      expect(reserveAmount).toBe(420);
-      expect(circulationAmount).toBe(280);
-      expect(reserveAmount + circulationAmount).toBe(houseAmount);
+      expect(Math.round(houseOperations)).toBe(490);
+      expect(Math.round(inheritancePool)).toBe(210);
+      expect(Math.round(houseOperations + inheritancePool)).toBe(houseAmount);
     });
   });
 

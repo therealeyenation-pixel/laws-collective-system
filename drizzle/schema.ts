@@ -1473,18 +1473,20 @@ export type IncomeEvent = typeof incomeEvents.$inferSelect;
 export type InsertIncomeEvent = typeof incomeEvents.$inferInsert;
 
 /**
- * Distribution Events - Track automated distributions (60/40 and 70/30)
+ * Distribution Events - Track automated distributions
+ * Inter-house: 60/40 (60% house, 40% collective)
+ * Intra-house: 70/30 (70% house, 30% inheritance)
  */
 export const distributionEvents = mysqlTable("distribution_events", {
   id: int("id").autoincrement().primaryKey(),
   incomeEventId: int("incomeEventId").notNull(), // Source income that triggered this distribution
   distributionType: mysqlEnum("distributionType", ["inter_house", "intra_house", "root_treasury", "ancestral_treasury"]).notNull(),
   
-  // For inter-house (60/40)
+  // For inter-house (60/40 = 60% house, 40% collective)
   fromHouseId: int("fromHouseId").notNull(),
   toHouseId: int("toHouseId"), // null if retained by fromHouse
   
-  // For intra-house (70/30) and root treasury (60/40)
+  // For intra-house (70/30 = 70% house, 30% inheritance)
   allocationCategory: mysqlEnum("allocationCategory", ["operations", "inheritance", "network", "root_authority_reserve", "circulation_pool", "ancestral_treasury"]),
   
   amount: decimal("amount", { precision: 20, scale: 2 }).notNull(),
@@ -2288,8 +2290,11 @@ export type AllocationPot = typeof allocationPots.$inferSelect;
 export type InsertAllocationPot = typeof allocationPots.$inferInsert;
 
 /**
- * Allocation Transactions - Track 70/30 and 60/40 splits
+ * Allocation Transactions - Track split distributions
  * Based on Scroll 55: Allocation Engine Protocol
+ * 
+ * Inter-house: 60/40 (60% house, 40% collective)
+ * Intra-house: 70/30 (70% house, 30% inheritance)
  */
 export const allocationTransactions = mysqlTable("allocation_transactions", {
   id: int("id").autoincrement().primaryKey(),
@@ -2299,13 +2304,13 @@ export const allocationTransactions = mysqlTable("allocation_transactions", {
   
   grossAmount: decimal("grossAmount", { precision: 20, scale: 8 }).notNull(),
   
-  // 70/30 Split (Treasury vs House)
-  treasuryAmount: decimal("treasuryAmount", { precision: 20, scale: 8 }).notNull(), // 30%
-  houseAmount: decimal("houseAmount", { precision: 20, scale: 8 }).notNull(), // 70%
+  // 70/30 Split (House vs Treasury) - 70% stays with house
+  houseAmount: decimal("houseAmount", { precision: 20, scale: 8 }).notNull(), // 70% to house
+  treasuryAmount: decimal("treasuryAmount", { precision: 20, scale: 8 }).notNull(), // 30% to treasury
   
-  // 60/40 Split of House Amount (Reserve vs Circulation)
-  reserveAmount: decimal("reserveAmount", { precision: 20, scale: 8 }).notNull(), // 60% of 70%
-  circulationAmount: decimal("circulationAmount", { precision: 20, scale: 8 }).notNull(), // 40% of 70%
+  // Internal house allocation of the 70%
+  reserveAmount: decimal("reserveAmount", { precision: 20, scale: 8 }).notNull(), // House reserve portion
+  circulationAmount: decimal("circulationAmount", { precision: 20, scale: 8 }).notNull(), // Circulation portion
   
   transactionType: mysqlEnum("allocationType", [
     "income_allocation",
@@ -5386,9 +5391,9 @@ export const revenueSharingEvents = mysqlTable("revenue_sharing_events", {
     "combined_services"        // Multiple services
   ]).default("combined_services"),
   servicesProvided: json("servicesProvided"), // Array of specific services
-  // House internal split (60/40 on the 30%)
-  reserveAmount: decimal("reserveAmount", { precision: 18, scale: 2 }), // 60% of 30%
-  communityShareAmount: decimal("communityShareAmount", { precision: 18, scale: 2 }), // 40% of 30%
+  // House internal split (70/30 - 70% house, 30% inheritance)
+  reserveAmount: decimal("reserveAmount", { precision: 18, scale: 2 }), // 70% to house operations
+  communityShareAmount: decimal("communityShareAmount", { precision: 18, scale: 2 }), // 30% to inheritance pool
   // Fund allocations (breakdown of community share)
   fundAllocations: json("fundAllocations"), // { fundId: amount, ... }
   // LuvLedger transactions
@@ -8303,10 +8308,12 @@ export const platformUsageFees = mysqlTable("platform_usage_fees", {
   feePercentage: decimal("feePercentage", { precision: 5, scale: 2 }), // If percentage-based
   calculatedFee: decimal("calculatedFee", { precision: 20, scale: 2 }).notNull(),
   
-  // Split Application (60/40 or 70/30)
+  // Split Application
+  // Inter-house 60/40: 60% house, 40% collective
+  // Intra-house 70/30: 70% house, 30% inheritance
   splitType: mysqlEnum("splitType", ["inter_house_60_40", "intra_house_70_30"]).default("inter_house_60_40").notNull(),
-  collectiveShare: decimal("collectiveShare", { precision: 20, scale: 2 }).notNull(), // Amount to collective
-  houseShare: decimal("houseShare", { precision: 20, scale: 2 }).notNull(), // Amount credited to House
+  houseShare: decimal("houseShare", { precision: 20, scale: 2 }).notNull(), // 60% or 70% to House
+  collectiveShare: decimal("collectiveShare", { precision: 20, scale: 2 }).notNull(), // 40% or 30% to collective/other
   
   // Reference to source transaction
   sourceType: varchar("sourceType", { length: 50 }), // e.g., "payroll_run", "invoice", "contract"

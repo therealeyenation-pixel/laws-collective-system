@@ -36,7 +36,7 @@ describe('House Dashboard Router', () => {
           ledgerAccount: { id: 1, currentBalance: 10000 },
           splits: {
             treasury: { ENTITY_SHARE: 70, PLATFORM_FEE: 30 },
-            houseInternal: { RESERVE: 60, COMMUNITY: 40 },
+            houseInternal: { HOUSE: 70, INHERITANCE: 30 },
           },
           totals: {
             platformFeesReceived: 3000,
@@ -74,7 +74,7 @@ describe('House Dashboard Router', () => {
         },
         splitRules: {
           treasury: { ENTITY_SHARE: 70, PLATFORM_FEE: 30 },
-          houseInternal: { RESERVE: 60, COMMUNITY: 40 },
+          houseInternal: { HOUSE: 70, OTHER_ALLOCATIONS: 30 },
         },
       };
 
@@ -100,15 +100,15 @@ describe('House Dashboard Router', () => {
       expect(splitRules.treasury.ENTITY_SHARE + splitRules.treasury.PLATFORM_FEE).toBe(100);
     });
 
-    it('should include correct house internal split rules (60/40)', async () => {
+    it('should include correct house internal split rules (70/30 - 70% house, 30% inheritance)', async () => {
       const splitRules = {
         treasury: { ENTITY_SHARE: 70, PLATFORM_FEE: 30 },
-        houseInternal: { RESERVE: 60, COMMUNITY: 40 },
+        houseInternal: { HOUSE: 70, INHERITANCE: 30 },
       };
 
-      expect(splitRules.houseInternal.RESERVE).toBe(60);
-      expect(splitRules.houseInternal.COMMUNITY).toBe(40);
-      expect(splitRules.houseInternal.RESERVE + splitRules.houseInternal.COMMUNITY).toBe(100);
+      expect(splitRules.houseInternal.HOUSE).toBe(70);
+      expect(splitRules.houseInternal.INHERITANCE).toBe(30);
+      expect(splitRules.houseInternal.HOUSE + splitRules.houseInternal.INHERITANCE).toBe(100);
     });
 
     it('should include L.A.W.S. framework in house identity', async () => {

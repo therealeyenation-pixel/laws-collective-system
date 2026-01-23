@@ -153,24 +153,24 @@ describe("House Management Router", () => {
   });
 
   describe("Platform Usage Fees", () => {
-    it("should apply 60/40 split for inter-house fees", () => {
+    it("should apply 60/40 split for inter-house fees (60% house, 40% collective)", () => {
       const feeAmount = 100;
-      const collectiveShare = feeAmount * 0.6;
-      const houseShare = feeAmount * 0.4;
+      const houseShare = feeAmount * 0.6; // 60% to house
+      const collectiveShare = feeAmount * 0.4; // 40% to collective
 
-      expect(collectiveShare).toBe(60);
-      expect(houseShare).toBe(40);
-      expect(collectiveShare + houseShare).toBe(feeAmount);
+      expect(houseShare).toBe(60);
+      expect(collectiveShare).toBe(40);
+      expect(houseShare + collectiveShare).toBe(feeAmount);
     });
 
-    it("should apply 70/30 split for intra-house fees", () => {
+    it("should apply 70/30 split for intra-house fees (70% house, 30% inheritance)", () => {
       const feeAmount = 100;
-      const operationsShare = feeAmount * 0.7;
-      const inheritanceShare = feeAmount * 0.3;
+      const houseShare = feeAmount * 0.7; // 70% for house operations
+      const inheritanceShare = feeAmount * 0.3; // 30% to inheritance pool
 
-      expect(operationsShare).toBe(70);
+      expect(houseShare).toBe(70);
       expect(inheritanceShare).toBe(30);
-      expect(operationsShare + inheritanceShare).toBe(feeAmount);
+      expect(houseShare + inheritanceShare).toBe(feeAmount);
     });
 
     it("should track platform fee types correctly", () => {

@@ -258,7 +258,7 @@ const COURSE_MODULES: CourseModule[] = [
         },
         {
           heading: "Token Economics",
-          text: "Token economics (tokenomics) defines how tokens are created, distributed, and used. The L.A.W.S. token economy is designed to reward learning, contribution, and long-term participation. The 60/40 and 70/30 splits in trusts are managed through smart contracts.",
+          text: "Token economics (tokenomics) defines how tokens are created, distributed, and used. The L.A.W.S. token economy is designed to reward learning, contribution, and long-term participation. The 60/40 split (60% house, 40% collective) and 70/30 split (70% house, 30% inheritance) are managed through smart contracts.",
           tips: [
             "Tokenomics creates incentives for positive behavior",
             "Scarcity and utility drive token value",
@@ -310,7 +310,7 @@ const COURSE_MODULES: CourseModule[] = [
             "D) Random percentages"
           ],
           correctIndex: 1,
-          explanation: "The L.A.W.S. system supports 60/40 and 70/30 inheritance splits, managed through smart contracts on LuvChain."
+          explanation: "The L.A.W.S. system supports 60/40 (60% house, 40% collective) and 70/30 (70% house, 30% inheritance) splits, managed through smart contracts on LuvChain."
         }
       ]
     }
@@ -389,7 +389,7 @@ const COURSE_MODULES: CourseModule[] = [
         },
         {
           heading: "Smart Contract Use Cases",
-          text: "In the L.A.W.S. ecosystem, smart contracts handle certificate issuance (minting NFTs when you complete courses), trust distributions (automatically splitting assets according to your 60/40 or 70/30 configuration), token rewards, and escrow services.",
+          text: "In the L.A.W.S. ecosystem, smart contracts handle certificate issuance (minting NFTs when you complete courses), trust distributions (automatically splitting assets according to your 60/40 (60% house, 40% collective) or 70/30 (70% house, 30% inheritance) configuration), token rewards, and escrow services.",
           tips: [
             "Certificates are NFTs minted via smart contracts",
             "Trust distributions happen automatically on schedule",

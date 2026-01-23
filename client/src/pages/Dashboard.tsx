@@ -870,7 +870,7 @@ export default function Dashboard() {
                   </div>
                   <h3 className="font-bold text-foreground text-lg mb-2">Trust Workshop</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Structure trusts, define beneficiaries, configure inheritance splits (60/40, 70/30).
+                    Structure trusts, define beneficiaries, configure inheritance splits (60/40: 60% house, 40% collective; 70/30: 70% house, 30% inheritance).
                   </p>
                   <div className="space-y-2 mb-4">
                     <p className="text-xs text-muted-foreground">4 Modules</p>

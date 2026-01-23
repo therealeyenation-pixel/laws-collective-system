@@ -5716,3 +5716,11 @@ Three main approaches available:
 - [x] Integrate NFT minting with achievement tier upgrades (platinum tier triggers NFT eligibility)
 - [x] Add NFT transfer functionality between wallets (via blockchain records)
 - [x] Write unit tests for blockchain and NFT features (32 new tests, 671 total passing)
+## Phase: Split Formula Corrections (COMPLETED)
+- [x] Correct inter-house split: 60/40 = 60% house / 40% collective
+- [x] Correct intra-house split: 70/30 = 70% house / 30% inheritance
+- [x] Update schema comments and descriptions (distributionEvents, allocationTransactions, platformUsageFees)
+- [x] Update UI text explaining splits (Dashboard trust workshop description)
+- [x] Update course content explaining splits (BlockchainCourse, TrustCourse)
+- [x] Update test files (house-management, house-activation, house-dashboard)
+- [x] Update luvledger router allocation logic and descriptions

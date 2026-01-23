@@ -236,10 +236,10 @@ const trustModules: CourseModule[] = [
         },
         {
           heading: "Inheritance Splits: 60/40 and 70/30",
-          text: "The inheritance split determines how trust assets are distributed. A 60/40 split might allocate 60% to direct heirs and 40% to a family fund for education or emergencies. A 70/30 split provides more to direct heirs while maintaining a community fund. Choose based on your family's values and goals.",
+          text: "The inheritance split determines how trust assets are distributed. The 60/40 split allocates 60% to the house (your family/entity) and 40% to the collective for community support. The 70/30 split allocates 70% to house operations and 30% to the inheritance pool for generational wealth. Both approaches prioritize the house while building long-term legacy.",
           tips: [
-            "60/40: Balanced approach for family support and individual inheritance",
-            "70/30: Emphasizes individual inheritance with community safety net",
+            "60/40: 60% house, 40% collective - balanced approach",
+            "70/30: 70% house operations, 30% inheritance pool - builds generational wealth",
             "Document the reasoning behind your chosen split",
           ],
         },

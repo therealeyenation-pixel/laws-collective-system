@@ -111,7 +111,9 @@ export const luvledgerRouter = router({
       return transactions;
     }),
 
-  // Get allocation summary (60/40 and 70/30 splits)
+  // Get allocation summary
+  // Inter-house: 60/40 (60% house, 40% collective)
+  // Intra-house: 70/30 (70% house, 30% inheritance)
   getAllocationSummary: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db) return null;
@@ -136,14 +138,14 @@ export const luvledgerRouter = router({
         const amount = parseFloat(tx.amount);
         totalIncome += amount;
 
-        // External split: 60% House / 40% External
-        const houseAmount = amount * 0.6;
-        const externalAmount = amount * 0.4;
+        // Inter-house split: 60% House / 40% Collective
+        const houseAmount = amount * 0.6; // 60% to house
+        const collectiveAmount = amount * 0.4; // 40% to collective
 
-        // Internal split: 70% Inheritance / 30% Operations
-        inheritanceTotal += houseAmount * 0.7;
-        operationsTotal += houseAmount * 0.3;
-        externalTotal += externalAmount;
+        // Intra-house split: 70% House operations / 30% Inheritance pool
+        operationsTotal += houseAmount * 0.7; // 70% for house operations
+        inheritanceTotal += houseAmount * 0.3; // 30% to inheritance pool
+        externalTotal += collectiveAmount;
       }
     });
 
@@ -152,18 +154,18 @@ export const luvledgerRouter = router({
       allocations: {
         inheritance: {
           amount: inheritanceTotal.toFixed(2),
-          percentage: 70,
-          description: "Generational wealth accumulation (70% of house 60%)",
+          percentage: 30,
+          description: "Inheritance pool for generational wealth (30% of house's 60%)",
         },
         operations: {
           amount: operationsTotal.toFixed(2),
-          percentage: 30,
-          description: "Current operations and reinvestment (30% of house 60%)",
+          percentage: 70,
+          description: "House operations and reinvestment (70% of house's 60%)",
         },
         external: {
           amount: externalTotal.toFixed(2),
           percentage: 40,
-          description: "External stakeholder returns (40%)",
+          description: "Collective/community share (40% of total)",
         },
         houseMajority: {
           amount: (inheritanceTotal + operationsTotal).toFixed(2),
