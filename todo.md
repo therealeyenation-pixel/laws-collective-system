@@ -5841,3 +5841,18 @@ Three main approaches available:
 - [x] Create master filing checklist with required documents
 - [x] Include specimen requirements and class selections
 - [x] Total estimated filing cost: $2,750 (TEAS Plus)
+
+## Phase: SWOT Enhancement with Freed 5C Context Framework (COMPLETED)
+- [x] Review current SWOT implementation in Business Simulator
+- [x] Add Market Validation prompts (industry growth vs GDP) - in Opportunities
+- [x] Add Customer Understanding prompts (demographics, income, pain points) - in Opportunities/Threats
+- [x] Add Blue Ocean/Niche prompts ("for X" differentiator) - in Strengths
+- [x] Integrate 5C Context prompts into add item dialog
+- [x] Add context tips to each SWOT quadrant
+
+## Phase: Trademark Documents Dashboard (COMPLETED)
+- [x] Create Trademark Documents page (/trademark-documents) linking to filing guides
+- [x] Add specimen collection tab for organizing required materials
+- [x] Add filing timeline tab with pre/post registration phases
+- [x] Add compliance/trademark/filing event types to Company Calendar
+- [x] Link trademark status to entity cards (status badges, progress bars)

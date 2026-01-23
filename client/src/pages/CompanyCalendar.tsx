@@ -103,6 +103,9 @@ export default function CompanyCalendar() {
       planning: "bg-orange-100 text-orange-800",
       one_on_one: "bg-pink-100 text-pink-800",
       external: "bg-gray-100 text-gray-800",
+      compliance: "bg-red-100 text-red-800",
+      trademark: "bg-indigo-100 text-indigo-800",
+      filing: "bg-amber-100 text-amber-800",
       other: "bg-slate-100 text-slate-800",
     };
     return colors[type] || colors.other;
@@ -165,6 +168,9 @@ export default function CompanyCalendar() {
                       <SelectItem value="planning">Planning Session</SelectItem>
                       <SelectItem value="one_on_one">One-on-One</SelectItem>
                       <SelectItem value="external">External</SelectItem>
+                      <SelectItem value="compliance">Compliance Deadline</SelectItem>
+                      <SelectItem value="trademark">Trademark Filing</SelectItem>
+                      <SelectItem value="filing">Government Filing</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>

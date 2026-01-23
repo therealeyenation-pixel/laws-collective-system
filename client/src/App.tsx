@@ -141,6 +141,7 @@ import OwnerActionList from "@/pages/OwnerActionList";
 import Chat from "@/pages/Chat";
 import SwotAnalysis from "@/pages/SwotAnalysis";
 import Changelog from "@/pages/Changelog";
+import TrademarkDocuments from "@/pages/TrademarkDocuments";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -388,6 +389,7 @@ function Router() {
       <Route path="/houses">{() => <ProtectedRoute component={HouseManagement} minRole="admin" />}</Route>
       <Route path="/trust-structure">{() => <ProtectedRoute component={TrustVisualization} minRole="admin" />}</Route>
       <Route path="/entity-structure">{() => <ProtectedRoute component={EntityStructure} minRole="admin" />}</Route>
+      <Route path="/trademark-documents">{() => <ProtectedRoute component={TrademarkDocuments} minRole="admin" />}</Route>
       <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} minRole="owner" />}</Route>
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>

@@ -47,40 +47,73 @@ interface SwotAnalysisData {
   items?: SwotItem[];
 }
 
+// 5C Context Framework prompts for each SWOT category
+const contextPrompts: Record<SwotCategory, string[]> = {
+  strength: [
+    "What's your 'for X' differentiator? (Blue Ocean Strategy)",
+    "What unique value do you provide that competitors don't?",
+    "What resources or capabilities give you an edge?",
+    "What do customers say you do better than others?",
+  ],
+  weakness: [
+    "What gaps do competitors fill that you don't?",
+    "Where do you lack resources or expertise?",
+    "What processes need improvement?",
+    "What customer complaints recur?",
+  ],
+  opportunity: [
+    "Is your industry growing faster than GDP? (Market Validation)",
+    "Can your target customer afford your solution? (Customer Understanding)",
+    "What underserved segment could you target? (Blue Ocean)",
+    "What market trends favor your business?",
+  ],
+  threat: [
+    "Is your market contracting or commoditizing?",
+    "Are competitors entering your niche?",
+    "What economic factors could impact your customers?",
+    "What regulatory changes could affect you?",
+  ],
+};
+
 const categoryConfig: Record<SwotCategory, { 
   label: string; 
   color: string; 
   bgColor: string; 
   icon: React.ReactNode;
   description: string;
+  contextTip: string;
 }> = {
   strength: { 
     label: "Strengths", 
     color: "text-green-700 dark:text-green-400", 
     bgColor: "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800",
     icon: <Shield className="w-5 h-5" />,
-    description: "Internal positive attributes"
+    description: "Internal positive attributes",
+    contextTip: "Think about your 'for X' differentiator - what makes you unique in your niche?"
   },
   weakness: { 
     label: "Weaknesses", 
     color: "text-red-700 dark:text-red-400", 
     bgColor: "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800",
     icon: <AlertTriangle className="w-5 h-5" />,
-    description: "Internal areas for improvement"
+    description: "Internal areas for improvement",
+    contextTip: "Consider gaps that competitors fill better than you"
   },
   opportunity: { 
     label: "Opportunities", 
     color: "text-blue-700 dark:text-blue-400", 
     bgColor: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800",
     icon: <TrendingUp className="w-5 h-5" />,
-    description: "External favorable factors"
+    description: "External favorable factors",
+    contextTip: "Is your market growing? Can your target customers afford your solution?"
   },
   threat: { 
     label: "Threats", 
     color: "text-amber-700 dark:text-amber-400", 
     bgColor: "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800",
     icon: <Target className="w-5 h-5" />,
-    description: "External challenges to address"
+    description: "External challenges to address",
+    contextTip: "What external factors could disrupt your market position?"
   },
 };
 
@@ -406,6 +439,9 @@ export default function SwotAnalysis() {
             </Button>
           </div>
           <CardDescription>{config.description}</CardDescription>
+          <p className="text-xs text-muted-foreground mt-1 italic">
+            {config.contextTip}
+          </p>
         </CardHeader>
         <CardContent className="space-y-2">
           {items.length === 0 ? (
@@ -913,7 +949,7 @@ export default function SwotAnalysis() {
 
         {/* Add Item Dialog */}
         <Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-          <DialogContent>
+          <DialogContent className="max-w-lg">
             <DialogHeader>
               <DialogTitle>Add {categoryConfig[selectedCategory].label.slice(0, -1)}</DialogTitle>
               <DialogDescription>
@@ -921,6 +957,20 @@ export default function SwotAnalysis() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
+              {/* 5C Context Framework Prompts */}
+              <div className={`p-3 rounded-lg border ${categoryConfig[selectedCategory].bgColor}`}>
+                <p className={`text-sm font-medium mb-2 ${categoryConfig[selectedCategory].color}`}>
+                  5C Context Prompts:
+                </p>
+                <ul className="text-xs space-y-1 text-muted-foreground">
+                  {contextPrompts[selectedCategory].map((prompt, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-muted-foreground">•</span>
+                      <span>{prompt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="item-title">Title</Label>
                 <Input
