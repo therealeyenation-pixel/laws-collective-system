@@ -96,6 +96,7 @@ const menuCategories: MenuCategory[] = [
       { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
       { icon: CheckCircle, label: "Owner Action List", path: "/owner-actions", minRole: "owner" },
       { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "admin" },
+      { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "admin" },
       { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
       { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner" },
       { icon: Building2, label: "House Management", path: "/houses", minRole: "admin" },

@@ -75,6 +75,7 @@ import DemographicGrantsPage from "@/pages/DemographicGrantsPage";
 import VolunteerPage from "@/pages/VolunteerPage";
 import HouseManagement from "./pages/HouseManagement";
 import TrustVisualization from "./pages/TrustVisualization";
+import EntityStructure from "./pages/EntityStructure";
 import FinancialStatements from "./pages/FinancialStatements";
 import BoardResolutions from "./pages/BoardResolutions";
 import ContingencyOffers from "./pages/ContingencyOffers";
@@ -386,6 +387,7 @@ function Router() {
       {/* Owner routes - trust & governance */}
       <Route path="/houses">{() => <ProtectedRoute component={HouseManagement} minRole="admin" />}</Route>
       <Route path="/trust-structure">{() => <ProtectedRoute component={TrustVisualization} minRole="admin" />}</Route>
+      <Route path="/entity-structure">{() => <ProtectedRoute component={EntityStructure} minRole="admin" />}</Route>
       <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} minRole="owner" />}</Route>
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
