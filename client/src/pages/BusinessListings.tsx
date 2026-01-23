@@ -201,7 +201,7 @@ export default function BusinessListings() {
               Internal entities and external business directory
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2">
             <Button variant="outline" onClick={() => toast.info("Syncing with Business Simulator...")}>
               <Building2 className="w-4 h-4 mr-2" />
               Sync Entities
@@ -209,14 +209,6 @@ export default function BusinessListings() {
             <Button onClick={() => toast.info("Add external business...")}>
               <Plus className="w-4 h-4 mr-2" />
               Add Business
-            </Button>
-            <Button variant="secondary" onClick={() => window.open("/business-simulator", "_blank")}>
-              <Eye className="w-4 h-4 mr-2" />
-              Try Demo
-            </Button>
-            <Button className="bg-green-600 hover:bg-green-700" onClick={() => window.location.href = "/pricing"}>
-              <DollarSign className="w-4 h-4 mr-2" />
-              Subscribe
             </Button>
           </div>
         </div>

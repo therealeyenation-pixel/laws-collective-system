@@ -78,7 +78,7 @@ export default function BusinessDashboard() {
             </p>
             <p className="text-sm text-muted-foreground mt-1">{departmentInfo.description}</p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2">
             <Link href="/business-simulator">
               <Button variant="outline" className="gap-2">
                 <Play className="w-4 h-4" />
@@ -91,14 +91,6 @@ export default function BusinessDashboard() {
                 Entity Formation
               </Button>
             </Link>
-            <Button variant="secondary" className="gap-2" onClick={() => window.open("/business-simulator", "_blank")}>
-              <Target className="w-4 h-4" />
-              Try Demo Sandbox
-            </Button>
-            <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={() => window.location.href = "/pricing"}>
-              <DollarSign className="w-4 h-4" />
-              Subscribe
-            </Button>
           </div>
         </div>
 

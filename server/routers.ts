@@ -120,7 +120,6 @@ import { sandboxRouter } from "./routers/sandbox";
 import { trademarkSearchRouter } from "./routers/trademark-search";
 import { externalBusinessesRouter } from "./routers/external-businesses";
 import { changelogRouter } from "./routers/changelog";
-import { systemDiagnosticsRouter } from "./routers/system-diagnostics";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -253,7 +252,6 @@ export const appRouter = router({
   trademarkSearch: trademarkSearchRouter,
   externalBusinesses: externalBusinessesRouter,
   changelog: changelogRouter,
-  systemDiagnostics: systemDiagnosticsRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
