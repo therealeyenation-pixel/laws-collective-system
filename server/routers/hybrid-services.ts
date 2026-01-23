@@ -631,4 +631,396 @@ export const hybridServicesRouter = router({
         totalLicensingFees: (licensingFees as any[])[0]?.total || 0,
       };
     }),
+
+  // ============================================
+  // LUVLEDGER INTEGRATION
+  // ============================================
+
+  // Record service payment to LuvLedger
+  recordServicePaymentToLedger: protectedProcedure
+    .input(z.object({
+      paymentId: z.number(),
+      invoiceId: z.number(),
+      amount: z.number(),
+      serviceType: z.string(),
+      departmentId: z.number(),
+      clientType: z.enum(['internal_house', 'internal_business', 'external']),
+      houseId: z.number().optional(),
+      description: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      const now = Date.now();
+      const txHash = generateBlockchainHash();
+      
+      // Get department info
+      const [deptRows] = await db.execute(
+        `SELECT department_name, service_type FROM service_departments WHERE id = ?`,
+        [input.departmentId]
+      );
+      const dept = (deptRows as any[])[0];
+      
+      // Create LuvLedger transaction
+      await db.execute(
+        `INSERT INTO luv_ledger_transactions 
+         (from_account_id, to_account_id, amount, transaction_type, description, blockchain_hash, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          1, // System/External account
+          input.houseId || 1, // House account or L.A.W.S. account
+          input.amount.toString(),
+          'service_revenue',
+          input.description || `Service payment: ${dept?.department_name || 'Unknown'} - Invoice #${input.invoiceId}`,
+          txHash,
+          'confirmed',
+          now
+        ]
+      );
+      
+      // Create blockchain record
+      await db.execute(
+        `INSERT INTO blockchain_records (record_type, reference_id, blockchain_hash, data, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          'service_payment',
+          input.paymentId,
+          txHash,
+          JSON.stringify({
+            paymentId: input.paymentId,
+            invoiceId: input.invoiceId,
+            amount: input.amount,
+            serviceType: input.serviceType,
+            departmentId: input.departmentId,
+            clientType: input.clientType,
+            houseId: input.houseId,
+            timestamp: new Date(now).toISOString()
+          }),
+          now
+        ]
+      );
+      
+      // Log to audit trail
+      await db.execute(
+        `INSERT INTO activity_audit_trail (user_id, activity_type, action, details, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          ctx.user.id,
+          'service_payment_recorded',
+          'create',
+          JSON.stringify({
+            paymentId: input.paymentId,
+            amount: input.amount,
+            txHash
+          }),
+          now
+        ]
+      );
+      
+      return { success: true, blockchainHash: txHash, recordedAt: now };
+    }),
+
+  // Record revenue allocation to LuvLedger
+  recordAllocationToLedger: protectedProcedure
+    .input(z.object({
+      allocationId: z.number(),
+      totalAmount: z.number(),
+      sourceType: z.enum(['subscription', 'service_invoice', 'licensing_fee']),
+      allocations: z.array(z.object({
+        recipientType: z.enum(['department', 'laws_collective', 'trust', 'house']),
+        recipientId: z.number().optional(),
+        amount: z.number(),
+        percentage: z.number(),
+      })),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      const now = Date.now();
+      const txHashes: string[] = [];
+      
+      // Create LuvLedger transaction for each allocation
+      for (const allocation of input.allocations) {
+        const txHash = generateBlockchainHash();
+        txHashes.push(txHash);
+        
+        // Determine account IDs based on recipient type
+        let toAccountId = 1; // Default to L.A.W.S.
+        let description = '';
+        
+        switch (allocation.recipientType) {
+          case 'trust':
+            toAccountId = 2; // Trust account
+            description = `Trust allocation (${allocation.percentage}%): $${allocation.amount.toFixed(2)}`;
+            break;
+          case 'laws_collective':
+            toAccountId = 1; // L.A.W.S. account
+            description = `L.A.W.S. allocation (${allocation.percentage}%): $${allocation.amount.toFixed(2)}`;
+            break;
+          case 'house':
+            toAccountId = allocation.recipientId || 1;
+            description = `House allocation (${allocation.percentage}%): $${allocation.amount.toFixed(2)}`;
+            break;
+          case 'department':
+            toAccountId = allocation.recipientId || 1;
+            description = `Department allocation (${allocation.percentage}%): $${allocation.amount.toFixed(2)}`;
+            break;
+        }
+        
+        await db.execute(
+          `INSERT INTO luv_ledger_transactions 
+           (from_account_id, to_account_id, amount, transaction_type, description, blockchain_hash, status, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            1, // From service revenue pool
+            toAccountId,
+            allocation.amount.toString(),
+            'allocation',
+            description,
+            txHash,
+            'confirmed',
+            now
+          ]
+        );
+        
+        // Create blockchain record
+        await db.execute(
+          `INSERT INTO blockchain_records (record_type, reference_id, blockchain_hash, data, created_at)
+           VALUES (?, ?, ?, ?, ?)`,
+          [
+            'revenue_allocation',
+            input.allocationId,
+            txHash,
+            JSON.stringify({
+              allocationId: input.allocationId,
+              recipientType: allocation.recipientType,
+              recipientId: allocation.recipientId,
+              amount: allocation.amount,
+              percentage: allocation.percentage,
+              sourceType: input.sourceType,
+              timestamp: new Date(now).toISOString()
+            }),
+            now
+          ]
+        );
+      }
+      
+      // Log to audit trail
+      await db.execute(
+        `INSERT INTO activity_audit_trail (user_id, activity_type, action, details, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          ctx.user.id,
+          'revenue_allocation_recorded',
+          'create',
+          JSON.stringify({
+            allocationId: input.allocationId,
+            totalAmount: input.totalAmount,
+            sourceType: input.sourceType,
+            allocationCount: input.allocations.length,
+            txHashes
+          }),
+          now
+        ]
+      );
+      
+      return { success: true, blockchainHashes: txHashes, recordedAt: now };
+    }),
+
+  // Get service transactions from LuvLedger
+  getServiceTransactions: protectedProcedure
+    .input(z.object({
+      transactionType: z.enum(['service_revenue', 'allocation', 'all']).default('all'),
+      limit: z.number().default(50),
+      startDate: z.number().optional(),
+      endDate: z.number().optional(),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      let query = `
+        SELECT llt.*, br.data as blockchain_data, br.verified_at
+        FROM luv_ledger_transactions llt
+        LEFT JOIN blockchain_records br ON llt.blockchain_hash = br.blockchain_hash
+        WHERE 1=1
+      `;
+      const params: any[] = [];
+      
+      if (input.transactionType !== 'all') {
+        query += ` AND llt.transaction_type = ?`;
+        params.push(input.transactionType);
+      }
+      if (input.startDate) {
+        query += ` AND llt.created_at >= ?`;
+        params.push(input.startDate);
+      }
+      if (input.endDate) {
+        query += ` AND llt.created_at <= ?`;
+        params.push(input.endDate);
+      }
+      
+      query += ` ORDER BY llt.created_at DESC LIMIT ?`;
+      params.push(input.limit);
+      
+      const [rows] = await db.execute(query, params);
+      return (rows as any[]).map(row => ({
+        ...row,
+        blockchain_data: typeof row.blockchain_data === 'string' ? JSON.parse(row.blockchain_data) : row.blockchain_data
+      }));
+    }),
+
+  // Get LuvLedger summary for services
+  getServiceLedgerSummary: protectedProcedure
+    .input(z.object({
+      startDate: z.number(),
+      endDate: z.number(),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      
+      // Total service revenue
+      const [revenueRows] = await db.execute(
+        `SELECT SUM(CAST(amount AS DECIMAL(15,2))) as total
+         FROM luv_ledger_transactions
+         WHERE transaction_type = 'service_revenue'
+         AND created_at BETWEEN ? AND ?`,
+        [input.startDate, input.endDate]
+      );
+      
+      // Total allocations by type
+      const [allocationRows] = await db.execute(
+        `SELECT 
+           SUM(CASE WHEN description LIKE '%Trust%' THEN CAST(amount AS DECIMAL(15,2)) ELSE 0 END) as trust_total,
+           SUM(CASE WHEN description LIKE '%L.A.W.S.%' THEN CAST(amount AS DECIMAL(15,2)) ELSE 0 END) as laws_total,
+           SUM(CASE WHEN description LIKE '%House%' THEN CAST(amount AS DECIMAL(15,2)) ELSE 0 END) as house_total,
+           SUM(CASE WHEN description LIKE '%Department%' THEN CAST(amount AS DECIMAL(15,2)) ELSE 0 END) as department_total
+         FROM luv_ledger_transactions
+         WHERE transaction_type = 'allocation'
+         AND created_at BETWEEN ? AND ?`,
+        [input.startDate, input.endDate]
+      );
+      
+      // Transaction counts
+      const [countRows] = await db.execute(
+        `SELECT transaction_type, COUNT(*) as count
+         FROM luv_ledger_transactions
+         WHERE created_at BETWEEN ? AND ?
+         GROUP BY transaction_type`,
+        [input.startDate, input.endDate]
+      );
+      
+      // Verified vs unverified
+      const [verificationRows] = await db.execute(
+        `SELECT 
+           COUNT(CASE WHEN br.id IS NOT NULL THEN 1 END) as verified,
+           COUNT(CASE WHEN br.id IS NULL THEN 1 END) as unverified
+         FROM luv_ledger_transactions llt
+         LEFT JOIN blockchain_records br ON llt.blockchain_hash = br.blockchain_hash
+         WHERE llt.created_at BETWEEN ? AND ?`,
+        [input.startDate, input.endDate]
+      );
+      
+      return {
+        totalServiceRevenue: Number((revenueRows as any[])[0]?.total || 0),
+        allocations: {
+          trust: Number((allocationRows as any[])[0]?.trust_total || 0),
+          laws: Number((allocationRows as any[])[0]?.laws_total || 0),
+          house: Number((allocationRows as any[])[0]?.house_total || 0),
+          department: Number((allocationRows as any[])[0]?.department_total || 0),
+        },
+        transactionCounts: countRows as any[],
+        verification: {
+          verified: Number((verificationRows as any[])[0]?.verified || 0),
+          unverified: Number((verificationRows as any[])[0]?.unverified || 0),
+        }
+      };
+    }),
+
+  // Sync service payment to LuvLedger (batch operation)
+  syncServicePaymentsToLedger: protectedProcedure
+    .input(z.object({
+      startDate: z.number(),
+      endDate: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      const now = Date.now();
+      
+      // Get all service payments not yet in LuvLedger
+      const [payments] = await db.execute(
+        `SELECT sp.*, si.service_type, si.department_id, si.client_type, si.house_id
+         FROM service_payments sp
+         JOIN service_invoices si ON sp.invoice_id = si.id
+         WHERE sp.payment_date BETWEEN ? AND ?
+         AND sp.id NOT IN (
+           SELECT CAST(JSON_EXTRACT(data, '$.paymentId') AS UNSIGNED)
+           FROM blockchain_records
+           WHERE record_type = 'service_payment'
+         )`,
+        [input.startDate, input.endDate]
+      );
+      
+      let synced = 0;
+      const errors: string[] = [];
+      
+      for (const payment of payments as any[]) {
+        try {
+          const txHash = generateBlockchainHash();
+          
+          // Create LuvLedger transaction
+          await db.execute(
+            `INSERT INTO luv_ledger_transactions 
+             (from_account_id, to_account_id, amount, transaction_type, description, blockchain_hash, status, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              1,
+              payment.house_id || 1,
+              payment.amount.toString(),
+              'service_revenue',
+              `Synced service payment - Invoice #${payment.invoice_id}`,
+              txHash,
+              'confirmed',
+              now
+            ]
+          );
+          
+          // Create blockchain record
+          await db.execute(
+            `INSERT INTO blockchain_records (record_type, reference_id, blockchain_hash, data, created_at)
+             VALUES (?, ?, ?, ?, ?)`,
+            [
+              'service_payment',
+              payment.id,
+              txHash,
+              JSON.stringify({
+                paymentId: payment.id,
+                invoiceId: payment.invoice_id,
+                amount: Number(payment.amount),
+                serviceType: payment.service_type,
+                synced: true,
+                timestamp: new Date(now).toISOString()
+              }),
+              now
+            ]
+          );
+          
+          synced++;
+        } catch (err: any) {
+          errors.push(`Payment ${payment.id}: ${err.message}`);
+        }
+      }
+      
+      return {
+        success: true,
+        totalFound: (payments as any[]).length,
+        synced,
+        errors
+      };
+    }),
 });
+
+// Helper function to generate blockchain hash
+function generateBlockchainHash(): string {
+  const crypto = require('crypto');
+  return crypto
+    .createHash('sha256')
+    .update(Date.now().toString() + Math.random().toString())
+    .digest('hex');
+}

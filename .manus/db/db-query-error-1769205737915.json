@@ -1,0 +1,10 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS bonus_pools (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  pool_name VARCHAR(100) NOT NULL,\n  pool_type ENUM('founding_member', 'employee', 'house', 'other') DEFAULT 'founding_member',\n  source_percentage DECIMAL(5,2) NOT NULL DEFAULT 15.00,\n  source_description VARCHAR(255),\n  current_balance DECIMAL(15,2) DEFAULT 0.00,\n  total_accumulated DECIMAL(15,2) DEFAULT 0.00,\n  total_distributed DECIMAL(15,2) DEFAULT 0.00,\n  distribution_frequency ENUM('monthly', 'quarterly', 'semi_annually', 'annually') DEFAULT 'quarterly',\n  last_distribution_date BIGINT,\n  next_distribution_date BIGINT,\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000),\n  updated_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS bonus_pools (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  pool_name VARCHAR(100) NOT NULL,\n  pool_type ENUM('founding_member', 'employee', 'house', 'other') DEFAULT 'founding_member',\n  source_percentage DECIMAL(5,2) NOT NULL DEFAULT 15.00,\n  source_description VARCHAR(255),\n  current_balance DECIMAL(15,2) DEFAULT 0.00,\n  total_accumulated DECIMAL(15,2) DEFAULT 0.00,\n  total_distributed DECIMAL(15,2) DEFAULT 0.00,\n  distribution_frequency ENUM('monthly', 'quarterly', 'semi_annually', 'annually') DEFAULT 'quarterly',\n  last_distribution_date BIGINT,\n  next_distribution_date BIGINT,\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000),\n  updated_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000)\n);",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 14 column 48 near \"* 1000),",
+    "  updated_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000)",
+    ")\""
+  ]
+}

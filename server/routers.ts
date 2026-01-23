@@ -129,6 +129,7 @@ import { revenueFlowRouter } from "./routers/revenue-flow";
 import { paymentsRouter } from "./routers/payments";
 import { serviceBillingRouter } from "./routers/service-billing";
 import { hybridServicesRouter } from "./routers/hybrid-services";
+import { foundingMemberBonusRouter } from "./routers/founding-member-bonus";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -270,6 +271,7 @@ export const appRouter = router({
   payments: paymentsRouter,
   serviceBilling: serviceBillingRouter,
   hybridServices: hybridServicesRouter,
+  foundingMemberBonus: foundingMemberBonusRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

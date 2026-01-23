@@ -156,6 +156,7 @@ import MarketingDashboard from "@/pages/MarketingDashboard";
 import RevenueFlowDashboard from "@/pages/RevenueFlowDashboard";
 import BusinessListings from "@/pages/BusinessListings";
 import ServiceDepartments from "@/pages/ServiceDepartments";
+import FoundingMemberBonus from "@/pages/FoundingMemberBonus";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -345,6 +346,7 @@ function Router() {
       <Route path="/design-services">{() => <ProtectedRoute component={DesignServices} minRole="staff" />}</Route>
       <Route path="/media-services">{() => <ProtectedRoute component={MediaServices} minRole="staff" />}</Route>
       <Route path="/service-departments">{() => <ProtectedRoute component={ServiceDepartments} minRole="staff" />}</Route>
+      <Route path="/founding-member-bonus">{() => <ProtectedRoute component={FoundingMemberBonus} minRole="admin" />}</Route>
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
       <Route path="/sandbox">{() => <ProtectedRoute component={Sandbox} minRole="user" />}</Route>
       <Route path="/games/financial-literacy">{() => <ProtectedRoute component={FinancialLiteracyGame} minRole="user" />}</Route>

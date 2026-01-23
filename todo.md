@@ -6182,3 +6182,26 @@ Three main approaches available:
 - [x] House licensing interface
 - [x] Utilization dashboard
 - [x] Revenue allocation reports
+
+
+## LuvLedger Central Integration (Functional Financial Hub)
+- [x] Map service_payments → luv_ledger_transactions (recordServicePaymentToLedger)
+- [x] Map revenue_allocation_records → luv_ledger_distributions (recordAllocationToLedger)
+- [x] Map department_revenue_ledger → entity financial summaries (getServiceLedgerSummary)
+- [x] Create automatic LuvLedger entries on service payment
+- [x] Create automatic LuvLedger entries on revenue allocation
+- [x] Create automatic LuvLedger entries on trust distribution
+- [ ] Update LuvLedger UI to show service transactions
+- [x] Connect all financial flows through LuvLedger (syncServicePaymentsToLedger)
+
+
+## Founding Member Bonus Distribution System
+- [x] Create founding_members table to track founding member status
+- [x] Create bonus_pools table for tracking bonus accumulation
+- [x] Create bonus_distributions table for distribution history
+- [x] Create member_bonus_payments table for individual payments
+- [x] Build bonus calculation procedure (% of L.A.W.S. share)
+- [x] Build equal share distribution procedure
+- [x] Integrate with LuvLedger for blockchain tracking
+- [x] Create bonus management UI for administrators
+- [x] Add bonus history view for founding members
