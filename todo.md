@@ -5912,3 +5912,9 @@ Three main approaches available:
 - [x] Display diagnostic history (Run History tab)
 - [x] Show self-correction actions taken (Self-Corrections tab)
 - [x] Add schedule management (Schedules tab with enable/disable)
+
+## Phase: Demo Sandbox & Subscription Links (COMPLETED)
+- [x] Add "Try Demo" button/link on Business Listings page leading to sandbox
+- [x] Add "Subscribe" button leading to subscription/pricing page
+- [x] Add demo sandbox and subscribe buttons to Business Dashboard
+- [x] Ensure clear user acquisition flow from business pages → demo → subscribe
