@@ -45,6 +45,17 @@ export const businessEntities = mysqlTable("business_entities", {
   formationDate: timestamp("formationDate"),
   registeredAddress: text("registeredAddress"),
   physicalAddress: text("physicalAddress"),
+  
+  // House Participation - Integration with LuvOnPurpose Autonomous Wealth System
+  houseParticipationStatus: mysqlEnum("houseParticipationStatus", [
+    "pending",      // Not yet decided
+    "opted_in",     // Participating in House system (Locked House)
+    "opted_out"     // Independent operation (Unlocked House)
+  ]).default("pending").notNull(),
+  linkedHouseId: int("linkedHouseId"), // Reference to houses table when opted in
+  houseActivatedAt: timestamp("houseActivatedAt"), // When business became a House
+  houseOptOutReason: text("houseOptOutReason"), // Optional reason for opting out
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

@@ -5912,3 +5912,18 @@ Three main approaches available:
 - [x] Add navigation link from Business Listings to Business Landing
 - [x] Make flowchart interactive or visually engaging
 
+
+## Phase: Business-to-House Integration (LuvOnPurpose Autonomous Wealth System)
+- [x] Add house_participation_status field to business entities (opted_in, opted_out, pending)
+- [x] Create HouseParticipationToggle component with opt-in/opt-out UI
+- [ ] Add House activation step to Business Simulator after entity formation
+- [x] Create "Locked House" status for opted-in businesses (under trust governance)
+- [x] Create "Unlocked House" status for opted-out businesses (independent operation)
+- [x] Connect opted-in Houses to The 508 Trust governance structure
+- [x] Add House benefits display (token economy, shared resources, collective benefits)
+- [x] Create House dashboard showing participation status and benefits
+- [ ] Add House activation ceremony/onboarding flow
+- [ ] Update Entity Structure page to show House relationships
+- [ ] Add House participation toggle to Business Listings entity cards
+- [x] Create router procedures for house participation management
+

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { HouseParticipationToggle } from "@/components/HouseParticipationToggle";
 
 export default function BusinessDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -211,6 +212,16 @@ export default function BusinessDashboard() {
           </TabsContent>
 
           <TabsContent value="entities" className="space-y-4 mt-4">
+            {/* House Participation Integration */}
+            <HouseParticipationToggle
+              businessId={1}
+              businessName="L.A.W.S. Collective, LLC"
+              currentStatus="pending"
+              onStatusChange={(newStatus, reason) => {
+                console.log("Status changed to:", newStatus, reason);
+              }}
+            />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {entities.map((entity) => (
                 <Card key={entity.name} className="p-6">
