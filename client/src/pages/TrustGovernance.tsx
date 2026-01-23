@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { MeetingWidget } from "@/components/widgets/MeetingWidget";
+import { ChatWidget } from "@/components/widgets/ChatWidget";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -386,6 +388,19 @@ export default function TrustGovernance() {
                 </div>
               </CardContent>
             </Card>
+            {/* Meeting & Chat Widgets */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <MeetingWidget
+                entityType="trust"
+                entityId={1}
+                entityName="Freeman Family Dynasty Trust"
+              />
+              <ChatWidget
+                entityType="trust"
+                entityId={1}
+                entityName="Freeman Family Dynasty Trust"
+              />
+            </div>
           </TabsContent>
 
           {/* Subsidiaries Tab */}

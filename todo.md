@@ -6064,3 +6064,9 @@ Three main approaches available:
 - [ ] Add Chat widget to Trust Dashboard
 - [ ] Entity-based access control for meetings
 - [ ] Entity-based access control for chat rooms
+
+## Dashboard Widget Integration
+- [x] Add MeetingWidget to TrustDashboard
+- [x] Add ChatWidget to TrustDashboard
+- [x] Add MeetingWidget to BusinessDashboard
+- [x] Add ChatWidget to BusinessDashboard

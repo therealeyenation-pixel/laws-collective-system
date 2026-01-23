@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { MeetingWidget } from "@/components/widgets/MeetingWidget";
+import { ChatWidget } from "@/components/widgets/ChatWidget";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -177,6 +179,20 @@ export default function BusinessDashboard() {
                   ))}
                 </div>
               </Card>
+            </div>
+
+            {/* Meeting & Chat Widgets */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <MeetingWidget
+                entityType="business"
+                entityId={1}
+                entityName="L.A.W.S. Collective, LLC"
+              />
+              <ChatWidget
+                entityType="business"
+                entityId={1}
+                entityName="L.A.W.S. Collective, LLC"
+              />
             </div>
 
             {/* Quick Actions */}
