@@ -139,6 +139,7 @@ import Downloads from "@/pages/Downloads";
 import OwnerActionList from "@/pages/OwnerActionList";
 import Chat from "@/pages/Chat";
 import SwotAnalysis from "@/pages/SwotAnalysis";
+import Changelog from "@/pages/Changelog";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -389,6 +390,7 @@ function Router() {
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
       <Route path="/training-content">{() => <ProtectedRoute component={TrainingContentManager} minRole="admin" />}</Route>
+      <Route path="/changelog">{() => <ProtectedRoute component={Changelog} minRole="user" />}</Route>
       
       {/* Placeholder routes - Department Documents */}
       <Route path="/business-documents">{() => <ProtectedRoute component={BusinessDocuments} minRole="staff" />}</Route>

@@ -12792,3 +12792,91 @@ export const sandboxTemplates = mysqlTable("sandbox_templates", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
+
+export type SandboxTemplate = typeof sandboxTemplates.$inferSelect;
+export type InsertSandboxTemplate = typeof sandboxTemplates.$inferInsert;
+
+/**
+ * Trademark Searches - Track USPTO trademark search history
+ * Used for business name validation during entity creation
+ */
+export const trademarkSearches = mysqlTable("trademark_searches", {
+  id: varchar("id", { length: 36 }).primaryKey(), // UUID
+  userId: int("userId").notNull(),
+  
+  // Search details
+  businessName: varchar("businessName", { length: 200 }).notNull(),
+  searchDate: timestamp("searchDate").defaultNow().notNull(),
+  
+  // Results summary
+  totalResults: int("totalResults").default(0).notNull(),
+  exactMatch: boolean("exactMatch").default(false).notNull(),
+  conflictRisk: mysqlEnum("conflictRisk", ["none", "low", "medium", "high"]).default("none").notNull(),
+  
+  // Full results (JSON)
+  resultsJson: text("resultsJson"), // Array of TrademarkResult objects
+  recommendationsJson: text("recommendationsJson"), // Array of recommendation strings
+  
+  // Link to business entity if applicable
+  entityId: varchar("entityId", { length: 36 }),
+  
+  // Metadata
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type TrademarkSearch = typeof trademarkSearches.$inferSelect;
+export type InsertTrademarkSearch = typeof trademarkSearches.$inferInsert;
+
+
+/**
+ * Changelog Entries - Track version updates and new features
+ * Used for the "What's New" feature to inform users of updates
+ */
+export const changelogEntries = mysqlTable("changelog_entries", {
+  id: int("id").autoincrement().primaryKey(),
+  version: varchar("version", { length: 20 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  changeType: mysqlEnum("changeType", ["feature", "improvement", "fix", "security", "breaking"]).default("feature").notNull(),
+  category: varchar("category", { length: 100 }),
+  highlights: json("highlights").$type<string[]>(),
+  releaseDate: timestamp("releaseDate").defaultNow().notNull(),
+  isPublished: boolean("isPublished").default(false).notNull(),
+  isMajor: boolean("isMajor").default(false).notNull(),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ChangelogEntry = typeof changelogEntries.$inferSelect;
+export type InsertChangelogEntry = typeof changelogEntries.$inferInsert;
+
+/**
+ * Changelog User Views - Track which users have seen which changelog entries
+ * Supports "dismiss" and "don't show again" functionality
+ */
+export const changelogUserViews = mysqlTable("changelog_user_views", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  changelogId: int("changelogId").notNull(),
+  viewedAt: timestamp("viewedAt").defaultNow().notNull(),
+  dismissed: boolean("dismissed").default(false).notNull(),
+  dontShowAgain: boolean("dontShowAgain").default(false).notNull(),
+});
+export type ChangelogUserView = typeof changelogUserViews.$inferSelect;
+export type InsertChangelogUserView = typeof changelogUserViews.$inferInsert;
+
+/**
+ * App Versions - Track application version releases
+ * Used for version management and update notifications
+ */
+export const appVersions = mysqlTable("app_versions", {
+  id: int("id").autoincrement().primaryKey(),
+  version: varchar("version", { length: 20 }).notNull().unique(),
+  buildNumber: int("buildNumber"),
+  releaseNotes: text("releaseNotes"),
+  releaseDate: timestamp("releaseDate").defaultNow().notNull(),
+  isStable: boolean("isStable").default(true).notNull(),
+  downloadUrl: varchar("downloadUrl", { length: 500 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AppVersion = typeof appVersions.$inferSelect;
+export type InsertAppVersion = typeof appVersions.$inferInsert;

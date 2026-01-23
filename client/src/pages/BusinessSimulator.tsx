@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import CompletionCertificate from "@/components/CompletionCertificate";
+import TrademarkSearch from "@/components/TrademarkSearch";
 import { 
   Building2, Shield, Landmark, Users, ChevronRight, ChevronLeft, Check, 
   DollarSign, Calendar, FileText, MapPin, Clock, AlertCircle, Sparkles,
@@ -565,6 +566,18 @@ export default function BusinessSimulator() {
               </div>
             </div>
 
+            {/* Trademark Search */}
+            {simulation.entityName && simulation.entityName.length >= 3 && (
+              <TrademarkSearch 
+                businessName={simulation.entityName}
+                compact={true}
+                onSearchComplete={(result) => {
+                  // Store search result in simulation state if needed
+                  console.log("Trademark search completed:", result);
+                }}
+              />
+            )}
+
             <Card className="bg-amber-50 border-amber-200">
               <CardContent className="pt-6">
                 <div className="flex items-start gap-3">
@@ -573,7 +586,8 @@ export default function BusinessSimulator() {
                     <h4 className="font-medium text-amber-900">Important</h4>
                     <p className="text-sm text-amber-800 mt-1">
                       The entity name you enter will be used to create your actual business entity 
-                      upon completion of the training. Choose carefully.
+                      upon completion of the training. Choose carefully. Use the trademark search above
+                      to check if your name conflicts with existing trademarks.
                     </p>
                   </div>
                 </div>

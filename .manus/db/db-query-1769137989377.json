@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS trademark_searches (\n  id VARCHAR(36) PRIMARY KEY,\n  userId INT NOT NULL,\n  businessName VARCHAR(200) NOT NULL,\n  searchDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  totalResults INT DEFAULT 0 NOT NULL,\n  exactMatch BOOLEAN DEFAULT FALSE NOT NULL,\n  conflictRisk ENUM('none', 'low', 'medium', 'high') DEFAULT 'none' NOT NULL,\n  resultsJson TEXT,\n  recommendationsJson TEXT,\n  entityId VARCHAR(36),\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS trademark_searches (\n  id VARCHAR(36) PRIMARY KEY,\n  userId INT NOT NULL,\n  businessName VARCHAR(200) NOT NULL,\n  searchDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  totalResults INT DEFAULT 0 NOT NULL,\n  exactMatch BOOLEAN DEFAULT FALSE NOT NULL,\n  conflictRisk ENUM('none', 'low', 'medium', 'high') DEFAULT 'none' NOT NULL,\n  resultsJson TEXT,\n  recommendationsJson TEXT,\n  entityId VARCHAR(36),\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1690
+}

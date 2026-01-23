@@ -117,6 +117,8 @@ import { achievementsRouter } from "./routers/achievements";
 import { challengesRouter } from "./routers/challenges";
 import { splitChangeRequestsRouter } from "./routers/split-change-requests";
 import { sandboxRouter } from "./routers/sandbox";
+import { trademarkSearchRouter } from "./routers/trademark-search";
+import { changelogRouter } from "./routers/changelog";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -246,6 +248,8 @@ export const appRouter = router({
   challenges: challengesRouter,
   splitChangeRequests: splitChangeRequestsRouter,
   sandbox: sandboxRouter,
+  trademarkSearch: trademarkSearchRouter,
+  changelog: changelogRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

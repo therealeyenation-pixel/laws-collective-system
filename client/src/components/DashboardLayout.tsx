@@ -434,6 +434,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Play, label: "Platform Simulator", path: "/platform-simulator", minRole: "admin" },
           { icon: Users, label: "Team", path: "/platform-team", minRole: "admin" },
           { icon: FolderOpen, label: "Documents", path: "/platform-documents", minRole: "admin" },
+          { icon: FileText, label: "Changelog", path: "/changelog", minRole: "admin" },
         ]
       },
       // Grants & Funding

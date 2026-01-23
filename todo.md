@@ -5744,3 +5744,37 @@ Three main approaches available:
 - [x] Add time multiplier support (1x, 2x, 5x, 10x acceleration)
 - [x] Implement snapshot save/restore functionality
 - [x] Write unit tests (18 new tests, 704 total passing)
+
+
+## Owner Action Items (Business/Legal)
+- [ ] Register L.A.W.S. Collective, LLC as foreign LLC in Georgia (~$225)
+- [ ] Obtain Georgia business license (check city/county requirements)
+- [ ] File federal trademark application for "L.A.W.S. Collective" (Classes 035, 036, 041) (~$250-350 per class)
+- [ ] Consult trademark attorney for comprehensive clearance search
+- [ ] Set up Stripe account for payment processing
+- [ ] Create Terms of Service document
+- [ ] Create Privacy Policy document
+- [ ] Create refund policy
+- [ ] Determine pricing tiers (Personal, Family, Enterprise licenses)
+- [ ] Decide update cadence (weekly, monthly, as-needed)
+
+## Phase: What's New Feature (COMPLETED)
+- [x] Create changelog database tables (changelog_entries, changelog_user_views, app_versions)
+- [x] Build What's New popup component (WhatsNew.tsx with dismiss/navigation)
+- [x] Add version tracking to application (CURRENT_VERSION in changelog router)
+- [x] Create admin interface for adding changelog entries (Changelog.tsx page)
+- [x] Implement "dismiss" and "don't show again" options
+- [x] Show What's New on first launch after update (auto-popup for unread entries)
+- [x] Add changelog route and navigation link
+- [x] Write unit tests (32 new tests, 756 total passing)
+
+
+## Phase: USPTO Trademark Search in Business Simulator (COMPLETED)
+- [x] Create trademark search router with USPTO integration
+- [x] Add trademark search API endpoint
+- [x] Build trademark search UI component (TrademarkSearch.tsx)
+- [x] Integrate into business entity creation flow (BusinessSimulator.tsx step 2)
+- [x] Display search results with availability status (risk badges, recommendations)
+- [x] Store search results in database (trademark_searches table)
+- [x] Add educational guidance about trademark classes (5 relevant classes)
+- [x] Write unit tests (20 new tests, 724 total passing)
