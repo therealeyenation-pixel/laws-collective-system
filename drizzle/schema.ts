@@ -12515,3 +12515,137 @@ export const nftMintQueue = mysqlTable("nft_mint_queue", {
 
 export type NftMintQueue = typeof nftMintQueue.$inferSelect;
 export type InsertNftMintQueue = typeof nftMintQueue.$inferInsert;
+
+
+// ============================================
+// SPLIT CONFIGURATION CHANGE REQUEST SYSTEM
+// ============================================
+
+/**
+ * Split Change Requests - Formal requests to modify house split configuration
+ * Requires approval workflow before changes take effect
+ */
+export const splitChangeRequests = mysqlTable("split_change_requests", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // House identification
+  houseId: varchar("houseId", { length: 100 }).notNull(),
+  houseName: varchar("houseName", { length: 255 }).notNull(),
+  
+  // Requester info
+  requesterId: int("requesterId").notNull(),
+  requesterName: varchar("requesterName", { length: 255 }).notNull(),
+  requesterRole: varchar("requesterRole", { length: 100 }),
+  
+  // Current configuration
+  currentInterHouseSplit: int("currentInterHouseSplit").default(60).notNull(), // House percentage
+  currentIntraHouseSplit: int("currentIntraHouseSplit").default(70).notNull(), // House operations percentage
+  
+  // Proposed configuration
+  proposedInterHouseSplit: int("proposedInterHouseSplit").notNull(), // House percentage
+  proposedIntraHouseSplit: int("proposedIntraHouseSplit").notNull(), // House operations percentage
+  
+  // Request details
+  justification: text("justification").notNull(),
+  effectiveDate: timestamp("effectiveDate").notNull(),
+  expirationDate: timestamp("expirationDate"), // Optional: when to revert
+  
+  // Impact analysis
+  estimatedImpact: json("estimatedImpact"), // Calculated impact on allocations
+  affectedAccounts: json("affectedAccounts"), // List of affected LuvLedger accounts
+  
+  // Status tracking
+  status: mysqlEnum("splitRequestStatus", [
+    "draft",
+    "pending_review",
+    "under_review",
+    "approved",
+    "rejected",
+    "implemented",
+    "expired",
+    "reverted"
+  ]).default("draft").notNull(),
+  
+  // Review info
+  reviewerId: int("reviewerId"),
+  reviewerName: varchar("reviewerName", { length: 255 }),
+  reviewedAt: timestamp("reviewedAt"),
+  reviewNotes: text("reviewNotes"),
+  
+  // Implementation info
+  implementedAt: timestamp("implementedAt"),
+  implementedBy: int("implementedBy"),
+  
+  // Blockchain record
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SplitChangeRequest = typeof splitChangeRequests.$inferSelect;
+export type InsertSplitChangeRequest = typeof splitChangeRequests.$inferInsert;
+
+/**
+ * Split Change Request Comments - Discussion and audit trail
+ */
+export const splitChangeRequestComments = mysqlTable("split_change_request_comments", {
+  id: int("id").autoincrement().primaryKey(),
+  requestId: int("requestId").notNull(),
+  userId: int("userId").notNull(),
+  userName: varchar("userName", { length: 255 }).notNull(),
+  comment: text("comment").notNull(),
+  commentType: mysqlEnum("commentType", [
+    "question",
+    "clarification",
+    "approval_note",
+    "rejection_reason",
+    "revision_request",
+    "general"
+  ]).default("general").notNull(),
+  isInternal: boolean("isInternal").default(false), // Internal notes vs visible to requester
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SplitChangeRequestComment = typeof splitChangeRequestComments.$inferSelect;
+export type InsertSplitChangeRequestComment = typeof splitChangeRequestComments.$inferInsert;
+
+/**
+ * Split Configuration History - Track all split changes over time
+ */
+export const splitConfigurationHistory = mysqlTable("split_configuration_history", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  houseId: varchar("houseId", { length: 100 }).notNull(),
+  houseName: varchar("houseName", { length: 255 }).notNull(),
+  
+  // Configuration at this point in time
+  interHouseSplit: int("interHouseSplit").notNull(), // House percentage (60/40)
+  intraHouseSplit: int("intraHouseSplit").notNull(), // House operations percentage (70/30)
+  
+  // Change info
+  changeType: mysqlEnum("changeType", [
+    "initial",
+    "approved_request",
+    "admin_override",
+    "system_default",
+    "reversion"
+  ]).notNull(),
+  
+  changeRequestId: int("changeRequestId"), // Link to the request that caused this change
+  changedBy: int("changedBy"),
+  changedByName: varchar("changedByName", { length: 255 }),
+  changeReason: text("changeReason"),
+  
+  // Validity period
+  effectiveFrom: timestamp("effectiveFrom").notNull(),
+  effectiveTo: timestamp("effectiveTo"), // Null = current configuration
+  
+  // Blockchain record
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SplitConfigurationHistory = typeof splitConfigurationHistory.$inferSelect;
+export type InsertSplitConfigurationHistory = typeof splitConfigurationHistory.$inferInsert;

@@ -389,6 +389,34 @@ const EMPLOYMENT_TEMPLATES = {
   },
 };
 
+// Split & Allocation Report Templates
+const SPLIT_REPORT_TEMPLATES = {
+  SPLIT_COMPARISON_REPORT: {
+    templateCode: "SPLIT_COMPARISON",
+    templateName: "Split Comparison Report",
+    category: "financial_reports" as const,
+    description: "Compare historical allocations under different split configurations",
+    pageSize: "letter" as const,
+    requiredFields: ["houseName", "reportPeriod", "totalAmount", "currentSplit", "comparisonSplits"],
+  },
+  ALLOCATION_SUMMARY_REPORT: {
+    templateCode: "ALLOCATION_SUMMARY",
+    templateName: "Allocation Summary Report",
+    category: "financial_reports" as const,
+    description: "Summary of fund allocations across house and collective",
+    pageSize: "letter" as const,
+    requiredFields: ["houseName", "reportDate", "totalIncome", "houseShare", "collectiveShare", "inheritancePool"],
+  },
+  SPLIT_CHANGE_REQUEST: {
+    templateCode: "SPLIT_CHANGE_REQ",
+    templateName: "Split Configuration Change Request",
+    category: "financial_reports" as const,
+    description: "Formal request to modify house split configuration",
+    pageSize: "letter" as const,
+    requiredFields: ["houseName", "requestedBy", "currentSplit", "proposedSplit", "effectiveDate", "justification"],
+  },
+};
+
 // All templates combined
 const ALL_TEMPLATES = {
   ...STATE_BUSINESS_TEMPLATES,
@@ -397,6 +425,7 @@ const ALL_TEMPLATES = {
   ...CONTRACT_TEMPLATES,
   ...FUNDING_TEMPLATES,
   ...EMPLOYMENT_TEMPLATES,
+  ...SPLIT_REPORT_TEMPLATES,
 };
 
 // ============================================
@@ -914,6 +943,146 @@ export const documentGenerationRouter = router({
       { code: "general_legal", name: "Contracts & Agreements", description: "NDAs, Operating Agreements, Loans" },
     ];
   }),
+
+  // Generate split comparison report
+  generateSplitComparisonReport: protectedProcedure
+    .input(z.object({
+      houseName: z.string(),
+      reportPeriod: z.string(), // e.g., "2024-01 to 2024-12"
+      totalAmount: z.number(),
+      transactions: z.array(z.object({
+        date: z.string(),
+        amount: z.number(),
+        description: z.string(),
+      })).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const userId = ctx.user?.id;
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      // Calculate allocations under different split configurations
+      const splitConfigs = [
+        { name: "Standard 60/40 + 70/30", interHouse: 60, intraHouse: 70 },
+        { name: "Conservative 55/45 + 65/35", interHouse: 55, intraHouse: 65 },
+        { name: "Growth 65/35 + 75/25", interHouse: 65, intraHouse: 75 },
+        { name: "Balanced 50/50 + 50/50", interHouse: 50, intraHouse: 50 },
+      ];
+
+      const comparisons = splitConfigs.map(config => {
+        const houseShare = input.totalAmount * (config.interHouse / 100);
+        const collectiveShare = input.totalAmount * ((100 - config.interHouse) / 100);
+        const houseOperations = houseShare * (config.intraHouse / 100);
+        const inheritancePool = houseShare * ((100 - config.intraHouse) / 100);
+        return {
+          ...config,
+          houseShare: houseShare.toFixed(2),
+          collectiveShare: collectiveShare.toFixed(2),
+          houseOperations: houseOperations.toFixed(2),
+          inheritancePool: inheritancePool.toFixed(2),
+        };
+      });
+
+      // Generate HTML report
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Split Comparison Report - ${input.houseName}</title>
+          <style>
+            body { font-family: 'Times New Roman', serif; margin: 40px; line-height: 1.6; }
+            h1 { color: #1a5f2a; border-bottom: 2px solid #1a5f2a; padding-bottom: 10px; }
+            h2 { color: #333; margin-top: 30px; }
+            .header { text-align: center; margin-bottom: 40px; }
+            .summary { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            th, td { border: 1px solid #ddd; padding: 12px; text-align: right; }
+            th { background: #1a5f2a; color: white; }
+            tr:nth-child(even) { background: #f9f9f9; }
+            .highlight { background: #e8f5e9 !important; font-weight: bold; }
+            .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Split Comparison Report</h1>
+            <p><strong>House:</strong> ${input.houseName}</p>
+            <p><strong>Report Period:</strong> ${input.reportPeriod}</p>
+            <p><strong>Generated:</strong> ${new Date().toLocaleDateString()}</p>
+          </div>
+
+          <div class="summary">
+            <h2>Summary</h2>
+            <p><strong>Total Amount Analyzed:</strong> $${input.totalAmount.toLocaleString()}</p>
+            <p>This report compares how funds would be distributed under different split configurations.</p>
+          </div>
+
+          <h2>Split Configuration Comparison</h2>
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align: left;">Configuration</th>
+                <th>House Share</th>
+                <th>Collective Share</th>
+                <th>House Operations</th>
+                <th>Inheritance Pool</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${comparisons.map((c, i) => `
+                <tr class="${i === 0 ? 'highlight' : ''}">
+                  <td style="text-align: left;">${c.name}${i === 0 ? ' (Current)' : ''}</td>
+                  <td>$${parseFloat(c.houseShare).toLocaleString()}</td>
+                  <td>$${parseFloat(c.collectiveShare).toLocaleString()}</td>
+                  <td>$${parseFloat(c.houseOperations).toLocaleString()}</td>
+                  <td>$${parseFloat(c.inheritancePool).toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <h2>Split Formulas Explained</h2>
+          <ul>
+            <li><strong>Inter-House Split (60/40):</strong> 60% to house, 40% to collective</li>
+            <li><strong>Intra-House Split (70/30):</strong> 70% house operations, 30% inheritance pool</li>
+          </ul>
+
+          <div class="footer">
+            <p>This report is generated by the L.A.W.S. Collective Financial Automation System.</p>
+            <p>Document ID: RPT-${Date.now()}</p>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Store the document
+      const userHouse = await db.select().from(houses).where(eq(houses.ownerUserId, userId)).limit(1);
+      const houseId = userHouse.length ? userHouse[0].id : null;
+
+      const documentNumber = `SPLIT-RPT-${Date.now()}`;
+      const document = await db.insert(generatedDocuments).values({
+        houseId,
+        documentNumber,
+        documentName: `Split Comparison Report - ${input.houseName}`,
+        templateCode: "SPLIT_COMPARISON",
+        entityType: "financial_report",
+        status: "generated",
+        htmlContent,
+        generatedAt: new Date(),
+        userId,
+        metadata: JSON.stringify({ comparisons, totalAmount: input.totalAmount }),
+      });
+
+      return {
+        documentId: document.insertId,
+        documentNumber,
+        htmlContent,
+        comparisons,
+      };
+    }),
 
   // Get jurisdictions (states)
   getJurisdictions: protectedProcedure.query(async () => {

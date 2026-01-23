@@ -38,6 +38,7 @@ import TokenChainProgress from "@/components/TokenChainProgress";
 import DBATrademarkCourse from "@/components/DBATrademarkCourse";
 import PostActivationProgress from "@/components/PostActivationProgress";
 import FormationChecklist from "@/components/FormationChecklist";
+import SplitCalculator from "@/components/SplitCalculator";
 
 type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
@@ -1288,6 +1289,9 @@ export default function Dashboard() {
                 </div>
               </Card>
             </div>
+
+            {/* Split Calculator */}
+            <SplitCalculator />
 
             {overview?.accounts && overview.accounts.length > 0 ? (
               <div className="space-y-4">
