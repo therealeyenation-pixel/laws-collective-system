@@ -145,6 +145,7 @@ import Chat from "@/pages/Chat";
 import SwotAnalysis from "@/pages/SwotAnalysis";
 import Changelog from "@/pages/Changelog";
 import InvestorOpportunities from "@/pages/InvestorOpportunities";
+import DocumentTemplates from "@/pages/DocumentTemplates";
 import TrademarkDocuments from "@/pages/TrademarkDocuments";
 import MarketingDashboard from "@/pages/MarketingDashboard";
 import BusinessListings from "@/pages/BusinessListings";
@@ -406,6 +407,7 @@ function Router() {
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
       <Route path="/investor-opportunities">{() => <ProtectedRoute component={InvestorOpportunities} minRole="owner" />}</Route>
+      <Route path="/document-templates">{() => <ProtectedRoute component={DocumentTemplates} minRole="user" />}</Route>
       <Route path="/training-content">{() => <ProtectedRoute component={TrainingContentManager} minRole="admin" />}</Route>
       <Route path="/changelog">{() => <ProtectedRoute component={Changelog} minRole="user" />}</Route>
       

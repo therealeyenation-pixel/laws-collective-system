@@ -6044,3 +6044,11 @@ Three main approaches available:
 - [x] Build investor management router
 - [x] Create investor opportunity UI
 - [x] Add investment document templates
+
+## Printable House/Trust Templates
+- [x] Create House Charter template (PDF)
+- [x] Create Trust Beneficiary Agreement template
+- [x] Create House Operating Agreement template
+- [ ] Create Lineage Registration Form
+- [ ] Create Investment Protection Addendum
+- [x] Add template download functionality to UI
