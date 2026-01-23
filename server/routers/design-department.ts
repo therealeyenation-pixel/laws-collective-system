@@ -793,12 +793,16 @@ export const designDepartmentRouter = router({
       title: z.string().min(1),
       description: z.string().optional(),
       category: z.enum(['apparel', 'accessories', 'print', 'digital', 'promotional', 'other']),
+      designScope: z.enum(['laws_collective', 'house', 'business']).default('house'),
+      isOriginalDesign: z.boolean().default(false),
+      isLogoDesign: z.boolean().default(false),
       productType: z.string().optional(),
       designConcept: z.string().optional(),
       targetAudience: z.string().optional(),
       estimatedCost: z.number().optional(),
       estimatedPrice: z.number().optional(),
       houseId: z.number().optional(),
+      businessId: z.number().optional(),
       priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),
       mockupUrls: z.array(z.string()).optional(),
       notes: z.string().optional(),
@@ -812,17 +816,31 @@ export const designDepartmentRouter = router({
         const now = Date.now();
         const status = input.submitImmediately ? 'submitted' : 'draft';
         const submittedAt = input.submitImmediately ? now : null;
+        
+        // Determine if Founding House approval is required:
+        // Only L.A.W.S. Collective original designs and logos require Founding House approval
+        // House/Business designs are self-governed
+        const requiresFoundingHouseApproval = 
+          input.designScope === 'laws_collective' && 
+          (input.isOriginalDesign || input.isLogoDesign);
+        
+        const foundingHouseApproval = requiresFoundingHouseApproval ? 'pending' : 'not_required';
 
         const [result] = await db.execute(
           `INSERT INTO design_submissions 
-           (title, description, category, product_type, design_concept, target_audience,
+           (title, description, category, design_scope, is_original_design, is_logo_design,
+            founding_house_approval, product_type, design_concept, target_audience,
             estimated_cost, estimated_price, submitted_by_id, submitted_by_name, house_id,
             status, priority, mockup_urls, notes, created_at, updated_at, submitted_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             input.title,
             input.description || null,
             input.category,
+            input.designScope,
+            input.isOriginalDesign,
+            input.isLogoDesign,
+            foundingHouseApproval,
             input.productType || null,
             input.designConcept || null,
             input.targetAudience || null,
@@ -847,6 +865,7 @@ export const designDepartmentRouter = router({
           message: input.submitImmediately 
             ? "Merchandise concept submitted for review" 
             : "Merchandise concept saved as draft",
+          requiresFoundingHouseApproval,
         };
       } catch (error) {
         console.error("Error creating merchandise submission:", error);
@@ -1035,11 +1054,241 @@ export const designDepartmentRouter = router({
         const [rows] = await db.execute(
           `SELECT * FROM design_submissions 
            WHERE status IN ('completed', 'in_production')
+           AND founding_house_approval = 'approved'
            ORDER BY approved_at DESC`
         );
         return rows as any[];
       } catch (error) {
         console.error("Error getting shop ready merchandise:", error);
+        return [];
+      }
+    }),
+
+  // ============================================================================
+  // FOUNDING HOUSE APPROVAL (Original Designs & Logos)
+  // ============================================================================
+
+  getDesignsAwaitingFoundingHouseApproval: protectedProcedure
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      try {
+        const [rows] = await db.execute(
+          `SELECT * FROM design_submissions 
+           WHERE (is_original_design = TRUE OR is_logo_design = TRUE)
+           AND founding_house_approval = 'pending'
+           AND status IN ('approved', 'in_review')
+           ORDER BY created_at DESC`
+        );
+        return rows as any[];
+      } catch (error) {
+        console.error("Error getting designs awaiting Founding House approval:", error);
+        return [];
+      }
+    }),
+
+  foundingHouseApproveDesign: protectedProcedure
+    .input(z.object({
+      submissionId: z.number(),
+      action: z.enum(['approve', 'reject']),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      // Only Founding House Chair (admin) can approve original designs
+      if (ctx.user.role !== 'admin') {
+        throw new Error("Only Founding House Chair can approve original designs and logos");
+      }
+      
+      try {
+        const now = Date.now();
+        const approvalStatus = input.action === 'approve' ? 'approved' : 'rejected';
+        
+        await db.execute(
+          `UPDATE design_submissions 
+           SET founding_house_approval = ?,
+               founding_house_approver_id = ?,
+               founding_house_approval_date = ?,
+               founding_house_approval_notes = ?,
+               updated_at = ?
+           WHERE id = ?`,
+          [approvalStatus, ctx.user.id, now, input.notes || null, now, input.submissionId]
+        );
+
+        return { 
+          success: true, 
+          message: input.action === 'approve' 
+            ? "Design approved by Founding House"
+            : "Design rejected by Founding House"
+        };
+      } catch (error) {
+        console.error("Error processing Founding House approval:", error);
+        throw new Error("Failed to process Founding House approval");
+      }
+    }),
+
+  markAsOriginalDesign: protectedProcedure
+    .input(z.object({
+      submissionId: z.number(),
+      isOriginal: z.boolean(),
+      isLogo: z.boolean(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        await db.execute(
+          `UPDATE design_submissions 
+           SET is_original_design = ?,
+               is_logo_design = ?,
+               founding_house_approval = CASE 
+                 WHEN ? = TRUE OR ? = TRUE THEN 'pending'
+                 ELSE founding_house_approval
+               END,
+               updated_at = ?
+           WHERE id = ?`,
+          [input.isOriginal, input.isLogo, input.isOriginal, input.isLogo, Date.now(), input.submissionId]
+        );
+
+        return { success: true };
+      } catch (error) {
+        console.error("Error marking design type:", error);
+        throw new Error("Failed to mark design type");
+      }
+    }),
+
+  // ============================================================================
+  // DESIGN FILE MANAGEMENT
+  // ============================================================================
+
+  addDesignFile: protectedProcedure
+    .input(z.object({
+      submissionId: z.number(),
+      fileName: z.string(),
+      fileUrl: z.string(),
+      fileType: z.string().optional(),
+      fileSize: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        // Get current files
+        const [submissions] = await db.execute(
+          `SELECT design_files FROM design_submissions WHERE id = ?`,
+          [input.submissionId]
+        );
+        const submission = (submissions as any[])[0];
+        if (!submission) throw new Error("Submission not found");
+
+        // Parse existing files or create new array
+        let files = [];
+        if (submission.design_files) {
+          try {
+            files = typeof submission.design_files === 'string' 
+              ? JSON.parse(submission.design_files) 
+              : submission.design_files;
+          } catch {
+            files = [];
+          }
+        }
+
+        // Add new file
+        files.push({
+          fileName: input.fileName,
+          fileUrl: input.fileUrl,
+          fileType: input.fileType || 'unknown',
+          fileSize: input.fileSize || 0,
+          uploadedAt: Date.now(),
+        });
+
+        // Update database
+        await db.execute(
+          `UPDATE design_submissions SET design_files = ?, updated_at = ? WHERE id = ?`,
+          [JSON.stringify(files), Date.now(), input.submissionId]
+        );
+
+        return { success: true, files };
+      } catch (error) {
+        console.error("Error adding design file:", error);
+        throw new Error("Failed to add design file");
+      }
+    }),
+
+  removeDesignFile: protectedProcedure
+    .input(z.object({
+      submissionId: z.number(),
+      fileUrl: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        // Get current files
+        const [submissions] = await db.execute(
+          `SELECT design_files FROM design_submissions WHERE id = ?`,
+          [input.submissionId]
+        );
+        const submission = (submissions as any[])[0];
+        if (!submission) throw new Error("Submission not found");
+
+        // Parse existing files
+        let files = [];
+        if (submission.design_files) {
+          try {
+            files = typeof submission.design_files === 'string' 
+              ? JSON.parse(submission.design_files) 
+              : submission.design_files;
+          } catch {
+            files = [];
+          }
+        }
+
+        // Remove file by URL
+        files = files.filter((f: any) => f.fileUrl !== input.fileUrl);
+
+        // Update database
+        await db.execute(
+          `UPDATE design_submissions SET design_files = ?, updated_at = ? WHERE id = ?`,
+          [JSON.stringify(files), Date.now(), input.submissionId]
+        );
+
+        return { success: true, files };
+      } catch (error) {
+        console.error("Error removing design file:", error);
+        throw new Error("Failed to remove design file");
+      }
+    }),
+
+  getDesignFiles: protectedProcedure
+    .input(z.object({ submissionId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      try {
+        const [submissions] = await db.execute(
+          `SELECT design_files FROM design_submissions WHERE id = ?`,
+          [input.submissionId]
+        );
+        const submission = (submissions as any[])[0];
+        if (!submission || !submission.design_files) return [];
+
+        try {
+          return typeof submission.design_files === 'string' 
+            ? JSON.parse(submission.design_files) 
+            : submission.design_files;
+        } catch {
+          return [];
+        }
+      } catch (error) {
+        console.error("Error getting design files:", error);
         return [];
       }
     }),

@@ -704,22 +704,37 @@ export default function DesignDepartment() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Title</TableHead>
+                        <TableHead>Scope</TableHead>
                         <TableHead>Category</TableHead>
-                        <TableHead>Product Type</TableHead>
                         <TableHead>Priority</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Submitted</TableHead>
+                        <TableHead>Founding House</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {merchSubmissions.map((item: any) => (
                         <TableRow key={item.id}>
-                          <TableCell className="font-medium">{item.title}</TableCell>
+                          <TableCell className="font-medium">
+                            <div>
+                              {item.title}
+                              {(item.is_original_design || item.is_logo_design) && (
+                                <div className="flex gap-1 mt-1">
+                                  {item.is_original_design && <Badge variant="outline" className="text-xs">Original</Badge>}
+                                  {item.is_logo_design && <Badge variant="outline" className="text-xs">Logo</Badge>}
+                                </div>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={item.design_scope === 'laws_collective' ? 'default' : 'secondary'}>
+                              {item.design_scope === 'laws_collective' ? 'L.A.W.S.' : 
+                               item.design_scope === 'house' ? 'House' : 'Business'}
+                            </Badge>
+                          </TableCell>
                           <TableCell>
                             <Badge variant="outline">{item.category}</Badge>
                           </TableCell>
-                          <TableCell>{item.product_type || '-'}</TableCell>
                           <TableCell>
                             <Badge variant={item.priority === 'urgent' ? 'destructive' : item.priority === 'high' ? 'default' : 'secondary'}>
                               {item.priority}
@@ -735,7 +750,18 @@ export default function DesignDepartment() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            {item.submitted_at ? new Date(Number(item.submitted_at)).toLocaleDateString() : 'Draft'}
+                            {/* Founding House Approval - only shown for L.A.W.S. Collective original/logo designs */}
+                            {item.design_scope === 'laws_collective' && (item.is_original_design || item.is_logo_design) ? (
+                              <Badge variant={
+                                item.founding_house_approval === 'approved' ? 'default' :
+                                item.founding_house_approval === 'rejected' ? 'destructive' :
+                                item.founding_house_approval === 'pending' ? 'secondary' : 'outline'
+                              }>
+                                {item.founding_house_approval === 'not_required' ? '-' : item.founding_house_approval}
+                              </Badge>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">Self-Governed</span>
+                            )}
                           </TableCell>
                           <TableCell>
                             <div className="flex gap-2">
@@ -757,14 +783,21 @@ export default function DesignDepartment() {
                                   Approve
                                 </Button>
                               )}
+                              {/* For L.A.W.S. designs, check Founding House approval before production */}
                               {item.status === 'approved' && (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => moveToProduction.mutate({ id: item.id })}
-                                >
-                                  To Production
-                                </Button>
+                                item.design_scope === 'laws_collective' && 
+                                (item.is_original_design || item.is_logo_design) && 
+                                item.founding_house_approval !== 'approved' ? (
+                                  <span className="text-xs text-muted-foreground">Awaiting Founding House</span>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => moveToProduction.mutate({ id: item.id })}
+                                  >
+                                    To Production
+                                  </Button>
+                                )
                               )}
                               {item.status === 'in_production' && (
                                 <Button
@@ -810,6 +843,9 @@ export default function DesignDepartment() {
                   title: formData.get("title") as string,
                   description: formData.get("description") as string || undefined,
                   category: formData.get("category") as any,
+                  designScope: formData.get("designScope") as any || 'house',
+                  isOriginalDesign: formData.get("isOriginalDesign") === 'on',
+                  isLogoDesign: formData.get("isLogoDesign") === 'on',
                   productType: formData.get("productType") as string || undefined,
                   designConcept: formData.get("designConcept") as string || undefined,
                   targetAudience: formData.get("targetAudience") as string || undefined,
@@ -846,6 +882,36 @@ export default function DesignDepartment() {
                 <div className="space-y-2">
                   <Label htmlFor="merchProductType">Product Type</Label>
                   <Input id="merchProductType" name="productType" placeholder="e.g., Hoodie, T-Shirt, Cap" />
+                </div>
+              </div>
+              
+              {/* Design Scope - Determines approval workflow */}
+              <div className="space-y-2">
+                <Label htmlFor="designScope">Design Scope *</Label>
+                <Select name="designScope" defaultValue="house">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="laws_collective">L.A.W.S. Collective (Central Brand)</SelectItem>
+                    <SelectItem value="house">My House (Self-Governed)</SelectItem>
+                    <SelectItem value="business">My Business (Self-Governed)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  L.A.W.S. Collective designs require Founding House approval. House/Business designs are self-governed.
+                </p>
+              </div>
+              
+              {/* Original Design / Logo checkboxes */}
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" id="isOriginalDesign" name="isOriginalDesign" className="rounded" />
+                  <Label htmlFor="isOriginalDesign" className="text-sm">Original Design</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" id="isLogoDesign" name="isLogoDesign" className="rounded" />
+                  <Label htmlFor="isLogoDesign" className="text-sm">Logo/Brand Design</Label>
                 </div>
               </div>
               <div className="space-y-2">

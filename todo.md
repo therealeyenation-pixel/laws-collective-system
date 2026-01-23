@@ -6091,3 +6091,23 @@ Three main approaches available:
 - [ ] Add approval workflow with status tracking
 - [x] Update Shop page to show Coming Soon for pending designs
 - [ ] Link approved designs to merchandise catalog
+
+## Founding House Design Approval
+- [x] Add foundingHouseApproval column to design_submissions table
+- [x] Update design-department router with Founding House approval gate
+- [ ] Update Design Department UI to show Founding House approval status
+- [x] Ensure only Founding House can approve original designs and logos
+
+
+## Design Approval Distinction (L.A.W.S. vs House/Business)
+- [x] Add design_scope field to design_submissions (laws_collective, house, business)
+- [x] Update router to only require Founding House approval for L.A.W.S. Collective designs
+- [x] Allow Houses/Businesses to self-govern their own designs
+- [x] Update Design Department UI to show scope selection
+- [x] Show Founding House approval status only for L.A.W.S. Collective designs
+
+## Design File Upload
+- [x] Add design_files column to design_submissions table
+- [x] Create file upload endpoint for design assets
+- [ ] Add file upload UI to merchandise submission form
+- [ ] Display uploaded files in submission details
