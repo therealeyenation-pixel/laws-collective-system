@@ -48,6 +48,7 @@ import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
 import Careers from "@/pages/Careers";
 import EmployeeDirectory from "@/pages/EmployeeDirectory";
+import HouseContractManagement from "@/pages/HouseContractManagement";
 import MyProfile from "@/pages/MyProfile";
 import Onboarding from "@/pages/Onboarding";
 import OperatingProcedures from "@/pages/OperatingProcedures";
@@ -263,6 +264,7 @@ function Router() {
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} minRole="user" />}</Route>
+      <Route path="/house-contracts">{() => <ProtectedRoute component={HouseContractManagement} minRole="user" />}</Route>
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
       <Route path="/academy">{() => <ProtectedRoute component={AcademyDashboard} minRole="user" />}</Route>
       <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>

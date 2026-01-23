@@ -12924,3 +12924,190 @@ export const externalBusinesses = mysqlTable("external_businesses", {
 
 export type ExternalBusiness = typeof externalBusinesses.$inferSelect;
 export type InsertExternalBusiness = typeof externalBusinesses.$inferInsert;
+
+
+// ============================================================================
+// HOUSE CONTRACT MANAGEMENT SYSTEM
+// Contracts linked to specific Houses for centralized management
+// ============================================================================
+
+/**
+ * House Contracts - All contracts associated with a specific House
+ * Links contracts to Houses for centralized management and compliance tracking
+ */
+export const houseContracts = mysqlTable("house_contracts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // House linkage
+  houseId: int("houseId").notNull(), // Links to houses table
+  houseName: varchar("houseName", { length: 255 }).notNull(),
+  
+  // Contract identification
+  contractNumber: varchar("contractNumber", { length: 100 }).notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  
+  // Contract type
+  contractType: mysqlEnum("contractType", [
+    "vendor_agreement",       // Agreement with vendors/suppliers
+    "partnership_agreement",  // Partnership with other entities
+    "service_agreement",      // Service contracts
+    "licensing_agreement",    // IP licensing
+    "lease_agreement",        // Property/equipment leases
+    "employment_contract",    // Employment agreements
+    "contractor_agreement",   // Independent contractor agreements
+    "nda",                    // Non-disclosure agreements
+    "operating_agreement",    // LLC operating agreements
+    "trust_affiliation",      // Trust affiliation agreement
+    "distribution_agreement", // Distribution/sales agreements
+    "franchise_agreement",    // Franchise agreements
+    "joint_venture",          // Joint venture agreements
+    "loan_agreement",         // Loan/financing agreements
+    "insurance_policy",       // Insurance contracts
+    "other"
+  ]).notNull(),
+  
+  // Parties
+  counterpartyName: varchar("counterpartyName", { length: 255 }).notNull(),
+  counterpartyType: mysqlEnum("counterpartyType", [
+    "individual", "business", "government", "nonprofit", "trust", "other"
+  ]).default("business").notNull(),
+  counterpartyContact: varchar("counterpartyContact", { length: 255 }),
+  counterpartyEmail: varchar("counterpartyEmail", { length: 255 }),
+  counterpartyPhone: varchar("counterpartyPhone", { length: 50 }),
+  
+  // Financial terms
+  contractValue: decimal("contractValue", { precision: 15, scale: 2 }),
+  paymentTerms: varchar("paymentTerms", { length: 255 }), // e.g., "Net 30", "Monthly"
+  paymentFrequency: mysqlEnum("paymentFrequency", [
+    "one_time", "weekly", "biweekly", "monthly", "quarterly", "annually", "as_invoiced"
+  ]),
+  
+  // Dates
+  effectiveDate: timestamp("effectiveDate").notNull(),
+  expirationDate: timestamp("expirationDate"),
+  renewalDate: timestamp("renewalDate"),
+  terminationDate: timestamp("terminationDate"),
+  
+  // Renewal terms
+  autoRenew: boolean("autoRenew").default(false).notNull(),
+  renewalTermMonths: int("renewalTermMonths"),
+  noticePeriodDays: int("noticePeriodDays").default(30),
+  
+  // Document storage
+  documentUrl: text("documentUrl"), // S3 URL to signed contract
+  documentHash: varchar("documentHash", { length: 64 }), // SHA-256 hash for integrity
+  
+  // E-signature tracking
+  signatureStatus: mysqlEnum("signatureStatus", [
+    "draft", "pending_internal", "pending_counterparty", "partially_signed", "fully_executed", "expired"
+  ]).default("draft").notNull(),
+  internalSignedBy: int("internalSignedBy"),
+  internalSignedAt: timestamp("internalSignedAt"),
+  counterpartySignedAt: timestamp("counterpartySignedAt"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "pending_approval", "active", "suspended", "expired", "terminated", "renewed"
+  ]).default("draft").notNull(),
+  
+  // Compliance integration
+  complianceAlertDays: int("complianceAlertDays").default(30), // Days before expiration to alert
+  lastComplianceCheck: timestamp("lastComplianceCheck"),
+  complianceStatus: mysqlEnum("complianceStatus", [
+    "compliant", "attention_needed", "non_compliant", "not_applicable"
+  ]).default("compliant").notNull(),
+  
+  // LuvLedger blockchain recording
+  luvLedgerRecorded: boolean("luvLedgerRecorded").default(false).notNull(),
+  luvLedgerTransactionId: int("luvLedgerTransactionId"),
+  luvLedgerHash: varchar("luvLedgerHash", { length: 255 }),
+  
+  // Metadata
+  tags: json("tags"), // Array of tags for categorization
+  notes: text("notes"),
+  createdBy: int("createdBy").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseContract = typeof houseContracts.$inferSelect;
+export type InsertHouseContract = typeof houseContracts.$inferInsert;
+
+/**
+ * Contract Milestones - Track key dates and events for contracts
+ */
+export const contractMilestones = mysqlTable("contract_milestones", {
+  id: int("id").autoincrement().primaryKey(),
+  contractId: int("contractId").notNull(),
+  
+  // Milestone details
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  milestoneType: mysqlEnum("milestoneType", [
+    "signing", "effective_date", "payment_due", "deliverable_due",
+    "review_date", "renewal_notice", "expiration", "termination",
+    "amendment", "custom"
+  ]).notNull(),
+  
+  // Dates
+  dueDate: timestamp("dueDate").notNull(),
+  completedDate: timestamp("completedDate"),
+  
+  // Status
+  status: mysqlEnum("status", ["pending", "completed", "overdue", "cancelled"]).default("pending").notNull(),
+  
+  // Notifications
+  reminderDays: int("reminderDays").default(7), // Days before to send reminder
+  reminderSent: boolean("reminderSent").default(false).notNull(),
+  
+  // LuvLedger recording
+  luvLedgerRecorded: boolean("luvLedgerRecorded").default(false).notNull(),
+  luvLedgerTransactionId: int("luvLedgerTransactionId"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContractMilestone = typeof contractMilestones.$inferSelect;
+export type InsertContractMilestone = typeof contractMilestones.$inferInsert;
+
+/**
+ * Contract Templates - Reusable templates for common contract types
+ */
+export const contractTemplates = mysqlTable("contract_templates", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Template info
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  contractType: mysqlEnum("contractType", [
+    "vendor_agreement", "partnership_agreement", "service_agreement",
+    "licensing_agreement", "lease_agreement", "employment_contract",
+    "contractor_agreement", "nda", "operating_agreement", "trust_affiliation",
+    "distribution_agreement", "franchise_agreement", "joint_venture",
+    "loan_agreement", "insurance_policy", "other"
+  ]).notNull(),
+  
+  // Template content
+  templateUrl: text("templateUrl"), // S3 URL to template document
+  templateContent: text("templateContent"), // HTML/Markdown content for inline templates
+  
+  // Variables/placeholders
+  variables: json("variables"), // Array of variable names that need to be filled
+  
+  // Usage tracking
+  usageCount: int("usageCount").default(0).notNull(),
+  lastUsedAt: timestamp("lastUsedAt"),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContractTemplate = typeof contractTemplates.$inferSelect;
+export type InsertContractTemplate = typeof contractTemplates.$inferInsert;

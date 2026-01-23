@@ -5973,3 +5973,16 @@ Three main approaches available:
 - [x] Add foreign business operations as a flow-down benefit from Trust to Houses
 - [x] Update Partner/Affiliate Benefits section with international capabilities
 - [x] Add visual showing Trust umbrella with Houses underneath
+
+
+## Phase: House-Contract Management Integration
+- [x] Add houseId foreign key to contracts table to link contracts to specific Houses
+- [x] Create House Contract Repository UI showing all contracts for a specific House
+- [x] Add contract creation flow that automatically links to the user's House
+- [x] Integrate contract deadlines with House compliance calendar
+- [x] Record contract milestones on LuvLedger blockchain (signing, renewal, termination)
+- [x] Add contract status tracking (draft, pending signature, active, expired, terminated)
+- [x] Create contract templates for common House agreements (vendor, partnership, service)
+- [ ] Add e-signature integration for contract execution
+- [ ] Show contract summary on House Dashboard
+- [x] Add contract alerts and notifications for upcoming deadlines

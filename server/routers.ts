@@ -48,6 +48,7 @@ import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
+import { houseContractsRouter } from "./routers/house-contracts";
 import { houseDashboardRouter } from "./routers/house-dashboard";
 import { ownerHouseSetupRouter } from "./routers/owner-house-setup";
 import { positionManagementRouter } from "./routers/position-management";
@@ -164,6 +165,7 @@ export const appRouter = router({
   houseLedger: houseLedgerRouter,
   realEstate: realEstateRouter,
   houseVault: houseVaultRouter,
+  houseContracts: houseContractsRouter,
   payroll: payrollRouter,
   taxPrep: taxPrepRouter,
   restoration: restorationRouter,
