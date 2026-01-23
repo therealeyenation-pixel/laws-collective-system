@@ -93,6 +93,8 @@ import SpecialistTracks from "./pages/SpecialistTracks";
 import Scholarships from "./pages/Scholarships";
 import CreativeEnterprise from "./pages/CreativeEnterprise";
 import DesignDepartment from "./pages/DesignDepartment";
+import DesignServices from "./pages/DesignServices";
+import MediaServices from "./pages/MediaServices";
 import GameCenter from "./pages/GameCenter";
 import Sandbox from "./pages/Sandbox";
 import SoftwareLicenses from "./pages/SoftwareLicenses";
@@ -153,6 +155,7 @@ import TrademarkDocuments from "@/pages/TrademarkDocuments";
 import MarketingDashboard from "@/pages/MarketingDashboard";
 import RevenueFlowDashboard from "@/pages/RevenueFlowDashboard";
 import BusinessListings from "@/pages/BusinessListings";
+import ServiceDepartments from "@/pages/ServiceDepartments";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -339,6 +342,9 @@ function Router() {
       <Route path="/scholarships">{() => <ProtectedRoute component={Scholarships} minRole="staff" />}</Route>
       <Route path="/creative-enterprise">{() => <ProtectedRoute component={CreativeEnterprise} minRole="staff" />}</Route>
       <Route path="/design-department">{() => <ProtectedRoute component={DesignDepartment} minRole="staff" />}</Route>
+      <Route path="/design-services">{() => <ProtectedRoute component={DesignServices} minRole="staff" />}</Route>
+      <Route path="/media-services">{() => <ProtectedRoute component={MediaServices} minRole="staff" />}</Route>
+      <Route path="/service-departments">{() => <ProtectedRoute component={ServiceDepartments} minRole="staff" />}</Route>
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
       <Route path="/sandbox">{() => <ProtectedRoute component={Sandbox} minRole="user" />}</Route>
       <Route path="/games/financial-literacy">{() => <ProtectedRoute component={FinancialLiteracyGame} minRole="user" />}</Route>

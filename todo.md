@@ -6111,3 +6111,74 @@ Three main approaches available:
 - [x] Create file upload endpoint for design assets
 - [ ] Add file upload UI to merchandise submission form
 - [ ] Display uploaded files in submission details
+
+## Design Services Billing (Revenue-Generating Department)
+- [x] Create service_packages table for design pricing tiers
+- [x] Create service_invoices table for billing
+- [x] Create service_payments table for payment tracking
+- [x] Add member vs non-member pricing differentiation (20% discount for members)
+- [x] Build Design Services billing router
+- [x] Create Design Services pricing UI with package selection
+- [x] Integrate with Stripe for payments
+- [x] Connect revenue to 60/40 split system
+
+## Media Creation Services Billing (Revenue-Generating Department)
+- [x] Create media service packages (video, audio, content creation)
+- [x] Build Media Services billing router (shared with Design Services)
+- [x] Create Media Services pricing UI
+- [x] Integrate with Stripe for payments
+- [x] Connect revenue to 60/40 split system
+
+
+## Hybrid Service Model Implementation
+
+### Database Schema
+- [x] Create service_departments table (central vs licensable)
+- [x] Create house_service_licenses table (which houses licensed which services)
+- [x] Create service_utilization_log table (track all service usage)
+- [x] Create department_revenue_ledger table (per-department revenue tracking)
+- [x] Create revenue_allocation_records table (distribution history)
+- [x] Create service_disclaimers table
+- [x] Create disclaimer_acknowledgments table
+
+### L.A.W.S. Central Services (Compliance-Sensitive)
+- [x] Tax Preparation Services
+- [x] Contract Services
+- [x] Grant Services
+- [x] Business Setup Services
+
+### Licensable Services (Houses Can Activate)
+- [x] Design Services (already exists - update for licensing)
+- [x] Media Services (already exists - update for licensing)
+- [x] Marketing Services
+- [x] Property Management Services
+- [x] Education Services
+- [x] Purchasing Management Services
+- [x] Health Services
+- [x] Business Management Services
+
+### Service Activation & Utilization
+- [x] Service activation logging system (logUtilization procedure)
+- [x] Time/unit tracking per department (hours_logged, units_completed)
+- [x] Utilization reports (getUtilizationByPeriod, getUtilizationSummary)
+
+### Revenue Allocation Engine
+- [x] Weighted distribution calculator (calculateAllocation procedure)
+- [x] Department ledger updates (department_revenue_ledger table)
+- [x] Monthly reconciliation (getAllocationHistory, getDepartmentLedger)
+- [x] Revenue split rules (60/40 central, 60/30/10 licensed in service_departments)
+
+### Disclaimer System
+- [x] Tax Prep disclaimer (not tax advice)
+- [x] Contract Services disclaimer (not legal advice)
+- [x] Business Setup disclaimer (not legal advice)
+- [x] Health Services disclaimer (not medical advice)
+- [x] Financial Services disclaimer (not financial advice)
+- [x] Acknowledgment checkbox requirement (acknowledgeDisclaimer procedure)
+- [x] Disclaimer on generated documents (display_on_documents flag)
+
+### UI Components
+- [x] Service Department Management page
+- [x] House licensing interface
+- [x] Utilization dashboard
+- [x] Revenue allocation reports

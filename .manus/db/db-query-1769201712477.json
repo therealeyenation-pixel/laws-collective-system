@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS service_packages (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  service_type ENUM('design', 'media') NOT NULL,\n  package_name VARCHAR(255) NOT NULL,\n  package_code VARCHAR(50) NOT NULL UNIQUE,\n  description TEXT,\n  category VARCHAR(100),\n  base_price DECIMAL(10,2) NOT NULL,\n  member_price DECIMAL(10,2),\n  member_discount_percent INT DEFAULT 20,\n  pricing_type ENUM('fixed', 'hourly', 'per_item', 'subscription') DEFAULT 'fixed',\n  estimated_hours INT,\n  deliverables JSON,\n  features JSON,\n  is_active BOOLEAN DEFAULT TRUE,\n  display_order INT DEFAULT 0,\n  created_at BIGINT NOT NULL,\n  updated_at BIGINT NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS service_packages (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  service_type ENUM('design', 'media') NOT NULL,\n  package_name VARCHAR(255) NOT NULL,\n  package_code VARCHAR(50) NOT NULL UNIQUE,\n  description TEXT,\n  category VARCHAR(100),\n  base_price DECIMAL(10,2) NOT NULL,\n  member_price DECIMAL(10,2),\n  member_discount_percent INT DEFAULT 20,\n  pricing_type ENUM('fixed', 'hourly', 'per_item', 'subscription') DEFAULT 'fixed',\n  estimated_hours INT,\n  deliverables JSON,\n  features JSON,\n  is_active BOOLEAN DEFAULT TRUE,\n  display_order INT DEFAULT 0,\n  created_at BIGINT NOT NULL,\n  updated_at BIGINT NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1593
+}
