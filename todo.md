@@ -6023,3 +6023,24 @@ Three main approaches available:
 - [x] Allow host to trigger vote on any topic
 - [x] Display vote results in real-time
 - [x] Track add-on topics separately from planned agenda
+
+## Investor/Partner Framework
+- [x] Create investor_partners table with tier system
+- [x] Create investment_opportunities table
+- [x] Create investment_agreements table with firewall clauses
+- [x] Create investment_allocations table (from 40% pool only)
+- [x] Add protection safeguards (veto, buyback, sunset)
+- [x] Build investor management router
+- [x] Create investor opportunity UI
+- [x] Add investment document templates
+
+
+## Investor/Partner Framework
+- [x] Create investor_partners table with tier system
+- [x] Create investment_opportunities table
+- [x] Create investment_agreements table with firewall clauses
+- [x] Create investment_allocations table (from 40% pool only)
+- [x] Add protection safeguards (veto, buyback, sunset)
+- [x] Build investor management router
+- [x] Create investor opportunity UI
+- [x] Add investment document templates
