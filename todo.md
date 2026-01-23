@@ -5891,3 +5891,13 @@ Three main approaches available:
 - [x] Create inter-entity service agreement template (L.A.W.S. ↔ Real-Eye-Nation) at /documents/inter-entity-service-agreement.md
 - [x] Add service agreement to document templates
 
+
+
+## Phase: Demo Sandbox and Subscription Conversion Flow
+- [x] Add "Try Demo" button to Business Listings page (opens Business Simulator)
+- [x] Add "Subscribe" button to Business Listings page (navigates to /pricing)
+- [x] Add "Try Demo Sandbox" button to Business Dashboard (/dept/business)
+- [x] Add "Subscribe" button to Business Dashboard (/dept/business)
+- [ ] Create /pricing page with subscription tiers and payment integration
+- [ ] Wire Subscribe buttons to actual payment flow
+
