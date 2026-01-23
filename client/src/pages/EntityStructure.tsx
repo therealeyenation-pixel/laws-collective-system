@@ -69,7 +69,7 @@ const entities: Entity[] = [
     children: [
       {
         id: "the-508",
-        name: "The 508",
+        name: "LuvOnPurpose Academy and Outreach",
         type: "trust",
         state: "GA",
         jurisdiction: "Georgia",
@@ -360,7 +360,7 @@ function FinancialFlowDiagram() {
                 <div className="flex items-center gap-2">
                   <Shield className="w-6 h-6" />
                   <div className="text-left">
-                    <h4 className="font-bold">The 508</h4>
+                    <h4 className="font-bold">LuvOnPurpose Academy and Outreach</h4>
                     <p className="text-xs text-amber-100">Trust • Georgia</p>
                   </div>
                 </div>
@@ -456,7 +456,7 @@ function HierarchyDiagram() {
               <div className="flex items-center gap-2">
                 <Shield className="w-6 h-6" />
                 <div className="text-left">
-                  <h4 className="font-bold">The 508</h4>
+                  <h4 className="font-bold">LuvOnPurpose Academy and Outreach</h4>
                   <p className="text-xs text-amber-100">Trust • Georgia</p>
                 </div>
               </div>
@@ -546,7 +546,7 @@ function HierarchyDiagram() {
 function EntitySummaryTable() {
   const allEntities = [
     { name: "REAL-EYE-NATION", type: "System", state: "—", purpose: "Master governance framework", status: "Active", nextDeadline: "—" },
-    { name: "The 508", type: "Trust", state: "GA", purpose: "Asset protection & wealth preservation", status: "Active", nextDeadline: "Apr 1 - Annual Registration" },
+    { name: "LuvOnPurpose Academy and Outreach", type: "508(c)(1)(a)", state: "GA", purpose: "Education, training & community outreach", status: "Active", nextDeadline: "Apr 1 - Annual Registration" },
     { name: "LuvOnPurpose AWS", type: "LLC", state: "DE", purpose: "Core operations & IP holding", status: "Active", nextDeadline: "Jun 1 - Franchise Tax" },
     { name: "L.A.W.S. Collective", type: "Collective", state: "—", purpose: "Public engagement & education", status: "Active", nextDeadline: "—" },
   ];
@@ -704,7 +704,7 @@ export default function EntityStructure() {
                   <Badge variant="outline" className="font-mono">GA</Badge>
                   <span className="font-medium">Georgia</span>
                 </div>
-                <span className="text-sm text-muted-foreground">The 508</span>
+                <span className="text-sm text-muted-foreground">LuvOnPurpose Academy and Outreach</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                 <div className="flex items-center gap-3">

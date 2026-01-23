@@ -89,7 +89,7 @@ export function HouseParticipationToggle({
     {
       icon: Shield,
       title: "Trust Governance",
-      description: "Protected under The 508 Trust structure",
+      description: "Protected under LuvOnPurpose Academy and Outreach Trust structure",
     },
     {
       icon: Coins,
@@ -169,7 +169,7 @@ export function HouseParticipationToggle({
                     Full House Management Active
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Your business is a Locked House under The 508 Trust governance.
+                    Your business is a Locked House under LuvOnPurpose Academy and Outreach Trust governance.
                     You have access to all House management features, distributions,
                     and generational wealth tools.
                   </p>
@@ -269,7 +269,7 @@ export function HouseParticipationToggle({
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
               By opting in, <strong>{businessName}</strong> will become a Locked House
-              under The 508 Trust governance. You'll gain access to:
+              under LuvOnPurpose Academy and Outreach Trust governance. You'll gain access to:
             </p>
 
             <div className="grid gap-3">

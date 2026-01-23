@@ -24,6 +24,16 @@ import {
   Briefcase,
   Play,
   ChevronRight,
+  Home,
+  Lock,
+  Unlock,
+  Coins,
+  Wallet,
+  Flame,
+  Gift,
+  Sparkles,
+  Heart,
+  Scale,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -367,6 +377,236 @@ export default function BusinessLanding() {
               <p className="text-center text-xs text-muted-foreground mt-4">
                 No duplicate data entry. Changes propagate automatically.
               </p>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Business to House Connection Section */}
+        <section>
+          <div className="text-center mb-8">
+            <Badge variant="outline" className="mb-4">
+              <Home className="w-4 h-4 mr-2" />
+              Business → House Integration
+            </Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+              From Business to Generational Wealth
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Your business can become a "House" in the LuvOnPurpose Autonomous Wealth System,
+              unlocking trust governance, token economy, and multi-generational wealth tools.
+            </p>
+          </div>
+
+          {/* Trust Affiliated vs Independent Comparison */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {/* Trust Affiliated */}
+            <Card className="border-2 border-primary bg-gradient-to-br from-primary/5 to-accent/5">
+              <CardHeader className="text-center">
+                <div className="mx-auto p-3 rounded-full bg-primary text-white w-fit">
+                  <Shield className="w-6 h-6" />
+                </div>
+                <CardTitle>Trust Affiliated</CardTitle>
+                <CardDescription>Full System Benefits</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  {[
+                    { icon: Shield, text: "Asset protection under LuvOnPurpose Academy and Outreach" },
+                    { icon: Coins, text: "Access to token economy (MIRROR, GIFT, SPARK, HOUSE)" },
+                    { icon: TrendingUp, text: "Participate in 70/30 & 60/40 distributions" },
+                    { icon: Users, text: "Succession planning & heir designations" },
+                    { icon: Wallet, text: "Dedicated business crypto wallet" },
+                    { icon: Heart, text: "Collective benefits & shared resources" },
+                    { icon: FileText, text: "LuvLedger blockchain recording" },
+                    { icon: Crown, text: "Generational wealth transfer tools" },
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2 text-sm">
+                      <item.icon className="w-4 h-4 text-primary flex-shrink-0" />
+                      <span>{item.text}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6">
+                  <Link href="/genesis">
+                    <Button className="w-full gap-2">
+                      <Flame className="w-4 h-4" />
+                      Affiliate with Trust
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Independent Operation */}
+            <Card className="border-2 border-muted">
+              <CardHeader className="text-center">
+                <div className="mx-auto p-3 rounded-full bg-muted w-fit">
+                  <Building2 className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <CardTitle className="text-muted-foreground">Independent Operation</CardTitle>
+                <CardDescription>Use Platform Tools Only</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  {[
+                    { text: "Trust asset protection", included: false },
+                    { text: "Token economy access", included: false },
+                    { text: "Distribution participation", included: false },
+                    { text: "Succession planning tools", included: false },
+                    { text: "Business wallet", included: false },
+                    { text: "Collective benefits", included: false },
+                    { text: "LuvLedger recording", included: true },
+                    { text: "Business management tools", included: true },
+                    { text: "Analytics & reporting", included: true },
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2 text-sm">
+                      {item.included ? (
+                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      ) : (
+                        <div className="w-4 h-4 rounded-full border-2 border-muted-foreground/30 flex-shrink-0" />
+                      )}
+                      <span className={item.included ? "" : "text-muted-foreground"}>
+                        {item.text}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6">
+                  <p className="text-xs text-center text-muted-foreground">
+                    You can affiliate with the trust at any time
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Established Business Onboarding */}
+          <Card className="border-2 border-dashed border-amber-500/50 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-amber-500/10">
+                  <Building2 className="w-6 h-6 text-amber-600" />
+                </div>
+                <div>
+                  <CardTitle>Already Have a Business?</CardTitle>
+                  <CardDescription>
+                    Existing businesses can join the trust system through our affiliation process
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <p className="text-sm text-muted-foreground">
+                If you already have an established business (LLC, Corporation, or other entity), 
+                you can affiliate with the LuvOnPurpose Academy and Outreach Trust without 
+                restructuring your existing legal entity. This is a <strong>legal, logical, and doable</strong> path 
+                that maintains your business independence while gaining access to the House system.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  {
+                    step: "1",
+                    title: "Register Your Business",
+                    desc: "Add your existing entity to the platform with basic information and documentation",
+                    icon: FileText,
+                  },
+                  {
+                    step: "2",
+                    title: "Sign Affiliation Agreement",
+                    desc: "Execute a Trust Affiliation Agreement (not ownership transfer) via e-signature",
+                    icon: Scale,
+                  },
+                  {
+                    step: "3",
+                    title: "Complete Affiliation",
+                    desc: "Finalize your trust affiliation and gain access to full system benefits",
+                    icon: Flame,
+                  },
+                ].map((item, idx) => (
+                  <div key={idx} className="p-4 rounded-lg bg-background border">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge className="bg-amber-500">{item.step}</Badge>
+                      <item.icon className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <h4 className="font-semibold text-sm mb-1">{item.title}</h4>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="p-4 rounded-lg bg-background border border-amber-200 dark:border-amber-800">
+                <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-amber-600" />
+                  Legal Framework
+                </h4>
+                <ul className="space-y-2 text-xs text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span><strong>No ownership transfer</strong> - Your business remains yours</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span><strong>Affiliation model</strong> - Similar to franchise or membership agreements</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span><strong>Revocable participation</strong> - You can opt-out at any time</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span><strong>Asset protection benefits</strong> - Gain trust governance without restructuring</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Link href="/business-listings">
+                  <Button className="gap-2 bg-amber-600 hover:bg-amber-700">
+                    <Building2 className="w-4 h-4" />
+                    Register Existing Business
+                  </Button>
+                </Link>
+                <Link href="/documents">
+                  <Button variant="outline" className="gap-2">
+                    <FileText className="w-4 h-4" />
+                    View Affiliation Agreement
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* House Lifecycle */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                House Lifecycle Journey
+              </CardTitle>
+              <CardDescription>
+                From genesis to generational legacy
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {[
+                  { stage: "1", title: "Genesis", desc: "Flame lighting ceremony", icon: Flame },
+                  { stage: "2", title: "Activation", desc: "Token chain init", icon: Sparkles },
+                  { stage: "3", title: "Operations", desc: "Active governance", icon: Scale },
+                  { stage: "4", title: "Growth", desc: "Wealth accumulation", icon: TrendingUp },
+                  { stage: "5", title: "Succession", desc: "Legacy transfer", icon: Crown },
+                ].map((stage, idx) => (
+                  <div key={idx} className="text-center p-4 rounded-lg bg-muted/50">
+                    <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                      <stage.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <Badge variant="outline" className="mb-1 text-xs">Stage {stage.stage}</Badge>
+                    <h4 className="font-semibold text-sm">{stage.title}</h4>
+                    <p className="text-xs text-muted-foreground">{stage.desc}</p>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </section>

@@ -119,6 +119,7 @@ import GrantsSimulator from "./pages/simulators/GrantsSimulator";
 import OfferLetters from "@/pages/OfferLetters";
 import BusinessDashboard from "@/pages/BusinessDashboard";
 import BusinessLanding from "@/pages/BusinessLanding";
+import SystemHealthDashboard from "@/pages/SystemHealthDashboard";
 import HealthDashboard from "@/pages/HealthDashboard";
 import EducationDashboard from "@/pages/EducationDashboard";
 import DesignDashboard from "@/pages/DesignDashboard";
@@ -465,6 +466,7 @@ function Router() {
       <Route path="/security-center">{() => <ProtectedRoute component={SecurityCenter} minRole="staff" />}</Route>
       <Route path="/swot-analysis">{() => <ProtectedRoute component={SwotAnalysis} minRole="user" />}</Route>
       <Route path="/system-admin">{() => <ProtectedRoute component={SystemAdmin} minRole="staff" />}</Route>
+      <Route path="/system-health">{() => <ProtectedRoute component={SystemHealthDashboard} minRole="admin" />}</Route>
       <Route path="/system-settings">{() => <ProtectedRoute component={SystemSettings} minRole="admin" />}</Route>
       <Route path="/user-management">{() => <ProtectedRoute component={UserManagement} minRole="admin" />}</Route>
       <Route path="/vendor-management">{() => <ProtectedRoute component={VendorManagement} minRole="staff" />}</Route>

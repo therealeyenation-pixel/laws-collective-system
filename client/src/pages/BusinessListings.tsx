@@ -36,9 +36,9 @@ import { Link } from "wouter";
 // Internal entities (auto-populated from system)
 const internalEntities = [
   {
-    id: "the-508",
-    name: "The 508",
-    type: "Trust",
+    id: "luvonpurpose-academy",
+    name: "LuvOnPurpose Academy and Outreach",
+    type: "508(c)(1)(a)",
     state: "GA",
     ein: "Pending",
     status: "active",

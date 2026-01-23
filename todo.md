@@ -5927,3 +5927,29 @@ Three main approaches available:
 - [ ] Add House participation toggle to Business Listings entity cards
 - [x] Create router procedures for house participation management
 
+
+
+## Phase: System Health & Entity Name Update
+- [x] Update "The 508" entity name to "LuvOnPurpose Academy and Outreach" in database
+- [x] Update all UI references from "The 508" to "LuvOnPurpose Academy and Outreach"
+- [x] Create auto-diagnostic scheduled job for system health checks
+- [ ] Add health check intervals: hourly quick check, daily full check, weekly deep audit
+- [x] Create System Health Dashboard page showing all integration statuses
+- [x] Add manual trigger button for running diagnostics on demand
+- [x] Display health status for: Database, LuvLedger, Token Economy, Autonomous Engine, House System
+- [ ] Add error logging and notification for critical issues
+- [ ] Create health history timeline view
+
+- [x] Create House/System "What You Get" landing page with benefits overview (merged into Business Landing)
+- [x] Include Trust governance benefits (asset protection, generational wealth)
+- [x] Include Token economy benefits (MIRROR, GIFT, SPARK, HOUSE tokens)
+- [x] Include Distribution framework (70/30, 60/40 splits)
+- [x] Include Heir designation and succession planning
+- [x] Include LuvLedger blockchain recording benefits
+- [x] Add visual flowchart of House lifecycle
+
+- [x] Add established business onboarding path to join trust system
+- [ ] Create Trust Affiliation Agreement template for existing businesses
+- [ ] Add "Join as Existing Business" option to Business Landing page
+- [ ] Create onboarding wizard for established businesses to affiliate with trust
+- [ ] Ensure legal compliance with affiliation model (no ownership transfer required)

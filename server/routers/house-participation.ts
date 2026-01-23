@@ -149,7 +149,7 @@ export const houseParticipationRouter = router({
           title: "Locked House (Opted-In)",
           description: "Full participation in the LuvOnPurpose Autonomous Wealth System",
           benefits: [
-            { name: "Trust Governance", description: "Protected under The 508 Trust structure", included: true },
+            { name: "Trust Governance", description: "Protected under LuvOnPurpose Academy and Outreach Trust structure", included: true },
             { name: "60/40 Distribution", description: "Participate in collective wealth building", included: true },
             { name: "70/30 Inheritance", description: "Generational wealth transfer framework", included: true },
             { name: "Heir Designations", description: "Set up beneficiaries and succession", included: true },
@@ -164,7 +164,7 @@ export const houseParticipationRouter = router({
           title: "Unlocked House (Opted-Out)",
           description: "Independent operation with blockchain recording",
           benefits: [
-            { name: "Trust Governance", description: "Protected under The 508 Trust structure", included: false },
+            { name: "Trust Governance", description: "Protected under LuvOnPurpose Academy and Outreach Trust structure", included: false },
             { name: "60/40 Distribution", description: "Participate in collective wealth building", included: false },
             { name: "70/30 Inheritance", description: "Generational wealth transfer framework", included: false },
             { name: "Heir Designations", description: "Set up beneficiaries and succession", included: false },
