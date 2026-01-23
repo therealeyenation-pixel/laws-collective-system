@@ -148,13 +148,13 @@ export const trademarkSearchRouter = router({
       entityId: z.string().optional(), // Link to a business entity if applicable
     }))
     .mutation(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
       
       // Perform the search
       const searchResult = simulateTrademarkSearch(input.businessName);
       
       // Save to database if requested
-      if (input.saveToRecord) {
+      if (input.saveToRecord && db) {
         await db.insert(trademarkSearches).values({
           id: crypto.randomUUID(),
           userId: ctx.user.id,
@@ -179,7 +179,8 @@ export const trademarkSearchRouter = router({
       limit: z.number().min(1).max(100).optional().default(20),
     }))
     .query(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
+      if (!db) return [];
       
       const searches = await db
         .select()
@@ -188,7 +189,7 @@ export const trademarkSearchRouter = router({
         .orderBy(desc(trademarkSearches.createdAt))
         .limit(input.limit);
       
-      return searches.map(search => ({
+      return searches.map((search: typeof trademarkSearches.$inferSelect) => ({
         ...search,
         results: JSON.parse(search.resultsJson || "[]"),
         recommendations: JSON.parse(search.recommendationsJson || "[]"),
@@ -201,7 +202,8 @@ export const trademarkSearchRouter = router({
       searchId: z.string(),
     }))
     .query(async ({ ctx, input }) => {
-      const db = getDb();
+      const db = await getDb();
+      if (!db) return null;
       
       const [search] = await db
         .select()
