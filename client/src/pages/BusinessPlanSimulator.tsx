@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -78,6 +78,7 @@ const TEAM_MEMBERS = [
 export default function BusinessPlanSimulator() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showCertificate, setShowCertificate] = useState(false);
+  const [swotDataLoaded, setSwotDataLoaded] = useState(false);
   
   // Form state - this would be saved to database
   const [formData, setFormData] = useState({
@@ -124,6 +125,28 @@ export default function BusinessPlanSimulator() {
   });
 
   const progress = (currentStep / STEPS.length) * 100;
+
+  // Fetch SWOT data for the selected entity
+  const selectedEntityIdNum = formData.selectedEntityId ? parseInt(formData.selectedEntityId) : undefined;
+  const { data: swotData } = trpc.swotAnalysis.getForBusinessPlan.useQuery(
+    { businessEntityId: selectedEntityIdNum! },
+    { enabled: !!selectedEntityIdNum && !swotDataLoaded }
+  );
+
+  // Auto-populate market analysis from SWOT when data is available
+  useEffect(() => {
+    if (swotData && !swotDataLoaded) {
+      setFormData(prev => ({
+        ...prev,
+        targetMarket: prev.targetMarket || swotData.marketAnalysis.opportunities || '',
+        competitiveAdvantage: prev.competitiveAdvantage || swotData.marketAnalysis.competitiveAdvantages || '',
+      }));
+      setSwotDataLoaded(true);
+      if (swotData.marketAnalysis.opportunities || swotData.marketAnalysis.competitiveAdvantages) {
+        toast.success('Market Analysis auto-populated from SWOT Analysis');
+      }
+    }
+  }, [swotData, swotDataLoaded]);
 
   const handleEntitySelect = (entityId: string) => {
     const entity = EXISTING_ENTITIES.find(e => e.id.toString() === entityId);

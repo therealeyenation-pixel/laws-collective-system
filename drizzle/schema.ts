@@ -12880,3 +12880,36 @@ export const appVersions = mysqlTable("app_versions", {
 });
 export type AppVersion = typeof appVersions.$inferSelect;
 export type InsertAppVersion = typeof appVersions.$inferInsert;
+
+
+/**
+ * External Businesses - Vendors, partners, contractors for Business Listings
+ */
+export const externalBusinesses = mysqlTable("external_businesses", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: varchar("userId", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: mysqlEnum("type", ["vendor", "partner", "contractor", "client", "supplier", "consultant", "agency", "other"]).notNull().default("vendor"),
+  industry: varchar("industry", { length: 255 }),
+  contactName: varchar("contact_name", { length: 255 }),
+  contactEmail: varchar("contact_email", { length: 255 }),
+  contactPhone: varchar("contact_phone", { length: 50 }),
+  website: varchar("website", { length: 500 }),
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 50 }),
+  zipCode: varchar("zip_code", { length: 20 }),
+  country: varchar("country", { length: 100 }).default("USA"),
+  ein: varchar("ein", { length: 20 }),
+  dunsNumber: varchar("duns_number", { length: 20 }),
+  notes: text("notes"),
+  status: mysqlEnum("status", ["active", "inactive", "pending", "blacklisted"]).notNull().default("active"),
+  rating: int("rating").default(0),
+  totalContracts: int("total_contracts").default(0),
+  totalSpend: decimal("total_spend", { precision: 15, scale: 2 }).default("0.00"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+export type ExternalBusiness = typeof externalBusinesses.$inferSelect;
+export type InsertExternalBusiness = typeof externalBusinesses.$inferInsert;

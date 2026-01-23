@@ -118,6 +118,7 @@ import { challengesRouter } from "./routers/challenges";
 import { splitChangeRequestsRouter } from "./routers/split-change-requests";
 import { sandboxRouter } from "./routers/sandbox";
 import { trademarkSearchRouter } from "./routers/trademark-search";
+import { externalBusinessesRouter } from "./routers/external-businesses";
 import { changelogRouter } from "./routers/changelog";
 
 export const appRouter = router({
@@ -249,6 +250,7 @@ export const appRouter = router({
   splitChangeRequests: splitChangeRequestsRouter,
   sandbox: sandboxRouter,
   trademarkSearch: trademarkSearchRouter,
+  externalBusinesses: externalBusinessesRouter,
   changelog: changelogRouter,
 
   // TODO: add feature routers here, e.g.

@@ -5881,3 +5881,13 @@ Three main approaches available:
 - [x] Add SWOT getForMarketing procedure for Marketing integration
 - [x] Add navigation links for Business Listings (under Business section)
 
+
+## Phase: Business Plan SWOT Integration & External Business Database (COMPLETED)
+- [x] Wire Business Plan Simulator to call trpc.swotAnalysis.getForBusinessPlan
+- [x] Auto-populate Market Analysis section from SWOT Opportunities/Threats (Import SWOT button)
+- [x] Create external_businesses database table
+- [x] Create external businesses router with CRUD operations (list, create, update, delete, search, getStats)
+- [x] Update BusinessListings page to use database instead of sample data
+- [x] Create inter-entity service agreement template (L.A.W.S. ↔ Real-Eye-Nation) at /documents/inter-entity-service-agreement.md
+- [x] Add service agreement to document templates
+
