@@ -27,9 +27,11 @@ import {
   Mail,
   FileSignature,
   Target,
+  Info,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { Link } from "wouter";
 
 // Internal entities (auto-populated from system)
 const internalEntities = [
@@ -203,6 +205,12 @@ export default function BusinessListings() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link href="/business-landing">
+              <Button variant="outline">
+                <Info className="w-4 h-4 mr-2" />
+                What We Offer
+              </Button>
+            </Link>
             <Button variant="outline" onClick={() => toast.info("Syncing with Business Simulator...")}>
               <Building2 className="w-4 h-4 mr-2" />
               Sync Entities

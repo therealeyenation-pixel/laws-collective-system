@@ -19,6 +19,7 @@ import {
   DollarSign,
   UserPlus,
   Calendar,
+  Info,
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
@@ -79,6 +80,12 @@ export default function BusinessDashboard() {
             <p className="text-sm text-muted-foreground mt-1">{departmentInfo.description}</p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link href="/business-landing">
+              <Button variant="outline" className="gap-2">
+                <Info className="w-4 h-4" />
+                What We Offer
+              </Button>
+            </Link>
             <Link href="/business-simulator">
               <Button variant="outline" className="gap-2">
                 <Play className="w-4 h-4" />

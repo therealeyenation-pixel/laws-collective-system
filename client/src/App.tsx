@@ -118,6 +118,7 @@ import PlatformSimulator from "./pages/simulators/PlatformSimulator";
 import GrantsSimulator from "./pages/simulators/GrantsSimulator";
 import OfferLetters from "@/pages/OfferLetters";
 import BusinessDashboard from "@/pages/BusinessDashboard";
+import BusinessLanding from "@/pages/BusinessLanding";
 import HealthDashboard from "@/pages/HealthDashboard";
 import EducationDashboard from "@/pages/EducationDashboard";
 import DesignDashboard from "@/pages/DesignDashboard";
@@ -338,6 +339,9 @@ function Router() {
       <Route path="/purchase-requests">{() => <ProtectedRoute component={PurchaseRequests} minRole="staff" />}</Route>
       <Route path="/offer-letters">{() => <ProtectedRoute component={OfferLetters} minRole="staff" />}</Route>
       
+      {/* Business Landing */}
+      <Route path="/business-landing">{() => <BusinessLanding />}</Route>
+
       {/* Department Dashboards */}
       <Route path="/dept/business">{() => <ProtectedRoute component={BusinessDashboard} minRole="staff" />}</Route>
       <Route path="/dept/health">{() => <ProtectedRoute component={HealthDashboard} minRole="staff" />}</Route>
