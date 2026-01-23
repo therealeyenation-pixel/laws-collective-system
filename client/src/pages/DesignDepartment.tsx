@@ -53,12 +53,15 @@ export default function DesignDepartment() {
   const [activeTab, setActiveTab] = useState("overview");
   const [showAddProject, setShowAddProject] = useState(false);
   const [showAddAsset, setShowAddAsset] = useState(false);
+  const [showAddMerchandise, setShowAddMerchandise] = useState(false);
 
   // Queries
   const { data: stats, refetch: refetchStats } = trpc.designDepartment.getStats.useQuery();
   const { data: projects, refetch: refetchProjects } = trpc.designDepartment.getAllProjects.useQuery();
   const { data: assets, refetch: refetchAssets } = trpc.designDepartment.getAllAssets.useQuery();
   const { data: designers } = trpc.designDepartment.getDesigners.useQuery();
+  const { data: merchSubmissions, refetch: refetchMerch } = trpc.designDepartment.getMerchSubmissions.useQuery();
+  const { data: merchStats } = trpc.designDepartment.getMerchStats.useQuery();
 
   // Mutations
   const createProject = trpc.designDepartment.createProject.useMutation({
@@ -77,6 +80,48 @@ export default function DesignDepartment() {
       setShowAddAsset(false);
       refetchAssets();
       refetchStats();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  // Merchandise mutations
+  const createMerchSubmission = trpc.designDepartment.createMerchSubmission.useMutation({
+    onSuccess: () => {
+      toast.success("Merchandise concept submitted successfully");
+      setShowAddMerchandise(false);
+      refetchMerch();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const submitMerchForReview = trpc.designDepartment.submitMerchForReview.useMutation({
+    onSuccess: () => {
+      toast.success("Submitted for review");
+      refetchMerch();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const reviewMerch = trpc.designDepartment.reviewMerchSubmission.useMutation({
+    onSuccess: () => {
+      toast.success("Review submitted");
+      refetchMerch();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const moveToProduction = trpc.designDepartment.moveToProduction.useMutation({
+    onSuccess: () => {
+      toast.success("Moved to production");
+      refetchMerch();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const completeMerch = trpc.designDepartment.completeMerchSubmission.useMutation({
+    onSuccess: () => {
+      toast.success("Merchandise completed and ready for shop");
+      refetchMerch();
     },
     onError: (error) => toast.error(error.message),
   });
@@ -201,11 +246,12 @@ export default function DesignDepartment() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="assets">Assets</TabsTrigger>
             <TabsTrigger value="designers">Designers</TabsTrigger>
+            <TabsTrigger value="merchandise">Merchandise</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
           </TabsList>
 
@@ -582,7 +628,283 @@ export default function DesignDepartment() {
               </Card>
             </div>
           </TabsContent>
+
+          {/* Merchandise Tab */}
+          <TabsContent value="merchandise" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold">Merchandise Concepts</h2>
+                <p className="text-sm text-muted-foreground">
+                  Submit and manage branded merchandise designs for the L.A.W.S. Collective Shop
+                </p>
+              </div>
+              <Button onClick={() => setShowAddMerchandise(true)} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Submit Concept
+              </Button>
+            </div>
+
+            {/* Merchandise Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-yellow-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{merchStats?.submitted || 0}</p>
+                      <p className="text-xs text-muted-foreground">Pending Review</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{merchStats?.in_review || 0}</p>
+                      <p className="text-xs text-muted-foreground">In Review</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{merchStats?.approved || 0}</p>
+                      <p className="text-xs text-muted-foreground">Approved</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2">
+                    <Layers className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <p className="text-2xl font-bold">{merchStats?.in_production || 0}</p>
+                      <p className="text-xs text-muted-foreground">In Production</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Merchandise Submissions Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Merchandise Submissions</CardTitle>
+                <CardDescription>All merchandise concept submissions and their status</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {merchSubmissions && merchSubmissions.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Product Type</TableHead>
+                        <TableHead>Priority</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Submitted</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {merchSubmissions.map((item: any) => (
+                        <TableRow key={item.id}>
+                          <TableCell className="font-medium">{item.title}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{item.category}</Badge>
+                          </TableCell>
+                          <TableCell>{item.product_type || '-'}</TableCell>
+                          <TableCell>
+                            <Badge variant={item.priority === 'urgent' ? 'destructive' : item.priority === 'high' ? 'default' : 'secondary'}>
+                              {item.priority}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={
+                              item.status === 'approved' || item.status === 'completed' ? 'default' :
+                              item.status === 'rejected' ? 'destructive' :
+                              item.status === 'in_production' ? 'default' : 'secondary'
+                            }>
+                              {item.status.replace('_', ' ')}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {item.submitted_at ? new Date(Number(item.submitted_at)).toLocaleDateString() : 'Draft'}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              {item.status === 'draft' && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => submitMerchForReview.mutate({ id: item.id })}
+                                >
+                                  Submit
+                                </Button>
+                              )}
+                              {item.status === 'submitted' && (
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  onClick={() => reviewMerch.mutate({ submissionId: item.id, action: 'approve' })}
+                                >
+                                  Approve
+                                </Button>
+                              )}
+                              {item.status === 'approved' && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => moveToProduction.mutate({ id: item.id })}
+                                >
+                                  To Production
+                                </Button>
+                              )}
+                              {item.status === 'in_production' && (
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  onClick={() => completeMerch.mutate({ id: item.id })}
+                                >
+                                  Complete
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Layers className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No merchandise concepts submitted yet</p>
+                    <p className="text-sm">Click "Submit Concept" to add your first design idea</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
+
+        {/* Add Merchandise Dialog */}
+        <Dialog open={showAddMerchandise} onOpenChange={setShowAddMerchandise}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Submit Merchandise Concept</DialogTitle>
+              <DialogDescription>
+                Submit a new branded merchandise design concept for review
+              </DialogDescription>
+            </DialogHeader>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                createMerchSubmission.mutate({
+                  title: formData.get("title") as string,
+                  description: formData.get("description") as string || undefined,
+                  category: formData.get("category") as any,
+                  productType: formData.get("productType") as string || undefined,
+                  designConcept: formData.get("designConcept") as string || undefined,
+                  targetAudience: formData.get("targetAudience") as string || undefined,
+                  estimatedCost: parseFloat(formData.get("estimatedCost") as string) || undefined,
+                  estimatedPrice: parseFloat(formData.get("estimatedPrice") as string) || undefined,
+                  priority: formData.get("priority") as any || 'medium',
+                  notes: formData.get("notes") as string || undefined,
+                  submitImmediately: formData.get("submitNow") === 'on',
+                });
+              }}
+              className="space-y-4"
+            >
+              <div className="space-y-2">
+                <Label htmlFor="merchTitle">Title *</Label>
+                <Input id="merchTitle" name="title" placeholder="e.g., L.A.W.S. Hoodie Collection" required />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="merchCategory">Category *</Label>
+                  <Select name="category" defaultValue="apparel">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="apparel">Apparel</SelectItem>
+                      <SelectItem value="accessories">Accessories</SelectItem>
+                      <SelectItem value="print">Print</SelectItem>
+                      <SelectItem value="digital">Digital</SelectItem>
+                      <SelectItem value="promotional">Promotional</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="merchProductType">Product Type</Label>
+                  <Input id="merchProductType" name="productType" placeholder="e.g., Hoodie, T-Shirt, Cap" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="merchDescription">Description</Label>
+                <Textarea id="merchDescription" name="description" placeholder="Describe the merchandise concept..." rows={3} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="merchDesignConcept">Design Concept</Label>
+                <Textarea id="merchDesignConcept" name="designConcept" placeholder="Describe the visual design, colors, graphics..." rows={3} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="merchTargetAudience">Target Audience</Label>
+                  <Input id="merchTargetAudience" name="targetAudience" placeholder="e.g., Young professionals, Community members" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="merchPriority">Priority</Label>
+                  <Select name="priority" defaultValue="medium">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="urgent">Urgent</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="merchEstCost">Estimated Cost ($)</Label>
+                  <Input id="merchEstCost" name="estimatedCost" type="number" step="0.01" placeholder="0.00" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="merchEstPrice">Estimated Retail Price ($)</Label>
+                  <Input id="merchEstPrice" name="estimatedPrice" type="number" step="0.01" placeholder="0.00" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="merchNotes">Additional Notes</Label>
+                <Textarea id="merchNotes" name="notes" placeholder="Any additional notes or requirements..." rows={2} />
+              </div>
+              <div className="flex items-center gap-2">
+                <input type="checkbox" id="submitNow" name="submitNow" className="rounded" />
+                <Label htmlFor="submitNow" className="text-sm">Submit immediately for review</Label>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setShowAddMerchandise(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createMerchSubmission.isPending}>
+                  {createMerchSubmission.isPending ? 'Submitting...' : 'Submit Concept'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
 
         {/* Add Project Dialog */}
         <Dialog open={showAddProject} onOpenChange={setShowAddProject}>

@@ -176,6 +176,38 @@ export default function Shop() {
             <h2 className="text-2xl font-bold text-stone-900 mb-6">
               Branded Merchandise
             </h2>
+            
+            {/* Coming Soon Banner */}
+            <Card className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+              <div className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-green-100 rounded-full">
+                    <Shirt className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-green-800 mb-2">
+                      Official Merchandise Coming Soon!
+                    </h3>
+                    <p className="text-green-700 text-sm mb-4">
+                      Our Design Department is currently developing exclusive L.A.W.S. Collective branded items. 
+                      Each piece will be thoughtfully designed to represent our mission of building multi-generational wealth through purpose and community.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline" className="bg-white text-green-700 border-green-300">
+                        Hoodies & Apparel
+                      </Badge>
+                      <Badge variant="outline" className="bg-white text-green-700 border-green-300">
+                        Accessories
+                      </Badge>
+                      <Badge variant="outline" className="bg-white text-green-700 border-green-300">
+                        Educational Materials
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            
             <p className="text-stone-600 mb-8">
               Support the L.A.W.S. Collective and represent the movement with our branded merchandise. 
               Every purchase supports community programs and wealth-building initiatives.

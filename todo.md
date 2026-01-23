@@ -6082,3 +6082,12 @@ Three main approaches available:
 - [ ] Connect merchandise purchases to revenue flow system
 - [ ] Test complete member journey in sandbox
 - [ ] Verify revenue → split → distribution cycle works end-to-end
+
+## Design Department Dashboard
+- [x] Create design_submissions table for merchandise concepts
+- [x] Create design_reviews table for approval workflow
+- [x] Build design department router with CRUD and approval procedures
+- [x] Create Design Department Dashboard UI with submission form
+- [ ] Add approval workflow with status tracking
+- [x] Update Shop page to show Coming Soon for pending designs
+- [ ] Link approved designs to merchandise catalog

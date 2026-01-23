@@ -717,4 +717,330 @@ export const designDepartmentRouter = router({
         throw new Error("Failed to request design service");
       }
     }),
+
+  // ============================================================================
+  // MERCHANDISE SUBMISSIONS
+  // ============================================================================
+
+  getMerchandiseSubmissions: protectedProcedure
+    .input(z.object({
+      status: z.enum(['draft', 'submitted', 'in_review', 'revision_requested', 'approved', 'rejected', 'in_production', 'completed']).optional(),
+      category: z.enum(['apparel', 'accessories', 'print', 'digital', 'promotional', 'other']).optional(),
+      limit: z.number().default(50),
+      offset: z.number().default(0),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      try {
+        const filters = input || {};
+        let query = `SELECT * FROM design_submissions WHERE 1=1`;
+        const params: any[] = [];
+
+        if (filters.status) {
+          query += ` AND status = ?`;
+          params.push(filters.status);
+        }
+        if (filters.category) {
+          query += ` AND category = ?`;
+          params.push(filters.category);
+        }
+
+        query += ` ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+        params.push(filters.limit, filters.offset);
+
+        const [rows] = await db.execute(query, params);
+        return rows as any[];
+      } catch (error) {
+        console.error("Error getting merchandise submissions:", error);
+        return [];
+      }
+    }),
+
+  getMerchandiseSubmission: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+      
+      try {
+        const [submissions] = await db.execute(
+          `SELECT * FROM design_submissions WHERE id = ?`,
+          [input.id]
+        );
+        const submission = (submissions as any[])[0];
+
+        if (!submission) return null;
+
+        const [reviews] = await db.execute(
+          `SELECT * FROM design_reviews WHERE submission_id = ? ORDER BY created_at DESC`,
+          [input.id]
+        );
+
+        return {
+          ...submission,
+          reviews: reviews as any[],
+        };
+      } catch (error) {
+        console.error("Error getting merchandise submission:", error);
+        return null;
+      }
+    }),
+
+  createMerchandiseSubmission: protectedProcedure
+    .input(z.object({
+      title: z.string().min(1),
+      description: z.string().optional(),
+      category: z.enum(['apparel', 'accessories', 'print', 'digital', 'promotional', 'other']),
+      productType: z.string().optional(),
+      designConcept: z.string().optional(),
+      targetAudience: z.string().optional(),
+      estimatedCost: z.number().optional(),
+      estimatedPrice: z.number().optional(),
+      houseId: z.number().optional(),
+      priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),
+      mockupUrls: z.array(z.string()).optional(),
+      notes: z.string().optional(),
+      submitImmediately: z.boolean().default(false),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        const now = Date.now();
+        const status = input.submitImmediately ? 'submitted' : 'draft';
+        const submittedAt = input.submitImmediately ? now : null;
+
+        const [result] = await db.execute(
+          `INSERT INTO design_submissions 
+           (title, description, category, product_type, design_concept, target_audience,
+            estimated_cost, estimated_price, submitted_by_id, submitted_by_name, house_id,
+            status, priority, mockup_urls, notes, created_at, updated_at, submitted_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            input.title,
+            input.description || null,
+            input.category,
+            input.productType || null,
+            input.designConcept || null,
+            input.targetAudience || null,
+            input.estimatedCost || null,
+            input.estimatedPrice || null,
+            ctx.user.id,
+            ctx.user.name,
+            input.houseId || null,
+            status,
+            input.priority,
+            input.mockupUrls ? JSON.stringify(input.mockupUrls) : null,
+            input.notes || null,
+            now,
+            now,
+            submittedAt,
+          ]
+        );
+
+        return {
+          success: true,
+          id: (result as any).insertId,
+          message: input.submitImmediately 
+            ? "Merchandise concept submitted for review" 
+            : "Merchandise concept saved as draft",
+        };
+      } catch (error) {
+        console.error("Error creating merchandise submission:", error);
+        throw new Error("Failed to create merchandise submission");
+      }
+    }),
+
+  submitMerchandiseForReview: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        const now = Date.now();
+        await db.execute(
+          `UPDATE design_submissions 
+           SET status = 'submitted', submitted_at = ?, updated_at = ?
+           WHERE id = ? AND status = 'draft'`,
+          [now, now, input.id]
+        );
+
+        return { success: true, message: "Merchandise submitted for review" };
+      } catch (error) {
+        console.error("Error submitting merchandise:", error);
+        throw new Error("Failed to submit merchandise");
+      }
+    }),
+
+  reviewMerchandise: protectedProcedure
+    .input(z.object({
+      submissionId: z.number(),
+      action: z.enum(['comment', 'request_revision', 'approve', 'reject']),
+      feedback: z.string().optional(),
+      rating: z.number().min(1).max(5).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        const now = Date.now();
+
+        // Add the review
+        await db.execute(
+          `INSERT INTO design_reviews 
+           (submission_id, reviewer_id, reviewer_name, reviewer_role, action, feedback, rating, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            input.submissionId,
+            ctx.user.id,
+            ctx.user.name,
+            ctx.user.role || 'reviewer',
+            input.action,
+            input.feedback || null,
+            input.rating || null,
+            now,
+          ]
+        );
+
+        // Update submission status based on action
+        let newStatus = 'in_review';
+        let approvalFields = '';
+        const updateParams: any[] = [now];
+
+        switch (input.action) {
+          case 'request_revision':
+            newStatus = 'revision_requested';
+            break;
+          case 'approve':
+            newStatus = 'approved';
+            approvalFields = ', approved_at = ?, approved_by_id = ?, approved_by_name = ?';
+            updateParams.push(now, ctx.user.id, ctx.user.name);
+            break;
+          case 'reject':
+            newStatus = 'rejected';
+            break;
+        }
+
+        updateParams.push(input.submissionId);
+
+        await db.execute(
+          `UPDATE design_submissions 
+           SET status = ?, updated_at = ?${approvalFields}
+           WHERE id = ? AND status NOT IN ('completed', 'rejected')`,
+          [newStatus, ...updateParams]
+        );
+
+        return { 
+          success: true, 
+          message: input.action === 'approve' 
+            ? "Merchandise approved and ready for production"
+            : input.action === 'reject'
+            ? "Merchandise rejected"
+            : input.action === 'request_revision'
+            ? "Revision requested"
+            : "Feedback added"
+        };
+      } catch (error) {
+        console.error("Error reviewing merchandise:", error);
+        throw new Error("Failed to review merchandise");
+      }
+    }),
+
+  moveMerchandiseToProduction: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        await db.execute(
+          `UPDATE design_submissions 
+           SET status = 'in_production', updated_at = ?
+           WHERE id = ? AND status = 'approved'`,
+          [Date.now(), input.id]
+        );
+
+        return { success: true, message: "Merchandise moved to production" };
+      } catch (error) {
+        console.error("Error moving to production:", error);
+        throw new Error("Failed to move to production");
+      }
+    }),
+
+  completeMerchandise: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      try {
+        await db.execute(
+          `UPDATE design_submissions 
+           SET status = 'completed', updated_at = ?
+           WHERE id = ? AND status = 'in_production'`,
+          [Date.now(), input.id]
+        );
+
+        return { success: true, message: "Merchandise completed and ready for shop" };
+      } catch (error) {
+        console.error("Error completing merchandise:", error);
+        throw new Error("Failed to complete merchandise");
+      }
+    }),
+
+  getMerchandiseStats: protectedProcedure
+    .query(async () => {
+      const db = await getDb();
+      if (!db) return {
+        total: 0, drafts: 0, submitted: 0, in_review: 0,
+        revision_requested: 0, approved: 0, in_production: 0, completed: 0, rejected: 0
+      };
+      
+      try {
+        const [stats] = await db.execute(`
+          SELECT 
+            COUNT(*) as total,
+            SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) as drafts,
+            SUM(CASE WHEN status = 'submitted' THEN 1 ELSE 0 END) as submitted,
+            SUM(CASE WHEN status = 'in_review' THEN 1 ELSE 0 END) as in_review,
+            SUM(CASE WHEN status = 'revision_requested' THEN 1 ELSE 0 END) as revision_requested,
+            SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
+            SUM(CASE WHEN status = 'in_production' THEN 1 ELSE 0 END) as in_production,
+            SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
+            SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected
+          FROM design_submissions
+        `);
+
+        return (stats as any[])[0];
+      } catch (error) {
+        console.error("Error getting merchandise stats:", error);
+        return {
+          total: 0, drafts: 0, submitted: 0, in_review: 0,
+          revision_requested: 0, approved: 0, in_production: 0, completed: 0, rejected: 0
+        };
+      }
+    }),
+
+  getShopReadyMerchandise: publicProcedure
+    .query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      try {
+        const [rows] = await db.execute(
+          `SELECT * FROM design_submissions 
+           WHERE status IN ('completed', 'in_production')
+           ORDER BY approved_at DESC`
+        );
+        return rows as any[];
+      } catch (error) {
+        console.error("Error getting shop ready merchandise:", error);
+        return [];
+      }
+    }),
 });
