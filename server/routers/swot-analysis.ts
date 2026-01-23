@@ -522,6 +522,129 @@ Provide the analysis in JSON format.`;
         exportDate: new Date().toISOString(),
       };
     }),
+
+  // Get SWOT summary for Business Plan integration
+  getForBusinessPlan: protectedProcedure
+    .input(z.object({ businessEntityId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      // Get the most recent active SWOT analysis for this entity
+      const [analysis] = await db.select().from(swotAnalyses)
+        .where(and(
+          eq(swotAnalyses.userId, ctx.user.id),
+          eq(swotAnalyses.businessEntityId, input.businessEntityId),
+          eq(swotAnalyses.status, "active")
+        ))
+        .orderBy(desc(swotAnalyses.updatedAt))
+        .limit(1);
+      
+      if (!analysis) {
+        return null;
+      }
+      
+      const items = await db.select().from(swotItems)
+        .where(eq(swotItems.swotAnalysisId, analysis.id))
+        .orderBy(asc(swotItems.sortOrder));
+      
+      // Format for Business Plan Market Analysis section
+      const opportunities = items.filter(i => i.category === "opportunity");
+      const threats = items.filter(i => i.category === "threat");
+      const strengths = items.filter(i => i.category === "strength");
+      const weaknesses = items.filter(i => i.category === "weakness");
+      
+      // Generate market analysis text from SWOT
+      const marketOpportunities = opportunities
+        .map(o => `- ${o.title}: ${o.description || ''}`)
+        .join('\n');
+      
+      const marketThreats = threats
+        .map(t => `- ${t.title}: ${t.description || ''}`)
+        .join('\n');
+      
+      const competitiveAdvantages = strengths
+        .filter(s => s.priority === 'high' || s.priority === 'critical')
+        .map(s => `- ${s.title}: ${s.description || ''}`)
+        .join('\n');
+      
+      const areasForImprovement = weaknesses
+        .filter(w => w.priority === 'high' || w.priority === 'critical')
+        .map(w => `- ${w.title}: ${w.description || ''}`)
+        .join('\n');
+      
+      return {
+        swotAnalysisId: analysis.id,
+        swotTitle: analysis.title,
+        marketAnalysis: {
+          opportunities: marketOpportunities,
+          threats: marketThreats,
+          competitiveAdvantages,
+          areasForImprovement,
+        },
+        scores: {
+          strengthScore: analysis.strengthScore,
+          weaknessScore: analysis.weaknessScore,
+          opportunityScore: analysis.opportunityScore,
+          threatScore: analysis.threatScore,
+        },
+        updatedAt: analysis.updatedAt,
+      };
+    }),
+
+  // Get SWOT summary for Marketing integration
+  getForMarketing: protectedProcedure
+    .input(z.object({ businessEntityId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      // Get the most recent active SWOT analysis for this entity
+      const [analysis] = await db.select().from(swotAnalyses)
+        .where(and(
+          eq(swotAnalyses.userId, ctx.user.id),
+          eq(swotAnalyses.businessEntityId, input.businessEntityId),
+          eq(swotAnalyses.status, "active")
+        ))
+        .orderBy(desc(swotAnalyses.updatedAt))
+        .limit(1);
+      
+      if (!analysis) {
+        return null;
+      }
+      
+      const items = await db.select().from(swotItems)
+        .where(eq(swotItems.swotAnalysisId, analysis.id))
+        .orderBy(asc(swotItems.sortOrder));
+      
+      // Extract marketing-relevant insights
+      const opportunities = items.filter(i => i.category === "opportunity");
+      const strengths = items.filter(i => i.category === "strength");
+      
+      // Find market validation items (from 5C Context prompts)
+      const marketValidation = opportunities.filter(o => 
+        o.title.toLowerCase().includes('market') ||
+        o.title.toLowerCase().includes('growth') ||
+        o.title.toLowerCase().includes('industry')
+      );
+      
+      // Find customer understanding items
+      const customerInsights = opportunities.filter(o => 
+        o.title.toLowerCase().includes('customer') ||
+        o.title.toLowerCase().includes('audience') ||
+        o.title.toLowerCase().includes('demographic')
+      );
+      
+      // Find unique value proposition items
+      const uniqueValue = strengths.filter(s => 
+        s.title.toLowerCase().includes('unique') ||
+        s.title.toLowerCase().includes('differentiator') ||
+        s.title.toLowerCase().includes('advantage')
+      );
+      
+      return {
+        swotAnalysisId: analysis.id,
+        marketValidation: marketValidation.map(m => ({ title: m.title, description: m.description })),
+        customerInsights: customerInsights.map(c => ({ title: c.title, description: c.description })),
+        uniqueValueProposition: uniqueValue.map(u => ({ title: u.title, description: u.description })),
+        allOpportunities: opportunities.map(o => ({ title: o.title, description: o.description, priority: o.priority })),
+        allStrengths: strengths.map(s => ({ title: s.title, description: s.description, priority: s.priority })),
+      };
+    }),
 });
 
 // Helper function to update analysis scores

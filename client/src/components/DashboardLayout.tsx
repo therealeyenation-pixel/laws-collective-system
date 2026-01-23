@@ -201,6 +201,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user" },
           { icon: FileText, label: "Business Plans", path: "/business-plans", minRole: "user" },
           { icon: Building2, label: "Business Formation", path: "/business-formation", minRole: "user" },
+          { icon: Building2, label: "Business Listings", path: "/business-listings", minRole: "user" },
           { icon: FileText, label: "Operating Agreements", path: "/operating-agreements", minRole: "user" },
           { icon: BarChart3, label: "SWOT Analysis", path: "/swot-analysis", minRole: "user" },
           { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin" },

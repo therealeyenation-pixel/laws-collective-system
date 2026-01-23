@@ -143,6 +143,7 @@ import SwotAnalysis from "@/pages/SwotAnalysis";
 import Changelog from "@/pages/Changelog";
 import TrademarkDocuments from "@/pages/TrademarkDocuments";
 import MarketingDashboard from "@/pages/MarketingDashboard";
+import BusinessListings from "@/pages/BusinessListings";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -343,6 +344,7 @@ function Router() {
       <Route path="/dept/education">{() => <ProtectedRoute component={EducationDashboard} minRole="staff" />}</Route>
       <Route path="/dept/design">{() => <ProtectedRoute component={DesignDashboard} minRole="staff" />}</Route>
       <Route path="/dept/marketing">{() => <ProtectedRoute component={MarketingDashboard} minRole="staff" />}</Route>
+      <Route path="/business-listings">{() => <ProtectedRoute component={BusinessListings} minRole="staff" />}</Route>
       <Route path="/dept/media">{() => <ProtectedRoute component={MediaDashboard} minRole="staff" />}</Route>
       <Route path="/dept/finance">{() => <ProtectedRoute component={FinanceDashboard} minRole="staff" />}</Route>
       <Route path="/dept/finance/tax">{() => <ProtectedRoute component={TaxModule} minRole="staff" />}</Route>
