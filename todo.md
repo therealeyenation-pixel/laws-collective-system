@@ -6012,3 +6012,14 @@ Three main approaches available:
 - [x] Add feature comparison table
 - [x] Add call-to-action buttons for each tier
 - [x] Style with consistent design language
+- [x] Add meeting-to-vote integration
+- [x] Link proposals to originating meetings
+- [x] Add "requires vote" flag to meeting agenda items
+- [x] Convert meeting agenda items to formal proposals
+- [ ] Add voting history/audit trail view
+- [ ] Track voting results with timestamps and member details
+- [x] Add live voting during meetings in progress
+- [x] Add add-on topics feature for meetings
+- [x] Allow host to trigger vote on any topic
+- [x] Display vote results in real-time
+- [x] Track add-on topics separately from planned agenda

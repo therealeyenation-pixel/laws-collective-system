@@ -685,6 +685,269 @@ export const meetingsRouter = router({
       return { success: true, message: `RSVP updated to ${input.response}` };
     }),
 
+  // ==========================================
+  // AGENDA ITEMS
+  // ==========================================
+
+  getAgendaItems: publicProcedure
+    .input(z.object({ meetingId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      const items = await db.execute(sql`
+        SELECT * FROM meeting_agenda_items 
+        WHERE meetingId = ${input.meetingId}
+        ORDER BY orderIndex ASC
+      `);
+      return items[0] || [];
+    }),
+
+  addAgendaItem: protectedProcedure
+    .input(z.object({
+      meetingId: z.number(),
+      title: z.string(),
+      description: z.string().optional(),
+      presenter: z.string().optional(),
+      duration: z.number().default(10),
+      itemType: z.enum(["discussion", "vote", "information", "action_item", "add_on"]).default("discussion"),
+      requiresVote: z.boolean().default(false),
+      isAddOn: z.boolean().default(false),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Get next order index
+      const maxOrder = await db.execute(sql`
+        SELECT MAX(orderIndex) as maxOrder FROM meeting_agenda_items WHERE meetingId = ${input.meetingId}
+      `);
+      const nextOrder = ((maxOrder[0] as any)?.[0]?.maxOrder || 0) + 1;
+
+      await db.execute(sql`
+        INSERT INTO meeting_agenda_items 
+        (meetingId, title, description, presenter, duration, orderIndex, itemType, requiresVote, isAddOn, addedById, addedByName)
+        VALUES (${input.meetingId}, ${input.title}, ${input.description || null}, ${input.presenter || null}, 
+                ${input.duration}, ${nextOrder}, ${input.itemType}, ${input.requiresVote}, ${input.isAddOn},
+                ${ctx.user.id}, ${ctx.user.name || 'Unknown'})
+      `);
+
+      return { success: true };
+    }),
+
+  updateAgendaItem: protectedProcedure
+    .input(z.object({
+      itemId: z.number(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      requiresVote: z.boolean().optional(),
+      status: z.enum(["pending", "in_progress", "completed", "skipped"]).optional(),
+      discussionNotes: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      const updates: string[] = [];
+      if (input.title !== undefined) updates.push(`title = '${input.title}'`);
+      if (input.description !== undefined) updates.push(`description = '${input.description}'`);
+      if (input.requiresVote !== undefined) updates.push(`requiresVote = ${input.requiresVote}`);
+      if (input.status !== undefined) updates.push(`status = '${input.status}'`);
+      if (input.discussionNotes !== undefined) updates.push(`discussionNotes = '${input.discussionNotes}'`);
+
+      if (updates.length > 0) {
+        await db.execute(sql.raw(`UPDATE meeting_agenda_items SET ${updates.join(', ')} WHERE id = ${input.itemId}`));
+      }
+
+      return { success: true };
+    }),
+
+  // ==========================================
+  // LIVE VOTING
+  // ==========================================
+
+  startVote: protectedProcedure
+    .input(z.object({
+      meetingId: z.number(),
+      agendaItemId: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Verify host
+      const [meeting] = await db.select().from(meetings).where(eq(meetings.id, input.meetingId)).limit(1);
+      if (!meeting || meeting.hostId !== ctx.user.id) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Only the host can start a vote" });
+      }
+
+      await db.execute(sql`
+        UPDATE meeting_agenda_items 
+        SET voteStatus = 'in_progress', voteStartedAt = NOW()
+        WHERE id = ${input.agendaItemId}
+      `);
+
+      return { success: true };
+    }),
+
+  castLiveVote: protectedProcedure
+    .input(z.object({
+      meetingId: z.number(),
+      agendaItemId: z.number(),
+      vote: z.enum(["for", "against", "abstain"]),
+      rationale: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Check if voting is in progress
+      const item = await db.execute(sql`
+        SELECT * FROM meeting_agenda_items WHERE id = ${input.agendaItemId} AND voteStatus = 'in_progress'
+      `);
+      if (!(item[0] as any[])?.length) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Voting is not in progress for this item" });
+      }
+
+      // Insert or update vote
+      await db.execute(sql`
+        INSERT INTO meeting_live_votes (meetingId, agendaItemId, voterId, voterName, vote, rationale)
+        VALUES (${input.meetingId}, ${input.agendaItemId}, ${ctx.user.id}, ${ctx.user.name || 'Unknown'}, ${input.vote}, ${input.rationale || null})
+        ON DUPLICATE KEY UPDATE vote = ${input.vote}, rationale = ${input.rationale || null}, votedAt = NOW()
+      `);
+
+      // Update tally
+      const votes = await db.execute(sql`
+        SELECT vote, COUNT(*) as count FROM meeting_live_votes 
+        WHERE agendaItemId = ${input.agendaItemId} GROUP BY vote
+      `);
+      
+      let votesFor = 0, votesAgainst = 0, votesAbstain = 0;
+      for (const v of (votes[0] as any[]) || []) {
+        if (v.vote === 'for') votesFor = v.count;
+        if (v.vote === 'against') votesAgainst = v.count;
+        if (v.vote === 'abstain') votesAbstain = v.count;
+      }
+
+      await db.execute(sql`
+        UPDATE meeting_agenda_items 
+        SET votesFor = ${votesFor}, votesAgainst = ${votesAgainst}, votesAbstain = ${votesAbstain}
+        WHERE id = ${input.agendaItemId}
+      `);
+
+      return { success: true, votesFor, votesAgainst, votesAbstain };
+    }),
+
+  endVote: protectedProcedure
+    .input(z.object({
+      meetingId: z.number(),
+      agendaItemId: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Verify host
+      const [meeting] = await db.select().from(meetings).where(eq(meetings.id, input.meetingId)).limit(1);
+      if (!meeting || meeting.hostId !== ctx.user.id) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Only the host can end a vote" });
+      }
+
+      // Get current tally
+      const item = await db.execute(sql`
+        SELECT votesFor, votesAgainst, votesAbstain FROM meeting_agenda_items WHERE id = ${input.agendaItemId}
+      `);
+      const data = (item[0] as any[])?.[0];
+      
+      let voteResult = 'pending';
+      if (data) {
+        if (data.votesFor > data.votesAgainst) voteResult = 'approved';
+        else if (data.votesAgainst > data.votesFor) voteResult = 'rejected';
+        else voteResult = 'tie';
+      }
+
+      await db.execute(sql`
+        UPDATE meeting_agenda_items 
+        SET voteStatus = 'completed', voteEndedAt = NOW(), voteResult = ${voteResult}
+        WHERE id = ${input.agendaItemId}
+      `);
+
+      return { success: true, voteResult };
+    }),
+
+  getLiveVotes: publicProcedure
+    .input(z.object({ agendaItemId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      
+      const votes = await db.execute(sql`
+        SELECT * FROM meeting_live_votes WHERE agendaItemId = ${input.agendaItemId} ORDER BY votedAt DESC
+      `);
+      return votes[0] || [];
+    }),
+
+  getVoteTally: publicProcedure
+    .input(z.object({ agendaItemId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { votesFor: 0, votesAgainst: 0, votesAbstain: 0, voteStatus: 'pending', voteResult: 'pending' };
+      
+      const item = await db.execute(sql`
+        SELECT votesFor, votesAgainst, votesAbstain, voteStatus, voteResult 
+        FROM meeting_agenda_items WHERE id = ${input.agendaItemId}
+      `);
+      return (item[0] as any[])?.[0] || { votesFor: 0, votesAgainst: 0, votesAbstain: 0, voteStatus: 'pending', voteResult: 'pending' };
+    }),
+
+  // Convert agenda item vote to formal proposal
+  convertToProposal: protectedProcedure
+    .input(z.object({
+      meetingId: z.number(),
+      agendaItemId: z.number(),
+      boardType: z.enum(["house", "network"]).default("network"),
+      houseId: z.number().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+      // Get agenda item
+      const item = await db.execute(sql`
+        SELECT * FROM meeting_agenda_items WHERE id = ${input.agendaItemId}
+      `);
+      const agendaItem = (item[0] as any[])?.[0];
+      if (!agendaItem) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Agenda item not found" });
+      }
+
+      // Create proposal
+      const proposalNumber = `PROP-MTG-${Date.now()}`;
+      const result = await db.execute(sql`
+        INSERT INTO decision_board_proposals 
+        (houseId, boardType, proposalNumber, title, description, proposalType,
+         proposedByName, originatingMeetingId, originatingAgendaItemId,
+         meetingDiscussionNotes, affectsNetworkPoolOnly, affectsHouseRetained,
+         votingStartDate, votingEndDate, status)
+        VALUES (${input.houseId || null}, ${input.boardType}, ${proposalNumber}, 
+                ${agendaItem.title}, ${agendaItem.description || ''}, 'policy_change',
+                ${ctx.user.name || 'Unknown'}, ${input.meetingId}, ${input.agendaItemId},
+                ${agendaItem.discussionNotes || null}, ${input.boardType === 'network'}, FALSE,
+                NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'submitted')
+      `);
+
+      const proposalId = (result[0] as any).insertId;
+
+      // Update agenda item
+      await db.execute(sql`
+        UPDATE meeting_agenda_items 
+        SET voteProposalId = ${proposalId}, voteStatus = 'converted'
+        WHERE id = ${input.agendaItemId}
+      `);
+
+      return { success: true, proposalId, proposalNumber };
+    }),
+
   // Get meeting statistics
   stats: protectedProcedure
     .query(async ({ ctx }) => {
