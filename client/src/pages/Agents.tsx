@@ -37,6 +37,16 @@ import {
   Heart,
   Palette,
   Video,
+  HandHeart,
+  FileText,
+  ExternalLink,
+  Scale,
+  Monitor,
+  FileSignature,
+  Building,
+  Home,
+  GanttChart as Gantt,
+  Package,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
@@ -57,6 +67,15 @@ const agentIcons: Record<string, React.ReactNode> = {
   purchasing: <ShoppingCart className="w-5 h-5" />,
   health: <Heart className="w-5 h-5" />,
   design: <Palette className="w-5 h-5" />,
+  fundraising: <HandHeart className="w-5 h-5" />,
+  grants: <FileText className="w-5 h-5" />,
+  legal: <Scale className="w-5 h-5" />,
+  it: <Monitor className="w-5 h-5" />,
+  contracts: <FileSignature className="w-5 h-5" />,
+  property: <Building className="w-5 h-5" />,
+  realEstate: <Home className="w-5 h-5" />,
+  projectControls: <Gantt className="w-5 h-5" />,
+  procurement: <Package className="w-5 h-5" />,
   custom: <Sparkles className="w-5 h-5" />,
 };
 
@@ -76,7 +95,45 @@ const agentColors: Record<string, string> = {
   purchasing: "bg-amber-500/10 text-amber-500 border-amber-500/20",
   health: "bg-rose-500/10 text-rose-500 border-rose-500/20",
   design: "bg-pink-500/10 text-pink-500 border-pink-500/20",
+  fundraising: "bg-pink-600/10 text-pink-600 border-pink-600/20",
+  grants: "bg-lime-500/10 text-lime-500 border-lime-500/20",
+  legal: "bg-slate-500/10 text-slate-500 border-slate-500/20",
+  it: "bg-sky-500/10 text-sky-500 border-sky-500/20",
+  contracts: "bg-violet-500/10 text-violet-500 border-violet-500/20",
+  property: "bg-stone-500/10 text-stone-500 border-stone-500/20",
+  realEstate: "bg-emerald-600/10 text-emerald-600 border-emerald-600/20",
+  projectControls: "bg-blue-600/10 text-blue-600 border-blue-600/20",
+  procurement: "bg-orange-600/10 text-orange-600 border-orange-600/20",
   custom: "bg-cyan-500/10 text-cyan-500 border-cyan-500/20",
+};
+
+// Agent to Department Dashboard links
+const agentDashboardLinks: Record<string, { url: string; label: string }> = {
+  operations: { url: "/operations-dashboard", label: "Operations Dashboard" },
+  support: { url: "/support", label: "Help Center" },
+  education: { url: "/academy", label: "Luv Learning Academy" },
+  analytics: { url: "/executive-dashboard", label: "Analytics Dashboard" },
+  guardian: { url: "/trust-governance", label: "Governance Dashboard" },
+  finance: { url: "/finance-dashboard", label: "Finance Dashboard" },
+  media: { url: "/media-dashboard", label: "Media Dashboard" },
+  outreach: { url: "/marketing-dashboard", label: "Marketing Dashboard" },
+  seo: { url: "/marketing-dashboard", label: "Marketing Dashboard" },
+  engagement: { url: "/marketing-dashboard", label: "Marketing Dashboard" },
+  hr: { url: "/hr-dashboard", label: "HR Dashboard" },
+  qaqc: { url: "/qaqc-dashboard", label: "QA/QC Dashboard" },
+  purchasing: { url: "/purchasing-dashboard", label: "Purchasing Dashboard" },
+  health: { url: "/health-dashboard", label: "Health & Wellness" },
+  design: { url: "/design-dashboard", label: "Design Studio" },
+  fundraising: { url: "/donate/public", label: "Donation Portal" },
+  grants: { url: "/grant-management", label: "Grant Management" },
+  legal: { url: "/legal-dashboard", label: "Legal Dashboard" },
+  it: { url: "/it-dashboard", label: "IT Dashboard" },
+  contracts: { url: "/contracts-dashboard", label: "Contracts Dashboard" },
+  property: { url: "/property-dashboard", label: "Property Dashboard" },
+  realEstate: { url: "/real-estate-dashboard", label: "Real Estate Dashboard" },
+  projectControls: { url: "/project-controls-dashboard", label: "Project Controls" },
+  procurement: { url: "/procurement-dashboard", label: "Procurement Dashboard" },
+  custom: { url: "/dashboard", label: "Dashboard" },
 };
 
 interface Message {
@@ -541,6 +598,17 @@ export default function Agents() {
           <Plus className="w-4 h-4" />
           <span className="hidden sm:inline">New</span>
         </Button>
+        {selectedAgentData?.type && agentDashboardLinks[selectedAgentData.type] && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.location.href = agentDashboardLinks[selectedAgentData.type].url}
+            className="gap-1 min-h-[44px]"
+          >
+            <ExternalLink className="w-4 h-4" />
+            <span className="hidden sm:inline">{agentDashboardLinks[selectedAgentData.type].label}</span>
+          </Button>
+        )}
       </div>
 
       {/* Conversations Pills */}

@@ -6412,3 +6412,70 @@ Three main approaches available:
 - [ ] Add sponsoring House selection
 - [ ] Include terms and membership agreement
 - [ ] Submit to pending approval queue
+
+
+## Phase 51: Department Bots & Donor Acquisition Algorithms
+
+### Donor Acquisition Bot (Marketing/Fundraising)
+- [ ] Create donor identification algorithms (wealth indicators, philanthropic alignment)
+- [ ] Build automated outreach sequences (email, social)
+- [ ] Implement donor scoring and prioritization
+- [ ] Add conversion optimization (A/B testing, optimal ask amounts)
+- [ ] Create retention and re-engagement automation
+- [ ] Integrate with donation pipeline
+
+### Department-Specific Bots
+- [ ] HR Bot - recruitment, onboarding, compliance reminders
+- [ ] Finance Bot - invoice processing, expense tracking, reporting
+- [ ] Operations Bot - task scheduling, resource allocation
+- [ ] Grants Bot - deadline tracking, application assistance
+- [ ] Legal Bot - document review, compliance monitoring
+- [ ] Academy Bot - course recommendations, progress tracking
+
+### Agents Dashboard Enhancement
+- [ ] Review existing Agents page structure
+- [ ] Add department bot management interface
+- [ ] Display bot activity logs and metrics
+- [ ] Add bot configuration and scheduling
+- [ ] Create bot performance analytics
+
+
+## Phase 52: Complete Department Agent System
+
+### New Department Agents Added
+- [x] Legal Agent - contract review, 508 compliance, IP management
+- [x] IT Agent - technical support, system administration
+- [x] Contracts Agent - contract management, RFP responses
+- [x] Property Agent - property management, LAND pillar support
+- [x] Real Estate Agent - market analysis, acquisitions
+- [x] Project Controls Agent - schedule/budget tracking, earned value
+- [x] Procurement Agent - sourcing, supplier management
+
+### Agent Topics & Prompts
+- [ ] Add AGENT_TOPICS for Legal, IT, Contracts, Property, Real Estate, Project Controls, Procurement
+- [ ] Add AGENT_PROMPTS for all new agents
+
+### Department Dashboard Pages
+- [ ] Create /dept/legal - Legal Department Dashboard
+- [ ] Create /dept/it - IT Department Dashboard
+- [ ] Create /dept/contracts - Contracts Department Dashboard
+- [ ] Create /dept/property - Property Management Dashboard
+- [ ] Create /dept/real-estate - Real Estate Department Dashboard
+- [ ] Create /dept/project-controls - Project Controls Dashboard
+- [ ] Create /dept/procurement - Procurement Department Dashboard
+- [ ] Create /dept/operations - Operations Department Dashboard
+- [ ] Create /dept/finance - Finance Department Dashboard
+- [ ] Create /dept/media - Media Department Dashboard
+- [ ] Create /dept/marketing - Marketing Department Dashboard
+- [ ] Create /dept/hr - HR Department Dashboard
+- [ ] Create /dept/qaqc - QA/QC Department Dashboard
+- [ ] Create /dept/purchasing - Purchasing Department Dashboard
+- [ ] Create /dept/health - Health & Wellness Dashboard
+- [ ] Create /dept/design - Design Studio Dashboard
+
+### Agent-Dashboard Integration
+- [ ] Each department dashboard links to its agent
+- [ ] Agent pages link back to department dashboards
+- [ ] Department simulators accessible from dashboards
+- [ ] Bot activity logs displayed on dashboards
+
