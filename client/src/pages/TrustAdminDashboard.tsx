@@ -320,6 +320,52 @@ export default function TrustAdminDashboard() {
 
           {/* Governance Tab */}
           <TabsContent value="governance" className="space-y-4">
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <Link href="/governance-workflows">
+                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-primary/20 hover:border-primary">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Activity className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Governance Workflows</p>
+                      <p className="text-xs text-muted-foreground">Approval workflows & escalations</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto" />
+                  </div>
+                </Card>
+              </Link>
+              <Link href="/audit-trail">
+                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-primary/20 hover:border-primary">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Activity className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Audit Trail</p>
+                      <p className="text-xs text-muted-foreground">Activity timeline & blockchain verification</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto" />
+                  </div>
+                </Card>
+              </Link>
+              <Link href="/entity-curriculum">
+                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-primary/20 hover:border-primary">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Users className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Entity Curricula</p>
+                      <p className="text-xs text-muted-foreground">Training programs by entity</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto" />
+                  </div>
+                </Card>
+              </Link>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Card className="p-6">
                 <h3 className="font-semibold text-foreground mb-4">Governance Actions</h3>

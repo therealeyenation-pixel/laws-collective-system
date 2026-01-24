@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { ResourceLinks } from "@/components/ResourceLinks";
 
 export default function HealthDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -115,6 +116,7 @@ export default function HealthDashboard() {
             <TabsTrigger value="events">Events</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="resources">Resources</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -295,6 +297,15 @@ export default function HealthDashboard() {
               description="Wellness programs, health policies, safety protocols, and wellness resources"
               showCategories={true}
               showSearch={true}
+            />
+          </TabsContent>
+
+          <TabsContent value="resources" className="mt-4">
+            <ResourceLinks 
+              dashboard="health" 
+              title="Health & Wellness Resources"
+              maxLinks={20}
+              showAddButton={true}
             />
           </TabsContent>
         </Tabs>

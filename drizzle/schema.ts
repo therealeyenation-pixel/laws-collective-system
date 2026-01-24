@@ -13993,3 +13993,603 @@ export const trialExitSurveys = mysqlTable("trial_exit_surveys", {
 
 export type TrialExitSurvey = typeof trialExitSurveys.$inferSelect;
 export type InsertTrialExitSurvey = typeof trialExitSurveys.$inferInsert;
+
+
+// ==========================================
+// TRAINING HUB SIMULATOR SYSTEM (Phase 67)
+// ==========================================
+
+/**
+ * Training Hub Modules - Defines training modules for the unified Training Hub
+ */
+export const trainingHubModules = mysqlTable("training_hub_modules", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Module identification
+  moduleCode: varchar("moduleCode", { length: 50 }).notNull().unique(), // e.g., "SEC-001", "ONB-101"
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Category
+  category: mysqlEnum("category", [
+    "company_wide",           // Security, policies, harassment prevention
+    "new_employee",           // Orientation, systems intro, culture
+    "department_specific",    // Role procedures, SOPs, specialized skills
+    "position_specific",      // Job scenarios, certification requirements
+    "compliance"              // Annual refreshers, regulatory
+  ]).notNull(),
+  
+  // Department (for department-specific modules)
+  department: varchar("department", { length: 100 }),
+  
+  // Position (for position-specific modules)
+  positionId: int("positionId"),
+  
+  // Content structure
+  scenarioCount: int("scenarioCount").default(5).notNull(),
+  estimatedMinutes: int("estimatedMinutes").default(30).notNull(),
+  passingScore: int("passingScore").default(80).notNull(),
+  
+  // Certification
+  issuesCertification: boolean("issuesCertification").default(true).notNull(),
+  certificationValidityMonths: int("certificationValidityMonths").default(12),
+  
+  // Token rewards
+  completionTokens: int("completionTokens").default(50).notNull(),
+  
+  // Requirements
+  prerequisiteModuleIds: json("prerequisiteModuleIds"), // Array of module IDs required first
+  isRequired: boolean("isRequired").default(false).notNull(), // Required for all employees
+  
+  // Status
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("draft").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrainingHubModule = typeof trainingHubModules.$inferSelect;
+export type InsertTrainingHubModule = typeof trainingHubModules.$inferInsert;
+
+/**
+ * Training Hub Scenarios - Individual scenarios within modules
+ */
+export const trainingHubScenarios = mysqlTable("training_hub_scenarios", {
+  id: int("id").autoincrement().primaryKey(),
+  moduleId: int("moduleId").notNull(),
+  
+  // Scenario content
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  scenarioText: text("scenarioText").notNull(), // The situation presented
+  
+  // Order
+  orderIndex: int("orderIndex").default(0).notNull(),
+  
+  // Question type
+  questionType: mysqlEnum("questionType", [
+    "multiple_choice",
+    "true_false",
+    "scenario_response",
+    "fill_blank"
+  ]).default("multiple_choice").notNull(),
+  
+  // Options (JSON array for multiple choice)
+  options: json("options"), // [{text: "Option A", isCorrect: false}, ...]
+  correctAnswer: text("correctAnswer"),
+  explanation: text("explanation"), // Shown after answering
+  
+  // Points
+  points: int("points").default(10).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TrainingHubScenario = typeof trainingHubScenarios.$inferSelect;
+export type InsertTrainingHubScenario = typeof trainingHubScenarios.$inferInsert;
+
+/**
+ * Training Hub Progress - Tracks user progress through modules
+ */
+export const trainingHubProgress = mysqlTable("training_hub_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  moduleId: int("moduleId").notNull(),
+  
+  // Progress tracking
+  scenariosCompleted: int("scenariosCompleted").default(0).notNull(),
+  totalScenarios: int("totalScenarios").notNull(),
+  currentScenarioIndex: int("currentScenarioIndex").default(0).notNull(),
+  
+  // Scoring
+  correctAnswers: int("correctAnswers").default(0).notNull(),
+  totalPoints: int("totalPoints").default(0).notNull(),
+  maxPoints: int("maxPoints").notNull(),
+  percentageScore: decimal("percentageScore", { precision: 5, scale: 2 }),
+  
+  // Status
+  status: mysqlEnum("status", ["not_started", "in_progress", "completed", "failed"]).default("not_started").notNull(),
+  passed: boolean("passed").default(false).notNull(),
+  
+  // Timestamps
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  
+  // Attempts
+  attemptNumber: int("attemptNumber").default(1).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrainingHubProgress = typeof trainingHubProgress.$inferSelect;
+export type InsertTrainingHubProgress = typeof trainingHubProgress.$inferInsert;
+
+/**
+ * Training Hub Certifications - Certifications issued upon module completion
+ */
+export const trainingHubCertifications = mysqlTable("training_hub_certifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  moduleId: int("moduleId").notNull(),
+  progressId: int("progressId").notNull(),
+  
+  // Certificate details
+  certificateNumber: varchar("certificateNumber", { length: 100 }).notNull().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  
+  // Scores
+  finalScore: decimal("finalScore", { precision: 5, scale: 2 }).notNull(),
+  tokensEarned: int("tokensEarned").default(0).notNull(),
+  
+  // Validity
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Blockchain verification
+  blockchainHash: varchar("blockchainHash", { length: 64 }),
+  verificationUrl: varchar("verificationUrl", { length: 500 }),
+  
+  // Recertification
+  recertificationRequired: boolean("recertificationRequired").default(false).notNull(),
+  recertificationDueAt: timestamp("recertificationDueAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TrainingHubCertification = typeof trainingHubCertifications.$inferSelect;
+export type InsertTrainingHubCertification = typeof trainingHubCertifications.$inferInsert;
+
+/**
+ * Training Hub Assignments - HR assigns training to employees
+ */
+export const trainingHubAssignments = mysqlTable("training_hub_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Assignment details
+  userId: int("userId").notNull(), // Employee being assigned
+  moduleId: int("moduleId").notNull(),
+  assignedBy: int("assignedBy").notNull(), // HR/Manager who assigned
+  
+  // Assignment type
+  assignmentType: mysqlEnum("assignmentType", [
+    "onboarding",        // Part of new hire onboarding
+    "compliance",        // Required compliance training
+    "development",       // Professional development
+    "remedial",          // Performance improvement
+    "certification"      // Required certification
+  ]).notNull(),
+  
+  // Deadline
+  dueDate: timestamp("dueDate"),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium").notNull(),
+  
+  // Status
+  status: mysqlEnum("status", ["assigned", "in_progress", "completed", "overdue", "waived"]).default("assigned").notNull(),
+  completedAt: timestamp("completedAt"),
+  
+  // Notes
+  assignmentNotes: text("assignmentNotes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrainingHubAssignment = typeof trainingHubAssignments.$inferSelect;
+export type InsertTrainingHubAssignment = typeof trainingHubAssignments.$inferInsert;
+
+
+// ==========================================
+// CONTRACT NEGOTIATION TRACKING (Phase 68)
+// ==========================================
+
+/**
+ * Contract Negotiations - Track contract negotiation status and outcomes
+ */
+export const contractNegotiations = mysqlTable("contract_negotiations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  // Contract identification
+  contractTitle: varchar("contractTitle", { length: 255 }).notNull(),
+  contractType: mysqlEnum("contractType", [
+    "employment",
+    "service",
+    "vendor",
+    "partnership",
+    "lease",
+    "nda",
+    "licensing",
+    "consulting",
+    "other"
+  ]).notNull(),
+  
+  // Parties
+  ourParty: varchar("ourParty", { length: 255 }).notNull(), // Our entity name
+  counterparty: varchar("counterparty", { length: 255 }).notNull(),
+  counterpartyContact: varchar("counterpartyContact", { length: 255 }),
+  
+  // Contract details
+  contractValue: decimal("contractValue", { precision: 15, scale: 2 }),
+  contractDuration: varchar("contractDuration", { length: 100 }), // e.g., "12 months", "2 years"
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  
+  // Negotiation status
+  status: mysqlEnum("status", [
+    "initial_review",
+    "counter_proposed",
+    "under_negotiation",
+    "final_review",
+    "accepted",
+    "rejected",
+    "withdrawn",
+    "expired"
+  ]).default("initial_review").notNull(),
+  
+  // Key terms being negotiated (JSON)
+  keyTerms: json("keyTerms"), // [{term: "Payment terms", ourPosition: "Net 30", theirPosition: "Net 60", status: "negotiating"}]
+  
+  // AI analysis results
+  aiAnalysisId: varchar("aiAnalysisId", { length: 100 }), // Reference to AI analysis
+  riskScore: int("riskScore"), // 1-100
+  leverageScore: int("leverageScore"), // 1-100
+  
+  // Walk-away point
+  walkAwayThreshold: text("walkAwayThreshold"),
+  
+  // Outcome
+  outcome: mysqlEnum("outcome", ["won", "lost", "compromised", "pending"]).default("pending"),
+  outcomeNotes: text("outcomeNotes"),
+  finalContractUrl: varchar("finalContractUrl", { length: 500 }),
+  
+  // Timestamps
+  negotiationStartedAt: timestamp("negotiationStartedAt").defaultNow().notNull(),
+  lastActivityAt: timestamp("lastActivityAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContractNegotiation = typeof contractNegotiations.$inferSelect;
+export type InsertContractNegotiation = typeof contractNegotiations.$inferInsert;
+
+/**
+ * Negotiation History - Track all negotiation activities
+ */
+export const negotiationHistory = mysqlTable("negotiation_history", {
+  id: int("id").autoincrement().primaryKey(),
+  negotiationId: int("negotiationId").notNull(),
+  
+  // Activity type
+  activityType: mysqlEnum("activityType", [
+    "initial_upload",
+    "ai_analysis",
+    "strategy_generated",
+    "counter_offer_sent",
+    "counter_offer_received",
+    "term_accepted",
+    "term_rejected",
+    "meeting_scheduled",
+    "meeting_completed",
+    "document_revised",
+    "final_agreement",
+    "negotiation_closed"
+  ]).notNull(),
+  
+  // Activity details
+  description: text("description").notNull(),
+  actorType: mysqlEnum("actorType", ["user", "counterparty", "system", "ai"]).notNull(),
+  actorName: varchar("actorName", { length: 255 }),
+  
+  // Associated data
+  metadata: json("metadata"), // Additional activity-specific data
+  documentUrl: varchar("documentUrl", { length: 500 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type NegotiationHistory = typeof negotiationHistory.$inferSelect;
+export type InsertNegotiationHistory = typeof negotiationHistory.$inferInsert;
+
+/**
+ * Negotiation Playbooks - Templates for common negotiation scenarios
+ */
+export const negotiationPlaybooks = mysqlTable("negotiation_playbooks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Playbook identification
+  title: varchar("title", { length: 255 }).notNull(),
+  contractType: varchar("contractType", { length: 100 }).notNull(),
+  description: text("description"),
+  
+  // Content
+  commonTerms: json("commonTerms"), // [{term: "Payment", standardPosition: "Net 30", negotiationTips: "..."}]
+  redFlags: json("redFlags"), // [{flag: "Unlimited liability", severity: "high", response: "..."}]
+  negotiationStrategies: json("negotiationStrategies"), // [{scenario: "...", strategy: "...", scripts: [...]}]
+  
+  // Industry
+  industry: varchar("industry", { length: 100 }),
+  
+  // Usage stats
+  usageCount: int("usageCount").default(0).notNull(),
+  successRate: decimal("successRate", { precision: 5, scale: 2 }),
+  
+  // Status
+  isPublic: boolean("isPublic").default(true).notNull(),
+  status: mysqlEnum("status", ["draft", "active", "archived"]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NegotiationPlaybook = typeof negotiationPlaybooks.$inferSelect;
+export type InsertNegotiationPlaybook = typeof negotiationPlaybooks.$inferInsert;
+
+
+// ==========================================
+// SERVICE BOOKING SYSTEM (Phase 69)
+// ==========================================
+
+/**
+ * Service Catalog - Available services for booking
+ */
+export const serviceCatalog = mysqlTable("service_catalog", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Service identification
+  serviceCode: varchar("serviceCode", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Category
+  category: mysqlEnum("category", [
+    "contract_negotiation",
+    "business_formation",
+    "grant_writing",
+    "tax_planning",
+    "workforce_transition",
+    "mediation",
+    "compliance_audit",
+    "training",
+    "consulting",
+    "other"
+  ]).notNull(),
+  
+  // Pricing tier
+  tier: mysqlEnum("tier", ["free", "premium", "business"]).notNull(),
+  
+  // Pricing
+  basePrice: decimal("basePrice", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  priceUnit: mysqlEnum("priceUnit", ["per_hour", "per_session", "per_project", "flat_fee"]).default("per_session").notNull(),
+  
+  // Duration
+  estimatedDurationMinutes: int("estimatedDurationMinutes").default(60),
+  
+  // Availability
+  isActive: boolean("isActive").default(true).notNull(),
+  requiresApproval: boolean("requiresApproval").default(false).notNull(),
+  
+  // Owning entity
+  owningEntityId: int("owningEntityId"),
+  owningEntityName: varchar("owningEntityName", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ServiceCatalogItem = typeof serviceCatalog.$inferSelect;
+export type InsertServiceCatalogItem = typeof serviceCatalog.$inferInsert;
+
+/**
+ * Service Bookings - Track service inquiries and bookings
+ */
+export const serviceBookings = mysqlTable("service_bookings", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Booking identification
+  bookingNumber: varchar("bookingNumber", { length: 50 }).notNull().unique(),
+  serviceId: int("serviceId").notNull(),
+  
+  // Client info
+  userId: int("userId"), // If registered user
+  clientName: varchar("clientName", { length: 255 }).notNull(),
+  clientEmail: varchar("clientEmail", { length: 320 }).notNull(),
+  clientPhone: varchar("clientPhone", { length: 50 }),
+  clientCompany: varchar("clientCompany", { length: 255 }),
+  
+  // Booking details
+  requestedDate: timestamp("requestedDate"),
+  preferredTimeSlot: varchar("preferredTimeSlot", { length: 100 }), // e.g., "Morning", "Afternoon"
+  scheduledAt: timestamp("scheduledAt"),
+  
+  // Service details
+  serviceDescription: text("serviceDescription"), // Client's description of what they need
+  additionalNotes: text("additionalNotes"),
+  
+  // Pricing
+  quotedPrice: decimal("quotedPrice", { precision: 10, scale: 2 }),
+  finalPrice: decimal("finalPrice", { precision: 10, scale: 2 }),
+  paymentStatus: mysqlEnum("paymentStatus", ["pending", "partial", "paid", "refunded"]).default("pending").notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "inquiry",           // Initial inquiry
+    "pending_review",    // Awaiting staff review
+    "quote_sent",        // Quote provided to client
+    "confirmed",         // Client confirmed
+    "scheduled",         // Date/time set
+    "in_progress",       // Service being delivered
+    "completed",         // Service completed
+    "cancelled",         // Cancelled by client or staff
+    "no_show"            // Client didn't show
+  ]).default("inquiry").notNull(),
+  
+  // Assignment
+  assignedTo: int("assignedTo"), // Staff member assigned
+  assignedAt: timestamp("assignedAt"),
+  
+  // Completion
+  completedAt: timestamp("completedAt"),
+  completionNotes: text("completionNotes"),
+  
+  // Follow-up
+  followUpRequired: boolean("followUpRequired").default(false).notNull(),
+  followUpDate: timestamp("followUpDate"),
+  followUpNotes: text("followUpNotes"),
+  
+  // Rating
+  clientRating: int("clientRating"), // 1-5
+  clientFeedback: text("clientFeedback"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ServiceBooking = typeof serviceBookings.$inferSelect;
+export type InsertServiceBooking = typeof serviceBookings.$inferInsert;
+
+/**
+ * Service Availability - Staff availability for services
+ */
+export const serviceAvailability = mysqlTable("service_availability", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Staff member
+  userId: int("userId").notNull(),
+  
+  // Services they can provide
+  serviceIds: json("serviceIds"), // Array of service IDs
+  
+  // Weekly availability (JSON schedule)
+  weeklySchedule: json("weeklySchedule"), // {monday: [{start: "09:00", end: "17:00"}], ...}
+  
+  // Exceptions
+  blockedDates: json("blockedDates"), // Array of dates not available
+  
+  // Capacity
+  maxBookingsPerDay: int("maxBookingsPerDay").default(4).notNull(),
+  maxBookingsPerWeek: int("maxBookingsPerWeek").default(20).notNull(),
+  
+  // Status
+  isAcceptingBookings: boolean("isAcceptingBookings").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ServiceAvailability = typeof serviceAvailability.$inferSelect;
+export type InsertServiceAvailability = typeof serviceAvailability.$inferInsert;
+
+
+// ==========================================
+// RESOURCE LINKS SYSTEM
+// ==========================================
+
+/**
+ * Resource Links - Curated external links for dashboards
+ * Allows admins to post relevant articles, recalls, news, and resources
+ */
+export const resourceLinks = mysqlTable("resource_links", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Link details
+  title: varchar("title", { length: 255 }).notNull(),
+  url: varchar("url", { length: 1000 }).notNull(),
+  description: text("description"),
+  
+  // Categorization
+  dashboard: mysqlEnum("dashboard", [
+    "health",
+    "finance",
+    "legal",
+    "business",
+    "education",
+    "governance",
+    "hr",
+    "operations",
+    "general"
+  ]).notNull(),
+  
+  category: varchar("category", { length: 100 }), // e.g., "recalls", "news", "research", "regulations"
+  tags: json("tags"), // Array of tags for filtering
+  
+  // Display
+  priority: int("priority").default(0).notNull(), // Higher = more prominent
+  isPinned: boolean("isPinned").default(false).notNull(),
+  
+  // Source info
+  sourceName: varchar("sourceName", { length: 255 }), // e.g., "ConsumerLab"
+  sourceIcon: varchar("sourceIcon", { length: 500 }), // URL to source favicon/icon
+  
+  // Metadata
+  publishedAt: timestamp("publishedAt"), // When the article was published
+  addedBy: int("addedBy"), // User who added the link (null if agent-added)
+  
+  // Agent identification
+  isAgentIdentified: boolean("isAgentIdentified").default(false).notNull(),
+  agentId: int("agentId"), // Which agent identified this content
+  agentConfidence: decimal("agentConfidence", { precision: 5, scale: 2 }), // 0-100 confidence score
+  agentReason: text("agentReason"), // Why the agent thinks this is relevant
+  
+  // Approval workflow for agent content
+  approvalStatus: mysqlEnum("approvalStatus", ["pending", "approved", "rejected"]).default("approved"),
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Engagement tracking
+  clickCount: int("clickCount").default(0).notNull(),
+  lastClickedAt: timestamp("lastClickedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ResourceLink = typeof resourceLinks.$inferSelect;
+export type InsertResourceLink = typeof resourceLinks.$inferInsert;
+
+/**
+ * Resource Link Categories - Predefined categories per dashboard
+ */
+export const resourceLinkCategories = mysqlTable("resource_link_categories", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  dashboard: varchar("dashboard", { length: 50 }).notNull(),
+  categoryName: varchar("categoryName", { length: 100 }).notNull(),
+  categoryIcon: varchar("categoryIcon", { length: 50 }), // Lucide icon name
+  description: text("description"),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ResourceLinkCategory = typeof resourceLinkCategories.$inferSelect;
+export type InsertResourceLinkCategory = typeof resourceLinkCategories.$inferInsert;
