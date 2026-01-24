@@ -6607,3 +6607,57 @@ Three main approaches available:
 - [x] Add IT Manager job posting to careers/positions ($90K-$120K)
 - [x] Add IT Operations Coordinator job posting ($55K-$75K)
 - [ ] Update Operations Dashboard to show IT department status
+
+
+## Phase 67: Unified Simulator System
+- [x] Create Training Hub page with all simulator categories
+- [x] Build simulator categories structure:
+  - [x] Company-Wide (security, policies, harassment prevention)
+  - [x] New Employee Onboarding (orientation, systems intro, culture)
+  - [x] Department-Specific (role procedures, SOPs, specialized skills)
+  - [x] Position-Specific (job scenarios, certification requirements)
+  - [x] Compliance/Recertification (annual refreshers, regulatory)
+- [x] Create IT Security Certification module (required for all employees)
+- [x] Add route /training-hub to App.tsx
+- [ ] Create simulator database schema (modules, scenarios, completions, certifications)
+- [ ] Build simulator completion tracking and certification system
+- [ ] Integrate with HR (assign training based on position/department)
+- [ ] Integrate with Property (equipment release requires certifications)
+- [ ] Integrate with Onboarding checklist (auto-update on completion)
+- [ ] Create manager dashboard for team compliance status
+- [ ] Add recertification reminders and audit trail
+
+## Phase 68: AI Contract Negotiation Agent
+- [x] Create contract analysis backend with LLM integration
+- [x] Build contract upload functionality (PDF, Word, text)
+- [x] Implement contract term extraction and plain language explanation
+- [x] Create position assessment feature (leverage analysis)
+- [x] Build negotiation strategy generator
+- [x] Create interactive Q&A chat for specific clauses
+- [x] Generate counter-offer suggestions with rationale
+- [x] Define walk-away points guidance
+- [x] Create ContractAgent page at /contract-agent
+- [x] Create contracts router with analyzeContract, generateStrategy, chatAboutContract procedures
+- [ ] Add contract comparison against industry standards
+- [ ] Build negotiation tracking (status, parties, terms, outcomes)
+- [ ] Create negotiation playbooks and templates
+- [ ] Integrate with Contracts Dashboard
+- [ ] Add to Simulator as negotiation practice scenarios
+
+## Phase 69: L.A.W.S. Collective Services Page
+- [x] Create public services page at /services
+- [x] List Contract Negotiation Agent as featured service
+- [x] List Business Formation Services
+- [x] List Grant Writing & Consulting
+- [x] List Academy courses
+- [x] List Tax Planning & Strategy
+- [x] List Workforce to Self-Employment transition
+- [x] List Mediation Services
+- [x] List Compliance & Audit Services
+- [x] Define service tiers (Free, Premium, Business)
+- [x] Add pricing and access level information
+- [x] Add service category filtering
+- [x] Cross-link to Academy for training courses
+- [x] Add contact/consultation booking section
+- [ ] Create member portal access to tools
+- [ ] Build service inquiry/booking functionality

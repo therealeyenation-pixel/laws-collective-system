@@ -137,6 +137,7 @@ import { lawsEmploymentRouter } from "./routers/laws-employment";
 import { enhancedDonationsRouter } from "./routers/enhanced-donations";
 import { stripeDonationsRouter } from "./routers/stripe-donations";
 import { trialRouter } from "./routers/trial";
+import { contractsRouter } from "./routers/contracts";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -286,6 +287,7 @@ export const appRouter = router({
   enhancedDonations: enhancedDonationsRouter,
   stripeDonations: stripeDonationsRouter,
   trial: trialRouter,
+  contracts: contractsRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

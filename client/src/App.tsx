@@ -123,6 +123,9 @@ import LegalSimulator from "./pages/simulators/LegalSimulator";
 import ITSimulator from "./pages/simulators/ITSimulator";
 import PlatformSimulator from "./pages/simulators/PlatformSimulator";
 import GrantsSimulator from "./pages/simulators/GrantsSimulator";
+import TrainingHub from "./pages/TrainingHub";
+import ContractAgent from "./pages/ContractAgent";
+import Services from "./pages/Services";
 import OfferLetters from "@/pages/OfferLetters";
 import BusinessDashboard from "@/pages/BusinessDashboard";
 import BusinessLanding from "@/pages/BusinessLanding";
@@ -279,6 +282,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/careers" component={Careers} />
       <Route path="/contact" component={Contact} />
+      <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
       <Route path="/donate/public" component={PublicDonate} />
@@ -327,6 +331,8 @@ function Router() {
       <Route path="/it-simulator">{() => <ProtectedRoute component={ITSimulator} minRole="staff" />}</Route>
       <Route path="/platform-simulator">{() => <ProtectedRoute component={PlatformSimulator} minRole="admin" />}</Route>
       <Route path="/grants-simulator">{() => <ProtectedRoute component={GrantsSimulator} minRole="staff" />}</Route>
+      <Route path="/training-hub">{() => <ProtectedRoute component={TrainingHub} minRole="user" />}</Route>
+      <Route path="/contract-agent">{() => <ProtectedRoute component={ContractAgent} minRole="user" />}</Route>
       
       {/* Staff routes - management level */}
       <Route path="/dashboard">{() => <ProtectedRoute component={Dashboard} minRole="staff" />}</Route>
