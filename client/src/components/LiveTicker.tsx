@@ -36,6 +36,8 @@ import {
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 
+type DashboardType = "health" | "finance" | "legal" | "business" | "education" | "governance" | "hr" | "operations" | "general";
+
 interface TickerItem {
   id: number;
   title: string;
@@ -49,7 +51,7 @@ interface TickerItem {
 }
 
 interface LiveTickerProps {
-  department: string;
+  department: DashboardType;
   className?: string;
 }
 
@@ -134,8 +136,30 @@ export function LiveTicker({ department, className = "" }: LiveTickerProps) {
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const tickerRef = useRef<HTMLDivElement>(null);
 
-  // Filter items by department category
-  const filteredItems = mockTickerItems; // In production, filter by department
+  // Fetch resource links from database
+  const { data: dbLinks, isLoading } = trpc.resourceLinks.getByDashboard.useQuery({
+    dashboard: department,
+    limit: 20,
+  });
+
+  // Transform database links to ticker items, fallback to mock data if empty
+  const filteredItems: TickerItem[] = dbLinks && dbLinks.length > 0 
+    ? dbLinks.map(link => ({
+        id: link.id,
+        title: link.title,
+        description: link.description || undefined,
+        url: link.url,
+        category: link.category || department,
+        priority: link.priority >= 8 ? "critical" : link.priority >= 5 ? "high" : link.priority >= 3 ? "medium" : "low",
+        source: link.isAgentIdentified ? "agent" as const : "admin" as const,
+        swotType: link.swotType as "strength" | "weakness" | "opportunity" | "threat" | undefined,
+        createdAt: link.createdAt?.toISOString() || new Date().toISOString(),
+      }))
+    : mockTickerItems.filter(item => 
+        item.category === department || 
+        department === "general" || 
+        ["health", "finance", "legal"].includes(department)
+      )
 
   // Auto-scroll effect
   useEffect(() => {

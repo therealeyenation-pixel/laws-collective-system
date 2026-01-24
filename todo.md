@@ -344,10 +344,10 @@
 
 
 ## Phase 23: Fix Dashboard Data Access
-- [ ] Update companySetup router to allow public read access for getEntities
-- [ ] Update autonomousEngine router to allow public read access for getRecentOperations
-- [ ] Update luv router to allow public read access for getSystemOverview
-- [ ] Ensure dashboards show data without authentication
+- [x] Update companySetup router to allow public read access for getEntities
+- [x] Update autonomousEngine router to allow public read access for getRecentOperations
+- [x] Update luv router to allow public read access for getSystemOverview
+- [x] Ensure dashboards show data without authentication
 
 
 ## Phase 24: Custom Notification System
@@ -6627,7 +6627,7 @@ Three main approaches available:
   - [x] Compliance/Recertification (annual refreshers, regulatory)
 - [x] Create IT Security Certification module (required for all employees)
 - [x] Add route /training-hub to App.tsx
-- [ ] Create simulator database schema (modules, scenarios, completions, certifications)
+- [x] Create simulator database schema (modules, scenarios, completions, certifications)
 - [ ] Build simulator completion tracking and certification system
 - [ ] Integrate with HR (assign training based on position/department)
 - [ ] Integrate with Property (equipment release requires certifications)
@@ -6646,8 +6646,8 @@ Three main approaches available:
 - [x] Define walk-away points guidance
 - [x] Create ContractAgent page at /contract-agent
 - [x] Create contracts router with analyzeContract, generateStrategy, chatAboutContract procedures
-- [ ] Add contract comparison against industry standards
-- [ ] Build negotiation tracking (status, parties, terms, outcomes)
+- [x] Add contract comparison against industry standards
+- [x] Build negotiation tracking (status, parties, terms, outcomes)
 - [ ] Create negotiation playbooks and templates
 - [ ] Integrate with Contracts Dashboard
 - [ ] Add to Simulator as negotiation practice scenarios
@@ -6667,8 +6667,8 @@ Three main approaches available:
 - [x] Add service category filtering
 - [x] Cross-link to Academy for training courses
 - [x] Add contact/consultation booking section
-- [ ] Create member portal access to tools
-- [ ] Build service inquiry/booking functionality
+- [x] Create member portal access to tools
+- [x] Build service inquiry/booking functionality
 
 
 ## Phase 73: Resource Links Feature
@@ -6679,10 +6679,10 @@ Three main approaches available:
 - [x] Create resource links router with CRUD operations
 - [x] Add agent suggestion and review workflow
 - [x] Add Resources tab to Health Dashboard
-- [ ] Add Resources tab to Finance Dashboard
-- [ ] Add Resources tab to Legal Dashboard
-- [ ] Add Resources tab to other department dashboards
-- [ ] Create admin page for managing resource links across all dashboards
+- [x] Add Resources tab to Finance Dashboard
+- [x] Add Resources tab to Legal Dashboard
+- [x] Add Resources tab to other department dashboards
+- [x] Create admin page for managing resource links across all dashboards
 - [ ] Implement agent content discovery job
 
 
@@ -6722,7 +6722,11 @@ Three main approaches available:
 - [x] Add ticker to Health Dashboard
 - [x] Add ticker to Finance Dashboard
 - [x] Add ticker to Legal Dashboard
-- [ ] Add ticker to all other department dashboards
+- [x] Add ticker to HR Dashboard
+- [x] Add ticker to Operations Dashboard
+- [x] Add ticker to IT Dashboard
+- [x] Add ticker to Education Dashboard
+- [ ] Add ticker to remaining department dashboards
 - [ ] Create ticker admin for managing displayed items
 - [x] Add priority/urgency indicators (recalls, warnings, alerts)
 - [x] Support agent-identified content in ticker feed
