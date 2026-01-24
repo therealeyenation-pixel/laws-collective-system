@@ -6532,3 +6532,17 @@ Three main approaches available:
 - [ ] Add offline indicator in UI
 - [ ] Test PWA install experience
 
+
+## Phase 62: Comprehensive Trademark Classes & Media Pages
+- [x] Update RELEVANT_TRADEMARK_CLASSES to include all 8 classes
+- [x] Add Class 009 (Downloadable media, software, apps)
+- [x] Add Class 016 (Printed materials, workbooks, certificates)
+- [x] Add Class 038 (Broadcasting, streaming services)
+- [x] Update Class 045 to include ministerial services for 508 only
+- [x] Ministerial services: wedding ceremonies, funerals, baptisms, spiritual counseling
+- [ ] Create trademark application checklist per entity type (508, LLC, Media)
+- [x] Create Documentary page with video content management
+- [x] Create Podcast page with episode management
+- [x] Link Documentary/Podcast to Real-Eye-Nation brand
+- [x] Add routes for /documentary and /podcast pages
+- [x] Update trademark search to show entity-specific class recommendations

@@ -31,14 +31,66 @@ interface SearchResult {
   relevantClasses: { code: string; name: string; description: string }[];
 }
 
-// Trademark classes relevant to business management systems
+// Comprehensive trademark classes for L.A.W.S. Collective ecosystem
 const RELEVANT_TRADEMARK_CLASSES = [
-  { code: "035", name: "Advertising and Business", description: "Business management; business administration; office functions" },
-  { code: "036", name: "Insurance and Financial", description: "Financial affairs; monetary affairs; real estate affairs" },
-  { code: "041", name: "Education and Entertainment", description: "Education; providing of training; entertainment; sporting and cultural activities" },
-  { code: "042", name: "Science and Technology", description: "Scientific and technological services; industrial analysis and research services; design and development of computer hardware and software" },
-  { code: "045", name: "Legal and Security", description: "Legal services; security services for the protection of property and individuals" },
+  { code: "009", name: "Downloadable Media & Software", description: "Downloadable educational materials, podcasts, documentaries, mobile applications, software" },
+  { code: "016", name: "Printed Materials", description: "Printed educational materials, workbooks, certificates, scrolls, curriculum guides" },
+  { code: "035", name: "Advertising and Business", description: "Business management; business administration; business consulting; office functions" },
+  { code: "036", name: "Insurance and Financial", description: "Financial affairs; monetary affairs; real estate affairs; investment services; financial planning" },
+  { code: "038", name: "Broadcasting & Streaming", description: "Broadcasting services; streaming of audio/video content; podcast distribution; online content delivery" },
+  { code: "041", name: "Education and Entertainment", description: "Education; providing of training; entertainment; sporting and cultural activities; documentary production; podcast production" },
+  { code: "042", name: "Science and Technology", description: "Scientific and technological services; software as a service (SaaS); platform development; design and development of computer software" },
+  { code: "045", name: "Legal, Security & Ministerial", description: "Legal services; security services; religious ministry services; officiating ceremonies; spiritual counseling" },
 ];
+
+// Entity-specific class recommendations
+const ENTITY_CLASS_MAP: Record<string, { codes: string[]; ministerial: boolean; description: string }> = {
+  "508": {
+    codes: ["009", "016", "035", "036", "038", "041", "042", "045"],
+    ministerial: true,
+    description: "508(c)(1)(a) nonprofit - Full coverage including ministerial services (weddings, funerals, baptisms, spiritual counseling)"
+  },
+  "llc": {
+    codes: ["035", "036", "041", "042"],
+    ministerial: false,
+    description: "LLC - Business operations, education, financial services (NO ministerial services)"
+  },
+  "media": {
+    codes: ["009", "016", "038", "041"],
+    ministerial: false,
+    description: "Media entity - Content production, broadcasting, downloadable media (NO ministerial services)"
+  },
+  "trust": {
+    codes: ["036", "045"],
+    ministerial: false,
+    description: "Trust - Financial and legal services"
+  },
+  "nonprofit": {
+    codes: ["009", "016", "035", "041", "045"],
+    ministerial: false,
+    description: "Standard nonprofit - Education, business services, printed materials"
+  },
+  "collective": {
+    codes: ["035", "036", "041", "042"],
+    ministerial: false,
+    description: "Collective - Business, financial, education, technology services"
+  },
+  "corporation": {
+    codes: ["035", "036", "042"],
+    ministerial: false,
+    description: "Corporation - Business, financial, technology services"
+  },
+  "partnership": {
+    codes: ["035", "036"],
+    ministerial: false,
+    description: "Partnership - Business and financial services"
+  },
+  "sole-prop": {
+    codes: ["035"],
+    ministerial: false,
+    description: "Sole proprietorship - Business services"
+  },
+};
 
 // Simulate trademark search (in production, would scrape USPTO or use a paid API)
 function simulateTrademarkSearch(businessName: string): SearchResult {
@@ -225,22 +277,82 @@ export const trademarkSearchRouter = router({
   // Get relevant trademark classes for business type
   getRelevantClasses: protectedProcedure
     .input(z.object({
-      businessType: z.enum(["llc", "corporation", "trust", "nonprofit", "collective", "partnership", "sole-prop"]),
+      businessType: z.enum(["508", "llc", "corporation", "trust", "nonprofit", "collective", "partnership", "sole-prop", "media"]),
     }))
     .query(({ input }) => {
-      // Return classes most relevant to the business type
-      const classMap: Record<string, string[]> = {
-        "llc": ["035", "036", "042"],
-        "corporation": ["035", "036", "042"],
-        "trust": ["036", "045"],
-        "nonprofit": ["035", "041", "045"],
-        "collective": ["035", "041"],
-        "partnership": ["035", "036"],
-        "sole-prop": ["035"],
-      };
+      const entityConfig = ENTITY_CLASS_MAP[input.businessType] || ENTITY_CLASS_MAP["llc"];
+      const relevantClasses = RELEVANT_TRADEMARK_CLASSES.filter(c => entityConfig.codes.includes(c.code));
       
-      const relevantCodes = classMap[input.businessType] || ["035"];
-      return RELEVANT_TRADEMARK_CLASSES.filter(c => relevantCodes.includes(c.code));
+      return {
+        classes: relevantClasses,
+        ministerialIncluded: entityConfig.ministerial,
+        description: entityConfig.description,
+        totalClasses: relevantClasses.length,
+        estimatedFilingCost: `$${relevantClasses.length * 250} - $${relevantClasses.length * 350}`,
+        ministerialServices: entityConfig.ministerial ? [
+          "Religious ministry services",
+          "Officiating wedding ceremonies",
+          "Officiating funeral and memorial services",
+          "Baptism ceremonies",
+          "Spiritual counseling and guidance",
+          "Religious ceremony coordination"
+        ] : [],
+      };
+    }),
+
+  // Get all trademark classes (for comprehensive filing)
+  getAllClasses: protectedProcedure
+    .query(() => {
+      return {
+        classes: RELEVANT_TRADEMARK_CLASSES,
+        totalClasses: RELEVANT_TRADEMARK_CLASSES.length,
+        estimatedFilingCost: `$${RELEVANT_TRADEMARK_CLASSES.length * 250} - $${RELEVANT_TRADEMARK_CLASSES.length * 350}`,
+        recommendation: "Filing all 8 classes in one application saves significant attorney fees and time compared to multiple applications later."
+      };
+    }),
+
+  // Get entity-specific trademark filing checklist
+  getFilingChecklist: protectedProcedure
+    .input(z.object({
+      entityType: z.enum(["508", "llc", "media"]),
+      brandName: z.string(),
+    }))
+    .query(({ input }) => {
+      const entityConfig = ENTITY_CLASS_MAP[input.entityType] || ENTITY_CLASS_MAP["llc"];
+      const classes = RELEVANT_TRADEMARK_CLASSES.filter(c => entityConfig.codes.includes(c.code));
+      
+      const checklist = [
+        { item: "Conduct comprehensive trademark search", completed: false },
+        { item: "Verify no conflicting marks in USPTO database", completed: false },
+        { item: "Prepare specimen showing mark in use (logo, website, product)", completed: false },
+        { item: "Draft goods/services description for each class", completed: false },
+        ...classes.map(c => ({ item: `Prepare Class ${c.code} description: ${c.name}`, completed: false })),
+        { item: "Calculate filing fees ($250-350 per class)", completed: false },
+        { item: "Determine filing basis (use in commerce vs. intent to use)", completed: false },
+      ];
+      
+      if (entityConfig.ministerial) {
+        checklist.push(
+          { item: "Include ministerial services in Class 045 description", completed: false },
+          { item: "Document minister credentials/ordination", completed: false }
+        );
+      }
+      
+      checklist.push(
+        { item: "File application via USPTO TEAS system", completed: false },
+        { item: "Monitor application status and respond to office actions", completed: false }
+      );
+      
+      return {
+        brandName: input.brandName,
+        entityType: input.entityType,
+        entityDescription: entityConfig.description,
+        classes,
+        ministerialIncluded: entityConfig.ministerial,
+        checklist,
+        estimatedCost: `$${classes.length * 250} - $${classes.length * 350}`,
+        timelineEstimate: "8-12 months for registration (if no issues)",
+      };
     }),
 
   // Get USPTO direct search URL

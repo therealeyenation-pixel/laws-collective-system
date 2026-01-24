@@ -168,6 +168,8 @@ import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
 import TrialLanding from "@/pages/TrialLanding";
 import TrialDashboard from "@/pages/TrialDashboard";
 import TrialAnalytics from "@/pages/TrialAnalytics";
+import Documentary from "@/pages/Documentary";
+import Podcast from "@/pages/Podcast";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -291,6 +293,10 @@ function Router() {
       <Route path="/trial" component={TrialLanding} />
       <Route path="/trial/dashboard" component={TrialDashboard} />
       <Route path="/admin/trial-analytics">{() => <ProtectedRoute component={TrialAnalytics} minRole="admin" />}</Route>
+      
+      {/* Media routes */}
+      <Route path="/documentary" component={Documentary} />
+      <Route path="/podcast" component={Podcast} />
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
