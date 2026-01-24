@@ -6867,3 +6867,54 @@ Three main approaches available:
 - [ ] Create asset pipeline for 3D conversion
 - [ ] Design API for external platform integration
 
+
+
+## Phase 140: Game Center Enhancements - Player Modes & AI Improvements
+
+### A) Standardize Difficulty Levels Across All AI Games
+- [x] Add Easy/Medium/Hard difficulty selector component (GameModeSelector)
+- [x] TicTacToe - Add difficulty levels (Easy: random moves, Medium: blocks wins, Hard: minimax)
+- [ ] Connect Four - Add difficulty levels with adjustable lookahead depth
+- [ ] Chess - Add difficulty levels (Easy: random legal, Medium: 2-ply, Hard: 4-ply minimax)
+- [ ] Checkers - Add difficulty levels with adjustable strategy
+- [ ] Battleship - Add difficulty levels (Easy: random shots, Medium: hunt mode, Hard: probability targeting)
+- [ ] Sudoku - Already has Easy/Medium/Hard (verify consistency)
+- [ ] Memory Match - Already has difficulty levels (verify consistency)
+
+### B) Local 2-Player Mode
+- [x] Create shared game mode selector component (vs AI / vs Local Player / Online / Intrasystem)
+- [x] TicTacToe - Add local 2-player mode with turn indicator
+- [ ] Connect Four - Add local 2-player mode
+- [ ] Chess - Add local 2-player mode with move history
+- [ ] Checkers - Add local 2-player mode
+- [ ] Battleship - Add local 2-player mode with hidden boards
+
+### C) Online & Intrasystem Multiplayer Infrastructure
+- [ ] Set up WebSocket server for real-time game communication
+- [ ] Create game lobby system with room codes
+- [ ] Add matchmaking queue for random opponents
+- [ ] Implement game state synchronization
+- [ ] Add chat during multiplayer games
+- [ ] Create spectator mode for ongoing games
+- [ ] Add friend invite system
+- [ ] Implement ELO rating system for ranked matches
+
+#### Intrasystem Multiplayer (L.A.W.S. Network)
+- [ ] House vs House challenges - compete against other Houses
+- [ ] Family game nights - invite family members to play
+- [ ] L.A.W.S. tournaments - system-wide competitions
+- [ ] Leaderboards by House, Entity, and Individual
+- [ ] Token wagering system for friendly competition
+- [ ] Achievement badges for intrasystem victories
+- [ ] Seasonal championships with prizes
+
+### D) AI Personality Modes
+- [x] Create AI personality framework
+- [x] Aggressive AI - prioritizes attacking moves
+- [x] Defensive AI - prioritizes blocking and safety
+- [x] Random AI - unpredictable moves for variety
+- [x] Teaching AI - explains moves and suggests improvements
+- [x] Add personality selector to game settings
+- [x] Teaching mode shows hints and move explanations (TicTacToe)
+- [ ] Add post-game analysis with AI suggestions
+

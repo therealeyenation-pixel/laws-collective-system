@@ -3,15 +3,14 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, RotateCcw, Trophy, Brain, Zap } from "lucide-react";
+import { ArrowLeft, RotateCcw, Trophy, Brain, Zap, Users, Bot, Swords, Shield, GraduationCap } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { useGameCompletion } from "@/hooks/useGameCompletion";
+import { GameModeSelector, GameConfig, GameMode, Difficulty, AIPersonality } from "@/components/games/GameModeSelector";
 
 type Player = "X" | "O" | null;
 type Board = Player[];
-type Difficulty = "easy" | "medium" | "hard";
 
 const winningCombinations = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -20,14 +19,21 @@ const winningCombinations = [
 ];
 
 export default function TicTacToe() {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
   const [board, setBoard] = useState<Board>(Array(9).fill(null));
-  const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+  const [currentPlayer, setCurrentPlayer] = useState<"X" | "O">("X");
   const [winner, setWinner] = useState<Player | "draw" | null>(null);
-  const [difficulty, setDifficulty] = useState<Difficulty>("medium");
-  const [scores, setScores] = useState({ player: 0, ai: 0, draws: 0 });
+  const [scores, setScores] = useState({ player1: 0, player2: 0, draws: 0 });
   const [winningLine, setWinningLine] = useState<number[] | null>(null);
   const [tokensAwarded, setTokensAwarded] = useState(false);
+  const [teachingHint, setTeachingHint] = useState<string | null>(null);
   const { completeGame } = useGameCompletion();
+
+  const isAIMode = gameConfig?.mode === "ai";
+  const isLocalMode = gameConfig?.mode === "local";
+  const difficulty = gameConfig?.difficulty || "medium";
+  const personality = gameConfig?.personality || "balanced";
 
   const checkWinner = (squares: Board): { winner: Player; line: number[] | null } => {
     for (const combo of winningCombinations) {
@@ -50,7 +56,7 @@ export default function TicTacToe() {
     }, []);
   };
 
-  // Minimax algorithm for hard difficulty
+  // Minimax algorithm
   const minimax = (squares: Board, depth: number, isMaximizing: boolean): number => {
     const { winner } = checkWinner(squares);
     if (winner === "O") return 10 - depth;
@@ -78,23 +84,85 @@ export default function TicTacToe() {
     }
   };
 
-  const getAIMove = (squares: Board): number => {
+  // Find winning move for a player
+  const findWinningMove = (squares: Board, player: Player): number | null => {
     const emptySquares = getEmptySquares(squares);
-    if (emptySquares.length === 0) return -1;
+    for (const idx of emptySquares) {
+      const testBoard = [...squares];
+      testBoard[idx] = player;
+      const { winner } = checkWinner(testBoard);
+      if (winner === player) return idx;
+    }
+    return null;
+  };
 
-    if (difficulty === "easy") {
-      // Random move
-      return emptySquares[Math.floor(Math.random() * emptySquares.length)];
+  // Get AI move based on difficulty and personality
+  const getAIMove = (squares: Board): { move: number; explanation?: string } => {
+    const emptySquares = getEmptySquares(squares);
+    if (emptySquares.length === 0) return { move: -1 };
+
+    // Teaching mode - always explain
+    let explanation: string | undefined;
+
+    // Check for winning move
+    const winMove = findWinningMove(squares, "O");
+    // Check for blocking move
+    const blockMove = findWinningMove(squares, "X");
+
+    // Personality-based behavior
+    if (personality === "random") {
+      const move = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+      return { move, explanation: "Random move for unpredictability!" };
     }
 
-    if (difficulty === "medium") {
-      // 50% chance of optimal move, 50% random
-      if (Math.random() < 0.5) {
-        return emptySquares[Math.floor(Math.random() * emptySquares.length)];
+    if (personality === "aggressive") {
+      // Prioritize winning, then center, then corners
+      if (winMove !== null) {
+        return { move: winMove, explanation: "Going for the win!" };
+      }
+      if (squares[4] === null) {
+        return { move: 4, explanation: "Taking the center for control!" };
+      }
+      const corners = [0, 2, 6, 8].filter(i => squares[i] === null);
+      if (corners.length > 0) {
+        return { move: corners[Math.floor(Math.random() * corners.length)], explanation: "Grabbing a corner for offense!" };
       }
     }
 
-    // Hard difficulty or medium's optimal move
+    if (personality === "defensive") {
+      // Prioritize blocking, then safe moves
+      if (blockMove !== null) {
+        return { move: blockMove, explanation: "Blocking your winning move!" };
+      }
+      if (winMove !== null) {
+        return { move: winMove, explanation: "Taking the win since you're blocked!" };
+      }
+    }
+
+    // Difficulty-based logic
+    if (difficulty === "easy") {
+      const move = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+      explanation = personality === "teaching" ? "Easy mode: I'm making a random move." : undefined;
+      return { move, explanation };
+    }
+
+    if (difficulty === "medium") {
+      // Block wins, take wins, otherwise 50% optimal
+      if (winMove !== null) {
+        explanation = personality === "teaching" ? "I can win here! Always check for winning moves." : undefined;
+        return { move: winMove, explanation };
+      }
+      if (blockMove !== null) {
+        explanation = personality === "teaching" ? "I need to block you! Always watch for opponent's winning moves." : undefined;
+        return { move: blockMove, explanation };
+      }
+      if (Math.random() < 0.5) {
+        const move = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+        return { move, explanation: personality === "teaching" ? "Making a random move to keep things interesting." : undefined };
+      }
+    }
+
+    // Hard difficulty - full minimax
     let bestScore = -Infinity;
     let bestMove = emptySquares[0];
 
@@ -108,26 +176,38 @@ export default function TicTacToe() {
       }
     }
 
-    return bestMove;
+    if (personality === "teaching") {
+      if (bestMove === 4) explanation = "The center is the strongest position - it's part of 4 winning lines!";
+      else if ([0, 2, 6, 8].includes(bestMove)) explanation = "Corners are strong - they're part of 3 winning lines each.";
+      else explanation = "This move sets up multiple winning possibilities.";
+    }
+
+    return { move: bestMove, explanation };
   };
 
   const handleClick = (idx: number) => {
-    if (board[idx] || winner || !isPlayerTurn) return;
+    if (board[idx] || winner) return;
+    if (isAIMode && currentPlayer === "O") return;
 
     const newBoard = [...board];
-    newBoard[idx] = "X";
+    newBoard[idx] = currentPlayer;
     setBoard(newBoard);
+    setTeachingHint(null);
 
     const { winner: gameWinner, line } = checkWinner(newBoard);
     if (gameWinner) {
       setWinner(gameWinner);
       setWinningLine(line);
-      setScores((prev) => ({ ...prev, player: prev.player + 1 }));
-      toast.success("You win! 🎉");
-      // Award tokens for winning
-      if (!tokensAwarded) {
-        setTokensAwarded(true);
-        completeGame({ gameSlug: "tic-tac-toe", won: true, score: 100, difficulty });
+      if (currentPlayer === "X") {
+        setScores((prev) => ({ ...prev, player1: prev.player1 + 1 }));
+        toast.success(isAIMode ? "You win! 🎉" : `${gameConfig?.playerNames[0]} wins! 🎉`);
+        if (isAIMode && !tokensAwarded) {
+          setTokensAwarded(true);
+          completeGame({ gameSlug: "tic-tac-toe", won: true, score: 100, difficulty });
+        }
+      } else {
+        setScores((prev) => ({ ...prev, player2: prev.player2 + 1 }));
+        toast.success(isAIMode ? "AI wins!" : `${gameConfig?.playerNames[1]} wins! 🎉`);
       }
       return;
     }
@@ -136,23 +216,26 @@ export default function TicTacToe() {
       setWinner("draw");
       setScores((prev) => ({ ...prev, draws: prev.draws + 1 }));
       toast.info("It's a draw!");
-      // Award tokens for draw
-      if (!tokensAwarded) {
+      if (isAIMode && !tokensAwarded) {
         setTokensAwarded(true);
         completeGame({ gameSlug: "tic-tac-toe", won: false, score: 50, difficulty });
       }
       return;
     }
 
-    setIsPlayerTurn(false);
+    setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
   };
 
   // AI move effect
   useEffect(() => {
-    if (!isPlayerTurn && !winner) {
+    if (isAIMode && currentPlayer === "O" && !winner) {
       const timer = setTimeout(() => {
-        const aiMove = getAIMove(board);
+        const { move: aiMove, explanation } = getAIMove(board);
         if (aiMove !== -1) {
+          if (personality === "teaching" && explanation) {
+            setTeachingHint(explanation);
+          }
+
           const newBoard = [...board];
           newBoard[aiMove] = "O";
           setBoard(newBoard);
@@ -161,33 +244,46 @@ export default function TicTacToe() {
           if (gameWinner) {
             setWinner(gameWinner);
             setWinningLine(line);
-            setScores((prev) => ({ ...prev, ai: prev.ai + 1 }));
+            setScores((prev) => ({ ...prev, player2: prev.player2 + 1 }));
             toast.error("AI wins! Try again.");
           } else if (isBoardFull(newBoard)) {
             setWinner("draw");
             setScores((prev) => ({ ...prev, draws: prev.draws + 1 }));
             toast.info("It's a draw!");
           } else {
-            setIsPlayerTurn(true);
+            setCurrentPlayer("X");
           }
         }
-      }, 500);
+      }, 700);
 
       return () => clearTimeout(timer);
     }
-  }, [isPlayerTurn, winner, board]);
+  }, [currentPlayer, winner, board, isAIMode]);
+
+  const handleStartGame = (config: GameConfig) => {
+    setGameConfig(config);
+    setGameStarted(true);
+    resetGame();
+  };
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
-    setIsPlayerTurn(true);
+    setCurrentPlayer("X");
     setWinner(null);
     setWinningLine(null);
     setTokensAwarded(false);
+    setTeachingHint(null);
   };
 
   const resetAll = () => {
     resetGame();
-    setScores({ player: 0, ai: 0, draws: 0 });
+    setScores({ player1: 0, player2: 0, draws: 0 });
+  };
+
+  const backToMenu = () => {
+    setGameStarted(false);
+    setGameConfig(null);
+    resetAll();
   };
 
   const getCellStyle = (idx: number) => {
@@ -209,11 +305,20 @@ export default function TicTacToe() {
     return `${baseStyle} bg-secondary hover:bg-secondary/80`;
   };
 
-  return (
-    <DashboardLayout>
-      <div className="space-y-6 max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+  const getPersonalityIcon = () => {
+    switch (personality) {
+      case "aggressive": return <Swords className="w-3 h-3" />;
+      case "defensive": return <Shield className="w-3 h-3" />;
+      case "teaching": return <GraduationCap className="w-3 h-3" />;
+      default: return <Brain className="w-3 h-3" />;
+    }
+  };
+
+  // Game Mode Selection Screen
+  if (!gameStarted) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6 max-w-2xl mx-auto">
           <div className="flex items-center gap-4">
             <Link href="/game-center">
               <Button variant="ghost" size="icon">
@@ -222,21 +327,67 @@ export default function TicTacToe() {
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-foreground">Tic-Tac-Toe</h1>
-              <p className="text-sm text-muted-foreground">Classic strategy game</p>
+              <p className="text-sm text-muted-foreground">Choose your game mode</p>
             </div>
           </div>
-          <Badge variant="outline" className="gap-1">
-            <Brain className="w-3 h-3" />
-            {difficulty === "easy" ? "Easy" : difficulty === "medium" ? "Medium" : "Hard"}
-          </Badge>
+
+          <GameModeSelector
+            gameName="Tic-Tac-Toe"
+            onStart={handleStartGame}
+            supportedModes={["ai", "local", "online", "intrasystem"]}
+            supportsDifficulty={true}
+            supportsPersonality={true}
+          />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Game Screen
+  return (
+    <DashboardLayout>
+      <div className="space-y-6 max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={backToMenu}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Tic-Tac-Toe</h1>
+              <p className="text-sm text-muted-foreground">
+                {isAIMode ? "Player vs AI" : isLocalMode ? "Local 2 Player" : "Multiplayer"}
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            {isAIMode && (
+              <>
+                <Badge variant="outline" className="gap-1">
+                  <Brain className="w-3 h-3" />
+                  {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+                </Badge>
+                <Badge variant="outline" className="gap-1">
+                  {getPersonalityIcon()}
+                  {personality.charAt(0).toUpperCase() + personality.slice(1)}
+                </Badge>
+              </>
+            )}
+            {isLocalMode && (
+              <Badge variant="outline" className="gap-1">
+                <Users className="w-3 h-3" />
+                2 Players
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* Scores */}
         <div className="grid grid-cols-3 gap-4">
-          <Card>
+          <Card className={currentPlayer === "X" && !winner ? "ring-2 ring-blue-500" : ""}>
             <CardContent className="pt-4 text-center">
-              <p className="text-3xl font-bold text-blue-600">{scores.player}</p>
-              <p className="text-sm text-muted-foreground">You (X)</p>
+              <p className="text-3xl font-bold text-blue-600">{scores.player1}</p>
+              <p className="text-sm text-muted-foreground">{gameConfig?.playerNames[0]} (X)</p>
             </CardContent>
           </Card>
           <Card>
@@ -245,13 +396,28 @@ export default function TicTacToe() {
               <p className="text-sm text-muted-foreground">Draws</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className={currentPlayer === "O" && !winner ? "ring-2 ring-red-500" : ""}>
             <CardContent className="pt-4 text-center">
-              <p className="text-3xl font-bold text-red-600">{scores.ai}</p>
-              <p className="text-sm text-muted-foreground">AI (O)</p>
+              <p className="text-3xl font-bold text-red-600">{scores.player2}</p>
+              <p className="text-sm text-muted-foreground">{gameConfig?.playerNames[1]} (O)</p>
             </CardContent>
           </Card>
         </div>
+
+        {/* Teaching Hint */}
+        {teachingHint && personality === "teaching" && (
+          <Card className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800">
+            <CardContent className="pt-4">
+              <div className="flex items-start gap-2">
+                <GraduationCap className="w-5 h-5 text-amber-600 mt-0.5" />
+                <div>
+                  <p className="font-medium text-amber-800 dark:text-amber-200">AI Teaching Tip</p>
+                  <p className="text-sm text-amber-700 dark:text-amber-300">{teachingHint}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Game Board */}
         <Card>
@@ -265,34 +431,29 @@ export default function TicTacToe() {
                     ) : winner === "X" ? (
                       <>
                         <Trophy className="w-5 h-5 text-yellow-500" />
-                        You Win!
+                        {gameConfig?.playerNames[0]} Wins!
                       </>
                     ) : (
-                      "AI Wins!"
+                      <>
+                        <Trophy className="w-5 h-5 text-yellow-500" />
+                        {gameConfig?.playerNames[1]} Wins!
+                      </>
                     )
-                  ) : isPlayerTurn ? (
-                    "Your Turn"
-                  ) : (
+                  ) : currentPlayer === "X" ? (
+                    <>{gameConfig?.playerNames[0]}'s Turn</>
+                  ) : isAIMode ? (
                     <>
                       <Zap className="w-5 h-5 animate-pulse" />
                       AI Thinking...
                     </>
+                  ) : (
+                    <>{gameConfig?.playerNames[1]}'s Turn</>
                   )}
                 </CardTitle>
                 <CardDescription>
                   {winner ? "Click 'New Game' to play again" : "Click a square to make your move"}
                 </CardDescription>
               </div>
-              <Select value={difficulty} onValueChange={(v) => setDifficulty(v as Difficulty)}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="easy">Easy</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="hard">Hard</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </CardHeader>
           <CardContent>
@@ -303,7 +464,7 @@ export default function TicTacToe() {
                   <button
                     key={idx}
                     onClick={() => handleClick(idx)}
-                    disabled={!!cell || !!winner || !isPlayerTurn}
+                    disabled={!!cell || !!winner || (isAIMode && currentPlayer === "O")}
                     className={getCellStyle(idx)}
                   >
                     {cell}
@@ -320,6 +481,9 @@ export default function TicTacToe() {
                 <Button onClick={resetAll} variant="ghost">
                   Reset Scores
                 </Button>
+                <Button onClick={backToMenu} variant="ghost">
+                  Change Mode
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -331,10 +495,10 @@ export default function TicTacToe() {
             <CardTitle className="text-lg">How to Play</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
-            <p>• You play as X, the AI plays as O</p>
+            <p>• {gameConfig?.playerNames[0]} plays as X, {gameConfig?.playerNames[1]} plays as O</p>
             <p>• Click any empty square to place your mark</p>
             <p>• Get three in a row (horizontal, vertical, or diagonal) to win</p>
-            <p>• Change difficulty to adjust AI intelligence</p>
+            {isAIMode && <p>• Current AI: {difficulty} difficulty, {personality} personality</p>}
           </CardContent>
         </Card>
       </div>
