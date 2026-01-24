@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { 
   ArrowLeft, 
   Mountain, 
@@ -25,7 +27,18 @@ import {
   Users,
   Home,
   Gem,
-  Leaf
+  Leaf,
+  Brain,
+  Target,
+  Zap,
+  TreePine,
+  Waves,
+  Flame,
+  Eye,
+  MessageCircle,
+  Calculator,
+  Package,
+  ChevronRight
 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
@@ -51,14 +64,18 @@ interface Character {
   completedQuests: string[];
   achievements: string[];
   inventory: InventoryItem[];
+  energy: number;
+  maxEnergy: number;
 }
 
 interface InventoryItem {
   id: string;
   name: string;
-  type: "scroll" | "tool" | "artifact" | "resource";
+  type: "scroll" | "tool" | "artifact" | "resource" | "key";
   description: string;
   quantity: number;
+  icon: string;
+  effect?: { stat: keyof CharacterStats; bonus: number };
 }
 
 interface Quest {
@@ -74,6 +91,33 @@ interface Quest {
     items?: InventoryItem[];
     statBoosts?: Partial<CharacterStats>;
   };
+  completed: boolean;
+  miniGame?: "trivia" | "memory" | "math" | "reflection" | "ancestry" | "meditation";
+  energyCost: number;
+}
+
+interface NPC {
+  id: string;
+  name: string;
+  title: string;
+  realm: "land" | "air" | "water" | "self" | "hub";
+  dialogue: string[];
+  questGiver?: string;
+  shopItems?: InventoryItem[];
+}
+
+// Mini-game types
+type MiniGameType = "trivia" | "memory" | "math" | "reflection" | "ancestry" | "meditation";
+
+interface MiniGameState {
+  active: boolean;
+  type: MiniGameType | null;
+  quest: Quest | null;
+  score: number;
+  maxScore: number;
+  currentQuestion: number;
+  questions: any[];
+  timeLeft: number;
   completed: boolean;
 }
 
@@ -95,6 +139,119 @@ const getCurrentRank = (level: number) => {
   return RANKS[0];
 };
 
+// NPCs for each realm
+const NPCS: NPC[] = [
+  {
+    id: "elder-root",
+    name: "Elder Root",
+    title: "Keeper of Ancestral Wisdom",
+    realm: "land",
+    dialogue: [
+      "Welcome, young one. The land remembers all who walk upon it.",
+      "Your ancestors planted seeds of wisdom. It is time to harvest.",
+      "To understand where you're going, you must know where you came from.",
+    ],
+    questGiver: "land-1",
+  },
+  {
+    id: "sage-breeze",
+    name: "Sage Breeze",
+    title: "Master of Knowledge",
+    realm: "air",
+    dialogue: [
+      "Knowledge flows like the wind - catch it, or it passes you by.",
+      "Every question is a doorway. Are you brave enough to open it?",
+      "The mind that seeks to learn will never be empty.",
+    ],
+    questGiver: "air-1",
+  },
+  {
+    id: "healer-tide",
+    name: "Healer Tide",
+    title: "Guardian of Balance",
+    realm: "water",
+    dialogue: [
+      "The waters of emotion can drown or carry you. Learn to swim.",
+      "Healing begins when we acknowledge the wound.",
+      "Balance is not stillness - it is the dance between forces.",
+    ],
+    questGiver: "water-1",
+  },
+  {
+    id: "mentor-flame",
+    name: "Mentor Flame",
+    title: "Guide of Purpose",
+    realm: "self",
+    dialogue: [
+      "Your purpose burns within you. Fan the flames.",
+      "Wealth without purpose is a house without foundation.",
+      "Build your legacy one brick at a time, but build it to last.",
+    ],
+    questGiver: "self-1",
+  },
+  {
+    id: "guide-compass",
+    name: "Guide Compass",
+    title: "Navigator of Paths",
+    realm: "hub",
+    dialogue: [
+      "All paths lead somewhere. Choose wisely.",
+      "The journey of a thousand miles begins with a single step.",
+      "I can show you the way, but you must walk it yourself.",
+    ],
+  },
+];
+
+// Trivia questions for each realm
+const TRIVIA_QUESTIONS = {
+  land: [
+    { question: "What is the foundation of generational wealth?", options: ["Quick profits", "Land ownership", "Lottery", "Debt"], answer: 1 },
+    { question: "Why is knowing your ancestry important?", options: ["It's not", "Social media", "Identity & roots", "Entertainment"], answer: 2 },
+    { question: "What does 'sovereignty' mean?", options: ["Being king", "Self-governance", "Having money", "Being alone"], answer: 1 },
+    { question: "What is a deed?", options: ["A good action", "Legal land document", "A type of tree", "A promise"], answer: 1 },
+    { question: "Why preserve family history?", options: ["Boredom", "Future generations", "Social status", "Legal requirement"], answer: 1 },
+  ],
+  air: [
+    { question: "What is the best investment in yourself?", options: ["Clothes", "Education", "Cars", "Jewelry"], answer: 1 },
+    { question: "How does knowledge create wealth?", options: ["It doesn't", "Better decisions", "Magic", "Luck"], answer: 1 },
+    { question: "What is financial literacy?", options: ["Reading books", "Understanding money", "Being rich", "Having a degree"], answer: 1 },
+    { question: "Why is communication important?", options: ["Talking more", "Building relationships", "Arguing", "Entertainment"], answer: 1 },
+    { question: "What is compound learning?", options: ["Math class", "Knowledge building on knowledge", "Studying hard", "Multiple degrees"], answer: 1 },
+  ],
+  water: [
+    { question: "What is emotional intelligence?", options: ["Being emotional", "Understanding emotions", "Hiding feelings", "Being logical"], answer: 1 },
+    { question: "How does stress affect decisions?", options: ["Improves them", "No effect", "Impairs judgment", "Makes you smarter"], answer: 2 },
+    { question: "What is the first step in healing?", options: ["Forgetting", "Acknowledgment", "Revenge", "Ignoring"], answer: 1 },
+    { question: "Why is balance important?", options: ["Gymnastics", "Sustainable living", "Looking good", "Being average"], answer: 1 },
+    { question: "What helps process difficult emotions?", options: ["Suppression", "Reflection", "Distraction", "Anger"], answer: 1 },
+  ],
+  self: [
+    { question: "What is a budget?", options: ["Restriction", "Financial plan", "Punishment", "Limit"], answer: 1 },
+    { question: "What is compound interest?", options: ["Bank fee", "Interest on interest", "Loan type", "Tax"], answer: 1 },
+    { question: "Why set financial goals?", options: ["Stress", "Direction & motivation", "Showing off", "Required by law"], answer: 1 },
+    { question: "What is an emergency fund?", options: ["Vacation money", "Savings for unexpected events", "Investment", "Retirement"], answer: 1 },
+    { question: "What builds credit score?", options: ["Ignoring bills", "On-time payments", "Closing accounts", "Maxing cards"], answer: 1 },
+  ],
+};
+
+// Math challenges for SELF realm
+const MATH_CHALLENGES = [
+  { question: "If you save $100/month for 12 months, how much do you have?", answer: 1200 },
+  { question: "You have $500 and spend 20%. How much is left?", answer: 400 },
+  { question: "Your income is $3000. You save 15%. How much do you save?", answer: 450 },
+  { question: "You invest $1000 and earn 10% interest. What's your total?", answer: 1100 },
+  { question: "Split $600 equally among 4 family members. Each gets?", answer: 150 },
+];
+
+// Reflection prompts for WATER realm
+const REFLECTION_PROMPTS = [
+  "What emotion have you felt most strongly this week?",
+  "Describe a moment when you felt truly at peace.",
+  "What is one thing you're grateful for today?",
+  "How do you typically respond to stress?",
+  "What brings you the most joy in life?",
+];
+
 // Initial quests for each realm
 const INITIAL_QUESTS: Quest[] = [
   // LAND Realm Quests
@@ -107,6 +264,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: {},
     rewards: { experience: 50, tokens: 10, statBoosts: { land: 2 } },
     completed: false,
+    miniGame: "ancestry",
+    energyCost: 10,
   },
   {
     id: "land-2",
@@ -117,6 +276,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { land: 5 },
     rewards: { experience: 100, tokens: 25, statBoosts: { land: 3 } },
     completed: false,
+    miniGame: "trivia",
+    energyCost: 15,
   },
   {
     id: "land-3",
@@ -127,6 +288,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { land: 15 },
     rewards: { experience: 200, tokens: 50, statBoosts: { land: 5, self: 2 } },
     completed: false,
+    miniGame: "trivia",
+    energyCost: 20,
   },
 
   // AIR Realm Quests
@@ -139,6 +302,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: {},
     rewards: { experience: 50, tokens: 10, statBoosts: { air: 2 } },
     completed: false,
+    miniGame: "trivia",
+    energyCost: 10,
   },
   {
     id: "air-2",
@@ -149,6 +314,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { air: 5 },
     rewards: { experience: 100, tokens: 25, statBoosts: { air: 3 } },
     completed: false,
+    miniGame: "memory",
+    energyCost: 15,
   },
   {
     id: "air-3",
@@ -159,6 +326,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { air: 15 },
     rewards: { experience: 200, tokens: 50, statBoosts: { air: 5, water: 2 } },
     completed: false,
+    miniGame: "trivia",
+    energyCost: 20,
   },
 
   // WATER Realm Quests
@@ -171,6 +340,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: {},
     rewards: { experience: 50, tokens: 10, statBoosts: { water: 2 } },
     completed: false,
+    miniGame: "reflection",
+    energyCost: 10,
   },
   {
     id: "water-2",
@@ -181,6 +352,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { water: 5 },
     rewards: { experience: 100, tokens: 25, statBoosts: { water: 3 } },
     completed: false,
+    miniGame: "meditation",
+    energyCost: 15,
   },
   {
     id: "water-3",
@@ -191,6 +364,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { water: 15 },
     rewards: { experience: 200, tokens: 50, statBoosts: { water: 5, land: 2 } },
     completed: false,
+    miniGame: "reflection",
+    energyCost: 20,
   },
 
   // SELF Realm Quests
@@ -203,6 +378,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: {},
     rewards: { experience: 50, tokens: 10, statBoosts: { self: 2 } },
     completed: false,
+    miniGame: "trivia",
+    energyCost: 10,
   },
   {
     id: "self-2",
@@ -213,6 +390,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { self: 5 },
     rewards: { experience: 100, tokens: 25, statBoosts: { self: 3 } },
     completed: false,
+    miniGame: "math",
+    energyCost: 15,
   },
   {
     id: "self-3",
@@ -223,6 +402,8 @@ const INITIAL_QUESTS: Quest[] = [
     requirements: { self: 15 },
     rewards: { experience: 200, tokens: 50, statBoosts: { self: 5, air: 2 } },
     completed: false,
+    miniGame: "math",
+    energyCost: 20,
   },
 ];
 
@@ -286,33 +467,94 @@ const DEFAULT_CHARACTER: Character = {
   completedQuests: [],
   achievements: [],
   inventory: [
-    { id: "scroll-1", name: "Scroll of Beginning", type: "scroll", description: "Your first scroll, marking the start of your journey.", quantity: 1 },
+    { id: "scroll-1", name: "Scroll of Beginning", type: "scroll", description: "Your first scroll, marking the start of your journey.", quantity: 1, icon: "📜" },
   ],
+  energy: 100,
+  maxEnergy: 100,
 };
 
 export default function LAWSQuest() {
   const [character, setCharacter] = useState<Character>(() => {
-    const saved = localStorage.getItem("laws-quest-character");
+    const saved = localStorage.getItem("laws-quest-character-v2");
     return saved ? JSON.parse(saved) : DEFAULT_CHARACTER;
   });
   const [quests, setQuests] = useState<Quest[]>(() => {
-    const saved = localStorage.getItem("laws-quest-quests");
+    const saved = localStorage.getItem("laws-quest-quests-v2");
     return saved ? JSON.parse(saved) : INITIAL_QUESTS;
   });
   const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
   const [showCharacterCreate, setShowCharacterCreate] = useState(false);
   const [newCharacterName, setNewCharacterName] = useState("");
+  const [activeNPC, setActiveNPC] = useState<NPC | null>(null);
+  const [npcDialogueIndex, setNpcDialogueIndex] = useState(0);
+  const [showInventory, setShowInventory] = useState(false);
   const { completeGame } = useGameCompletion();
+
+  // Mini-game state
+  const [miniGame, setMiniGame] = useState<MiniGameState>({
+    active: false,
+    type: null,
+    quest: null,
+    score: 0,
+    maxScore: 5,
+    currentQuestion: 0,
+    questions: [],
+    timeLeft: 60,
+    completed: false,
+  });
+  const [userAnswer, setUserAnswer] = useState("");
+  const [memoryCards, setMemoryCards] = useState<{ id: number; emoji: string; flipped: boolean; matched: boolean }[]>([]);
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+  const [meditationProgress, setMeditationProgress] = useState(0);
+  const [meditationActive, setMeditationActive] = useState(false);
 
   // Save game state
   useEffect(() => {
-    localStorage.setItem("laws-quest-character", JSON.stringify(character));
-    localStorage.setItem("laws-quest-quests", JSON.stringify(quests));
+    localStorage.setItem("laws-quest-character-v2", JSON.stringify(character));
+    localStorage.setItem("laws-quest-quests-v2", JSON.stringify(quests));
   }, [character, quests]);
+
+  // Energy regeneration
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCharacter(prev => ({
+        ...prev,
+        energy: Math.min(prev.maxEnergy, prev.energy + 1)
+      }));
+    }, 60000); // Regenerate 1 energy per minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Mini-game timer
+  useEffect(() => {
+    if (miniGame.active && miniGame.timeLeft > 0 && !miniGame.completed) {
+      const timer = setTimeout(() => {
+        setMiniGame(prev => ({ ...prev, timeLeft: prev.timeLeft - 1 }));
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (miniGame.timeLeft === 0 && miniGame.active) {
+      endMiniGame(false);
+    }
+  }, [miniGame.active, miniGame.timeLeft, miniGame.completed]);
+
+  // Meditation timer
+  useEffect(() => {
+    if (meditationActive && meditationProgress < 100) {
+      const timer = setTimeout(() => {
+        setMeditationProgress(prev => Math.min(100, prev + 2));
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (meditationProgress >= 100 && meditationActive) {
+      setMeditationActive(false);
+      setMiniGame(prev => ({ ...prev, score: prev.maxScore, completed: true }));
+      toast.success("Meditation complete! Inner peace achieved.");
+    }
+  }, [meditationActive, meditationProgress]);
 
   // Check if quest requirements are met
   const canStartQuest = (quest: Quest): boolean => {
     if (quest.completed) return false;
+    if (character.energy < quest.energyCost) return false;
     const reqs = quest.requirements;
     return (
       (!reqs.land || character.stats.land >= reqs.land) &&
@@ -322,10 +564,198 @@ export default function LAWSQuest() {
     );
   };
 
-  // Complete a quest
-  const completeQuest = (quest: Quest) => {
+  // Start mini-game for quest
+  const startMiniGame = (quest: Quest) => {
     if (!canStartQuest(quest)) return;
 
+    // Deduct energy
+    setCharacter(prev => ({ ...prev, energy: prev.energy - quest.energyCost }));
+
+    const type = quest.miniGame || "trivia";
+    let questions: any[] = [];
+    let maxScore = 5;
+
+    switch (type) {
+      case "trivia":
+        questions = [...TRIVIA_QUESTIONS[quest.realm]].sort(() => Math.random() - 0.5).slice(0, 5);
+        break;
+      case "math":
+        questions = [...MATH_CHALLENGES].sort(() => Math.random() - 0.5).slice(0, 5);
+        break;
+      case "reflection":
+        questions = [...REFLECTION_PROMPTS].sort(() => Math.random() - 0.5).slice(0, 3);
+        maxScore = 3;
+        break;
+      case "memory":
+        initializeMemoryGame();
+        maxScore = 6;
+        break;
+      case "meditation":
+        maxScore = 1;
+        setMeditationProgress(0);
+        break;
+      case "ancestry":
+        questions = [
+          { prompt: "Enter your family's country of origin:" },
+          { prompt: "Name one ancestor you know about:" },
+          { prompt: "What tradition has been passed down in your family?" },
+        ];
+        maxScore = 3;
+        break;
+    }
+
+    setMiniGame({
+      active: true,
+      type,
+      quest,
+      score: 0,
+      maxScore,
+      currentQuestion: 0,
+      questions,
+      timeLeft: type === "meditation" ? 30 : 60,
+      completed: false,
+    });
+    setSelectedQuest(null);
+    setUserAnswer("");
+  };
+
+  // Initialize memory game
+  const initializeMemoryGame = () => {
+    const emojis = ["🌟", "🎯", "🔮", "💎", "🌙", "⚡"];
+    const cards = [...emojis, ...emojis]
+      .map((emoji, idx) => ({ id: idx, emoji, flipped: false, matched: false }))
+      .sort(() => Math.random() - 0.5);
+    setMemoryCards(cards);
+    setFlippedCards([]);
+  };
+
+  // Handle memory card click
+  const handleMemoryCardClick = (idx: number) => {
+    if (flippedCards.length >= 2 || memoryCards[idx].flipped || memoryCards[idx].matched) return;
+
+    const newCards = [...memoryCards];
+    newCards[idx].flipped = true;
+    setMemoryCards(newCards);
+    setFlippedCards([...flippedCards, idx]);
+
+    if (flippedCards.length === 1) {
+      const firstIdx = flippedCards[0];
+      if (newCards[firstIdx].emoji === newCards[idx].emoji) {
+        // Match!
+        setTimeout(() => {
+          const matched = memoryCards.map((c, i) =>
+            i === firstIdx || i === idx ? { ...c, matched: true } : c
+          );
+          setMemoryCards(matched);
+          setFlippedCards([]);
+          setMiniGame(prev => ({ ...prev, score: prev.score + 1 }));
+
+          // Check if all matched
+          if (matched.filter(c => c.matched).length === matched.length) {
+            setMiniGame(prev => ({ ...prev, completed: true }));
+          }
+        }, 500);
+      } else {
+        // No match
+        setTimeout(() => {
+          const reset = memoryCards.map((c, i) =>
+            i === firstIdx || i === idx ? { ...c, flipped: false } : c
+          );
+          setMemoryCards(reset);
+          setFlippedCards([]);
+        }, 1000);
+      }
+    }
+  };
+
+  // Handle trivia answer
+  const handleTriviaAnswer = (answerIdx: number) => {
+    const question = miniGame.questions[miniGame.currentQuestion];
+    const correct = answerIdx === question.answer;
+
+    if (correct) {
+      setMiniGame(prev => ({ ...prev, score: prev.score + 1 }));
+      toast.success("Correct!");
+    } else {
+      toast.error("Incorrect!");
+    }
+
+    if (miniGame.currentQuestion + 1 >= miniGame.questions.length) {
+      setMiniGame(prev => ({ ...prev, completed: true }));
+    } else {
+      setMiniGame(prev => ({ ...prev, currentQuestion: prev.currentQuestion + 1 }));
+    }
+  };
+
+  // Handle math answer
+  const handleMathAnswer = () => {
+    const question = miniGame.questions[miniGame.currentQuestion];
+    const correct = parseInt(userAnswer) === question.answer;
+
+    if (correct) {
+      setMiniGame(prev => ({ ...prev, score: prev.score + 1 }));
+      toast.success("Correct!");
+    } else {
+      toast.error(`Incorrect! The answer was ${question.answer}`);
+    }
+
+    setUserAnswer("");
+
+    if (miniGame.currentQuestion + 1 >= miniGame.questions.length) {
+      setMiniGame(prev => ({ ...prev, completed: true }));
+    } else {
+      setMiniGame(prev => ({ ...prev, currentQuestion: prev.currentQuestion + 1 }));
+    }
+  };
+
+  // Handle reflection/ancestry submit
+  const handleReflectionSubmit = () => {
+    if (userAnswer.trim().length < 3) {
+      toast.error("Please provide a more detailed response");
+      return;
+    }
+
+    setMiniGame(prev => ({ ...prev, score: prev.score + 1 }));
+    toast.success("Response recorded!");
+    setUserAnswer("");
+
+    if (miniGame.currentQuestion + 1 >= miniGame.questions.length) {
+      setMiniGame(prev => ({ ...prev, completed: true }));
+    } else {
+      setMiniGame(prev => ({ ...prev, currentQuestion: prev.currentQuestion + 1 }));
+    }
+  };
+
+  // End mini-game
+  const endMiniGame = (success: boolean) => {
+    if (!miniGame.quest) return;
+
+    const passThreshold = Math.ceil(miniGame.maxScore * 0.6);
+    const passed = miniGame.score >= passThreshold;
+
+    if (passed) {
+      completeQuest(miniGame.quest);
+    } else {
+      toast.error("Quest failed. Try again when you're ready!");
+      // Refund some energy
+      setCharacter(prev => ({ ...prev, energy: Math.min(prev.maxEnergy, prev.energy + Math.floor(miniGame.quest!.energyCost / 2)) }));
+    }
+
+    setMiniGame({
+      active: false,
+      type: null,
+      quest: null,
+      score: 0,
+      maxScore: 5,
+      currentQuestion: 0,
+      questions: [],
+      timeLeft: 60,
+      completed: false,
+    });
+  };
+
+  // Complete a quest
+  const completeQuest = (quest: Quest) => {
     // Apply rewards
     const newExp = character.experience + quest.rewards.experience;
     let newLevel = character.level;
@@ -365,8 +795,6 @@ export default function LAWSQuest() {
 
     // Award tokens through game completion system
     completeGame({ gameSlug: "laws-quest", won: true, score: quest.rewards.experience });
-
-    setSelectedQuest(null);
   };
 
   // Create new character
@@ -390,10 +818,166 @@ export default function LAWSQuest() {
     setShowCharacterCreate(true);
   };
 
+  // Talk to NPC
+  const talkToNPC = (npc: NPC) => {
+    setActiveNPC(npc);
+    setNpcDialogueIndex(0);
+  };
+
+  const advanceDialogue = () => {
+    if (activeNPC && npcDialogueIndex < activeNPC.dialogue.length - 1) {
+      setNpcDialogueIndex(prev => prev + 1);
+    } else {
+      setActiveNPC(null);
+      setNpcDialogueIndex(0);
+    }
+  };
+
   const rank = getCurrentRank(character.level);
   const RankIcon = rank.icon;
 
   const realmQuests = (realm: string) => quests.filter(q => q.realm === realm);
+  const realmNPCs = (realm: string) => NPCS.filter(n => n.realm === realm);
+
+  // Render mini-game content
+  const renderMiniGame = () => {
+    if (!miniGame.active) return null;
+
+    return (
+      <Dialog open={miniGame.active} onOpenChange={() => {}}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <span>{miniGame.quest?.name}</span>
+              <Badge variant="outline">{miniGame.timeLeft}s</Badge>
+            </DialogTitle>
+            <DialogDescription>
+              Score: {miniGame.score}/{miniGame.maxScore}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            {/* Trivia Game */}
+            {miniGame.type === "trivia" && !miniGame.completed && (
+              <div className="space-y-4">
+                <p className="font-medium">{miniGame.questions[miniGame.currentQuestion]?.question}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {miniGame.questions[miniGame.currentQuestion]?.options.map((opt: string, idx: number) => (
+                    <Button
+                      key={idx}
+                      variant="outline"
+                      className="h-auto py-3 text-left"
+                      onClick={() => handleTriviaAnswer(idx)}
+                    >
+                      {opt}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Math Game */}
+            {miniGame.type === "math" && !miniGame.completed && (
+              <div className="space-y-4">
+                <p className="font-medium">{miniGame.questions[miniGame.currentQuestion]?.question}</p>
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    placeholder="Enter your answer"
+                    onKeyDown={(e) => e.key === "Enter" && handleMathAnswer()}
+                  />
+                  <Button onClick={handleMathAnswer}>Submit</Button>
+                </div>
+              </div>
+            )}
+
+            {/* Memory Game */}
+            {miniGame.type === "memory" && !miniGame.completed && (
+              <div className="grid grid-cols-4 gap-2">
+                {memoryCards.map((card, idx) => (
+                  <button
+                    key={card.id}
+                    onClick={() => handleMemoryCardClick(idx)}
+                    className={`w-14 h-14 text-2xl rounded-lg transition-all ${
+                      card.flipped || card.matched
+                        ? "bg-primary/10"
+                        : "bg-secondary hover:bg-secondary/80"
+                    } ${card.matched ? "opacity-50" : ""}`}
+                  >
+                    {card.flipped || card.matched ? card.emoji : "❓"}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Reflection Game */}
+            {(miniGame.type === "reflection" || miniGame.type === "ancestry") && !miniGame.completed && (
+              <div className="space-y-4">
+                <p className="font-medium">
+                  {miniGame.type === "reflection"
+                    ? miniGame.questions[miniGame.currentQuestion]
+                    : miniGame.questions[miniGame.currentQuestion]?.prompt}
+                </p>
+                <Input
+                  value={userAnswer}
+                  onChange={(e) => setUserAnswer(e.target.value)}
+                  placeholder="Share your thoughts..."
+                />
+                <Button onClick={handleReflectionSubmit} className="w-full">
+                  Submit Response
+                </Button>
+              </div>
+            )}
+
+            {/* Meditation Game */}
+            {miniGame.type === "meditation" && !miniGame.completed && (
+              <div className="space-y-4 text-center">
+                <div className="text-6xl mb-4">🧘</div>
+                <p className="text-muted-foreground">
+                  {meditationActive
+                    ? "Breathe deeply... Focus on the present moment..."
+                    : "Click to begin your meditation journey"}
+                </p>
+                <Progress value={meditationProgress} className="h-3" />
+                {!meditationActive && (
+                  <Button onClick={() => setMeditationActive(true)} className="w-full">
+                    Begin Meditation
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {/* Completed State */}
+            {miniGame.completed && (
+              <div className="text-center space-y-4">
+                <div className="text-6xl">
+                  {miniGame.score >= Math.ceil(miniGame.maxScore * 0.6) ? "🎉" : "😔"}
+                </div>
+                <p className="text-lg font-medium">
+                  {miniGame.score >= Math.ceil(miniGame.maxScore * 0.6)
+                    ? "Quest Complete!"
+                    : "Quest Failed"}
+                </p>
+                <p className="text-muted-foreground">
+                  Final Score: {miniGame.score}/{miniGame.maxScore}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            {miniGame.completed && (
+              <Button onClick={() => endMiniGame(miniGame.score >= Math.ceil(miniGame.maxScore * 0.6))}>
+                {miniGame.score >= Math.ceil(miniGame.maxScore * 0.6) ? "Claim Rewards" : "Return"}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  };
 
   return (
     <DashboardLayout>
@@ -414,9 +998,15 @@ export default function LAWSQuest() {
               <p className="text-sm text-muted-foreground">The Sovereign Journey</p>
             </div>
           </div>
-          <Badge variant="outline" className="text-green-600 border-green-600">
-            Exclusive to L.A.W.S. Collective
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowInventory(true)}>
+              <Package className="w-4 h-4 mr-1" />
+              Inventory
+            </Button>
+            <Badge variant="outline" className="text-green-600 border-green-600">
+              Exclusive to L.A.W.S. Collective
+            </Badge>
+          </div>
         </div>
 
         {/* Character Creation Modal */}
@@ -432,12 +1022,11 @@ export default function LAWSQuest() {
             <CardContent className="space-y-4">
               <div>
                 <label className="text-sm font-medium">Character Name</label>
-                <input
+                <Input
                   type="text"
                   value={newCharacterName}
                   onChange={(e) => setNewCharacterName(e.target.value)}
                   placeholder="Enter your name..."
-                  className="w-full mt-1 px-3 py-2 border rounded-md"
                   maxLength={20}
                 />
               </div>
@@ -471,6 +1060,16 @@ export default function LAWSQuest() {
                       <span>{character.experience} / {character.experienceToNext}</span>
                     </div>
                     <Progress value={(character.experience / character.experienceToNext) * 100} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="flex items-center gap-1">
+                        <Zap className="w-3 h-3 text-yellow-500" />
+                        Energy
+                      </span>
+                      <span>{character.energy} / {character.maxEnergy}</span>
+                    </div>
+                    <Progress value={(character.energy / character.maxEnergy) * 100} className="h-2 bg-yellow-100" />
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-1">
@@ -579,6 +1178,28 @@ export default function LAWSQuest() {
                       })}
                     </div>
 
+                    {/* NPCs in Hub */}
+                    <div className="mt-6">
+                      <h4 className="font-semibold mb-3 flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        Characters
+                      </h4>
+                      <div className="flex gap-2 flex-wrap">
+                        {realmNPCs("hub").map(npc => (
+                          <Button
+                            key={npc.id}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => talkToNPC(npc)}
+                            className="gap-1"
+                          >
+                            <MessageCircle className="w-3 h-3" />
+                            {npc.name}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+
                     {/* Progress Overview */}
                     <div className="mt-6 p-4 bg-secondary/30 rounded-lg">
                       <h4 className="font-semibold mb-2 flex items-center gap-2">
@@ -613,6 +1234,7 @@ export default function LAWSQuest() {
                 const info = REALM_INFO[realm];
                 const Icon = info.icon;
                 const questsInRealm = realmQuests(realm);
+                const npcsInRealm = realmNPCs(realm);
                 return (
                   <TabsContent key={realm} value={realm} className="mt-4">
                     <Card className={`${info.borderColor} border-2`}>
@@ -624,9 +1246,32 @@ export default function LAWSQuest() {
                         <CardDescription>{info.description}</CardDescription>
                       </CardHeader>
                       <CardContent className="pt-4">
+                        {/* NPCs */}
+                        {npcsInRealm.length > 0 && (
+                          <div className="mb-4">
+                            <h4 className="font-semibold mb-2 text-sm">Realm Guides</h4>
+                            <div className="flex gap-2 flex-wrap">
+                              {npcsInRealm.map(npc => (
+                                <Button
+                                  key={npc.id}
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => talkToNPC(npc)}
+                                  className={`gap-1 ${info.borderColor}`}
+                                >
+                                  <MessageCircle className="w-3 h-3" />
+                                  {npc.name}
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Quests */}
                         <div className="space-y-3">
                           {questsInRealm.map((quest) => {
                             const canStart = canStartQuest(quest);
+                            const hasEnergy = character.energy >= quest.energyCost;
                             const difficultyColors = {
                               beginner: "bg-green-100 text-green-800",
                               intermediate: "bg-yellow-100 text-yellow-800",
@@ -652,6 +1297,10 @@ export default function LAWSQuest() {
                                         <Badge className={difficultyColors[quest.difficulty]}>{quest.difficulty}</Badge>
                                         <Badge variant="outline">+{quest.rewards.experience} XP</Badge>
                                         <Badge variant="outline" className="text-amber-600">+{quest.rewards.tokens} Tokens</Badge>
+                                        <Badge variant="outline" className={hasEnergy ? "text-yellow-600" : "text-red-600"}>
+                                          <Zap className="w-3 h-3 mr-1" />
+                                          {quest.energyCost} Energy
+                                        </Badge>
                                       </div>
                                     </div>
                                     {!quest.completed && canStart && (
@@ -674,16 +1323,16 @@ export default function LAWSQuest() {
 
             {/* Quest Dialog */}
             {selectedQuest && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <Card className="max-w-md w-full">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+              <Dialog open={!!selectedQuest} onOpenChange={() => setSelectedQuest(null)}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
                       <Swords className="w-5 h-5" />
                       {selectedQuest.name}
-                    </CardTitle>
-                    <CardDescription>{selectedQuest.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+                    </DialogTitle>
+                    <DialogDescription>{selectedQuest.description}</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
                     <div className="p-3 bg-secondary/30 rounded-lg">
                       <h4 className="font-semibold mb-2">Rewards</h4>
                       <div className="flex flex-wrap gap-2">
@@ -694,18 +1343,84 @@ export default function LAWSQuest() {
                         ))}
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" className="flex-1" onClick={() => setSelectedQuest(null)}>
-                        Cancel
-                      </Button>
-                      <Button className="flex-1" onClick={() => completeQuest(selectedQuest)}>
-                        Complete Quest
-                      </Button>
+                    <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <div className="flex items-center gap-2 text-yellow-800">
+                        <Zap className="w-4 h-4" />
+                        <span className="font-medium">Energy Cost: {selectedQuest.energyCost}</span>
+                      </div>
+                      <p className="text-xs text-yellow-700 mt-1">
+                        Current Energy: {character.energy}/{character.maxEnergy}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setSelectedQuest(null)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={() => startMiniGame(selectedQuest)}>
+                      Begin Quest
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             )}
+
+            {/* NPC Dialogue */}
+            {activeNPC && (
+              <Dialog open={!!activeNPC} onOpenChange={() => setActiveNPC(null)}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{activeNPC.name}</DialogTitle>
+                    <DialogDescription>{activeNPC.title}</DialogDescription>
+                  </DialogHeader>
+                  <div className="py-4">
+                    <p className="text-lg italic">"{activeNPC.dialogue[npcDialogueIndex]}"</p>
+                  </div>
+                  <DialogFooter>
+                    <Button onClick={advanceDialogue}>
+                      {npcDialogueIndex < activeNPC.dialogue.length - 1 ? (
+                        <>Continue <ChevronRight className="w-4 h-4 ml-1" /></>
+                      ) : (
+                        "Farewell"
+                      )}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+
+            {/* Inventory Dialog */}
+            <Dialog open={showInventory} onOpenChange={setShowInventory}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <Package className="w-5 h-5" />
+                    Inventory
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                  {character.inventory.map((item, idx) => (
+                    <Card key={idx} className="p-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{item.icon}</span>
+                        <div>
+                          <p className="font-medium text-sm">{item.name}</p>
+                          <p className="text-xs text-muted-foreground">x{item.quantity}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                  {character.inventory.length === 0 && (
+                    <p className="col-span-2 text-center text-muted-foreground py-4">
+                      Your inventory is empty
+                    </p>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Mini-game Dialog */}
+            {renderMiniGame()}
           </>
         )}
 
@@ -720,11 +1435,6 @@ export default function LAWSQuest() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div className="p-3 bg-purple-50 rounded-lg">
-                <BookOpen className="w-5 h-5 text-purple-500 mb-1" />
-                <p className="font-medium">Mini-Games</p>
-                <p className="text-xs text-muted-foreground">Realm-specific challenges</p>
-              </div>
-              <div className="p-3 bg-purple-50 rounded-lg">
                 <Users className="w-5 h-5 text-purple-500 mb-1" />
                 <p className="font-medium">Multiplayer</p>
                 <p className="text-xs text-muted-foreground">Co-op quests</p>
@@ -735,9 +1445,14 @@ export default function LAWSQuest() {
                 <p className="text-xs text-muted-foreground">Family legacy system</p>
               </div>
               <div className="p-3 bg-purple-50 rounded-lg">
+                <Coins className="w-5 h-5 text-purple-500 mb-1" />
+                <p className="font-medium">Token Shop</p>
+                <p className="text-xs text-muted-foreground">Spend earned tokens</p>
+              </div>
+              <div className="p-3 bg-purple-50 rounded-lg">
                 <Map className="w-5 h-5 text-purple-500 mb-1" />
-                <p className="font-medium">AR/VR</p>
-                <p className="text-xs text-muted-foreground">Immersive experience</p>
+                <p className="font-medium">World Map</p>
+                <p className="text-xs text-muted-foreground">Explore new regions</p>
               </div>
             </div>
           </CardContent>

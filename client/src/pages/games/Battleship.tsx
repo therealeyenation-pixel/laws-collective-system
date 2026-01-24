@@ -1,16 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, RotateCcw, Ship, Target, Crosshair, Waves } from "lucide-react";
+import { ArrowLeft, RotateCcw, Ship, Target, Crosshair, Waves, Brain } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { useGameCompletion } from "@/hooks/useGameCompletion";
+import GameModeSelector, { GameMode, Difficulty, AIPersonality, GameConfig } from "@/components/games/GameModeSelector";
 
 type CellState = "empty" | "ship" | "hit" | "miss";
 type Board = CellState[][];
-type Ship = { name: string; size: number; positions: { row: number; col: number }[]; hits: number };
+type ShipType = { name: string; size: number; positions: { row: number; col: number }[]; hits: number };
 
 const BOARD_SIZE = 10;
 const SHIPS = [
@@ -26,19 +27,39 @@ const createEmptyBoard = (): Board => {
 };
 
 export default function Battleship() {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameMode, setGameMode] = useState<GameMode>("ai");
+  const [difficulty, setDifficulty] = useState<Difficulty>("medium");
+  const [aiPersonality, setAIPersonality] = useState<AIPersonality>("balanced");
+  
   const [playerBoard, setPlayerBoard] = useState<Board>(createEmptyBoard());
   const [aiBoard, setAiBoard] = useState<Board>(createEmptyBoard());
-  const [playerShips, setPlayerShips] = useState<Ship[]>([]);
-  const [aiShips, setAiShips] = useState<Ship[]>([]);
+  const [playerShips, setPlayerShips] = useState<ShipType[]>([]);
+  const [aiShips, setAiShips] = useState<ShipType[]>([]);
   const [gamePhase, setGamePhase] = useState<"setup" | "playing" | "gameover">("setup");
   const [currentShipIndex, setCurrentShipIndex] = useState(0);
   const [isHorizontal, setIsHorizontal] = useState(true);
   const [playerTurn, setPlayerTurn] = useState(true);
   const [winner, setWinner] = useState<"player" | "ai" | null>(null);
   const [aiLastHit, setAiLastHit] = useState<{ row: number; col: number } | null>(null);
-  const [aiHuntMode, setAiHuntMode] = useState(false);
+  const [aiHuntDirection, setAiHuntDirection] = useState<"none" | "horizontal" | "vertical">("none");
+  const [aiHitStack, setAiHitStack] = useState<{ row: number; col: number }[]>([]);
   const [tokensAwarded, setTokensAwarded] = useState(false);
+  const [isAIThinking, setIsAIThinking] = useState(false);
   const { completeGame } = useGameCompletion();
+
+  const handleStartGame = (config: GameConfig) => {
+    setGameMode(config.mode);
+    setDifficulty(config.difficulty);
+    setAIPersonality(config.personality);
+    setGameStarted(true);
+    resetGame();
+  };
+
+  const handleChangeMode = () => {
+    setGameStarted(false);
+    setGamePhase("setup");
+  };
 
   // Check if ship can be placed
   const canPlaceShip = useCallback((board: Board, row: number, col: number, size: number, horizontal: boolean): boolean => {
@@ -70,7 +91,7 @@ export default function Battleship() {
   // Place AI ships randomly
   const placeAiShips = useCallback(() => {
     let board = createEmptyBoard();
-    const ships: Ship[] = [];
+    const ships: ShipType[] = [];
     
     for (const shipDef of SHIPS) {
       let placed = false;
@@ -119,6 +140,73 @@ export default function Battleship() {
     }
   };
 
+  // Calculate probability map for hard AI
+  const calculateProbabilityMap = useCallback((board: Board): number[][] => {
+    const probMap = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
+    
+    // For each remaining ship size, calculate where it could fit
+    const remainingShips = playerShips.filter(s => s.hits < s.size);
+    
+    for (const ship of remainingShips) {
+      // Horizontal placements
+      for (let row = 0; row < BOARD_SIZE; row++) {
+        for (let col = 0; col <= BOARD_SIZE - ship.size; col++) {
+          let canPlace = true;
+          for (let i = 0; i < ship.size; i++) {
+            if (board[row][col + i] === "miss" || board[row][col + i] === "hit") {
+              canPlace = false;
+              break;
+            }
+          }
+          if (canPlace) {
+            for (let i = 0; i < ship.size; i++) {
+              probMap[row][col + i]++;
+            }
+          }
+        }
+      }
+      
+      // Vertical placements
+      for (let row = 0; row <= BOARD_SIZE - ship.size; row++) {
+        for (let col = 0; col < BOARD_SIZE; col++) {
+          let canPlace = true;
+          for (let i = 0; i < ship.size; i++) {
+            if (board[row + i][col] === "miss" || board[row + i][col] === "hit") {
+              canPlace = false;
+              break;
+            }
+          }
+          if (canPlace) {
+            for (let i = 0; i < ship.size; i++) {
+              probMap[row + i][col]++;
+            }
+          }
+        }
+      }
+    }
+    
+    // Boost probability around hits
+    for (let row = 0; row < BOARD_SIZE; row++) {
+      for (let col = 0; col < BOARD_SIZE; col++) {
+        if (board[row][col] === "hit") {
+          const adjacent = [
+            { r: row - 1, c: col }, { r: row + 1, c: col },
+            { r: row, c: col - 1 }, { r: row, c: col + 1 }
+          ];
+          for (const adj of adjacent) {
+            if (adj.r >= 0 && adj.r < BOARD_SIZE && adj.c >= 0 && adj.c < BOARD_SIZE) {
+              if (board[adj.r][adj.c] === "empty" || board[adj.r][adj.c] === "ship") {
+                probMap[adj.r][adj.c] *= 3;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    return probMap;
+  }, [playerShips]);
+
   // Handle player attack
   const handleAttack = (row: number, col: number) => {
     if (gamePhase !== "playing" || !playerTurn) return;
@@ -166,46 +254,103 @@ export default function Battleship() {
     }
     
     setPlayerTurn(false);
-    setTimeout(aiTurn, 1000);
+    setIsAIThinking(true);
+    
+    const delay = difficulty === "easy" ? 800 : difficulty === "medium" ? 1000 : 1500;
+    setTimeout(() => aiTurn(), delay);
   };
 
-  // AI turn
-  const aiTurn = () => {
+  // AI turn with difficulty-based targeting
+  const aiTurn = useCallback(() => {
     let row: number, col: number;
     
-    // Hunt mode - try adjacent cells to last hit
-    if (aiHuntMode && aiLastHit) {
-      const adjacent = [
-        { row: aiLastHit.row - 1, col: aiLastHit.col },
-        { row: aiLastHit.row + 1, col: aiLastHit.col },
-        { row: aiLastHit.row, col: aiLastHit.col - 1 },
-        { row: aiLastHit.row, col: aiLastHit.col + 1 },
-      ].filter(p => 
-        p.row >= 0 && p.row < BOARD_SIZE && 
-        p.col >= 0 && p.col < BOARD_SIZE &&
-        playerBoard[p.row][p.col] !== "hit" && 
-        playerBoard[p.row][p.col] !== "miss"
-      );
+    if (difficulty === "easy") {
+      // Easy: Pure random targeting
+      do {
+        row = Math.floor(Math.random() * BOARD_SIZE);
+        col = Math.floor(Math.random() * BOARD_SIZE);
+      } while (playerBoard[row][col] === "hit" || playerBoard[row][col] === "miss");
       
-      if (adjacent.length > 0) {
-        const target = adjacent[Math.floor(Math.random() * adjacent.length)];
+    } else if (difficulty === "medium") {
+      // Medium: Hunt mode after hits
+      if (aiHitStack.length > 0) {
+        const lastHit = aiHitStack[aiHitStack.length - 1];
+        const adjacent = [
+          { row: lastHit.row - 1, col: lastHit.col },
+          { row: lastHit.row + 1, col: lastHit.col },
+          { row: lastHit.row, col: lastHit.col - 1 },
+          { row: lastHit.row, col: lastHit.col + 1 },
+        ].filter(p => 
+          p.row >= 0 && p.row < BOARD_SIZE && 
+          p.col >= 0 && p.col < BOARD_SIZE &&
+          playerBoard[p.row][p.col] !== "hit" && 
+          playerBoard[p.row][p.col] !== "miss"
+        );
+        
+        if (adjacent.length > 0) {
+          const target = adjacent[Math.floor(Math.random() * adjacent.length)];
+          row = target.row;
+          col = target.col;
+        } else {
+          setAiHitStack([]);
+          do {
+            row = Math.floor(Math.random() * BOARD_SIZE);
+            col = Math.floor(Math.random() * BOARD_SIZE);
+          } while (playerBoard[row][col] === "hit" || playerBoard[row][col] === "miss");
+        }
+      } else {
+        // Checkerboard pattern for efficiency
+        const candidates: { row: number; col: number }[] = [];
+        for (let r = 0; r < BOARD_SIZE; r++) {
+          for (let c = 0; c < BOARD_SIZE; c++) {
+            if ((r + c) % 2 === 0 && playerBoard[r][c] !== "hit" && playerBoard[r][c] !== "miss") {
+              candidates.push({ row: r, col: c });
+            }
+          }
+        }
+        if (candidates.length > 0) {
+          const target = candidates[Math.floor(Math.random() * candidates.length)];
+          row = target.row;
+          col = target.col;
+        } else {
+          do {
+            row = Math.floor(Math.random() * BOARD_SIZE);
+            col = Math.floor(Math.random() * BOARD_SIZE);
+          } while (playerBoard[row][col] === "hit" || playerBoard[row][col] === "miss");
+        }
+      }
+      
+    } else {
+      // Hard: Probability-based targeting
+      const probMap = calculateProbabilityMap(playerBoard);
+      
+      let maxProb = -1;
+      const candidates: { row: number; col: number }[] = [];
+      
+      for (let r = 0; r < BOARD_SIZE; r++) {
+        for (let c = 0; c < BOARD_SIZE; c++) {
+          if (playerBoard[r][c] !== "hit" && playerBoard[r][c] !== "miss") {
+            if (probMap[r][c] > maxProb) {
+              maxProb = probMap[r][c];
+              candidates.length = 0;
+              candidates.push({ row: r, col: c });
+            } else if (probMap[r][c] === maxProb) {
+              candidates.push({ row: r, col: c });
+            }
+          }
+        }
+      }
+      
+      if (candidates.length > 0) {
+        const target = candidates[Math.floor(Math.random() * candidates.length)];
         row = target.row;
         col = target.col;
       } else {
-        setAiHuntMode(false);
-        setAiLastHit(null);
-        // Random attack
         do {
           row = Math.floor(Math.random() * BOARD_SIZE);
           col = Math.floor(Math.random() * BOARD_SIZE);
         } while (playerBoard[row][col] === "hit" || playerBoard[row][col] === "miss");
       }
-    } else {
-      // Random attack
-      do {
-        row = Math.floor(Math.random() * BOARD_SIZE);
-        col = Math.floor(Math.random() * BOARD_SIZE);
-      } while (playerBoard[row][col] === "hit" || playerBoard[row][col] === "miss");
     }
     
     const newPlayerBoard = playerBoard.map(r => [...r]);
@@ -213,8 +358,10 @@ export default function Battleship() {
     if (playerBoard[row][col] === "ship") {
       newPlayerBoard[row][col] = "hit";
       setPlayerBoard(newPlayerBoard);
-      setAiLastHit({ row, col });
-      setAiHuntMode(true);
+      
+      if (difficulty === "medium") {
+        setAiHitStack(prev => [...prev, { row, col }]);
+      }
       
       // Check if ship sunk
       const hitShip = playerShips.find(s => s.positions.some(p => p.row === row && p.col === col));
@@ -222,8 +369,9 @@ export default function Battleship() {
         hitShip.hits++;
         if (hitShip.hits === hitShip.size) {
           toast.error(`AI sunk your ${hitShip.name}!`);
-          setAiHuntMode(false);
-          setAiLastHit(null);
+          if (difficulty === "medium") {
+            setAiHitStack([]);
+          }
         }
       }
       
@@ -237,6 +385,7 @@ export default function Battleship() {
           setTokensAwarded(true);
           completeGame({ gameSlug: "battleship", won: false, score: 100 });
         }
+        setIsAIThinking(false);
         return;
       }
     } else {
@@ -244,8 +393,9 @@ export default function Battleship() {
       setPlayerBoard(newPlayerBoard);
     }
     
+    setIsAIThinking(false);
     setPlayerTurn(true);
-  };
+  }, [playerBoard, playerShips, difficulty, aiHitStack, calculateProbabilityMap, tokensAwarded, completeGame]);
 
   const resetGame = () => {
     setPlayerBoard(createEmptyBoard());
@@ -258,8 +408,10 @@ export default function Battleship() {
     setPlayerTurn(true);
     setWinner(null);
     setAiLastHit(null);
-    setAiHuntMode(false);
+    setAiHuntDirection("none");
+    setAiHitStack([]);
     setTokensAwarded(false);
+    setIsAIThinking(false);
     toast.info(`Place your ${SHIPS[0].name}`);
   };
 
@@ -274,9 +426,39 @@ export default function Battleship() {
       case "miss":
         return `${base} bg-blue-200`;
       default:
-        return `${base} bg-blue-100 ${isAiBoard && gamePhase === "playing" ? "hover:bg-blue-200 cursor-crosshair" : ""}`;
+        return `${base} bg-blue-100 ${isAiBoard && gamePhase === "playing" && playerTurn ? "hover:bg-blue-200 cursor-crosshair" : ""}`;
     }
   };
+
+  // Show game mode selector if game hasn't started
+  if (!gameStarted) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6 max-w-xl mx-auto">
+          <div className="flex items-center gap-4">
+            <Link href="/game-center">
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                <Ship className="w-6 h-6" />
+                Battleship
+              </h1>
+              <p className="text-sm text-muted-foreground">Naval strategy game</p>
+            </div>
+          </div>
+          
+          <GameModeSelector
+            gameName="Battleship"
+            onStart={handleStartGame}
+            supportedModes={["ai", "local", "online", "intrasystem"]}
+          />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -294,11 +476,18 @@ export default function Battleship() {
                 <Ship className="w-6 h-6" />
                 Battleship
               </h1>
-              <p className="text-sm text-muted-foreground">Naval strategy game</p>
+              <p className="text-sm text-muted-foreground">
+                vs AI ({difficulty}) - {aiPersonality}
+              </p>
             </div>
           </div>
           <Badge variant={gamePhase === "setup" ? "secondary" : gamePhase === "playing" ? "default" : "outline"}>
-            {gamePhase === "setup" ? "Setup Phase" : gamePhase === "playing" ? (playerTurn ? "Your Turn" : "AI Turn") : winner === "player" ? "Victory!" : "Defeat"}
+            {isAIThinking ? (
+              <span className="flex items-center gap-1">
+                <Brain className="w-3 h-3 animate-pulse" />
+                AI Targeting...
+              </span>
+            ) : gamePhase === "setup" ? "Setup Phase" : gamePhase === "playing" ? (playerTurn ? "Your Turn" : "AI Turn") : winner === "player" ? "Victory!" : "Defeat"}
           </Badge>
         </div>
 
@@ -382,7 +571,7 @@ export default function Battleship() {
                         <button
                           key={colIdx}
                           onClick={() => handleAttack(rowIdx, colIdx)}
-                          disabled={gamePhase !== "playing" || !playerTurn}
+                          disabled={gamePhase !== "playing" || !playerTurn || isAIThinking}
                           className={getCellStyle(cell === "ship" ? "empty" : cell, true)}
                         >
                           {cell === "hit" && <Target className="w-4 h-4 text-white" />}
@@ -411,10 +600,13 @@ export default function Battleship() {
         </div>
 
         {/* Controls */}
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-2">
           <Button onClick={resetGame} variant="outline" className="gap-2">
             <RotateCcw className="w-4 h-4" />
             New Game
+          </Button>
+          <Button onClick={handleChangeMode} variant="outline">
+            Change Mode
           </Button>
         </div>
 
@@ -428,6 +620,9 @@ export default function Battleship() {
             <p>• Click cells on the enemy board to attack</p>
             <p>• Red = Hit, Blue dot = Miss</p>
             <p>• Sink all enemy ships to win!</p>
+            <p className="text-xs mt-2 pt-2 border-t">
+              <strong>AI Difficulty:</strong> {difficulty === "easy" ? "Random targeting" : difficulty === "medium" ? "Hunt mode after hits" : "Probability-based targeting"}
+            </p>
           </CardContent>
         </Card>
       </div>
