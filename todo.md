@@ -6744,9 +6744,10 @@ Three main approaches available:
 - [x] Add high-priority styling for upcoming deadlines in Live Ticker
 - [x] Integrate with SWOT (auto-classify as threat/opportunity)
 - [x] Add compliance action item conversion (government action → task)
-- [ ] Create Government Actions Admin page for managing entries
+- [x] Create Government Actions Admin page for managing entries
 - [ ] Add deadline notification system
-- [ ] Seed initial government agencies and sample actions
+- [x] Seed initial government agencies and sample actions
+- [x] Create seed script for resource links with ConsumerLab recalls and curated content
 
 
 ## Phase 78: Stock Ticker Widget & Portfolio Alerts

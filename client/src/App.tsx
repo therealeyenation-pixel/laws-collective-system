@@ -157,6 +157,7 @@ import OwnerActionList from "@/pages/OwnerActionList";
 import Chat from "@/pages/Chat";
 import SwotAnalysis from "@/pages/SwotAnalysis";
 import ResourceLinksAdmin from "@/pages/ResourceLinksAdmin";
+import GovernmentActionsAdmin from "@/pages/GovernmentActionsAdmin";
 import TokenReportingDashboard from "@/pages/TokenReportingDashboard";
 import Changelog from "@/pages/Changelog";
 import InvestorOpportunities from "@/pages/InvestorOpportunities";
@@ -538,6 +539,7 @@ function Router() {
       <Route path="/security-center">{() => <ProtectedRoute component={SecurityCenter} minRole="staff" />}</Route>
       <Route path="/swot-analysis">{() => <ProtectedRoute component={SwotAnalysis} minRole="user" />}</Route>
       <Route path="/resource-links-admin">{() => <ProtectedRoute component={ResourceLinksAdmin} minRole="admin" />}</Route>
+      <Route path="/government-actions-admin">{() => <ProtectedRoute component={GovernmentActionsAdmin} minRole="admin" />}</Route>
       <Route path="/token-reporting">{() => <ProtectedRoute component={TokenReportingDashboard} minRole="admin" />}</Route>
       <Route path="/system-admin">{() => <ProtectedRoute component={SystemAdmin} minRole="staff" />}</Route>
       <Route path="/system-health">{() => <ProtectedRoute component={SystemHealthDashboard} minRole="admin" />}</Route>
