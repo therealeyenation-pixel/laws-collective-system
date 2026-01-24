@@ -156,6 +156,8 @@ import Downloads from "@/pages/Downloads";
 import OwnerActionList from "@/pages/OwnerActionList";
 import Chat from "@/pages/Chat";
 import SwotAnalysis from "@/pages/SwotAnalysis";
+import ResourceLinksAdmin from "@/pages/ResourceLinksAdmin";
+import TokenReportingDashboard from "@/pages/TokenReportingDashboard";
 import Changelog from "@/pages/Changelog";
 import InvestorOpportunities from "@/pages/InvestorOpportunities";
 import DocumentTemplates from "@/pages/DocumentTemplates";
@@ -533,6 +535,8 @@ function Router() {
       <Route path="/real-eye-dashboard">{() => <ProtectedRoute component={RealEyeDashboard} minRole="staff" />}</Route>
       <Route path="/security-center">{() => <ProtectedRoute component={SecurityCenter} minRole="staff" />}</Route>
       <Route path="/swot-analysis">{() => <ProtectedRoute component={SwotAnalysis} minRole="user" />}</Route>
+      <Route path="/resource-links-admin">{() => <ProtectedRoute component={ResourceLinksAdmin} minRole="admin" />}</Route>
+      <Route path="/token-reporting">{() => <ProtectedRoute component={TokenReportingDashboard} minRole="admin" />}</Route>
       <Route path="/system-admin">{() => <ProtectedRoute component={SystemAdmin} minRole="staff" />}</Route>
       <Route path="/system-health">{() => <ProtectedRoute component={SystemHealthDashboard} minRole="admin" />}</Route>
       <Route path="/system-settings">{() => <ProtectedRoute component={SystemSettings} minRole="admin" />}</Route>

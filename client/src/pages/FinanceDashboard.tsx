@@ -21,9 +21,13 @@ import {
   Landmark,
   Calculator,
   ClipboardCheck,
+  BookOpen,
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { ResourceLinks } from "@/components/ResourceLinks";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function FinanceDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -130,6 +134,16 @@ export default function FinanceDashboard() {
           ))}
         </div>
 
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="finance" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
@@ -138,6 +152,10 @@ export default function FinanceDashboard() {
             <TabsTrigger value="budget">Budget</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="resources">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Resources
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 mt-4">
@@ -342,6 +360,14 @@ export default function FinanceDashboard() {
               description="Financial policies, accounting procedures, budget templates, and compliance documents"
               showCategories={true}
               showSearch={true}
+            />
+          </TabsContent>
+
+          <TabsContent value="resources" className="mt-4">
+            <ResourceLinks 
+              dashboard="finance" 
+              title="Finance Resources"
+              description="Curated financial resources, regulatory updates, grant opportunities, and industry news"
             />
           </TabsContent>
         </Tabs>

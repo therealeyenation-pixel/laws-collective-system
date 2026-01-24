@@ -19,10 +19,14 @@ import {
   Download,
   Search,
   Plus,
+  BookOpen,
 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { ResourceLinks } from "@/components/ResourceLinks";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function LegalDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -108,6 +112,16 @@ export default function LegalDashboard() {
           ))}
         </div>
 
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="legal" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
@@ -115,6 +129,10 @@ export default function LegalDashboard() {
             <TabsTrigger value="cases">Cases</TabsTrigger>
             <TabsTrigger value="compliance">Compliance</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="resources">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Resources
+            </TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
           </TabsList>
 
@@ -284,6 +302,14 @@ export default function LegalDashboard() {
               description="Contracts, policies, compliance documents, and legal templates"
               showCategories={true}
               showSearch={true}
+            />
+          </TabsContent>
+
+          <TabsContent value="resources" className="mt-4">
+            <ResourceLinks 
+              dashboard="legal" 
+              title="Legal Resources"
+              description="Case law, regulatory updates, compliance requirements, and industry standards"
             />
           </TabsContent>
 
