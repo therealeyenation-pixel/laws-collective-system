@@ -24,6 +24,7 @@ import {
   Activity,
 } from "lucide-react";
 import { Link } from "wouter";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function ExecutiveDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -153,6 +154,9 @@ export default function ExecutiveDashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="executive" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

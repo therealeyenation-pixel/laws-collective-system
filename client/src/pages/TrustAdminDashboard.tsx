@@ -22,6 +22,7 @@ import {
   Activity,
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function TrustAdminDashboard() {
   const { user } = useAuth();
@@ -177,6 +178,9 @@ export default function TrustAdminDashboard() {
             </div>
           </div>
         </Card>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="trust" showStats className="mb-6" />
 
         <Tabs defaultValue="assets" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">

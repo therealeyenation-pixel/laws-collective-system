@@ -32,6 +32,7 @@ import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function OperationsDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -279,6 +280,9 @@ export default function OperationsDashboard() {
             <WeatherWidget compact />
           </div>
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="operations" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

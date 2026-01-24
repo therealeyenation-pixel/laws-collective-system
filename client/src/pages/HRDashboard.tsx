@@ -22,6 +22,7 @@ import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function HRDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -120,6 +121,9 @@ export default function HRDashboard() {
             <WeatherWidget compact />
           </div>
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="hr" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

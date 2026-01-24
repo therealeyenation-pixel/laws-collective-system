@@ -27,6 +27,7 @@ import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { ResourceLinks } from "@/components/ResourceLinks";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function LegalDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -121,6 +122,9 @@ export default function LegalDashboard() {
             <WeatherWidget compact />
           </div>
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="legal" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

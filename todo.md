@@ -6764,3 +6764,22 @@ Three main approaches available:
 - [ ] Integrate with Investment Dashboard
 - [ ] Add portfolio news feed filtered by holdings
 - [ ] Connect to stock data API for real-time quotes
+
+
+## Phase 79: Government Actions Widget - All Dashboards
+- [x] Add Government Actions Widget to Health Dashboard
+- [x] Add Government Actions Widget to Legal Dashboard
+- [x] Add Government Actions Widget to HR Dashboard
+- [x] Add Government Actions Widget to Operations Dashboard
+- [x] Add Government Actions Widget to IT Dashboard
+- [x] Add Government Actions Widget to Education Dashboard
+- [ ] Add Government Actions Widget to Business Dashboard
+- [ ] Add Government Actions Widget to Marketing Dashboard
+- [ ] Add Government Actions Widget to Procurement Dashboard
+- [ ] Add Government Actions Widget to Property Dashboard
+- [ ] Add Government Actions Widget to Real Estate Dashboard
+- [ ] Add Government Actions Widget to Contracts Dashboard
+- [ ] Add Government Actions Widget to Academy Dashboard
+- [x] Add Government Actions Widget to Foundation Dashboard
+- [x] Add Government Actions Widget to Executive Dashboard
+- [x] Add Government Actions Widget to Trust Admin Dashboard

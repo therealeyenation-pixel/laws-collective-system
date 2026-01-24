@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function ITDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -116,12 +117,15 @@ export default function ITDashboard() {
         {/* Live Ticker and Weather */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           <div className="lg:col-span-3">
-            <LiveTicker department="general" />
+            <LiveTicker department="it" />
           </div>
           <div className="lg:col-span-1">
             <WeatherWidget compact />
           </div>
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="it" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

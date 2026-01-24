@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function FoundationDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -164,6 +165,9 @@ export default function FoundationDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Government Actions */}
+      <GovernmentActionsWidget department="foundation" showStats className="mb-4" />
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
