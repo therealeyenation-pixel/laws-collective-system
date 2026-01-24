@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure, protectedProcedure } from "./_core/trpc";
-import { db } from "./db";
+import { getDb } from "./db";
 import { 
   governmentAgencies, 
   governmentActions, 
@@ -56,7 +56,7 @@ export const governmentActionsRouter = router({
       relevantEntities: z.array(z.string()).optional(),
     }))
     .mutation(async ({ input }) => {
-      const [result] = await db.insert(governmentAgencies).values({
+      const [result] = const db = await getDb(); if (!db) throw new Error("Database not available"); await db.insert(governmentAgencies).values({
         ...input,
         relevantDepartments: input.relevantDepartments ? JSON.stringify(input.relevantDepartments) : null,
         relevantEntities: input.relevantEntities ? JSON.stringify(input.relevantEntities) : null,
@@ -196,7 +196,7 @@ export const governmentActionsRouter = router({
       tickerPriority: z.enum(["urgent", "high", "normal", "low"]).default("normal"),
     }))
     .mutation(async ({ input, ctx }) => {
-      const [result] = await db.insert(governmentActions).values({
+      const [result] = const db = await getDb(); if (!db) throw new Error("Database not available"); await db.insert(governmentActions).values({
         ...input,
         affectedEntities: input.affectedEntities ? JSON.stringify(input.affectedEntities) : null,
         affectedDepartments: input.affectedDepartments ? JSON.stringify(input.affectedDepartments) : null,
@@ -263,7 +263,7 @@ export const governmentActionsRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
-      await db.delete(governmentActions).where(eq(governmentActions.id, input.id));
+      const db = await getDb(); if (!db) throw new Error("Database not available"); await db.delete(governmentActions).where(eq(governmentActions.id, input.id));
       return { success: true };
     }),
   
@@ -408,7 +408,7 @@ export const governmentActionsRouter = router({
       priority: z.enum(["urgent", "high", "medium", "low"]).default("medium"),
     }))
     .mutation(async ({ input }) => {
-      const [result] = await db.insert(governmentActionTasks).values(input);
+      const [result] = const db = await getDb(); if (!db) throw new Error("Database not available"); await db.insert(governmentActionTasks).values(input);
       return { id: result.insertId };
     }),
   

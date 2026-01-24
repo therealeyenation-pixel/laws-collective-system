@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { getDb } from "./db";
 import { governmentAgencies, governmentActions } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -273,6 +273,12 @@ const sampleActions = [
 ];
 
 export async function seedGovernmentData() {
+  const db = await getDb();
+  if (!db) {
+    console.error("Database not available");
+    return;
+  }
+  
   console.log("Seeding government agencies...");
   
   // Insert agencies
