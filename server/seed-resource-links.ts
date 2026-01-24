@@ -1,4 +1,4 @@
-import { getDb } from "./db";
+import { db } from "./db";
 import { resourceLinks } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -285,12 +285,6 @@ const initialLinks = [
 ];
 
 export async function seedResourceLinks() {
-  const db = await getDb();
-  if (!db) {
-    console.error("Database not available");
-    return;
-  }
-  
   console.log("Seeding resource links...");
   
   for (const link of initialLinks) {
