@@ -14563,6 +14563,40 @@ export const resourceLinks = mysqlTable("resource_links", {
   // Status
   isActive: boolean("isActive").default(true).notNull(),
   
+  // SWOT Analysis Integration
+  swotRelevance: mysqlEnum("swotRelevance", [
+    "strength",      // Internal positive - capabilities, resources
+    "weakness",      // Internal negative - gaps, limitations
+    "opportunity",   // External positive - market trends, grants
+    "threat",        // External negative - regulations, competitors, recalls
+    "none"           // Not SWOT relevant
+  ]).default("none"),
+  
+  swotConfidence: decimal("swotConfidence", { precision: 5, scale: 2 }), // 0-100 AI confidence
+  swotReason: text("swotReason"), // Why classified this way
+  
+  // Industry monitoring
+  industryCategory: mysqlEnum("industryCategory", [
+    "competitor_intel",    // Competitor news, moves
+    "regulatory",          // Laws, regulations, compliance
+    "market_trends",       // Industry trends, forecasts
+    "technology",          // Tech developments, innovations
+    "economic",            // Economic indicators, funding
+    "consumer",            // Consumer behavior, recalls
+    "talent",              // Workforce, skills trends
+    "general"              // General industry news
+  ]),
+  
+  // Impact assessment
+  impactLevel: mysqlEnum("impactLevel", ["low", "medium", "high", "critical"]),
+  impactTimeframe: mysqlEnum("impactTimeframe", ["immediate", "short_term", "medium_term", "long_term"]),
+  
+  // Action tracking
+  requiresAction: boolean("requiresAction").default(false).notNull(),
+  actionTaken: text("actionTaken"),
+  actionTakenBy: int("actionTakenBy"),
+  actionTakenAt: timestamp("actionTakenAt"),
+  
   // Engagement tracking
   clickCount: int("clickCount").default(0).notNull(),
   lastClickedAt: timestamp("lastClickedAt"),
@@ -14593,3 +14627,121 @@ export const resourceLinkCategories = mysqlTable("resource_link_categories", {
 
 export type ResourceLinkCategory = typeof resourceLinkCategories.$inferSelect;
 export type InsertResourceLinkCategory = typeof resourceLinkCategories.$inferInsert;
+
+
+// ==========================================
+// READ AND SIGN COMPLIANCE SYSTEM
+// ==========================================
+
+/**
+ * Required Reading Assignments - Links employees to required resource links
+ */
+export const requiredReadings = mysqlTable("required_readings", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Link to resource
+  resourceLinkId: int("resourceLinkId").notNull(),
+  
+  // Assignment scope
+  assignmentType: mysqlEnum("assignmentType", [
+    "all_employees",      // Everyone in the organization
+    "entity",             // Specific entity (L.A.W.S., Collective, etc.)
+    "department",         // Specific department
+    "role",               // Specific role/position
+    "individual"          // Specific employee(s)
+  ]).notNull(),
+  
+  // Scope details (entity name, department name, role, or employee IDs)
+  scopeValue: varchar("scopeValue", { length: 255 }),
+  scopeEmployeeIds: json("scopeEmployeeIds"), // Array of employee IDs for individual assignments
+  
+  // Deadline and priority
+  dueDate: timestamp("dueDate"),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "critical"]).default("medium"),
+  
+  // Recurrence (for annual policy reviews, etc.)
+  isRecurring: boolean("isRecurring").default(false).notNull(),
+  recurrenceInterval: mysqlEnum("recurrenceInterval", ["monthly", "quarterly", "annually"]),
+  lastRecurrenceDate: timestamp("lastRecurrenceDate"),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Metadata
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RequiredReading = typeof requiredReadings.$inferSelect;
+export type InsertRequiredReading = typeof requiredReadings.$inferInsert;
+
+/**
+ * Reading Acknowledgments - Tracks employee read-and-sign completions
+ */
+export const readingAcknowledgments = mysqlTable("reading_acknowledgments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  requiredReadingId: int("requiredReadingId").notNull(),
+  resourceLinkId: int("resourceLinkId").notNull(),
+  employeeId: int("employeeId").notNull(),
+  userId: int("userId"), // If employee has user account
+  
+  // Acknowledgment details
+  acknowledgedAt: timestamp("acknowledgedAt").notNull(),
+  
+  // Electronic signature
+  signatureType: mysqlEnum("signatureType", ["checkbox", "typed_name", "drawn", "digital_certificate"]).default("checkbox"),
+  signatureData: text("signatureData"), // Typed name or drawn signature data
+  signatureHash: varchar("signatureHash", { length: 64 }), // SHA-256 hash of signature
+  
+  // IP and device info for audit
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  
+  // Confirmation statement
+  confirmationText: text("confirmationText"), // "I have read and understand..."
+  
+  // Time spent reading (optional tracking)
+  timeSpentSeconds: int("timeSpentSeconds"),
+  
+  // Blockchain verification
+  blockchainHash: varchar("blockchainHash", { length: 128 }),
+  blockchainTimestamp: timestamp("blockchainTimestamp"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ReadingAcknowledgment = typeof readingAcknowledgments.$inferSelect;
+export type InsertReadingAcknowledgment = typeof readingAcknowledgments.$inferInsert;
+
+/**
+ * Reading Compliance Reports - Pre-computed compliance statistics
+ */
+export const readingComplianceReports = mysqlTable("reading_compliance_reports", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Report scope
+  reportType: mysqlEnum("reportType", ["organization", "entity", "department", "individual"]).notNull(),
+  scopeValue: varchar("scopeValue", { length: 255 }),
+  
+  // Period
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd").notNull(),
+  
+  // Statistics
+  totalAssignments: int("totalAssignments").default(0).notNull(),
+  completedAssignments: int("completedAssignments").default(0).notNull(),
+  overdueAssignments: int("overdueAssignments").default(0).notNull(),
+  complianceRate: decimal("complianceRate", { precision: 5, scale: 2 }), // Percentage
+  
+  // Details
+  reportData: json("reportData"), // Detailed breakdown
+  
+  generatedAt: timestamp("generatedAt").defaultNow().notNull(),
+  generatedBy: int("generatedBy"),
+});
+
+export type ReadingComplianceReport = typeof readingComplianceReports.$inferSelect;
+export type InsertReadingComplianceReport = typeof readingComplianceReports.$inferInsert;

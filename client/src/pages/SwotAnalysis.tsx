@@ -12,7 +12,8 @@ import { trpc } from "@/lib/trpc";
 import { 
   Plus, Trash2, Target, Shield, AlertTriangle, 
   TrendingUp, Lightbulb, ChevronRight, BarChart3, FileText,
-  CheckCircle, Clock, XCircle, Sparkles, Loader2, Download, Calendar, Filter
+  CheckCircle, Clock, XCircle, Sparkles, Loader2, Download, Calendar, Filter,
+  Globe, ExternalLink, Newspaper, Bot, AlertCircle
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -633,6 +634,10 @@ export default function SwotAnalysis() {
                       <FileText className="w-4 h-4 mr-2" />
                       List View
                     </TabsTrigger>
+                    <TabsTrigger value="intelligence">
+                      <Globe className="w-4 h-4 mr-2" />
+                      Industry Intel
+                    </TabsTrigger>
                     <TabsTrigger value="compare">
                       <TrendingUp className="w-4 h-4 mr-2" />
                       Compare
@@ -942,6 +947,11 @@ export default function SwotAnalysis() {
                     </CardContent>
                   </Card>
                 </TabsContent>
+
+                {/* Industry Intelligence Tab */}
+                <TabsContent value="intelligence">
+                  <IndustryIntelligencePanel />
+                </TabsContent>
               </Tabs>
             ) : null}
           </>
@@ -1052,5 +1062,316 @@ export default function SwotAnalysis() {
         </Dialog>
       </div>
     </DashboardLayout>
+  );
+}
+
+// Industry Intelligence Panel Component
+function IndustryIntelligencePanel() {
+  const [timeframe, setTimeframe] = useState<"week" | "month" | "quarter" | "year">("month");
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+
+  const { data: intelligence, isLoading } = trpc.resourceLinks.getIndustryIntelligence.useQuery({
+    timeframe,
+    industryCategory: selectedCategory,
+  });
+
+  const swotColors = {
+    strength: "bg-green-100 text-green-800 border-green-200",
+    weakness: "bg-red-100 text-red-800 border-red-200",
+    opportunity: "bg-blue-100 text-blue-800 border-blue-200",
+    threat: "bg-amber-100 text-amber-800 border-amber-200",
+  };
+
+  const industryCategories = [
+    { value: "competitor_intel", label: "Competitor Intel" },
+    { value: "regulatory", label: "Regulatory" },
+    { value: "market_trends", label: "Market Trends" },
+    { value: "technology", label: "Technology" },
+    { value: "economic", label: "Economic" },
+    { value: "consumer", label: "Consumer" },
+    { value: "talent", label: "Talent" },
+    { value: "general", label: "General" },
+  ];
+
+  if (isLoading) {
+    return (
+      <Card className="p-8">
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Filters */}
+      <div className="flex items-center gap-4">
+        <Select value={timeframe} onValueChange={(v: any) => setTimeframe(v)}>
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Timeframe" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="week">Past Week</SelectItem>
+            <SelectItem value="month">Past Month</SelectItem>
+            <SelectItem value="quarter">Past Quarter</SelectItem>
+            <SelectItem value="year">Past Year</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={selectedCategory || "all"} onValueChange={(v) => setSelectedCategory(v === "all" ? undefined : v)}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {industryCategories.map((cat) => (
+              <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="border-green-200 bg-green-50/50">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground">Strengths</p>
+                <p className="text-2xl font-bold text-green-700">
+                  {intelligence?.swotSummary.strengths.length || 0}
+                </p>
+              </div>
+              <Shield className="w-8 h-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-red-200 bg-red-50/50">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground">Weaknesses</p>
+                <p className="text-2xl font-bold text-red-700">
+                  {intelligence?.swotSummary.weaknesses.length || 0}
+                </p>
+              </div>
+              <AlertTriangle className="w-8 h-8 text-red-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-blue-200 bg-blue-50/50">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground">Opportunities</p>
+                <p className="text-2xl font-bold text-blue-700">
+                  {intelligence?.swotSummary.opportunities.length || 0}
+                </p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-amber-200 bg-amber-50/50">
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-muted-foreground">Threats</p>
+                <p className="text-2xl font-bold text-amber-700">
+                  {intelligence?.swotSummary.threats.length || 0}
+                </p>
+              </div>
+              <Target className="w-8 h-8 text-amber-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Action Required Alert */}
+      {intelligence?.actionRequired && intelligence.actionRequired.length > 0 && (
+        <Card className="border-red-300 bg-red-50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-red-700 flex items-center gap-2">
+              <AlertCircle className="w-5 h-5" />
+              Action Required ({intelligence.actionRequired.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {intelligence.actionRequired.slice(0, 5).map((item: any) => (
+                <div key={item.id} className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex items-center gap-2">
+                    <Badge className={swotColors[item.swotRelevance as keyof typeof swotColors] || "bg-gray-100"}>
+                      {item.swotRelevance}
+                    </Badge>
+                    <span className="font-medium text-sm">{item.title}</span>
+                  </div>
+                  <Button variant="ghost" size="sm" asChild>
+                    <a href={item.url} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* SWOT Intelligence Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Threats - Most Important */}
+        <Card className="border-amber-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-amber-700 flex items-center gap-2">
+              <Target className="w-5 h-5" />
+              Threats Detected
+            </CardTitle>
+            <CardDescription>External risks from industry monitoring</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {intelligence?.swotSummary.threats.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-4 text-center">No threats detected</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {intelligence?.swotSummary.threats.map((item: any) => (
+                  <IntelligenceItem key={item.id} item={item} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Opportunities */}
+        <Card className="border-blue-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-blue-700 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              Opportunities Found
+            </CardTitle>
+            <CardDescription>Market trends and growth potential</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {intelligence?.swotSummary.opportunities.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-4 text-center">No opportunities found</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {intelligence?.swotSummary.opportunities.map((item: any) => (
+                  <IntelligenceItem key={item.id} item={item} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Strengths */}
+        <Card className="border-green-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-green-700 flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              Strengths Identified
+            </CardTitle>
+            <CardDescription>Competitive advantages from research</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {intelligence?.swotSummary.strengths.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-4 text-center">No strengths identified</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {intelligence?.swotSummary.strengths.map((item: any) => (
+                  <IntelligenceItem key={item.id} item={item} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Weaknesses */}
+        <Card className="border-red-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-red-700 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5" />
+              Weaknesses Flagged
+            </CardTitle>
+            <CardDescription>Areas needing improvement</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {intelligence?.swotSummary.weaknesses.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-4 text-center">No weaknesses flagged</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {intelligence?.swotSummary.weaknesses.map((item: any) => (
+                  <IntelligenceItem key={item.id} item={item} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Empty State */}
+      {intelligence?.total === 0 && (
+        <Card className="p-8">
+          <div className="text-center">
+            <Newspaper className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Industry Intelligence Yet</h3>
+            <p className="text-muted-foreground mb-4">
+              Add resource links with SWOT classifications to see industry intelligence here.
+            </p>
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+// Intelligence Item Component
+function IntelligenceItem({ item }: { item: any }) {
+  const impactColors = {
+    low: "bg-gray-100 text-gray-700",
+    medium: "bg-blue-100 text-blue-700",
+    high: "bg-orange-100 text-orange-700",
+    critical: "bg-red-100 text-red-700",
+  };
+
+  return (
+    <div className="p-3 bg-muted/30 rounded-lg border">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-medium text-sm">{item.title}</span>
+            {item.isAgentIdentified && (
+              <Badge variant="outline" className="text-xs gap-1">
+                <Bot className="w-3 h-3" />
+                AI
+              </Badge>
+            )}
+          </div>
+          {item.description && (
+            <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>
+          )}
+          <div className="flex items-center gap-2 mt-2">
+            {item.impactLevel && (
+              <Badge className={impactColors[item.impactLevel as keyof typeof impactColors] || "bg-gray-100"}>
+                {item.impactLevel}
+              </Badge>
+            )}
+            {item.industryCategory && (
+              <Badge variant="outline" className="text-xs">
+                {item.industryCategory.replace(/_/g, " ")}
+              </Badge>
+            )}
+            {item.sourceName && (
+              <span className="text-xs text-muted-foreground">{item.sourceName}</span>
+            )}
+          </div>
+        </div>
+        <Button variant="ghost" size="sm" asChild>
+          <a href={item.url} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="w-4 h-4" />
+          </a>
+        </Button>
+      </div>
+    </div>
   );
 }

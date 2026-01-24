@@ -6684,3 +6684,29 @@ Three main approaches available:
 - [ ] Add Resources tab to other department dashboards
 - [ ] Create admin page for managing resource links across all dashboards
 - [ ] Implement agent content discovery job
+
+
+## Phase 74: Read and Sign Compliance System
+- [x] Create required_readings database table
+- [x] Create reading_acknowledgments table with electronic signature support
+- [x] Create reading_compliance_reports table
+- [x] Build read-and-sign router with acknowledgment procedures
+- [x] Create ReadAndSign UI component for employees
+- [x] Add signature hash generation for audit trail
+- [ ] Add Read and Sign to employee portal
+- [ ] Create compliance reporting dashboard
+- [ ] Set up overdue reading notifications
+
+## Phase 75: SWOT Analysis Industry Intelligence Integration
+- [x] Add SWOT classification fields to resource_links schema (swotRelevance, swotConfidence, swotReason)
+- [x] Add industry monitoring fields (industryCategory, impactLevel, impactTimeframe)
+- [x] Add action tracking fields (requiresAction, actionTaken, actionTakenBy)
+- [x] Create getBySwotRelevance procedure
+- [x] Create getIndustryIntelligence procedure with SWOT summary
+- [x] Add updateSwotClassification procedure
+- [x] Add recordAction procedure
+- [x] Add Industry Intel tab to SWOT Analysis page
+- [x] Create IndustryIntelligencePanel component
+- [x] Create IntelligenceItem component
+- [ ] Create agent job for automated industry scanning
+- [ ] Add SWOT auto-classification using AI

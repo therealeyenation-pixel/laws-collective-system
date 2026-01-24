@@ -140,6 +140,7 @@ import { trialRouter } from "./routers/trial";
 import { contractsRouter } from "./routers/contracts";
 import { trustGovernanceRouter } from "./routers/trust-governance";
 import { resourceLinksRouter } from "./resource-links";
+import { readAndSignRouter } from "./routers/read-and-sign";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -292,6 +293,7 @@ export const appRouter = router({
   contracts: contractsRouter,
   trustGovernance: trustGovernanceRouter,
   resourceLinks: resourceLinksRouter,
+  readAndSign: readAndSignRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
