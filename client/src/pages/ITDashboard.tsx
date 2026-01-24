@@ -21,6 +21,7 @@ import {
   Wifi,
   HardDrive,
   Cloud,
+  ClipboardCheck,
 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
@@ -32,9 +33,9 @@ export default function ITDashboard() {
 
   const departmentInfo = {
     name: "IT Department",
-    manager: "Amandes Pearsall IV",
-    role: "IT Director",
-    description: "Managing technology infrastructure, security, and digital systems",
+    manager: "Open Position",
+    role: "IT Manager",
+    description: "Managing technology infrastructure, security, communications systems, and digital support",
   };
 
   const metrics = [
@@ -284,7 +285,7 @@ export default function ITDashboard() {
           <TabsContent value="team" className="space-y-4 mt-4">
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-foreground">Department Team</h3>
+                <h3 className="font-semibold text-foreground">IT Department Team</h3>
                 <Link href="/employee-directory?department=it">
                   <Button variant="outline" size="sm" className="gap-2">
                     <Users className="w-4 h-4" />
@@ -292,49 +293,85 @@ export default function ITDashboard() {
                   </Button>
                 </Link>
               </div>
+              
+              {/* IT Department Scope */}
+              <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>IT Scope:</strong> Infrastructure, Security, Helpdesk Support, Communications Systems (Email, Teams, Phone)
+                </p>
+                <p className="text-xs text-blue-600 dark:text-blue-300 mt-1">
+                  Note: Creative/video work is handled by the Media Department
+                </p>
+              </div>
+
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                {/* IT Manager - Tier 3 */}
+                <div className="flex items-center justify-between p-4 border rounded-lg border-dashed border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-900/10">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
-                      AP
+                    <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                      <Users className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Amandes Pearsall IV</p>
-                      <p className="text-sm text-muted-foreground">IT Director</p>
+                      <p className="font-medium text-foreground">IT Manager</p>
+                      <p className="text-sm text-muted-foreground">Tier 3 - Reports to CEO</p>
                     </div>
                   </div>
-                  <Badge className="bg-purple-500">Director</Badge>
+                  <Badge className="bg-blue-500">Open - Priority</Badge>
                 </div>
+
+                {/* IT Operations Coordinator - Tier 4 */}
                 <div className="flex items-center justify-between p-4 border rounded-lg border-dashed">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
                       <Users className="w-5 h-5 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Systems Administrator</p>
-                      <p className="text-sm text-muted-foreground">Open Position</p>
+                      <p className="font-medium text-foreground">IT Operations Coordinator</p>
+                      <p className="text-sm text-muted-foreground">Tier 4 - Day-to-day IT support</p>
                     </div>
                   </div>
                   <Badge variant="secondary">Open</Badge>
                 </div>
+
+                {/* Security Specialist - Future */}
                 <div className="flex items-center justify-between p-4 border rounded-lg border-dashed">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                      <Users className="w-5 h-5 text-muted-foreground" />
+                      <Shield className="w-5 h-5 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Help Desk Technician</p>
-                      <p className="text-sm text-muted-foreground">Open Position</p>
+                      <p className="font-medium text-foreground">Security Specialist</p>
+                      <p className="text-sm text-muted-foreground">Future Position - Cybersecurity focus</p>
                     </div>
                   </div>
-                  <Badge variant="secondary">Open</Badge>
+                  <Badge variant="outline">Future</Badge>
+                </div>
+
+                {/* Helpdesk Support - Future */}
+                <div className="flex items-center justify-between p-4 border rounded-lg border-dashed">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                      <Monitor className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Helpdesk Support</p>
+                      <p className="text-sm text-muted-foreground">Future Position - User support</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline">Future</Badge>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t">
+              <div className="mt-4 pt-4 border-t space-y-2">
                 <Link href="/employee-directory?department=it">
                   <Button className="w-full gap-2">
                     <Users className="w-4 h-4" />
                     View All IT Team Members
+                  </Button>
+                </Link>
+                <Link href="/onboarding-checklist?department=it">
+                  <Button variant="outline" className="w-full gap-2">
+                    <ClipboardCheck className="w-4 h-4" />
+                    View IT Onboarding Checklist
                   </Button>
                 </Link>
               </div>

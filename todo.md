@@ -6593,3 +6593,17 @@ Three main approaches available:
 - [ ] Integrate with Media department video capabilities
 - [ ] Store captured photos in S3 storage
 - [ ] Update Employee Directory to display photos
+
+
+## Phase 66: IT Manager Position & Department Structure
+- [x] Add IT Manager position to organizational structure (Tier 3)
+- [x] Add IT Operations Coordinator position (Tier 4)
+- [x] Add Security Specialist position (future - Tier 4) - shown in IT Dashboard
+- [x] Update IT Dashboard with proper team structure and hierarchy
+- [x] Add Team tab to IT Dashboard with all positions
+- [x] Create IT-specific onboarding checklist with security protocols (16 tasks)
+- [x] Define IT department scope (infrastructure, security, support, communications)
+- [x] Distinguish IT from Media department responsibilities (note in IT Dashboard)
+- [x] Add IT Manager job posting to careers/positions ($90K-$120K)
+- [x] Add IT Operations Coordinator job posting ($55K-$75K)
+- [ ] Update Operations Dashboard to show IT department status

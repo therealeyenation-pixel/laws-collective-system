@@ -139,11 +139,27 @@ const departmentSpecificTasks: Record<string, { title: string; icon: any; color:
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
     tasks: [
-      { id: "itd-1", task: "Review IT infrastructure documentation", required: true },
-      { id: "itd-2", task: "Set up admin access to systems", required: true },
-      { id: "itd-3", task: "Complete advanced security certifications", required: true },
-      { id: "itd-4", task: "Review incident response procedures", required: true },
-      { id: "itd-5", task: "Understand change management processes", required: true },
+      // Infrastructure & Systems
+      { id: "itd-1", task: "Review IT infrastructure documentation and network topology", required: true },
+      { id: "itd-2", task: "Set up admin access to servers and cloud platforms", required: true },
+      { id: "itd-3", task: "Review system monitoring and alerting tools", required: true },
+      // Security Protocols
+      { id: "itd-4", task: "Complete advanced cybersecurity certification training", required: true },
+      { id: "itd-5", task: "Review and understand incident response procedures", required: true },
+      { id: "itd-6", task: "Complete security audit and penetration testing protocols", required: true },
+      { id: "itd-7", task: "Review data backup and disaster recovery procedures", required: true },
+      { id: "itd-8", task: "Understand access control and privilege management", required: true },
+      // Communications Systems
+      { id: "itd-9", task: "Review email server administration procedures", required: true },
+      { id: "itd-10", task: "Understand Teams/video conferencing system management", required: true },
+      { id: "itd-11", task: "Review phone system and VoIP administration", required: false },
+      // Support & Troubleshooting
+      { id: "itd-12", task: "Review helpdesk ticketing system and SLA requirements", required: true },
+      { id: "itd-13", task: "Complete troubleshooting and escalation procedures training", required: true },
+      { id: "itd-14", task: "Understand change management and deployment processes", required: true },
+      // Compliance
+      { id: "itd-15", task: "Review IT compliance requirements (SOC2, GDPR, etc.)", required: true },
+      { id: "itd-16", task: "Complete vendor management and third-party risk assessment training", required: false },
     ],
   },
   operations: {

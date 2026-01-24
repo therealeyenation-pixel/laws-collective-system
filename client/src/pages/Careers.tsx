@@ -123,6 +123,21 @@ const POSITIONS = [
     tier: "tier3_open",
     hiringStatus: "Open Position"
   },
+  { 
+    id: "it-manager", 
+    title: "IT Manager", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Information Technology",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$90,000 - $120,000",
+    description: "Lead all technology infrastructure, security, and support operations across the organization. Manage system security, troubleshooting, communications systems (email, Teams, phone), and helpdesk support. Ensure cybersecurity compliance and maintain reliable technology services for all remote employees.",
+    requirements: ["5+ years IT management experience", "Strong cybersecurity knowledge", "Cloud infrastructure experience (AWS/Azure)", "Helpdesk and user support management", "Network administration", "Remote team technology support"],
+    category: "technology",
+    tier: "tier3_open",
+    hiringStatus: "Open Position - Priority"
+  },
   // ============================================
   // TIER 2: IDENTIFIED CANDIDATES (Pending Funding)
   // ============================================
@@ -324,6 +339,22 @@ const POSITIONS = [
     category: "operations",
     tier: "tier4_coordinator",
     hiringStatus: "Open Position"
+  },
+  { 
+    id: "ops-coordinator-it", 
+    title: "IT Operations Coordinator", 
+    entity: "The L.A.W.S. Collective, LLC",
+    entityShort: "L.A.W.S.",
+    department: "Information Technology",
+    type: "Full-Time",
+    location: "Remote",
+    salaryRange: "$55,000 - $75,000",
+    description: "Provide day-to-day IT support to the organization. Handle helpdesk tickets, user account management, software installations, and basic troubleshooting. Assist the IT Manager with system maintenance, security monitoring, and documentation. Reports to IT Manager.",
+    requirements: ["2+ years IT support experience", "Helpdesk/ticketing system experience", "Windows/Mac troubleshooting", "Cloud platform familiarity", "Strong communication skills", "Remote support experience"],
+    category: "technology",
+    tier: "tier4_coordinator",
+    hiringStatus: "Open Position",
+    reportsTo: "IT Manager"
   },
   { 
     id: "ops-coordinator-purchasing", 
