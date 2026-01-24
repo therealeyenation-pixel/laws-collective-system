@@ -54,7 +54,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Minor Energy Elixir",
     description: "Restore 25 energy instantly",
     category: "consumables",
-    price: 15,
+    price: 8,
     icon: "⚡",
     rarity: "common",
     effect: { type: "energy", value: 25 }
@@ -64,7 +64,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Energy Elixir",
     description: "Restore 50 energy instantly",
     category: "consumables",
-    price: 25,
+    price: 18,
     icon: "🔋",
     rarity: "uncommon",
     effect: { type: "energy", value: 50 }
@@ -74,7 +74,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Greater Energy Elixir",
     description: "Fully restore your energy",
     category: "consumables",
-    price: 50,
+    price: 35,
     icon: "💫",
     rarity: "rare",
     effect: { type: "energy", value: 100 }
@@ -84,7 +84,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Scholar's Blessing",
     description: "+50% XP for 30 minutes",
     category: "consumables",
-    price: 40,
+    price: 25,
     icon: "📚",
     rarity: "uncommon",
     effect: { type: "xp_boost", value: 50, duration: 30 }
@@ -94,7 +94,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Fortune's Favor",
     description: "+25% tokens for 30 minutes",
     category: "consumables",
-    price: 35,
+    price: 20,
     icon: "🍀",
     rarity: "uncommon",
     effect: { type: "token_boost", value: 25, duration: 30 }
@@ -106,7 +106,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Scroll of Earth Wisdom",
     description: "Permanently increase LAND by 1",
     category: "scrolls",
-    price: 100,
+    price: 75,
     icon: "📜",
     rarity: "rare",
     effect: { type: "stat_boost", value: 1, stat: "land", duration: 0 }
@@ -116,7 +116,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Scroll of Wind Knowledge",
     description: "Permanently increase AIR by 1",
     category: "scrolls",
-    price: 100,
+    price: 75,
     icon: "📜",
     rarity: "rare",
     effect: { type: "stat_boost", value: 1, stat: "air", duration: 0 }
@@ -126,7 +126,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Scroll of Ocean Calm",
     description: "Permanently increase WATER by 1",
     category: "scrolls",
-    price: 100,
+    price: 75,
     icon: "📜",
     rarity: "rare",
     effect: { type: "stat_boost", value: 1, stat: "water", duration: 0 }
@@ -136,7 +136,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Scroll of Inner Fire",
     description: "Permanently increase SELF by 1",
     category: "scrolls",
-    price: 100,
+    price: 75,
     icon: "📜",
     rarity: "rare",
     effect: { type: "stat_boost", value: 1, stat: "self", duration: 0 }
@@ -185,7 +185,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Title: Pioneer",
     description: "Display 'Pioneer' as your title",
     category: "cosmetics",
-    price: 50,
+    price: 30,
     icon: "🏷️",
     rarity: "uncommon",
     effect: { type: "cosmetic", value: 0 },
@@ -196,7 +196,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Title: Guardian",
     description: "Display 'Guardian' as your title",
     category: "cosmetics",
-    price: 75,
+    price: 60,
     icon: "🏷️",
     rarity: "rare",
     effect: { type: "cosmetic", value: 0 },
@@ -208,7 +208,7 @@ const SHOP_ITEMS: ShopItem[] = [
     name: "Title: Sage",
     description: "Display 'Sage' as your title",
     category: "cosmetics",
-    price: 150,
+    price: 120,
     icon: "🏷️",
     rarity: "epic",
     effect: { type: "cosmetic", value: 0 },
