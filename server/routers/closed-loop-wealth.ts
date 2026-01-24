@@ -857,7 +857,7 @@ export const closedLoopWealthRouter = router({
     }),
 
   // Register a new member business (public application)
-  registerMemberBusiness: publicProcedure
+  registerMemberBusinessPublic: publicProcedure
     .input(z.object({
       businessName: z.string().min(1),
       businessType: z.enum(['llc', 'corporation', 'sole_proprietorship', 'partnership', 'nonprofit']),

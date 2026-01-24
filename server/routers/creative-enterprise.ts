@@ -38,10 +38,16 @@ export const creativeEnterpriseRouter = router({
     }
 
     try {
-      const artists = await db.select().from(creativeArtists);
-      const productions = await db.select().from(creativeProductions);
-      const bookings = await db.select().from(creativeBookings);
-      const revenue = await db.select().from(artistRevenueStreams);
+      const artistsResult = await db.select().from(creativeArtists);
+      const productionsResult = await db.select().from(creativeProductions);
+      const bookingsResult = await db.select().from(creativeBookings);
+      const revenueResult = await db.select().from(artistRevenueStreams);
+      
+      // Ensure results are arrays
+      const artists = Array.isArray(artistsResult) ? artistsResult : [];
+      const productions = Array.isArray(productionsResult) ? productionsResult : [];
+      const bookings = Array.isArray(bookingsResult) ? bookingsResult : [];
+      const revenue = Array.isArray(revenueResult) ? revenueResult : [];
 
       const activeArtists = artists.filter(a => a.status === "active" || a.status === "senior" || a.status === "master");
       const releasedProductions = productions.filter(p => p.status === "released");

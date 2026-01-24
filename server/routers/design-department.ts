@@ -29,9 +29,14 @@ export const designDepartmentRouter = router({
     }
 
     try {
-      const projects = await db.select().from(designProjects);
-      const assets = await db.select().from(designAssets);
-      const artists = await db.select().from(creativeArtists);
+      const projectsResult = await db.select().from(designProjects);
+      const assetsResult = await db.select().from(designAssets);
+      const artistsResult = await db.select().from(creativeArtists);
+      
+      // Ensure results are arrays
+      const projects = Array.isArray(projectsResult) ? projectsResult : [];
+      const assets = Array.isArray(assetsResult) ? assetsResult : [];
+      const artists = Array.isArray(artistsResult) ? artistsResult : [];
       
       const designers = artists.filter(a => 
         a.artistType === "designer" || a.artistType === "animator" || a.artistType === "hybrid"
