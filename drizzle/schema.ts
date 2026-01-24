@@ -15363,3 +15363,274 @@ export const pdfOperations = mysqlTable("pdf_operations", {
 
 export type PdfOperation = typeof pdfOperations.$inferSelect;
 export type InsertPdfOperation = typeof pdfOperations.$inferInsert;
+
+
+// ============================================
+// Employee Gaming Requirement System Tables
+// ============================================
+
+/**
+ * Employee Game Sessions - Track individual gaming activity for compliance
+ */
+export const employeeGameSessions = mysqlTable("employee_game_sessions", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("userId").notNull(),
+  gameId: int("gameId"), // Reference to gameCenterGames
+  gameSlug: varchar("gameSlug", { length: 100 }).notNull(),
+  gameName: varchar("gameName", { length: 255 }).notNull(),
+  
+  // Session timing
+  startTime: timestamp("startTime").notNull(),
+  endTime: timestamp("endTime"),
+  durationMinutes: int("durationMinutes").default(0).notNull(),
+  
+  // Session type for categorization
+  sessionType: mysqlEnum("sessionType", [
+    "solo_practice",      // Individual practice time
+    "team_battle",        // Department team competition
+    "house_championship", // House vs House events
+    "laws_tournament",    // System-wide tournaments
+    "training"            // Onboarding/skill building
+  ]).default("solo_practice").notNull(),
+  
+  // Performance metrics
+  won: boolean("won").default(false),
+  score: int("score").default(0),
+  difficulty: varchar("difficulty", { length: 20 }),
+  
+  // Compliance tracking
+  countsTowardRequirement: boolean("countsTowardRequirement").default(true),
+  weekNumber: int("weekNumber").notNull(), // ISO week number
+  weekYear: int("weekYear").notNull(), // Year for the week
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type EmployeeGameSession = typeof employeeGameSessions.$inferSelect;
+export type InsertEmployeeGameSession = typeof employeeGameSessions.$inferInsert;
+
+/**
+ * Weekly Gaming Requirements - Track compliance per employee per week
+ */
+export const weeklyGameRequirements = mysqlTable("weekly_game_requirements", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("userId").notNull(),
+  
+  // Week identification
+  weekNumber: int("weekNumber").notNull(),
+  weekYear: int("weekYear").notNull(),
+  weekStartDate: timestamp("weekStartDate").notNull(),
+  weekEndDate: timestamp("weekEndDate").notNull(),
+  
+  // Requirements
+  requiredMinutes: int("requiredMinutes").default(300).notNull(), // 5 hours = 300 minutes
+  completedMinutes: int("completedMinutes").default(0).notNull(),
+  
+  // Compliance status
+  complianceStatus: mysqlEnum("complianceStatus", [
+    "not_started",  // 0% progress
+    "in_progress",  // 1-99% progress
+    "completed",    // 100%+ progress
+    "exceeded",     // Significantly exceeded (150%+)
+    "excused"       // Excused from requirement (vacation, etc.)
+  ]).default("not_started").notNull(),
+  
+  // Bonus tracking
+  bonusTokensAwarded: int("bonusTokensAwarded").default(0),
+  streakWeeks: int("streakWeeks").default(0), // Consecutive weeks meeting requirement
+  
+  // Game variety (encourage trying different games)
+  uniqueGamesPlayed: int("uniqueGamesPlayed").default(0),
+  
+  // Manager notes
+  managerNotes: text("managerNotes"),
+  excuseReason: text("excuseReason"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type WeeklyGameRequirement = typeof weeklyGameRequirements.$inferSelect;
+export type InsertWeeklyGameRequirement = typeof weeklyGameRequirements.$inferInsert;
+
+/**
+ * Team Game Events - Scheduled team building gaming sessions
+ */
+export const teamGameEvents = mysqlTable("team_game_events", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Event details
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  gameId: int("gameId"), // Specific game or null for any
+  gameSlug: varchar("gameSlug", { length: 100 }),
+  
+  // Scheduling
+  scheduledStart: timestamp("scheduledStart").notNull(),
+  scheduledEnd: timestamp("scheduledEnd").notNull(),
+  durationMinutes: int("durationMinutes").notNull(),
+  
+  // Event type
+  eventType: mysqlEnum("eventType", [
+    "team_battle",        // Department vs Department
+    "house_championship", // House vs House
+    "laws_tournament",    // System-wide competition
+    "training_session",   // Skill building
+    "casual_play"         // Informal team bonding
+  ]).notNull(),
+  
+  // Organizational scope
+  departmentId: int("departmentId"), // Specific department or null for all
+  houseId: int("houseId"), // Specific house or null for all
+  entityId: int("entityId"), // Specific entity or null for all
+  
+  // Participation
+  maxParticipants: int("maxParticipants"),
+  minParticipants: int("minParticipants").default(2),
+  isRequired: boolean("isRequired").default(false), // Mandatory attendance
+  
+  // Recurring events
+  isRecurring: boolean("isRecurring").default(false),
+  recurrencePattern: varchar("recurrencePattern", { length: 50 }), // weekly, biweekly, monthly
+  recurrenceEndDate: timestamp("recurrenceEndDate"),
+  parentEventId: int("parentEventId"), // For recurring event instances
+  
+  // Status
+  status: mysqlEnum("status", ["scheduled", "in_progress", "completed", "cancelled"]).default("scheduled").notNull(),
+  
+  // Results
+  winningTeam: varchar("winningTeam", { length: 255 }),
+  winningHouse: int("winningHouse"),
+  
+  // Organizer
+  createdBy: int("createdBy").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type TeamGameEvent = typeof teamGameEvents.$inferSelect;
+export type InsertTeamGameEvent = typeof teamGameEvents.$inferInsert;
+
+/**
+ * Team Event Participants - Track who's attending team events
+ */
+export const teamEventParticipants = mysqlTable("team_event_participants", {
+  id: int("id").primaryKey().autoincrement(),
+  eventId: int("eventId").notNull(),
+  userId: int("userId").notNull(),
+  
+  // RSVP status
+  rsvpStatus: mysqlEnum("rsvpStatus", ["pending", "accepted", "declined", "tentative"]).default("pending").notNull(),
+  rsvpAt: timestamp("rsvpAt"),
+  
+  // Attendance
+  attended: boolean("attended").default(false),
+  checkInTime: timestamp("checkInTime"),
+  checkOutTime: timestamp("checkOutTime"),
+  minutesParticipated: int("minutesParticipated").default(0),
+  
+  // Team assignment (for team battles)
+  teamName: varchar("teamName", { length: 100 }),
+  teamColor: varchar("teamColor", { length: 20 }),
+  
+  // Performance
+  individualScore: int("individualScore").default(0),
+  wasOnWinningTeam: boolean("wasOnWinningTeam").default(false),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type TeamEventParticipant = typeof teamEventParticipants.$inferSelect;
+export type InsertTeamEventParticipant = typeof teamEventParticipants.$inferInsert;
+
+/**
+ * Gaming Leaderboards - Rankings by various periods and scopes
+ */
+export const gamingLeaderboards = mysqlTable("gaming_leaderboards", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Scope
+  leaderboardType: mysqlEnum("leaderboardType", [
+    "individual",   // Single player rankings
+    "team",         // Department team rankings
+    "house",        // House rankings
+    "entity"        // Business entity rankings
+  ]).notNull(),
+  
+  // Period
+  period: mysqlEnum("period", ["weekly", "monthly", "quarterly", "yearly", "all_time"]).notNull(),
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd"),
+  
+  // Entity being ranked
+  userId: int("userId"),
+  departmentId: int("departmentId"),
+  houseId: int("houseId"),
+  entityId: int("entityId"),
+  
+  // Game scope (null = all games combined)
+  gameId: int("gameId"),
+  gameSlug: varchar("gameSlug", { length: 100 }),
+  
+  // Rankings
+  rank: int("rank").notNull(),
+  previousRank: int("previousRank"),
+  rankChange: int("rankChange").default(0),
+  
+  // Stats
+  totalMinutesPlayed: int("totalMinutesPlayed").default(0),
+  totalGamesPlayed: int("totalGamesPlayed").default(0),
+  totalWins: int("totalWins").default(0),
+  totalScore: int("totalScore").default(0),
+  winRate: decimal("winRate", { precision: 5, scale: 2 }),
+  
+  // Compliance (for individual)
+  complianceRate: decimal("complianceRate", { precision: 5, scale: 2 }),
+  streakWeeks: int("streakWeeks").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GamingLeaderboard = typeof gamingLeaderboards.$inferSelect;
+export type InsertGamingLeaderboard = typeof gamingLeaderboards.$inferInsert;
+
+/**
+ * Gaming Compliance Reports - Manager reports for tracking
+ */
+export const gamingComplianceReports = mysqlTable("gaming_compliance_reports", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Report scope
+  reportType: mysqlEnum("reportType", ["individual", "department", "house", "entity", "system"]).notNull(),
+  departmentId: int("departmentId"),
+  houseId: int("houseId"),
+  entityId: int("entityId"),
+  
+  // Period
+  periodType: mysqlEnum("periodType", ["weekly", "monthly", "quarterly"]).notNull(),
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd").notNull(),
+  
+  // Summary stats
+  totalEmployees: int("totalEmployees").default(0),
+  compliantEmployees: int("compliantEmployees").default(0),
+  nonCompliantEmployees: int("nonCompliantEmployees").default(0),
+  excusedEmployees: int("excusedEmployees").default(0),
+  complianceRate: decimal("complianceRate", { precision: 5, scale: 2 }),
+  
+  // Detailed metrics
+  totalMinutesPlayed: int("totalMinutesPlayed").default(0),
+  averageMinutesPerEmployee: int("averageMinutesPerEmployee").default(0),
+  totalTeamEventsHeld: int("totalTeamEventsHeld").default(0),
+  averageEventAttendance: decimal("averageEventAttendance", { precision: 5, scale: 2 }),
+  
+  // Top performers
+  topPerformers: json("topPerformers"), // Array of {userId, name, score}
+  
+  // Generated report file
+  reportFileUrl: varchar("reportFileUrl", { length: 500 }),
+  
+  // Generated by
+  generatedBy: int("generatedBy"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type GamingComplianceReport = typeof gamingComplianceReports.$inferSelect;
+export type InsertGamingComplianceReport = typeof gamingComplianceReports.$inferInsert;

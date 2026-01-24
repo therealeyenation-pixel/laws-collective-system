@@ -6918,3 +6918,50 @@ Three main approaches available:
 - [x] Teaching mode shows hints and move explanations (TicTacToe)
 - [ ] Add post-game analysis with AI suggestions
 
+
+
+## Phase 141: Employee Gaming Requirement System - Team Building & Compliance
+
+### Database Schema
+- [x] Create employee_game_sessions table (user_id, game_id, start_time, end_time, duration_minutes, session_type)
+- [x] Create weekly_game_requirements table (user_id, week_start, required_hours, completed_hours, compliance_status)
+- [x] Create team_game_events table (event_id, title, scheduled_time, duration, event_type, department_id, participants)
+- [x] Create game_leaderboards table (user_id, game_id, period, wins, losses, score, rank)
+
+### Employee Game Tracking Dashboard
+- [x] Build personal gaming dashboard showing weekly progress toward 5-hour requirement
+- [x] Display progress bar with hours completed vs required
+- [x] Show game variety metrics (different games played)
+- [x] Track win/loss records and improvement trends
+- [x] Add session history log with game details
+- [x] Create streak tracking for consecutive weeks meeting requirement
+
+### Team Session Scheduler
+- [x] Build team session calendar with upcoming events
+- [x] Add session creation form (title, game, time, participants, department)
+- [x] Create session types: Solo Practice, Team Battles, House Championships, L.A.W.S. Tournaments
+- [x] Add RSVP and attendance tracking
+- [ ] Send reminders for upcoming team sessions
+- [x] Allow recurring session scheduling (weekly team battles)
+
+### Manager Compliance Reports
+- [x] Create manager dashboard showing team compliance rates
+- [x] Build department-level compliance summary
+- [x] Add individual employee compliance details
+- [x] Generate weekly/monthly compliance reports
+- [x] Flag employees below requirement threshold
+- [ ] Export compliance data to CSV/PDF
+
+### Leaderboards & Rankings
+- [x] Individual leaderboards by game and overall
+- [x] Team/Department leaderboards
+- [x] House leaderboards for intrasystem competition
+- [x] Weekly, monthly, and all-time rankings
+- [ ] Achievement badges for milestones
+
+### Integration
+- [x] Auto-track game time from Game Center sessions
+- [x] Award bonus tokens for meeting weekly requirements
+- [ ] Connect to HR dashboard for performance metrics
+- [ ] Add gaming stats to employee profiles
+

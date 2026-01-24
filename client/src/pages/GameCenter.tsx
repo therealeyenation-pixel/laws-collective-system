@@ -205,7 +205,19 @@ export default function GameCenter() {
               Strategic thinking games for all ages - earn tokens while you learn!
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Link href="/gaming-dashboard">
+              <Button variant="outline" className="gap-2">
+                <Target className="w-4 h-4 text-green-500" />
+                My Progress
+              </Button>
+            </Link>
+            <Link href="/team-sessions">
+              <Button variant="outline" className="gap-2">
+                <Users className="w-4 h-4 text-blue-500" />
+                Team Sessions
+              </Button>
+            </Link>
             <Link href="/achievements">
               <Button variant="outline" className="gap-2">
                 <Award className="w-4 h-4 text-yellow-500" />

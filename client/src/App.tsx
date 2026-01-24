@@ -110,8 +110,11 @@ import DesignDepartment from "./pages/DesignDepartment";
 import DesignServices from "./pages/DesignServices";
 import MediaServices from "./pages/MediaServices";
 import GameCenter from "./pages/GameCenter";
+import EmployeeGamingDashboard from "./pages/EmployeeGamingDashboard";
 import Sandbox from "./pages/Sandbox";
+import TeamSessionScheduler from "./pages/TeamSessionScheduler";
 import SoftwareLicenses from "./pages/SoftwareLicenses";
+import GamingComplianceReports from "./pages/GamingComplianceReports";
 import PurchaseRequests from "./pages/PurchaseRequests";
 import TaxModule from "./pages/TaxModule";
 import TimekeepingDashboard from "./pages/TimekeepingDashboard";
@@ -410,8 +413,11 @@ function Router() {
       <Route path="/service-departments">{() => <ProtectedRoute component={ServiceDepartments} minRole="staff" />}</Route>
       <Route path="/founding-member-bonus">{() => <ProtectedRoute component={FoundingMemberBonus} minRole="admin" />}</Route>
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
+      <Route path="/gaming-dashboard">{() => <ProtectedRoute component={EmployeeGamingDashboard} minRole="user" />}</Route>
       <Route path="/sandbox">{() => <ProtectedRoute component={Sandbox} minRole="user" />}</Route>
+      <Route path="/team-sessions">{() => <ProtectedRoute component={TeamSessionScheduler} minRole="staff" />}</Route>
       <Route path="/games/financial-literacy">{() => <ProtectedRoute component={FinancialLiteracyGame} minRole="user" />}</Route>
+      <Route path="/gaming-compliance">{() => <ProtectedRoute component={GamingComplianceReports} minRole="staff" />}</Route>
       <Route path="/games/business-tycoon">{() => <ProtectedRoute component={BusinessTycoonGame} minRole="user" />}</Route>
       <Route path="/games/tic-tac-toe">{() => <ProtectedRoute component={TicTacToe} minRole="user" />}</Route>
       <Route path="/games/memory-match">{() => <ProtectedRoute component={MemoryMatch} minRole="user" />}</Route>
