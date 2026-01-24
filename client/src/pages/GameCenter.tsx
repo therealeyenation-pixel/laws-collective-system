@@ -141,12 +141,24 @@ export default function GameCenter() {
 
   const handlePlayGame = (gameSlug: string) => {
     // Route to implemented games
-    if (gameSlug === "stock-sim" || gameSlug === "property-empire") {
-      window.location.href = "/games/financial-literacy";
-      return;
-    }
-    if (gameSlug === "business-tycoon" || gameSlug === "startup-sim") {
-      window.location.href = "/games/business-tycoon";
+    const gameRoutes: Record<string, string> = {
+      "stock-sim": "/games/financial-literacy",
+      "property-empire": "/games/financial-literacy",
+      "business-tycoon": "/games/business-tycoon",
+      "startup-sim": "/games/business-tycoon",
+      "tic-tac-toe": "/games/tic-tac-toe",
+      "memory-match": "/games/memory-match",
+      "connect-four": "/games/connect-four",
+      "sudoku": "/games/sudoku",
+      "word-search": "/games/word-search",
+      "hangman": "/games/hangman",
+      "snake": "/games/snake",
+      "checkers": "/games/checkers",
+      "2048": "/games/2048",
+    };
+    
+    if (gameRoutes[gameSlug]) {
+      window.location.href = gameRoutes[gameSlug];
       return;
     }
     toast.info(`Game "${gameSlug}" coming soon! Full gameplay implementation in progress.`);

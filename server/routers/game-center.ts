@@ -108,6 +108,12 @@ export const gameCenterRouter = router({
       { name: "Logic Puzzles", slug: "logic-puzzles", description: "Brain teasers and deduction challenges", gameType: "puzzle", ageGroup: "9_12", minPlayers: 1, maxPlayers: 1, estimatedDuration: "10-20 min", skillsTargeted: ["logic", "deduction", "critical-thinking"], tokenRewardBase: 12, icon: "lightbulb" },
       
       // Adult/All Ages
+      { name: "Word Search", slug: "word-search", description: "Find hidden words in the grid", gameType: "word", ageGroup: "k_5", minPlayers: 1, maxPlayers: 1, estimatedDuration: "10-15 min", skillsTargeted: ["vocabulary", "pattern-recognition", "concentration"], tokenRewardBase: 6, icon: "search" },
+      { name: "Hangman", slug: "hangman", description: "Guess the word before running out of tries", gameType: "word", ageGroup: "6_8", minPlayers: 1, maxPlayers: 2, estimatedDuration: "5-10 min", skillsTargeted: ["vocabulary", "spelling", "deduction"], tokenRewardBase: 5, icon: "text" },
+      { name: "Snake Classic", slug: "snake", description: "Classic arcade snake game", gameType: "puzzle", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "5-15 min", skillsTargeted: ["reflexes", "planning", "concentration"], tokenRewardBase: 8, icon: "bug" },
+      { name: "2048", slug: "2048", description: "Merge tiles to reach 2048", gameType: "puzzle", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "10-30 min", skillsTargeted: ["math", "strategy", "planning"], tokenRewardBase: 10, icon: "grid-3x3" },
+      
+      // Adult/All Ages
       { name: "Solitaire Classic", slug: "solitaire", description: "Classic Klondike solitaire", gameType: "card", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "10-15 min", skillsTargeted: ["planning", "patience", "strategy"], tokenRewardBase: 5, icon: "spade" },
       { name: "Spider Solitaire", slug: "spider-solitaire", description: "Advanced solitaire variant", gameType: "card", ageGroup: "adult", minPlayers: 1, maxPlayers: 1, estimatedDuration: "15-30 min", skillsTargeted: ["planning", "strategy", "patience"], tokenRewardBase: 8, icon: "bug" },
       { name: "Hearts", slug: "hearts", description: "Classic trick-taking card game", gameType: "card", ageGroup: "adult", minPlayers: 4, maxPlayers: 4, estimatedDuration: "30-45 min", skillsTargeted: ["strategy", "probability", "memory"], tokenRewardBase: 10, icon: "heart" },

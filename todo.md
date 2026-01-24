@@ -4327,8 +4327,8 @@
 - [ ] Chess game with AI opponent and multiplayer
 - [ ] Crossword puzzle generator with educational themes
 - [ ] Battleship game with strategic thinking elements
-- [ ] Sudoku with difficulty levels
-- [ ] Word games (word search, anagrams, vocabulary builders)
+- [x] Sudoku with difficulty levels
+- [x] Word games (word search, anagrams, vocabulary builders)
 - [ ] Logic puzzles (pattern recognition, deduction)
 
 ### Competition Features
@@ -4367,21 +4367,21 @@
 #### House of Wonder Games (K-5, Ages 5-10)
 - [ ] Candy Land (color/pattern recognition, turn-taking)
 - [ ] Chutes & Ladders (counting, consequences)
-- [ ] Memory/Matching games (cognitive development)
-- [ ] Simple word searches (vocabulary)
+- [x] Memory/Matching games (cognitive development)
+- [x] Simple word searches (vocabulary)
 - [ ] Basic jigsaw puzzles
 - [ ] Educational mini-games (math facts, spelling)
-- [ ] Tic-Tac-Toe (basic strategy)
+- [x] Tic-Tac-Toe (basic strategy)
 
 #### House of Form Games (6-8, Ages 11-13)
 - [ ] Monopoly (financial literacy, negotiation)
 - [ ] Clue/Mystery games (deductive reasoning)
 - [ ] Battleship (coordinates, strategy)
 - [ ] Scrabble (vocabulary, spelling)
-- [ ] Sudoku (easy-medium difficulty)
+- [x] Sudoku (easy-medium difficulty)
 - [ ] Escape Room puzzles (problem-solving, teamwork)
-- [ ] Connect Four (pattern recognition)
-- [ ] Checkers (strategic thinking)
+- [x] Connect Four (pattern recognition)
+- [x] Checkers (strategic thinking)
 
 #### House of Mastery Games (9-12, Ages 14-18)
 - [ ] Chess (deep strategy, planning)
@@ -4398,6 +4398,9 @@
 - [ ] Advanced chess tournaments
 - [ ] Mystery/detective story games
 - [ ] Business strategy simulations
+- [x] Snake classic arcade game
+- [x] Hangman word guessing game
+- [x] 2048 number puzzle game
 - [x] Trivia games (Knowledge Quest with 6 L.A.W.S. categories)
 
 ### Family & Multi-Generational Features
