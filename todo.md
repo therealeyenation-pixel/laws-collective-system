@@ -6875,8 +6875,8 @@ Three main approaches available:
 - [x] Add Easy/Medium/Hard difficulty selector component (GameModeSelector)
 - [x] TicTacToe - Add difficulty levels (Easy: random moves, Medium: blocks wins, Hard: minimax)
 - [x] Connect Four - Add difficulty levels with adjustable lookahead depth
-- [ ] Chess - Add difficulty levels (Easy: random legal, Medium: 2-ply, Hard: 4-ply minimax)
-- [ ] Checkers - Add difficulty levels with adjustable strategy
+- [x] Chess - Add difficulty levels (Easy: random legal, Medium: 2-ply, Hard: 4-ply minimax)
+- [x] Checkers - Add difficulty levels with adjustable strategy
 - [ ] Battleship - Add difficulty levels (Easy: random shots, Medium: hunt mode, Hard: probability targeting)
 - [ ] Sudoku - Already has Easy/Medium/Hard (verify consistency)
 - [ ] Memory Match - Already has difficulty levels (verify consistency)
@@ -6885,8 +6885,8 @@ Three main approaches available:
 - [x] Create shared game mode selector component (vs AI / vs Local Player / Online / Intrasystem)
 - [x] TicTacToe - Add local 2-player mode with turn indicator
 - [x] Connect Four - Add local 2-player mode
-- [ ] Chess - Add local 2-player mode with move history
-- [ ] Checkers - Add local 2-player mode
+- [x] Chess - Add local 2-player mode with move history
+- [x] Checkers - Add local 2-player mode
 - [ ] Battleship - Add local 2-player mode with hidden boards
 
 ### C) Online & Intrasystem Multiplayer Infrastructure

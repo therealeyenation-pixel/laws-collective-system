@@ -3,9 +3,10 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, RotateCcw, Trophy, Crown, Circle } from "lucide-react";
+import { ArrowLeft, RotateCcw, Trophy, Crown, Circle, Brain, Zap, Lightbulb } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import GameModeSelector, { GameMode, Difficulty, AIPersonality, GameConfig } from "@/components/games/GameModeSelector";
 
 type Player = "red" | "black";
 type PieceType = "regular" | "king";
@@ -16,6 +17,11 @@ type Position = { row: number; col: number };
 const BOARD_SIZE = 8;
 
 export default function Checkers() {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameMode, setGameMode] = useState<GameMode>("ai");
+  const [difficulty, setDifficulty] = useState<Difficulty>("medium");
+  const [aiPersonality, setAIPersonality] = useState<AIPersonality>("balanced");
+  
   const [board, setBoard] = useState<Board>([]);
   const [currentPlayer, setCurrentPlayer] = useState<Player>("red");
   const [selectedPiece, setSelectedPiece] = useState<Position | null>(null);
@@ -24,6 +30,8 @@ export default function Checkers() {
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState<Player | null>(null);
   const [scores, setScores] = useState({ red: 12, black: 12 });
+  const [isAIThinking, setIsAIThinking] = useState(false);
+  const [teachingHint, setTeachingHint] = useState<string | null>(null);
 
   const initializeBoard = (): Board => {
     const newBoard: Board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null));
@@ -58,11 +66,27 @@ export default function Checkers() {
     setGameOver(false);
     setWinner(null);
     setScores({ red: 12, black: 12 });
+    setTeachingHint(null);
+  };
+
+  const handleStartGame = (config: GameConfig) => {
+    setGameMode(config.mode);
+    setDifficulty(config.difficulty);
+    setAIPersonality(config.personality);
+    setGameStarted(true);
+    resetGame();
+  };
+
+  const handleChangeMode = () => {
+    setGameStarted(false);
+    setGameOver(false);
   };
 
   useEffect(() => {
-    resetGame();
-  }, []);
+    if (gameStarted) {
+      resetGame();
+    }
+  }, [gameStarted]);
 
   const getValidMoves = (row: number, col: number, board: Board): { moves: Position[]; captures: Position[] } => {
     const piece = board[row][col];
@@ -125,15 +149,218 @@ export default function Checkers() {
     return capturePieces;
   };
 
+  const getAllMoves = (player: Player, board: Board): { from: Position; to: Position; isCapture: boolean }[] => {
+    const allMoves: { from: Position; to: Position; isCapture: boolean }[] = [];
+    const captures = findAllCaptures(player, board);
+    
+    for (let row = 0; row < BOARD_SIZE; row++) {
+      for (let col = 0; col < BOARD_SIZE; col++) {
+        const piece = board[row][col];
+        if (piece && piece.player === player) {
+          const { moves, captures: pieceCaptures } = getValidMoves(row, col, board);
+          
+          if (captures.length > 0) {
+            // Must capture - only add capture moves
+            for (const capture of pieceCaptures) {
+              allMoves.push({ from: { row, col }, to: capture, isCapture: true });
+            }
+          } else {
+            // No captures available - add regular moves
+            for (const move of moves) {
+              allMoves.push({ from: { row, col }, to: move, isCapture: false });
+            }
+          }
+        }
+      }
+    }
+    
+    return allMoves;
+  };
+
+  const evaluateBoard = (board: Board, player: Player): number => {
+    let score = 0;
+    
+    for (let row = 0; row < BOARD_SIZE; row++) {
+      for (let col = 0; col < BOARD_SIZE; col++) {
+        const piece = board[row][col];
+        if (piece) {
+          const value = piece.type === "king" ? 3 : 1;
+          const positionBonus = piece.type === "regular" 
+            ? (piece.player === "red" ? (7 - row) * 0.1 : row * 0.1)
+            : 0;
+          
+          if (piece.player === player) {
+            score += value + positionBonus;
+          } else {
+            score -= value + positionBonus;
+          }
+        }
+      }
+    }
+    
+    return score;
+  };
+
+  const makeAIMove = () => {
+    if (gameOver || currentPlayer !== "black" || gameMode !== "ai") return;
+    
+    setIsAIThinking(true);
+    setTeachingHint(null);
+    
+    setTimeout(() => {
+      const moves = getAllMoves("black", board);
+      
+      if (moves.length === 0) {
+        setGameOver(true);
+        setWinner("red");
+        toast.success("Red wins! Black has no valid moves.");
+        setIsAIThinking(false);
+        return;
+      }
+      
+      let selectedMove: { from: Position; to: Position; isCapture: boolean } | null = null;
+      
+      // AI difficulty logic
+      if (difficulty === "easy") {
+        // Random move with occasional mistakes
+        selectedMove = moves[Math.floor(Math.random() * moves.length)];
+      } else if (difficulty === "medium") {
+        // Prefer captures, then evaluate positions
+        const captureMoves = moves.filter(m => m.isCapture);
+        if (captureMoves.length > 0) {
+          selectedMove = captureMoves[Math.floor(Math.random() * captureMoves.length)];
+        } else {
+          // Simple evaluation
+          let bestScore = -Infinity;
+          for (const move of moves) {
+            const testBoard = board.map(r => r.map(c => c ? { ...c } : null));
+            testBoard[move.to.row][move.to.col] = testBoard[move.from.row][move.from.col];
+            testBoard[move.from.row][move.from.col] = null;
+            
+            const score = evaluateBoard(testBoard, "black");
+            if (score > bestScore) {
+              bestScore = score;
+              selectedMove = move;
+            }
+          }
+        }
+      } else {
+        // Hard - minimax-like evaluation
+        let bestScore = -Infinity;
+        for (const move of moves) {
+          const testBoard = board.map(r => r.map(c => c ? { ...c } : null));
+          testBoard[move.to.row][move.to.col] = testBoard[move.from.row][move.from.col];
+          testBoard[move.from.row][move.from.col] = null;
+          
+          if (move.isCapture) {
+            const capturedRow = (move.to.row + move.from.row) / 2;
+            const capturedCol = (move.to.col + move.from.col) / 2;
+            testBoard[capturedRow][capturedCol] = null;
+          }
+          
+          // Check for king promotion
+          if (move.to.row === BOARD_SIZE - 1) {
+            testBoard[move.to.row][move.to.col] = { player: "black", type: "king" };
+          }
+          
+          const score = evaluateBoard(testBoard, "black") + (move.isCapture ? 2 : 0);
+          if (score > bestScore) {
+            bestScore = score;
+            selectedMove = move;
+          }
+        }
+      }
+      
+      if (selectedMove) {
+        executeMove(selectedMove.from, selectedMove.to);
+      }
+      
+      setIsAIThinking(false);
+    }, difficulty === "easy" ? 500 : difficulty === "medium" ? 800 : 1200);
+  };
+
+  const executeMove = (from: Position, to: Position) => {
+    const newBoard = board.map(r => r.map(c => c ? { ...c } : null));
+    const movingPiece = newBoard[from.row][from.col]!;
+    
+    // Check if this is a capture move
+    const rowDiff = Math.abs(to.row - from.row);
+    const isCapture = rowDiff === 2;
+
+    if (isCapture) {
+      // Remove captured piece
+      const capturedRow = (to.row + from.row) / 2;
+      const capturedCol = (to.col + from.col) / 2;
+      newBoard[capturedRow][capturedCol] = null;
+      
+      // Update scores
+      setScores(prev => ({
+        ...prev,
+        [currentPlayer === "red" ? "black" : "red"]: prev[currentPlayer === "red" ? "black" : "red"] - 1
+      }));
+    }
+
+    // Move piece
+    newBoard[from.row][from.col] = null;
+    newBoard[to.row][to.col] = movingPiece;
+
+    // Check for king promotion
+    if (
+      (movingPiece.player === "red" && to.row === 0) ||
+      (movingPiece.player === "black" && to.row === BOARD_SIZE - 1)
+    ) {
+      newBoard[to.row][to.col] = { ...movingPiece, type: "king" };
+      toast.success("Crowned! Your piece is now a King!");
+    }
+
+    setBoard(newBoard);
+
+    // Check for additional captures (multi-jump)
+    if (isCapture) {
+      const { captures } = getValidMoves(to.row, to.col, newBoard);
+      if (captures.length > 0 && currentPlayer === "red") {
+        setSelectedPiece({ row: to.row, col: to.col });
+        setValidMoves(captures);
+        setMustCapture([{ row: to.row, col: to.col }]);
+        return;
+      }
+    }
+
+    // Check for win condition
+    const opponentPieces = newBoard.flat().filter(p => p && p.player !== currentPlayer);
+    if (opponentPieces.length === 0) {
+      setGameOver(true);
+      setWinner(currentPlayer);
+      toast.success(`${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)} wins! 🎉`);
+      return;
+    }
+
+    // Switch player
+    setCurrentPlayer(currentPlayer === "red" ? "black" : "red");
+    setSelectedPiece(null);
+    setValidMoves([]);
+  };
+
   useEffect(() => {
-    if (!gameOver) {
+    if (!gameOver && board.length > 0) {
       const captures = findAllCaptures(currentPlayer, board);
       setMustCapture(captures);
     }
   }, [currentPlayer, board, gameOver]);
 
+  // AI move trigger
+  useEffect(() => {
+    if (gameMode === "ai" && currentPlayer === "black" && !gameOver && gameStarted && board.length > 0) {
+      const timer = setTimeout(() => {
+        makeAIMove();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [currentPlayer, gameOver, gameStarted, gameMode, board]);
+
   const handleCellClick = (row: number, col: number) => {
-    if (gameOver) return;
+    if (gameOver || isAIThinking) return;
+    if (gameMode === "ai" && currentPlayer === "black") return;
 
     const piece = board[row][col];
 
@@ -159,65 +386,7 @@ export default function Checkers() {
 
     // If a piece is selected and clicking on a valid move
     if (selectedPiece && validMoves.some(m => m.row === row && m.col === col)) {
-      const newBoard = board.map(r => r.map(c => c ? { ...c } : null));
-      const movingPiece = newBoard[selectedPiece.row][selectedPiece.col]!;
-      
-      // Check if this is a capture move
-      const rowDiff = Math.abs(row - selectedPiece.row);
-      const isCapture = rowDiff === 2;
-
-      if (isCapture) {
-        // Remove captured piece
-        const capturedRow = (row + selectedPiece.row) / 2;
-        const capturedCol = (col + selectedPiece.col) / 2;
-        newBoard[capturedRow][capturedCol] = null;
-        
-        // Update scores
-        setScores(prev => ({
-          ...prev,
-          [currentPlayer === "red" ? "black" : "red"]: prev[currentPlayer === "red" ? "black" : "red"] - 1
-        }));
-      }
-
-      // Move piece
-      newBoard[selectedPiece.row][selectedPiece.col] = null;
-      newBoard[row][col] = movingPiece;
-
-      // Check for king promotion
-      if (
-        (movingPiece.player === "red" && row === 0) ||
-        (movingPiece.player === "black" && row === BOARD_SIZE - 1)
-      ) {
-        newBoard[row][col] = { ...movingPiece, type: "king" };
-        toast.success("Crowned! Your piece is now a King!");
-      }
-
-      setBoard(newBoard);
-
-      // Check for additional captures (multi-jump)
-      if (isCapture) {
-        const { captures } = getValidMoves(row, col, newBoard);
-        if (captures.length > 0) {
-          setSelectedPiece({ row, col });
-          setValidMoves(captures);
-          setMustCapture([{ row, col }]);
-          return;
-        }
-      }
-
-      // Check for win condition
-      const opponentPieces = newBoard.flat().filter(p => p && p.player !== currentPlayer);
-      if (opponentPieces.length === 0) {
-        setGameOver(true);
-        setWinner(currentPlayer);
-        toast.success(`${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)} wins! 🎉`);
-        return;
-      }
-
-      // Switch player
-      setCurrentPlayer(currentPlayer === "red" ? "black" : "red");
-      setSelectedPiece(null);
-      setValidMoves([]);
+      executeMove(selectedPiece, { row, col });
     }
   };
 
@@ -267,6 +436,33 @@ export default function Checkers() {
     );
   };
 
+  // Show game mode selector if game hasn't started
+  if (!gameStarted) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6 max-w-xl mx-auto">
+          <div className="flex items-center gap-4">
+            <Link href="/game-center">
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Checkers</h1>
+              <p className="text-sm text-muted-foreground">Classic strategy board game</p>
+            </div>
+          </div>
+          
+          <GameModeSelector
+            gameName="Checkers"
+            onStart={handleStartGame}
+            supportedModes={["ai", "local", "online", "intrasystem"]}
+          />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-6 max-w-xl mx-auto">
@@ -280,15 +476,26 @@ export default function Checkers() {
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-foreground">Checkers</h1>
-              <p className="text-sm text-muted-foreground">Classic strategy board game</p>
+              <p className="text-sm text-muted-foreground">
+                {gameMode === "ai" ? `vs AI (${difficulty})` : "Local 2 Player"}
+              </p>
             </div>
           </div>
           <Badge 
             variant="outline" 
             className={`gap-1 ${currentPlayer === "red" ? "border-red-500 text-red-500" : "border-gray-500"}`}
           >
-            <Circle className={`w-3 h-3 ${currentPlayer === "red" ? "fill-red-500" : "fill-gray-900"}`} />
-            {currentPlayer === "red" ? "Red" : "Black"}'s Turn
+            {isAIThinking ? (
+              <>
+                <Brain className="w-3 h-3 animate-pulse" />
+                AI Thinking...
+              </>
+            ) : (
+              <>
+                <Circle className={`w-3 h-3 ${currentPlayer === "red" ? "fill-red-500" : "fill-gray-900"}`} />
+                {currentPlayer === "red" ? "Red" : "Black"}'s Turn
+              </>
+            )}
           </Badge>
         </div>
 
@@ -300,7 +507,9 @@ export default function Checkers() {
                 <div className="w-4 h-4 rounded-full bg-red-600" />
                 <p className="text-2xl font-bold">{scores.red}</p>
               </div>
-              <p className="text-xs text-muted-foreground">Red Pieces</p>
+              <p className="text-xs text-muted-foreground">
+                {gameMode === "ai" ? "You (Red)" : "Red Pieces"}
+              </p>
             </CardContent>
           </Card>
           <Card className={currentPlayer === "black" ? "ring-2 ring-gray-500" : ""}>
@@ -309,7 +518,9 @@ export default function Checkers() {
                 <div className="w-4 h-4 rounded-full bg-gray-900" />
                 <p className="text-2xl font-bold">{scores.black}</p>
               </div>
-              <p className="text-xs text-muted-foreground">Black Pieces</p>
+              <p className="text-xs text-muted-foreground">
+                {gameMode === "ai" ? `AI (${aiPersonality})` : "Black Pieces"}
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -355,10 +566,15 @@ export default function Checkers() {
               </div>
 
               {/* Controls */}
-              <Button onClick={resetGame} variant="outline" className="gap-2">
-                <RotateCcw className="w-4 h-4" />
-                New Game
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={resetGame} variant="outline" className="gap-2">
+                  <RotateCcw className="w-4 h-4" />
+                  New Game
+                </Button>
+                <Button onClick={handleChangeMode} variant="outline" className="gap-2">
+                  Change Mode
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

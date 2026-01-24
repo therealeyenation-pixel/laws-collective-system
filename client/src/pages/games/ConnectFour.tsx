@@ -360,10 +360,10 @@ export default function ConnectFour() {
     }
   }, [currentPlayer, winner, gameStarted, gameMode]);
 
-  const handleStartGame = (mode: GameMode, diff: Difficulty, personality: AIPersonality) => {
-    setGameMode(mode);
-    setDifficulty(diff);
-    setAIPersonality(personality);
+  const handleStartGame = (config: { mode: GameMode; difficulty: Difficulty; personality: AIPersonality }) => {
+    setGameMode(config.mode);
+    setDifficulty(config.difficulty);
+    setAIPersonality(config.personality);
     setGameStarted(true);
     resetGame();
   };
@@ -434,7 +434,7 @@ export default function ConnectFour() {
           
           <GameModeSelector
             gameName="Connect Four"
-            onStartGame={handleStartGame}
+            onStart={handleStartGame}
             supportedModes={["ai", "local", "online", "intrasystem"]}
           />
         </div>
