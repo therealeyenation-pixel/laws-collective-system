@@ -4,27 +4,32 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, RotateCcw, Trophy, Brain, Zap, Circle } from "lucide-react";
+import { ArrowLeft, RotateCcw, Trophy, Brain, Zap, Users, Wifi, Building2, Lightbulb } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import GameModeSelector, { GameMode, Difficulty, AIPersonality } from "@/components/games/GameModeSelector";
 
 type Player = "red" | "yellow" | null;
 type Board = Player[][];
-type Difficulty = "easy" | "medium" | "hard";
 
 const ROWS = 6;
 const COLS = 7;
 
 export default function ConnectFour() {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameMode, setGameMode] = useState<GameMode>("ai");
+  const [difficulty, setDifficulty] = useState<Difficulty>("medium");
+  const [aiPersonality, setAIPersonality] = useState<AIPersonality>("balanced");
+  
   const [board, setBoard] = useState<Board>(() => 
     Array(ROWS).fill(null).map(() => Array(COLS).fill(null))
   );
   const [currentPlayer, setCurrentPlayer] = useState<"red" | "yellow">("red");
   const [winner, setWinner] = useState<Player | "draw" | null>(null);
-  const [difficulty, setDifficulty] = useState<Difficulty>("medium");
-  const [scores, setScores] = useState({ player: 0, ai: 0, draws: 0 });
+  const [scores, setScores] = useState({ player1: 0, player2: 0, draws: 0 });
   const [winningCells, setWinningCells] = useState<[number, number][]>([]);
   const [isAIThinking, setIsAIThinking] = useState(false);
+  const [teachingHint, setTeachingHint] = useState<string | null>(null);
 
   const checkWinner = (board: Board, row: number, col: number): { winner: Player; cells: [number, number][] } | null => {
     const player = board[row][col];
@@ -40,7 +45,6 @@ export default function ConnectFour() {
     for (const [dr, dc] of directions) {
       const cells: [number, number][] = [[row, col]];
       
-      // Check in positive direction
       let r = row + dr;
       let c = col + dc;
       while (r >= 0 && r < ROWS && c >= 0 && c < COLS && board[r][c] === player) {
@@ -49,7 +53,6 @@ export default function ConnectFour() {
         c += dc;
       }
       
-      // Check in negative direction
       r = row - dr;
       c = col - dc;
       while (r >= 0 && r < ROWS && c >= 0 && c < COLS && board[r][c] === player) {
@@ -92,13 +95,11 @@ export default function ConnectFour() {
     let score = 0;
     const opponent = player === "red" ? "yellow" : "red";
 
-    // Center column preference
     const centerCol = Math.floor(COLS / 2);
     for (let row = 0; row < ROWS; row++) {
       if (board[row][centerCol] === player) score += 3;
     }
 
-    // Check all windows of 4
     const checkWindow = (window: Player[]): number => {
       const playerCount = window.filter((c) => c === player).length;
       const emptyCount = window.filter((c) => c === null).length;
@@ -149,12 +150,11 @@ export default function ConnectFour() {
   const minimax = (board: Board, depth: number, alpha: number, beta: number, isMaximizing: boolean): number => {
     const validCols = getValidColumns(board);
     
-    // Check terminal states
     for (const col of validCols) {
       const result = dropPiece(board, col, isMaximizing ? "yellow" : "red");
       if (result) {
         const winResult = checkWinner(result.newBoard, result.row, col);
-        result.newBoard[result.row][col] = null; // Undo
+        result.newBoard[result.row][col] = null;
         if (winResult) {
           return isMaximizing ? -10000 + depth : 10000 - depth;
         }
@@ -192,14 +192,76 @@ export default function ConnectFour() {
     }
   };
 
-  const getAIMove = (board: Board): number => {
+  const findWinningMove = (board: Board, player: Player): number | null => {
     const validCols = getValidColumns(board);
-    if (validCols.length === 0) return -1;
+    for (const col of validCols) {
+      const result = dropPiece(board, col, player);
+      if (result) {
+        const winResult = checkWinner(result.newBoard, result.row, col);
+        if (winResult) return col;
+      }
+    }
+    return null;
+  };
 
+  const getAIMove = (board: Board): { col: number; explanation?: string } => {
+    const validCols = getValidColumns(board);
+    if (validCols.length === 0) return { col: -1 };
+
+    // Easy: random moves
     if (difficulty === "easy") {
-      return validCols[Math.floor(Math.random() * validCols.length)];
+      const col = validCols[Math.floor(Math.random() * validCols.length)];
+      return { col, explanation: "I'm playing randomly to give you practice!" };
     }
 
+    // Check for immediate win
+    const winMove = findWinningMove(board, "yellow");
+    if (winMove !== null) {
+      return { col: winMove, explanation: "I found a winning move!" };
+    }
+
+    // Check for immediate block
+    const blockMove = findWinningMove(board, "red");
+    if (blockMove !== null) {
+      return { col: blockMove, explanation: "I need to block your winning move!" };
+    }
+
+    // Apply personality
+    if (aiPersonality === "aggressive") {
+      // Prefer center and attacking positions
+      const centerCol = Math.floor(COLS / 2);
+      if (validCols.includes(centerCol)) {
+        return { col: centerCol, explanation: "Taking the center for offensive control!" };
+      }
+    }
+
+    if (aiPersonality === "defensive") {
+      // Look for threats two moves ahead
+      for (const col of validCols) {
+        const result = dropPiece(board, col, "yellow");
+        if (result) {
+          // Check if this blocks a potential threat
+          const threatCount = validCols.filter(c => {
+            const r = dropPiece(result.newBoard, c, "red");
+            if (r) {
+              const win = checkWinner(r.newBoard, r.row, c);
+              return win !== null;
+            }
+            return false;
+          }).length;
+          if (threatCount === 0) {
+            return { col, explanation: "Playing defensively to prevent future threats." };
+          }
+        }
+      }
+    }
+
+    if (aiPersonality === "random") {
+      const col = validCols[Math.floor(Math.random() * validCols.length)];
+      return { col, explanation: "Playing unpredictably!" };
+    }
+
+    // Standard minimax for balanced/teaching
     const depth = difficulty === "medium" ? 3 : 5;
     let bestScore = -Infinity;
     let bestCol = validCols[0];
@@ -215,23 +277,39 @@ export default function ConnectFour() {
       }
     }
 
-    return bestCol;
+    let explanation = "Playing the optimal move based on position analysis.";
+    if (aiPersonality === "teaching") {
+      if (bestCol === Math.floor(COLS / 2)) {
+        explanation = "Tip: The center column gives the most winning opportunities!";
+      } else {
+        explanation = "Tip: I'm building towards multiple winning paths. Watch for diagonal threats!";
+      }
+    }
+
+    return { col: bestCol, explanation };
   };
 
   const handleColumnClick = (col: number) => {
-    if (winner || currentPlayer !== "red" || isAIThinking) return;
+    if (winner || isAIThinking) return;
+    if (gameMode === "ai" && currentPlayer !== "red") return;
 
-    const result = dropPiece(board, col, "red");
+    const result = dropPiece(board, col, currentPlayer);
     if (!result) return;
 
     setBoard(result.newBoard);
+    setTeachingHint(null);
 
     const winResult = checkWinner(result.newBoard, result.row, col);
     if (winResult) {
       setWinner(winResult.winner);
       setWinningCells(winResult.cells);
-      setScores((prev) => ({ ...prev, player: prev.player + 1 }));
-      toast.success("You win! 🎉");
+      if (currentPlayer === "red") {
+        setScores((prev) => ({ ...prev, player1: prev.player1 + 1 }));
+        toast.success(gameMode === "local" ? "Red wins! 🎉" : "You win! 🎉");
+      } else {
+        setScores((prev) => ({ ...prev, player2: prev.player2 + 1 }));
+        toast.success(gameMode === "local" ? "Yellow wins! 🎉" : "AI wins!");
+      }
       return;
     }
 
@@ -242,25 +320,29 @@ export default function ConnectFour() {
       return;
     }
 
-    setCurrentPlayer("yellow");
+    setCurrentPlayer(currentPlayer === "red" ? "yellow" : "red");
   };
 
   // AI move effect
   useEffect(() => {
-    if (currentPlayer === "yellow" && !winner) {
+    if (gameMode === "ai" && currentPlayer === "yellow" && !winner && gameStarted) {
       setIsAIThinking(true);
       const timer = setTimeout(() => {
-        const aiCol = getAIMove(board);
+        const { col: aiCol, explanation } = getAIMove(board);
         if (aiCol !== -1) {
           const result = dropPiece(board, aiCol, "yellow");
           if (result) {
             setBoard(result.newBoard);
 
+            if (aiPersonality === "teaching" && explanation) {
+              setTeachingHint(explanation);
+            }
+
             const winResult = checkWinner(result.newBoard, result.row, aiCol);
             if (winResult) {
               setWinner(winResult.winner);
               setWinningCells(winResult.cells);
-              setScores((prev) => ({ ...prev, ai: prev.ai + 1 }));
+              setScores((prev) => ({ ...prev, player2: prev.player2 + 1 }));
               toast.error("AI wins! Try again.");
             } else if (isBoardFull(result.newBoard)) {
               setWinner("draw");
@@ -276,7 +358,15 @@ export default function ConnectFour() {
 
       return () => clearTimeout(timer);
     }
-  }, [currentPlayer, winner]);
+  }, [currentPlayer, winner, gameStarted, gameMode]);
+
+  const handleStartGame = (mode: GameMode, diff: Difficulty, personality: AIPersonality) => {
+    setGameMode(mode);
+    setDifficulty(diff);
+    setAIPersonality(personality);
+    setGameStarted(true);
+    resetGame();
+  };
 
   const resetGame = () => {
     setBoard(Array(ROWS).fill(null).map(() => Array(COLS).fill(null)));
@@ -284,17 +374,52 @@ export default function ConnectFour() {
     setWinner(null);
     setWinningCells([]);
     setIsAIThinking(false);
+    setTeachingHint(null);
+  };
+
+  const backToModeSelect = () => {
+    setGameStarted(false);
+    setScores({ player1: 0, player2: 0, draws: 0 });
+    resetGame();
   };
 
   const isWinningCell = (row: number, col: number): boolean => {
     return winningCells.some(([r, c]) => r === row && c === col);
   };
 
-  return (
-    <DashboardLayout>
-      <div className="space-y-6 max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+  const getModeIcon = () => {
+    switch (gameMode) {
+      case "ai": return <Brain className="w-3 h-3" />;
+      case "local": return <Users className="w-3 h-3" />;
+      case "online": return <Wifi className="w-3 h-3" />;
+      case "intrasystem": return <Building2 className="w-3 h-3" />;
+    }
+  };
+
+  const getModeLabel = () => {
+    switch (gameMode) {
+      case "ai": return `vs AI (${difficulty})`;
+      case "local": return "Local 2P";
+      case "online": return "Online";
+      case "intrasystem": return "House Battle";
+    }
+  };
+
+  const getPlayer1Label = () => {
+    if (gameMode === "local") return "Red";
+    return "You (Red)";
+  };
+
+  const getPlayer2Label = () => {
+    if (gameMode === "local") return "Yellow";
+    if (gameMode === "ai") return `AI (${aiPersonality})`;
+    return "Opponent (Yellow)";
+  };
+
+  if (!gameStarted) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6 max-w-2xl mx-auto">
           <div className="flex items-center gap-4">
             <Link href="/game-center">
               <Button variant="ghost" size="icon">
@@ -306,18 +431,55 @@ export default function ConnectFour() {
               <p className="text-sm text-muted-foreground">Get 4 in a row to win</p>
             </div>
           </div>
+          
+          <GameModeSelector
+            gameName="Connect Four"
+            onStartGame={handleStartGame}
+            supportedModes={["ai", "local", "online", "intrasystem"]}
+          />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  return (
+    <DashboardLayout>
+      <div className="space-y-6 max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" onClick={backToModeSelect}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Connect Four</h1>
+              <p className="text-sm text-muted-foreground">Get 4 in a row to win</p>
+            </div>
+          </div>
           <Badge variant="outline" className="gap-1">
-            <Brain className="w-3 h-3" />
-            {difficulty === "easy" ? "Easy" : difficulty === "medium" ? "Medium" : "Hard"}
+            {getModeIcon()}
+            {getModeLabel()}
           </Badge>
         </div>
+
+        {/* Teaching Hint */}
+        {aiPersonality === "teaching" && teachingHint && (
+          <Card className="border-blue-500/50 bg-blue-500/10">
+            <CardContent className="py-3">
+              <div className="flex items-center gap-2">
+                <Lightbulb className="w-5 h-5 text-blue-500" />
+                <p className="text-sm">{teachingHint}</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Scores */}
         <div className="grid grid-cols-3 gap-4">
           <Card>
             <CardContent className="pt-4 text-center">
-              <p className="text-3xl font-bold text-red-500">{scores.player}</p>
-              <p className="text-sm text-muted-foreground">You (Red)</p>
+              <p className="text-3xl font-bold text-red-500">{scores.player1}</p>
+              <p className="text-sm text-muted-foreground">{getPlayer1Label()}</p>
             </CardContent>
           </Card>
           <Card>
@@ -328,8 +490,8 @@ export default function ConnectFour() {
           </Card>
           <Card>
             <CardContent className="pt-4 text-center">
-              <p className="text-3xl font-bold text-yellow-500">{scores.ai}</p>
-              <p className="text-sm text-muted-foreground">AI (Yellow)</p>
+              <p className="text-3xl font-bold text-yellow-500">{scores.player2}</p>
+              <p className="text-sm text-muted-foreground">{getPlayer2Label()}</p>
             </CardContent>
           </Card>
         </div>
@@ -346,17 +508,26 @@ export default function ConnectFour() {
                     ) : winner === "red" ? (
                       <>
                         <Trophy className="w-5 h-5 text-yellow-500" />
-                        You Win!
+                        {gameMode === "local" ? "Red Wins!" : "You Win!"}
                       </>
                     ) : (
-                      "AI Wins!"
+                      <>
+                        <Trophy className="w-5 h-5 text-yellow-500" />
+                        {gameMode === "local" ? "Yellow Wins!" : "AI Wins!"}
+                      </>
                     )
-                  ) : currentPlayer === "red" ? (
-                    "Your Turn"
-                  ) : (
+                  ) : isAIThinking ? (
                     <>
                       <Zap className="w-5 h-5 animate-pulse" />
                       AI Thinking...
+                    </>
+                  ) : (
+                    <>
+                      <div className={`w-4 h-4 rounded-full ${currentPlayer === "red" ? "bg-red-500" : "bg-yellow-400"}`} />
+                      {gameMode === "local" 
+                        ? `${currentPlayer === "red" ? "Red" : "Yellow"}'s Turn`
+                        : currentPlayer === "red" ? "Your Turn" : "AI's Turn"
+                      }
                     </>
                   )}
                 </CardTitle>
@@ -364,16 +535,6 @@ export default function ConnectFour() {
                   {winner ? "Click 'New Game' to play again" : "Click a column to drop your piece"}
                 </CardDescription>
               </div>
-              <Select value={difficulty} onValueChange={(v) => setDifficulty(v as Difficulty)}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="easy">Easy</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="hard">Hard</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </CardHeader>
           <CardContent>
@@ -386,7 +547,7 @@ export default function ConnectFour() {
                       <button
                         key={`${rowIdx}-${colIdx}`}
                         onClick={() => handleColumnClick(colIdx)}
-                        disabled={!!winner || currentPlayer !== "red" || isAIThinking}
+                        disabled={!!winner || isAIThinking || (gameMode === "ai" && currentPlayer !== "red")}
                         className={`
                           w-10 h-10 md:w-12 md:h-12 rounded-full
                           transition-all duration-200
@@ -411,6 +572,9 @@ export default function ConnectFour() {
                   <RotateCcw className="w-4 h-4" />
                   New Game
                 </Button>
+                <Button onClick={backToModeSelect} variant="ghost">
+                  Change Mode
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -422,7 +586,7 @@ export default function ConnectFour() {
             <CardTitle className="text-lg">How to Play</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
-            <p>• You play as Red, the AI plays as Yellow</p>
+            <p>• {gameMode === "local" ? "Red plays first, then Yellow" : "You play as Red, the AI plays as Yellow"}</p>
             <p>• Click any column to drop your piece</p>
             <p>• Pieces fall to the lowest available spot</p>
             <p>• Connect 4 pieces in a row (horizontal, vertical, or diagonal) to win</p>

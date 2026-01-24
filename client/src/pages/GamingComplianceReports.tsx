@@ -81,8 +81,32 @@ export default function GamingComplianceReports() {
     }
   };
 
-  const handleExportReport = () => {
-    toast.success("Report export coming soon!");
+  const exportCSVMutation = trpc.employeeGaming.exportComplianceCSV.useQuery({}, {
+    enabled: false,
+  });
+
+  const handleExportCSV = async () => {
+    try {
+      const result = await exportCSVMutation.refetch();
+      if (result.data) {
+        const blob = new Blob([result.data.content], { type: result.data.mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = result.data.filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast.success("CSV report downloaded!");
+      }
+    } catch (error) {
+      toast.error("Failed to export report");
+    }
+  };
+
+  const handleExportPDF = async () => {
+    toast.info("PDF export coming soon - use CSV for now");
   };
 
   // Calculate overall stats
@@ -119,9 +143,9 @@ export default function GamingComplianceReports() {
                 <SelectItem value="yearly">This Year</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" onClick={handleExportReport}>
+            <Button variant="outline" onClick={handleExportCSV}>
               <Download className="w-4 h-4 mr-2" />
-              Export
+              Export CSV
             </Button>
           </div>
         </div>

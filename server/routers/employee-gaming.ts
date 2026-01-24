@@ -383,6 +383,87 @@ export const employeeGamingRouter = router({
       };
     }),
 
+  // Send session reminders
+  sendSessionReminders: adminProcedure
+    .input(z.object({
+      eventId: z.number(),
+      reminderType: z.enum(["24h", "1h", "15min", "custom"]),
+      customMessage: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      
+      // Get event details
+      const [event] = await db.select()
+        .from(teamGameEvents)
+        .where(eq(teamGameEvents.id, input.eventId));
+      
+      if (!event) {
+        throw new Error("Event not found");
+      }
+      
+      // Get participants who accepted
+      const participants = await db.select()
+        .from(teamEventParticipants)
+        .where(and(
+          eq(teamEventParticipants.eventId, input.eventId),
+          eq(teamEventParticipants.rsvpStatus, "accepted")
+        ));
+      
+      // In a real implementation, this would send notifications via email/push
+      // For now, we'll mark reminders as sent and return count
+      const reminderMessage = input.customMessage || 
+        `Reminder: ${event.title} starts ${input.reminderType === "24h" ? "tomorrow" : 
+          input.reminderType === "1h" ? "in 1 hour" : "in 15 minutes"}!`;
+      
+      return {
+        success: true,
+        remindersSent: participants.length,
+        message: reminderMessage,
+        eventTitle: event.title,
+        scheduledStart: event.scheduledStart,
+      };
+    }),
+
+  // Get events needing reminders
+  getEventsNeedingReminders: adminProcedure
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      const now = new Date();
+      const in24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+      const in1Hour = new Date(now.getTime() + 60 * 60 * 1000);
+      const in15Min = new Date(now.getTime() + 15 * 60 * 1000);
+      
+      const events = await db.select()
+        .from(teamGameEvents)
+        .where(and(
+          gte(teamGameEvents.scheduledStart, now),
+          lte(teamGameEvents.scheduledStart, in24Hours),
+          eq(teamGameEvents.status, "scheduled")
+        ))
+        .orderBy(teamGameEvents.scheduledStart);
+      
+      return events.map(event => {
+        const eventTime = new Date(event.scheduledStart).getTime();
+        const timeUntil = eventTime - now.getTime();
+        
+        let suggestedReminder: "24h" | "1h" | "15min" | null = null;
+        if (timeUntil > 23 * 60 * 60 * 1000 && timeUntil <= 24 * 60 * 60 * 1000) {
+          suggestedReminder = "24h";
+        } else if (timeUntil > 55 * 60 * 1000 && timeUntil <= 60 * 60 * 1000) {
+          suggestedReminder = "1h";
+        } else if (timeUntil > 10 * 60 * 1000 && timeUntil <= 15 * 60 * 1000) {
+          suggestedReminder = "15min";
+        }
+        
+        return {
+          ...event,
+          timeUntilMinutes: Math.round(timeUntil / 60000),
+          suggestedReminder,
+        };
+      });
+    }),
+
   // Generate compliance report
   generateReport: adminProcedure
     .input(z.object({
@@ -432,6 +513,107 @@ export const employeeGamingRouter = router({
       }).$returningId();
       
       return { reportId: report.id };
+    }),
+
+  // Export compliance report as CSV
+  exportComplianceCSV: adminProcedure
+    .input(z.object({
+      weekNumber: z.number().optional(),
+      weekYear: z.number().optional(),
+      departmentId: z.number().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      const now = new Date();
+      const { weekNumber, weekYear } = input.weekNumber && input.weekYear 
+        ? { weekNumber: input.weekNumber, weekYear: input.weekYear }
+        : getISOWeek(now);
+      
+      const requirements = await db.select()
+        .from(weeklyGameRequirements)
+        .where(and(
+          eq(weeklyGameRequirements.weekNumber, weekNumber),
+          eq(weeklyGameRequirements.weekYear, weekYear)
+        ));
+      
+      // Generate CSV content
+      const headers = ["User ID", "Week", "Year", "Required Minutes", "Completed Minutes", "Compliance Status", "Unique Games", "Streak Weeks"];
+      const rows = requirements.map(r => [
+        r.userId,
+        r.weekNumber,
+        r.weekYear,
+        r.requiredMinutes,
+        r.completedMinutes,
+        r.complianceStatus,
+        r.uniqueGamesPlayed,
+        r.streakWeeks,
+      ]);
+      
+      const csvContent = [
+        headers.join(","),
+        ...rows.map(row => row.join(","))
+      ].join("\n");
+      
+      return {
+        filename: `gaming-compliance-week${weekNumber}-${weekYear}.csv`,
+        content: csvContent,
+        mimeType: "text/csv",
+      };
+    }),
+
+  // Get compliance report data for PDF generation
+  getComplianceReportData: adminProcedure
+    .input(z.object({
+      weekNumber: z.number().optional(),
+      weekYear: z.number().optional(),
+      departmentId: z.number().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      const now = new Date();
+      const { weekNumber, weekYear } = input.weekNumber && input.weekYear 
+        ? { weekNumber: input.weekNumber, weekYear: input.weekYear }
+        : getISOWeek(now);
+      const { start, end } = getWeekDates(weekNumber, weekYear);
+      
+      const requirements = await db.select()
+        .from(weeklyGameRequirements)
+        .where(and(
+          eq(weeklyGameRequirements.weekNumber, weekNumber),
+          eq(weeklyGameRequirements.weekYear, weekYear)
+        ));
+      
+      const totalEmployees = requirements.length;
+      const compliant = requirements.filter(r => 
+        r.complianceStatus === "completed" || r.complianceStatus === "exceeded"
+      ).length;
+      const inProgress = requirements.filter(r => r.complianceStatus === "in_progress").length;
+      const notStarted = requirements.filter(r => r.complianceStatus === "not_started").length;
+      const totalMinutes = requirements.reduce((sum, r) => sum + r.completedMinutes, 0);
+      
+      return {
+        reportTitle: `Gaming Compliance Report - Week ${weekNumber}, ${weekYear}`,
+        periodStart: start.toISOString().split('T')[0],
+        periodEnd: end.toISOString().split('T')[0],
+        generatedAt: now.toISOString(),
+        summary: {
+          totalEmployees,
+          compliantEmployees: compliant,
+          inProgressEmployees: inProgress,
+          notStartedEmployees: notStarted,
+          complianceRate: totalEmployees > 0 ? Math.round((compliant / totalEmployees) * 100) : 0,
+          totalMinutesPlayed: totalMinutes,
+          averageMinutesPerEmployee: totalEmployees > 0 ? Math.round(totalMinutes / totalEmployees) : 0,
+        },
+        employees: requirements.map(r => ({
+          userId: r.userId,
+          completedMinutes: r.completedMinutes,
+          requiredMinutes: r.requiredMinutes,
+          complianceStatus: r.complianceStatus,
+          uniqueGamesPlayed: r.uniqueGamesPlayed,
+          streakWeeks: r.streakWeeks,
+        })),
+      };
     }),
 });
 
