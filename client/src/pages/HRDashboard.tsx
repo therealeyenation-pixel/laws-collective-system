@@ -187,10 +187,10 @@ export default function HRDashboard() {
                     Training Programs
                   </Button>
                 </Link>
-                <Link href="/family-onboarding">
+                <Link href="/employee-directory?department=human%20resources">
                   <Button variant="outline" className="w-full gap-2">
                     <Users className="w-4 h-4" />
-                    Team Directory
+                    HR Team Directory
                   </Button>
                 </Link>
               </div>

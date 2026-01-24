@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
+import { useSearch } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -69,9 +70,21 @@ const WORKER_TYPES = [
 ];
 
 export default function EmployeeDirectory() {
+  const searchParams = useSearch();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEntity, setSelectedEntity] = useState<string>("all");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
+  
+  // Handle URL department parameter
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    const deptParam = params.get("department");
+    if (deptParam) {
+      // Capitalize first letter for display matching
+      const formattedDept = deptParam.charAt(0).toUpperCase() + deptParam.slice(1).toLowerCase();
+      setSelectedDepartment(formattedDept);
+    }
+  }, [searchParams]);
   const [selectedStatus, setSelectedStatus] = useState<string>("active");
   const [selectedWorkerType, setSelectedWorkerType] = useState<string>("all");
   const [showAddDialog, setShowAddDialog] = useState(false);

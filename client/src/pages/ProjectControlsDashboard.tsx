@@ -284,7 +284,15 @@ export default function ProjectControlsDashboard() {
 
           <TabsContent value="team" className="space-y-4 mt-4">
             <Card className="p-6">
-              <h3 className="font-semibold text-foreground mb-4">Department Team</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground">Department Team</h3>
+                <Link href="/employee-directory?department=project%20controls">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Users className="w-4 h-4" />
+                    View Full Directory
+                  </Button>
+                </Link>
+              </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-200 dark:border-indigo-800">
                   <div className="flex items-center gap-3">
@@ -310,6 +318,14 @@ export default function ProjectControlsDashboard() {
                   </div>
                   <Badge variant="secondary">Open</Badge>
                 </div>
+              </div>
+              <div className="mt-4 pt-4 border-t">
+                <Link href="/employee-directory?department=project%20controls">
+                  <Button className="w-full gap-2">
+                    <Users className="w-4 h-4" />
+                    View All Project Controls Team Members
+                  </Button>
+                </Link>
               </div>
             </Card>
           </TabsContent>

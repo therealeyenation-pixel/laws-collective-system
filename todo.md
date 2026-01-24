@@ -6546,3 +6546,29 @@ Three main approaches available:
 - [x] Link Documentary/Podcast to Real-Eye-Nation brand
 - [x] Add routes for /documentary and /podcast pages
 - [x] Update trademark search to show entity-specific class recommendations
+
+
+## Phase 63: Department Team Links Fix
+- [x] Link department "Team" buttons to Employee Directory filtered by department
+- [x] Update Finance dashboard Team link → /employee-directory?department=finance
+- [x] Update HR dashboard Team link → /employee-directory?department=hr (no Team tab - has Positions tab instead)
+- [x] Update Legal dashboard Team link → /employee-directory?department=legal
+- [x] Update IT dashboard Team link → /employee-directory?department=it
+- [x] Update Operations dashboard Team link → /employee-directory?department=operations (no Team tab)
+- [x] Update Marketing dashboard Team link → /employee-directory?department=marketing (no Team tab)
+- [x] Update Procurement dashboard Team link → /employee-directory?department=procurement
+- [x] Update Contracts dashboard Team link → /employee-directory?department=contracts
+- [x] Update Property dashboard Team link → /employee-directory?department=property
+- [x] Update Real Estate dashboard Team link → /employee-directory?department=real-estate
+- [x] Update Project Controls dashboard Team link → /employee-directory?department=project-controls
+- [x] Update all other department dashboards with Team links
+  - [x] Business Dashboard
+  - [x] Design Dashboard
+  - [x] Education Dashboard
+  - [x] Health Dashboard
+  - [x] Media Dashboard
+  - [x] Platform Admin Dashboard
+  - [x] Purchasing Dashboard
+  - [x] QA/QC Dashboard
+- [x] Ensure Employee Directory supports department query parameter filtering
+- [ ] Test all department Team links navigate correctly

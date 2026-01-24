@@ -295,12 +295,20 @@ export default function BusinessDashboard() {
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-foreground">Department Team</h3>
-                <Link href="/positions">
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <UserPlus className="w-4 h-4" />
-                    View All Positions
-                  </Button>
-                </Link>
+                <div className="flex gap-2">
+                  <Link href="/employee-directory?department=business">
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Users className="w-4 h-4" />
+                      View Directory
+                    </Button>
+                  </Link>
+                  <Link href="/positions">
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <UserPlus className="w-4 h-4" />
+                      Positions
+                    </Button>
+                  </Link>
+                </div>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
@@ -320,6 +328,14 @@ export default function BusinessDashboard() {
                     All new employees start in Business Department before transitioning to specialized roles
                   </p>
                 </div>
+              </div>
+              <div className="mt-4 pt-4 border-t">
+                <Link href="/employee-directory?department=business">
+                  <Button className="w-full gap-2">
+                    <Users className="w-4 h-4" />
+                    View All Business Team Members
+                  </Button>
+                </Link>
               </div>
             </Card>
           </TabsContent>

@@ -251,7 +251,15 @@ export default function ContractsDashboard() {
 
           <TabsContent value="team" className="space-y-4 mt-4">
             <Card className="p-6">
-              <h3 className="font-semibold text-foreground mb-4">Department Team</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground">Department Team</h3>
+                <Link href="/employee-directory?department=contracts">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Users className="w-4 h-4" />
+                    View Full Directory
+                  </Button>
+                </Link>
+              </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                   <div className="flex items-center gap-3">
@@ -277,6 +285,14 @@ export default function ContractsDashboard() {
                   </div>
                   <Badge variant="secondary">Open</Badge>
                 </div>
+              </div>
+              <div className="mt-4 pt-4 border-t">
+                <Link href="/employee-directory?department=contracts">
+                  <Button className="w-full gap-2">
+                    <Users className="w-4 h-4" />
+                    View All Contracts Team Members
+                  </Button>
+                </Link>
               </div>
             </Card>
           </TabsContent>
