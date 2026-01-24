@@ -13772,3 +13772,220 @@ export const progressionEvents = mysqlTable("progression_events", {
 
 export type ProgressionEvent = typeof progressionEvents.$inferSelect;
 export type InsertProgressionEvent = typeof progressionEvents.$inferInsert;
+
+
+// ============================================================================
+// TRIAL/DEMO SYSTEM TABLES
+// ============================================================================
+
+/**
+ * Trial Users - Separate from main OAuth users for committee member trials
+ * Simple email signup with auto-generated password
+ */
+export const trialUsers = mysqlTable("trial_users", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  passwordHash: varchar("passwordHash", { length: 255 }).notNull(),
+  organization: varchar("organization", { length: 255 }),
+  role: varchar("role", { length: 100 }), // Their role/title
+  
+  // Trial status
+  status: mysqlEnum("status", ["pending", "active", "expired", "converted"]).default("pending").notNull(),
+  trialStartedAt: timestamp("trialStartedAt"),
+  trialExpiresAt: timestamp("trialExpiresAt"),
+  
+  // Engagement tracking
+  totalSessions: int("totalSessions").default(0).notNull(),
+  totalTimeSpentSeconds: int("totalTimeSpentSeconds").default(0).notNull(),
+  lastLoginAt: timestamp("lastLoginAt"),
+  
+  // Conversion tracking
+  convertedToUserId: int("convertedToUserId"), // If they become a real user
+  convertedAt: timestamp("convertedAt"),
+  
+  // Communication preferences
+  wantsUpdates: boolean("wantsUpdates").default(false).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrialUser = typeof trialUsers.$inferSelect;
+export type InsertTrialUser = typeof trialUsers.$inferInsert;
+
+/**
+ * Trial Sessions - Track each login session for analytics
+ */
+export const trialSessions = mysqlTable("trial_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  trialUserId: int("trialUserId").notNull(),
+  
+  // Session timing
+  sessionStart: timestamp("sessionStart").defaultNow().notNull(),
+  sessionEnd: timestamp("sessionEnd"),
+  durationSeconds: int("durationSeconds"),
+  
+  // Session metadata
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  deviceType: varchar("deviceType", { length: 50 }), // desktop, mobile, tablet
+  browser: varchar("browser", { length: 50 }),
+  
+  // Engagement summary (updated at session end)
+  pagesVisited: int("pagesVisited").default(0).notNull(),
+  featuresExplored: json("featuresExplored"), // Array of feature names
+  actionsPerformed: int("actionsPerformed").default(0).notNull(),
+});
+
+export type TrialSession = typeof trialSessions.$inferSelect;
+export type InsertTrialSession = typeof trialSessions.$inferInsert;
+
+/**
+ * Trial Page Views - Detailed page-by-page tracking
+ */
+export const trialPageViews = mysqlTable("trial_page_views", {
+  id: int("id").autoincrement().primaryKey(),
+  trialUserId: int("trialUserId").notNull(),
+  trialSessionId: int("trialSessionId").notNull(),
+  
+  // Page details
+  pagePath: varchar("pagePath", { length: 500 }).notNull(),
+  pageTitle: varchar("pageTitle", { length: 255 }),
+  
+  // Timing
+  enteredAt: timestamp("enteredAt").defaultNow().notNull(),
+  exitedAt: timestamp("exitedAt"),
+  timeOnPageSeconds: int("timeOnPageSeconds"),
+  
+  // Interaction
+  scrollDepthPercent: int("scrollDepthPercent"), // How far they scrolled
+  clickCount: int("clickCount").default(0).notNull(),
+  
+  // Referrer within app
+  previousPage: varchar("previousPage", { length: 500 }),
+});
+
+export type TrialPageView = typeof trialPageViews.$inferSelect;
+export type InsertTrialPageView = typeof trialPageViews.$inferInsert;
+
+/**
+ * Trial Feedback - Ratings and comments from trial users
+ */
+export const trialFeedback = mysqlTable("trial_feedback", {
+  id: int("id").autoincrement().primaryKey(),
+  trialUserId: int("trialUserId").notNull(),
+  trialSessionId: int("trialSessionId"),
+  
+  // Feedback type
+  feedbackType: mysqlEnum("feedbackType", [
+    "overall_rating",      // Overall system rating
+    "feature_rating",      // Rating for specific feature
+    "bug_report",          // Something broken
+    "suggestion",          // Feature request
+    "exit_survey",         // When leaving trial
+    "inline_comment"       // Comment on specific page
+  ]).notNull(),
+  
+  // Rating (1-5 stars)
+  rating: int("rating"), // 1-5, null if just comment
+  
+  // Context
+  featureName: varchar("featureName", { length: 100 }), // Which feature rated
+  pagePath: varchar("pagePath", { length: 500 }), // Where feedback given
+  
+  // Content
+  comment: text("comment"),
+  
+  // Follow-up
+  wantsResponse: boolean("wantsResponse").default(false).notNull(),
+  responseStatus: mysqlEnum("responseStatus", ["pending", "responded", "closed"]).default("pending"),
+  respondedAt: timestamp("respondedAt"),
+  respondedBy: int("respondedBy"),
+  responseNote: text("responseNote"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TrialFeedback = typeof trialFeedback.$inferSelect;
+export type InsertTrialFeedback = typeof trialFeedback.$inferInsert;
+
+/**
+ * Trial Feature Exploration - Track which features trial users explore
+ */
+export const trialFeatureExploration = mysqlTable("trial_feature_exploration", {
+  id: int("id").autoincrement().primaryKey(),
+  trialUserId: int("trialUserId").notNull(),
+  
+  // Feature identification
+  featureCategory: varchar("featureCategory", { length: 100 }).notNull(), // e.g., "house_management", "donations", "simulators"
+  featureName: varchar("featureName", { length: 100 }).notNull(), // e.g., "create_house", "make_donation"
+  
+  // Exploration depth
+  firstExploredAt: timestamp("firstExploredAt").defaultNow().notNull(),
+  lastExploredAt: timestamp("lastExploredAt").defaultNow().notNull(),
+  explorationCount: int("explorationCount").default(1).notNull(),
+  totalTimeSeconds: int("totalTimeSeconds").default(0).notNull(),
+  
+  // Completion tracking
+  completedAction: boolean("completedAction").default(false).notNull(), // Did they complete the feature action?
+  completedAt: timestamp("completedAt"),
+});
+
+export type TrialFeatureExploration = typeof trialFeatureExploration.$inferSelect;
+export type InsertTrialFeatureExploration = typeof trialFeatureExploration.$inferInsert;
+
+/**
+ * Trial Sample Data - Pre-populated data for each trial user's sandbox
+ */
+export const trialSampleData = mysqlTable("trial_sample_data", {
+  id: int("id").autoincrement().primaryKey(),
+  trialUserId: int("trialUserId").notNull(),
+  
+  // Sample data references
+  sampleHouseId: int("sampleHouseId"), // Their demo House
+  sampleBusinessId: int("sampleBusinessId"), // Their demo business
+  
+  // Data generation status
+  dataGeneratedAt: timestamp("dataGeneratedAt"),
+  dataTemplate: varchar("dataTemplate", { length: 50 }).default("standard").notNull(), // Which template used
+  
+  // Isolation flag
+  isIsolated: boolean("isIsolated").default(true).notNull(), // Data only visible to this trial user
+});
+
+export type TrialSampleData = typeof trialSampleData.$inferSelect;
+export type InsertTrialSampleData = typeof trialSampleData.$inferInsert;
+
+/**
+ * Trial Exit Survey - Detailed survey when trial user leaves
+ */
+export const trialExitSurveys = mysqlTable("trial_exit_surveys", {
+  id: int("id").autoincrement().primaryKey(),
+  trialUserId: int("trialUserId").notNull(),
+  
+  // Overall impression
+  overallRating: int("overallRating"), // 1-5
+  wouldRecommend: int("wouldRecommend"), // 1-10 NPS score
+  
+  // Specific ratings
+  easeOfUseRating: int("easeOfUseRating"), // 1-5
+  featureCompletenessRating: int("featureCompletenessRating"), // 1-5
+  designRating: int("designRating"), // 1-5
+  valuePropositionRating: int("valuePropositionRating"), // 1-5
+  
+  // Open questions
+  mostUsefulFeature: text("mostUsefulFeature"),
+  missingFeatures: text("missingFeatures"),
+  biggestConcerns: text("biggestConcerns"),
+  additionalComments: text("additionalComments"),
+  
+  // Intent
+  interestedInJoining: mysqlEnum("interestedInJoining", ["yes", "no", "maybe"]),
+  preferredFollowUp: mysqlEnum("preferredFollowUp", ["email", "call", "demo", "none"]),
+  
+  completedAt: timestamp("completedAt").defaultNow().notNull(),
+});
+
+export type TrialExitSurvey = typeof trialExitSurveys.$inferSelect;
+export type InsertTrialExitSurvey = typeof trialExitSurveys.$inferInsert;

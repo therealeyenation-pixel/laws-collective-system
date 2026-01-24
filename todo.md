@@ -6413,69 +6413,122 @@ Three main approaches available:
 - [ ] Include terms and membership agreement
 - [ ] Submit to pending approval queue
 
+## Phase 53: Trial/Demo System
+- [x] Create trial_users table (email, name, password_hash, created_at, last_login)
+- [x] Create trial_sessions table (user_id, session_start, session_end, pages_visited, duration)
+- [x] Create trial_feedback table (user_id, rating, comment, feature, created_at)
+- [x] Create trial_page_views table (user_id, page, timestamp, duration)
+- [x] Build trial signup page with email + name form
+- [x] Implement auto-generated password sent via email
+- [x] Create trial login flow separate from main OAuth
+- [x] Build isolated sandbox data per trial user (clone sample House)
+- [x] Add persistent feedback widget on every page for trial users
+- [x] Create rating system (1-5 stars) per feature
+- [x] Add comment box for open feedback
+- [x] Optional email capture for updates
+- [x] Exit survey prompt when leaving demo
+- [x] Build trial analytics dashboard for admin
+- [x] Track session duration, pages visited, features explored
+- [x] Show trial user engagement metrics
+- [x] Write tests for trial system
 
-## Phase 51: Department Bots & Donor Acquisition Algorithms
+## Phase 54: Land & Buildings Acquisition Fund
+- [ ] Add fund_categories table with Land & Buildings Acquisition
+- [ ] Update donation form with fund designation dropdown
+- [ ] Add grant allocation field for fund assignment
+- [ ] Create fund balance tracking in treasury
+- [ ] Build fund-specific dashboard widget
+- [ ] Add transfer rules between funds
+- [ ] Update financial reports to show fund breakdowns
 
-### Donor Acquisition Bot (Marketing/Fundraising)
-- [ ] Create donor identification algorithms (wealth indicators, philanthropic alignment)
-- [ ] Build automated outreach sequences (email, social)
-- [ ] Implement donor scoring and prioritization
-- [ ] Add conversion optimization (A/B testing, optimal ask amounts)
-- [ ] Create retention and re-engagement automation
-- [ ] Integrate with donation pipeline
+## Phase 55: Real Property System (Land Trust + House-Linked)
+- [ ] Create property_assets table (land, buildings, improvements)
+- [ ] Create property_donations table (appraisal, deed, donor info)
+- [ ] Create house_property_assignments table
+- [ ] Create property_usage_agreements table (ground leases)
+- [ ] Create property_improvements table (credits tracking)
+- [ ] Build property asset registry UI
+- [ ] Create donated property intake workflow
+- [ ] Implement House-property assignment management
+- [ ] Build usage agreement/ground lease generation
+- [ ] Create Property Council governance structure
+- [ ] Add improvement credits system
+- [ ] Define exit provisions for Houses leaving collective
+- [ ] Build property fund accounting separate from operating
 
-### Department-Specific Bots
-- [ ] HR Bot - recruitment, onboarding, compliance reminders
-- [ ] Finance Bot - invoice processing, expense tracking, reporting
-- [ ] Operations Bot - task scheduling, resource allocation
-- [ ] Grants Bot - deadline tracking, application assistance
-- [ ] Legal Bot - document review, compliance monitoring
-- [ ] Academy Bot - course recommendations, progress tracking
+## Phase 56: Expanded Asset Management
+- [ ] Extend property_assets for equipment, licenses, vehicles
+- [ ] Create equipment_assignments table (who has what)
+- [ ] Create software_licenses table (seats, expiration, users)
+- [ ] Create remote_office_equipment table
+- [ ] Build asset registry dashboard showing all categories
+- [ ] Add equipment checkout/return workflow
+- [ ] Track license utilization and renewals
+- [ ] Implement depreciation tracking
+- [ ] Add maintenance scheduling
 
-### Agents Dashboard Enhancement
-- [ ] Review existing Agents page structure
-- [ ] Add department bot management interface
-- [ ] Display bot activity logs and metrics
-- [ ] Add bot configuration and scheduling
-- [ ] Create bot performance analytics
+## Phase 57: Integrated Onboarding/Offboarding System
+- [ ] Create onboarding_workflows table
+- [ ] Create onboarding_tasks table (HR, IT, Property tasks)
+- [ ] Create onboarding_status table (tracking progress)
+- [ ] Build single-trigger onboarding from HR hire
+- [ ] Auto-generate IT tasks (accounts, software, access, VPN)
+- [ ] Auto-generate Property tasks (equipment selection, shipping)
+- [ ] Add department-specific training modules
+- [ ] Create status visibility dashboard across departments
+- [ ] Build offboarding mirror workflow
+- [ ] Track onboarding duration and bottlenecks
+- [ ] Write cross-functional onboarding simulator scenarios
+
+## Phase 58: Investment Portfolio Management (LuvLedger Integration)
+- [ ] Create investment_holdings table (ticker, shares, cost_basis)
+- [ ] Create investment_transactions table (buy, sell, dividend)
+- [ ] Create investment_proposals table (for meeting votes)
+- [ ] Add Investments tab to LuvLedger Finance dashboard
+- [ ] Build holdings tracker with real-time/delayed quotes
+- [ ] Implement cost basis and gains/losses calculation
+- [ ] Add dividend/distribution tracking
+- [ ] Create asset allocation visualization
+- [ ] Build performance vs. benchmark comparison
+- [ ] Add investment policy compliance checks
+- [ ] Create rebalancing alerts
+
+## Phase 59: Investment Governance (Meeting Integration)
+- [ ] Create investment proposal template
+- [ ] Add "Investment Proposals" as meeting agenda item type
+- [ ] Build proposal submission workflow
+- [ ] Implement Founding Members voting on investments
+- [ ] Configure governance rules (quorum, threshold, limits)
+- [ ] Auto-create holding record when vote passes
+- [ ] Link investments to meeting minutes and vote records
+- [ ] Build divestment voting process
+- [ ] Extend Finance Agent for investment queries
+- [ ] Create investment education simulator tie-in
 
 
-## Phase 52: Complete Department Agent System
+## Phase 60: Unified Portfolio with Tiered Governance
+- [ ] Add asset_risk_tier enum (cash, stablecoin, index, stock, volatile_crypto, speculative, property)
+- [ ] Create investment_policy table (max percentages, caps, thresholds)
+- [ ] Configure approval thresholds per risk tier
+- [ ] Integrate existing crypto wallets into LuvLedger Investments tab
+- [ ] Build unified portfolio view (cash, traditional, crypto, property)
+- [ ] Add real-time/delayed price feeds for all asset types
+- [ ] Create investment policy compliance checker
+- [ ] Auto-flag policy violations before execution
+- [ ] Build risk disclosure workflow for high-risk votes
+- [ ] Add cool-down period enforcement between major purchases
+- [ ] Create automatic rebalancing alerts
+- [ ] Build quarterly investment report generator
+- [ ] Document fiduciary duty language for governance
 
-### New Department Agents Added
-- [x] Legal Agent - contract review, 508 compliance, IP management
-- [x] IT Agent - technical support, system administration
-- [x] Contracts Agent - contract management, RFP responses
-- [x] Property Agent - property management, LAND pillar support
-- [x] Real Estate Agent - market analysis, acquisitions
-- [x] Project Controls Agent - schedule/budget tracking, earned value
-- [x] Procurement Agent - sourcing, supplier management
 
-### Agent Topics & Prompts
-- [ ] Add AGENT_TOPICS for Legal, IT, Contracts, Property, Real Estate, Project Controls, Procurement
-- [ ] Add AGENT_PROMPTS for all new agents
-
-### Department Dashboard Pages
-- [ ] Create /dept/legal - Legal Department Dashboard
-- [ ] Create /dept/it - IT Department Dashboard
-- [ ] Create /dept/contracts - Contracts Department Dashboard
-- [ ] Create /dept/property - Property Management Dashboard
-- [ ] Create /dept/real-estate - Real Estate Department Dashboard
-- [ ] Create /dept/project-controls - Project Controls Dashboard
-- [ ] Create /dept/procurement - Procurement Department Dashboard
-- [ ] Create /dept/operations - Operations Department Dashboard
-- [ ] Create /dept/finance - Finance Department Dashboard
-- [ ] Create /dept/media - Media Department Dashboard
-- [ ] Create /dept/marketing - Marketing Department Dashboard
-- [ ] Create /dept/hr - HR Department Dashboard
-- [ ] Create /dept/qaqc - QA/QC Department Dashboard
-- [ ] Create /dept/purchasing - Purchasing Department Dashboard
-- [ ] Create /dept/health - Health & Wellness Dashboard
-- [ ] Create /dept/design - Design Studio Dashboard
-
-### Agent-Dashboard Integration
-- [ ] Each department dashboard links to its agent
-- [ ] Agent pages link back to department dashboards
-- [ ] Department simulators accessible from dashboards
-- [ ] Bot activity logs displayed on dashboards
+## Phase 61: Offline-First System Verification
+- [ ] Verify service worker is registered and active
+- [ ] Test offline page load (app shell caching)
+- [ ] Test data entry while offline (IndexedDB storage)
+- [ ] Verify sync queue processes when reconnected
+- [ ] Test conflict resolution for offline edits
+- [ ] Document which features work offline vs. require connection
+- [ ] Add offline indicator in UI
+- [ ] Test PWA install experience
 

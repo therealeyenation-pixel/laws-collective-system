@@ -165,6 +165,9 @@ import PublicDonate from "@/pages/PublicDonate";
 import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
 import DonationThankYou from "@/pages/DonationThankYou";
 import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
+import TrialLanding from "@/pages/TrialLanding";
+import TrialDashboard from "@/pages/TrialDashboard";
+import TrialAnalytics from "@/pages/TrialAnalytics";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -283,6 +286,11 @@ function Router() {
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
+      
+      {/* Trial routes - separate authentication system */}
+      <Route path="/trial" component={TrialLanding} />
+      <Route path="/trial/dashboard" component={TrialDashboard} />
+      <Route path="/admin/trial-analytics">{() => <ProtectedRoute component={TrialAnalytics} minRole="admin" />}</Route>
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
