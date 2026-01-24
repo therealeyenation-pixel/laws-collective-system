@@ -6731,3 +6731,36 @@ Three main approaches available:
 - [x] Add priority/urgency indicators (recalls, warnings, alerts)
 - [x] Support agent-identified content in ticker feed
 - [x] Add ticker speed/pause controls
+
+
+## Phase 77: Government Actions Tracking System
+- [ ] Add government_actions table with agency, effective_date, deadline, action_type fields
+- [ ] Add government_agencies reference table (IRS, SBA, HHS, DOL, state agencies)
+- [ ] Add action_type enum (regulatory_change, grant_announcement, tax_update, licensing, labor_law, nonprofit_compliance)
+- [ ] Add affected_entities and affected_departments fields for impact tracking
+- [ ] Create government actions router with CRUD procedures
+- [ ] Add getByAgency, getByDeadline, getUpcoming procedures
+- [ ] Create GovernmentActionsWidget component for dashboards
+- [ ] Add high-priority styling for upcoming deadlines in Live Ticker
+- [ ] Integrate with SWOT (auto-classify as threat/opportunity)
+- [ ] Add compliance action item conversion (government action → task)
+- [ ] Create Government Actions Admin page for managing entries
+- [ ] Add deadline notification system
+- [ ] Seed initial government agencies and sample actions
+
+
+## Phase 78: Stock Ticker Widget & Portfolio Alerts
+- [ ] Create stock_watchlist table for tracking portfolio holdings and watchlist
+- [ ] Create stock_alerts table for price movement and event alerts
+- [ ] Create stock_price_history table for tracking price data
+- [ ] Build StockTickerWidget component with real-time price display
+- [ ] Add portfolio holdings display with gain/loss indicators
+- [ ] Create alert system for significant price movements (±5% daily)
+- [ ] Add earnings report date tracking and alerts
+- [ ] Add dividend announcement/ex-date alerts
+- [ ] Add SEC filing alerts (10-K, 10-Q, 8-K)
+- [ ] Add analyst rating change alerts
+- [ ] Create watchlist management UI
+- [ ] Integrate with Investment Dashboard
+- [ ] Add portfolio news feed filtered by holdings
+- [ ] Connect to stock data API for real-time quotes

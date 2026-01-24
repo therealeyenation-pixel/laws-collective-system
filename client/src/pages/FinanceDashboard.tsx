@@ -28,6 +28,8 @@ import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { ResourceLinks } from "@/components/ResourceLinks";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { StockTickerWidget } from "@/components/StockTickerWidget";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function FinanceDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -144,6 +146,12 @@ export default function FinanceDashboard() {
           </div>
         </div>
 
+        {/* Stock Ticker and Government Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <StockTickerWidget showStats showAlerts />
+          <GovernmentActionsWidget department="finance" showStats />
+        </div>
+
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
@@ -155,6 +163,10 @@ export default function FinanceDashboard() {
             <TabsTrigger value="resources">
               <BookOpen className="w-4 h-4 mr-2" />
               Resources
+            </TabsTrigger>
+            <TabsTrigger value="investments">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Investments
             </TabsTrigger>
           </TabsList>
 
@@ -369,6 +381,35 @@ export default function FinanceDashboard() {
               title="Finance Resources"
               description="Curated financial resources, regulatory updates, grant opportunities, and industry news"
             />
+          </TabsContent>
+
+          <TabsContent value="investments" className="mt-4 space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <StockTickerWidget showStats showAlerts />
+              <Card className="p-6">
+                <h3 className="font-semibold text-foreground mb-4">Investment Actions</h3>
+                <div className="space-y-3">
+                  <Link href="/investments">
+                    <Button className="w-full gap-2">
+                      <PieChart className="w-4 h-4" />
+                      Manage Portfolio
+                    </Button>
+                  </Link>
+                  <Link href="/investments/watchlist">
+                    <Button variant="outline" className="w-full gap-2">
+                      <TrendingUp className="w-4 h-4" />
+                      View Watchlist
+                    </Button>
+                  </Link>
+                  <Link href="/investments/alerts">
+                    <Button variant="outline" className="w-full gap-2">
+                      <BarChart3 className="w-4 h-4" />
+                      Alert Settings
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

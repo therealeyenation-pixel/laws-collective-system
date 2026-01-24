@@ -14745,3 +14745,358 @@ export const readingComplianceReports = mysqlTable("reading_compliance_reports",
 
 export type ReadingComplianceReport = typeof readingComplianceReports.$inferSelect;
 export type InsertReadingComplianceReport = typeof readingComplianceReports.$inferInsert;
+
+
+// ============================================================================
+// GOVERNMENT ACTIONS TRACKING SYSTEM
+// Track regulatory changes, grant announcements, tax updates, and compliance deadlines
+// ============================================================================
+
+/**
+ * Government Agencies - Reference table for tracking sources
+ */
+export const governmentAgencies = mysqlTable("government_agencies", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Agency identification
+  code: varchar("code", { length: 20 }).notNull(), // IRS, SBA, HHS, DOL, etc.
+  name: varchar("name", { length: 255 }).notNull(),
+  fullName: varchar("fullName", { length: 500 }),
+  
+  // Agency details
+  level: mysqlEnum("level", ["federal", "state", "local", "international"]).default("federal").notNull(),
+  state: varchar("state", { length: 2 }), // For state-level agencies
+  
+  // Contact and resources
+  website: varchar("website", { length: 500 }),
+  contactEmail: varchar("contactEmail", { length: 255 }),
+  contactPhone: varchar("contactPhone", { length: 50 }),
+  
+  // Relevance to organization
+  relevantDepartments: json("relevantDepartments"), // ["finance", "legal", "hr"]
+  relevantEntities: json("relevantEntities"), // ["508_academy", "laws_collective"]
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type GovernmentAgency = typeof governmentAgencies.$inferSelect;
+export type InsertGovernmentAgency = typeof governmentAgencies.$inferInsert;
+
+/**
+ * Government Actions - Track regulatory changes, announcements, and deadlines
+ */
+export const governmentActions = mysqlTable("government_actions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Action identification
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  
+  // Source
+  agencyId: int("agencyId").notNull(),
+  sourceUrl: varchar("sourceUrl", { length: 1000 }),
+  referenceNumber: varchar("referenceNumber", { length: 100 }), // Rule number, notice ID, etc.
+  
+  // Action type
+  actionType: mysqlEnum("actionType", [
+    "regulatory_change",
+    "grant_announcement", 
+    "tax_update",
+    "licensing_requirement",
+    "labor_law",
+    "nonprofit_compliance",
+    "filing_deadline",
+    "policy_change",
+    "enforcement_action",
+    "guidance_update"
+  ]).notNull(),
+  
+  // Dates
+  announcedDate: timestamp("announcedDate"),
+  effectiveDate: timestamp("effectiveDate"),
+  deadline: timestamp("deadline"),
+  expirationDate: timestamp("expirationDate"),
+  
+  // Impact assessment
+  impactLevel: mysqlEnum("impactLevel", ["critical", "high", "medium", "low", "informational"]).default("medium").notNull(),
+  affectedEntities: json("affectedEntities"), // ["508_academy", "laws_collective", "real_eye_nation"]
+  affectedDepartments: json("affectedDepartments"), // ["finance", "legal", "hr", "health"]
+  estimatedCost: decimal("estimatedCost", { precision: 12, scale: 2 }),
+  estimatedTimeHours: int("estimatedTimeHours"),
+  
+  // SWOT classification
+  swotCategory: mysqlEnum("swotCategory", ["strength", "weakness", "opportunity", "threat"]),
+  swotNotes: text("swotNotes"),
+  
+  // Compliance tracking
+  complianceStatus: mysqlEnum("complianceStatus", ["pending", "in_progress", "compliant", "non_compliant", "not_applicable"]).default("pending").notNull(),
+  complianceNotes: text("complianceNotes"),
+  assignedTo: int("assignedTo"),
+  
+  // Related items
+  relatedTaskId: int("relatedTaskId"),
+  relatedResourceLinkId: int("relatedResourceLinkId"),
+  
+  // Display in ticker
+  showInTicker: boolean("showInTicker").default(true).notNull(),
+  tickerPriority: mysqlEnum("tickerPriority", ["urgent", "high", "normal", "low"]).default("normal").notNull(),
+  
+  // Agent identification (if discovered by AI)
+  isAgentIdentified: boolean("isAgentIdentified").default(false).notNull(),
+  agentConfidence: decimal("agentConfidence", { precision: 3, scale: 2 }),
+  agentSource: varchar("agentSource", { length: 255 }),
+  
+  // Status
+  status: mysqlEnum("status", ["active", "archived", "superseded"]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  createdBy: int("createdBy"),
+});
+
+export type GovernmentAction = typeof governmentActions.$inferSelect;
+export type InsertGovernmentAction = typeof governmentActions.$inferInsert;
+
+/**
+ * Government Action Compliance Tasks - Track required actions for compliance
+ */
+export const governmentActionTasks = mysqlTable("government_action_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  governmentActionId: int("governmentActionId").notNull(),
+  
+  // Task details
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  
+  // Assignment
+  assignedTo: int("assignedTo"),
+  assignedDepartment: varchar("assignedDepartment", { length: 100 }),
+  
+  // Timeline
+  dueDate: timestamp("dueDate"),
+  completedAt: timestamp("completedAt"),
+  
+  // Status
+  status: mysqlEnum("status", ["pending", "in_progress", "completed", "blocked", "cancelled"]).default("pending").notNull(),
+  priority: mysqlEnum("priority", ["urgent", "high", "medium", "low"]).default("medium").notNull(),
+  
+  // Notes and documentation
+  notes: text("notes"),
+  documentationUrl: varchar("documentationUrl", { length: 1000 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type GovernmentActionTask = typeof governmentActionTasks.$inferSelect;
+export type InsertGovernmentActionTask = typeof governmentActionTasks.$inferInsert;
+
+/**
+ * Government Action Notifications - Track deadline reminders and alerts
+ */
+export const governmentActionNotifications = mysqlTable("government_action_notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  governmentActionId: int("governmentActionId").notNull(),
+  
+  // Notification details
+  notificationType: mysqlEnum("notificationType", ["deadline_reminder", "new_action", "status_change", "compliance_alert"]).notNull(),
+  daysBefore: int("daysBefore"), // For deadline reminders
+  
+  // Recipients
+  recipientUserId: int("recipientUserId"),
+  recipientEmail: varchar("recipientEmail", { length: 255 }),
+  recipientDepartment: varchar("recipientDepartment", { length: 100 }),
+  
+  // Status
+  scheduledFor: timestamp("scheduledFor"),
+  sentAt: timestamp("sentAt"),
+  status: mysqlEnum("status", ["pending", "sent", "failed", "cancelled"]).default("pending").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GovernmentActionNotification = typeof governmentActionNotifications.$inferSelect;
+export type InsertGovernmentActionNotification = typeof governmentActionNotifications.$inferInsert;
+
+
+// ============================================================================
+// STOCK TICKER & PORTFOLIO ALERTS SYSTEM
+// Track portfolio holdings, watchlist, and generate alerts for investments
+// ============================================================================
+
+/**
+ * Stock Watchlist - Portfolio holdings and stocks to watch
+ */
+export const stockWatchlist = mysqlTable("stock_watchlist", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Stock identification
+  symbol: varchar("symbol", { length: 10 }).notNull(),
+  companyName: varchar("companyName", { length: 255 }).notNull(),
+  exchange: varchar("exchange", { length: 50 }), // NYSE, NASDAQ, etc.
+  
+  // Ownership details
+  entityId: int("entityId"), // Which entity owns this
+  isHolding: boolean("isHolding").default(false).notNull(), // true = in portfolio, false = watchlist only
+  shares: decimal("shares", { precision: 15, scale: 4 }),
+  costBasis: decimal("costBasis", { precision: 12, scale: 2 }),
+  purchaseDate: timestamp("purchaseDate"),
+  
+  // Current data (updated periodically)
+  lastPrice: decimal("lastPrice", { precision: 12, scale: 4 }),
+  lastPriceUpdated: timestamp("lastPriceUpdated"),
+  dayChange: decimal("dayChange", { precision: 10, scale: 4 }),
+  dayChangePercent: decimal("dayChangePercent", { precision: 6, scale: 2 }),
+  
+  // Alert settings
+  alertOnPriceChange: boolean("alertOnPriceChange").default(true).notNull(),
+  priceChangeThreshold: decimal("priceChangeThreshold", { precision: 5, scale: 2 }).default("5.00"), // Percentage
+  alertOnEarnings: boolean("alertOnEarnings").default(true).notNull(),
+  alertOnDividends: boolean("alertOnDividends").default(true).notNull(),
+  alertOnFilings: boolean("alertOnFilings").default(true).notNull(),
+  alertOnNews: boolean("alertOnNews").default(false).notNull(),
+  
+  // Metadata
+  notes: text("notes"),
+  sector: varchar("sector", { length: 100 }),
+  industry: varchar("industry", { length: 100 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  createdBy: int("createdBy"),
+});
+
+export type StockWatchlistItem = typeof stockWatchlist.$inferSelect;
+export type InsertStockWatchlistItem = typeof stockWatchlist.$inferInsert;
+
+/**
+ * Stock Alerts - Generated alerts for portfolio and watchlist
+ */
+export const stockAlerts = mysqlTable("stock_alerts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  watchlistId: int("watchlistId").notNull(),
+  symbol: varchar("symbol", { length: 10 }).notNull(),
+  
+  // Alert type
+  alertType: mysqlEnum("alertType", [
+    "price_up",
+    "price_down",
+    "earnings_upcoming",
+    "earnings_released",
+    "dividend_announced",
+    "dividend_ex_date",
+    "sec_filing",
+    "analyst_upgrade",
+    "analyst_downgrade",
+    "insider_buy",
+    "insider_sell",
+    "news_major",
+    "52_week_high",
+    "52_week_low"
+  ]).notNull(),
+  
+  // Alert details
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  sourceUrl: varchar("sourceUrl", { length: 1000 }),
+  
+  // Numeric data
+  priceAtAlert: decimal("priceAtAlert", { precision: 12, scale: 4 }),
+  changeAmount: decimal("changeAmount", { precision: 12, scale: 4 }),
+  changePercent: decimal("changePercent", { precision: 6, scale: 2 }),
+  
+  // Priority
+  priority: mysqlEnum("priority", ["critical", "high", "medium", "low"]).default("medium").notNull(),
+  
+  // Status
+  isRead: boolean("isRead").default(false).notNull(),
+  isDismissed: boolean("isDismissed").default(false).notNull(),
+  
+  // Display in ticker
+  showInTicker: boolean("showInTicker").default(true).notNull(),
+  
+  // Event dates
+  eventDate: timestamp("eventDate"), // For earnings, dividends, etc.
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type StockAlert = typeof stockAlerts.$inferSelect;
+export type InsertStockAlert = typeof stockAlerts.$inferInsert;
+
+/**
+ * Stock Price History - Historical price data for charts
+ */
+export const stockPriceHistory = mysqlTable("stock_price_history", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  symbol: varchar("symbol", { length: 10 }).notNull(),
+  
+  // Price data
+  date: timestamp("date").notNull(),
+  open: decimal("open", { precision: 12, scale: 4 }),
+  high: decimal("high", { precision: 12, scale: 4 }),
+  low: decimal("low", { precision: 12, scale: 4 }),
+  close: decimal("close", { precision: 12, scale: 4 }).notNull(),
+  volume: bigint("volume", { mode: "number" }),
+  
+  // Adjusted prices (for splits/dividends)
+  adjustedClose: decimal("adjustedClose", { precision: 12, scale: 4 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type StockPriceHistory = typeof stockPriceHistory.$inferSelect;
+export type InsertStockPriceHistory = typeof stockPriceHistory.$inferInsert;
+
+/**
+ * Stock Events - Track upcoming events (earnings, dividends, etc.)
+ */
+export const stockEvents = mysqlTable("stock_events", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  symbol: varchar("symbol", { length: 10 }).notNull(),
+  
+  eventType: mysqlEnum("eventType", [
+    "earnings",
+    "dividend_ex_date",
+    "dividend_pay_date",
+    "split",
+    "sec_filing",
+    "shareholder_meeting",
+    "analyst_day"
+  ]).notNull(),
+  
+  eventDate: timestamp("eventDate").notNull(),
+  
+  // Event details
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  
+  // For earnings
+  estimatedEps: decimal("estimatedEps", { precision: 8, scale: 4 }),
+  actualEps: decimal("actualEps", { precision: 8, scale: 4 }),
+  
+  // For dividends
+  dividendAmount: decimal("dividendAmount", { precision: 8, scale: 4 }),
+  
+  // For filings
+  filingType: varchar("filingType", { length: 20 }), // 10-K, 10-Q, 8-K
+  filingUrl: varchar("filingUrl", { length: 1000 }),
+  
+  // Status
+  isConfirmed: boolean("isConfirmed").default(false).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type StockEvent = typeof stockEvents.$inferSelect;
+export type InsertStockEvent = typeof stockEvents.$inferInsert;
