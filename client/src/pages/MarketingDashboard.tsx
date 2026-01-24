@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 // Marketing metrics data
 const marketingMetrics = {
@@ -221,6 +222,9 @@ export default function MarketingDashboard() {
             format="currency"
           />
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="marketing" />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

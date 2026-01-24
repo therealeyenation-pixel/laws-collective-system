@@ -26,6 +26,7 @@ import {
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { HouseParticipationToggle } from "@/components/HouseParticipationToggle";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function BusinessDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -155,6 +156,9 @@ export default function BusinessDashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="business" />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
