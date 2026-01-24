@@ -389,6 +389,90 @@ const EMPLOYMENT_TEMPLATES = {
   },
 };
 
+// Trust Document Templates (The Calea Freeman Trust)
+const TRUST_DOCUMENT_TEMPLATES = {
+  TRUST_INDENTURE: {
+    templateCode: "TRUST_INDENTURE",
+    templateName: "Trust Indenture / Declaration of Trust",
+    category: "trust" as const,
+    description: "Founding document that defines the trust, its purpose, trustees, and beneficiaries",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "trustNumber", "jurisdiction", "grantor", "initialTrustees", "beneficiaries", "purpose", "assets", "distributionRules", "amendments", "termination"],
+  },
+  TRUSTEE_APPOINTMENT: {
+    templateCode: "TRUST_TRUSTEE_APPT",
+    templateName: "Certificate of Trustee Appointment",
+    category: "trust" as const,
+    description: "Formal appointment of a trustee to manage trust affairs",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "trusteeName", "trusteeAddress", "appointmentDate", "powers", "compensation", "term", "acceptanceSignature"],
+  },
+  TRUSTEE_RESIGNATION: {
+    templateCode: "TRUST_TRUSTEE_RESIGN",
+    templateName: "Trustee Resignation Letter",
+    category: "trust" as const,
+    description: "Formal resignation of a trustee from their position",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "trusteeName", "resignationDate", "reason", "transitionPlan", "finalAccounting"],
+  },
+  BENEFICIARY_DESIGNATION: {
+    templateCode: "TRUST_BENEFICIARY",
+    templateName: "Trust Beneficiary Designation Form",
+    category: "trust" as const,
+    description: "Designates beneficiaries and their share of trust distributions",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "beneficiaryName", "relationship", "beneficiaryType", "distributionShare", "conditions", "contingentBeneficiary"],
+  },
+  TRUST_ENTITY_CONNECTION: {
+    templateCode: "TRUST_ENTITY_CONNECT",
+    templateName: "Trust-Entity Connection Agreement",
+    category: "trust" as const,
+    description: "Agreement connecting an operating entity (LLC or 508) to the trust structure",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "entityName", "entityType", "ownershipPercentage", "revenueAllocation", "governanceRights", "reportingRequirements", "effectiveDate"],
+  },
+  TRUST_ACTIVATION_CHECKLIST: {
+    templateCode: "TRUST_ACTIVATION",
+    templateName: "Trust Activation Checklist & Certificate",
+    category: "trust" as const,
+    description: "Checklist and certificate confirming all requirements for trust activation are met",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "trustNumber", "indentureComplete", "trusteesAppointed", "beneficiariesDesignated", "initialFunding", "bankAccountOpened", "activationDate"],
+  },
+  TRUST_AMENDMENT: {
+    templateCode: "TRUST_AMENDMENT",
+    templateName: "Trust Amendment Document",
+    category: "trust" as const,
+    description: "Formal amendment to modify terms of an existing trust",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "amendmentNumber", "originalProvision", "amendedProvision", "effectiveDate", "trusteeApproval"],
+  },
+  TRUST_DISTRIBUTION_REQUEST: {
+    templateCode: "TRUST_DISTRIBUTION_REQ",
+    templateName: "Trust Distribution Request Form",
+    category: "trust" as const,
+    description: "Request for distribution of funds from the trust to beneficiaries",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "beneficiaryName", "amount", "purpose", "distributionType", "trusteeApproval"],
+  },
+  TRUST_ANNUAL_REPORT: {
+    templateCode: "TRUST_ANNUAL_REPORT",
+    templateName: "Trust Annual Report",
+    category: "trust" as const,
+    description: "Annual accounting and status report for trust operations",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "reportYear", "openingBalance", "contributions", "distributions", "expenses", "closingBalance", "entityPerformance"],
+  },
+  TRUST_MEETING_MINUTES: {
+    templateCode: "TRUST_MINUTES",
+    templateName: "Trust Meeting Minutes",
+    category: "trust" as const,
+    description: "Official minutes of trustee meetings",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "meetingDate", "attendees", "agendaItems", "decisions", "actionItems", "nextMeeting"],
+  },
+};
+
 // Split & Allocation Report Templates
 const SPLIT_REPORT_TEMPLATES = {
   SPLIT_COMPARISON_REPORT: {
@@ -425,6 +509,7 @@ const ALL_TEMPLATES = {
   ...CONTRACT_TEMPLATES,
   ...FUNDING_TEMPLATES,
   ...EMPLOYMENT_TEMPLATES,
+  ...TRUST_DOCUMENT_TEMPLATES,
   ...SPLIT_REPORT_TEMPLATES,
 };
 

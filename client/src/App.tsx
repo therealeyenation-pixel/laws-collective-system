@@ -157,6 +157,10 @@ import RevenueFlowDashboard from "@/pages/RevenueFlowDashboard";
 import BusinessListings from "@/pages/BusinessListings";
 import ServiceDepartments from "@/pages/ServiceDepartments";
 import FoundingMemberBonus from "@/pages/FoundingMemberBonus";
+import WorkerProgression from "@/pages/WorkerProgression";
+import ClosedLoopWealth from "@/pages/ClosedLoopWealth";
+import LAWSEmploymentPortal from "@/pages/LAWSEmploymentPortal";
+import Donate508 from "@/pages/Donate508";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -267,6 +271,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
+      <Route path="/donate/academy" component={Donate508} />
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
@@ -311,6 +316,9 @@ function Router() {
       <Route path="/contractor-transition">{() => <ProtectedRoute component={ContractorTransition} minRole="staff" />}</Route>
       <Route path="/contractor-transitions">{() => <ProtectedRoute component={ContractorTransitions} minRole="staff" />}</Route>
       <Route path="/career-path-planner">{() => <ProtectedRoute component={CareerPathPlanner} minRole="staff" />}</Route>
+      <Route path="/worker-progression">{() => <ProtectedRoute component={WorkerProgression} minRole="staff" />}</Route>
+      <Route path="/laws-employment">{() => <LAWSEmploymentPortal />}</Route>
+      <Route path="/closed-loop-wealth">{() => <ProtectedRoute component={ClosedLoopWealth} minRole="staff" />}</Route>
       <Route path="/benefits-comparison">{() => <ProtectedRoute component={BenefitsComparison} minRole="user" />}</Route>
       <Route path="/transition-training">{() => <ProtectedRoute component={TransitionTraining} minRole="staff" />}</Route>
       <Route path="/board-governance">{() => <ProtectedRoute component={BoardGovernance} minRole="admin" />}</Route>

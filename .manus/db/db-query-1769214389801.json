@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS recurring_donations (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  donor_id INT,\n  donor_name VARCHAR(255),\n  donor_email VARCHAR(255),\n  amount DECIMAL(12,2) NOT NULL,\n  frequency ENUM('monthly', 'quarterly', 'semi_annual', 'annual') DEFAULT 'monthly',\n  payment_method VARCHAR(50),\n  stripe_subscription_id VARCHAR(255),\n  start_date DATE NOT NULL,\n  next_charge_date DATE,\n  end_date DATE,\n  status ENUM('active', 'paused', 'cancelled', 'failed') DEFAULT 'active',\n  total_donated DECIMAL(12,2) DEFAULT 0,\n  donation_count INT DEFAULT 0,\n  campaign_id INT,\n  designation VARCHAR(255),\n  notes TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS recurring_donations (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  donor_id INT,\n  donor_name VARCHAR(255),\n  donor_email VARCHAR(255),\n  amount DECIMAL(12,2) NOT NULL,\n  frequency ENUM('monthly', 'quarterly', 'semi_annual', 'annual') DEFAULT 'monthly',\n  payment_method VARCHAR(50),\n  stripe_subscription_id VARCHAR(255),\n  start_date DATE NOT NULL,\n  next_charge_date DATE,\n  end_date DATE,\n  status ENUM('active', 'paused', 'cancelled', 'failed') DEFAULT 'active',\n  total_donated DECIMAL(12,2) DEFAULT 0,\n  donation_count INT DEFAULT 0,\n  campaign_id INT,\n  designation VARCHAR(255),\n  notes TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1792
+}

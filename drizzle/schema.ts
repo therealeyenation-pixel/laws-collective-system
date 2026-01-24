@@ -13111,3 +13111,664 @@ export const contractTemplates = mysqlTable("contract_templates", {
 
 export type ContractTemplate = typeof contractTemplates.$inferSelect;
 export type InsertContractTemplate = typeof contractTemplates.$inferInsert;
+
+
+// ============================================
+// W-2 TO CONTRACTOR PREMIUM PROGRESSION SYSTEM
+// ============================================
+
+/**
+ * Worker Progression - Tracks career stages from W-2 Employee to House Member
+ * Premium pathway: Employee → Senior Employee → Contractor → Certified Contractor → Business Owner → House Member
+ */
+export const workerProgressions = mysqlTable("worker_progressions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Worker identity
+  userId: int("userId").notNull(),
+  workerId: int("workerId"), // Reference to w2_workers or contractors table
+  workerType: mysqlEnum("workerType", ["w2_employee", "contractor"]).notNull(),
+  
+  // Current progression stage
+  currentStage: mysqlEnum("currentStage", [
+    "w2_employee",           // Entry level - learning the ropes
+    "senior_employee",       // Demonstrated competence, ready for more responsibility
+    "contractor",            // Transitioned to independent contractor
+    "certified_contractor",  // Achieved premium certifications
+    "business_owner",        // Started their own business
+    "house_member"           // Full House membership in L.A.W.S.
+  ]).default("w2_employee").notNull(),
+  
+  // Stage history
+  stageEnteredAt: timestamp("stageEnteredAt").defaultNow().notNull(),
+  previousStage: mysqlEnum("previousStage", [
+    "w2_employee", "senior_employee", "contractor", 
+    "certified_contractor", "business_owner", "house_member"
+  ]),
+  previousStageExitedAt: timestamp("previousStageExitedAt"),
+  
+  // Readiness indicators
+  readinessScore: int("readinessScore").default(0).notNull(), // 0-100
+  nextStageEligible: boolean("nextStageEligible").default(false).notNull(),
+  nextStageBlockers: json("nextStageBlockers"), // Array of requirements not yet met
+  
+  // Mentorship
+  mentorId: int("mentorId"), // User ID of assigned mentor
+  mentorAssignedAt: timestamp("mentorAssignedAt"),
+  
+  // Department specialization
+  primaryDepartmentId: int("primaryDepartmentId"),
+  secondaryDepartments: json("secondaryDepartments"), // Array of department IDs
+  
+  // Performance metrics
+  qualityScore: decimal("qualityScore", { precision: 5, scale: 2 }).default("0.00"),
+  onTimeDeliveryRate: decimal("onTimeDeliveryRate", { precision: 5, scale: 2 }).default("0.00"),
+  clientSatisfactionScore: decimal("clientSatisfactionScore", { precision: 5, scale: 2 }).default("0.00"),
+  totalRevenueGenerated: decimal("totalRevenueGenerated", { precision: 15, scale: 2 }).default("0.00"),
+  
+  // Career goals
+  targetStage: mysqlEnum("targetStage", [
+    "w2_employee", "senior_employee", "contractor", 
+    "certified_contractor", "business_owner", "house_member"
+  ]),
+  targetDate: timestamp("targetDate"),
+  careerNotes: text("careerNotes"),
+  
+  // Linked entities (when progressed)
+  linkedBusinessId: int("linkedBusinessId"), // When became business owner
+  linkedHouseId: int("linkedHouseId"), // When became house member
+  
+  // LuvLedger tracking
+  luvLedgerAccountId: int("luvLedgerAccountId"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WorkerProgression = typeof workerProgressions.$inferSelect;
+export type InsertWorkerProgression = typeof workerProgressions.$inferInsert;
+
+/**
+ * Progression Milestones - Defines requirements for each stage transition
+ */
+export const progressionMilestones = mysqlTable("progression_milestones", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Stage transition
+  fromStage: mysqlEnum("fromStage", [
+    "w2_employee", "senior_employee", "contractor", 
+    "certified_contractor", "business_owner"
+  ]).notNull(),
+  toStage: mysqlEnum("toStage", [
+    "senior_employee", "contractor", "certified_contractor", 
+    "business_owner", "house_member"
+  ]).notNull(),
+  
+  // Milestone info
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  category: mysqlEnum("category", [
+    "time_based",      // Minimum time in stage
+    "certification",   // Required certifications
+    "performance",     // Quality/delivery metrics
+    "revenue",         // Revenue generation targets
+    "training",        // Required training completion
+    "mentorship",      // Mentorship requirements
+    "business",        // Business formation requirements
+    "approval"         // Manual approval required
+  ]).notNull(),
+  
+  // Requirements
+  requirementType: varchar("requirementType", { length: 100 }).notNull(),
+  requirementValue: varchar("requirementValue", { length: 255 }).notNull(),
+  requirementUnit: varchar("requirementUnit", { length: 50 }), // months, dollars, percentage, etc.
+  
+  // Weighting
+  weight: int("weight").default(1).notNull(), // Importance in readiness calculation
+  isRequired: boolean("isRequired").default(true).notNull(), // Must be met vs optional
+  
+  // Display
+  displayOrder: int("displayOrder").default(0).notNull(),
+  iconName: varchar("iconName", { length: 50 }),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProgressionMilestone = typeof progressionMilestones.$inferSelect;
+export type InsertProgressionMilestone = typeof progressionMilestones.$inferInsert;
+
+/**
+ * Worker Milestone Progress - Tracks individual worker progress on milestones
+ */
+export const workerMilestoneProgress = mysqlTable("worker_milestone_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  progressionId: int("progressionId").notNull(),
+  milestoneId: int("milestoneId").notNull(),
+  
+  // Progress tracking
+  currentValue: varchar("currentValue", { length: 255 }),
+  targetValue: varchar("targetValue", { length: 255 }),
+  progressPercentage: int("progressPercentage").default(0).notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "not_started", "in_progress", "completed", "waived"
+  ]).default("not_started").notNull(),
+  
+  completedAt: timestamp("completedAt"),
+  waivedBy: int("waivedBy"),
+  waivedReason: text("waivedReason"),
+  
+  // Evidence
+  evidenceUrl: text("evidenceUrl"),
+  evidenceNotes: text("evidenceNotes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WorkerMilestoneProgress = typeof workerMilestoneProgress.$inferSelect;
+export type InsertWorkerMilestoneProgress = typeof workerMilestoneProgress.$inferInsert;
+
+/**
+ * Skill Certifications - Tracks competencies and certifications
+ */
+export const skillCertifications = mysqlTable("skill_certifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Certification info
+  name: varchar("name", { length: 255 }).notNull(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  
+  // Department linkage
+  departmentId: int("departmentId"), // Which service department this applies to
+  departmentCode: varchar("departmentCode", { length: 50 }), // DESIGN, MEDIA, TAX_PREP, etc.
+  
+  // Certification level
+  level: mysqlEnum("level", [
+    "apprentice",   // Learning fundamentals
+    "journeyman",   // Competent practitioner
+    "master",       // Expert level
+    "expert"        // Industry-leading expertise
+  ]).notNull(),
+  
+  // Requirements
+  prerequisiteCertifications: json("prerequisiteCertifications"), // Array of certification IDs required first
+  requiredTrainingHours: int("requiredTrainingHours").default(0),
+  requiredPracticeHours: int("requiredPracticeHours").default(0),
+  assessmentRequired: boolean("assessmentRequired").default(true).notNull(),
+  
+  // Validity
+  validityMonths: int("validityMonths").default(24), // How long certification is valid
+  renewalRequirements: json("renewalRequirements"),
+  
+  // Premium tier
+  premiumTier: mysqlEnum("premiumTier", [
+    "standard",     // Basic certification
+    "premium",      // Higher quality standards
+    "elite"         // Top-tier excellence
+  ]).default("standard").notNull(),
+  
+  // Pricing (for external certification)
+  assessmentFee: decimal("assessmentFee", { precision: 10, scale: 2 }).default("0.00"),
+  renewalFee: decimal("renewalFee", { precision: 10, scale: 2 }).default("0.00"),
+  
+  // Display
+  badgeUrl: text("badgeUrl"),
+  badgeColor: varchar("badgeColor", { length: 20 }),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SkillCertification = typeof skillCertifications.$inferSelect;
+export type InsertSkillCertification = typeof skillCertifications.$inferInsert;
+
+/**
+ * Worker Certifications - Links workers to their earned certifications
+ */
+export const workerCertifications = mysqlTable("worker_certifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  progressionId: int("progressionId").notNull(),
+  certificationId: int("certificationId").notNull(),
+  
+  // Certification status
+  status: mysqlEnum("status", [
+    "in_progress",   // Working toward certification
+    "pending_assessment", // Ready for assessment
+    "active",        // Currently certified
+    "expired",       // Certification lapsed
+    "revoked"        // Certification removed
+  ]).default("in_progress").notNull(),
+  
+  // Dates
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  earnedAt: timestamp("earnedAt"),
+  expiresAt: timestamp("expiresAt"),
+  revokedAt: timestamp("revokedAt"),
+  
+  // Assessment
+  assessmentScore: int("assessmentScore"),
+  assessmentDate: timestamp("assessmentDate"),
+  assessorId: int("assessorId"),
+  assessmentNotes: text("assessmentNotes"),
+  
+  // Progress tracking
+  trainingHoursCompleted: int("trainingHoursCompleted").default(0).notNull(),
+  practiceHoursCompleted: int("practiceHoursCompleted").default(0).notNull(),
+  
+  // Certificate
+  certificateNumber: varchar("certificateNumber", { length: 100 }),
+  certificateUrl: text("certificateUrl"),
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  // Renewal
+  renewalCount: int("renewalCount").default(0).notNull(),
+  lastRenewalAt: timestamp("lastRenewalAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WorkerCertification = typeof workerCertifications.$inferSelect;
+export type InsertWorkerCertification = typeof workerCertifications.$inferInsert;
+
+/**
+ * Quality Standards - Defines excellence metrics per department
+ */
+export const qualityStandards = mysqlTable("quality_standards", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Department linkage
+  departmentId: int("departmentId"),
+  departmentCode: varchar("departmentCode", { length: 50 }),
+  
+  // Standard info
+  name: varchar("name", { length: 255 }).notNull(),
+  code: varchar("code", { length: 50 }).notNull(),
+  description: text("description"),
+  category: mysqlEnum("category", [
+    "deliverable_quality",  // Quality of work output
+    "timeliness",           // On-time delivery
+    "communication",        // Client communication
+    "documentation",        // Proper documentation
+    "compliance",           // Regulatory compliance
+    "innovation"            // Creative excellence
+  ]).notNull(),
+  
+  // Measurement
+  metricType: mysqlEnum("metricType", [
+    "percentage",   // 0-100%
+    "rating",       // 1-5 stars
+    "score",        // Numeric score
+    "boolean",      // Pass/fail
+    "count"         // Number of occurrences
+  ]).notNull(),
+  
+  // Thresholds
+  minimumValue: decimal("minimumValue", { precision: 10, scale: 2 }),
+  targetValue: decimal("targetValue", { precision: 10, scale: 2 }),
+  excellentValue: decimal("excellentValue", { precision: 10, scale: 2 }),
+  
+  // Premium tier requirements
+  standardTierMinimum: decimal("standardTierMinimum", { precision: 10, scale: 2 }),
+  premiumTierMinimum: decimal("premiumTierMinimum", { precision: 10, scale: 2 }),
+  eliteTierMinimum: decimal("eliteTierMinimum", { precision: 10, scale: 2 }),
+  
+  // Weighting
+  weight: int("weight").default(1).notNull(),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type QualityStandard = typeof qualityStandards.$inferSelect;
+export type InsertQualityStandard = typeof qualityStandards.$inferInsert;
+
+/**
+ * Deliverable Quality Scores - Tracks quality scores for individual deliverables
+ */
+export const deliverableQualityScores = mysqlTable("deliverable_quality_scores", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Worker and deliverable
+  progressionId: int("progressionId").notNull(),
+  serviceOrderId: int("serviceOrderId"), // Link to service order
+  projectId: int("projectId"), // Link to project
+  deliverableType: varchar("deliverableType", { length: 100 }),
+  deliverableDescription: text("deliverableDescription"),
+  
+  // Scores by standard
+  standardId: int("standardId").notNull(),
+  score: decimal("score", { precision: 10, scale: 2 }).notNull(),
+  
+  // Assessment
+  assessedBy: int("assessedBy"), // User ID of assessor
+  assessedAt: timestamp("assessedAt").defaultNow().notNull(),
+  assessmentMethod: mysqlEnum("assessmentMethod", [
+    "self_assessment",
+    "peer_review",
+    "supervisor_review",
+    "client_feedback",
+    "automated"
+  ]).notNull(),
+  
+  // Feedback
+  feedback: text("feedback"),
+  improvementAreas: json("improvementAreas"),
+  
+  // Blockchain verification
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DeliverableQualityScore = typeof deliverableQualityScores.$inferSelect;
+export type InsertDeliverableQualityScore = typeof deliverableQualityScores.$inferInsert;
+
+/**
+ * Excellence Badges - Recognition for outstanding performance
+ */
+export const excellenceBadges = mysqlTable("excellence_badges", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Badge info
+  name: varchar("name", { length: 255 }).notNull(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  
+  // Category
+  category: mysqlEnum("category", [
+    "quality",          // Quality excellence
+    "timeliness",       // Consistent on-time delivery
+    "client_satisfaction", // High client ratings
+    "revenue",          // Revenue generation
+    "mentorship",       // Helping others grow
+    "innovation",       // Creative solutions
+    "leadership",       // Team leadership
+    "community"         // Community contribution
+  ]).notNull(),
+  
+  // Requirements
+  requirementType: varchar("requirementType", { length: 100 }).notNull(),
+  requirementValue: varchar("requirementValue", { length: 255 }).notNull(),
+  requirementPeriod: mysqlEnum("requirementPeriod", [
+    "one_time",   // Achieved once
+    "monthly",    // Must maintain monthly
+    "quarterly",  // Must maintain quarterly
+    "annual"      // Must maintain annually
+  ]).default("one_time").notNull(),
+  
+  // Display
+  badgeUrl: text("badgeUrl"),
+  badgeColor: varchar("badgeColor", { length: 20 }),
+  tier: mysqlEnum("tier", ["bronze", "silver", "gold", "platinum"]).default("bronze").notNull(),
+  
+  // Rewards
+  tokenReward: int("tokenReward").default(0),
+  premiumTierBoost: boolean("premiumTierBoost").default(false).notNull(),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ExcellenceBadge = typeof excellenceBadges.$inferSelect;
+export type InsertExcellenceBadge = typeof excellenceBadges.$inferInsert;
+
+/**
+ * Worker Badges - Links workers to their earned badges
+ */
+export const workerBadges = mysqlTable("worker_badges", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  progressionId: int("progressionId").notNull(),
+  badgeId: int("badgeId").notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "active",     // Currently held
+    "expired",    // Period-based badge expired
+    "revoked"     // Removed for cause
+  ]).default("active").notNull(),
+  
+  // Dates
+  earnedAt: timestamp("earnedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  revokedAt: timestamp("revokedAt"),
+  
+  // Achievement details
+  achievementValue: varchar("achievementValue", { length: 255 }),
+  achievementPeriodStart: timestamp("achievementPeriodStart"),
+  achievementPeriodEnd: timestamp("achievementPeriodEnd"),
+  
+  // Blockchain verification
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type WorkerBadge = typeof workerBadges.$inferSelect;
+export type InsertWorkerBadge = typeof workerBadges.$inferInsert;
+
+/**
+ * Skill Taxonomy - Extensible skill categories for future technologies
+ */
+export const skillTaxonomy = mysqlTable("skill_taxonomy", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Hierarchy
+  parentId: int("parentId"), // For nested skills
+  
+  // Skill info
+  name: varchar("name", { length: 255 }).notNull(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  
+  // Categorization
+  domain: mysqlEnum("domain", [
+    "creative",       // Design, media, marketing
+    "technical",      // Technology, systems
+    "financial",      // Accounting, tax, finance
+    "legal",          // Contracts, compliance
+    "operational",    // Business operations
+    "educational",    // Teaching, training
+    "health",         // Health services
+    "property",       // Real estate
+    "leadership",     // Management, governance
+    "interpersonal"   // Communication, collaboration
+  ]).notNull(),
+  
+  // Evolution tracking
+  technologyTrend: mysqlEnum("technologyTrend", [
+    "emerging",       // New technology/skill
+    "growing",        // Increasing demand
+    "stable",         // Consistent demand
+    "declining",      // Decreasing relevance
+    "legacy"          // Being phased out
+  ]).default("stable").notNull(),
+  
+  relevanceScore: int("relevanceScore").default(50).notNull(), // 0-100
+  lastTrendUpdate: timestamp("lastTrendUpdate"),
+  
+  // External mapping
+  externalStandardId: varchar("externalStandardId", { length: 100 }), // O*NET, LinkedIn, etc.
+  externalStandardName: varchar("externalStandardName", { length: 255 }),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SkillTaxonomy = typeof skillTaxonomy.$inferSelect;
+export type InsertSkillTaxonomy = typeof skillTaxonomy.$inferInsert;
+
+/**
+ * Worker Skills - Links workers to skills with proficiency levels
+ */
+export const workerSkills = mysqlTable("worker_skills", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  progressionId: int("progressionId").notNull(),
+  skillId: int("skillId").notNull(),
+  
+  // Proficiency
+  proficiencyLevel: mysqlEnum("proficiencyLevel", [
+    "novice",         // Basic awareness
+    "beginner",       // Learning fundamentals
+    "intermediate",   // Can work independently
+    "advanced",       // Expert level
+    "master"          // Can teach others
+  ]).default("novice").notNull(),
+  
+  // Assessment
+  selfAssessedLevel: mysqlEnum("selfAssessedLevel", [
+    "novice", "beginner", "intermediate", "advanced", "master"
+  ]),
+  verifiedLevel: mysqlEnum("verifiedLevel", [
+    "novice", "beginner", "intermediate", "advanced", "master"
+  ]),
+  verifiedBy: int("verifiedBy"),
+  verifiedAt: timestamp("verifiedAt"),
+  
+  // Experience
+  yearsExperience: decimal("yearsExperience", { precision: 4, scale: 1 }).default("0.0"),
+  projectCount: int("projectCount").default(0).notNull(),
+  
+  // Learning
+  currentlyLearning: boolean("currentlyLearning").default(false).notNull(),
+  targetLevel: mysqlEnum("targetLevel", [
+    "novice", "beginner", "intermediate", "advanced", "master"
+  ]),
+  
+  // AI recommendations
+  aiRecommendedPriority: int("aiRecommendedPriority"), // 1-10, higher = more important
+  aiRecommendationReason: text("aiRecommendationReason"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WorkerSkill = typeof workerSkills.$inferSelect;
+export type InsertWorkerSkill = typeof workerSkills.$inferInsert;
+
+/**
+ * Learning Pathways - Recommended learning sequences
+ */
+export const learningPathways = mysqlTable("learning_pathways", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Pathway info
+  name: varchar("name", { length: 255 }).notNull(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  
+  // Target
+  targetStage: mysqlEnum("targetStage", [
+    "senior_employee", "contractor", "certified_contractor", 
+    "business_owner", "house_member"
+  ]).notNull(),
+  targetDepartment: varchar("targetDepartment", { length: 50 }),
+  targetCertification: int("targetCertification"),
+  
+  // Structure
+  steps: json("steps"), // Array of {skillId, certificationId, trainingId, order}
+  estimatedDurationWeeks: int("estimatedDurationWeeks"),
+  
+  // AI generated
+  aiGenerated: boolean("aiGenerated").default(false).notNull(),
+  aiGeneratedAt: timestamp("aiGeneratedAt"),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LearningPathway = typeof learningPathways.$inferSelect;
+export type InsertLearningPathway = typeof learningPathways.$inferInsert;
+
+/**
+ * Worker Learning Progress - Tracks worker progress on learning pathways
+ */
+export const workerLearningProgress = mysqlTable("worker_learning_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  progressionId: int("progressionId").notNull(),
+  pathwayId: int("pathwayId").notNull(),
+  
+  // Progress
+  currentStepIndex: int("currentStepIndex").default(0).notNull(),
+  completedSteps: json("completedSteps"), // Array of completed step indices
+  progressPercentage: int("progressPercentage").default(0).notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "not_started", "in_progress", "completed", "paused", "abandoned"
+  ]).default("not_started").notNull(),
+  
+  // Dates
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  lastActivityAt: timestamp("lastActivityAt"),
+  
+  // Estimated completion
+  estimatedCompletionDate: timestamp("estimatedCompletionDate"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WorkerLearningProgress = typeof workerLearningProgress.$inferSelect;
+export type InsertWorkerLearningProgress = typeof workerLearningProgress.$inferInsert;
+
+/**
+ * Progression Events - Audit trail of all progression-related events
+ */
+export const progressionEvents = mysqlTable("progression_events", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  progressionId: int("progressionId").notNull(),
+  
+  // Event info
+  eventType: mysqlEnum("eventType", [
+    "stage_change",           // Changed progression stage
+    "milestone_completed",    // Completed a milestone
+    "certification_earned",   // Earned a certification
+    "certification_expired",  // Certification expired
+    "badge_earned",           // Earned a badge
+    "badge_expired",          // Badge expired
+    "skill_verified",         // Skill level verified
+    "quality_score_recorded", // Quality score recorded
+    "mentor_assigned",        // Mentor assigned
+    "pathway_started",        // Started learning pathway
+    "pathway_completed",      // Completed learning pathway
+    "business_formed",        // Formed own business
+    "house_joined"            // Joined a House
+  ]).notNull(),
+  
+  // Event details
+  description: text("description"),
+  previousValue: varchar("previousValue", { length: 255 }),
+  newValue: varchar("newValue", { length: 255 }),
+  metadata: json("metadata"),
+  
+  // Actor
+  triggeredBy: int("triggeredBy"), // User who triggered the event
+  triggeredBySystem: boolean("triggeredBySystem").default(false).notNull(),
+  
+  // Blockchain
+  blockchainHash: varchar("blockchainHash", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProgressionEvent = typeof progressionEvents.$inferSelect;
+export type InsertProgressionEvent = typeof progressionEvents.$inferInsert;

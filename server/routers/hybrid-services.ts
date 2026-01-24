@@ -933,6 +933,207 @@ export const hybridServicesRouter = router({
       };
     }),
 
+  // ============================================
+  // TRUST STATUS & RESERVE TRACKING
+  // ============================================
+  
+  getTrustStatus: protectedProcedure.query(async () => {
+    const db = await getDb();
+    const [rows] = await db.execute(
+      `SELECT * FROM trust_status WHERE trust_name = 'The Calea Freeman Trust' LIMIT 1`
+    );
+    return (rows as any[])[0] || null;
+  }),
+
+  updateTrustStatus: protectedProcedure
+    .input(z.object({
+      indentureComplete: z.boolean().optional(),
+      trusteesAppointed: z.boolean().optional(),
+      beneficiariesDesignated: z.boolean().optional(),
+      initialFundingComplete: z.boolean().optional(),
+      bankAccountOpened: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      const updates: string[] = [];
+      const params: any[] = [];
+      
+      if (input.indentureComplete !== undefined) {
+        updates.push('indenture_complete = ?');
+        params.push(input.indentureComplete);
+      }
+      if (input.trusteesAppointed !== undefined) {
+        updates.push('trustees_appointed = ?');
+        params.push(input.trusteesAppointed);
+      }
+      if (input.beneficiariesDesignated !== undefined) {
+        updates.push('beneficiaries_designated = ?');
+        params.push(input.beneficiariesDesignated);
+      }
+      if (input.initialFundingComplete !== undefined) {
+        updates.push('initial_funding_complete = ?');
+        params.push(input.initialFundingComplete);
+      }
+      if (input.bankAccountOpened !== undefined) {
+        updates.push('bank_account_opened = ?');
+        params.push(input.bankAccountOpened);
+      }
+      
+      if (updates.length > 0) {
+        await db.execute(
+          `UPDATE trust_status SET ${updates.join(', ')} WHERE trust_name = 'The Calea Freeman Trust'`,
+          params
+        );
+      }
+      
+      // Check if all requirements are met to update status to 'defined'
+      const [rows] = await db.execute(
+        `SELECT * FROM trust_status WHERE trust_name = 'The Calea Freeman Trust' LIMIT 1`
+      );
+      const trust = (rows as any[])[0];
+      
+      if (trust && trust.indenture_complete && trust.trustees_appointed && trust.beneficiaries_designated) {
+        if (trust.status === 'exists_by_number') {
+          await db.execute(
+            `UPDATE trust_status SET status = 'defined' WHERE trust_name = 'The Calea Freeman Trust'`
+          );
+        }
+      }
+      
+      return { success: true };
+    }),
+
+  activateTrust: protectedProcedure
+    .input(z.object({
+      activationDate: z.number(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      
+      // Verify all requirements are met
+      const [rows] = await db.execute(
+        `SELECT * FROM trust_status WHERE trust_name = 'The Calea Freeman Trust' LIMIT 1`
+      );
+      const trust = (rows as any[])[0];
+      
+      if (!trust) {
+        throw new Error('Trust record not found');
+      }
+      
+      if (!trust.indenture_complete || !trust.trustees_appointed || !trust.beneficiaries_designated || 
+          !trust.initial_funding_complete || !trust.bank_account_opened) {
+        throw new Error('All activation requirements must be completed before activating the trust');
+      }
+      
+      await db.execute(
+        `UPDATE trust_status SET status = 'activated', activation_date = ? WHERE trust_name = 'The Calea Freeman Trust'`,
+        [new Date(input.activationDate)]
+      );
+      
+      return { success: true, message: 'The Calea Freeman Trust has been activated' };
+    }),
+
+  // Trust Reserve - Track 40% allocations pending Trust activation
+  addToTrustReserve: protectedProcedure
+    .input(z.object({
+      sourceType: z.enum(['service_revenue', 'donation', 'investment', 'other']),
+      sourceReference: z.string().optional(),
+      amount: z.number(),
+      description: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      
+      // Get trust ID
+      const [trustRows] = await db.execute(
+        `SELECT id FROM trust_status WHERE trust_name = 'The Calea Freeman Trust' LIMIT 1`
+      );
+      const trustId = (trustRows as any[])[0]?.id || 1;
+      
+      await db.execute(
+        `INSERT INTO trust_reserve (trust_id, source_type, source_reference, amount, description, status, created_at)
+         VALUES (?, ?, ?, ?, ?, 'pending', NOW())`,
+        [trustId, input.sourceType, input.sourceReference || null, input.amount, input.description || null]
+      );
+      
+      return { success: true };
+    }),
+
+  getTrustReserve: protectedProcedure
+    .input(z.object({
+      status: z.enum(['pending', 'transferred', 'released', 'all']).default('all'),
+    }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      let query = `SELECT * FROM trust_reserve WHERE 1=1`;
+      const params: any[] = [];
+      
+      if (input?.status && input.status !== 'all') {
+        query += ` AND status = ?`;
+        params.push(input.status);
+      }
+      
+      query += ` ORDER BY created_at DESC`;
+      
+      const [rows] = await db.execute(query, params);
+      return rows as any[];
+    }),
+
+  getTrustReserveSummary: protectedProcedure.query(async () => {
+    const db = await getDb();
+    
+    const [totalRows] = await db.execute(
+      `SELECT 
+         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) as pending_total,
+         SUM(CASE WHEN status = 'transferred' THEN amount ELSE 0 END) as transferred_total,
+         COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending_count,
+         COUNT(CASE WHEN status = 'transferred' THEN 1 END) as transferred_count
+       FROM trust_reserve`
+    );
+    
+    const [bySourceRows] = await db.execute(
+      `SELECT source_type, SUM(amount) as total, COUNT(*) as count
+       FROM trust_reserve WHERE status = 'pending'
+       GROUP BY source_type`
+    );
+    
+    const [trustRows] = await db.execute(
+      `SELECT status, activation_date FROM trust_status WHERE trust_name = 'The Calea Freeman Trust' LIMIT 1`
+    );
+    
+    return {
+      totals: (totalRows as any[])[0],
+      bySource: bySourceRows as any[],
+      trustStatus: (trustRows as any[])[0] || { status: 'exists_by_number', activation_date: null }
+    };
+  }),
+
+  // Transfer pending reserves to Trust upon activation
+  transferReservesToTrust: protectedProcedure
+    .mutation(async () => {
+      const db = await getDb();
+      
+      // Verify trust is activated
+      const [trustRows] = await db.execute(
+        `SELECT status FROM trust_status WHERE trust_name = 'The Calea Freeman Trust' LIMIT 1`
+      );
+      const trust = (trustRows as any[])[0];
+      
+      if (!trust || trust.status !== 'activated') {
+        throw new Error('Trust must be activated before transferring reserves');
+      }
+      
+      // Transfer all pending reserves
+      const [result] = await db.execute(
+        `UPDATE trust_reserve SET status = 'transferred', transfer_date = NOW() WHERE status = 'pending'`
+      );
+      
+      return { 
+        success: true, 
+        transferred: (result as any).affectedRows || 0 
+      };
+    }),
+
   // Sync service payment to LuvLedger (batch operation)
   syncServicePaymentsToLedger: protectedProcedure
     .input(z.object({
