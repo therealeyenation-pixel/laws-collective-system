@@ -178,6 +178,7 @@ import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
 import TrialLanding from "@/pages/TrialLanding";
 import TrialDashboard from "@/pages/TrialDashboard";
 import TrialAnalytics from "@/pages/TrialAnalytics";
+import OfficeSuite from "@/pages/OfficeSuite";
 import Documentary from "@/pages/Documentary";
 import Podcast from "@/pages/Podcast";
 import {
@@ -400,6 +401,7 @@ function Router() {
       <Route path="/games/business-tycoon">{() => <ProtectedRoute component={BusinessTycoonGame} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
+      <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>
       <Route path="/purchase-requests">{() => <ProtectedRoute component={PurchaseRequests} minRole="staff" />}</Route>
       <Route path="/offer-letters">{() => <ProtectedRoute component={OfferLetters} minRole="staff" />}</Route>
       

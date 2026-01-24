@@ -15100,3 +15100,266 @@ export const stockEvents = mysqlTable("stock_events", {
 
 export type StockEvent = typeof stockEvents.$inferSelect;
 export type InsertStockEvent = typeof stockEvents.$inferInsert;
+
+
+// ==================== OFFICE SUITE & DOCUMENT MANAGEMENT ====================
+
+// Documents table - main document tracking (official versions only per user preference)
+export const officeDocuments = mysqlTable("office_documents", {
+  id: int("id").primaryKey().autoincrement(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  documentType: mysqlEnum("documentType", [
+    "document",      // Word-like documents
+    "spreadsheet",   // Excel-like spreadsheets
+    "presentation",  // PowerPoint-like presentations
+    "pdf",           // PDF files
+    "form",          // Fillable forms
+    "template",      // Reusable templates
+    "contract",      // Legal contracts
+    "report",        // Generated reports
+    "other"
+  ]).notNull().default("document"),
+  status: mysqlEnum("status", [
+    "draft",
+    "in_review",
+    "pending_signature",
+    "signed",
+    "final",
+    "archived",
+    "deleted"
+  ]).notNull().default("draft"),
+  
+  // Storage
+  fileKey: varchar("fileKey", { length: 500 }),  // S3 key
+  fileUrl: varchar("fileUrl", { length: 1000 }), // Public URL
+  mimeType: varchar("mimeType", { length: 100 }),
+  fileSize: int("fileSize"), // bytes
+  
+  // Content for browser-based editing
+  content: text("content"), // JSON or HTML content for in-browser editing
+  
+  // Metadata
+  entityType: varchar("entityType", { length: 100 }), // trust, llc, collective, etc.
+  entityId: int("entityId"),
+  department: varchar("department", { length: 100 }),
+  category: varchar("category", { length: 100 }),
+  tags: text("tags"), // JSON array of tags
+  
+  // Template info
+  isTemplate: boolean("isTemplate").default(false),
+  templateId: int("templateId"), // If created from template
+  
+  // Ownership
+  createdBy: int("createdBy").notNull(),
+  ownerId: int("ownerId").notNull(),
+  
+  // Signature tracking
+  requiresSignature: boolean("requiresSignature").default(false),
+  signatureCount: int("signatureCount").default(0),
+  requiredSignatures: int("requiredSignatures").default(0),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  finalizedAt: timestamp("finalizedAt"),
+  archivedAt: timestamp("archivedAt"),
+});
+
+export type OfficeDocument = typeof officeDocuments.$inferSelect;
+export type InsertOfficeDocument = typeof officeDocuments.$inferInsert;
+
+// Document versions - track version history
+export const officeDocumentVersions = mysqlTable("office_document_versions", {
+  id: int("id").primaryKey().autoincrement(),
+  documentId: int("documentId").notNull(),
+  versionNumber: int("versionNumber").notNull(),
+  
+  // Storage
+  fileKey: varchar("fileKey", { length: 500 }),
+  fileUrl: varchar("fileUrl", { length: 1000 }),
+  content: text("content"),
+  
+  // Change info
+  changeDescription: text("changeDescription"),
+  changedBy: int("changedBy").notNull(),
+  
+  // Snapshot of document state
+  title: varchar("title", { length: 500 }),
+  status: varchar("status", { length: 50 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OfficeDocumentVersion = typeof officeDocumentVersions.$inferSelect;
+export type InsertOfficeDocumentVersion = typeof officeDocumentVersions.$inferInsert;
+
+// Document collaborators - sharing and permissions
+export const officeDocumentCollaborators = mysqlTable("office_document_collaborators", {
+  id: int("id").primaryKey().autoincrement(),
+  documentId: int("documentId").notNull(),
+  userId: int("userId").notNull(),
+  
+  // Permission levels
+  canView: boolean("canView").default(true),
+  canEdit: boolean("canEdit").default(false),
+  canComment: boolean("canComment").default(true),
+  canShare: boolean("canShare").default(false),
+  canSign: boolean("canSign").default(false),
+  canDelete: boolean("canDelete").default(false),
+  
+  // Invitation
+  invitedBy: int("invitedBy"),
+  invitedAt: timestamp("invitedAt").defaultNow(),
+  acceptedAt: timestamp("acceptedAt"),
+  
+  // Access tracking
+  lastAccessedAt: timestamp("lastAccessedAt"),
+});
+
+export type OfficeDocumentCollaborator = typeof officeDocumentCollaborators.$inferSelect;
+export type InsertOfficeDocumentCollaborator = typeof officeDocumentCollaborators.$inferInsert;
+
+// Document comments - inline comments and discussions
+export const officeDocumentComments = mysqlTable("office_document_comments", {
+  id: int("id").primaryKey().autoincrement(),
+  documentId: int("documentId").notNull(),
+  versionId: int("versionId"), // Optional - comment on specific version
+  
+  // Comment content
+  content: text("content").notNull(),
+  
+  // Position in document (for inline comments)
+  anchorType: varchar("anchorType", { length: 50 }), // text, cell, slide, page
+  anchorData: text("anchorData"), // JSON with position info
+  
+  // Threading
+  parentCommentId: int("parentCommentId"), // For replies
+  
+  // Status
+  isResolved: boolean("isResolved").default(false),
+  resolvedBy: int("resolvedBy"),
+  resolvedAt: timestamp("resolvedAt"),
+  
+  // Author
+  authorId: int("authorId").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OfficeDocumentComment = typeof officeDocumentComments.$inferSelect;
+export type InsertOfficeDocumentComment = typeof officeDocumentComments.$inferInsert;
+
+// Document signatures - electronic signature tracking (system-wide requirement)
+export const officeDocumentSignatures = mysqlTable("office_document_signatures", {
+  id: int("id").primaryKey().autoincrement(),
+  documentId: int("documentId").notNull(),
+  
+  // Signer info
+  signerId: int("signerId"), // If internal user
+  signerName: varchar("signerName", { length: 255 }).notNull(),
+  signerEmail: varchar("signerEmail", { length: 255 }).notNull(),
+  signerTitle: varchar("signerTitle", { length: 255 }),
+  
+  // Signature data
+  signatureType: varchar("signatureType", { length: 50 }).notNull(), // drawn, typed, uploaded
+  signatureData: text("signatureData"), // Base64 or reference
+  signatureImageUrl: varchar("signatureImageUrl", { length: 1000 }),
+  
+  // Placement
+  pageNumber: int("pageNumber"),
+  positionX: int("positionX"),
+  positionY: int("positionY"),
+  width: int("width"),
+  height: int("height"),
+  
+  // Verification
+  ipAddress: varchar("ipAddress", { length: 50 }),
+  userAgent: text("userAgent"),
+  signedAt: timestamp("signedAt"),
+  
+  // Status
+  status: varchar("status", { length: 50 }).notNull().default("pending"), // pending, signed, declined, expired
+  declineReason: text("declineReason"),
+  
+  // Request info
+  requestedBy: int("requestedBy"),
+  requestedAt: timestamp("requestedAt").defaultNow(),
+  expiresAt: timestamp("expiresAt"),
+  
+  // Audit
+  auditTrail: text("auditTrail"), // JSON array of events
+});
+
+export type OfficeDocumentSignature = typeof officeDocumentSignatures.$inferSelect;
+export type InsertOfficeDocumentSignature = typeof officeDocumentSignatures.$inferInsert;
+
+// Document templates - reusable document templates
+export const officeDocumentTemplates = mysqlTable("office_document_templates", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  documentType: mysqlEnum("templateDocType", [
+    "document", "spreadsheet", "presentation", "pdf", "form", "contract", "report"
+  ]).notNull(),
+  
+  // Template content
+  content: text("content"), // Template content with placeholders
+  fileKey: varchar("fileKey", { length: 500 }),
+  fileUrl: varchar("fileUrl", { length: 1000 }),
+  
+  // Categorization
+  category: varchar("category", { length: 100 }),
+  department: varchar("department", { length: 100 }),
+  entityType: varchar("entityType", { length: 100 }),
+  
+  // Placeholders/variables
+  variables: text("variables"), // JSON array of variable definitions
+  
+  // Usage
+  usageCount: int("usageCount").default(0),
+  isPublic: boolean("isPublic").default(false), // Available to all users
+  
+  // Ownership
+  createdBy: int("createdBy").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type OfficeDocumentTemplate = typeof officeDocumentTemplates.$inferSelect;
+export type InsertOfficeDocumentTemplate = typeof officeDocumentTemplates.$inferInsert;
+
+// PDF operations log - track PDF manipulations
+export const pdfOperations = mysqlTable("pdf_operations", {
+  id: int("id").primaryKey().autoincrement(),
+  
+  // Operation type
+  operationType: varchar("operationType", { length: 50 }).notNull(), // merge, split, compress, convert, fill_form, sign
+  
+  // Input files
+  inputDocumentIds: text("inputDocumentIds"), // JSON array
+  inputFileUrls: text("inputFileUrls"), // JSON array for external files
+  
+  // Output
+  outputDocumentId: int("outputDocumentId"),
+  outputFileKey: varchar("outputFileKey", { length: 500 }),
+  outputFileUrl: varchar("outputFileUrl", { length: 1000 }),
+  
+  // Operation details
+  operationParams: text("operationParams"), // JSON with operation-specific params
+  
+  // Status
+  status: varchar("status", { length: 50 }).notNull().default("pending"), // pending, processing, completed, failed
+  errorMessage: text("errorMessage"),
+  
+  // User
+  userId: int("userId").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type PdfOperation = typeof pdfOperations.$inferSelect;
+export type InsertPdfOperation = typeof pdfOperations.$inferInsert;
