@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO business_entities (name, entityType, status, description, parentEntityId, allocationPercentage, createdAt, updatedAt) VALUES ('LuvLedger System', 'Asset', 'Active', 'Financial Backbone - Transaction tracking, allocations, blockchain records', 1, NULL, NOW(), NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO business_entities (name, entityType, status, description, parentEntityId, allocationPercentage, createdAt, updatedAt) VALUES ('LuvLedger System', 'Asset', 'Active', 'Financial Backbone - Transaction tracking, allocations, blockchain records', 1, NULL, NOW(), NOW());",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1265 (01000) at line 1: Data truncated for column 'entityType' at row 1"
+  ]
+}

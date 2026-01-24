@@ -1,0 +1,73 @@
+{
+  "query": "SELECT id, name, entityType, parentEntityId, description FROM business_entities ORDER BY COALESCE(parentEntityId, 0), entityType, id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, entityType, parentEntityId, description FROM business_entities ORDER BY COALESCE(parentEntityId, 0), entityType, id;",
+  "rows": [
+    {
+      "id": "30004",
+      "name": "CALEA Freeman Family Trust",
+      "entityType": "trust",
+      "parentEntityId": "NULL",
+      "description": "Root holding authority, lineage anchor, protection layer - INTERNAL ONLY"
+    },
+    {
+      "id": "7",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "parentEntityId": "NULL",
+      "description": "Commercial Engine - Products, licensing, IP monetization. Handles product development, licensing agreements, and intellectual property revenue generation."
+    },
+    {
+      "id": "9",
+      "name": "Real-Eye-Nation",
+      "entityType": "llc",
+      "parentEntityId": "1",
+      "description": "Commercial Engine - Products, licensing, IP monetization. Handles product development, licensing agreements, and intellectual property revenue generation."
+    },
+    {
+      "id": "60001",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "parentEntityId": "1",
+      "description": "Commercial engine for products and IP monetization"
+    },
+    {
+      "id": "8",
+      "name": "The L.A.W.S. Collective LLC",
+      "entityType": "collective",
+      "parentEntityId": "1",
+      "description": "House Trust system - Multi-generational wealth structure and family governance platform."
+    },
+    {
+      "id": "90001",
+      "name": "LuvLedger System",
+      "entityType": "asset",
+      "parentEntityId": "1",
+      "description": "Financial Backbone - Transaction tracking, allocations, blockchain records"
+    },
+    {
+      "id": "90002",
+      "name": "Platform Application",
+      "entityType": "asset",
+      "parentEntityId": "1",
+      "description": "Software System - The L.A.W.S. platform, simulators, member tools"
+    },
+    {
+      "id": "90003",
+      "name": "IP Portfolio",
+      "entityType": "asset",
+      "parentEntityId": "1",
+      "description": "Intellectual Property - Trademarks, copyrights, patents, trade secrets"
+    },
+    {
+      "id": "90004",
+      "name": "Digital Assets",
+      "entityType": "asset",
+      "parentEntityId": "1",
+      "description": "Domain Names - lawscollective.com, digital real estate, member data"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tentityType\tparentEntityId\tdescription\n30004\tCALEA Freeman Family Trust\ttrust\tNULL\tRoot holding authority, lineage anchor, protection layer - INTERNAL ONLY\n7\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\tNULL\tCommercial Engine - Products, licensing, IP monetization. Handles product development, licensing agreements, and intellectual property revenue generation.\n9\tReal-Eye-Nation\tllc\t1\tCommercial Engine - Products, licensing, IP monetization. Handles product development, licensing agreements, and intellectual property revenue generation.\n60001\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\t1\tCommercial engine for products and IP monetization\n8\tThe L.A.W.S. Collective LLC\tcollective\t1\tHouse Trust system - Multi-generational wealth structure and family governance platform.\n90001\tLuvLedger System\tasset\t1\tFinancial Backbone - Transaction tracking, allocations, blockchain records\n90002\tPlatform Application\tasset\t1\tSoftware System - The L.A.W.S. platform, simulators, member tools\n90003\tIP Portfolio\tasset\t1\tIntellectual Property - Trademarks, copyrights, patents, trade secrets\n90004\tDigital Assets\tasset\t1\tDomain Names - lawscollective.com, digital real estate, member data\n",
+  "stderr": "",
+  "execution_time_ms": 344
+}

@@ -33,7 +33,7 @@ export const businessEntities = mysqlTable("business_entities", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
   name: varchar("name", { length: 255 }).notNull(),
-  entityType: mysqlEnum("entityType", ["trust", "llc", "corporation", "collective", "508c1a"]).notNull(),
+  entityType: mysqlEnum("entityType", ["trust", "llc", "corporation", "collective", "508c1a", "asset", "division"]).notNull(),
   status: mysqlEnum("status", ["draft", "active", "paused", "archived"]).default("draft").notNull(),
   trustLevel: int("trustLevel").default(1).notNull(),
   description: text("description"),
@@ -12735,7 +12735,7 @@ export const sandboxEntities = mysqlTable("sandbox_entities", {
   sessionId: int("sessionId").notNull(),
   userId: int("userId").notNull(),
   entityName: varchar("entityName", { length: 255 }).notNull(),
-  entityType: mysqlEnum("entityType", ["trust", "llc", "corporation", "collective", "508c1a"]).notNull(),
+  entityType: mysqlEnum("entityType", ["trust", "llc", "corporation", "collective", "508c1a", "asset", "division"]).notNull(),
   status: mysqlEnum("status", ["draft", "active", "paused", "archived"]).default("active").notNull(),
   balance: decimal("balance", { precision: 15, scale: 2 }).default("0.00"),
   // Sandbox-specific settings

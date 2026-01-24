@@ -146,6 +146,7 @@ import QAQCDashboard from "@/pages/QAQCDashboard";
 import LegalDashboard from "@/pages/LegalDashboard";
 import ITDashboard from "@/pages/ITDashboard";
 import PlatformAdminDashboard from "@/pages/PlatformAdminDashboard";
+import TrustAdminDashboard from "@/pages/TrustAdminDashboard";
 import Procedures from "@/pages/Procedures";
 import MeetingsDashboard from "@/pages/MeetingsDashboard";
 import Downloads from "@/pages/Downloads";
@@ -427,6 +428,7 @@ function Router() {
       <Route path="/dept/hr">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
       <Route path="/dept/operations">{() => <ProtectedRoute component={OperationsDashboard} minRole="staff" />}</Route>
       <Route path="/dept/platform-admin">{() => <ProtectedRoute component={PlatformAdminDashboard} minRole="admin" />}</Route>
+      <Route path="/trust-admin">{() => <ProtectedRoute component={TrustAdminDashboard} minRole="admin" />}</Route>
       <Route path="/dept/legal">{() => <ProtectedRoute component={LegalDashboard} minRole="staff" />}</Route>
       <Route path="/dept/it">{() => <ProtectedRoute component={ITDashboard} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
