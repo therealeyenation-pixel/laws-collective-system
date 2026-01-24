@@ -147,6 +147,7 @@ import LegalDashboard from "@/pages/LegalDashboard";
 import ITDashboard from "@/pages/ITDashboard";
 import PlatformAdminDashboard from "@/pages/PlatformAdminDashboard";
 import TrustAdminDashboard from "@/pages/TrustAdminDashboard";
+import EntityCurriculum from "@/pages/EntityCurriculum";
 import Procedures from "@/pages/Procedures";
 import MeetingsDashboard from "@/pages/MeetingsDashboard";
 import Downloads from "@/pages/Downloads";
@@ -333,6 +334,7 @@ function Router() {
       <Route path="/platform-simulator">{() => <ProtectedRoute component={PlatformSimulator} minRole="admin" />}</Route>
       <Route path="/grants-simulator">{() => <ProtectedRoute component={GrantsSimulator} minRole="staff" />}</Route>
       <Route path="/training-hub">{() => <ProtectedRoute component={TrainingHub} minRole="user" />}</Route>
+      <Route path="/entity-curriculum">{() => <ProtectedRoute component={EntityCurriculum} minRole="user" />}</Route>
       <Route path="/contract-agent">{() => <ProtectedRoute component={ContractAgent} minRole="user" />}</Route>
       
       {/* Staff routes - management level */}

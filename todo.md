@@ -145,13 +145,14 @@
 - [ ] Build token reporting dashboard
 
 ### Phase 10.5: Entity-Specific Curriculum
-- [ ] Generate "Lineage & Sovereignty" curriculum (Trust)
-- [ ] Generate "Financial Literacy" curriculum (Academy)
-- [ ] Generate "Truth & Narrative" curriculum (Real-Eye-Nation)
-- [ ] Generate "Product Development" curriculum (Commercial)
-- [ ] Generate "Platform Administration" curriculum (L.A.W.S.)
-- [ ] Create entity-specific simulators
-- [ ] Configure difficulty adaptation per entity
+- [x] Generate "Lineage & Sovereignty" curriculum (Trust) - 5 modules, 40 hours
+- [x] Generate "Financial Literacy" curriculum (Academy) - 6 modules, 60 hours
+- [x] Generate "Truth & Narrative" curriculum (Real-Eye-Nation) - 5 modules, 48 hours
+- [x] Generate "Product Development" curriculum (Commercial) - 5 modules, 50 hours
+- [x] Generate "Platform Administration" curriculum (L.A.W.S.) - 5 modules, 45 hours
+- [x] Create EntityCurriculum page at /entity-curriculum
+- [x] Create entity-specific simulators (integrated with Training Hub)
+- [x] Configure difficulty adaptation per entity (beginner/intermediate/advanced)
 - [ ] Set up certificate issuance workflows
 
 ### Phase 10.6: Governance Integration
