@@ -735,4 +735,124 @@ export const closedLoopWealthRouter = router({
         distributions: distributions[0],
       };
     }),
+
+  // Get member business profile for current user
+  getMemberBusinessProfile: protectedProcedure
+    .query(async ({ ctx }) => {
+      const result = await db.execute(sql`
+        SELECT 
+          mb.*,
+          h.houseName,
+          COALESCE((SELECT SUM(amount) FROM community_reinvestments WHERE memberBusinessId = mb.id AND status = 'paid'), 0) as totalReinvestment,
+          COALESCE((SELECT SUM(amount) FROM community_reinvestments WHERE memberBusinessId = mb.id AND status = 'paid' AND YEAR(createdAt) = YEAR(CURDATE())), 0) as ytdReinvestment,
+          COALESCE((SELECT SUM(amount) FROM prosperity_distributions WHERE recipientType = 'member_business' AND recipientId = mb.id), 0) as totalDistributions,
+          (SELECT COUNT(*) FROM member_businesses WHERE referredBy = mb.id) as referralCount
+        FROM member_businesses mb
+        LEFT JOIN houses h ON mb.sponsoringHouseId = h.id
+        WHERE mb.userId = ${ctx.user.id}
+        LIMIT 1
+      `);
+      
+      const business = (result[0] as any[])[0];
+      if (!business) return null;
+      
+      return {
+        ...business,
+        reinvestmentRate: business.reinvestmentRate || 10,
+        complianceStatus: business.membershipStatus === 'active' ? 'compliant' : 'pending',
+      };
+    }),
+
+  // Get reinvestment history for current user's business
+  getMyReinvestmentHistory: protectedProcedure
+    .query(async ({ ctx }) => {
+      const result = await db.execute(sql`
+        SELECT cr.* 
+        FROM community_reinvestments cr
+        JOIN member_businesses mb ON cr.memberBusinessId = mb.id
+        WHERE mb.userId = ${ctx.user.id}
+        ORDER BY cr.createdAt DESC
+        LIMIT 20
+      `);
+      return result[0] as any[];
+    }),
+
+  // Get prosperity distributions for current user's business
+  getProsperityDistributions: protectedProcedure
+    .query(async ({ ctx }) => {
+      const result = await db.execute(sql`
+        SELECT pd.* 
+        FROM prosperity_distributions pd
+        JOIN member_businesses mb ON pd.recipientId = mb.id AND pd.recipientType = 'member_business'
+        WHERE mb.userId = ${ctx.user.id}
+        ORDER BY pd.createdAt DESC
+        LIMIT 20
+      `);
+      return result[0] as any[];
+    }),
+
+  // Get member benefits
+  getMemberBenefits: protectedProcedure
+    .query(async ({ ctx }) => {
+      // Get user's membership tier
+      const business = await db.execute(sql`
+        SELECT membershipTier FROM member_businesses WHERE userId = ${ctx.user.id}
+      `);
+      
+      const tier = ((business[0] as any[])[0])?.membershipTier || 'standard';
+      
+      const allBenefits = [
+        { name: 'Academy Access', tier: 'standard' },
+        { name: 'Business Consulting', tier: 'standard' },
+        { name: 'Network Events', tier: 'standard' },
+        { name: 'Marketing Support', tier: 'premium' },
+        { name: 'Priority Grant Access', tier: 'premium' },
+        { name: 'Dedicated Account Manager', tier: 'elite' },
+        { name: 'Board Advisory Access', tier: 'elite' },
+        { name: 'Founding Recognition', tier: 'founding' },
+      ];
+      
+      const tierOrder = ['standard', 'premium', 'elite', 'founding'];
+      const userTierIndex = tierOrder.indexOf(tier);
+      
+      return allBenefits.map(b => ({
+        ...b,
+        available: tierOrder.indexOf(b.tier) <= userTierIndex,
+      }));
+    }),
+
+  // Submit community reinvestment
+  submitReinvestment: protectedProcedure
+    .input(z.object({
+      amount: z.number().positive(),
+      period: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Get user's business
+      const business = await db.execute(sql`
+        SELECT id FROM member_businesses WHERE userId = ${ctx.user.id}
+      `);
+      
+      const businessId = ((business[0] as any[])[0])?.id;
+      if (!businessId) {
+        throw new Error('No member business found');
+      }
+      
+      const blockchainHash = generateBlockchainHash({
+        businessId,
+        amount: input.amount,
+        period: input.period,
+        userId: ctx.user.id,
+      });
+      
+      await db.execute(sql`
+        INSERT INTO community_reinvestments (
+          memberBusinessId, amount, period, status, blockchainHash
+        ) VALUES (
+          ${businessId}, ${input.amount}, ${input.period}, 'pending', ${blockchainHash}
+        )
+      `);
+      
+      return { success: true };
+    }),
 });

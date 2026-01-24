@@ -161,6 +161,8 @@ import WorkerProgression from "@/pages/WorkerProgression";
 import ClosedLoopWealth from "@/pages/ClosedLoopWealth";
 import LAWSEmploymentPortal from "@/pages/LAWSEmploymentPortal";
 import Donate508 from "@/pages/Donate508";
+import PublicDonate from "@/pages/PublicDonate";
+import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -271,7 +273,9 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
+      <Route path="/donate/public" component={PublicDonate} />
       <Route path="/donate/academy" component={Donate508} />
+      <Route path="/member-business" component={MemberBusinessDashboard} />
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
