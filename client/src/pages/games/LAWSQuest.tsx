@@ -43,6 +43,7 @@ import {
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { useGameCompletion } from "@/hooks/useGameCompletion";
+import TokenShop, { SHOP_ITEMS, type ShopItem } from "@/components/games/TokenShop";
 
 // Character attributes aligned with L.A.W.S.
 interface CharacterStats {
@@ -405,6 +406,160 @@ const INITIAL_QUESTS: Quest[] = [
     miniGame: "math",
     energyCost: 20,
   },
+
+  // EXPANDED QUESTS - Phase 2
+
+  // LAND Realm - Additional Quests
+  {
+    id: "land-4",
+    name: "Migration Stories",
+    description: "Trace the paths your ancestors traveled and understand the journeys that shaped your family.",
+    realm: "land",
+    difficulty: "intermediate",
+    requirements: { land: 8 },
+    rewards: { experience: 120, tokens: 30, statBoosts: { land: 3, air: 1 } },
+    completed: false,
+    miniGame: "trivia",
+    energyCost: 15,
+  },
+  {
+    id: "land-5",
+    name: "Homestead Vision",
+    description: "Design your ideal family homestead and learn about sustainable living.",
+    realm: "land",
+    difficulty: "advanced",
+    requirements: { land: 20 },
+    rewards: { experience: 250, tokens: 60, statBoosts: { land: 6, self: 3 } },
+    completed: false,
+    miniGame: "reflection",
+    energyCost: 25,
+  },
+  {
+    id: "land-6",
+    name: "Legacy Lands",
+    description: "Master the art of acquiring and preserving land for future generations.",
+    realm: "land",
+    difficulty: "master",
+    requirements: { land: 30 },
+    rewards: { experience: 400, tokens: 100, statBoosts: { land: 10, self: 5 } },
+    completed: false,
+    miniGame: "math",
+    energyCost: 35,
+  },
+
+  // AIR Realm - Additional Quests
+  {
+    id: "air-4",
+    name: "Story Weaver",
+    description: "Learn the art of storytelling to preserve and share family history.",
+    realm: "air",
+    difficulty: "intermediate",
+    requirements: { air: 8 },
+    rewards: { experience: 120, tokens: 30, statBoosts: { air: 3, water: 1 } },
+    completed: false,
+    miniGame: "reflection",
+    energyCost: 15,
+  },
+  {
+    id: "air-5",
+    name: "Academy Builder",
+    description: "Design an educational curriculum for your family's academy.",
+    realm: "air",
+    difficulty: "advanced",
+    requirements: { air: 20 },
+    rewards: { experience: 250, tokens: 60, statBoosts: { air: 6, land: 3 } },
+    completed: false,
+    miniGame: "trivia",
+    energyCost: 25,
+  },
+  {
+    id: "air-6",
+    name: "Wisdom Council",
+    description: "Establish a council of elders to guide future generations.",
+    realm: "air",
+    difficulty: "master",
+    requirements: { air: 30 },
+    rewards: { experience: 400, tokens: 100, statBoosts: { air: 10, water: 5 } },
+    completed: false,
+    miniGame: "memory",
+    energyCost: 35,
+  },
+
+  // WATER Realm - Additional Quests
+  {
+    id: "water-4",
+    name: "Ancestral Healing",
+    description: "Address generational trauma and begin the healing process for your lineage.",
+    realm: "water",
+    difficulty: "intermediate",
+    requirements: { water: 8 },
+    rewards: { experience: 120, tokens: 30, statBoosts: { water: 3, self: 1 } },
+    completed: false,
+    miniGame: "reflection",
+    energyCost: 15,
+  },
+  {
+    id: "water-5",
+    name: "Emotional Intelligence",
+    description: "Develop advanced skills in understanding and managing emotions.",
+    realm: "water",
+    difficulty: "advanced",
+    requirements: { water: 20 },
+    rewards: { experience: 250, tokens: 60, statBoosts: { water: 6, air: 3 } },
+    completed: false,
+    miniGame: "meditation",
+    energyCost: 25,
+  },
+  {
+    id: "water-6",
+    name: "Harmony Keeper",
+    description: "Become a master of conflict resolution and family harmony.",
+    realm: "water",
+    difficulty: "master",
+    requirements: { water: 30 },
+    rewards: { experience: 400, tokens: 100, statBoosts: { water: 10, land: 5 } },
+    completed: false,
+    miniGame: "reflection",
+    energyCost: 35,
+  },
+
+  // SELF Realm - Additional Quests
+  {
+    id: "self-4",
+    name: "Business Blueprint",
+    description: "Create a business plan aligned with your purpose and values.",
+    realm: "self",
+    difficulty: "intermediate",
+    requirements: { self: 8 },
+    rewards: { experience: 120, tokens: 30, statBoosts: { self: 3, land: 1 } },
+    completed: false,
+    miniGame: "trivia",
+    energyCost: 15,
+  },
+  {
+    id: "self-5",
+    name: "Investment Mastery",
+    description: "Learn advanced investment strategies for building generational wealth.",
+    realm: "self",
+    difficulty: "advanced",
+    requirements: { self: 20 },
+    rewards: { experience: 250, tokens: 60, statBoosts: { self: 6, air: 3 } },
+    completed: false,
+    miniGame: "math",
+    energyCost: 25,
+  },
+  {
+    id: "self-6",
+    name: "Dynasty Founder",
+    description: "Establish the foundation for a multi-generational family dynasty.",
+    realm: "self",
+    difficulty: "master",
+    requirements: { self: 30 },
+    rewards: { experience: 400, tokens: 100, statBoosts: { self: 10, water: 5 } },
+    completed: false,
+    miniGame: "reflection",
+    energyCost: 35,
+  },
 ];
 
 const REALM_INFO = {
@@ -488,6 +643,11 @@ export default function LAWSQuest() {
   const [activeNPC, setActiveNPC] = useState<NPC | null>(null);
   const [npcDialogueIndex, setNpcDialogueIndex] = useState(0);
   const [showInventory, setShowInventory] = useState(false);
+  const [showShop, setShowShop] = useState(false);
+  const [purchasedItems, setPurchasedItems] = useState<string[]>(() => {
+    const saved = localStorage.getItem("laws-quest-purchased-v1");
+    return saved ? JSON.parse(saved) : [];
+  });
   const { completeGame } = useGameCompletion();
 
   // Mini-game state
@@ -512,7 +672,79 @@ export default function LAWSQuest() {
   useEffect(() => {
     localStorage.setItem("laws-quest-character-v2", JSON.stringify(character));
     localStorage.setItem("laws-quest-quests-v2", JSON.stringify(quests));
-  }, [character, quests]);
+    localStorage.setItem("laws-quest-purchased-v1", JSON.stringify(purchasedItems));
+  }, [character, quests, purchasedItems]);
+
+  // Handle shop purchase
+  const handleShopPurchase = (item: ShopItem) => {
+    if (character.tokens < item.price) return;
+
+    // Deduct tokens
+    let newCharacter = {
+      ...character,
+      tokens: character.tokens - item.price
+    };
+
+    // Apply item effect
+    if (item.effect) {
+      switch (item.effect.type) {
+        case "energy":
+          if (item.effect.duration === 0) {
+            // Permanent max energy increase
+            newCharacter.maxEnergy += item.effect.value;
+          }
+          newCharacter.energy = Math.min(newCharacter.maxEnergy, newCharacter.energy + item.effect.value);
+          break;
+        case "stat_boost":
+          if (item.effect.stat) {
+            newCharacter.stats = {
+              ...newCharacter.stats,
+              [item.effect.stat]: newCharacter.stats[item.effect.stat] + item.effect.value
+            };
+          } else {
+            // All stats boost (like Sovereign's Crown)
+            newCharacter.stats = {
+              land: newCharacter.stats.land + item.effect.value,
+              air: newCharacter.stats.air + item.effect.value,
+              water: newCharacter.stats.water + item.effect.value,
+              self: newCharacter.stats.self + item.effect.value
+            };
+          }
+          break;
+        case "xp_boost":
+        case "token_boost":
+          // These would need a buff system - for now just add to inventory
+          newCharacter.inventory = [
+            ...newCharacter.inventory,
+            {
+              id: item.id,
+              name: item.name,
+              type: "artifact" as const,
+              description: item.description,
+              quantity: 1,
+              icon: item.icon
+            }
+          ];
+          break;
+        case "cosmetic":
+          // Handle title changes
+          if (item.name.startsWith("Title:")) {
+            const titleName = item.name.replace("Title: ", "");
+            newCharacter.title = titleName;
+          }
+          break;
+      }
+    }
+
+    setCharacter(newCharacter);
+
+    // Track one-time purchases
+    if (item.category !== "consumables") {
+      setPurchasedItems([...purchasedItems, item.id]);
+    }
+
+    toast.success(`${item.name} applied!`);
+  };
 
   // Energy regeneration
   useEffect(() => {
@@ -999,6 +1231,10 @@ export default function LAWSQuest() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowShop(true)}>
+              <Coins className="w-4 h-4 mr-1" />
+              Shop
+            </Button>
             <Button variant="outline" size="sm" onClick={() => setShowInventory(true)}>
               <Package className="w-4 h-4 mr-1" />
               Inventory
@@ -1421,6 +1657,17 @@ export default function LAWSQuest() {
 
             {/* Mini-game Dialog */}
             {renderMiniGame()}
+
+            {/* Token Shop */}
+            <TokenShop
+              open={showShop}
+              onOpenChange={setShowShop}
+              tokens={character.tokens}
+              level={character.level}
+              stats={character.stats}
+              onPurchase={handleShopPurchase}
+              purchasedItems={purchasedItems}
+            />
           </>
         )}
 
@@ -1444,10 +1691,10 @@ export default function LAWSQuest() {
                 <p className="font-medium">House Building</p>
                 <p className="text-xs text-muted-foreground">Family legacy system</p>
               </div>
-              <div className="p-3 bg-purple-50 rounded-lg">
-                <Coins className="w-5 h-5 text-purple-500 mb-1" />
-                <p className="font-medium">Token Shop</p>
-                <p className="text-xs text-muted-foreground">Spend earned tokens</p>
+              <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                <Coins className="w-5 h-5 text-green-600 mb-1" />
+                <p className="font-medium text-green-800">Token Shop</p>
+                <p className="text-xs text-green-600">Now Available!</p>
               </div>
               <div className="p-3 bg-purple-50 rounded-lg">
                 <Map className="w-5 h-5 text-purple-500 mb-1" />
