@@ -115,6 +115,7 @@ export default function HRDashboard() {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="applications">Recent Applications</TabsTrigger>
             <TabsTrigger value="positions">Open Positions</TabsTrigger>
+            <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
           </TabsList>
@@ -275,6 +276,72 @@ export default function HRDashboard() {
               <div className="mt-4">
                 <Link href="/positions">
                   <Button variant="outline" className="w-full">Manage All Positions</Button>
+                </Link>
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="team" className="space-y-4 mt-4">
+            <Card className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground">HR Department Team</h3>
+                <Link href="/employee-directory?department=hr">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Users className="w-4 h-4" />
+                    View Full Directory
+                  </Button>
+                </Link>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
+                      LR
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">LaShanna K. Russell</p>
+                      <p className="text-sm text-muted-foreground">CEO - HR Oversight</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-purple-500">Executive</Badge>
+                </div>
+                <div className="flex items-center justify-between p-4 border rounded-lg border-dashed">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                      <Users className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">HR Manager</p>
+                      <p className="text-sm text-muted-foreground">Open Position</p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary">Open</Badge>
+                </div>
+                <div className="flex items-center justify-between p-4 border rounded-lg border-dashed">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                      <Users className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">HR Coordinator</p>
+                      <p className="text-sm text-muted-foreground">Open Position</p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary">Open</Badge>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t space-y-2">
+                <Link href="/employee-directory?department=hr">
+                  <Button className="w-full gap-2">
+                    <Users className="w-4 h-4" />
+                    View All HR Team Members
+                  </Button>
+                </Link>
+                <Link href="/onboarding-checklist?department=hr">
+                  <Button variant="outline" className="w-full gap-2">
+                    <FileText className="w-4 h-4" />
+                    View Onboarding Checklist
+                  </Button>
                 </Link>
               </div>
             </Card>

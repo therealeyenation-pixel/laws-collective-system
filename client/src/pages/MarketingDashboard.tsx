@@ -22,8 +22,10 @@ import {
   FileText,
   Palette,
   ExternalLink,
+  ClipboardCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "wouter";
 
 // Marketing metrics data
 const marketingMetrics = {
@@ -226,6 +228,7 @@ export default function MarketingDashboard() {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
             <TabsTrigger value="leads">Lead Sources</TabsTrigger>
+            <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="tasks">Tasks</TabsTrigger>
           </TabsList>
 
@@ -356,6 +359,79 @@ export default function MarketingDashboard() {
                       </p>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="team" className="space-y-4 mt-4">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Marketing Department Team</CardTitle>
+                    <CardDescription>Team members and open positions</CardDescription>
+                  </div>
+                  <Link href="/employee-directory?department=marketing">
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Users className="w-4 h-4" />
+                      View Full Directory
+                    </Button>
+                  </Link>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 bg-pink-50 dark:bg-pink-900/20 rounded-lg border border-pink-200 dark:border-pink-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center text-white font-bold">
+                        LR
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">LaShanna K. Russell</p>
+                        <p className="text-sm text-muted-foreground">CEO - Marketing Oversight</p>
+                      </div>
+                    </div>
+                    <Badge className="bg-pink-500">Executive</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-4 border rounded-lg border-dashed">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                        <Users className="w-5 h-5 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Marketing Manager</p>
+                        <p className="text-sm text-muted-foreground">Open Position</p>
+                      </div>
+                    </div>
+                    <Badge variant="secondary">Open</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-4 border rounded-lg border-dashed">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                        <Users className="w-5 h-5 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Marketing Coordinator</p>
+                        <p className="text-sm text-muted-foreground">Open Position</p>
+                      </div>
+                    </div>
+                    <Badge variant="secondary">Open</Badge>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t space-y-2">
+                  <Link href="/employee-directory?department=marketing">
+                    <Button className="w-full gap-2">
+                      <Users className="w-4 h-4" />
+                      View All Marketing Team Members
+                    </Button>
+                  </Link>
+                  <Link href="/onboarding-checklist?department=marketing">
+                    <Button variant="outline" className="w-full gap-2">
+                      <ClipboardCheck className="w-4 h-4" />
+                      View Onboarding Checklist
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>

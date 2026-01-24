@@ -20,6 +20,7 @@ import {
   Coins,
   Landmark,
   Calculator,
+  ClipboardCheck,
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
@@ -317,11 +318,17 @@ export default function FinanceDashboard() {
                   <Badge variant="secondary">Open</Badge>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t">
+              <div className="mt-4 pt-4 border-t space-y-2">
                 <Link href="/employee-directory?department=finance">
                   <Button className="w-full gap-2">
                     <Users className="w-4 h-4" />
                     View All Finance Team Members
+                  </Button>
+                </Link>
+                <Link href="/onboarding-checklist?department=finance">
+                  <Button variant="outline" className="w-full gap-2">
+                    <ClipboardCheck className="w-4 h-4" />
+                    View Onboarding Checklist
                   </Button>
                 </Link>
               </div>

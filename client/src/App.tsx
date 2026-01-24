@@ -54,6 +54,7 @@ import EmployeeDirectory from "@/pages/EmployeeDirectory";
 import HouseContractManagement from "@/pages/HouseContractManagement";
 import MyProfile from "@/pages/MyProfile";
 import Onboarding from "@/pages/Onboarding";
+import OnboardingChecklist from "@/pages/OnboardingChecklist";
 import OperatingProcedures from "@/pages/OperatingProcedures";
 import ProjectControls from "@/pages/ProjectControls";
 import PositionRequisitions from "@/pages/PositionRequisitions";
@@ -352,6 +353,7 @@ function Router() {
       <Route path="/procedures">{() => <ProtectedRoute component={OperatingProcedures} />}</Route>
       <Route path="/project-controls">{() => <ProtectedRoute component={ProjectControls} minRole="staff" />}</Route>
       <Route path="/employees">{() => <ProtectedRoute component={EmployeeDirectory} minRole="staff" />}</Route>
+      <Route path="/onboarding-checklist">{() => <ProtectedRoute component={OnboardingChecklist} minRole="staff" />}</Route>
       <Route path="/operations-dashboard">{() => <ProtectedRoute component={OperationsDashboard} minRole="staff" />}</Route>
       <Route path="/executive-dashboard">{() => <ProtectedRoute component={ExecutiveDashboard} minRole="admin" />}</Route>
       <Route path="/positions">{() => <ProtectedRoute component={PositionManagement} minRole="staff" />}</Route>

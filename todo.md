@@ -6572,3 +6572,24 @@ Three main approaches available:
   - [x] QA/QC Dashboard
 - [x] Ensure Employee Directory supports department query parameter filtering
 - [ ] Test all department Team links navigate correctly
+
+
+## Phase 64: Team Tabs & Onboarding Checklists
+- [x] Add Team tab to HR Dashboard with Employee Directory link
+- [x] Add Team tab to Operations Dashboard with Employee Directory link
+- [x] Add Team tab to Marketing Dashboard with Employee Directory link
+- [x] Create DepartmentOnboardingChecklist component
+- [x] Define onboarding tasks per department (HR, IT, Property, department-specific)
+- [x] Link onboarding checklists from all Team tabs (HR, Operations, Marketing, Finance)
+- [x] Add "View Onboarding Checklist" button to Team tab cards
+- [x] Create OnboardingChecklist page with department selector
+- [x] Add route /onboarding-checklist to App.tsx
+- [ ] Test Team tabs and onboarding checklist navigation
+
+## Phase 65: Remote Photo Capture Feature (Future)
+- [ ] Create webcam photo capture component
+- [ ] Add photo capture to employee onboarding flow
+- [ ] Add photo update option in employee profile settings
+- [ ] Integrate with Media department video capabilities
+- [ ] Store captured photos in S3 storage
+- [ ] Update Employee Directory to display photos
