@@ -112,6 +112,9 @@ export const gameCenterRouter = router({
       { name: "Hangman", slug: "hangman", description: "Guess the word before running out of tries", gameType: "word", ageGroup: "6_8", minPlayers: 1, maxPlayers: 2, estimatedDuration: "5-10 min", skillsTargeted: ["vocabulary", "spelling", "deduction"], tokenRewardBase: 5, icon: "text" },
       { name: "Snake Classic", slug: "snake", description: "Classic arcade snake game", gameType: "puzzle", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "5-15 min", skillsTargeted: ["reflexes", "planning", "concentration"], tokenRewardBase: 8, icon: "bug" },
       { name: "2048", slug: "2048", description: "Merge tiles to reach 2048", gameType: "puzzle", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "10-30 min", skillsTargeted: ["math", "strategy", "planning"], tokenRewardBase: 10, icon: "grid-3x3" },
+      { name: "Chess", slug: "chess", description: "Classic strategy game - checkmate the AI opponent", gameType: "strategy", ageGroup: "9_12", minPlayers: 1, maxPlayers: 2, estimatedDuration: "15-60 min", skillsTargeted: ["strategy", "planning", "critical-thinking"], tokenRewardBase: 25, icon: "crown" },
+      { name: "Battleship", slug: "battleship", description: "Naval strategy - sink the enemy fleet before they sink yours", gameType: "strategy", ageGroup: "6_8", minPlayers: 1, maxPlayers: 2, estimatedDuration: "15-30 min", skillsTargeted: ["strategy", "deduction", "planning"], tokenRewardBase: 15, icon: "ship" },
+      { name: "L.A.W.S. Quest", slug: "laws-quest", description: "Flagship RPG - Journey through Land, Air, Water, and Self realms to build your sovereign legacy", gameType: "rpg", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "30-120 min", skillsTargeted: ["strategy", "financial-literacy", "emotional-intelligence", "leadership"], tokenRewardBase: 50, icon: "crown" },
       
       // Adult/All Ages
       { name: "Solitaire Classic", slug: "solitaire", description: "Classic Klondike solitaire", gameType: "card", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "10-15 min", skillsTargeted: ["planning", "patience", "strategy"], tokenRewardBase: 5, icon: "spade" },
@@ -275,6 +278,118 @@ export const gameCenterRouter = router({
       }
       return { success: true };
     }),
+
+  // Record game completion and award tokens
+  recordGameCompletion: protectedProcedure
+    .input(z.object({
+      gameSlug: z.string(),
+      won: z.boolean(),
+      score: z.number().default(0),
+      difficulty: z.enum(["easy", "medium", "hard"]).optional(),
+      duration: z.number().optional(), // in seconds
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await ensureDb();
+      
+      // Get game info
+      const [game] = await db.select().from(gameCenterGames)
+        .where(eq(gameCenterGames.slug, input.gameSlug));
+      
+      if (!game) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Game not found" });
+      }
+      
+      // Calculate token reward
+      let tokenReward = game.tokenRewardBase || 5;
+      
+      // Bonus for winning
+      if (input.won) {
+        tokenReward = Math.floor(tokenReward * 1.5);
+      }
+      
+      // Bonus for difficulty
+      if (input.difficulty === "medium") {
+        tokenReward = Math.floor(tokenReward * 1.25);
+      } else if (input.difficulty === "hard") {
+        tokenReward = Math.floor(tokenReward * 1.5);
+      }
+      
+      // Bonus for high score (if applicable)
+      if (input.score > 1000) {
+        tokenReward += Math.floor(input.score / 500);
+      }
+      
+      // Update player stats
+      const [existingStats] = await db.select().from(gamePlayerStats)
+        .where(and(
+          eq(gamePlayerStats.playerId, ctx.user.id),
+          eq(gamePlayerStats.gameId, game.id)
+        ));
+      
+      if (existingStats) {
+        const newStreak = input.won ? (existingStats.currentStreak || 0) + 1 : 0;
+        
+        // Streak bonus
+        if (newStreak >= 3) {
+          tokenReward += Math.min(newStreak * 2, 20); // Max 20 bonus tokens for streak
+        }
+        
+        await db.update(gamePlayerStats).set({
+          gamesPlayed: existingStats.gamesPlayed + 1,
+          gamesWon: input.won ? existingStats.gamesWon + 1 : existingStats.gamesWon,
+          gamesLost: input.won ? existingStats.gamesLost : existingStats.gamesLost + 1,
+          totalScore: existingStats.totalScore + input.score,
+          highScore: Math.max(existingStats.highScore || 0, input.score),
+          currentStreak: newStreak,
+          bestStreak: Math.max(existingStats.bestStreak || 0, newStreak),
+          tokensEarned: (existingStats.tokensEarned || 0) + tokenReward,
+          lastPlayedAt: new Date(),
+        }).where(eq(gamePlayerStats.id, existingStats.id));
+      } else {
+        await db.insert(gamePlayerStats).values({
+          playerId: ctx.user.id,
+          gameId: game.id,
+          gamesPlayed: 1,
+          gamesWon: input.won ? 1 : 0,
+          gamesLost: input.won ? 0 : 1,
+          totalScore: input.score,
+          highScore: input.score,
+          currentStreak: input.won ? 1 : 0,
+          bestStreak: input.won ? 1 : 0,
+          tokensEarned: tokenReward,
+          lastPlayedAt: new Date(),
+        });
+      }
+      
+      return {
+        success: true,
+        tokensAwarded: tokenReward,
+        gameName: game.name,
+        won: input.won,
+        score: input.score,
+      };
+    }),
+
+  // Get user's game stats summary
+  getMyGameStats: protectedProcedure.query(async ({ ctx }) => {
+    const db = await ensureDb();
+    const stats = await db.select().from(gamePlayerStats)
+      .where(eq(gamePlayerStats.playerId, ctx.user.id));
+    
+    const totalGames = stats.reduce((sum, s) => sum + s.gamesPlayed, 0);
+    const totalWins = stats.reduce((sum, s) => sum + s.gamesWon, 0);
+    const totalTokens = stats.reduce((sum, s) => sum + (s.tokensEarned || 0), 0);
+    const bestStreak = Math.max(...stats.map(s => s.bestStreak || 0), 0);
+    
+    return {
+      totalGames,
+      totalWins,
+      winRate: totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0,
+      totalTokens,
+      bestStreak,
+      gameStats: stats,
+    };
+  }),
 
   // Leaderboards
   getLeaderboard: publicProcedure

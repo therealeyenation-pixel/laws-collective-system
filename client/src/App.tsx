@@ -55,6 +55,10 @@ import Hangman from "@/pages/games/Hangman";
 import Snake from "@/pages/games/Snake";
 import Checkers from "@/pages/games/Checkers";
 import Game2048 from "@/pages/games/Game2048";
+import Chess from "@/pages/games/Chess";
+import Battleship from "@/pages/games/Battleship";
+import Solitaire from "@/pages/games/Solitaire";
+import LAWSQuest from "@/pages/games/LAWSQuest";
 import Achievements from "@/pages/Achievements";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
@@ -418,6 +422,10 @@ function Router() {
       <Route path="/games/snake">{() => <ProtectedRoute component={Snake} minRole="user" />}</Route>
       <Route path="/games/checkers">{() => <ProtectedRoute component={Checkers} minRole="user" />}</Route>
       <Route path="/games/2048">{() => <ProtectedRoute component={Game2048} minRole="user" />}</Route>
+          <Route path="/games/chess" component={Chess} />
+          <Route path="/games/battleship" component={Battleship} />
+          <Route path="/games/solitaire" component={Solitaire} />
+          <Route path="/games/laws-quest" component={LAWSQuest} />
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>

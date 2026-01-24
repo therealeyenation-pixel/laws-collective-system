@@ -139,6 +139,29 @@ export default function GameCenter() {
     return true;
   });
 
+  // List of fully implemented and testable games
+  const implementedGames = new Set([
+    "tic-tac-toe",
+    "memory-match",
+    "connect-four",
+    "sudoku",
+    "word-search",
+    "hangman",
+    "snake",
+    "checkers",
+    "2048",
+    "chess",
+    "battleship",
+    "solitaire",
+    "laws-quest",
+    "business-tycoon",
+    "stock-sim",
+    "property-empire",
+    "startup-sim",
+  ]);
+
+  const isGameImplemented = (slug: string) => implementedGames.has(slug);
+
   const handlePlayGame = (gameSlug: string) => {
     // Route to implemented games
     const gameRoutes: Record<string, string> = {
@@ -155,6 +178,10 @@ export default function GameCenter() {
       "snake": "/games/snake",
       "checkers": "/games/checkers",
       "2048": "/games/2048",
+      "chess": "/games/chess",
+      "battleship": "/games/battleship",
+      "solitaire": "/games/solitaire",
+      "laws-quest": "/games/laws-quest",
     };
     
     if (gameRoutes[gameSlug]) {
@@ -342,12 +369,18 @@ export default function GameCenter() {
                           </div>
                           <div>
                             <CardTitle className="text-lg">{game.name}</CardTitle>
-                            <div className="flex gap-2 mt-1">
+                            <div className="flex gap-2 mt-1 flex-wrap">
+                              {isGameImplemented(game.slug) ? (
+                                <Badge className="text-xs bg-green-500 hover:bg-green-600">
+                                  ✓ Ready to Play
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-xs text-muted-foreground">
+                                  Coming Soon
+                                </Badge>
+                              )}
                               <Badge variant="secondary" className="text-xs">
                                 {gameTypeLabels[game.gameType]}
-                              </Badge>
-                              <Badge variant="outline" className="text-xs">
-                                {ageGroupLabels[game.ageGroup]}
                               </Badge>
                             </div>
                           </div>
@@ -377,7 +410,11 @@ export default function GameCenter() {
                           <Sparkles className="w-4 h-4 text-amber-500" />
                           <span className="text-sm font-medium">+{game.tokenRewardBase} tokens</span>
                         </div>
-                        <Button size="sm" onClick={() => handlePlayGame(game.slug)}>
+                        <Button 
+                          size="sm" 
+                          onClick={() => handlePlayGame(game.slug)}
+                          variant={isGameImplemented(game.slug) ? "default" : "outline"}
+                        >
                           <Play className="w-4 h-4 mr-1" />
                           Play
                         </Button>

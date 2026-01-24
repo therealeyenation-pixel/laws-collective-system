@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, RotateCcw, Trophy, Brain, Zap } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { useGameCompletion } from "@/hooks/useGameCompletion";
 
 type Player = "X" | "O" | null;
 type Board = Player[];
@@ -25,6 +26,8 @@ export default function TicTacToe() {
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [scores, setScores] = useState({ player: 0, ai: 0, draws: 0 });
   const [winningLine, setWinningLine] = useState<number[] | null>(null);
+  const [tokensAwarded, setTokensAwarded] = useState(false);
+  const { completeGame } = useGameCompletion();
 
   const checkWinner = (squares: Board): { winner: Player; line: number[] | null } => {
     for (const combo of winningCombinations) {
@@ -121,6 +124,11 @@ export default function TicTacToe() {
       setWinningLine(line);
       setScores((prev) => ({ ...prev, player: prev.player + 1 }));
       toast.success("You win! 🎉");
+      // Award tokens for winning
+      if (!tokensAwarded) {
+        setTokensAwarded(true);
+        completeGame({ gameSlug: "tic-tac-toe", won: true, score: 100, difficulty });
+      }
       return;
     }
 
@@ -128,6 +136,11 @@ export default function TicTacToe() {
       setWinner("draw");
       setScores((prev) => ({ ...prev, draws: prev.draws + 1 }));
       toast.info("It's a draw!");
+      // Award tokens for draw
+      if (!tokensAwarded) {
+        setTokensAwarded(true);
+        completeGame({ gameSlug: "tic-tac-toe", won: false, score: 50, difficulty });
+      }
       return;
     }
 
@@ -169,6 +182,7 @@ export default function TicTacToe() {
     setIsPlayerTurn(true);
     setWinner(null);
     setWinningLine(null);
+    setTokensAwarded(false);
   };
 
   const resetAll = () => {

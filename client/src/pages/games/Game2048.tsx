@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, RotateCcw, Trophy, ArrowUp, ArrowDown, ArrowLeftIcon, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { useGameCompletion } from "@/hooks/useGameCompletion";
 
 type Board = number[][];
 type Direction = "up" | "down" | "left" | "right";
@@ -34,6 +35,8 @@ export default function Game2048() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [continueAfterWin, setContinueAfterWin] = useState(false);
+  const [tokensAwarded, setTokensAwarded] = useState(false);
+  const { completeGame } = useGameCompletion();
 
   const createEmptyBoard = (): Board => {
     return Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(0));
@@ -155,6 +158,11 @@ export default function Game2048() {
       if (has2048) {
         setWon(true);
         toast.success("Congratulations! You reached 2048! 🎉");
+        // Award tokens for winning
+        if (!tokensAwarded) {
+          setTokensAwarded(true);
+          completeGame({ gameSlug: "2048", won: true, score: prev + totalPoints });
+        }
       }
     }
 
@@ -162,6 +170,11 @@ export default function Game2048() {
     if (!canMove(finalBoard)) {
       setGameOver(true);
       toast.error("Game Over! No more moves available.");
+      // Award tokens for game completion
+      if (!tokensAwarded) {
+        setTokensAwarded(true);
+        completeGame({ gameSlug: "2048", won: false, score: prev + totalPoints });
+      }
     }
 
     return true;
