@@ -18,6 +18,7 @@ import {
   Key,
 } from "lucide-react";
 import { Link } from "wouter";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function PropertyDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -101,6 +102,9 @@ export default function PropertyDashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="property" />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

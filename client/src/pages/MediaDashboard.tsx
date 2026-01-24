@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function MediaDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -104,6 +105,9 @@ export default function MediaDashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="media" />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

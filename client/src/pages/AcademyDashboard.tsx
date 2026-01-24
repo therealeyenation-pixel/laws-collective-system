@@ -27,6 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 type TabType = "overview" | "houses" | "modules" | "languages" | "courses" | "simulators" | "documents";
 
@@ -96,6 +97,9 @@ export default function AcademyDashboard() {
             and sovereign skill-building. Three Houses guide students from Wonder through Mastery.
           </p>
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="academy" />
 
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-4">

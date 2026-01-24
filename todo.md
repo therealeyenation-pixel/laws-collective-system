@@ -6734,16 +6734,16 @@ Three main approaches available:
 
 
 ## Phase 77: Government Actions Tracking System
-- [ ] Add government_actions table with agency, effective_date, deadline, action_type fields
-- [ ] Add government_agencies reference table (IRS, SBA, HHS, DOL, state agencies)
-- [ ] Add action_type enum (regulatory_change, grant_announcement, tax_update, licensing, labor_law, nonprofit_compliance)
-- [ ] Add affected_entities and affected_departments fields for impact tracking
-- [ ] Create government actions router with CRUD procedures
-- [ ] Add getByAgency, getByDeadline, getUpcoming procedures
-- [ ] Create GovernmentActionsWidget component for dashboards
-- [ ] Add high-priority styling for upcoming deadlines in Live Ticker
-- [ ] Integrate with SWOT (auto-classify as threat/opportunity)
-- [ ] Add compliance action item conversion (government action → task)
+- [x] Add government_actions table with agency, effective_date, deadline, action_type fields
+- [x] Add government_agencies reference table (IRS, SBA, HHS, DOL, state agencies)
+- [x] Add action_type enum (regulatory_change, grant_announcement, tax_update, licensing, labor_law, nonprofit_compliance)
+- [x] Add affected_entities and affected_departments fields for impact tracking
+- [x] Create government actions router with CRUD procedures
+- [x] Add getByAgency, getByDeadline, getUpcoming procedures
+- [x] Create GovernmentActionsWidget component for dashboards
+- [x] Add high-priority styling for upcoming deadlines in Live Ticker
+- [x] Integrate with SWOT (auto-classify as threat/opportunity)
+- [x] Add compliance action item conversion (government action → task)
 - [ ] Create Government Actions Admin page for managing entries
 - [ ] Add deadline notification system
 - [ ] Seed initial government agencies and sample actions
@@ -6773,13 +6773,14 @@ Three main approaches available:
 - [x] Add Government Actions Widget to Operations Dashboard
 - [x] Add Government Actions Widget to IT Dashboard
 - [x] Add Government Actions Widget to Education Dashboard
-- [ ] Add Government Actions Widget to Business Dashboard
-- [ ] Add Government Actions Widget to Marketing Dashboard
-- [ ] Add Government Actions Widget to Procurement Dashboard
-- [ ] Add Government Actions Widget to Property Dashboard
-- [ ] Add Government Actions Widget to Real Estate Dashboard
-- [ ] Add Government Actions Widget to Contracts Dashboard
-- [ ] Add Government Actions Widget to Academy Dashboard
+- [x] Add Government Actions Widget to Business Dashboard
+- [x] Add Government Actions Widget to Marketing Dashboard
+- [x] Add Government Actions Widget to Procurement Dashboard
+- [x] Add Government Actions Widget to Property Dashboard
+- [x] Add Government Actions Widget to Real Estate Dashboard
+- [x] Add Government Actions Widget to Contracts Dashboard
+- [x] Add Government Actions Widget to Academy Dashboard
+- [x] Add Government Actions Widget to Media Dashboard
 - [x] Add Government Actions Widget to Foundation Dashboard
 - [x] Add Government Actions Widget to Executive Dashboard
 - [x] Add Government Actions Widget to Trust Admin Dashboard

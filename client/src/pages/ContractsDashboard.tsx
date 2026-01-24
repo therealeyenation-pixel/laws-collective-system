@@ -17,6 +17,7 @@ import {
   Building2,
 } from "lucide-react";
 import { Link } from "wouter";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { ElectronicSignature } from "@/components/ElectronicSignature";
 
 export default function ContractsDashboard() {
@@ -100,6 +101,9 @@ export default function ContractsDashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="contracts" />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

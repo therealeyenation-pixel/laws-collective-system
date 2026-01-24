@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function ProcurementDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -106,6 +107,9 @@ export default function ProcurementDashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="procurement" />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
