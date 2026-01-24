@@ -46,11 +46,38 @@ export default function BusinessDashboard() {
     { label: "Revenue Streams", value: 3, icon: DollarSign, color: "text-emerald-500" },
   ];
 
+  // Public-facing entity hierarchy (Trust is internal only, not shown publicly)
+  // Structure: Trust → L.A.W.S. LLC → Collective → Divisions
   const entities = [
-    { name: "L.A.W.S. Trust", type: "Trust", status: "Active", description: "Governance & Asset Protection" },
-    { name: "L.A.W.S. Academy", type: "508(c)(1)(a)", status: "Pending EIN", description: "Education & Training" },
-    { name: "Real Eye", type: "LLC", status: "Active", description: "Media & Creative Services" },
-    { name: "L.A.W.S. Collective", type: "LLC", status: "Active", description: "Operating Company" },
+    { 
+      name: "LuvOnPurpose Autonomous Wealth System, LLC", 
+      type: "LLC", 
+      status: "Active", 
+      description: "Parent Operating LLC - The House",
+      isParent: true,
+      children: [
+        { 
+          name: "The L.A.W.S. Collective, LLC", 
+          type: "LLC", 
+          status: "Active", 
+          description: "Community Operating Entity",
+          isParent: true,
+          children: [
+            { name: "LuvOnPurpose Academy & Outreach", type: "508(c)(1)(a)", status: "Pending EIN", description: "Education Division", allocation: "30%" },
+            { name: "Real-Eye-Nation", type: "Division", status: "Active", description: "Media Division", allocation: "20%" },
+            { name: "Services & Operations", type: "Division", status: "Active", description: "Platform, Consulting, Member Services", allocation: "50%" },
+          ]
+        }
+      ]
+    },
+  ];
+
+  // Flat list for simple display
+  const entitiesFlat = [
+    { name: "LuvOnPurpose Autonomous Wealth System, LLC", type: "LLC", status: "Active", description: "Parent Operating LLC - The House" },
+    { name: "The L.A.W.S. Collective, LLC", type: "LLC", status: "Active", description: "Community Operating Entity" },
+    { name: "LuvOnPurpose Academy & Outreach", type: "508(c)(1)(a)", status: "Pending EIN", description: "Education Division - 30%" },
+    { name: "Real-Eye-Nation", type: "Division", status: "Active", description: "Media Division - 20%" },
   ];
 
   const recentActivity = [
@@ -145,7 +172,7 @@ export default function BusinessDashboard() {
               <Card className="p-6">
                 <h3 className="font-semibold text-foreground mb-4">Entity Status</h3>
                 <div className="space-y-3">
-                  {entities.map((entity) => (
+                  {entitiesFlat.map((entity) => (
                     <div key={entity.name} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div>
                         <p className="font-medium text-foreground">{entity.name}</p>
@@ -239,7 +266,7 @@ export default function BusinessDashboard() {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {entities.map((entity) => (
+              {entitiesFlat.map((entity) => (
                 <Card key={entity.name} className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>

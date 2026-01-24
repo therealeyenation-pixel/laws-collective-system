@@ -56,6 +56,10 @@ export const businessEntities = mysqlTable("business_entities", {
   houseActivatedAt: timestamp("houseActivatedAt"), // When business became a House
   houseOptOutReason: text("houseOptOutReason"), // Optional reason for opting out
   
+  // Hierarchical structure - all entities report to Trust
+  parentEntityId: int("parentEntityId"), // Reference to parent entity (Trust is root)
+  allocationPercentage: decimal("allocationPercentage", { precision: 5, scale: 2 }), // 40.00, 30.00, 20.00, 10.00
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
