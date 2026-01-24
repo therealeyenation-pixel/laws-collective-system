@@ -855,4 +855,60 @@ export const closedLoopWealthRouter = router({
       
       return { success: true };
     }),
+
+  // Register a new member business (public application)
+  registerMemberBusiness: publicProcedure
+    .input(z.object({
+      businessName: z.string().min(1),
+      businessType: z.enum(['llc', 'corporation', 'sole_proprietorship', 'partnership', 'nonprofit']),
+      ein: z.string().optional(),
+      stateOfFormation: z.string(),
+      yearEstablished: z.number().optional(),
+      industry: z.string(),
+      description: z.string(),
+      website: z.string().optional(),
+      contactName: z.string(),
+      contactTitle: z.string(),
+      contactEmail: z.string().email(),
+      contactPhone: z.string(),
+      businessAddress: z.string(),
+      businessCity: z.string(),
+      businessState: z.string(),
+      businessZip: z.string(),
+      lawsPillar: z.enum(['land', 'air', 'water', 'self']),
+      sponsoringHouseId: z.number().optional(),
+      annualRevenue: z.string(),
+      employeeCount: z.number().default(1),
+      communityCommitment: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const blockchainHash = generateBlockchainHash({
+        businessName: input.businessName,
+        contactEmail: input.contactEmail,
+        timestamp: Date.now(),
+      });
+      
+      await db.execute(sql`
+        INSERT INTO member_businesses (
+          businessName, businessType, ein, stateOfFormation, yearEstablished,
+          industry, description, website, contactName, contactTitle,
+          contactEmail, contactPhone, businessAddress, businessCity,
+          businessState, businessZip, lawsPillar, sponsoringHouseId,
+          annualRevenue, employeeCount, communityCommitment,
+          membershipStatus, membershipTier, reinvestmentRate, blockchainHash
+        ) VALUES (
+          ${input.businessName}, ${input.businessType}, ${input.ein || null},
+          ${input.stateOfFormation}, ${input.yearEstablished || null},
+          ${input.industry}, ${input.description}, ${input.website || null},
+          ${input.contactName}, ${input.contactTitle}, ${input.contactEmail},
+          ${input.contactPhone}, ${input.businessAddress}, ${input.businessCity},
+          ${input.businessState}, ${input.businessZip}, ${input.lawsPillar},
+          ${input.sponsoringHouseId || null}, ${input.annualRevenue},
+          ${input.employeeCount}, ${input.communityCommitment},
+          'pending', 'standard', 10, ${blockchainHash}
+        )
+      `);
+      
+      return { success: true, message: 'Application submitted successfully' };
+    }),
 });

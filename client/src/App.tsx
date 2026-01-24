@@ -163,6 +163,8 @@ import LAWSEmploymentPortal from "@/pages/LAWSEmploymentPortal";
 import Donate508 from "@/pages/Donate508";
 import PublicDonate from "@/pages/PublicDonate";
 import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
+import DonationThankYou from "@/pages/DonationThankYou";
+import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -276,6 +278,8 @@ function Router() {
       <Route path="/donate/public" component={PublicDonate} />
       <Route path="/donate/academy" component={Donate508} />
       <Route path="/member-business" component={MemberBusinessDashboard} />
+      <Route path="/member-business/register" component={MemberBusinessRegistration} />
+      <Route path="/donate/thank-you" component={DonationThankYou} />
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
