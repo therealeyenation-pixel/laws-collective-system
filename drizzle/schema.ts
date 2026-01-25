@@ -16418,3 +16418,351 @@ export const homeschoolPortfolios = mysqlTable("homeschool_portfolios", {
 });
 export type HomeschoolPortfolio = typeof homeschoolPortfolios.$inferSelect;
 export type InsertHomeschoolPortfolio = typeof homeschoolPortfolios.$inferInsert;
+
+
+// ============================================================================
+// VIRTUAL LIBRARY SYSTEM
+// AI-powered reading platform with tiered discussion requirements
+// ============================================================================
+
+/**
+ * Library Books - Catalog of books available in the Virtual Library
+ */
+export const libraryBooks = mysqlTable("library_books", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Book identification
+  title: varchar("title", { length: 500 }).notNull(),
+  author: varchar("author", { length: 255 }).notNull(),
+  isbn: varchar("isbn", { length: 20 }),
+  coverImageUrl: text("coverImageUrl"),
+  
+  // Classification
+  genre: varchar("genre", { length: 100 }),
+  subGenre: varchar("subGenre", { length: 100 }),
+  lawsPillar: mysqlEnum("lawsPillar", ["land", "air", "water", "self"]),
+  
+  // Reading level
+  readingLevel: mysqlEnum("readingLevel", [
+    "k_2", "3_5", "6_8", "9_12", "adult"
+  ]).notNull(),
+  lexileScore: int("lexileScore"), // Lexile measure for reading difficulty
+  pageCount: int("pageCount"),
+  estimatedReadingMinutes: int("estimatedReadingMinutes"),
+  
+  // Content
+  description: text("description"),
+  contentUrl: text("contentUrl"), // URL to book content (PDF, EPUB, etc.)
+  contentType: mysqlEnum("contentType", ["pdf", "epub", "html", "text"]).default("text"),
+  chapters: json("chapters"), // Array of chapter titles and page numbers
+  
+  // Metadata
+  publisher: varchar("publisher", { length: 255 }),
+  publicationYear: int("publicationYear"),
+  language: varchar("language", { length: 50 }).default("English"),
+  
+  // Features
+  hasAudioVersion: boolean("hasAudioVersion").default(false),
+  audioUrl: text("audioUrl"),
+  hasQuizzes: boolean("hasQuizzes").default(false),
+  hasDiscussionGuide: boolean("hasDiscussionGuide").default(false),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  isFeatured: boolean("isFeatured").default(false),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type LibraryBook = typeof libraryBooks.$inferSelect;
+export type InsertLibraryBook = typeof libraryBooks.$inferInsert;
+
+/**
+ * Reading Sessions - Track student reading activity
+ */
+export const readingSessions = mysqlTable("reading_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  bookId: int("bookId").notNull(),
+  studentProfileId: int("studentProfileId"),
+  
+  // Progress
+  currentPage: int("currentPage").default(1).notNull(),
+  currentChapter: int("currentChapter").default(1),
+  percentComplete: decimal("percentComplete", { precision: 5, scale: 2 }).default("0"),
+  totalReadingMinutes: int("totalReadingMinutes").default(0),
+  
+  // Session tracking
+  lastReadAt: timestamp("lastReadAt"),
+  sessionsCount: int("sessionsCount").default(0),
+  
+  // Settings
+  readAloudEnabled: boolean("readAloudEnabled").default(false),
+  fontSize: varchar("fontSize", { length: 20 }).default("medium"),
+  theme: mysqlEnum("theme", ["light", "dark", "sepia"]).default("light"),
+  
+  // Status
+  status: mysqlEnum("readingStatus", [
+    "not_started", "in_progress", "completed", "abandoned"
+  ]).default("not_started").notNull(),
+  completedAt: timestamp("completedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ReadingSession = typeof readingSessions.$inferSelect;
+export type InsertReadingSession = typeof readingSessions.$inferInsert;
+
+/**
+ * Book Discussions - AI-powered reading companion conversations
+ */
+export const bookDiscussions = mysqlTable("book_discussions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  bookId: int("bookId").notNull(),
+  readingSessionId: int("readingSessionId"),
+  studentProfileId: int("studentProfileId"),
+  
+  // Discussion context
+  chapterNumber: int("chapterNumber"),
+  pageNumber: int("pageNumber"),
+  discussionType: mysqlEnum("discussionType", [
+    "comprehension", "analysis", "socratic", "vocabulary", "free_form"
+  ]).notNull(),
+  
+  // Conversation
+  messages: json("messages"), // Array of {role, content, timestamp}
+  messageCount: int("messageCount").default(0),
+  
+  // Assessment
+  discussionQuality: mysqlEnum("discussionQuality", [
+    "surface", "developing", "proficient", "advanced"
+  ]),
+  qualityScore: int("qualityScore"), // 0-100
+  keyInsights: json("keyInsights"), // Notable points from discussion
+  
+  // Requirements tracking
+  isRequired: boolean("isRequired").default(false),
+  requirementMet: boolean("requirementMet").default(false),
+  
+  // Recording (for video/chat discussions)
+  hasRecording: boolean("hasRecording").default(false),
+  recordingUrl: text("recordingUrl"),
+  recordingDurationSeconds: int("recordingDurationSeconds"),
+  transcription: text("transcription"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type BookDiscussion = typeof bookDiscussions.$inferSelect;
+export type InsertBookDiscussion = typeof bookDiscussions.$inferInsert;
+
+/**
+ * Comprehension Quizzes - End-of-chapter/book assessments
+ */
+export const comprehensionQuizzes = mysqlTable("comprehension_quizzes", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  bookId: int("bookId").notNull(),
+  
+  // Quiz details
+  title: varchar("title", { length: 255 }).notNull(),
+  chapterNumber: int("chapterNumber"), // null = full book quiz
+  quizType: mysqlEnum("quizType", [
+    "chapter", "midpoint", "final", "vocabulary"
+  ]).notNull(),
+  
+  // Questions
+  questions: json("questions"), // Array of {question, type, options, correctAnswer, explanation}
+  questionCount: int("questionCount").default(0),
+  passingScore: int("passingScore").default(70), // Percentage
+  
+  // Difficulty
+  difficultyLevel: mysqlEnum("quizDifficulty", [
+    "basic", "intermediate", "advanced"
+  ]).default("intermediate"),
+  
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ComprehensionQuiz = typeof comprehensionQuizzes.$inferSelect;
+export type InsertComprehensionQuiz = typeof comprehensionQuizzes.$inferInsert;
+
+/**
+ * Quiz Attempts - Track student quiz performance
+ */
+export const quizAttempts = mysqlTable("quiz_attempts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  quizId: int("quizId").notNull(),
+  bookId: int("bookId").notNull(),
+  readingSessionId: int("readingSessionId"),
+  studentProfileId: int("studentProfileId"),
+  
+  // Attempt details
+  attemptNumber: int("attemptNumber").default(1),
+  answers: json("answers"), // Array of {questionIndex, answer, isCorrect}
+  
+  // Results
+  score: int("score"), // Percentage
+  correctCount: int("correctCount").default(0),
+  totalQuestions: int("totalQuestions").default(0),
+  passed: boolean("passed").default(false),
+  
+  // Timing
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  durationSeconds: int("durationSeconds"),
+  
+  // Feedback
+  feedback: text("feedback"), // AI-generated feedback
+  areasToImprove: json("areasToImprove"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type QuizAttempt = typeof quizAttempts.$inferSelect;
+export type InsertQuizAttempt = typeof quizAttempts.$inferInsert;
+
+/**
+ * Vocabulary Words - Words learned from reading
+ */
+export const vocabularyWords = mysqlTable("vocabulary_words", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  bookId: int("bookId"),
+  studentProfileId: int("studentProfileId"),
+  
+  // Word details
+  word: varchar("word", { length: 100 }).notNull(),
+  definition: text("definition"),
+  partOfSpeech: varchar("partOfSpeech", { length: 50 }),
+  pronunciation: varchar("pronunciation", { length: 100 }),
+  exampleSentence: text("exampleSentence"),
+  contextFromBook: text("contextFromBook"), // Original sentence from book
+  
+  // Learning status
+  masteryLevel: mysqlEnum("masteryLevel", [
+    "new", "learning", "familiar", "mastered"
+  ]).default("new").notNull(),
+  timesReviewed: int("timesReviewed").default(0),
+  timesCorrect: int("timesCorrect").default(0),
+  lastReviewedAt: timestamp("lastReviewedAt"),
+  nextReviewAt: timestamp("nextReviewAt"), // Spaced repetition
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type VocabularyWord = typeof vocabularyWords.$inferSelect;
+export type InsertVocabularyWord = typeof vocabularyWords.$inferInsert;
+
+/**
+ * Reading Certificates - Credentials earned from completing books
+ */
+export const readingCertificates = mysqlTable("reading_certificates", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  bookId: int("bookId").notNull(),
+  readingSessionId: int("readingSessionId"),
+  studentProfileId: int("studentProfileId"),
+  
+  // Certificate details
+  certificateType: mysqlEnum("readingCertType", [
+    "book_completion", "discussion_excellence", "vocabulary_mastery", "reading_streak"
+  ]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Achievement data
+  achievementData: json("achievementData"), // Specific metrics for this certificate
+  
+  // Verification
+  certificateHash: varchar("certificateHash", { length: 128 }),
+  blockchainTimestamp: timestamp("blockchainTimestamp"),
+  
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+});
+export type ReadingCertificate = typeof readingCertificates.$inferSelect;
+export type InsertReadingCertificate = typeof readingCertificates.$inferInsert;
+
+/**
+ * Book Annotations - Highlights and notes
+ */
+export const bookAnnotations = mysqlTable("book_annotations", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  bookId: int("bookId").notNull(),
+  readingSessionId: int("readingSessionId"),
+  
+  // Location
+  chapterNumber: int("chapterNumber"),
+  pageNumber: int("pageNumber"),
+  startPosition: int("startPosition"), // Character position
+  endPosition: int("endPosition"),
+  
+  // Content
+  annotationType: mysqlEnum("annotationType", [
+    "highlight", "note", "bookmark", "question"
+  ]).notNull(),
+  highlightedText: text("highlightedText"),
+  noteContent: text("noteContent"),
+  highlightColor: varchar("highlightColor", { length: 20 }).default("yellow"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type BookAnnotation = typeof bookAnnotations.$inferSelect;
+export type InsertBookAnnotation = typeof bookAnnotations.$inferInsert;
+
+/**
+ * Reading Discussion Requirements - Grade-level requirements for discussions
+ */
+export const readingDiscussionRequirements = mysqlTable("reading_discussion_requirements", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Grade level
+  gradeLevel: mysqlEnum("reqGradeLevel", [
+    "k_2", "3_5", "6_8", "9_12"
+  ]).notNull(),
+  
+  // Read-aloud settings
+  readAloudDefault: boolean("readAloudDefault").default(true), // K-2 default ON
+  readAloudCanDisable: boolean("readAloudCanDisable").default(true),
+  
+  // Q&A requirements
+  basicQARequired: boolean("basicQARequired").default(true), // Required for all
+  qaFrequency: mysqlEnum("qaFrequency", [
+    "after_each_chapter", "after_each_section", "end_of_book"
+  ]).default("after_each_chapter"),
+  
+  // Discussion requirements
+  deepDiscussionRequired: boolean("deepDiscussionRequired").default(false),
+  deepDiscussionEncouraged: boolean("deepDiscussionEncouraged").default(false),
+  discussionBonusCredits: int("discussionBonusCredits").default(0),
+  
+  // Minimum requirements
+  minDiscussionMessages: int("minDiscussionMessages").default(0),
+  minDiscussionQuality: mysqlEnum("minQuality", [
+    "none", "surface", "developing", "proficient"
+  ]).default("none"),
+  
+  description: text("description"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ReadingDiscussionRequirement = typeof readingDiscussionRequirements.$inferSelect;
+export type InsertReadingDiscussionRequirement = typeof readingDiscussionRequirements.$inferInsert;

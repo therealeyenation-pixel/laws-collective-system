@@ -147,6 +147,7 @@ import { officeSuiteRouter } from "./routers/office-suite";
 import { employeeGamingRouter } from "./routers/employee-gaming";
 import { onboardingJourneyRouter } from "./routers/onboarding-journey";
 import { memberCredentialsRouter } from "./routers/member-credentials";
+import { virtualLibraryRouter } from "./routers/virtual-library";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -306,6 +307,7 @@ export const appRouter = router({
   employeeGaming: employeeGamingRouter,
   onboardingJourney: onboardingJourneyRouter,
   memberCredentials: memberCredentialsRouter,
+  virtualLibrary: virtualLibraryRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

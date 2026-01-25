@@ -220,6 +220,8 @@ import Documentary from "@/pages/Documentary";
 import Podcast from "@/pages/Podcast";
 import JoinJourney from "@/pages/JoinJourney";
 import MyCredential from "@/pages/MyCredential";
+import VirtualLibrary from "@/pages/VirtualLibrary";
+import BookReader from "@/pages/BookReader";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -437,6 +439,9 @@ function Router() {
       <Route path="/service-departments">{() => <ProtectedRoute component={ServiceDepartments} minRole="staff" />}</Route>
       <Route path="/founding-member-bonus">{() => <ProtectedRoute component={FoundingMemberBonus} minRole="admin" />}</Route>
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
+      <Route path="/library" component={VirtualLibrary} />
+      <Route path="/library/book/:bookId" component={BookReader} />
+      <Route path="/library/discuss/:bookId" component={BookReader} />
       <Route path="/gaming-dashboard">{() => <ProtectedRoute component={EmployeeGamingDashboard} minRole="user" />}</Route>
       <Route path="/sandbox">{() => <ProtectedRoute component={Sandbox} minRole="user" />}</Route>
       <Route path="/team-sessions">{() => <ProtectedRoute component={TeamSessionScheduler} minRole="staff" />}</Route>
