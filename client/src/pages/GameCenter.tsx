@@ -50,6 +50,7 @@ import {
   Award,
 } from "lucide-react";
 import { Link } from "wouter";
+import { OnboardingTutorial } from "@/components/games/OnboardingTutorial";
 
 const gameIcons: Record<string, React.ReactNode> = {
   crown: <Crown className="w-6 h-6" />,
@@ -108,6 +109,35 @@ const gameTypeLabels: Record<string, string> = {
 export default function GameCenter() {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>("all");
   const [selectedGameType, setSelectedGameType] = useState<string>("all");
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialCompleted, setTutorialCompleted] = useState(false);
+
+  // Check for first-time player and show tutorial
+  useEffect(() => {
+    const hasCompletedTutorial = localStorage.getItem("laws_game_tutorial_completed");
+    if (!hasCompletedTutorial) {
+      // Small delay to let the page load first
+      const timer = setTimeout(() => {
+        setShowTutorial(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      setTutorialCompleted(true);
+    }
+  }, []);
+
+  const handleTutorialComplete = () => {
+    localStorage.setItem("laws_game_tutorial_completed", "true");
+    setShowTutorial(false);
+    setTutorialCompleted(true);
+    toast.success("Welcome to L.A.W.S. Game Center! Start your journey.");
+  };
+
+  const handleTutorialSkip = () => {
+    localStorage.setItem("laws_game_tutorial_completed", "skipped");
+    setShowTutorial(false);
+    setTutorialCompleted(true);
+  };
 
   const { data: stats, isLoading: statsLoading } = trpc.gameCenter.getStats.useQuery();
   const { data: games, isLoading: gamesLoading } = trpc.gameCenter.getGames.useQuery(
@@ -241,6 +271,14 @@ export default function GameCenter() {
 
   return (
     <DashboardLayout>
+      {/* Onboarding Tutorial for first-time players */}
+      {showTutorial && (
+        <OnboardingTutorial
+          onComplete={handleTutorialComplete}
+          onSkip={handleTutorialSkip}
+        />
+      )}
+
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -272,6 +310,16 @@ export default function GameCenter() {
                 Achievements
               </Button>
             </Link>
+            {tutorialCompleted && (
+              <Button
+                variant="ghost"
+                className="gap-2"
+                onClick={() => setShowTutorial(true)}
+              >
+                <BookOpen className="w-4 h-4" />
+                Tutorial
+              </Button>
+            )}
             <Button
               variant="outline"
               onClick={() => seedGamesMutation.mutate()}

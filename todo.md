@@ -8098,3 +8098,29 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add tooltips and hints for first-time players
 - [x] Create skip option for returning players
 - [x] Track tutorial completion status
+
+
+## Phase 54: Achievement UI & Tutorial Integration
+
+### Achievement Notifications
+- [x] Create AchievementNotification component with animation
+- [x] Add toast-style popup for achievement unlock
+- [x] Include achievement icon, name, points, and rarity
+- [x] Add sound effect trigger (optional)
+- [x] Create notification queue for multiple achievements
+
+### Achievements Page
+- [x] Create /achievements route and page (already exists)
+- [x] Display all achievements organized by category
+- [x] Show locked vs unlocked status with visual distinction
+- [x] Add progress bars for multi-step achievements
+- [x] Display player stats (total points, rank, completion percentage)
+- [x] Add rarity-based visual badges with colors
+- [x] Include achievement detail modal on click
+
+### Tutorial Integration
+- [x] Add first-time player detection in Game Center
+- [x] Store tutorial completion status in localStorage/database
+- [x] Auto-show OnboardingTutorial for new players
+- [x] Add "Show Tutorial" button for returning players
+- [x] Track tutorial skip vs completion
