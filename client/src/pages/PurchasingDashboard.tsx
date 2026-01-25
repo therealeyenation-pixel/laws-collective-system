@@ -18,6 +18,9 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
+import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 
 export default function PurchasingDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -100,6 +103,19 @@ export default function PurchasingDashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="purchasing" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
+        {/* Government Actions */}
+        <GovernmentActionsWidget department="purchasing" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

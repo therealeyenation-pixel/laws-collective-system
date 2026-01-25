@@ -7,6 +7,8 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 import {
   Trophy,
   Target,

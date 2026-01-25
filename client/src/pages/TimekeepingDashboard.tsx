@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 import { 
   Clock, 
   Calendar, 

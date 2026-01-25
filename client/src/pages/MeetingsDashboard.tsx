@@ -16,6 +16,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { useSSE, useTypingIndicator, ChatEvent } from "@/hooks/useSSE";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 import { 
   Video, 
   VideoOff, 
@@ -605,6 +607,16 @@ export default function MeetingsDashboard() {
               </div>
             </CardContent>
           </Card>
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="meetings" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         </div>
 
         {/* Main Content */}

@@ -27,6 +27,8 @@ import {
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 // Marketing metrics data
 const marketingMetrics = {
@@ -223,8 +225,18 @@ export default function MarketingDashboard() {
           />
         </div>
 
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="marketing" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         {/* Government Actions */}
-        <GovernmentActionsWidget department="marketing" />
+        <GovernmentActionsWidget department="marketing" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

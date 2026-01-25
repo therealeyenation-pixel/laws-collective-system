@@ -23,6 +23,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function TrustAdminDashboard() {
   const { user } = useAuth();

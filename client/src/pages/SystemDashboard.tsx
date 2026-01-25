@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 // Icon mapping for entity types
 const entityIcons: Record<string, any> = {
@@ -229,6 +231,16 @@ export default function SystemDashboard() {
               </div>
             </div>
           </Card>
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="system" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         </div>
 
         {/* Tabs */}

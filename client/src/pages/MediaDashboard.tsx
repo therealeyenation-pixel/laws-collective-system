@@ -21,6 +21,8 @@ import {
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function MediaDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -106,8 +108,18 @@ export default function MediaDashboard() {
           ))}
         </div>
 
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="media" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         {/* Government Actions */}
-        <GovernmentActionsWidget department="media" />
+        <GovernmentActionsWidget department="media" showStats />
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>

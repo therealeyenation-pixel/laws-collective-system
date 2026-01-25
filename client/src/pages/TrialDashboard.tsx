@@ -21,6 +21,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { FeedbackWidget } from "@/components/FeedbackWidget";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 interface TrialUser {
   id: number;

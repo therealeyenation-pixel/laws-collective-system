@@ -24,6 +24,8 @@ import {
   Star,
 } from "lucide-react";
 import { toast } from "sonner";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function EmployeeGamingDashboard() {
   const { user } = useAuth();

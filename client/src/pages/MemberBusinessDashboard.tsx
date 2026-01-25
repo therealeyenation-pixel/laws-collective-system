@@ -30,6 +30,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 const membershipTiers = {
   standard: { name: "Standard", icon: Star, color: "text-gray-600", bgColor: "bg-gray-100" },
@@ -204,6 +206,16 @@ export default function MemberBusinessDashboard() {
               </p>
             </CardContent>
           </Card>
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="business" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         </div>
 
         {/* Main Content Tabs */}

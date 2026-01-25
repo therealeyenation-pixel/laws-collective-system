@@ -17190,3 +17190,166 @@ export const gameSaveStates = mysqlTable("game_save_states", {
   savedAt: timestamp("savedAt").defaultNow().notNull(),
   expiresAt: timestamp("expiresAt"), // Auto-saves expire after 30 days
 });
+
+
+// ==========================================
+// CONTRACT MANAGEMENT SYSTEM
+// ==========================================
+
+/**
+ * Contracts - Master Service Agreements and other contract types
+ */
+export const contracts = mysqlTable("contracts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Contract identification
+  contractNumber: varchar("contractNumber", { length: 50 }).notNull().unique(),
+  contractType: mysqlEnum("contractType", [
+    "msa", "sow", "nda", "employment", "consulting", "vendor", "partnership", "other"
+  ]).notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  
+  // Parties
+  contractorId: int("contractorId"),
+  contractorBusinessId: int("contractorBusinessId"),
+  clientEntityId: int("clientEntityId"),
+  
+  // Dates
+  effectiveDate: timestamp("effectiveDate"),
+  expirationDate: timestamp("expirationDate"),
+  
+  // Renewal terms
+  autoRenew: boolean("autoRenew").default(false).notNull(),
+  renewalTermMonths: int("renewalTermMonths").default(12),
+  
+  // Financial terms
+  totalValue: decimal("totalValue", { precision: 15, scale: 2 }),
+  paymentTerms: varchar("paymentTerms", { length: 100 }),
+  billingFrequency: mysqlEnum("billingFrequency", [
+    "one_time", "weekly", "bi_weekly", "monthly", "quarterly", "annually"
+  ]).default("monthly"),
+  retainerAmount: decimal("retainerAmount", { precision: 15, scale: 2 }),
+  hourlyRate: decimal("hourlyRate", { precision: 10, scale: 2 }),
+  
+  // Terms
+  terminationNoticeDays: int("terminationNoticeDays").default(30),
+  nonCompeteMonths: int("nonCompeteMonths").default(0),
+  ipAssignment: boolean("ipAssignment").default(true),
+  confidentialityRequired: boolean("confidentialityRequired").default(true),
+  insuranceRequired: boolean("insuranceRequired").default(false),
+  insuranceMinimum: decimal("insuranceMinimum", { precision: 15, scale: 2 }),
+  
+  // Signature tracking
+  signedByContractor: boolean("signedByContractor").default(false),
+  signedByContractorAt: timestamp("signedByContractorAt"),
+  signedByClient: boolean("signedByClient").default(false),
+  signedByClientAt: timestamp("signedByClientAt"),
+  signedByClientName: varchar("signedByClientName", { length: 255 }),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "pending_review", "pending_signature", "active", "expired", "terminated", "renewed"
+  ]).default("draft").notNull(),
+  
+  // Metadata
+  notes: text("notes"),
+  createdBy: int("createdBy").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Contract = typeof contracts.$inferSelect;
+export type InsertContract = typeof contracts.$inferInsert;
+
+/**
+ * Statements of Work - Project-specific work orders under MSAs
+ */
+export const statementsOfWork = mysqlTable("statements_of_work", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // SOW identification
+  sowNumber: varchar("sowNumber", { length: 50 }).notNull().unique(),
+  contractId: int("contractId").notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  
+  // Scope
+  scope: text("scope"),
+  deliverables: text("deliverables"),
+  
+  // Timeline
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  
+  // Budget
+  estimatedHours: int("estimatedHours"),
+  actualHours: int("actualHours").default(0),
+  fixedPrice: decimal("fixedPrice", { precision: 15, scale: 2 }),
+  hourlyRate: decimal("hourlyRate", { precision: 10, scale: 2 }),
+  budgetAmount: decimal("budgetAmount", { precision: 15, scale: 2 }),
+  
+  // Milestones and acceptance
+  milestones: text("milestones"),
+  acceptanceCriteria: text("acceptanceCriteria"),
+  
+  // Assignment
+  projectManagerId: int("projectManagerId"),
+  
+  // Approval
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  completedAt: timestamp("completedAt"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "pending_approval", "active", "completed", "cancelled", "on_hold"
+  ]).default("draft").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StatementOfWork = typeof statementsOfWork.$inferSelect;
+export type InsertStatementOfWork = typeof statementsOfWork.$inferInsert;
+
+/**
+ * Contract Amendments - Track changes to contracts
+ */
+export const contractAmendments = mysqlTable("contract_amendments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Amendment identification
+  amendmentNumber: varchar("amendmentNumber", { length: 50 }).notNull().unique(),
+  contractId: int("contractId").notNull(),
+  sowId: int("sowId"),
+  
+  // Amendment details
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  changeType: mysqlEnum("changeType", [
+    "scope_change", "rate_change", "term_extension", "termination", "other"
+  ]).notNull(),
+  previousValue: text("previousValue"),
+  newValue: text("newValue"),
+  effectiveDate: timestamp("effectiveDate"),
+  
+  // Approval
+  approvedBy: int("approvedBy"),
+  approvedAt: timestamp("approvedAt"),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "draft", "pending_approval", "approved", "rejected"
+  ]).default("draft").notNull(),
+  
+  // Metadata
+  createdBy: int("createdBy").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContractAmendment = typeof contractAmendments.$inferSelect;
+export type InsertContractAmendment = typeof contractAmendments.$inferInsert;

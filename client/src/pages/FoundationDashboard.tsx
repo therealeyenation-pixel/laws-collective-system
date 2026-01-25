@@ -22,6 +22,8 @@ import {
 import { trpc } from "@/lib/trpc";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function FoundationDashboard() {
   const [activeTab, setActiveTab] = useState("overview");

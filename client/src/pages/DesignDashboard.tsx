@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function DesignDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -107,6 +109,16 @@ export default function DesignDashboard() {
               </div>
             </Card>
           ))}
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="design" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         </div>
 
         {/* Tabs */}

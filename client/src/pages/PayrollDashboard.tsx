@@ -13,6 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { ElectronicSignature } from "@/components/ElectronicSignature";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 import { 
   DollarSign, 
   Calendar, 

@@ -28,6 +28,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 type TabType = "overview" | "houses" | "modules" | "languages" | "courses" | "simulators" | "documents";
 
@@ -96,6 +98,16 @@ export default function AcademyDashboard() {
             A flame-based education system honoring ancestral wisdom, indigenous knowledge, 
             and sovereign skill-building. Three Houses guide students from Wonder through Mastery.
           </p>
+        {/* Live Ticker and Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3">
+            <LiveTicker department="education" />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget compact />
+          </div>
+        </div>
+
         </div>
 
         {/* Government Actions */}

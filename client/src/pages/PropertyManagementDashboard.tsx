@@ -37,6 +37,8 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { format } from "date-fns";
+import { LiveTicker } from "@/components/LiveTicker";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 export default function PropertyManagementDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
