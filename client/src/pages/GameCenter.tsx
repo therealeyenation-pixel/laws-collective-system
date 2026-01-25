@@ -51,6 +51,10 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { OnboardingTutorial } from "@/components/games/OnboardingTutorial";
+import PlayerProfile from "@/components/games/PlayerProfile";
+import DailyChallenges from "@/components/games/DailyChallenges";
+import StreakTracker from "@/components/games/StreakTracker";
+import GameLeaderboard from "@/components/games/GameLeaderboard";
 
 const gameIcons: Record<string, React.ReactNode> = {
   crown: <Crown className="w-6 h-6" />,
@@ -406,22 +410,34 @@ export default function GameCenter() {
         )}
 
         <Tabs defaultValue="games" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
             <TabsTrigger value="games">
               <Gamepad2 className="w-4 h-4 mr-2" />
-              Games
+              <span className="hidden sm:inline">Games</span>
+            </TabsTrigger>
+            <TabsTrigger value="challenges">
+              <Target className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Challenges</span>
+            </TabsTrigger>
+            <TabsTrigger value="streaks">
+              <Flame className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Streaks</span>
             </TabsTrigger>
             <TabsTrigger value="tournaments">
               <Trophy className="w-4 h-4 mr-2" />
-              Tournaments
+              <span className="hidden sm:inline">Tournaments</span>
             </TabsTrigger>
             <TabsTrigger value="trivia">
               <Brain className="w-4 h-4 mr-2" />
-              Knowledge Quest
+              <span className="hidden sm:inline">Trivia</span>
             </TabsTrigger>
             <TabsTrigger value="leaderboard">
               <Medal className="w-4 h-4 mr-2" />
-              Leaderboard
+              <span className="hidden sm:inline">Leaderboard</span>
+            </TabsTrigger>
+            <TabsTrigger value="profile">
+              <Star className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Profile</span>
             </TabsTrigger>
           </TabsList>
 
@@ -726,34 +742,24 @@ export default function GameCenter() {
             )}
           </TabsContent>
 
+          {/* Challenges Tab */}
+          <TabsContent value="challenges" className="space-y-6">
+            <DailyChallenges />
+          </TabsContent>
+
+          {/* Streaks Tab */}
+          <TabsContent value="streaks" className="space-y-6">
+            <StreakTracker />
+          </TabsContent>
+
           {/* Leaderboard Tab */}
           <TabsContent value="leaderboard" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Top Players</h2>
-              <Select defaultValue="wins">
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="wins">Most Wins</SelectItem>
-                  <SelectItem value="rating">Highest Rating</SelectItem>
-                  <SelectItem value="tokens">Most Tokens</SelectItem>
-                  <SelectItem value="streak">Best Streak</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <GameLeaderboard />
+          </TabsContent>
 
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center py-12">
-                  <Medal className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold">Leaderboard Coming Soon</h3>
-                  <p className="text-muted-foreground mt-2">
-                    Start playing games to appear on the leaderboard!
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="space-y-6">
+            <PlayerProfile />
           </TabsContent>
         </Tabs>
 
