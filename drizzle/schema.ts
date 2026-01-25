@@ -17097,3 +17097,96 @@ export const companyUsers = mysqlTable("company_users", {
 });
 export type CompanyUser = typeof companyUsers.$inferSelect;
 export type InsertCompanyUser = typeof companyUsers.$inferInsert;
+
+
+/**
+ * Tournament Participants - Track players registered for tournaments
+ */
+export const tournamentParticipants = mysqlTable("tournament_participants", {
+  id: int("id").primaryKey().autoincrement(),
+  tournamentId: int("tournamentId").notNull(),
+  playerId: int("playerId").notNull(),
+  seed: int("seed"), // Seeding position based on rating
+  status: mysqlEnum("status", ["registered", "checked_in", "playing", "eliminated", "winner"]).default("registered").notNull(),
+  currentRound: int("currentRound").default(0),
+  wins: int("wins").default(0),
+  losses: int("losses").default(0),
+  pointsScored: int("pointsScored").default(0),
+  registeredAt: timestamp("registeredAt").defaultNow().notNull(),
+  checkedInAt: timestamp("checkedInAt"),
+  eliminatedAt: timestamp("eliminatedAt"),
+  finalPlacement: int("finalPlacement"),
+  prizesWon: int("prizesWon").default(0),
+});
+
+/**
+ * Tournament Matches - Individual matches within a tournament
+ */
+export const tournamentMatches = mysqlTable("tournament_matches", {
+  id: int("id").primaryKey().autoincrement(),
+  tournamentId: int("tournamentId").notNull(),
+  roundNumber: int("roundNumber").notNull(),
+  matchNumber: int("matchNumber").notNull(),
+  bracketPosition: varchar("bracketPosition", { length: 50 }), // e.g., "W1", "L2", "F" for finals
+  player1Id: int("player1Id"),
+  player2Id: int("player2Id"),
+  winnerId: int("winnerId"),
+  player1Score: int("player1Score").default(0),
+  player2Score: int("player2Score").default(0),
+  status: mysqlEnum("status", ["pending", "ready", "in_progress", "completed", "bye"]).default("pending").notNull(),
+  scheduledAt: timestamp("scheduledAt"),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  gameMatchId: int("gameMatchId"), // Link to actual game match
+  spectatorCount: int("spectatorCount").default(0),
+});
+
+/**
+ * Matchmaking Queue - Players waiting for matches
+ */
+export const matchmakingQueue = mysqlTable("matchmaking_queue", {
+  id: int("id").primaryKey().autoincrement(),
+  playerId: int("playerId").notNull(),
+  gameId: int("gameId").notNull(),
+  matchType: mysqlEnum("matchType", ["casual", "ranked", "tournament"]).default("casual").notNull(),
+  playerRating: int("playerRating").default(1000),
+  ratingRange: int("ratingRange").default(200), // Acceptable rating difference
+  queuedAt: timestamp("queuedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  status: mysqlEnum("status", ["waiting", "matched", "expired", "cancelled"]).default("waiting").notNull(),
+  matchedWithId: int("matchedWithId"),
+  matchedAt: timestamp("matchedAt"),
+});
+
+/**
+ * Spectator Sessions - Track who is watching matches
+ */
+export const spectatorSessions = mysqlTable("spectator_sessions", {
+  id: int("id").primaryKey().autoincrement(),
+  matchId: int("matchId").notNull(), // Can be gameMatches or tournamentMatches
+  matchType: mysqlEnum("matchType", ["game", "tournament"]).notNull(),
+  spectatorId: int("spectatorId").notNull(),
+  joinedAt: timestamp("joinedAt").defaultNow().notNull(),
+  leftAt: timestamp("leftAt"),
+  isActive: boolean("isActive").default(true).notNull(),
+});
+
+/**
+ * Game Save States - For pause and auto-save functionality
+ */
+export const gameSaveStates = mysqlTable("game_save_states", {
+  id: int("id").primaryKey().autoincrement(),
+  playerId: int("playerId").notNull(),
+  gameId: int("gameId").notNull(),
+  matchId: int("matchId"),
+  saveName: varchar("saveName", { length: 100 }),
+  saveType: mysqlEnum("saveType", ["manual", "auto", "checkpoint"]).default("auto").notNull(),
+  gameState: json("gameState").notNull(),
+  score: int("score").default(0),
+  progress: int("progress").default(0), // Percentage complete
+  playTime: int("playTime").default(0), // Seconds played
+  difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard"]).default("medium"),
+  isActive: boolean("isActive").default(true).notNull(),
+  savedAt: timestamp("savedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"), // Auto-saves expire after 30 days
+});

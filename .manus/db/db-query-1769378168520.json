@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS tournament_matches (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  tournamentId INT NOT NULL,\n  roundNumber INT NOT NULL,\n  matchNumber INT NOT NULL,\n  bracketPosition VARCHAR(50),\n  player1Id INT,\n  player2Id INT,\n  winnerId INT,\n  player1Score INT DEFAULT 0,\n  player2Score INT DEFAULT 0,\n  status ENUM('pending', 'ready', 'in_progress', 'completed', 'bye') DEFAULT 'pending' NOT NULL,\n  scheduledAt TIMESTAMP NULL,\n  startedAt TIMESTAMP NULL,\n  completedAt TIMESTAMP NULL,\n  gameMatchId INT,\n  spectatorCount INT DEFAULT 0,\n  INDEX idx_tournament (tournamentId),\n  INDEX idx_round (roundNumber)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS tournament_matches (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  tournamentId INT NOT NULL,\n  roundNumber INT NOT NULL,\n  matchNumber INT NOT NULL,\n  bracketPosition VARCHAR(50),\n  player1Id INT,\n  player2Id INT,\n  winnerId INT,\n  player1Score INT DEFAULT 0,\n  player2Score INT DEFAULT 0,\n  status ENUM('pending', 'ready', 'in_progress', 'completed', 'bye') DEFAULT 'pending' NOT NULL,\n  scheduledAt TIMESTAMP NULL,\n  startedAt TIMESTAMP NULL,\n  completedAt TIMESTAMP NULL,\n  gameMatchId INT,\n  spectatorCount INT DEFAULT 0,\n  INDEX idx_tournament (tournamentId),\n  INDEX idx_round (roundNumber)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 319
+}

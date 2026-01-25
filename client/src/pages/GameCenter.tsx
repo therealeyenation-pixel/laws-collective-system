@@ -55,6 +55,8 @@ import PlayerProfile from "@/components/games/PlayerProfile";
 import DailyChallenges from "@/components/games/DailyChallenges";
 import StreakTracker from "@/components/games/StreakTracker";
 import GameLeaderboard from "@/components/games/GameLeaderboard";
+import { TournamentLobby } from "@/components/games/TournamentLobby";
+import { GameSaveManager } from "@/components/games/GameSaveManager";
 
 const gameIcons: Record<string, React.ReactNode> = {
   crown: <Crown className="w-6 h-6" />,
@@ -410,7 +412,7 @@ export default function GameCenter() {
         )}
 
         <Tabs defaultValue="games" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
             <TabsTrigger value="games">
               <Gamepad2 className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Games</span>
@@ -438,6 +440,10 @@ export default function GameCenter() {
             <TabsTrigger value="profile">
               <Star className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Profile</span>
+            </TabsTrigger>
+            <TabsTrigger value="saves">
+              <Clock className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Saves</span>
             </TabsTrigger>
           </TabsList>
 
@@ -620,67 +626,7 @@ export default function GameCenter() {
 
           {/* Tournaments Tab */}
           <TabsContent value="tournaments" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Active Tournaments</h2>
-              <Button variant="outline">
-                <Trophy className="w-4 h-4 mr-2" />
-                Create Tournament
-              </Button>
-            </div>
-
-            {tournaments && tournaments.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {tournaments.map((tournament) => (
-                  <Card key={tournament.id}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle>{tournament.name}</CardTitle>
-                          <CardDescription>{tournament.description}</CardDescription>
-                        </div>
-                        <Badge
-                          variant={tournament.status === "registration" ? "default" : "secondary"}
-                        >
-                          {tournament.status}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">Participants</span>
-                        <span>
-                          {tournament.currentParticipants}/{tournament.maxParticipants}
-                        </span>
-                      </div>
-                      <Progress
-                        value={
-                          ((tournament.currentParticipants || 0) /
-                            (tournament.maxParticipants || 1)) *
-                          100
-                        }
-                      />
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                          <Trophy className="w-4 h-4 text-amber-500" />
-                          <span className="text-sm font-medium">
-                            Prize: {tournament.prizePool} tokens
-                          </span>
-                        </div>
-                        <Button size="sm">Join Tournament</Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card className="p-12 text-center">
-                <Trophy className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold">No Active Tournaments</h3>
-                <p className="text-muted-foreground mt-2">
-                  Create a tournament to start competing!
-                </p>
-              </Card>
-            )}
+            <TournamentLobby />
           </TabsContent>
 
           {/* Trivia Tab */}
@@ -760,6 +706,11 @@ export default function GameCenter() {
           {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-6">
             <PlayerProfile />
+          </TabsContent>
+
+          {/* Saves Tab */}
+          <TabsContent value="saves" className="space-y-6">
+            <GameSaveManager />
           </TabsContent>
         </Tabs>
 
