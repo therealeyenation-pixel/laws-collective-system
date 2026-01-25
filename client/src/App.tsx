@@ -185,6 +185,7 @@ import ProjectControlsDashboard from "@/pages/ProjectControlsDashboard";
 import QAQCDashboard from "@/pages/QAQCDashboard";
 import LegalDashboard from "@/pages/LegalDashboard";
 import ITDashboard from "@/pages/ITDashboard";
+import GrantsDashboard from "@/pages/dept/GrantsDashboard";
 import PlatformAdminDashboard from "@/pages/PlatformAdminDashboard";
 import TrustAdminDashboard from "@/pages/TrustAdminDashboard";
 import EntityCurriculum from "@/pages/EntityCurriculum";
@@ -240,7 +241,7 @@ import {
   OperationsTeam, ProcurementTeam, ContractsTeam, PurchasingTeam, PropertyTeam, RealEstateTeam,
   ProjectControlsTeam, QAQCTeam, LegalTeam, ITTeam, PlatformTeam, GrantsTeam,
   AssetTracking, Audits, BrandAssets, BusinessPlans, Compliance, ContentCalendar, Curriculum,
-  GrantsDashboard, Instructors, Inventory, OperatingAgreements, ProgressReporting, Properties,
+  Instructors, Inventory, OperatingAgreements, ProgressReporting, Properties,
   QualityStandards, RealEyeDashboard, SecurityCenter, SystemAdmin, SystemSettings,
   UserManagement, VendorManagement, WellnessPrograms
 } from "@/pages/placeholders";
@@ -540,6 +541,7 @@ function Router() {
       <Route path="/trust-admin">{() => <ProtectedRoute component={TrustAdminDashboard} minRole="admin" />}</Route>
       <Route path="/dept/legal">{() => <ProtectedRoute component={LegalDashboard} minRole="staff" />}</Route>
       <Route path="/dept/it">{() => <ProtectedRoute component={ITDashboard} minRole="staff" />}</Route>
+      <Route path="/dept/grants">{() => <ProtectedRoute component={GrantsDashboard} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
       <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>

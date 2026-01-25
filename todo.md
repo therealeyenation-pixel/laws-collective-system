@@ -4809,7 +4809,7 @@
 - [x] Legal/Compliance Dashboard (Atty. Tiffany Crutcher) - /dept/legal
 - [x] IT Dashboard (Amandes Pearsall IV) - /dept/it
 - [x] Platform Admin Dashboard (Open) - /dept/platform-admin
-- [ ] Grants Dashboard (Open) - pending
+- [x] Grants Dashboard (Open) - /dept/grants
 
 ## Phase 40: Department Document Repositories
 - [ ] Add Documents tab with upload/repository to each department dashboard
