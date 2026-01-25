@@ -7413,18 +7413,18 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 
 
 ## Phase 23: Additional Cognitive Games
-- [ ] Build Spades game (4-player partnership card game)
-- [ ] Build Yahtzee game (dice probability game)
-- [ ] Build Scrabble game (word building vocabulary game)
-- [ ] Build Dominoes game (pattern matching and math)
-- [ ] Build Mancala game (counting and strategy)
-- [ ] Build Mahjong Solitaire game (pattern recognition)
+- [x] Build Spades game (4-player partnership card game)
+- [x] Build Yahtzee game (dice probability game)
+- [x] Build Scrabble game (word building vocabulary game)
+- [x] Build Dominoes game (pattern matching and math)
+- [x] Build Mancala game (counting and strategy)
+- [x] Build Mahjong Solitaire game (pattern recognition)
 - [ ] Build Backgammon game (probability and strategy)
 - [ ] Build Tangram game (spatial reasoning puzzles)
 - [ ] Build Word Ladder game (vocabulary word chains)
 - [ ] Build Trivia Challenge game (L.A.W.S. knowledge categories)
 - [ ] Build Simon Says game (memory sequence game)
-- [ ] Register all new games in App router and GameCenter
+- [x] Register all new games in App router and GameCenter
 
 ## Phase 24: Virtual Library System
 
@@ -7458,3 +7458,45 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Issue reading credentials/certificates
 - [ ] Create book report templates with AI assistance
 - [ ] Build reading statistics dashboard
+
+
+## Phase 25: L.A.W.S. Quest: The Generational Journey (Combined Game)
+
+### Game Structure
+- [ ] Merge L.A.W.S. Quest RPG with L.A.W.S. Life simulation
+- [ ] Create Act 1: Foundation (Ages 5-18) - Quest-style RPG learning
+- [ ] Create Act 2: Launch (Ages 18-30) - Life decisions, career/business
+- [ ] Create Act 3: Building (Ages 30-50) - Wealth building, family
+- [ ] Create Act 4: Legacy (Ages 50+) - Generational transfer
+- [ ] Implement seamless transition between acts
+- [ ] Add skill carryover from Act 1 to later acts
+- [ ] Implement generational loop (play as children/grandchildren)
+- [ ] Add real-world consequence system
+
+### Educational Integration
+- [ ] Connect game progress to Academy credentials
+- [ ] Link skill development to course completion
+- [ ] Add portfolio documentation for homeschool compliance
+- [ ] Implement L.A.W.S. pillar alignment throughout
+
+
+## Phase 26: Virtual Library Video/Chat Discussion Integration
+
+### Discussion Infrastructure
+- [ ] Integrate with existing meeting system for video discussions
+- [ ] Add chat-based threaded discussions for books
+- [ ] Implement recording and transcription for all discussions
+- [ ] Create discussion tracking and progress system
+
+### Age-Based Requirements
+- [ ] K-2: Read-aloud default ON, basic Q&A required
+- [ ] 3-5: Read-aloud optional, Q&A required, discussion optional
+- [ ] 6-9: Read-aloud optional, Q&A required, discussion encouraged (bonus)
+- [ ] 10-12: Read-aloud optional, Q&A required, discussion REQUIRED
+
+### Discussion Features
+- [ ] Video response recording for discussion prompts
+- [ ] AI moderation and follow-up questions
+- [ ] Parent visibility into discussion recordings
+- [ ] Discussion quality assessment and feedback
+

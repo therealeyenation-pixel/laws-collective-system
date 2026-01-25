@@ -167,6 +167,12 @@ export default function GameCenter() {
     "escape-rooms",
     "detective-academy",
     "rubiks-cube",
+    "spades",
+    "yahtzee",
+    "scrabble",
+    "dominoes",
+    "mancala",
+    "mahjong-solitaire",
   ]);
 
   const isGameImplemented = (slug: string) => implementedGames.has(slug);
@@ -200,6 +206,12 @@ export default function GameCenter() {
       "escape-rooms": "/games/escape-room",
       "detective-academy": "/games/detective-academy",
       "rubiks-cube": "/games/rubiks-cube",
+      "spades": "/games/spades",
+      "yahtzee": "/games/yahtzee",
+      "scrabble": "/games/scrabble",
+      "dominoes": "/games/dominoes",
+      "mancala": "/games/mancala",
+      "mahjong-solitaire": "/games/mahjong",
     };
     
     if (gameRoutes[gameSlug]) {
