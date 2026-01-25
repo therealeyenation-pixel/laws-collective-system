@@ -116,7 +116,7 @@ The LuvOnPurpose Trust serves as the protective vault for all core intellectual 
 
 ## The Member Journey
 
-### Three Entry Points, One Destination
+### Five Entry Points, One Destination
 
 The L.A.W.S. Collective welcomes members through multiple pathways, each designed to meet people where they are while ensuring they develop the understanding needed for full participation.
 
@@ -135,6 +135,28 @@ The Academy is included free with L.A.W.S. Collective employment and is availabl
 **Entry Point 3: Direct Onboarding (Website)**
 
 For those who want to join the community directly, the website offers a simulated onboarding journey. This condensed experience walks new members through the L.A.W.S. framework, assesses their understanding, and guides them through House setup. Upon completion, they receive their Member Credential.
+
+**Entry Point 4: Employment (Work Your Way In)**
+
+The L.A.W.S. Collective operates as a real business with real positions. Employment provides one of the most direct paths to membership:
+
+- **W-2 Employees** receive automatic Member Credentials upon hire, with access to the Academy included as a job benefit
+- **1099 Contractors** in the network earn credentials through verified work history and completion of onboarding requirements
+- **Interns and Apprentices** progress through structured programs that culminate in credential issuance
+
+Employment entry provides immediate access to the closed-loop economy. Employees earn income from the Collective, learn the framework through daily work, and can progress through the system while building their career. This path is particularly valuable because it combines earning with learning — members don't have to pause their income to develop their skills.
+
+The employment path also feeds the contractor-to-business-owner pipeline: employees who demonstrate capability can transition to contractors, then to business owners within the ecosystem, each step increasing their autonomy while maintaining their connection to the collective.
+
+**Entry Point 5: Legacy Transfer (Generational Membership)**
+
+Members who have established Houses can transfer membership benefits to family members:
+
+- **Beneficiary Credentials** are issued to designated heirs when they come of age or meet specified conditions
+- **Family House Membership** allows multiple generations to participate under a single House structure
+- **Youth Programs** prepare the next generation through age-appropriate versions of the Academy curriculum
+
+Legacy transfer ensures that the wealth-building infrastructure persists across generations. Children of members grow up within the ecosystem, learning the L.A.W.S. framework as a natural part of their development rather than as an external program they must seek out.
 
 ### The Member Credential
 

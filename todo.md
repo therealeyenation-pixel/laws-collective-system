@@ -7258,10 +7258,12 @@ L.A.W.S. Quest is a standalone commercial game product owned by The L.A.W.S. Col
 - [ ] Track achievement history per member
 - [ ] Implement access level tiers
 
-### Entry Point Integration (To Build)
+### Entry Point Integration (5 Paths)
 - [ ] Game completion → Credential issuance trigger
 - [ ] Academy certification → Credential issuance trigger
 - [ ] Direct onboarding journey → Credential issuance trigger
+- [ ] Employment (W-2/1099) → Credential issuance trigger
+- [ ] Legacy transfer → Credential issuance trigger
 - [ ] Unified onboarding flow for all paths
 
 ### Wealth System Dashboard (To Build)
