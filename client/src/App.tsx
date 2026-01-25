@@ -68,6 +68,17 @@ import ClimbSlide from "@/pages/games/ClimbSlide";
 import EscapeRoom from "@/pages/games/EscapeRoom";
 import DetectiveAcademy from "@/pages/games/DetectiveAcademy";
 import RubiksCube from "@/pages/games/RubiksCube";
+import Spades from "@/pages/games/Spades";
+import Yahtzee from "@/pages/games/Yahtzee";
+import ScrabbleGame from "@/pages/games/ScrabbleGame";
+import Dominoes from "@/pages/games/Dominoes";
+import Mancala from "@/pages/games/Mancala";
+import MahjongSolitaire from "@/pages/games/MahjongSolitaire";
+import Backgammon from "@/pages/games/Backgammon";
+import Tangram from "@/pages/games/Tangram";
+import WordLadder from "@/pages/games/WordLadder";
+import TriviaChallenge from "@/pages/games/TriviaChallenge";
+import SimonSays from "@/pages/games/SimonSays";
 import Achievements from "@/pages/Achievements";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
@@ -454,6 +465,17 @@ function Router() {
       <Route path="/games/escape-room">{() => <ProtectedRoute component={EscapeRoom} minRole="user" />}</Route>
       <Route path="/games/detective-academy">{() => <ProtectedRoute component={DetectiveAcademy} minRole="user" />}</Route>
       <Route path="/games/rubiks-cube">{() => <ProtectedRoute component={RubiksCube} minRole="user" />}</Route>
+      <Route path="/games/spades">{() => <ProtectedRoute component={Spades} minRole="user" />}</Route>
+      <Route path="/games/yahtzee">{() => <ProtectedRoute component={Yahtzee} minRole="user" />}</Route>
+      <Route path="/games/scrabble">{() => <ProtectedRoute component={ScrabbleGame} minRole="user" />}</Route>
+      <Route path="/games/dominoes">{() => <ProtectedRoute component={Dominoes} minRole="user" />}</Route>
+      <Route path="/games/mancala">{() => <ProtectedRoute component={Mancala} minRole="user" />}</Route>
+      <Route path="/games/mahjong-solitaire">{() => <ProtectedRoute component={MahjongSolitaire} minRole="user" />}</Route>
+      <Route path="/games/backgammon">{() => <ProtectedRoute component={Backgammon} minRole="user" />}</Route>
+      <Route path="/games/tangram">{() => <ProtectedRoute component={Tangram} minRole="user" />}</Route>
+      <Route path="/games/word-ladder">{() => <ProtectedRoute component={WordLadder} minRole="user" />}</Route>
+      <Route path="/games/trivia-challenge">{() => <ProtectedRoute component={TriviaChallenge} minRole="user" />}</Route>
+      <Route path="/games/simon-says">{() => <ProtectedRoute component={SimonSays} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>

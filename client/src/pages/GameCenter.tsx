@@ -173,6 +173,11 @@ export default function GameCenter() {
     "dominoes",
     "mancala",
     "mahjong-solitaire",
+    "backgammon",
+    "tangram",
+    "word-ladder",
+    "trivia-challenge",
+    "simon-says",
   ]);
 
   const isGameImplemented = (slug: string) => implementedGames.has(slug);
@@ -211,7 +216,12 @@ export default function GameCenter() {
       "scrabble": "/games/scrabble",
       "dominoes": "/games/dominoes",
       "mancala": "/games/mancala",
-      "mahjong-solitaire": "/games/mahjong",
+      "mahjong-solitaire": "/games/mahjong-solitaire",
+      "backgammon": "/games/backgammon",
+      "tangram": "/games/tangram",
+      "word-ladder": "/games/word-ladder",
+      "trivia-challenge": "/games/trivia-challenge",
+      "simon-says": "/games/simon-says",
     };
     
     if (gameRoutes[gameSlug]) {
