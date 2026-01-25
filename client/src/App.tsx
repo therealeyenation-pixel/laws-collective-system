@@ -59,6 +59,7 @@ import Chess from "@/pages/games/Chess";
 import Battleship from "@/pages/games/Battleship";
 import Solitaire from "@/pages/games/Solitaire";
 import LAWSQuest from "@/pages/games/LAWSQuest";
+import SovereigntyJourney from "@/pages/games/SovereigntyJourney";
 import RainbowJourney from "@/pages/games/RainbowJourney";
 import LogicPuzzles from "@/pages/games/LogicPuzzles";
 import SpiderSolitaire from "@/pages/games/SpiderSolitaire";
@@ -222,6 +223,7 @@ import JoinJourney from "@/pages/JoinJourney";
 import MyCredential from "@/pages/MyCredential";
 import VirtualLibrary from "@/pages/VirtualLibrary";
 import BookReader from "@/pages/BookReader";
+import ProtectionLayer from "@/pages/ProtectionLayer";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -441,6 +443,7 @@ function Router() {
       <Route path="/game-center">{() => <ProtectedRoute component={GameCenter} minRole="user" />}</Route>
       <Route path="/library" component={VirtualLibrary} />
       <Route path="/library/book/:bookId" component={BookReader} />
+      <Route path="/protection-layer">{() => <ProtectedRoute component={ProtectionLayer} minRole="user" />}</Route>
       <Route path="/library/discuss/:bookId" component={BookReader} />
       <Route path="/gaming-dashboard">{() => <ProtectedRoute component={EmployeeGamingDashboard} minRole="user" />}</Route>
       <Route path="/sandbox">{() => <ProtectedRoute component={Sandbox} minRole="user" />}</Route>
@@ -461,6 +464,7 @@ function Router() {
           <Route path="/games/battleship" component={Battleship} />
           <Route path="/games/solitaire" component={Solitaire} />
           <Route path="/games/laws-quest" component={LAWSQuest} />
+          <Route path="/games/sovereignty-journey" component={SovereigntyJourney} />
       <Route path="/games/rainbow-journey">{() => <ProtectedRoute component={RainbowJourney} minRole="user" />}</Route>
       <Route path="/games/logic-puzzles">{() => <ProtectedRoute component={LogicPuzzles} minRole="user" />}</Route>
       <Route path="/games/spider-solitaire">{() => <ProtectedRoute component={SpiderSolitaire} minRole="user" />}</Route>
