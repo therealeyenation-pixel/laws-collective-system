@@ -4325,11 +4325,11 @@
 
 ### Strategic Games Implementation
 - [x] Chess game with AI opponent and multiplayer
-- [ ] Crossword puzzle generator with educational themes
+- [x] Crossword puzzle generator with educational themes
 - [x] Battleship game with strategic thinking elements
 - [x] Sudoku with difficulty levels
 - [x] Word games (word search, anagrams, vocabulary builders)
-- [ ] Logic puzzles (pattern recognition, deduction)
+- [x] Logic puzzles (pattern recognition, deduction)
 
 ### Competition Features
 - [x] Head-to-head matchmaking system
@@ -4387,10 +4387,10 @@
 - [ ] Chess (deep strategy, planning)
 - [ ] Advanced Monopoly with real estate concepts
 - [ ] Complex escape rooms with cryptography
-- [ ] Logic puzzles and brain teasers
+- [x] Logic puzzles and brain teasers
 - [ ] Stock market simulation games
 - [ ] Risk-style strategy games
-- [ ] Advanced crossword puzzles
+- [x] Advanced crossword puzzles
 
 #### Adult/All Ages Games
 - [x] Solitaire variations (Klondike, Spider, FreeCell)

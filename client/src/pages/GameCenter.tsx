@@ -57,6 +57,8 @@ import StreakTracker from "@/components/games/StreakTracker";
 import GameLeaderboard from "@/components/games/GameLeaderboard";
 import { TournamentLobby } from "@/components/games/TournamentLobby";
 import { GameSaveManager } from "@/components/games/GameSaveManager";
+import LogicPuzzles from "@/components/games/LogicPuzzles";
+import CrosswordPuzzle from "@/components/games/CrosswordPuzzle";
 
 const gameIcons: Record<string, React.ReactNode> = {
   crown: <Crown className="w-6 h-6" />,
@@ -445,6 +447,14 @@ export default function GameCenter() {
               <Clock className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Saves</span>
             </TabsTrigger>
+            <TabsTrigger value="logic">
+              <Brain className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Logic</span>
+            </TabsTrigger>
+            <TabsTrigger value="crossword">
+              <Grid3X3 className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Crossword</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* Games Tab */}
@@ -711,6 +721,16 @@ export default function GameCenter() {
           {/* Saves Tab */}
           <TabsContent value="saves" className="space-y-6">
             <GameSaveManager />
+          </TabsContent>
+
+          {/* Logic Puzzles Tab */}
+          <TabsContent value="logic" className="space-y-6">
+            <LogicPuzzles />
+          </TabsContent>
+
+          {/* Crossword Tab */}
+          <TabsContent value="crossword" className="space-y-6">
+            <CrosswordPuzzle />
           </TabsContent>
         </Tabs>
 
