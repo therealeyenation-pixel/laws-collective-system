@@ -7460,24 +7460,48 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Build reading statistics dashboard
 
 
-## Phase 25: L.A.W.S. Quest: The Generational Journey (Combined Game)
+## Phase 25: L.A.W.S. Quest: The Sovereignty Journey (Combined Game)
 
-### Game Structure
-- [ ] Merge L.A.W.S. Quest RPG with L.A.W.S. Life simulation
-- [ ] Create Act 1: Foundation (Ages 5-18) - Quest-style RPG learning
-- [ ] Create Act 2: Launch (Ages 18-30) - Life decisions, career/business
-- [ ] Create Act 3: Building (Ages 30-50) - Wealth building, family
-- [ ] Create Act 4: Legacy (Ages 50+) - Generational transfer
-- [ ] Implement seamless transition between acts
-- [ ] Add skill carryover from Act 1 to later acts
-- [ ] Implement generational loop (play as children/grandchildren)
-- [ ] Add real-world consequence system
+### Core Narrative: Strawman Separation
+- [ ] Prologue: The Creation - Birth, hospital, birth certificate creates "strawman" entity
+- [ ] Visual distinction: ALL CAPS name (strawman) vs. proper case (living being)
+- [ ] Player starts operating AS the strawman (default unaware state)
+- [ ] Tutorial: Basic life mechanics while under strawman identity
+
+### Act 1: Awakening (Ages 12-18)
+- [ ] Discover something is "off" about the system
+- [ ] Meet mentor who introduces sovereignty concepts
+- [ ] Learn difference between legal person vs. living being
+- [ ] Collect knowledge scrolls about UCC, commercial law
+- [ ] First small acts of sovereignty (understanding rights)
+
+### Act 2: Separation (Ages 18-25)
+- [ ] Legal separation from strawman (UCC filings, affidavits)
+- [ ] Create first business entity (DBA, LLC)
+- [ ] Establish initial trust structure
+- [ ] Build credit in YOUR name vs. strawman's name
+- [ ] Navigate system challenges and pushback
+
+### Act 3: Sovereignty (Ages 25-40)
+- [ ] Full operational sovereignty achieved
+- [ ] Multiple business entities under trust
+- [ ] Asset protection strategies
+- [ ] Mentorship missions (teaching others)
+- [ ] Building generational wealth
+
+### Act 4: Legacy (Ages 40+)
+- [ ] Establish family trust dynasty
+- [ ] Transfer knowledge to next generation
+- [ ] Game continues as your children (generational loop)
+- [ ] Multi-generational wealth preservation
 
 ### Educational Integration
 - [ ] Connect game progress to Academy credentials
 - [ ] Link skill development to course completion
 - [ ] Add portfolio documentation for homeschool compliance
 - [ ] Implement L.A.W.S. pillar alignment throughout
+- [ ] Teach REAL legal concepts (trusts, UCC, entity formation)
+- [ ] Practical application focus (skills players can use in real life)
 
 
 ## Phase 26: Virtual Library Video/Chat Discussion Integration
