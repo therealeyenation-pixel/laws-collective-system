@@ -7832,3 +7832,17 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Company dashboard API
 - [x] User invitation system
 - [x] Vitest tests for external onboarding
+
+## Phase 38: UCC Content Audit and Removal
+- [ ] Search and identify all UCC references in codebase
+- [ ] Remove/rebrand UCC content in database schema
+- [ ] Remove/rebrand UCC content in routers
+- [ ] Update UI pages that reference UCC
+- [ ] Ensure no association with sovereignty scam terminology
+
+### Phase 38 Completed:
+- [x] Search and identify all UCC references in codebase
+- [x] Remove/rebrand UCC content in database schema
+- [x] Remove/rebrand UCC content in routers
+- [x] Update UI pages that reference UCC
+- [x] Ensure no association with sovereignty scam terminology

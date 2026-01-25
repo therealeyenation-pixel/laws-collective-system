@@ -82,7 +82,7 @@ interface Scene {
   id: string;
   title: string;
   narrative: string;
-  strawmanPerspective: string;
+  systemPerspective: string;
   sovereignPerspective: string;
   lesson: string;
   quiz?: QuizQuestion;
@@ -124,7 +124,7 @@ const LEGAL_INSTRUMENTS: Record<string, LegalInstrument> = {
     id: "birth_certificate",
     name: "Birth Certificate",
     description: "The foundational document that creates your legal identity in the system.",
-    purpose: "Establishes your existence as a legal entity and creates the 'strawman' - the ALL CAPS name that represents you in commerce.",
+    purpose: "Establishes your existence as a legal entity and creates the 'legal person' - the ALL CAPS name that represents you in commerce.",
     whenToUse: "Understanding this document helps you distinguish between your living self and your legal person.",
     icon: FileText,
   },
@@ -230,9 +230,9 @@ const LIFE_ACTS: LifeAct[] = [
             id: "birth-1-1",
             title: "A New Life Begins",
             narrative: "A child is born - a living, breathing human being with inherent rights. Within days, a document is created: the Birth Certificate. This document does something remarkable - it creates a legal 'person' that will represent you in the commercial world.",
-            strawmanPerspective: "The system sees: A new taxable entity has been registered. The ALL CAPS name (JOHN DOE) is created as a commercial vessel. This 'person' can enter contracts, own property, and participate in commerce.",
-            sovereignPerspective: "The empowered individual understands: I am a living being with natural rights. The Birth Certificate creates a legal tool - my 'strawman' - that I can learn to use strategically. This is not a limitation but an instrument I can master.",
-            lesson: "Your Birth Certificate creates two identities: you (the living being) and your legal person (the strawman). Understanding this distinction is the first step to navigating the system effectively.",
+            systemPerspective: "The system sees: A new taxable entity has been registered. The ALL CAPS name (JOHN DOE) is created as a commercial vessel. This 'person' can enter contracts, own property, and participate in commerce.",
+            sovereignPerspective: "The empowered individual understands: I am a living being with natural rights. The Birth Certificate creates a legal tool - my 'legal person' - that I can learn to use strategically. This is not a limitation but an instrument I can master.",
+            lesson: "Your Birth Certificate creates two identities: you (the living being) and your legal person (the commercial entity). Understanding this distinction is the first step to navigating the system effectively.",
             quiz: {
               question: "What does the Birth Certificate create?",
               options: [
@@ -242,7 +242,7 @@ const LIFE_ACTS: LifeAct[] = [
                 "Your rights as a human"
               ],
               correctIndex: 1,
-              explanation: "The Birth Certificate creates a legal 'person' (your strawman) that represents you in the commercial and legal system. This is separate from you as a living being."
+              explanation: "The Birth Certificate creates a legal 'person' (your commercial identity) that represents you in the commercial and legal system. This is separate from you as a living being."
             },
             completed: false,
           },
@@ -250,7 +250,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "birth-1-2",
             title: "The Name Game",
             narrative: "Notice how your name appears on official documents: JOHN HENRY DOE. The all-capital letters signify something specific in legal terms - this is the name of your legal person, your commercial identity.",
-            strawmanPerspective: "The system uses: ALL CAPS names on legal documents, tax forms, court papers, and official correspondence. This formatting identifies the commercial entity, not the living person.",
+            systemPerspective: "The system uses: ALL CAPS names on legal documents, tax forms, court papers, and official correspondence. This formatting identifies the commercial entity, not the living person.",
             sovereignPerspective: "The empowered individual recognizes: When I see my name in ALL CAPS, I'm looking at my legal person - the instrument through which I interact with the commercial system. I can use this instrument strategically.",
             lesson: "The ALL CAPS name is not a mistake or preference - it's a legal convention identifying your commercial person. Recognizing this helps you understand which 'you' is being addressed in legal matters.",
             completed: false,
@@ -269,7 +269,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "birth-2-1",
             title: "The Number",
             narrative: "Shortly after birth, parents apply for a Social Security Number. This nine-digit identifier links your legal person to the commercial system, enabling participation in employment, banking, and government programs.",
-            strawmanPerspective: "The system records: A new account has been created in the Social Security system. This number will track earnings, taxes, and benefits throughout the entity's commercial life.",
+            systemPerspective: "The system records: A new account has been created in the Social Security system. This number will track earnings, taxes, and benefits throughout the entity's commercial life.",
             sovereignPerspective: "The empowered individual understands: The SSN is a tool for participating in the system. I can use it to access employment, build credit, and receive benefits while also learning to create other structures that provide additional options.",
             lesson: "The Social Security Number is an essential tool for navigating the commercial system. Rather than viewing it as control, see it as an access key that opens doors to opportunities.",
             quiz: {
@@ -312,7 +312,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "edu-1-1",
             title: "Learning the Rules",
             narrative: "The education system teaches many things, but rarely explains how the legal and financial systems actually work. This is knowledge you must seek independently.",
-            strawmanPerspective: "The system provides: Standardized education focused on creating productive workers. Financial literacy, legal understanding, and business formation are often absent from the curriculum.",
+            systemPerspective: "The system provides: Standardized education focused on creating productive workers. Financial literacy, legal understanding, and business formation are often absent from the curriculum.",
             sovereignPerspective: "The empowered individual seeks: Knowledge beyond the standard curriculum. Understanding contracts, business structures, taxes, and legal rights. This knowledge is the foundation of true empowerment.",
             lesson: "Formal education is valuable, but financial and legal literacy must often be self-taught. Seek this knowledge actively - it's the key to navigating the system effectively.",
             completed: false,
@@ -321,7 +321,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "edu-1-2",
             title: "Building Your Knowledge Base",
             narrative: "While in school, you can begin building the knowledge that will serve you throughout life: understanding money, contracts, business, and your rights.",
-            strawmanPerspective: "The system expects: Focus on grades, credentials, and preparation for employment. Success is measured by degrees and job placement.",
+            systemPerspective: "The system expects: Focus on grades, credentials, and preparation for employment. Success is measured by degrees and job placement.",
             sovereignPerspective: "The empowered individual builds: A comprehensive understanding of how systems work. Knowledge of business formation, asset protection, and wealth building alongside formal education.",
             lesson: "Use your educational years to build both formal credentials AND practical knowledge of business, finance, and legal structures. This dual approach creates maximum options.",
             quiz: {
@@ -351,7 +351,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "edu-2-1",
             title: "The W-2 Path",
             narrative: "Your first job introduces you to the employment system: W-2 forms, tax withholding, and trading time for money. This is one path, but not the only one.",
-            strawmanPerspective: "The system creates: An employee who trades time for wages, with taxes automatically withheld. The employer reports earnings, and the system tracks everything.",
+            systemPerspective: "The system creates: An employee who trades time for wages, with taxes automatically withheld. The employer reports earnings, and the system tracks everything.",
             sovereignPerspective: "The empowered individual recognizes: W-2 employment is a starting point, not a destination. While employed, I can learn skills, save capital, and plan my transition to greater autonomy.",
             lesson: "W-2 employment provides stability and learning opportunities. Use it strategically as a foundation while building toward greater options and autonomy.",
             completed: false,
@@ -383,7 +383,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "com-1-1",
             title: "The LLC Shield",
             narrative: "A Limited Liability Company creates a legal vessel separate from you personally. This structure provides protection and creates new opportunities for wealth building.",
-            strawmanPerspective: "The system recognizes: A new legal entity has been formed. This entity can enter contracts, hold assets, and conduct business - separate from its owner's personal liability.",
+            systemPerspective: "The system recognizes: A new legal entity has been formed. This entity can enter contracts, hold assets, and conduct business - separate from its owner's personal liability.",
             sovereignPerspective: "The empowered individual creates: A strategic structure that separates personal assets from business risks. The LLC becomes a tool for building wealth while protecting what I've already built.",
             lesson: "An LLC is not just for 'big businesses' - it's a fundamental tool for anyone serious about building and protecting wealth. It creates a legal separation between you and your business activities.",
             quiz: {
@@ -403,7 +403,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "com-1-2",
             title: "The EIN Identity",
             narrative: "Just as you have a Social Security Number, your business entity gets an Employer Identification Number. This separates your business's tax identity from your personal one.",
-            strawmanPerspective: "The system tracks: Business income and expenses through the EIN. This number identifies the business entity for all tax and banking purposes.",
+            systemPerspective: "The system tracks: Business income and expenses through the EIN. This number identifies the business entity for all tax and banking purposes.",
             sovereignPerspective: "The empowered individual understands: The EIN creates a separate identity for my business. Income flows through the business first, allowing for strategic tax planning and asset protection.",
             lesson: "The EIN is your business's 'social security number.' It enables business banking, tax filing, and creates the separation between personal and business finances that protects you.",
             completed: false,
@@ -422,7 +422,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "com-2-1",
             title: "The Trust Framework",
             narrative: "A trust is one of the most powerful legal instruments available. It separates ownership from control and can protect assets across generations.",
-            strawmanPerspective: "The system sees: Assets held in trust are owned by the trust, not the individual. The trustee controls the assets for the benefit of the beneficiaries.",
+            systemPerspective: "The system sees: Assets held in trust are owned by the trust, not the individual. The trustee controls the assets for the benefit of the beneficiaries.",
             sovereignPerspective: "The empowered individual utilizes: Trusts to protect assets from lawsuits, plan for incapacity, and transfer wealth to future generations efficiently.",
             lesson: "Trusts are not just for the wealthy - they're tools everyone can use for asset protection, estate planning, and creating generational wealth structures.",
             quiz: {
@@ -452,7 +452,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "com-3-1",
             title: "Private Justice",
             narrative: "The court system is public, slow, and expensive. Arbitration provides a private alternative for resolving disputes efficiently.",
-            strawmanPerspective: "The system offers: Public courts where disputes become public record, proceedings can take years, and costs can be enormous.",
+            systemPerspective: "The system offers: Public courts where disputes become public record, proceedings can take years, and costs can be enormous.",
             sovereignPerspective: "The empowered individual chooses: Private arbitration when possible, maintaining confidentiality and control over the dispute resolution process.",
             lesson: "Including arbitration clauses in your contracts gives you control over how disputes are resolved. This is a standard practice among sophisticated businesses and families.",
             completed: false,
@@ -484,7 +484,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "sov-1-1",
             title: "Multiple Vessels",
             narrative: "True sovereignty comes from having multiple legal structures working together - trusts holding LLCs, businesses generating income, and protection layers at every level.",
-            strawmanPerspective: "The system sees: A complex web of legal entities, each with its own identity, purpose, and protections. The individual behind them is shielded by layers of legal structure.",
+            systemPerspective: "The system sees: A complex web of legal entities, each with its own identity, purpose, and protections. The individual behind them is shielded by layers of legal structure.",
             sovereignPerspective: "The empowered individual has built: A comprehensive system where assets are protected, income flows efficiently, and the structures can continue operating across generations.",
             lesson: "Sovereignty isn't about leaving the system - it's about mastering its instruments. Multiple coordinated structures provide maximum protection and flexibility.",
             quiz: {
@@ -514,7 +514,7 @@ const LIFE_ACTS: LifeAct[] = [
             id: "sov-2-1",
             title: "The Legacy Plan",
             narrative: "The ultimate goal: creating structures that transfer not just wealth, but knowledge and capability to future generations. This is the completion of the sovereignty journey.",
-            strawmanPerspective: "The system allows: Wealth transfer through proper estate planning. Without planning, the system takes a significant portion through taxes and probate.",
+            systemPerspective: "The system allows: Wealth transfer through proper estate planning. Without planning, the system takes a significant portion through taxes and probate.",
             sovereignPerspective: "The empowered individual ensures: Wealth, knowledge, and structures transfer efficiently to the next generation. The journey continues through children and grandchildren.",
             lesson: "True generational wealth isn't just about money - it's about transferring the knowledge of how to use these instruments. Teach your children what you've learned.",
             completed: false,
@@ -548,7 +548,7 @@ export default function SovereigntyJourney() {
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [showInstrument, setShowInstrument] = useState(false);
   const [currentInstrument, setCurrentInstrument] = useState<LegalInstrument | null>(null);
-  const [narrativeStep, setNarrativeStep] = useState<"narrative" | "strawman" | "sovereign" | "lesson">("narrative");
+  const [narrativeStep, setNarrativeStep] = useState<"narrative" | "system" | "sovereign" | "lesson">("narrative");
 
   const getCurrentAct = () => LIFE_ACTS.find(act => act.id === progress.currentAct);
 
@@ -572,8 +572,8 @@ export default function SovereigntyJourney() {
 
   const advanceNarrative = () => {
     if (narrativeStep === "narrative") {
-      setNarrativeStep("strawman");
-    } else if (narrativeStep === "strawman") {
+      setNarrativeStep("system");
+    } else if (narrativeStep === "system") {
       setNarrativeStep("sovereign");
     } else if (narrativeStep === "sovereign") {
       setNarrativeStep("lesson");
@@ -929,11 +929,11 @@ export default function SovereigntyJourney() {
               <div className="space-y-6">
                 {/* Progress indicator */}
                 <div className="flex gap-2">
-                  {["narrative", "strawman", "sovereign", "lesson"].map((step, idx) => (
+                  {["narrative", "system", "sovereign", "lesson"].map((step, idx) => (
                     <div
                       key={step}
                       className={`flex-1 h-2 rounded-full ${
-                        ["narrative", "strawman", "sovereign", "lesson"].indexOf(narrativeStep) >= idx
+                        ["narrative", "system", "sovereign", "lesson"].indexOf(narrativeStep) >= idx
                           ? 'bg-primary'
                           : 'bg-muted'
                       }`}
@@ -955,7 +955,7 @@ export default function SovereigntyJourney() {
                     </div>
                   )}
 
-                  {narrativeStep === "strawman" && (
+                  {narrativeStep === "system" && (
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 text-amber-500">
                         <AlertTriangle className="w-5 h-5" />
@@ -963,7 +963,7 @@ export default function SovereigntyJourney() {
                       </div>
                       <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
                         <p className="text-foreground leading-relaxed">
-                          {currentSceneData?.strawmanPerspective}
+                          {currentSceneData?.systemPerspective}
                         </p>
                       </div>
                     </div>
