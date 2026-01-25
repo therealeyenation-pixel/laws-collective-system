@@ -151,6 +151,11 @@ import { virtualLibraryRouter } from "./routers/virtual-library";
 import { protectionLayerRouter } from "./routers/protection-layer-documents";
 import { readingStreaksRouter } from "./routers/reading-streaks";
 import { externalOnboardingRouter } from "./routers/external-onboarding";
+import { landPropertyManagementRouter } from "./routers/land-property-management";
+import { educationAcademyRouter } from "./routers/education-academy";
+import { internshipProgramsRouter } from "./routers/internship-programs";
+import { internshipTransitionRouter } from "./routers/internship-transition";
+import { unifiedGovernanceRouter } from "./routers/unified-governance";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -314,6 +319,11 @@ export const appRouter = router({
   protectionLayer: protectionLayerRouter,
   readingStreaks: readingStreaksRouter,
   externalOnboarding: externalOnboardingRouter,
+  landPropertyManagement: landPropertyManagementRouter,
+  educationAcademy: educationAcademyRouter,
+  internshipPrograms: internshipProgramsRouter,
+  internshipTransition: internshipTransitionRouter,
+  unifiedGovernance: unifiedGovernanceRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
