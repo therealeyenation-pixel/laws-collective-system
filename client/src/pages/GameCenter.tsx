@@ -166,6 +166,7 @@ export default function GameCenter() {
     "climb-slide",
     "escape-rooms",
     "detective-academy",
+    "rubiks-cube",
   ]);
 
   const isGameImplemented = (slug: string) => implementedGames.has(slug);
@@ -198,6 +199,7 @@ export default function GameCenter() {
       "climb-slide": "/games/climb-slide",
       "escape-rooms": "/games/escape-room",
       "detective-academy": "/games/detective-academy",
+      "rubiks-cube": "/games/rubiks-cube",
     };
     
     if (gameRoutes[gameSlug]) {

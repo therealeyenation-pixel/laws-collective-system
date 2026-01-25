@@ -67,6 +67,7 @@ import CrosswordMaster from "@/pages/games/CrosswordMaster";
 import ClimbSlide from "@/pages/games/ClimbSlide";
 import EscapeRoom from "@/pages/games/EscapeRoom";
 import DetectiveAcademy from "@/pages/games/DetectiveAcademy";
+import RubiksCube from "@/pages/games/RubiksCube";
 import Achievements from "@/pages/Achievements";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
@@ -452,6 +453,7 @@ function Router() {
       <Route path="/games/climb-slide">{() => <ProtectedRoute component={ClimbSlide} minRole="user" />}</Route>
       <Route path="/games/escape-room">{() => <ProtectedRoute component={EscapeRoom} minRole="user" />}</Route>
       <Route path="/games/detective-academy">{() => <ProtectedRoute component={DetectiveAcademy} minRole="user" />}</Route>
+      <Route path="/games/rubiks-cube">{() => <ProtectedRoute component={RubiksCube} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>

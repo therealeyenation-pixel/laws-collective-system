@@ -121,6 +121,7 @@ export const gameCenterRouter = router({
       { name: "Spider Solitaire", slug: "spider-solitaire", description: "Advanced solitaire variant", gameType: "card", ageGroup: "adult", minPlayers: 1, maxPlayers: 1, estimatedDuration: "15-30 min", skillsTargeted: ["planning", "strategy", "patience"], tokenRewardBase: 8, icon: "bug" },
       { name: "Hearts", slug: "hearts", description: "Classic trick-taking card game", gameType: "card", ageGroup: "adult", minPlayers: 4, maxPlayers: 4, estimatedDuration: "30-45 min", skillsTargeted: ["strategy", "probability", "memory"], tokenRewardBase: 10, icon: "heart" },
       { name: "Knowledge Quest", slug: "knowledge-quest", description: "Trivia game with L.A.W.S. categories", gameType: "trivia", ageGroup: "all_ages", minPlayers: 2, maxPlayers: 8, estimatedDuration: "30-60 min", skillsTargeted: ["general-knowledge", "quick-thinking", "memory"], tokenRewardBase: 15, icon: "trophy" },
+      { name: "Rubik's Cube", slug: "rubiks-cube", description: "Solve the cube! Compete for best times with 1-6 color difficulty levels", gameType: "puzzle", ageGroup: "all_ages", minPlayers: 1, maxPlayers: 1, estimatedDuration: "5-30 min", skillsTargeted: ["spatial-reasoning", "pattern-recognition", "problem-solving", "patience"], tokenRewardBase: 20, icon: "puzzle" },
     ];
 
     for (const game of games) {
