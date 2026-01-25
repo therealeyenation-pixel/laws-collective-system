@@ -156,6 +156,8 @@ import { educationAcademyRouter } from "./routers/education-academy";
 import { internshipProgramsRouter } from "./routers/internship-programs";
 import { internshipTransitionRouter } from "./routers/internship-transition";
 import { unifiedGovernanceRouter } from "./routers/unified-governance";
+import { multiplayerRouter } from "./routers/multiplayer";
+import { gameAchievementsRouter } from "./routers/game-achievements";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -324,6 +326,8 @@ export const appRouter = router({
   internshipPrograms: internshipProgramsRouter,
   internshipTransition: internshipTransitionRouter,
   unifiedGovernance: unifiedGovernanceRouter,
+  multiplayer: multiplayerRouter,
+  gameAchievements: gameAchievementsRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
