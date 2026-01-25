@@ -28,7 +28,11 @@ import {
   Wind,
   Droplets,
   Sparkles,
+  Pen,
+  Check,
 } from "lucide-react";
+import { ESignatureCapture } from "@/components/ESignatureCapture";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 const US_STATES = [
   "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
@@ -42,9 +46,18 @@ const US_STATES = [
 ];
 
 export default function ProtectionLayer() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
-  const [generatedDocument, setGeneratedDocument] = useState<{ html: string; url: string } | null>(null);
+  const [generatedDocument, setGeneratedDocument] = useState<{ html: string; url: string; documentType?: string } | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showSignature, setShowSignature] = useState(false);
+  const [signatureData, setSignatureData] = useState<{
+    type: "drawn" | "typed";
+    data: string;
+    name: string;
+    timestamp: number;
+  } | null>(null);
+  const [documentSigned, setDocumentSigned] = useState(false);
 
   const [healthcarePOAForm, setHealthcarePOAForm] = useState({
     principalName: "",
@@ -80,10 +93,43 @@ export default function ProtectionLayer() {
     executionDate: new Date().toISOString().split('T')[0],
   });
 
+  const signDocument = trpc.electronicSignature.sign.useMutation({
+    onSuccess: (data) => {
+      setDocumentSigned(true);
+      toast.success(`Document signed! Verification code: ${data.verificationCode}`);
+    },
+    onError: (error) => {
+      toast.error(`Failed to sign: ${error.message}`);
+    },
+  });
+
+  const handleSignDocument = (signature: {
+    type: "drawn" | "typed";
+    data: string;
+    name: string;
+    timestamp: number;
+  }) => {
+    setSignatureData(signature);
+    setShowSignature(false);
+    
+    // Sign the document with the electronic signature system
+    if (generatedDocument) {
+      signDocument.mutate({
+        documentType: generatedDocument.documentType || "protection_layer_document",
+        documentId: Date.now(), // Use timestamp as unique ID for generated documents
+        documentTitle: generatedDocument.documentType?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "Protection Layer Document",
+        signatureStatement: `I, ${signature.name}, hereby sign this document electronically on ${new Date(signature.timestamp).toLocaleString()}.`,
+        requiresAnnualReAck: false,
+      });
+    }
+  };
+
   const generateHealthcarePOA = trpc.protectionLayer.generateHealthcarePOA.useMutation({
     onSuccess: (data) => {
-      setGeneratedDocument({ html: data.html, url: data.url });
+      setGeneratedDocument({ html: data.html, url: data.url, documentType: "healthcare_poa" });
       setShowPreview(true);
+      setDocumentSigned(false);
+      setSignatureData(null);
       toast.success("Healthcare Power of Attorney generated!");
     },
     onError: (error) => {
@@ -206,11 +252,12 @@ export default function ProtectionLayer() {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="healthcare">Healthcare & Estate</TabsTrigger>
-            <TabsTrigger value="dispute">Dispute Resolution</TabsTrigger>
-            <TabsTrigger value="privacy">Privacy Protection</TabsTrigger>
+            <TabsTrigger value="bundles">Document Bundles</TabsTrigger>
+            <TabsTrigger value="healthcare">Healthcare</TabsTrigger>
+            <TabsTrigger value="dispute">Dispute</TabsTrigger>
+            <TabsTrigger value="privacy">Privacy</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -295,6 +342,163 @@ export default function ProtectionLayer() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="bundles" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileSignature className="w-5 h-5" />
+                  Document Bundles
+                </CardTitle>
+                <CardDescription>
+                  Generate multiple related documents at once with shared information
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Business Starter Bundle */}
+                  <Card className="border-2 border-sky-500/20 hover:border-sky-500/40 transition-colors">
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center">
+                          <Building2 className="w-6 h-6 text-sky-500" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">Business Starter Bundle</CardTitle>
+                          <Badge variant="outline" className="mt-1">Air Pillar</Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Essential documents for starting a new business entity
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>LLC Operating Agreement</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>DBA Registration</span>
+                        </div>
+                      </div>
+                      <Button className="w-full" onClick={() => toast.info("Business bundle form coming soon")}>
+                        Generate Bundle
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Family Protection Bundle */}
+                  <Card className="border-2 border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                          <Users className="w-6 h-6 text-purple-500" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">Family Protection Bundle</CardTitle>
+                          <Badge variant="outline" className="mt-1">Self Pillar</Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Complete healthcare and financial protection for your family
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>Healthcare Power of Attorney</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>Living Will</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>Financial Power of Attorney</span>
+                        </div>
+                      </div>
+                      <Button className="w-full" onClick={() => toast.info("Family bundle form coming soon")}>
+                        Generate Bundle
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Healthcare Complete Bundle */}
+                  <Card className="border-2 border-red-500/20 hover:border-red-500/40 transition-colors">
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center">
+                          <Heart className="w-6 h-6 text-red-500" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">Healthcare Complete Bundle</CardTitle>
+                          <Badge variant="outline" className="mt-1">Self Pillar</Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        All healthcare-related legal documents in one package
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>Healthcare Power of Attorney</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>Living Will</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>HIPAA Authorization</span>
+                        </div>
+                      </div>
+                      <Button className="w-full" onClick={() => toast.info("Healthcare bundle form coming soon")}>
+                        Generate Bundle
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Asset Protection Bundle */}
+                  <Card className="border-2 border-green-500/20 hover:border-green-500/40 transition-colors">
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
+                          <Shield className="w-6 h-6 text-green-500" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">Asset Protection Bundle</CardTitle>
+                          <Badge variant="outline" className="mt-1">Land Pillar</Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Trust structures for privacy and asset protection
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>Privacy Trust</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          <span>Revocable Living Trust</span>
+                        </div>
+                      </div>
+                      <Button className="w-full" onClick={() => toast.info("Asset bundle form coming soon")}>
+                        Generate Bundle
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="healthcare" className="space-y-6">
@@ -718,22 +922,59 @@ export default function ProtectionLayer() {
             <DialogHeader>
               <DialogTitle>Document Preview</DialogTitle>
               <DialogDescription>
-                Review your generated document before downloading
+                Review your generated document, sign electronically, then download
               </DialogDescription>
             </DialogHeader>
             {generatedDocument && (
               <div className="space-y-4">
                 <div 
-                  className="border rounded-lg p-4 bg-white text-black max-h-[60vh] overflow-y-auto"
+                  className="border rounded-lg p-4 bg-white text-black max-h-[50vh] overflow-y-auto"
                   dangerouslySetInnerHTML={{ __html: generatedDocument.html }}
                 />
+                
+                {/* Signature Status */}
+                {signatureData && (
+                  <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Check className="w-5 h-5 text-green-600" />
+                      <div>
+                        <p className="font-medium text-green-800 dark:text-green-200">Document Signed</p>
+                        <p className="text-sm text-green-600 dark:text-green-400">
+                          Signed by {signatureData.name} on {new Date(signatureData.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    {signatureData.type === "drawn" && (
+                      <div className="mt-3 p-2 bg-white rounded border">
+                        <img src={signatureData.data} alt="Signature" className="h-12 mx-auto" />
+                      </div>
+                    )}
+                    {signatureData.type === "typed" && (
+                      <div className="mt-3 p-2 bg-white rounded border text-center">
+                        <p className="text-xl" style={{ fontFamily: "cursive" }}>{signatureData.data}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
                 <div className="flex gap-4">
-                  <Button asChild className="flex-1">
-                    <a href={generatedDocument.url} target="_blank" rel="noopener noreferrer">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Document
-                    </a>
-                  </Button>
+                  {!signatureData ? (
+                    <Button 
+                      onClick={() => setShowSignature(true)} 
+                      className="flex-1"
+                      variant="default"
+                    >
+                      <Pen className="w-4 h-4 mr-2" />
+                      Sign Document Electronically
+                    </Button>
+                  ) : (
+                    <Button asChild className="flex-1">
+                      <a href={generatedDocument.url} target="_blank" rel="noopener noreferrer">
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Signed Document
+                      </a>
+                    </Button>
+                  )}
                   <Button variant="outline" onClick={() => setShowPreview(false)}>
                     Close
                   </Button>
@@ -742,6 +983,15 @@ export default function ProtectionLayer() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* E-Signature Capture Dialog */}
+        <ESignatureCapture
+          open={showSignature}
+          onOpenChange={setShowSignature}
+          onSign={handleSignDocument}
+          signerName={user?.name || ""}
+          documentTitle={generatedDocument?.documentType?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "Protection Layer Document"}
+        />
       </div>
     </DashboardLayout>
   );

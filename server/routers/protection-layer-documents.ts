@@ -2239,4 +2239,361 @@ export const protectionLayerRouter = router({
       },
     ];
   }),
+
+  // Generate a bundle of related documents
+  generateBundle: protectedProcedure
+    .input(z.object({
+      bundleType: z.enum(["business_starter", "family_protection", "healthcare_complete", "asset_protection"]),
+      // Common fields used across multiple documents
+      principalName: z.string(),
+      principalAddress: z.string(),
+      principalCity: z.string(),
+      principalState: z.string(),
+      principalZip: z.string(),
+      principalDOB: z.string().optional(),
+      // Agent/Trustee info
+      agentName: z.string().optional(),
+      agentAddress: z.string().optional(),
+      agentCity: z.string().optional(),
+      agentState: z.string().optional(),
+      agentZip: z.string().optional(),
+      agentPhone: z.string().optional(),
+      agentRelationship: z.string().optional(),
+      // Business info
+      businessName: z.string().optional(),
+      businessPurpose: z.string().optional(),
+      // Additional members/beneficiaries
+      members: z.array(z.object({
+        name: z.string(),
+        ownershipPercentage: z.number(),
+        capitalContribution: z.string().optional(),
+      })).optional(),
+      beneficiaries: z.array(z.object({
+        name: z.string(),
+        relationship: z.string(),
+        percentage: z.number(),
+      })).optional(),
+      executionDate: z.string(),
+      state: z.string(),
+      county: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const documents: Array<{ name: string; html: string; url: string; documentType: string }> = [];
+      
+      const bundleConfigs: Record<string, string[]> = {
+        business_starter: ["operating_agreement", "dba_registration"],
+        family_protection: ["healthcare_poa", "living_will", "financial_poa"],
+        healthcare_complete: ["healthcare_poa", "living_will", "hipaa_authorization"],
+        asset_protection: ["privacy_trust", "revocable_living_trust"],
+      };
+      
+      const documentsToGenerate = bundleConfigs[input.bundleType] || [];
+      
+      for (const docType of documentsToGenerate) {
+        let html = "";
+        let name = "";
+        
+        switch (docType) {
+          case "operating_agreement":
+            if (input.businessName && input.members) {
+              html = generateOperatingAgreement({
+                llcName: input.businessName,
+                stateOfFormation: input.state,
+                formationDate: input.executionDate,
+                principalAddress: input.principalAddress,
+                principalCity: input.principalCity,
+                principalState: input.principalState,
+                principalZip: input.principalZip,
+                businessPurpose: input.businessPurpose || "General business operations",
+                members: input.members.map(m => ({
+                  ...m,
+                  memberType: "individual" as const,
+                  capitalContribution: m.capitalContribution || "$0",
+                })),
+                managementType: "member_managed",
+                profitDistribution: "pro_rata",
+                fiscalYearEnd: "December 31",
+                votingThreshold: 51,
+                transferRestrictions: true,
+                rightOfFirstRefusal: true,
+                dissolutionEvents: [
+                  "Unanimous consent of all members",
+                  "Entry of a decree of judicial dissolution",
+                  "Administrative dissolution by the state",
+                ],
+                executionDate: input.executionDate,
+              });
+              name = "LLC Operating Agreement";
+            }
+            break;
+            
+          case "dba_registration":
+            if (input.businessName) {
+              html = generateDBARegistration({
+                dbaName: input.businessName,
+                businessAddress: input.principalAddress,
+                businessCity: input.principalCity,
+                businessState: input.principalState,
+                businessZip: input.principalZip,
+                ownerName: input.principalName,
+                ownerType: "individual",
+                ownerAddress: input.principalAddress,
+                ownerCity: input.principalCity,
+                ownerState: input.principalState,
+                ownerZip: input.principalZip,
+                businessType: input.businessPurpose || "General business",
+                businessDescription: input.businessPurpose || "General business operations",
+                registrationDate: input.executionDate,
+                stateOfRegistration: input.state,
+                countyOfRegistration: input.county,
+              });
+              name = "DBA Registration";
+            }
+            break;
+            
+          case "healthcare_poa":
+            if (input.agentName) {
+              html = generateHealthcarePOA({
+                principalName: input.principalName,
+                principalAddress: input.principalAddress,
+                principalCity: input.principalCity,
+                principalState: input.principalState,
+                principalZip: input.principalZip,
+                principalDOB: input.principalDOB || "",
+                agentName: input.agentName,
+                agentAddress: input.agentAddress || "",
+                agentCity: input.agentCity || "",
+                agentState: input.agentState || "",
+                agentZip: input.agentZip || "",
+                agentPhone: input.agentPhone || "",
+                agentRelationship: input.agentRelationship || "",
+                powers: {
+                  consentToTreatment: true,
+                  refuseTreatment: true,
+                  accessMedicalRecords: true,
+                  hireDischargeProviders: true,
+                  admitToFacility: true,
+                  authorizeRelease: true,
+                  makeDNRDecisions: false,
+                  organDonation: false,
+                  mentalHealthTreatment: true,
+                  experimentalTreatment: false,
+                },
+                effectiveImmediately: false,
+                effectiveUponIncapacity: true,
+                state: input.state,
+                county: input.county,
+                executionDate: input.executionDate,
+              });
+              name = "Healthcare Power of Attorney";
+            }
+            break;
+            
+          case "living_will":
+            html = generateLivingWill({
+              principalName: input.principalName,
+              principalAddress: input.principalAddress,
+              principalCity: input.principalCity,
+              principalState: input.principalState,
+              principalZip: input.principalZip,
+              principalDOB: input.principalDOB || "",
+              state: input.state,
+              county: input.county,
+              executionDate: input.executionDate,
+              lifeSustainingTreatment: {
+                terminalCondition: "withhold",
+                permanentUnconscious: "withhold",
+                advancedDementia: "agentDecides",
+              },
+              artificialNutrition: {
+                terminalCondition: "withhold",
+                permanentUnconscious: "withhold",
+                advancedDementia: "agentDecides",
+              },
+              artificialHydration: {
+                terminalCondition: "withhold",
+                permanentUnconscious: "withhold",
+                advancedDementia: "agentDecides",
+              },
+              painManagement: "comfort_focused",
+              organDonation: "no_donation",
+              religiousBeliefs: "",
+              additionalInstructions: "",
+            });
+            name = "Living Will";
+            break;
+            
+          case "financial_poa":
+            if (input.agentName) {
+              html = generateFinancialPOA({
+                principalName: input.principalName,
+                principalAddress: input.principalAddress,
+                principalCity: input.principalCity,
+                principalState: input.principalState,
+                principalZip: input.principalZip,
+                principalDOB: input.principalDOB || "",
+                agentName: input.agentName,
+                agentAddress: input.agentAddress || "",
+                agentCity: input.agentCity || "",
+                agentState: input.agentState || "",
+                agentZip: input.agentZip || "",
+                agentPhone: input.agentPhone || "",
+                agentRelationship: input.agentRelationship || "",
+                powers: {
+                  banking: true,
+                  realEstate: true,
+                  investments: true,
+                  taxes: true,
+                  insurance: true,
+                  retirement: true,
+                  business: true,
+                  legal: true,
+                  government: true,
+                  gifts: false,
+                },
+                effectiveImmediately: false,
+                effectiveUponIncapacity: true,
+                state: input.state,
+                county: input.county,
+                executionDate: input.executionDate,
+              });
+              name = "Financial Power of Attorney";
+            }
+            break;
+            
+          case "hipaa_authorization":
+            if (input.agentName) {
+              html = generateHIPAAAuth({
+                patientName: input.principalName,
+                patientAddress: input.principalAddress,
+                patientCity: input.principalCity,
+                patientState: input.principalState,
+                patientZip: input.principalZip,
+                patientDOB: input.principalDOB || "",
+                authorizedPersons: [{
+                  name: input.agentName,
+                  relationship: input.agentRelationship || "Agent",
+                  phone: input.agentPhone || "",
+                }],
+                informationTypes: {
+                  medicalRecords: true,
+                  mentalHealth: true,
+                  substanceAbuse: false,
+                  hivAids: false,
+                  geneticTesting: false,
+                  billing: true,
+                },
+                purposeOfDisclosure: "healthcare_coordination",
+                expirationDate: "",
+                executionDate: input.executionDate,
+              });
+              name = "HIPAA Authorization";
+            }
+            break;
+            
+          case "privacy_trust":
+            if (input.beneficiaries) {
+              html = generatePrivacyTrust({
+                trustName: `${input.principalName} Privacy Trust`,
+                settlorName: input.principalName,
+                settlorAddress: input.principalAddress,
+                settlorCity: input.principalCity,
+                settlorState: input.principalState,
+                settlorZip: input.principalZip,
+                trusteeName: input.agentName || input.principalName,
+                trusteeAddress: input.agentAddress || input.principalAddress,
+                trusteeCity: input.agentCity || input.principalCity,
+                trusteeState: input.agentState || input.principalState,
+                trusteeZip: input.agentZip || input.principalZip,
+                trustPurpose: "asset_protection",
+                revocable: true,
+                beneficiaries: input.beneficiaries,
+                initialAssets: [{ description: "Initial contribution", estimatedValue: "$100" }],
+                governingLaw: input.state,
+                executionDate: input.executionDate,
+              });
+              name = "Privacy Trust";
+            }
+            break;
+            
+          case "revocable_living_trust":
+            if (input.beneficiaries) {
+              html = generateRevocableLivingTrust({
+                trustName: `${input.principalName} Living Trust`,
+                grantorName: input.principalName,
+                grantorAddress: input.principalAddress,
+                grantorCity: input.principalCity,
+                grantorState: input.principalState,
+                grantorZip: input.principalZip,
+                trusteeName: input.principalName,
+                trusteeAddress: `${input.principalAddress}, ${input.principalCity}, ${input.principalState} ${input.principalZip}`,
+                successorTrustee1Name: input.agentName || "",
+                successorTrustee1Address: input.agentAddress ? `${input.agentAddress}, ${input.agentCity}, ${input.agentState} ${input.agentZip}` : "",
+                beneficiaries: input.beneficiaries.map(b => ({ ...b, contingent: false })),
+                residuaryDistribution: "All remaining trust assets shall be distributed equally among the primary beneficiaries.",
+                incapacityProvisions: true,
+                spendthriftProvisions: true,
+                noContestClause: true,
+                trusteeCompensation: "none",
+                governingLaw: input.state,
+                executionDate: input.executionDate,
+              });
+              name = "Revocable Living Trust";
+            }
+            break;
+        }
+        
+        if (html) {
+          const fileName = `${docType}-${Date.now()}.html`;
+          const { url } = await storagePut(fileName, html, "text/html");
+          documents.push({ name, html, url, documentType: docType });
+        }
+      }
+      
+      return {
+        bundleType: input.bundleType,
+        documents,
+        generatedAt: new Date().toISOString(),
+        totalDocuments: documents.length,
+      };
+    }),
+
+  // Get available bundles
+  getBundles: protectedProcedure
+    .query(async () => {
+      return [
+        {
+          id: "business_starter",
+          name: "Business Starter Bundle",
+          description: "Essential documents for starting a new business",
+          lawsPillar: "Air",
+          documents: ["LLC Operating Agreement", "DBA Registration"],
+          icon: "building",
+        },
+        {
+          id: "family_protection",
+          name: "Family Protection Bundle",
+          description: "Complete healthcare and financial protection for your family",
+          lawsPillar: "Self",
+          documents: ["Healthcare POA", "Living Will", "Financial POA"],
+          icon: "users",
+        },
+        {
+          id: "healthcare_complete",
+          name: "Healthcare Complete Bundle",
+          description: "All healthcare-related legal documents",
+          lawsPillar: "Self",
+          documents: ["Healthcare POA", "Living Will", "HIPAA Authorization"],
+          icon: "heart",
+        },
+        {
+          id: "asset_protection",
+          name: "Asset Protection Bundle",
+          description: "Trust structures for privacy and asset protection",
+          lawsPillar: "Land",
+          documents: ["Privacy Trust", "Revocable Living Trust"],
+          icon: "shield",
+        },
+      ];
+    }),
 });
