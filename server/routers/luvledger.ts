@@ -223,4 +223,57 @@ export const luvledgerRouter = router({
 
       return { success: true };
     }),
+
+  // Get house ledger summary for dashboard widget
+  getHouseLedgerSummary: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    // Get user's accounts with summary
+    const accounts = await db
+      .select()
+      .from(luvLedgerAccounts)
+      .where(eq(luvLedgerAccounts.userId, ctx.user.id));
+
+    // Get recent transactions for all accounts
+    const accountIds = accounts.map(a => a.id);
+    let recentTransactions: any[] = [];
+    
+    if (accountIds.length > 0) {
+      for (const accountId of accountIds.slice(0, 3)) {
+        const txs = await db
+          .select()
+          .from(luvLedgerTransactions)
+          .where(eq(luvLedgerTransactions.fromAccountId, accountId));
+        recentTransactions = [...recentTransactions, ...txs];
+      }
+    }
+
+    // Calculate totals
+    const totalBalance = accounts.reduce((sum, a) => sum + parseFloat(a.balance || '0'), 0);
+
+    return {
+      accounts,
+      recentTransactions: recentTransactions.slice(0, 5),
+      totalBalance: totalBalance.toFixed(2),
+    };
+  }),
+
+  // Get main house aggregation (root house view)
+  getMainHouseAggregation: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    const accounts = await db.select().from(luvLedgerAccounts);
+    const transactions = await db.select().from(luvLedgerTransactions);
+
+    const totalBalance = accounts.reduce((sum, a) => sum + parseFloat(a.balance || '0'), 0);
+    const totalTransactions = transactions.length;
+
+    return {
+      totalHouses: accounts.length,
+      totalBalance: totalBalance.toFixed(2),
+      totalTransactions,
+    };
+  }),
 });
