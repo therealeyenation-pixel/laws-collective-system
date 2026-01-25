@@ -1191,6 +1191,598 @@ function generateArbitrationAgreement(data: ArbitrationAgreementData): string {
 }
 
 // ============================================
+// PRIVACY TRUST GENERATOR
+// ============================================
+
+function generatePrivacyTrust(data: any): string {
+  const purposeLabels: Record<string, string> = {
+    asset_protection: "Asset Protection and Creditor Shield",
+    privacy: "Privacy and Anonymity in Asset Ownership",
+    estate_planning: "Estate Planning and Wealth Transfer",
+    business_holding: "Business and Investment Holdings",
+  };
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Trust Agreement - ${data.trustName}</title>
+  ${getDocumentStyles()}
+</head>
+<body>
+  <div class="document-container">
+    <div class="document-header">
+      <h1>${data.trustName}</h1>
+      <p class="subtitle">${data.revocable ? "Revocable" : "Irrevocable"} Privacy Trust Agreement</p>
+      <p>Governed by the Laws of ${data.governingLaw}</p>
+    </div>
+
+    <div class="section">
+      <h2>Article I: Declaration of Trust</h2>
+      <p>This Trust Agreement (the "Agreement") is made and entered into on <strong>${data.executionDate}</strong> by and between:</p>
+      
+      <div class="indent">
+        <p><strong>SETTLOR:</strong></p>
+        <p>${data.settlorName}</p>
+        <p>${data.settlorAddress}, ${data.settlorCity}, ${data.settlorState} ${data.settlorZip}</p>
+      </div>
+      
+      <div class="indent">
+        <p><strong>TRUSTEE:</strong></p>
+        <p>${data.trusteeName}</p>
+        <p>${data.trusteeAddress}, ${data.trusteeCity}, ${data.trusteeState} ${data.trusteeZip}</p>
+      </div>
+      
+      <p>The Settlor hereby transfers, assigns, and conveys to the Trustee the property described in Schedule A attached hereto, to be held, administered, and distributed according to the terms of this Agreement.</p>
+    </div>
+
+    <div class="section">
+      <h2>Article II: Purpose of Trust</h2>
+      <p>The primary purpose of this Trust is: <strong>${purposeLabels[data.trustPurpose]}</strong></p>
+      <p>The Trust is established to provide privacy in the ownership and management of assets, protect assets from potential creditors, and facilitate the efficient transfer of wealth to designated beneficiaries.</p>
+    </div>
+
+    <div class="section">
+      <h2>Article III: Beneficiaries</h2>
+      <p>The following individuals are designated as beneficiaries of this Trust:</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Relationship</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.beneficiaries.map((b: any) => `
+          <tr>
+            <td>${b.name}</td>
+            <td>${b.relationship}</td>
+            <td>${b.percentage}%</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Article IV: Trust Property</h2>
+      <p>The initial trust property consists of:</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Estimated Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.initialAssets.map((a: any) => `
+          <tr>
+            <td>${a.description}</td>
+            <td>${a.estimatedValue}</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Article V: Trustee Powers</h2>
+      <p>The Trustee shall have all powers necessary to carry out the purposes of this Trust, including but not limited to:</p>
+      <ul>
+        <li>To buy, sell, lease, or exchange any trust property</li>
+        <li>To invest and reinvest trust funds in any property</li>
+        <li>To borrow money and encumber trust property</li>
+        <li>To employ agents, attorneys, and accountants</li>
+        <li>To make distributions to beneficiaries</li>
+        <li>To maintain privacy in all trust transactions</li>
+      </ul>
+    </div>
+
+    ${data.successorTrusteeName ? `
+    <div class="section">
+      <h2>Article VI: Successor Trustee</h2>
+      <p>If the Trustee is unable or unwilling to serve, the following individual shall serve as Successor Trustee:</p>
+      <div class="indent">
+        <p><strong>${data.successorTrusteeName}</strong></p>
+        <p>${data.successorTrusteeAddress || ''}</p>
+      </div>
+    </div>
+    ` : ''}
+
+    <div class="section">
+      <h2>Article VII: ${data.revocable ? 'Revocation and Amendment' : 'Irrevocability'}</h2>
+      ${data.revocable ? `
+      <p>The Settlor reserves the right to revoke, amend, or modify this Trust at any time during the Settlor's lifetime by written instrument delivered to the Trustee.</p>
+      ` : `
+      <p>This Trust is irrevocable. The Settlor has no power to revoke, amend, or modify this Trust or any of its terms.</p>
+      `}
+    </div>
+
+    <div class="section">
+      <h2>Article VIII: Governing Law</h2>
+      <p>This Trust shall be governed by and construed in accordance with the laws of the State of <strong>${data.governingLaw}</strong>.</p>
+    </div>
+
+    <div class="signature-section">
+      <h2>Execution</h2>
+      <p>IN WITNESS WHEREOF, the parties have executed this Trust Agreement on the date first written above.</p>
+      
+      <div class="witness-grid">
+        <div class="witness-item">
+          <h3>Settlor</h3>
+          <div class="signature-line"></div>
+          <p class="signature-label">Signature</p>
+          <p><strong>${data.settlorName}</strong></p>
+          <p>Date: <span class="blank-line short"></span></p>
+        </div>
+        
+        <div class="witness-item">
+          <h3>Trustee</h3>
+          <div class="signature-line"></div>
+          <p class="signature-label">Signature</p>
+          <p><strong>${data.trusteeName}</strong></p>
+          <p>Date: <span class="blank-line short"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Privacy Trust Agreement | Generated by L.A.W.S. Collective Protection Layer</p>
+      <p>Document ID: TRUST-${Date.now()}</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+// ============================================
+// LLC OPERATING AGREEMENT GENERATOR
+// ============================================
+
+function generateOperatingAgreement(data: any): string {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operating Agreement - ${data.llcName}</title>
+  ${getDocumentStyles()}
+</head>
+<body>
+  <div class="document-container">
+    <div class="document-header">
+      <h1>Operating Agreement</h1>
+      <p class="subtitle">${data.llcName}</p>
+      <p>A ${data.stateOfFormation} Limited Liability Company</p>
+    </div>
+
+    <div class="section">
+      <h2>Article I: Formation</h2>
+      <p>This Operating Agreement (the "Agreement") of <strong>${data.llcName}</strong> (the "Company"), a limited liability company organized under the laws of the State of <strong>${data.stateOfFormation}</strong>, is entered into and effective as of <strong>${data.executionDate}</strong>.</p>
+      
+      <p><strong>Formation Date:</strong> ${data.formationDate}</p>
+      <p><strong>Principal Place of Business:</strong> ${data.principalAddress}, ${data.principalCity}, ${data.principalState} ${data.principalZip}</p>
+    </div>
+
+    <div class="section">
+      <h2>Article II: Purpose</h2>
+      <p>The Company is formed for the following purpose: <strong>${data.businessPurpose}</strong></p>
+      <p>The Company may engage in any lawful business activity permitted under the laws of ${data.stateOfFormation}.</p>
+    </div>
+
+    <div class="section">
+      <h2>Article III: Members</h2>
+      <p>The Members of the Company, their ownership interests, and capital contributions are as follows:</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Member Name</th>
+            <th>Type</th>
+            <th>Ownership %</th>
+            <th>Capital Contribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.members.map((m: any) => `
+          <tr>
+            <td>${m.name}</td>
+            <td>${m.memberType === 'individual' ? 'Individual' : 'Entity'}</td>
+            <td>${m.ownershipPercentage}%</td>
+            <td>${m.capitalContribution}</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>Article IV: Management</h2>
+      <p>The Company shall be <strong>${data.managementType === 'member_managed' ? 'Member-Managed' : 'Manager-Managed'}</strong>.</p>
+      
+      ${data.managementType === 'manager_managed' && data.managers ? `
+      <p>The following individuals are designated as Managers:</p>
+      <ul>
+        ${data.managers.map((m: any) => `<li>${m.name} - ${m.title}</li>`).join('')}
+      </ul>
+      ` : `
+      <p>All Members shall have the authority to manage the business and affairs of the Company.</p>
+      `}
+    </div>
+
+    <div class="section">
+      <h2>Article V: Distributions</h2>
+      <p><strong>Profit Distribution:</strong> ${data.profitDistribution === 'pro_rata' ? 'Profits and losses shall be allocated to Members in proportion to their ownership percentages.' : data.customDistribution}</p>
+      <p><strong>Fiscal Year End:</strong> ${data.fiscalYearEnd}</p>
+    </div>
+
+    <div class="section">
+      <h2>Article VI: Voting</h2>
+      <p>Decisions requiring Member approval shall require a vote of <strong>${data.votingThreshold}%</strong> of the ownership interests.</p>
+      <p>Major decisions including but not limited to the sale of substantially all assets, merger, or dissolution shall require unanimous consent.</p>
+    </div>
+
+    <div class="section">
+      <h2>Article VII: Transfer of Interests</h2>
+      ${data.transferRestrictions ? `
+      <p>Transfer of membership interests is restricted. No Member may transfer, sell, assign, or encumber their interest without the prior written consent of all other Members.</p>
+      ` : `
+      <p>Members may freely transfer their interests subject to compliance with applicable securities laws.</p>
+      `}
+      ${data.rightOfFirstRefusal ? `
+      <p><strong>Right of First Refusal:</strong> Before any Member may sell or transfer their interest to a third party, they must first offer the interest to the other Members at the same price and terms.</p>
+      ` : ''}
+    </div>
+
+    <div class="section">
+      <h2>Article VIII: Dissolution</h2>
+      <p>The Company shall be dissolved upon the occurrence of any of the following events:</p>
+      <ul>
+        ${data.dissolutionEvents.map((e: string) => `<li>${e}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Article IX: Governing Law</h2>
+      <p>This Agreement shall be governed by the laws of the State of <strong>${data.stateOfFormation}</strong>.</p>
+    </div>
+
+    <div class="signature-section">
+      <h2>Member Signatures</h2>
+      <p>IN WITNESS WHEREOF, the undersigned Members have executed this Operating Agreement as of the date first written above.</p>
+      
+      <div class="witness-grid">
+        ${data.members.map((m: any) => `
+        <div class="witness-item">
+          <div class="signature-line"></div>
+          <p class="signature-label">Signature</p>
+          <p><strong>${m.name}</strong></p>
+          <p>Ownership: ${m.ownershipPercentage}%</p>
+          <p>Date: <span class="blank-line short"></span></p>
+        </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>LLC Operating Agreement | Generated by L.A.W.S. Collective Protection Layer</p>
+      <p>Document ID: OA-${Date.now()}</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+// ============================================
+// DBA REGISTRATION GENERATOR
+// ============================================
+
+function generateDBARegistration(data: any): string {
+  const ownerTypeLabels: Record<string, string> = {
+    individual: "Individual/Sole Proprietor",
+    llc: "Limited Liability Company",
+    corporation: "Corporation",
+    partnership: "Partnership",
+    trust: "Trust",
+  };
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DBA Registration - ${data.dbaName}</title>
+  ${getDocumentStyles()}
+</head>
+<body>
+  <div class="document-container">
+    <div class="document-header">
+      <h1>Fictitious Business Name Statement</h1>
+      <p class="subtitle">DBA (Doing Business As) Registration</p>
+      <p>${data.countyOfRegistration} County, ${data.stateOfRegistration}</p>
+    </div>
+
+    <div class="section">
+      <h2>Section 1: Fictitious Business Name</h2>
+      <p>The following person(s) is/are doing business as:</p>
+      <div class="highlight-box">
+        <h3>${data.dbaName}</h3>
+      </div>
+      <p><strong>Business Address:</strong> ${data.businessAddress}, ${data.businessCity}, ${data.businessState} ${data.businessZip}</p>
+    </div>
+
+    <div class="section">
+      <h2>Section 2: Registrant Information</h2>
+      <p><strong>Owner Name:</strong> ${data.ownerName}</p>
+      <p><strong>Owner Type:</strong> ${ownerTypeLabels[data.ownerType]}</p>
+      <p><strong>Owner Address:</strong> ${data.ownerAddress}, ${data.ownerCity}, ${data.ownerState} ${data.ownerZip}</p>
+    </div>
+
+    <div class="section">
+      <h2>Section 3: Business Information</h2>
+      <p><strong>Type of Business:</strong> ${data.businessType}</p>
+      <p><strong>Business Description:</strong> ${data.businessDescription}</p>
+      <p><strong>Registration Date:</strong> ${data.registrationDate}</p>
+    </div>
+
+    <div class="section">
+      <h2>Section 4: Declaration</h2>
+      <p>I declare that all information in this statement is true and correct. A registrant who declares as true any material matter pursuant to this section that the registrant knows to be false is guilty of a misdemeanor.</p>
+    </div>
+
+    <div class="signature-section">
+      <h2>Registrant Signature</h2>
+      <div class="witness-item">
+        <div class="signature-line"></div>
+        <p class="signature-label">Signature of Registrant</p>
+        <p><strong>${data.ownerName}</strong></p>
+        <p>Date: <span class="blank-line short"></span></p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>For Official Use Only</h2>
+      <p>Filed with the County Clerk of ${data.countyOfRegistration} County</p>
+      <p>File Number: <span class="blank-line"></span></p>
+      <p>Filing Date: <span class="blank-line short"></span></p>
+      <p>Expiration Date: <span class="blank-line short"></span></p>
+    </div>
+
+    <div class="footer">
+      <p>Fictitious Business Name Statement | Generated by L.A.W.S. Collective Protection Layer</p>
+      <p>Document ID: DBA-${Date.now()}</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+// ============================================
+// REVOCABLE LIVING TRUST GENERATOR
+// ============================================
+
+function generateRevocableLivingTrust(data: any): string {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revocable Living Trust - ${data.trustName}</title>
+  ${getDocumentStyles()}
+</head>
+<body>
+  <div class="document-container">
+    <div class="document-header">
+      <h1>${data.trustName}</h1>
+      <p class="subtitle">Revocable Living Trust Agreement</p>
+      <p>Governed by the Laws of ${data.governingLaw}</p>
+    </div>
+
+    <div class="section">
+      <h2>Article I: Declaration of Trust</h2>
+      <p>I, <strong>${data.grantorName}</strong>, residing at ${data.grantorAddress}, ${data.grantorCity}, ${data.grantorState} ${data.grantorZip}, (hereinafter "Grantor" and "Trustee"), declare that I hold the property described in Schedule A attached hereto, IN TRUST, for the uses and purposes and upon the terms and conditions set forth in this Agreement.</p>
+      <p><strong>Effective Date:</strong> ${data.executionDate}</p>
+    </div>
+
+    <div class="section">
+      <h2>Article II: Revocability</h2>
+      <p>This Trust is revocable. The Grantor reserves the right to revoke, amend, or modify this Trust at any time during the Grantor's lifetime by written instrument delivered to the Trustee. Upon the death of the Grantor, this Trust shall become irrevocable.</p>
+    </div>
+
+    <div class="section">
+      <h2>Article III: Trustee Designation</h2>
+      <p><strong>Initial Trustee:</strong> ${data.trusteeName}</p>
+      <p>Address: ${data.trusteeAddress}</p>
+      
+      <h3>Successor Trustees</h3>
+      <p>If the initial Trustee is unable or unwilling to serve, the following shall serve as Successor Trustee in the order named:</p>
+      <ol>
+        <li><strong>${data.successorTrustee1Name}</strong> - ${data.successorTrustee1Address}</li>
+        ${data.successorTrustee2Name ? `<li><strong>${data.successorTrustee2Name}</strong> - ${data.successorTrustee2Address}</li>` : ''}
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>Article IV: Beneficiaries</h2>
+      <h3>Primary Beneficiaries</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Relationship</th>
+            <th>Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.beneficiaries.filter((b: any) => !b.contingent).map((b: any) => `
+          <tr>
+            <td>${b.name}</td>
+            <td>${b.relationship}</td>
+            <td>${b.percentage}%</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      
+      ${data.beneficiaries.some((b: any) => b.contingent) ? `
+      <h3>Contingent Beneficiaries</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Relationship</th>
+            <th>Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.beneficiaries.filter((b: any) => b.contingent).map((b: any) => `
+          <tr>
+            <td>${b.name}</td>
+            <td>${b.relationship}</td>
+            <td>${b.percentage}%</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      ` : ''}
+    </div>
+
+    ${data.specificBequests && data.specificBequests.length > 0 ? `
+    <div class="section">
+      <h2>Article V: Specific Bequests</h2>
+      <p>The following specific items shall be distributed as indicated:</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Beneficiary</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.specificBequests.map((b: any) => `
+          <tr>
+            <td>${b.item}</td>
+            <td>${b.beneficiary}</td>
+          </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    ` : ''}
+
+    <div class="section">
+      <h2>Article VI: Residuary Distribution</h2>
+      <p>${data.residuaryDistribution}</p>
+    </div>
+
+    ${data.incapacityProvisions ? `
+    <div class="section">
+      <h2>Article VII: Incapacity Provisions</h2>
+      <p>If the Grantor becomes incapacitated, the Successor Trustee shall manage the Trust assets for the benefit of the Grantor. The Trustee shall use Trust income and principal as necessary for the Grantor's health, education, maintenance, and support.</p>
+    </div>
+    ` : ''}
+
+    ${data.spendthriftProvisions ? `
+    <div class="section">
+      <h2>Article VIII: Spendthrift Provisions</h2>
+      <p>No beneficiary shall have the right to anticipate, sell, assign, mortgage, pledge, or otherwise dispose of or encumber all or any part of such beneficiary's interest in the Trust. No interest of any beneficiary shall be subject to claims of creditors or others.</p>
+    </div>
+    ` : ''}
+
+    ${data.noContestClause ? `
+    <div class="section">
+      <h2>Article IX: No-Contest Clause</h2>
+      <p>If any beneficiary contests this Trust or any of its provisions, that beneficiary shall forfeit their entire interest in the Trust, and such interest shall be distributed as if that beneficiary had predeceased the Grantor.</p>
+    </div>
+    ` : ''}
+
+    <div class="section">
+      <h2>Article X: Trustee Compensation</h2>
+      ${data.trusteeCompensation === 'none' ? `
+      <p>The Trustee shall serve without compensation.</p>
+      ` : data.trusteeCompensation === 'reasonable' ? `
+      <p>The Trustee shall be entitled to reasonable compensation for services rendered.</p>
+      ` : `
+      <p>The Trustee shall be entitled to compensation as follows: ${data.compensationDetails}</p>
+      `}
+    </div>
+
+    <div class="section">
+      <h2>Article XI: Governing Law</h2>
+      <p>This Trust shall be governed by and construed in accordance with the laws of the State of <strong>${data.governingLaw}</strong>.</p>
+    </div>
+
+    <div class="signature-section">
+      <h2>Execution</h2>
+      <p>IN WITNESS WHEREOF, I have executed this Revocable Living Trust Agreement on <strong>${data.executionDate}</strong>.</p>
+      
+      <div class="witness-grid">
+        <div class="witness-item">
+          <h3>Grantor/Trustee</h3>
+          <div class="signature-line"></div>
+          <p class="signature-label">Signature</p>
+          <p><strong>${data.grantorName}</strong></p>
+          <p>Date: <span class="blank-line short"></span></p>
+        </div>
+      </div>
+      
+      <h3>Witnesses</h3>
+      <div class="witness-grid">
+        <div class="witness-item">
+          <div class="signature-line"></div>
+          <p class="signature-label">Witness 1 Signature</p>
+          <p>Name: <span class="blank-line"></span></p>
+          <p>Address: <span class="blank-line long"></span></p>
+        </div>
+        
+        <div class="witness-item">
+          <div class="signature-line"></div>
+          <p class="signature-label">Witness 2 Signature</p>
+          <p>Name: <span class="blank-line"></span></p>
+          <p>Address: <span class="blank-line long"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Revocable Living Trust | Generated by L.A.W.S. Collective Protection Layer</p>
+      <p>Document ID: RLT-${Date.now()}</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+// ============================================
 // ROUTER DEFINITION
 // ============================================
 
@@ -1429,6 +2021,176 @@ export const protectionLayerRouter = router({
       };
     }),
 
+  // Generate Privacy Trust
+  generatePrivacyTrust: protectedProcedure
+    .input(z.object({
+      trustName: z.string(),
+      settlorName: z.string(),
+      settlorAddress: z.string(),
+      settlorCity: z.string(),
+      settlorState: z.string(),
+      settlorZip: z.string(),
+      trusteeName: z.string(),
+      trusteeAddress: z.string(),
+      trusteeCity: z.string(),
+      trusteeState: z.string(),
+      trusteeZip: z.string(),
+      successorTrusteeName: z.string().optional(),
+      successorTrusteeAddress: z.string().optional(),
+      beneficiaries: z.array(z.object({
+        name: z.string(),
+        relationship: z.string(),
+        percentage: z.number(),
+      })),
+      initialAssets: z.array(z.object({
+        description: z.string(),
+        estimatedValue: z.string(),
+      })),
+      trustPurpose: z.enum(["asset_protection", "privacy", "estate_planning", "business_holding"]),
+      revocable: z.boolean(),
+      governingLaw: z.string(),
+      executionDate: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const html = generatePrivacyTrust(input);
+      const fileName = `privacy-trust-${Date.now()}.html`;
+      const { url } = await storagePut(fileName, html, "text/html");
+      
+      return {
+        html,
+        url,
+        documentType: "privacy_trust",
+        generatedAt: new Date().toISOString(),
+      };
+    }),
+
+  // Generate LLC Operating Agreement
+  generateOperatingAgreement: protectedProcedure
+    .input(z.object({
+      llcName: z.string(),
+      stateOfFormation: z.string(),
+      formationDate: z.string(),
+      principalAddress: z.string(),
+      principalCity: z.string(),
+      principalState: z.string(),
+      principalZip: z.string(),
+      members: z.array(z.object({
+        name: z.string(),
+        address: z.string(),
+        ownershipPercentage: z.number(),
+        capitalContribution: z.string(),
+        memberType: z.enum(["individual", "entity"]),
+      })),
+      managementType: z.enum(["member_managed", "manager_managed"]),
+      managers: z.array(z.object({
+        name: z.string(),
+        title: z.string(),
+      })).optional(),
+      businessPurpose: z.string(),
+      fiscalYearEnd: z.string(),
+      profitDistribution: z.enum(["pro_rata", "custom"]),
+      customDistribution: z.string().optional(),
+      votingThreshold: z.number(),
+      transferRestrictions: z.boolean(),
+      rightOfFirstRefusal: z.boolean(),
+      dissolutionEvents: z.array(z.string()),
+      executionDate: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const html = generateOperatingAgreement(input);
+      const fileName = `operating-agreement-${Date.now()}.html`;
+      const { url } = await storagePut(fileName, html, "text/html");
+      
+      return {
+        html,
+        url,
+        documentType: "operating_agreement",
+        generatedAt: new Date().toISOString(),
+      };
+    }),
+
+  // Generate DBA Registration Form
+  generateDBARegistration: protectedProcedure
+    .input(z.object({
+      dbaName: z.string(),
+      ownerName: z.string(),
+      ownerType: z.enum(["individual", "llc", "corporation", "partnership", "trust"]),
+      ownerAddress: z.string(),
+      ownerCity: z.string(),
+      ownerState: z.string(),
+      ownerZip: z.string(),
+      businessAddress: z.string(),
+      businessCity: z.string(),
+      businessState: z.string(),
+      businessZip: z.string(),
+      businessType: z.string(),
+      businessDescription: z.string(),
+      countyOfRegistration: z.string(),
+      stateOfRegistration: z.string(),
+      registrationDate: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const html = generateDBARegistration(input);
+      const fileName = `dba-registration-${Date.now()}.html`;
+      const { url } = await storagePut(fileName, html, "text/html");
+      
+      return {
+        html,
+        url,
+        documentType: "dba_registration",
+        generatedAt: new Date().toISOString(),
+      };
+    }),
+
+  // Generate Revocable Living Trust
+  generateRevocableLivingTrust: protectedProcedure
+    .input(z.object({
+      trustName: z.string(),
+      grantorName: z.string(),
+      grantorAddress: z.string(),
+      grantorCity: z.string(),
+      grantorState: z.string(),
+      grantorZip: z.string(),
+      grantorSSN: z.string().optional(),
+      grantorDateOfBirth: z.string().optional(),
+      trusteeName: z.string(),
+      trusteeAddress: z.string(),
+      successorTrustee1Name: z.string(),
+      successorTrustee1Address: z.string(),
+      successorTrustee2Name: z.string().optional(),
+      successorTrustee2Address: z.string().optional(),
+      beneficiaries: z.array(z.object({
+        name: z.string(),
+        relationship: z.string(),
+        percentage: z.number(),
+        contingent: z.boolean(),
+      })),
+      specificBequests: z.array(z.object({
+        item: z.string(),
+        beneficiary: z.string(),
+      })).optional(),
+      residuaryDistribution: z.string(),
+      trusteeCompensation: z.enum(["none", "reasonable", "percentage"]),
+      compensationDetails: z.string().optional(),
+      incapacityProvisions: z.boolean(),
+      spendthriftProvisions: z.boolean(),
+      noContestClause: z.boolean(),
+      governingLaw: z.string(),
+      executionDate: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const html = generateRevocableLivingTrust(input);
+      const fileName = `revocable-living-trust-${Date.now()}.html`;
+      const { url } = await storagePut(fileName, html, "text/html");
+      
+      return {
+        html,
+        url,
+        documentType: "revocable_living_trust",
+        generatedAt: new Date().toISOString(),
+      };
+    }),
+
   // Get available document types
   getDocumentTypes: protectedProcedure.query(() => {
     return [
@@ -1458,9 +2220,21 @@ export const protectionLayerRouter = router({
         title: "Privacy & Asset Protection",
         lawsPillar: "Land",
         documents: [
-          { code: "privacy_trust", name: "Privacy Trust", description: "Trust to hold assets anonymously", ready: false },
+          { code: "privacy_trust", name: "Privacy Trust", description: "Trust to hold assets anonymously", ready: true },
+          { code: "revocable_living_trust", name: "Revocable Living Trust", description: "Flexible trust for estate planning", ready: true },
           { code: "nominee_agreement", name: "Nominee Agreement", description: "Agreement for nominee to appear on public records", ready: false },
           { code: "registered_agent", name: "Registered Agent Agreement", description: "Agreement for registered agent services", ready: false },
+        ],
+      },
+      {
+        category: "business",
+        title: "Business Formation",
+        lawsPillar: "Air",
+        documents: [
+          { code: "operating_agreement", name: "LLC Operating Agreement", description: "Governs LLC operations and member rights", ready: true },
+          { code: "dba_registration", name: "DBA Registration", description: "Fictitious business name registration", ready: true },
+          { code: "partnership_agreement", name: "Partnership Agreement", description: "Agreement between business partners", ready: false },
+          { code: "bylaws", name: "Corporate Bylaws", description: "Rules governing corporate operations", ready: false },
         ],
       },
     ];
