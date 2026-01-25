@@ -7273,3 +7273,76 @@ L.A.W.S. Quest is a standalone commercial game product owned by The L.A.W.S. Col
 - [ ] Business formation tools
 - [ ] Community investment pool access
 
+
+## Phase 147: Direct Onboarding Journey
+
+### Overview
+The Direct Onboarding Journey is the website path for joining L.A.W.S. Collective. It provides a condensed S.W.A.L. experience that walks new members through the framework, assesses their understanding, and guides them through House setup.
+
+### Database Schema
+- [x] Create onboarding_journeys table (userId, status, currentStep, startedAt, completedAt)
+- [x] Create onboarding_assessments table (journeyId, realm, score, completedAt)
+- [x] Create onboarding_responses table (assessmentId, questionId, response, isCorrect)
+
+### S.W.A.L. Assessment Components
+- [x] Self Realm Assessment - Purpose, skills, financial literacy basics
+- [x] Water Realm Assessment - Emotional intelligence, healing awareness
+- [x] Air Realm Assessment - Knowledge, communication, learning style
+- [x] Land Realm Assessment - Stability goals, property awareness, roots
+
+### Onboarding Flow
+- [x] Welcome/Introduction page explaining L.A.W.S. framework
+- [x] Progress tracker showing S.W.A.L. journey status
+- [x] Realm-by-realm assessment with educational content
+- [x] Passing threshold (70%) to advance to next realm
+- [x] Retry option for failed assessments
+
+### House Setup Wizard
+- [x] House name and type selection
+- [x] Initial beneficiary designation
+- [x] Community values agreement
+- [x] Profile completion
+
+### Credential Issuance
+- [x] Auto-issue credential upon journey completion
+- [x] Display credential with QR code
+- [x] Link to Wealth System access
+
+### UI/UX
+- [x] Create /join route for onboarding entry
+- [x] Mobile-responsive design
+- [x] Progress persistence (can resume later)
+- [x] Celebration animation on completion
+
+
+## Phase 148: Health Department & Water Realm Integration
+
+### Overview
+The Health Department is formally connected to the Water Realm in the L.A.W.S. framework. Water represents healing, emotional balance, and wellness. Amber S. Hunter (RN) serves as clinical advisor, bringing professional healthcare credibility while the system focuses on holistic/social wellness.
+
+### Water Realm = Health Department Connection
+- [ ] Update Master Vision Document with Health Department section
+- [ ] Document Amber S. Hunter (RN) as Health Department clinical advisor
+- [ ] Define Health Department scope (holistic wellness, not clinical treatment)
+
+### Health Department Focus Areas
+- [ ] Social Health - Community connections, relationship wellness, support networks
+- [ ] Emotional Wellness - Stress management, emotional regulation, healing from trauma
+- [ ] Lifestyle Balance - Sleep, nutrition awareness, movement, mindfulness
+- [ ] Financial Health - Financial stress management, money-health connection
+- [ ] Generational Healing - Breaking cycles, addressing inherited patterns
+
+### Health Agent Configuration
+- [x] Configure Health Agent to focus on holistic wellness content
+- [x] Align agent responses with Water Realm philosophy
+- [x] Include RN-informed but non-prescriptive guidance (Amber S. Hunter, RN)
+- [x] Focus on prevention, education, and community wellness
+- [x] Updated agent topics for WATER pillar journey
+- [x] Updated agent prompts for holistic wellness
+
+### Health Simulators
+- [ ] Emotional Intelligence Simulator - Recognize and manage emotions
+- [ ] Stress Management Simulator - Healthy coping strategies
+- [ ] Relationship Wellness Simulator - Healthy boundaries and communication
+- [ ] Work-Life Balance Simulator - Sustainable lifestyle choices
+- [ ] Community Health Simulator - Building support networks

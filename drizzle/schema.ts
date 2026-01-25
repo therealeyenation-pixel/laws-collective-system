@@ -15918,3 +15918,258 @@ export const swalRoyaltyDistributions = mysqlTable("swal_royalty_distributions",
 
 export type SwalRoyaltyDistribution = typeof swalRoyaltyDistributions.$inferSelect;
 export type InsertSwalRoyaltyDistribution = typeof swalRoyaltyDistributions.$inferInsert;
+
+
+// ============================================
+// DIRECT ONBOARDING JOURNEY TABLES
+// ============================================
+
+/**
+ * Onboarding Journeys - Tracks a user's progress through the Direct Onboarding path
+ * This is the website entry point for joining L.A.W.S. Collective
+ */
+export const onboardingJourneys = mysqlTable("onboarding_journeys", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  userId: int("userId").notNull(), // Reference to user
+  
+  // Journey Status
+  status: mysqlEnum("status", ["not_started", "in_progress", "completed", "abandoned"]).default("not_started").notNull(),
+  
+  // Current position in the journey
+  currentStep: mysqlEnum("currentStep", [
+    "welcome",
+    "self_intro",
+    "self_assessment",
+    "water_intro",
+    "water_assessment",
+    "air_intro",
+    "air_assessment",
+    "land_intro",
+    "land_assessment",
+    "house_setup",
+    "values_agreement",
+    "credential_issuance",
+    "complete"
+  ]).default("welcome").notNull(),
+  
+  // Realm completion status
+  selfCompleted: boolean("selfCompleted").default(false).notNull(),
+  waterCompleted: boolean("waterCompleted").default(false).notNull(),
+  airCompleted: boolean("airCompleted").default(false).notNull(),
+  landCompleted: boolean("landCompleted").default(false).notNull(),
+  
+  // Scores (0-100)
+  selfScore: int("selfScore"),
+  waterScore: int("waterScore"),
+  airScore: int("airScore"),
+  landScore: int("landScore"),
+  
+  // Overall progress percentage
+  progressPercent: int("progressPercent").default(0).notNull(),
+  
+  // Timestamps
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  lastActivityAt: timestamp("lastActivityAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  
+  // Credential issued upon completion
+  credentialId: varchar("credentialId", { length: 50 }), // LAWS-XXXX-XXXX-XXXX format
+});
+
+export type OnboardingJourney = typeof onboardingJourneys.$inferSelect;
+export type InsertOnboardingJourney = typeof onboardingJourneys.$inferInsert;
+
+/**
+ * Onboarding Assessments - Individual realm assessments within a journey
+ */
+export const onboardingAssessments = mysqlTable("onboarding_assessments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  journeyId: int("journeyId").notNull(), // Reference to onboardingJourneys
+  
+  realm: mysqlEnum("realm", ["self", "water", "air", "land"]).notNull(),
+  
+  // Assessment results
+  totalQuestions: int("totalQuestions").notNull(),
+  correctAnswers: int("correctAnswers").notNull(),
+  score: int("score").notNull(), // Percentage 0-100
+  passed: boolean("passed").notNull(), // Score >= 70%
+  
+  // Attempt tracking
+  attemptNumber: int("attemptNumber").default(1).notNull(),
+  
+  // Timing
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  durationSeconds: int("durationSeconds"),
+});
+
+export type OnboardingAssessment = typeof onboardingAssessments.$inferSelect;
+export type InsertOnboardingAssessment = typeof onboardingAssessments.$inferInsert;
+
+/**
+ * Onboarding Responses - Individual question responses within an assessment
+ */
+export const onboardingResponses = mysqlTable("onboarding_responses", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  assessmentId: int("assessmentId").notNull(), // Reference to onboardingAssessments
+  
+  questionId: varchar("questionId", { length: 50 }).notNull(), // e.g., "self_q1", "water_q3"
+  questionText: text("questionText").notNull(),
+  
+  // Response data
+  selectedOption: varchar("selectedOption", { length: 255 }).notNull(),
+  correctOption: varchar("correctOption", { length: 255 }).notNull(),
+  isCorrect: boolean("isCorrect").notNull(),
+  
+  // For learning purposes
+  explanation: text("explanation"), // Why the correct answer is correct
+  
+  answeredAt: timestamp("answeredAt").defaultNow().notNull(),
+});
+
+export type OnboardingResponse = typeof onboardingResponses.$inferSelect;
+export type InsertOnboardingResponse = typeof onboardingResponses.$inferInsert;
+
+/**
+ * Onboarding Questions - Question bank for realm assessments
+ */
+export const onboardingQuestions = mysqlTable("onboarding_questions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  questionId: varchar("questionId", { length: 50 }).notNull().unique(), // e.g., "self_q1"
+  
+  realm: mysqlEnum("realm", ["self", "water", "air", "land"]).notNull(),
+  
+  // Question content
+  questionText: text("questionText").notNull(),
+  
+  // Options (JSON array of strings)
+  options: json("options").notNull(), // ["Option A", "Option B", "Option C", "Option D"]
+  
+  correctOptionIndex: int("correctOptionIndex").notNull(), // 0-3
+  
+  // Educational content
+  explanation: text("explanation").notNull(), // Why the correct answer is correct
+  
+  // Difficulty and ordering
+  difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard"]).default("medium").notNull(),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type OnboardingQuestion = typeof onboardingQuestions.$inferSelect;
+export type InsertOnboardingQuestion = typeof onboardingQuestions.$inferInsert;
+
+/**
+ * Onboarding House Setup - Captures House configuration during onboarding
+ */
+export const onboardingHouseSetup = mysqlTable("onboarding_house_setup", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  journeyId: int("journeyId").notNull(), // Reference to onboardingJourneys
+  userId: int("userId").notNull(),
+  
+  // House details
+  houseName: varchar("houseName", { length: 255 }).notNull(),
+  houseType: mysqlEnum("houseType", ["individual", "family", "legacy"]).default("individual").notNull(),
+  
+  // Initial beneficiary (optional)
+  primaryBeneficiaryName: varchar("primaryBeneficiaryName", { length: 255 }),
+  primaryBeneficiaryRelation: varchar("primaryBeneficiaryRelation", { length: 100 }),
+  
+  // Values agreement
+  valuesAgreed: boolean("valuesAgreed").default(false).notNull(),
+  valuesAgreedAt: timestamp("valuesAgreedAt"),
+  
+  // Profile completion
+  profileComplete: boolean("profileComplete").default(false).notNull(),
+  
+  // Created House reference
+  createdHouseId: int("createdHouseId"), // Reference to houses table after creation
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type OnboardingHouseSetup = typeof onboardingHouseSetup.$inferSelect;
+export type InsertOnboardingHouseSetup = typeof onboardingHouseSetup.$inferInsert;
+
+/**
+ * Member Credentials - Unique credentials issued to L.A.W.S. Collective members
+ */
+export const memberCredentials = mysqlTable("member_credentials", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  userId: int("userId").notNull(),
+  houseId: int("houseId"), // Reference to houses table
+  
+  // Unique credential identifier
+  credentialId: varchar("credentialId", { length: 50 }).notNull().unique(), // e.g., LAWS-XXXX-XXXX-XXXX
+  verificationCode: varchar("verificationCode", { length: 20 }).notNull(),
+  
+  // Entry path that earned this credential
+  entryPath: mysqlEnum("entryPath", ["game", "academy", "direct", "employment", "legacy"]).notNull(),
+  
+  // Access level
+  accessLevel: mysqlEnum("accessLevel", ["basic", "standard", "premium", "elite", "sovereign"]).default("basic").notNull(),
+  
+  // Status
+  status: mysqlEnum("status", ["active", "suspended", "revoked", "expired"]).default("active").notNull(),
+  
+  // Dates
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  lastVerifiedAt: timestamp("lastVerifiedAt"),
+  
+  // Metadata
+  metadata: json("metadata"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+export type MemberCredential = typeof memberCredentials.$inferSelect;
+export type InsertMemberCredential = typeof memberCredentials.$inferInsert;
+
+/**
+ * Credential Achievements - Tracks achievements that contribute to credential status
+ */
+export const credentialAchievements = mysqlTable("credential_achievements", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  credentialId: int("credentialId").notNull(), // Reference to memberCredentials
+  userId: int("userId").notNull(),
+  
+  // Achievement details
+  achievementType: mysqlEnum("achievementType", [
+    "game_sovereignty", "academy_certification", "direct_onboarding",
+    "employment_start", "legacy_transfer", "realm_mastery",
+    "community_contribution", "mentor_status"
+  ]).notNull(),
+  
+  achievementName: varchar("achievementName", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Points/value
+  pointsEarned: int("pointsEarned").default(0).notNull(),
+  
+  // Verification
+  verified: boolean("verified").default(false).notNull(),
+  verifiedBy: int("verifiedBy"),
+  verifiedAt: timestamp("verifiedAt"),
+  
+  // Metadata
+  metadata: json("metadata"),
+  
+  earnedAt: timestamp("earnedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CredentialAchievement = typeof credentialAchievements.$inferSelect;
+export type InsertCredentialAchievement = typeof credentialAchievements.$inferInsert;

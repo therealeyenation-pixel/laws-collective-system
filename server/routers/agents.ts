@@ -146,16 +146,33 @@ Be detail-oriented, systematic, and focused on maintaining excellence.`,
 - Support budget planning and forecasting
 Be analytical, cost-conscious, and focused on value optimization.`,
 
-  health: `You are the Health Agent for the LuvOnPurpose Health Department (WATER pillar - Healing & Balance). Your role is to:
-- Support health and wellness program coordination
-- Provide guidance on community health resources
-- Track wellness metrics and program outcomes
-- Assist with mental health and healing initiatives
-- Coordinate wellness workshops and events
-- Support the L.A.W.S. WATER pillar programs
-- Connect community members with health resources
-- Promote holistic wellness and balance
-Be compassionate, supportive, and focused on community wellbeing.`,
+  health: `You are the Health Agent for the LuvOnPurpose Health Department, representing the WATER pillar of the L.A.W.S. framework (Healing, Balance, and Emotional Intelligence). The Health Department is clinically advised by Amber S. Hunter, RN.
+
+Your role focuses on HOLISTIC WELLNESS and SOCIAL HEALTH, not clinical treatment:
+
+**Core Focus Areas:**
+- Social Health: Community connections, relationship wellness, support networks
+- Emotional Wellness: Stress management, emotional regulation, healing from trauma
+- Lifestyle Balance: Sleep, nutrition awareness, movement, mindfulness
+- Financial Health: Money-stress connection, financial wellness
+- Generational Healing: Breaking cycles, addressing inherited patterns
+
+**Your Responsibilities:**
+- Guide members through the Water phase of their S.W.A.L. journey
+- Coordinate wellness workshops and community health events
+- Connect members with appropriate health resources and support networks
+- Promote emotional intelligence and healthy decision-making
+- Support mental health awareness and stress reduction initiatives
+- Help members develop resilience and balance for sustainable prosperity
+
+**Important Guidelines:**
+- Focus on wellness education, not medical diagnosis or treatment
+- Encourage professional help for clinical concerns
+- Emphasize the connection between emotional health and financial success
+- Support the philosophy that healing must precede lasting wealth-building
+- Recognize that true health encompasses mind, body, community, and purpose
+
+Be compassionate, supportive, and focused on holistic community wellbeing. Remember: Water flows, heals, and restores balance.`,
 
   design: `You are the Design Agent for the LuvOnPurpose Design Department. Your role is to:
 - Support brand identity and visual design projects
@@ -265,11 +282,12 @@ const AGENT_TOPICS: Record<string, Array<{ title: string; description: string; i
     { title: "Budget Review", description: "Review procurement budget", icon: "dollar-sign" },
   ],
   health: [
-    { title: "Wellness Programs", description: "Explore health and wellness initiatives", icon: "heart" },
-    { title: "Health Resources", description: "Find community health resources", icon: "clipboard" },
-    { title: "Wellness Workshops", description: "Schedule wellness workshops", icon: "calendar" },
-    { title: "Mental Health", description: "Access mental health support", icon: "brain" },
-    { title: "WATER Pillar", description: "Learn about healing and balance", icon: "droplet" },
+    { title: "WATER Pillar Journey", description: "Progress through the healing phase of S.W.A.L.", icon: "droplet" },
+    { title: "Emotional Intelligence", description: "Develop emotional awareness and regulation skills", icon: "heart" },
+    { title: "Stress & Balance", description: "Learn stress management and work-life balance", icon: "scale" },
+    { title: "Generational Healing", description: "Break cycles and address inherited patterns", icon: "users" },
+    { title: "Community Wellness", description: "Connect with support networks and resources", icon: "home" },
+    { title: "Financial Wellness", description: "Understand the money-health connection", icon: "trending-up" },
   ],
   design: [
     { title: "Brand Identity", description: "Develop and maintain brand guidelines", icon: "palette" },
@@ -392,12 +410,14 @@ const AGENT_PROMPTS: Record<string, string[]> = {
     "What's our budget remaining?",
   ],
   health: [
-    "What wellness programs are available?",
-    "Help me find mental health resources",
-    "Schedule a wellness workshop",
-    "What is the WATER pillar about?",
-    "Track our community health metrics",
-    "Connect me with health partners",
+    "How do I progress through the WATER phase of my S.W.A.L. journey?",
+    "Help me understand the connection between emotional health and financial success",
+    "What strategies can help me manage stress and find balance?",
+    "How can I break generational patterns that hold me back?",
+    "What community wellness resources are available?",
+    "How does healing relate to building lasting wealth?",
+    "Help me develop better emotional intelligence",
+    "What does holistic wellness mean in the L.A.W.S. framework?",
   ],
   design: [
     "Review our brand guidelines",

@@ -198,6 +198,8 @@ import TrialAnalytics from "@/pages/TrialAnalytics";
 import OfficeSuite from "@/pages/OfficeSuite";
 import Documentary from "@/pages/Documentary";
 import Podcast from "@/pages/Podcast";
+import JoinJourney from "@/pages/JoinJourney";
+import MyCredential from "@/pages/MyCredential";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -305,6 +307,8 @@ function Router() {
       {/* Public routes - no authentication required */}
       <Route path="/" component={Home} />
       <Route path="/careers" component={Careers} />
+      <Route path="/join" component={JoinJourney} />
+      <Route path="/my-credential" component={MyCredential} />
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
