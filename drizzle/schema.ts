@@ -16766,3 +16766,80 @@ export const readingDiscussionRequirements = mysqlTable("reading_discussion_requ
 });
 export type ReadingDiscussionRequirement = typeof readingDiscussionRequirements.$inferSelect;
 export type InsertReadingDiscussionRequirement = typeof readingDiscussionRequirements.$inferInsert;
+
+
+/**
+ * Reading Streaks - Track consecutive days of reading activity
+ */
+export const readingStreaks = mysqlTable("reading_streaks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  studentProfileId: int("studentProfileId"),
+  
+  // Current streak
+  currentStreak: int("currentStreak").default(0).notNull(),
+  longestStreak: int("longestStreak").default(0).notNull(),
+  
+  // Tracking
+  lastReadDate: date("lastReadDate"),
+  streakStartDate: date("streakStartDate"),
+  
+  // Weekly/Monthly stats
+  thisWeekMinutes: int("thisWeekMinutes").default(0),
+  thisMonthMinutes: int("thisMonthMinutes").default(0),
+  totalReadingMinutes: int("totalReadingMinutes").default(0),
+  totalBooksCompleted: int("totalBooksCompleted").default(0),
+  
+  // Goals
+  dailyGoalMinutes: int("dailyGoalMinutes").default(15),
+  weeklyGoalMinutes: int("weeklyGoalMinutes").default(60),
+  
+  // Notifications
+  streakReminderEnabled: boolean("streakReminderEnabled").default(true),
+  reminderTime: varchar("reminderTime", { length: 10 }).default("18:00"), // HH:MM format
+  lastReminderSentAt: timestamp("lastReminderSentAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ReadingStreak = typeof readingStreaks.$inferSelect;
+export type InsertReadingStreak = typeof readingStreaks.$inferInsert;
+
+/**
+ * Streak Notifications - Track sent streak reminders
+ */
+export const streakNotifications = mysqlTable("streak_notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  userId: int("userId").notNull(),
+  streakId: int("streakId").notNull(),
+  
+  // Notification details
+  notificationType: mysqlEnum("streakNotificationType", [
+    "streak_at_risk",      // Haven't read today, streak ending soon
+    "streak_lost",         // Streak was broken
+    "streak_milestone",    // Hit 7, 30, 100 day milestone
+    "weekly_summary",      // Weekly reading summary
+    "encouragement"        // General encouragement to read
+  ]).notNull(),
+  
+  // Content
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  
+  // Delivery
+  deliveryMethod: mysqlEnum("deliveryMethod", ["in_app", "email", "push", "sms"]).default("in_app").notNull(),
+  sentAt: timestamp("sentAt").defaultNow().notNull(),
+  readAt: timestamp("readAt"),
+  
+  // Context
+  streakCount: int("streakCount"),
+  minutesRead: int("minutesRead"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type StreakNotification = typeof streakNotifications.$inferSelect;
+export type InsertStreakNotification = typeof streakNotifications.$inferInsert;

@@ -149,6 +149,7 @@ import { onboardingJourneyRouter } from "./routers/onboarding-journey";
 import { memberCredentialsRouter } from "./routers/member-credentials";
 import { virtualLibraryRouter } from "./routers/virtual-library";
 import { protectionLayerRouter } from "./routers/protection-layer-documents";
+import { readingStreaksRouter } from "./routers/reading-streaks";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -310,6 +311,7 @@ export const appRouter = router({
   memberCredentials: memberCredentialsRouter,
   virtualLibrary: virtualLibraryRouter,
   protectionLayer: protectionLayerRouter,
+  readingStreaks: readingStreaksRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

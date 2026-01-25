@@ -7772,3 +7772,25 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Vocabulary mastery tracking
 - [x] Achievement badges for reading milestones
 - [x] Quiz performance analytics
+
+## Phase 36: Bundle Forms and Streak Notifications
+- [ ] Business Starter bundle form modal
+- [ ] Family Protection bundle form modal
+- [ ] Healthcare Complete bundle form modal
+- [ ] Asset Protection bundle form modal
+- [ ] Bundle preview and download functionality
+- [ ] Reading streak tracking in database
+- [ ] Streak notification service
+- [ ] Streak reminder emails/notifications
+
+### Phase 36 Completed Items
+- [x] Business Starter bundle form modal
+- [x] Family Protection bundle form modal
+- [x] Healthcare Complete bundle form modal
+- [x] Asset Protection bundle form modal
+- [x] Bundle preview and download functionality
+- [x] Reading streak tracking schema
+- [x] Reading streak router with notifications
+- [x] Streak milestone detection (7, 14, 30, 60, 100, 365 days)
+- [x] Streak at-risk reminder system
+- [x] Reading leaderboard

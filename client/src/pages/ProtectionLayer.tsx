@@ -58,6 +58,30 @@ export default function ProtectionLayer() {
     timestamp: number;
   } | null>(null);
   const [documentSigned, setDocumentSigned] = useState(false);
+  const [showBundleModal, setShowBundleModal] = useState<string | null>(null);
+  const [bundleDocuments, setBundleDocuments] = useState<Array<{ name: string; html: string; url: string; documentType: string }>>([]);
+  const [bundleForm, setBundleForm] = useState({
+    principalName: user?.name || "",
+    principalAddress: "",
+    principalCity: "",
+    principalState: "",
+    principalZip: "",
+    principalDOB: "",
+    agentName: "",
+    agentAddress: "",
+    agentCity: "",
+    agentState: "",
+    agentZip: "",
+    agentPhone: "",
+    agentRelationship: "",
+    businessName: "",
+    businessPurpose: "",
+    members: [{ name: user?.name || "", ownershipPercentage: 100, capitalContribution: "$1,000" }],
+    beneficiaries: [{ name: "", relationship: "", percentage: 100 }],
+    state: "",
+    county: "",
+    executionDate: new Date().toISOString().split('T')[0],
+  });
 
   const [healthcarePOAForm, setHealthcarePOAForm] = useState({
     principalName: "",
@@ -143,6 +167,71 @@ export default function ProtectionLayer() {
       return;
     }
     generateHealthcarePOA.mutate(healthcarePOAForm);
+  };
+
+  const generateBundle = trpc.protectionLayer.generateBundle.useMutation({
+    onSuccess: (data) => {
+      setBundleDocuments(data.documents);
+      setShowBundleModal(null);
+      toast.success(`${data.totalDocuments} documents generated successfully!`);
+    },
+    onError: (error) => {
+      toast.error(`Failed to generate bundle: ${error.message}`);
+    },
+  });
+
+  const handleGenerateBundle = (bundleType: string) => {
+    if (!bundleForm.principalName || !bundleForm.state || !bundleForm.county) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    // Validate bundle-specific requirements
+    if (bundleType === "business_starter" && !bundleForm.businessName) {
+      toast.error("Please enter a business name");
+      return;
+    }
+
+    if ((bundleType === "family_protection" || bundleType === "healthcare_complete") && !bundleForm.agentName) {
+      toast.error("Please enter an agent name");
+      return;
+    }
+
+    if (bundleType === "asset_protection" && bundleForm.beneficiaries[0]?.name === "") {
+      toast.error("Please add at least one beneficiary");
+      return;
+    }
+
+    generateBundle.mutate({
+      bundleType: bundleType as "business_starter" | "family_protection" | "healthcare_complete" | "asset_protection",
+      ...bundleForm,
+    });
+  };
+
+  const resetBundleForm = () => {
+    setBundleForm({
+      principalName: user?.name || "",
+      principalAddress: "",
+      principalCity: "",
+      principalState: "",
+      principalZip: "",
+      principalDOB: "",
+      agentName: "",
+      agentAddress: "",
+      agentCity: "",
+      agentState: "",
+      agentZip: "",
+      agentPhone: "",
+      agentRelationship: "",
+      businessName: "",
+      businessPurpose: "",
+      members: [{ name: user?.name || "", ownershipPercentage: 100, capitalContribution: "$1,000" }],
+      beneficiaries: [{ name: "", relationship: "", percentage: 100 }],
+      state: "",
+      county: "",
+      executionDate: new Date().toISOString().split('T')[0],
+    });
+    setBundleDocuments([]);
   };
 
   const documentCategories = [
@@ -384,7 +473,7 @@ export default function ProtectionLayer() {
                           <span>DBA Registration</span>
                         </div>
                       </div>
-                      <Button className="w-full" onClick={() => toast.info("Business bundle form coming soon")}>
+                      <Button className="w-full" onClick={() => { resetBundleForm(); setShowBundleModal("business_starter"); }}>
                         Generate Bundle
                       </Button>
                     </CardContent>
@@ -421,7 +510,7 @@ export default function ProtectionLayer() {
                           <span>Financial Power of Attorney</span>
                         </div>
                       </div>
-                      <Button className="w-full" onClick={() => toast.info("Family bundle form coming soon")}>
+                      <Button className="w-full" onClick={() => { resetBundleForm(); setShowBundleModal("family_protection"); }}>
                         Generate Bundle
                       </Button>
                     </CardContent>
@@ -458,7 +547,7 @@ export default function ProtectionLayer() {
                           <span>HIPAA Authorization</span>
                         </div>
                       </div>
-                      <Button className="w-full" onClick={() => toast.info("Healthcare bundle form coming soon")}>
+                      <Button className="w-full" onClick={() => { resetBundleForm(); setShowBundleModal("healthcare_complete"); }}>
                         Generate Bundle
                       </Button>
                     </CardContent>
@@ -491,12 +580,52 @@ export default function ProtectionLayer() {
                           <span>Revocable Living Trust</span>
                         </div>
                       </div>
-                      <Button className="w-full" onClick={() => toast.info("Asset bundle form coming soon")}>
+                      <Button className="w-full" onClick={() => { resetBundleForm(); setShowBundleModal("asset_protection"); }}>
                         Generate Bundle
                       </Button>
                     </CardContent>
                   </Card>
                 </div>
+
+                {/* Generated Bundle Documents */}
+                {bundleDocuments.length > 0 && (
+                  <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                    <h4 className="font-semibold text-green-700 dark:text-green-300 mb-3 flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5" />
+                      Generated Documents ({bundleDocuments.length})
+                    </h4>
+                    <div className="space-y-2">
+                      {bundleDocuments.map((doc, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-background rounded border">
+                          <div className="flex items-center gap-2">
+                            <FileText className="w-4 h-4 text-primary" />
+                            <span className="font-medium">{doc.name}</span>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setGeneratedDocument({ html: doc.html, url: doc.url, documentType: doc.documentType });
+                                setShowPreview(true);
+                                setDocumentSigned(false);
+                                setSignatureData(null);
+                              }}
+                            >
+                              Preview
+                            </Button>
+                            <Button size="sm" asChild>
+                              <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                                <Download className="w-4 h-4 mr-1" />
+                                Download
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -992,6 +1121,456 @@ export default function ProtectionLayer() {
           signerName={user?.name || ""}
           documentTitle={generatedDocument?.documentType?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "Protection Layer Document"}
         />
+
+        {/* Bundle Form Modals */}
+        <Dialog open={showBundleModal === "business_starter"} onOpenChange={(open) => !open && setShowBundleModal(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-sky-500" />
+                Business Starter Bundle
+              </DialogTitle>
+              <DialogDescription>
+                Generate LLC Operating Agreement and DBA Registration documents
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label>Business Name *</Label>
+                  <Input
+                    value={bundleForm.businessName}
+                    onChange={(e) => setBundleForm({ ...bundleForm, businessName: e.target.value })}
+                    placeholder="Your Business LLC"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Business Purpose</Label>
+                  <Input
+                    value={bundleForm.businessPurpose}
+                    onChange={(e) => setBundleForm({ ...bundleForm, businessPurpose: e.target.value })}
+                    placeholder="General business operations"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Owner/Member Name *</Label>
+                  <Input
+                    value={bundleForm.principalName}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalName: e.target.value })}
+                    placeholder="Your full legal name"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Address</Label>
+                  <Input
+                    value={bundleForm.principalAddress}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalAddress: e.target.value })}
+                    placeholder="123 Main Street"
+                  />
+                </div>
+                <div>
+                  <Label>City</Label>
+                  <Input
+                    value={bundleForm.principalCity}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalCity: e.target.value })}
+                    placeholder="City"
+                  />
+                </div>
+                <div>
+                  <Label>State *</Label>
+                  <Select value={bundleForm.state} onValueChange={(v) => setBundleForm({ ...bundleForm, state: v })}>
+                    <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                    <SelectContent>
+                      {US_STATES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>County *</Label>
+                  <Input
+                    value={bundleForm.county}
+                    onChange={(e) => setBundleForm({ ...bundleForm, county: e.target.value })}
+                    placeholder="County"
+                  />
+                </div>
+                <div>
+                  <Label>ZIP Code</Label>
+                  <Input
+                    value={bundleForm.principalZip}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalZip: e.target.value })}
+                    placeholder="12345"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button
+                  className="flex-1"
+                  onClick={() => handleGenerateBundle("business_starter")}
+                  disabled={generateBundle.isPending}
+                >
+                  {generateBundle.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
+                  Generate Bundle
+                </Button>
+                <Button variant="outline" onClick={() => setShowBundleModal(null)}>Cancel</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showBundleModal === "family_protection"} onOpenChange={(open) => !open && setShowBundleModal(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-purple-500" />
+                Family Protection Bundle
+              </DialogTitle>
+              <DialogDescription>
+                Generate Healthcare POA, Living Will, and Financial POA documents
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <h4 className="font-medium text-purple-800 dark:text-purple-200 mb-1">Principal Information</h4>
+                <p className="text-sm text-purple-600 dark:text-purple-400">The person these documents protect</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label>Your Full Legal Name *</Label>
+                  <Input
+                    value={bundleForm.principalName}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalName: e.target.value })}
+                    placeholder="Your full legal name"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Address</Label>
+                  <Input
+                    value={bundleForm.principalAddress}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalAddress: e.target.value })}
+                    placeholder="123 Main Street"
+                  />
+                </div>
+                <div>
+                  <Label>City</Label>
+                  <Input
+                    value={bundleForm.principalCity}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalCity: e.target.value })}
+                    placeholder="City"
+                  />
+                </div>
+                <div>
+                  <Label>State *</Label>
+                  <Select value={bundleForm.state} onValueChange={(v) => setBundleForm({ ...bundleForm, state: v })}>
+                    <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                    <SelectContent>
+                      {US_STATES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>County *</Label>
+                  <Input
+                    value={bundleForm.county}
+                    onChange={(e) => setBundleForm({ ...bundleForm, county: e.target.value })}
+                    placeholder="County"
+                  />
+                </div>
+                <div>
+                  <Label>Date of Birth</Label>
+                  <Input
+                    type="date"
+                    value={bundleForm.principalDOB}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalDOB: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-1">Agent Information</h4>
+                <p className="text-sm text-blue-600 dark:text-blue-400">The person who will make decisions on your behalf</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label>Agent Full Name *</Label>
+                  <Input
+                    value={bundleForm.agentName}
+                    onChange={(e) => setBundleForm({ ...bundleForm, agentName: e.target.value })}
+                    placeholder="Agent's full legal name"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Agent Address</Label>
+                  <Input
+                    value={bundleForm.agentAddress}
+                    onChange={(e) => setBundleForm({ ...bundleForm, agentAddress: e.target.value })}
+                    placeholder="Agent's address"
+                  />
+                </div>
+                <div>
+                  <Label>Agent Phone</Label>
+                  <Input
+                    value={bundleForm.agentPhone}
+                    onChange={(e) => setBundleForm({ ...bundleForm, agentPhone: e.target.value })}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div>
+                  <Label>Relationship</Label>
+                  <Input
+                    value={bundleForm.agentRelationship}
+                    onChange={(e) => setBundleForm({ ...bundleForm, agentRelationship: e.target.value })}
+                    placeholder="Spouse, Child, Sibling, etc."
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button
+                  className="flex-1"
+                  onClick={() => handleGenerateBundle("family_protection")}
+                  disabled={generateBundle.isPending}
+                >
+                  {generateBundle.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
+                  Generate Bundle
+                </Button>
+                <Button variant="outline" onClick={() => setShowBundleModal(null)}>Cancel</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showBundleModal === "healthcare_complete"} onOpenChange={(open) => !open && setShowBundleModal(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-red-500" />
+                Healthcare Complete Bundle
+              </DialogTitle>
+              <DialogDescription>
+                Generate Healthcare POA, Living Will, and HIPAA Authorization documents
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                <h4 className="font-medium text-red-800 dark:text-red-200 mb-1">Your Information</h4>
+                <p className="text-sm text-red-600 dark:text-red-400">The person these healthcare documents protect</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label>Your Full Legal Name *</Label>
+                  <Input
+                    value={bundleForm.principalName}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalName: e.target.value })}
+                    placeholder="Your full legal name"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Address</Label>
+                  <Input
+                    value={bundleForm.principalAddress}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalAddress: e.target.value })}
+                    placeholder="123 Main Street"
+                  />
+                </div>
+                <div>
+                  <Label>City</Label>
+                  <Input
+                    value={bundleForm.principalCity}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalCity: e.target.value })}
+                    placeholder="City"
+                  />
+                </div>
+                <div>
+                  <Label>State *</Label>
+                  <Select value={bundleForm.state} onValueChange={(v) => setBundleForm({ ...bundleForm, state: v })}>
+                    <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                    <SelectContent>
+                      {US_STATES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>County *</Label>
+                  <Input
+                    value={bundleForm.county}
+                    onChange={(e) => setBundleForm({ ...bundleForm, county: e.target.value })}
+                    placeholder="County"
+                  />
+                </div>
+                <div>
+                  <Label>Date of Birth</Label>
+                  <Input
+                    type="date"
+                    value={bundleForm.principalDOB}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalDOB: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-1">Healthcare Agent</h4>
+                <p className="text-sm text-blue-600 dark:text-blue-400">The person who will make healthcare decisions for you</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label>Agent Full Name *</Label>
+                  <Input
+                    value={bundleForm.agentName}
+                    onChange={(e) => setBundleForm({ ...bundleForm, agentName: e.target.value })}
+                    placeholder="Agent's full legal name"
+                  />
+                </div>
+                <div>
+                  <Label>Agent Phone</Label>
+                  <Input
+                    value={bundleForm.agentPhone}
+                    onChange={(e) => setBundleForm({ ...bundleForm, agentPhone: e.target.value })}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div>
+                  <Label>Relationship</Label>
+                  <Input
+                    value={bundleForm.agentRelationship}
+                    onChange={(e) => setBundleForm({ ...bundleForm, agentRelationship: e.target.value })}
+                    placeholder="Spouse, Child, etc."
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button
+                  className="flex-1"
+                  onClick={() => handleGenerateBundle("healthcare_complete")}
+                  disabled={generateBundle.isPending}
+                >
+                  {generateBundle.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
+                  Generate Bundle
+                </Button>
+                <Button variant="outline" onClick={() => setShowBundleModal(null)}>Cancel</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showBundleModal === "asset_protection"} onOpenChange={(open) => !open && setShowBundleModal(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-green-500" />
+                Asset Protection Bundle
+              </DialogTitle>
+              <DialogDescription>
+                Generate Privacy Trust and Revocable Living Trust documents
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <h4 className="font-medium text-green-800 dark:text-green-200 mb-1">Grantor Information</h4>
+                <p className="text-sm text-green-600 dark:text-green-400">The person creating the trusts</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label>Your Full Legal Name *</Label>
+                  <Input
+                    value={bundleForm.principalName}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalName: e.target.value })}
+                    placeholder="Your full legal name"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Address</Label>
+                  <Input
+                    value={bundleForm.principalAddress}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalAddress: e.target.value })}
+                    placeholder="123 Main Street"
+                  />
+                </div>
+                <div>
+                  <Label>City</Label>
+                  <Input
+                    value={bundleForm.principalCity}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalCity: e.target.value })}
+                    placeholder="City"
+                  />
+                </div>
+                <div>
+                  <Label>State *</Label>
+                  <Select value={bundleForm.state} onValueChange={(v) => setBundleForm({ ...bundleForm, state: v })}>
+                    <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                    <SelectContent>
+                      {US_STATES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>County *</Label>
+                  <Input
+                    value={bundleForm.county}
+                    onChange={(e) => setBundleForm({ ...bundleForm, county: e.target.value })}
+                    placeholder="County"
+                  />
+                </div>
+                <div>
+                  <Label>ZIP Code</Label>
+                  <Input
+                    value={bundleForm.principalZip}
+                    onChange={(e) => setBundleForm({ ...bundleForm, principalZip: e.target.value })}
+                    placeholder="12345"
+                  />
+                </div>
+              </div>
+              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+                <h4 className="font-medium text-amber-800 dark:text-amber-200 mb-1">Primary Beneficiary</h4>
+                <p className="text-sm text-amber-600 dark:text-amber-400">Who will benefit from the trust</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label>Beneficiary Name *</Label>
+                  <Input
+                    value={bundleForm.beneficiaries[0]?.name || ""}
+                    onChange={(e) => setBundleForm({
+                      ...bundleForm,
+                      beneficiaries: [{ ...bundleForm.beneficiaries[0], name: e.target.value }]
+                    })}
+                    placeholder="Beneficiary's full legal name"
+                  />
+                </div>
+                <div>
+                  <Label>Relationship</Label>
+                  <Input
+                    value={bundleForm.beneficiaries[0]?.relationship || ""}
+                    onChange={(e) => setBundleForm({
+                      ...bundleForm,
+                      beneficiaries: [{ ...bundleForm.beneficiaries[0], relationship: e.target.value }]
+                    })}
+                    placeholder="Spouse, Child, etc."
+                  />
+                </div>
+                <div>
+                  <Label>Percentage</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={bundleForm.beneficiaries[0]?.percentage || 100}
+                    onChange={(e) => setBundleForm({
+                      ...bundleForm,
+                      beneficiaries: [{ ...bundleForm.beneficiaries[0], percentage: parseInt(e.target.value) || 100 }]
+                    })}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button
+                  className="flex-1"
+                  onClick={() => handleGenerateBundle("asset_protection")}
+                  disabled={generateBundle.isPending}
+                >
+                  {generateBundle.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
+                  Generate Bundle
+                </Button>
+                <Button variant="outline" onClick={() => setShowBundleModal(null)}>Cancel</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
