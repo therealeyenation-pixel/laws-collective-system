@@ -59,6 +59,14 @@ import Chess from "@/pages/games/Chess";
 import Battleship from "@/pages/games/Battleship";
 import Solitaire from "@/pages/games/Solitaire";
 import LAWSQuest from "@/pages/games/LAWSQuest";
+import RainbowJourney from "@/pages/games/RainbowJourney";
+import LogicPuzzles from "@/pages/games/LogicPuzzles";
+import SpiderSolitaire from "@/pages/games/SpiderSolitaire";
+import WordForge from "@/pages/games/WordForge";
+import CrosswordMaster from "@/pages/games/CrosswordMaster";
+import ClimbSlide from "@/pages/games/ClimbSlide";
+import EscapeRoom from "@/pages/games/EscapeRoom";
+import DetectiveAcademy from "@/pages/games/DetectiveAcademy";
 import Achievements from "@/pages/Achievements";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
@@ -436,6 +444,14 @@ function Router() {
           <Route path="/games/battleship" component={Battleship} />
           <Route path="/games/solitaire" component={Solitaire} />
           <Route path="/games/laws-quest" component={LAWSQuest} />
+      <Route path="/games/rainbow-journey">{() => <ProtectedRoute component={RainbowJourney} minRole="user" />}</Route>
+      <Route path="/games/logic-puzzles">{() => <ProtectedRoute component={LogicPuzzles} minRole="user" />}</Route>
+      <Route path="/games/spider-solitaire">{() => <ProtectedRoute component={SpiderSolitaire} minRole="user" />}</Route>
+      <Route path="/games/word-forge">{() => <ProtectedRoute component={WordForge} minRole="user" />}</Route>
+      <Route path="/games/crossword-master">{() => <ProtectedRoute component={CrosswordMaster} minRole="user" />}</Route>
+      <Route path="/games/climb-slide">{() => <ProtectedRoute component={ClimbSlide} minRole="user" />}</Route>
+      <Route path="/games/escape-room">{() => <ProtectedRoute component={EscapeRoom} minRole="user" />}</Route>
+      <Route path="/games/detective-academy">{() => <ProtectedRoute component={DetectiveAcademy} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>

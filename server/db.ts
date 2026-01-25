@@ -1,15 +1,16 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import * as schema from "../drizzle/schema";
 import { InsertUser, users, businessEntities, simulatorSessions, certificates, luvLedgerAccounts, trustRelationships, departments, staffMembers, curriculumSubjects, courses, studentEnrollments } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
-let _db: ReturnType<typeof drizzle> | null = null;
+let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      _db = drizzle(process.env.DATABASE_URL, { schema, mode: 'default' });
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -337,26 +338,69 @@ export async function getPurchaseRequestStats() {
   };
 }
 
-export const db = {
-  upsertUser,
-  getUserByOpenId,
-  getUserBusinessEntities,
-  getUserSimulatorSessions,
-  getUserCertificates,
-  getUserLuvLedgerAccounts,
-  getTrustRelationshipsForUser,
-  getDepartments,
-  getStaffByDepartment,
-  getStaffByUser,
-  getCurriculumSubjects,
-  getCoursesBySubject,
-  getStudentEnrollments,
-  // Purchase requests
-  getPurchaseRequests,
-  getPurchaseRequestById,
-  createPurchaseRequest,
-  updatePurchaseRequest,
-  addPurchaseRequestComment,
-  getPurchaseRequestComments,
-  getPurchaseRequestStats,
-};
+// Create a singleton db instance for use with drizzle query API
+let _dbInstance: ReturnType<typeof drizzle<typeof schema>> | null = null;
+
+export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>> & {
+  upsertUser: typeof upsertUser;
+  getUserByOpenId: typeof getUserByOpenId;
+  getUserBusinessEntities: typeof getUserBusinessEntities;
+  getUserSimulatorSessions: typeof getUserSimulatorSessions;
+  getUserCertificates: typeof getUserCertificates;
+  getUserLuvLedgerAccounts: typeof getUserLuvLedgerAccounts;
+  getTrustRelationshipsForUser: typeof getTrustRelationshipsForUser;
+  getDepartments: typeof getDepartments;
+  getStaffByDepartment: typeof getStaffByDepartment;
+  getStaffByUser: typeof getStaffByUser;
+  getCurriculumSubjects: typeof getCurriculumSubjects;
+  getCoursesBySubject: typeof getCoursesBySubject;
+  getStudentEnrollments: typeof getStudentEnrollments;
+  getPurchaseRequests: typeof getPurchaseRequests;
+  getPurchaseRequestById: typeof getPurchaseRequestById;
+  createPurchaseRequest: typeof createPurchaseRequest;
+  updatePurchaseRequest: typeof updatePurchaseRequest;
+  addPurchaseRequestComment: typeof addPurchaseRequestComment;
+  getPurchaseRequestComments: typeof getPurchaseRequestComments;
+  getPurchaseRequestStats: typeof getPurchaseRequestStats;
+}, {
+  get(target, prop) {
+    // Return helper functions
+    const helpers: Record<string, any> = {
+      upsertUser,
+      getUserByOpenId,
+      getUserBusinessEntities,
+      getUserSimulatorSessions,
+      getUserCertificates,
+      getUserLuvLedgerAccounts,
+      getTrustRelationshipsForUser,
+      getDepartments,
+      getStaffByDepartment,
+      getStaffByUser,
+      getCurriculumSubjects,
+      getCoursesBySubject,
+      getStudentEnrollments,
+      getPurchaseRequests,
+      getPurchaseRequestById,
+      createPurchaseRequest,
+      updatePurchaseRequest,
+      addPurchaseRequestComment,
+      getPurchaseRequestComments,
+      getPurchaseRequestStats,
+    };
+    
+    if (prop in helpers) {
+      return helpers[prop as string];
+    }
+    
+    // For drizzle query API access, get the db instance
+    if (!_dbInstance && process.env.DATABASE_URL) {
+      _dbInstance = drizzle(process.env.DATABASE_URL, { schema, mode: 'default' });
+    }
+    
+    if (_dbInstance) {
+      return (_dbInstance as any)[prop];
+    }
+    
+    return undefined;
+  }
+});

@@ -158,6 +158,14 @@ export default function GameCenter() {
     "stock-sim",
     "property-empire",
     "startup-sim",
+    "rainbow-journey",
+    "logic-puzzles",
+    "spider-solitaire",
+    "word-forge",
+    "crossword-master",
+    "climb-slide",
+    "escape-rooms",
+    "detective-academy",
   ]);
 
   const isGameImplemented = (slug: string) => implementedGames.has(slug);
@@ -182,6 +190,14 @@ export default function GameCenter() {
       "battleship": "/games/battleship",
       "solitaire": "/games/solitaire",
       "laws-quest": "/games/laws-quest",
+      "rainbow-journey": "/games/rainbow-journey",
+      "logic-puzzles": "/games/logic-puzzles",
+      "spider-solitaire": "/games/spider-solitaire",
+      "word-forge": "/games/word-forge",
+      "crossword-master": "/games/crossword-master",
+      "climb-slide": "/games/climb-slide",
+      "escape-rooms": "/games/escape-room",
+      "detective-academy": "/games/detective-academy",
     };
     
     if (gameRoutes[gameSlug]) {

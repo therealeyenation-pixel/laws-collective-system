@@ -16173,3 +16173,248 @@ export const credentialAchievements = mysqlTable("credential_achievements", {
 });
 export type CredentialAchievement = typeof credentialAchievements.$inferSelect;
 export type InsertCredentialAchievement = typeof credentialAchievements.$inferInsert;
+
+
+/**
+ * Student Placement Assessments - Initial assessments to determine course paths
+ * Assessment-driven placement with parent override capability
+ */
+export const studentPlacementAssessments = mysqlTable("student_placement_assessments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  studentProfileId: int("studentProfileId").notNull(),
+  guardianUserId: int("guardianUserId"), // Parent/guardian who can approve/override
+  
+  // Assessment type
+  assessmentType: mysqlEnum("assessmentType", [
+    "initial_placement",    // First-time student placement
+    "progress_checkpoint",  // Periodic re-assessment
+    "level_advancement",    // Testing for next level
+    "subject_specific"      // Single subject assessment
+  ]).notNull(),
+  
+  // L.A.W.S. Domain Scores (0-100)
+  landScore: int("landScore"), // Science, Geography, Environmental
+  airScore: int("airScore"),   // Language Arts, Communication, History
+  waterScore: int("waterScore"), // Emotional Intelligence, Arts, Health
+  selfScore: int("selfScore"),  // Financial Literacy, Business, Leadership
+  
+  // Academic Skill Scores (0-100)
+  readingLevel: int("readingLevel"),
+  mathLevel: int("mathLevel"),
+  criticalThinkingLevel: int("criticalThinkingLevel"),
+  
+  // Learning Style Assessment
+  learningStyle: mysqlEnum("learningStyle", [
+    "visual", "auditory", "reading_writing", "kinesthetic", "multimodal"
+  ]),
+  learningStyleScores: json("learningStyleScores"), // Detailed breakdown
+  
+  // Recommended placement
+  recommendedHouseId: int("recommendedHouseId"),
+  recommendedGradeLevel: varchar("recommendedGradeLevel", { length: 10 }),
+  recommendedCourses: json("recommendedCourses"), // Array of course IDs with priority
+  recommendedPace: mysqlEnum("recommendedPace", [
+    "accelerated", "standard", "supported", "intensive_support"
+  ]).default("standard"),
+  
+  // AI Analysis
+  aiAnalysis: json("aiAnalysis"), // Detailed AI recommendations
+  strengthAreas: json("strengthAreas"), // Array of strength areas
+  growthAreas: json("growthAreas"), // Array of areas needing development
+  
+  // Parent/Guardian Review
+  parentReviewed: boolean("parentReviewed").default(false).notNull(),
+  parentReviewedAt: timestamp("parentReviewedAt"),
+  parentApproved: boolean("parentApproved").default(false),
+  parentNotes: text("parentNotes"),
+  
+  // Parent Override
+  parentOverride: boolean("parentOverride").default(false).notNull(),
+  overriddenCourses: json("overriddenCourses"), // Parent-selected courses
+  overrideReason: text("overrideReason"),
+  
+  // Final Enrollment
+  enrollmentFinalized: boolean("enrollmentFinalized").default(false).notNull(),
+  finalizedAt: timestamp("finalizedAt"),
+  finalizedCourses: json("finalizedCourses"), // Array of enrolled course IDs
+  
+  // Status
+  status: mysqlEnum("placementStatus", [
+    "in_progress",
+    "completed",
+    "pending_parent_review",
+    "parent_approved",
+    "enrolled",
+    "expired"
+  ]).default("in_progress").notNull(),
+  
+  // Timestamps
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  expiresAt: timestamp("expiresAt"), // Assessments expire after 30 days
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type StudentPlacementAssessment = typeof studentPlacementAssessments.$inferSelect;
+export type InsertStudentPlacementAssessment = typeof studentPlacementAssessments.$inferInsert;
+
+/**
+ * Placement Assessment Questions - Question bank for placement assessments
+ */
+export const placementAssessmentQuestions = mysqlTable("placement_assessment_questions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  questionId: varchar("questionId", { length: 50 }).notNull().unique(),
+  
+  // Categorization
+  domain: mysqlEnum("domain", ["land", "air", "water", "self", "academic"]).notNull(),
+  subject: varchar("subject", { length: 100 }).notNull(), // e.g., "reading", "math", "science"
+  skillArea: varchar("skillArea", { length: 100 }), // e.g., "comprehension", "algebra"
+  
+  // Difficulty
+  difficultyLevel: mysqlEnum("difficultyLevel", [
+    "k_2", "3_5", "6_8", "9_12", "adult"
+  ]).notNull(),
+  difficultyScore: int("difficultyScore").default(50), // 1-100 fine-grained difficulty
+  
+  // Question content
+  questionType: mysqlEnum("questionType", [
+    "multiple_choice", "true_false", "matching", "short_answer", "scenario"
+  ]).notNull(),
+  questionText: text("questionText").notNull(),
+  questionMedia: json("questionMedia"), // Images, audio, video references
+  
+  // Answer options
+  options: json("options"), // Array of answer options
+  correctAnswer: json("correctAnswer"), // Correct answer(s)
+  explanation: text("explanation"), // Explanation for correct answer
+  
+  // Scoring
+  pointValue: int("pointValue").default(1).notNull(),
+  partialCreditAllowed: boolean("partialCreditAllowed").default(false).notNull(),
+  
+  // Metadata
+  tags: json("tags"), // Array of tags for filtering
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PlacementAssessmentQuestion = typeof placementAssessmentQuestions.$inferSelect;
+export type InsertPlacementAssessmentQuestion = typeof placementAssessmentQuestions.$inferInsert;
+
+/**
+ * Placement Assessment Responses - Student responses to assessment questions
+ */
+export const placementAssessmentResponses = mysqlTable("placement_assessment_responses", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  assessmentId: int("assessmentId").notNull(), // Reference to studentPlacementAssessments
+  questionId: int("questionId").notNull(), // Reference to placementAssessmentQuestions
+  
+  // Response
+  selectedAnswer: json("selectedAnswer"),
+  textResponse: text("textResponse"),
+  
+  // Scoring
+  isCorrect: boolean("isCorrect"),
+  pointsEarned: int("pointsEarned").default(0),
+  
+  // Timing
+  timeSpentSeconds: int("timeSpentSeconds"),
+  
+  // AI analysis of response
+  aiAnalysis: json("aiAnalysis"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PlacementAssessmentResponse = typeof placementAssessmentResponses.$inferSelect;
+export type InsertPlacementAssessmentResponse = typeof placementAssessmentResponses.$inferInsert;
+
+/**
+ * Course Recommendations - AI-generated course recommendations with parent approval workflow
+ */
+export const courseRecommendations = mysqlTable("course_recommendations", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  assessmentId: int("assessmentId").notNull(), // Reference to studentPlacementAssessments
+  studentProfileId: int("studentProfileId").notNull(),
+  courseId: int("courseId").notNull(), // Reference to academyCourses
+  
+  // Recommendation details
+  priority: int("priority").default(1).notNull(), // 1 = highest priority
+  recommendationReason: text("recommendationReason"),
+  alignedStrengths: json("alignedStrengths"), // How course aligns with student strengths
+  addressedGrowthAreas: json("addressedGrowthAreas"), // Growth areas this course addresses
+  
+  // Confidence
+  confidenceScore: int("confidenceScore").default(80), // AI confidence 0-100
+  
+  // Parent decision
+  parentDecision: mysqlEnum("parentDecision", [
+    "pending", "approved", "rejected", "modified"
+  ]).default("pending").notNull(),
+  parentDecisionAt: timestamp("parentDecisionAt"),
+  parentNotes: text("parentNotes"),
+  
+  // Alternative course if parent rejects
+  alternativeCourseId: int("alternativeCourseId"),
+  
+  // Enrollment status
+  enrolled: boolean("enrolled").default(false).notNull(),
+  enrolledAt: timestamp("enrolledAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CourseRecommendation = typeof courseRecommendations.$inferSelect;
+export type InsertCourseRecommendation = typeof courseRecommendations.$inferInsert;
+
+/**
+ * Homeschool Portfolios - Documentation for homeschool compliance
+ */
+export const homeschoolPortfolios = mysqlTable("homeschool_portfolios", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  studentProfileId: int("studentProfileId").notNull(),
+  guardianUserId: int("guardianUserId").notNull(),
+  
+  // Academic year
+  academicYear: varchar("academicYear", { length: 10 }).notNull(), // e.g., "2025-2026"
+  
+  // State compliance
+  stateOfResidence: varchar("stateOfResidence", { length: 50 }),
+  complianceRequirements: json("complianceRequirements"),
+  
+  // Portfolio contents
+  assessmentRecords: json("assessmentRecords"), // Array of assessment IDs
+  courseCompletions: json("courseCompletions"), // Array of completed course IDs
+  certificatesEarned: json("certificatesEarned"), // Array of certificate IDs
+  workSamples: json("workSamples"), // Array of work sample references
+  
+  // Attendance/Hours
+  totalInstructionalHours: int("totalInstructionalHours").default(0),
+  hoursBreakdown: json("hoursBreakdown"), // Hours by subject
+  
+  // Progress summary
+  progressSummary: text("progressSummary"),
+  strengthsNarrative: text("strengthsNarrative"),
+  goalsNarrative: text("goalsNarrative"),
+  
+  // Transcript data
+  transcriptGenerated: boolean("transcriptGenerated").default(false).notNull(),
+  transcriptUrl: text("transcriptUrl"),
+  gpaEquivalent: decimal("gpaEquivalent", { precision: 3, scale: 2 }),
+  
+  // Status
+  status: mysqlEnum("portfolioStatus", [
+    "active", "archived", "submitted_for_review"
+  ]).default("active").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type HomeschoolPortfolio = typeof homeschoolPortfolios.$inferSelect;
+export type InsertHomeschoolPortfolio = typeof homeschoolPortfolios.$inferInsert;
