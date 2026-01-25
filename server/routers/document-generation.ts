@@ -501,6 +501,138 @@ const SPLIT_REPORT_TEMPLATES = {
   },
 };
 
+// Healthcare & Estate Planning Templates (Protection Layer)
+const HEALTHCARE_ESTATE_TEMPLATES = {
+  HEALTHCARE_POA: {
+    templateCode: "HEALTHCARE_POA",
+    templateName: "Healthcare Power of Attorney",
+    category: "healthcare" as const,
+    description: "Designates an agent to make healthcare decisions if you become incapacitated",
+    pageSize: "letter" as const,
+    requiredFields: ["principalName", "principalAddress", "principalDOB", "agentName", "agentAddress", "agentPhone", "alternateAgentName", "alternateAgentAddress", "powers", "limitations", "effectiveDate", "witnessNames", "notaryInfo"],
+  },
+  LIVING_WILL: {
+    templateCode: "LIVING_WILL",
+    templateName: "Living Will / Advance Healthcare Directive",
+    category: "healthcare" as const,
+    description: "Specifies your wishes for end-of-life medical treatment",
+    pageSize: "letter" as const,
+    requiredFields: ["principalName", "principalAddress", "principalDOB", "lifeProlong", "painManagement", "artificialNutrition", "organDonation", "burialPreferences", "additionalInstructions", "witnessNames", "notaryInfo"],
+  },
+  HIPAA_AUTHORIZATION: {
+    templateCode: "HIPAA_AUTH",
+    templateName: "HIPAA Authorization for Release of Medical Information",
+    category: "healthcare" as const,
+    description: "Authorizes designated individuals to access your protected health information",
+    pageSize: "letter" as const,
+    requiredFields: ["patientName", "patientDOB", "patientAddress", "authorizedPersons", "infoToRelease", "purposeOfRelease", "expirationDate", "patientSignature", "signatureDate"],
+  },
+  FINANCIAL_POA: {
+    templateCode: "FINANCIAL_POA",
+    templateName: "Durable Financial Power of Attorney",
+    category: "healthcare" as const,
+    description: "Grants authority to manage financial affairs if you become incapacitated",
+    pageSize: "letter" as const,
+    requiredFields: ["principalName", "principalAddress", "principalSSN", "agentName", "agentAddress", "powers", "bankingPowers", "realEstatePowers", "investmentPowers", "taxPowers", "giftingPowers", "limitations", "effectiveType", "witnessNames", "notaryInfo"],
+  },
+  GUARDIAN_NOMINATION: {
+    templateCode: "GUARDIAN_NOM",
+    templateName: "Nomination of Guardian for Minor Children",
+    category: "healthcare" as const,
+    description: "Nominates a guardian to care for minor children if parents become incapacitated or pass away",
+    pageSize: "letter" as const,
+    requiredFields: ["parentNames", "childrenNames", "childrenDOB", "primaryGuardian", "alternateGuardian", "guardianAddress", "reasons", "specialInstructions", "witnessNames", "notaryInfo"],
+  },
+  BENEFICIARY_DESIGNATION_FORM: {
+    templateCode: "BENEFICIARY_FORM",
+    templateName: "Beneficiary Designation Form",
+    category: "healthcare" as const,
+    description: "Designates beneficiaries for accounts and policies to ensure proper transfer",
+    pageSize: "letter" as const,
+    requiredFields: ["accountOwner", "accountType", "accountNumber", "primaryBeneficiaries", "contingentBeneficiaries", "percentages", "signatureDate"],
+  },
+  FUNERAL_INSTRUCTIONS: {
+    templateCode: "FUNERAL_INSTR",
+    templateName: "Funeral and Burial Instructions",
+    category: "healthcare" as const,
+    description: "Documents your wishes for funeral arrangements and final disposition",
+    pageSize: "letter" as const,
+    requiredFields: ["principalName", "dispositionType", "funeralHome", "serviceType", "locationPreferences", "musicSelections", "readings", "specialRequests", "prePaidArrangements"],
+  },
+};
+
+// Private Dispute Resolution Templates
+const DISPUTE_RESOLUTION_TEMPLATES = {
+  ARBITRATION_AGREEMENT: {
+    templateCode: "DISPUTE_ARBITRATION",
+    templateName: "Private Arbitration Agreement",
+    category: "dispute_resolution" as const,
+    description: "Agreement to resolve disputes through private arbitration rather than public courts",
+    pageSize: "letter" as const,
+    requiredFields: ["partyA", "partyB", "scopeOfDisputes", "arbitrationRules", "arbitratorSelection", "venue", "governingLaw", "costAllocation", "confidentiality", "bindingDecision"],
+  },
+  MEDIATION_AGREEMENT: {
+    templateCode: "DISPUTE_MEDIATION",
+    templateName: "Mediation Agreement",
+    category: "dispute_resolution" as const,
+    description: "Agreement to attempt mediation before arbitration or litigation",
+    pageSize: "letter" as const,
+    requiredFields: ["partyA", "partyB", "disputeDescription", "mediatorSelection", "mediationRules", "confidentiality", "costSharing", "timeframe"],
+  },
+  LAWS_MEMBER_DISPUTE_PROTOCOL: {
+    templateCode: "DISPUTE_LAWS_PROTOCOL",
+    templateName: "L.A.W.S. Collective Member Dispute Resolution Protocol",
+    category: "dispute_resolution" as const,
+    description: "Internal dispute resolution protocol for L.A.W.S. Collective members",
+    pageSize: "letter" as const,
+    requiredFields: ["memberA", "memberB", "disputeType", "initialResolutionAttempt", "escalationPath", "mediatorPanel", "arbitrationOption", "enforcementMechanism"],
+  },
+  SETTLEMENT_AGREEMENT: {
+    templateCode: "DISPUTE_SETTLEMENT",
+    templateName: "Settlement Agreement and Mutual Release",
+    category: "dispute_resolution" as const,
+    description: "Agreement to settle a dispute with mutual release of claims",
+    pageSize: "letter" as const,
+    requiredFields: ["partyA", "partyB", "disputeBackground", "settlementTerms", "paymentTerms", "releaseScope", "confidentiality", "nonDisparagement", "effectiveDate"],
+  },
+};
+
+// Privacy Protection Templates
+const PRIVACY_TEMPLATES = {
+  PRIVACY_TRUST: {
+    templateCode: "PRIVACY_TRUST",
+    templateName: "Privacy Trust Agreement",
+    category: "privacy" as const,
+    description: "Trust structure designed to hold LLC interests anonymously",
+    pageSize: "letter" as const,
+    requiredFields: ["trustName", "grantor", "trustee", "beneficiary", "llcInterests", "privacyProvisions", "distributionRules", "successorTrustee"],
+  },
+  NOMINEE_AGREEMENT: {
+    templateCode: "PRIVACY_NOMINEE",
+    templateName: "Nominee Manager/Member Agreement",
+    category: "privacy" as const,
+    description: "Agreement for a nominee to appear on public records on behalf of the actual owner",
+    pageSize: "letter" as const,
+    requiredFields: ["nomineeName", "principalName", "entityName", "nomineeRole", "compensation", "indemnification", "terminationRights", "confidentiality"],
+  },
+  REGISTERED_AGENT_AGREEMENT: {
+    templateCode: "PRIVACY_RA",
+    templateName: "Registered Agent Service Agreement",
+    category: "privacy" as const,
+    description: "Agreement for registered agent services to maintain address privacy",
+    pageSize: "letter" as const,
+    requiredFields: ["agentName", "agentAddress", "clientName", "entityName", "services", "fees", "mailHandling", "term", "termination"],
+  },
+  VIRTUAL_OFFICE_AGREEMENT: {
+    templateCode: "PRIVACY_VIRTUAL_OFFICE",
+    templateName: "Virtual Office Service Agreement",
+    category: "privacy" as const,
+    description: "Agreement for virtual office services including business address and mail handling",
+    pageSize: "letter" as const,
+    requiredFields: ["providerName", "clientName", "businessAddress", "services", "mailForwarding", "phoneServices", "meetingRoomAccess", "fees", "term"],
+  },
+};
+
 // All templates combined
 const ALL_TEMPLATES = {
   ...STATE_BUSINESS_TEMPLATES,
@@ -511,6 +643,9 @@ const ALL_TEMPLATES = {
   ...EMPLOYMENT_TEMPLATES,
   ...TRUST_DOCUMENT_TEMPLATES,
   ...SPLIT_REPORT_TEMPLATES,
+  ...HEALTHCARE_ESTATE_TEMPLATES,
+  ...DISPUTE_RESOLUTION_TEMPLATES,
+  ...PRIVACY_TEMPLATES,
 };
 
 // ============================================
