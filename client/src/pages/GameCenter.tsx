@@ -154,6 +154,7 @@ export default function GameCenter() {
     "battleship",
     "solitaire",
     "laws-quest",
+    "dual-path-journey",
     "sovereignty-journey",
     "business-tycoon",
     "stock-sim",
@@ -179,6 +180,7 @@ export default function GameCenter() {
     "word-ladder",
     "trivia-challenge",
     "simon-says",
+    "community-builder",
   ]);
 
   const isGameImplemented = (slug: string) => implementedGames.has(slug);
@@ -203,6 +205,7 @@ export default function GameCenter() {
       "battleship": "/games/battleship",
       "solitaire": "/games/solitaire",
       "laws-quest": "/games/laws-quest",
+      "dual-path-journey": "/games/dual-path-journey",
       "sovereignty-journey": "/games/sovereignty-journey",
       "rainbow-journey": "/games/rainbow-journey",
       "logic-puzzles": "/games/logic-puzzles",
@@ -224,6 +227,7 @@ export default function GameCenter() {
       "word-ladder": "/games/word-ladder",
       "trivia-challenge": "/games/trivia-challenge",
       "simon-says": "/games/simon-says",
+      "community-builder": "/games/community-builder",
     };
     
     if (gameRoutes[gameSlug]) {

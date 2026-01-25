@@ -59,6 +59,7 @@ import Chess from "@/pages/games/Chess";
 import Battleship from "@/pages/games/Battleship";
 import Solitaire from "@/pages/games/Solitaire";
 import LAWSQuest from "@/pages/games/LAWSQuest";
+import DualPathJourney from "@/pages/games/DualPathJourney";
 import SovereigntyJourney from "@/pages/games/SovereigntyJourney";
 import RainbowJourney from "@/pages/games/RainbowJourney";
 import LogicPuzzles from "@/pages/games/LogicPuzzles";
@@ -80,6 +81,7 @@ import Tangram from "@/pages/games/Tangram";
 import WordLadder from "@/pages/games/WordLadder";
 import TriviaChallenge from "@/pages/games/TriviaChallenge";
 import SimonSays from "@/pages/games/SimonSays";
+import CommunityBuilder from "@/pages/games/CommunityBuilder";
 import Achievements from "@/pages/Achievements";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
@@ -208,6 +210,7 @@ import FoundingMemberBonus from "@/pages/FoundingMemberBonus";
 import WorkerProgression from "@/pages/WorkerProgression";
 import ClosedLoopWealth from "@/pages/ClosedLoopWealth";
 import LAWSEmploymentPortal from "@/pages/LAWSEmploymentPortal";
+import InternshipPortal from "@/pages/InternshipPortal";
 import Donate508 from "@/pages/Donate508";
 import PublicDonate from "@/pages/PublicDonate";
 import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
@@ -404,6 +407,7 @@ function Router() {
       <Route path="/career-path-planner">{() => <ProtectedRoute component={CareerPathPlanner} minRole="staff" />}</Route>
       <Route path="/worker-progression">{() => <ProtectedRoute component={WorkerProgression} minRole="staff" />}</Route>
       <Route path="/laws-employment">{() => <LAWSEmploymentPortal />}</Route>
+      <Route path="/internship-portal">{() => <ProtectedRoute component={InternshipPortal} minRole="user" />}</Route>
       <Route path="/closed-loop-wealth">{() => <ProtectedRoute component={ClosedLoopWealth} minRole="staff" />}</Route>
       <Route path="/benefits-comparison">{() => <ProtectedRoute component={BenefitsComparison} minRole="user" />}</Route>
       <Route path="/transition-training">{() => <ProtectedRoute component={TransitionTraining} minRole="staff" />}</Route>
@@ -478,8 +482,8 @@ function Router() {
       <Route path="/games/escape-room">{() => <ProtectedRoute component={EscapeRoom} minRole="user" />}</Route>
       <Route path="/games/detective-academy">{() => <ProtectedRoute component={DetectiveAcademy} minRole="user" />}</Route>
       <Route path="/games/rubiks-cube">{() => <ProtectedRoute component={RubiksCube} minRole="user" />}</Route>
-      <Route path="/games/spades">{() => <ProtectedRoute component={Spades} minRole="user" />}</Route>
-      <Route path="/games/yahtzee">{() => <ProtectedRoute component={Yahtzee} minRole="user" />}</Route>
+ <Route path="/games/laws-quest">{() => <ProtectedRoute component={LAWSQuest} minRole="user" />}</Route>
+      <Route path="/games/dual-path-journey">{() => <ProtectedRoute component={DualPathJourney} minRole="user" />}</Route>     <Route path="/games/yahtzee">{() => <ProtectedRoute component={Yahtzee} minRole="user" />}</Route>
       <Route path="/games/scrabble">{() => <ProtectedRoute component={ScrabbleGame} minRole="user" />}</Route>
       <Route path="/games/dominoes">{() => <ProtectedRoute component={Dominoes} minRole="user" />}</Route>
       <Route path="/games/mancala">{() => <ProtectedRoute component={Mancala} minRole="user" />}</Route>
@@ -489,6 +493,7 @@ function Router() {
       <Route path="/games/word-ladder">{() => <ProtectedRoute component={WordLadder} minRole="user" />}</Route>
       <Route path="/games/trivia-challenge">{() => <ProtectedRoute component={TriviaChallenge} minRole="user" />}</Route>
       <Route path="/games/simon-says">{() => <ProtectedRoute component={SimonSays} minRole="user" />}</Route>
+      <Route path="/games/community-builder">{() => <ProtectedRoute component={CommunityBuilder} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>
