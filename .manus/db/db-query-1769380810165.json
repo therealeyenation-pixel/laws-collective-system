@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS house_hierarchy (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  house_id INT NOT NULL,\n  parent_house_id INT,\n  house_type ENUM('root', 'bloodline', 'mirrored', 'adaptive') DEFAULT 'bloodline',\n  trust_name VARCHAR(255),\n  trust_protection_level ENUM('calea', 'standard', 'basic') DEFAULT 'standard',\n  inter_house_split_percent DECIMAL(5,2) DEFAULT 60.00,\n  intra_house_inheritance_percent DECIMAL(5,2) DEFAULT 70.00,\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS house_hierarchy (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  house_id INT NOT NULL,\n  parent_house_id INT,\n  house_type ENUM('root', 'bloodline', 'mirrored', 'adaptive') DEFAULT 'bloodline',\n  trust_name VARCHAR(255),\n  trust_protection_level ENUM('calea', 'standard', 'basic') DEFAULT 'standard',\n  inter_house_split_percent DECIMAL(5,2) DEFAULT 60.00,\n  intra_house_inheritance_percent DECIMAL(5,2) DEFAULT 70.00,\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 206
+}
