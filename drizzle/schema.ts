@@ -15634,3 +15634,287 @@ export const gamingComplianceReports = mysqlTable("gaming_compliance_reports", {
 });
 export type GamingComplianceReport = typeof gamingComplianceReports.$inferSelect;
 export type InsertGamingComplianceReport = typeof gamingComplianceReports.$inferInsert;
+
+
+// ============================================================
+// S.W.A.L. TOKENOMICS TABLES (L.A.W.S. Quest Commercial Product)
+// Owner: The L.A.W.S. Collective, LLC
+// Journey to Sovereignty: Self → Water → Air → Land → Sovereignty
+// ============================================================
+
+/**
+ * S.W.A.L. Token Supply - Tracks token supply per phase
+ * Total supply: 10,000 tokens across 5 phases
+ */
+export const swalTokenSupply = mysqlTable("swal_token_supply", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  phase: mysqlEnum("phase", ["self", "water", "air", "land", "sovereignty"]).notNull().unique(),
+  tier: mysqlEnum("tier", ["genesis", "flow", "ascend", "root", "crown"]).notNull(),
+  
+  // Supply tracking
+  totalSupply: int("totalSupply").notNull(),
+  soldCount: int("soldCount").default(0).notNull(),
+  reservedCount: int("reservedCount").default(0).notNull(), // For Academy/Employee
+  burnedCount: int("burnedCount").default(0).notNull(),
+  
+  // Pricing
+  basePrice: decimal("basePrice", { precision: 10, scale: 2 }).notNull(), // USD
+  currentPrice: decimal("currentPrice", { precision: 10, scale: 2 }).notNull(),
+  valueMultiplier: decimal("valueMultiplier", { precision: 5, scale: 2 }).notNull(),
+  
+  // Phase status
+  isActive: boolean("isActive").default(false).notNull(),
+  activatedAt: timestamp("activatedAt"),
+  
+  // Revenue tracking
+  totalRevenue: decimal("totalRevenue", { precision: 20, scale: 2 }).default("0").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SwalTokenSupply = typeof swalTokenSupply.$inferSelect;
+export type InsertSwalTokenSupply = typeof swalTokenSupply.$inferInsert;
+
+/**
+ * S.W.A.L. Tokens - Individual token records
+ */
+export const swalTokens = mysqlTable("swal_tokens", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  tokenId: varchar("tokenId", { length: 100 }).notNull().unique(), // e.g., swal-self-1
+  phase: mysqlEnum("phase", ["self", "water", "air", "land", "sovereignty"]).notNull(),
+  tier: mysqlEnum("tier", ["genesis", "flow", "ascend", "root", "crown"]).notNull(),
+  tokenNumber: int("tokenNumber").notNull(), // Sequential within phase
+  
+  // Ownership
+  ownerId: int("ownerId"), // null if available
+  ownerType: mysqlEnum("ownerType", ["user", "house", "entity"]),
+  
+  // Pricing
+  purchasePrice: decimal("purchasePrice", { precision: 10, scale: 2 }),
+  currentValue: decimal("currentValue", { precision: 10, scale: 2 }).notNull(),
+  
+  // Status
+  status: mysqlEnum("status", ["available", "owned", "burned", "reserved"]).default("available").notNull(),
+  
+  // Blockchain
+  blockchainHash: varchar("blockchainHash", { length: 255 }).notNull(),
+  
+  mintedAt: timestamp("mintedAt").defaultNow().notNull(),
+  purchasedAt: timestamp("purchasedAt"),
+  burnedAt: timestamp("burnedAt"),
+});
+
+export type SwalToken = typeof swalTokens.$inferSelect;
+export type InsertSwalToken = typeof swalTokens.$inferInsert;
+
+/**
+ * S.W.A.L. Purchases - Purchase transaction records
+ */
+export const swalPurchases = mysqlTable("swal_purchases", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  userId: int("userId").notNull(),
+  tokenId: int("tokenId").notNull(), // Reference to swalTokens.id
+  
+  phase: mysqlEnum("phase", ["self", "water", "air", "land", "sovereignty"]).notNull(),
+  
+  // Pricing
+  basePrice: decimal("basePrice", { precision: 10, scale: 2 }).notNull(),
+  discountApplied: decimal("discountApplied", { precision: 5, scale: 2 }).default("0").notNull(),
+  finalPrice: decimal("finalPrice", { precision: 10, scale: 2 }).notNull(),
+  
+  // Payment
+  paymentMethod: mysqlEnum("paymentMethod", ["stripe", "crypto", "earned", "gifted"]).notNull(),
+  paymentReference: varchar("paymentReference", { length: 255 }),
+  
+  // Membership benefit
+  membershipType: mysqlEnum("membershipType", ["public", "academy", "employee"]).notNull(),
+  
+  // Blockchain
+  transactionHash: varchar("transactionHash", { length: 255 }).notNull(),
+  
+  purchasedAt: timestamp("purchasedAt").defaultNow().notNull(),
+});
+
+export type SwalPurchase = typeof swalPurchases.$inferSelect;
+export type InsertSwalPurchase = typeof swalPurchases.$inferInsert;
+
+/**
+ * S.W.A.L. NFTs - NFT collection records
+ * Five collections: The Awakening, The Healing, The Enlightenment, The Foundation, The Crown
+ */
+export const swalNfts = mysqlTable("swal_nfts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  nftId: varchar("nftId", { length: 100 }).notNull().unique(),
+  
+  // Owner
+  userId: int("userId").notNull(),
+  houseId: int("houseId"), // If transferred to House wallet
+  
+  // Collection info
+  collection: mysqlEnum("collection", [
+    "the_awakening",
+    "the_healing",
+    "the_enlightenment",
+    "the_foundation",
+    "the_crown"
+  ]).notNull(),
+  phase: mysqlEnum("phase", ["self", "water", "air", "land", "sovereignty"]).notNull(),
+  
+  // NFT metadata
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  imageUrl: varchar("imageUrl", { length: 500 }),
+  
+  // Rarity
+  rarity: mysqlEnum("rarity", ["common", "uncommon", "rare", "epic", "legendary"]).notNull(),
+  rarityScore: int("rarityScore").default(0).notNull(),
+  
+  // Traits (JSON object)
+  traits: json("traits").notNull(),
+  
+  // Completion data
+  completionLevel: int("completionLevel").notNull(),
+  completionStats: json("completionStats").notNull(), // Realm stats at completion
+  questsCompleted: int("questsCompleted").notNull(),
+  timePlayed: int("timePlayed").notNull(), // Minutes
+  
+  // Source token
+  sourceTokenId: int("sourceTokenId").notNull(), // Token that was burned
+  
+  // Blockchain
+  blockchainHash: varchar("blockchainHash", { length: 255 }).notNull(),
+  
+  // Marketplace
+  isListed: boolean("isListed").default(false).notNull(),
+  listingPrice: decimal("listingPrice", { precision: 10, scale: 2 }),
+  
+  mintedAt: timestamp("mintedAt").defaultNow().notNull(),
+  transferredAt: timestamp("transferredAt"),
+});
+
+export type SwalNft = typeof swalNfts.$inferSelect;
+export type InsertSwalNft = typeof swalNfts.$inferInsert;
+
+/**
+ * S.W.A.L. Unlocks - Phase unlock records
+ */
+export const swalUnlocks = mysqlTable("swal_unlocks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  userId: int("userId").notNull(),
+  phase: mysqlEnum("phase", ["self", "water", "air", "land", "sovereignty"]).notNull(),
+  
+  // Token used for unlock
+  tokenId: int("tokenId").notNull(),
+  
+  // NFT generated
+  nftId: int("nftId").notNull(),
+  
+  // Blockchain
+  blockchainHash: varchar("blockchainHash", { length: 255 }).notNull(),
+  
+  unlockedAt: timestamp("unlockedAt").defaultNow().notNull(),
+});
+
+export type SwalUnlock = typeof swalUnlocks.$inferSelect;
+export type InsertSwalUnlock = typeof swalUnlocks.$inferInsert;
+
+/**
+ * S.W.A.L. User Progress - Track user's journey to sovereignty
+ */
+export const swalUserProgress = mysqlTable("swal_user_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  userId: int("userId").notNull().unique(),
+  
+  // Current position in journey
+  currentPhase: mysqlEnum("currentPhase", ["self", "water", "air", "land", "sovereignty"]).default("self").notNull(),
+  
+  // Membership
+  membershipType: mysqlEnum("membershipType", ["public", "academy", "employee"]).default("public").notNull(),
+  
+  // Token holdings
+  tokensOwned: int("tokensOwned").default(0).notNull(),
+  tokensBurned: int("tokensBurned").default(0).notNull(),
+  tokensEarned: int("tokensEarned").default(0).notNull(), // Academy/Employee earned
+  
+  // NFT holdings
+  nftsOwned: int("nftsOwned").default(0).notNull(),
+  
+  // Investment tracking
+  totalInvested: decimal("totalInvested", { precision: 10, scale: 2 }).default("0").notNull(),
+  portfolioValue: decimal("portfolioValue", { precision: 10, scale: 2 }).default("0").notNull(),
+  
+  // Achievement tracking
+  selfCompleted: boolean("selfCompleted").default(false).notNull(),
+  waterCompleted: boolean("waterCompleted").default(false).notNull(),
+  airCompleted: boolean("airCompleted").default(false).notNull(),
+  landCompleted: boolean("landCompleted").default(false).notNull(),
+  sovereigntyAchieved: boolean("sovereigntyAchieved").default(false).notNull(),
+  
+  // Timestamps
+  journeyStartedAt: timestamp("journeyStartedAt").defaultNow().notNull(),
+  sovereigntyAchievedAt: timestamp("sovereigntyAchievedAt"),
+  
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SwalUserProgress = typeof swalUserProgress.$inferSelect;
+export type InsertSwalUserProgress = typeof swalUserProgress.$inferInsert;
+
+/**
+ * S.W.A.L. NFT Transfers - Track NFT ownership changes
+ */
+export const swalNftTransfers = mysqlTable("swal_nft_transfers", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  nftId: int("nftId").notNull(),
+  
+  fromUserId: int("fromUserId"),
+  fromHouseId: int("fromHouseId"),
+  toUserId: int("toUserId"),
+  toHouseId: int("toHouseId"),
+  
+  transferType: mysqlEnum("transferType", ["mint", "gift", "sale", "house_deposit", "house_withdrawal"]).notNull(),
+  
+  // Sale details (if applicable)
+  salePrice: decimal("salePrice", { precision: 10, scale: 2 }),
+  royaltyPaid: decimal("royaltyPaid", { precision: 10, scale: 2 }),
+  
+  // Blockchain
+  transactionHash: varchar("transactionHash", { length: 255 }).notNull(),
+  
+  transferredAt: timestamp("transferredAt").defaultNow().notNull(),
+});
+
+export type SwalNftTransfer = typeof swalNftTransfers.$inferSelect;
+export type InsertSwalNftTransfer = typeof swalNftTransfers.$inferInsert;
+
+/**
+ * S.W.A.L. Royalty Distributions - Track royalty payments from secondary sales
+ */
+export const swalRoyaltyDistributions = mysqlTable("swal_royalty_distributions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  transferId: int("transferId").notNull(), // Reference to swalNftTransfers
+  
+  totalRoyalty: decimal("totalRoyalty", { precision: 10, scale: 2 }).notNull(),
+  
+  // Distribution (7.5% total)
+  creatorAmount: decimal("creatorAmount", { precision: 10, scale: 2 }).notNull(), // 70% to L.A.W.S. Collective
+  communityAmount: decimal("communityAmount", { precision: 10, scale: 2 }).notNull(), // 20% to community treasury
+  platformAmount: decimal("platformAmount", { precision: 10, scale: 2 }).notNull(), // 10% to platform
+  
+  // Blockchain
+  distributionHash: varchar("distributionHash", { length: 255 }).notNull(),
+  
+  distributedAt: timestamp("distributedAt").defaultNow().notNull(),
+});
+
+export type SwalRoyaltyDistribution = typeof swalRoyaltyDistributions.$inferSelect;
+export type InsertSwalRoyaltyDistribution = typeof swalRoyaltyDistributions.$inferInsert;

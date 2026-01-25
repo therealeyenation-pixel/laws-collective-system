@@ -7123,3 +7123,60 @@ L.A.W.S. Quest is a standalone commercial game product owned by The L.A.W.S. Col
 - [ ] No pay-to-win mechanics
 - [ ] Academy/Employee users get all content free
 
+
+## Phase 144: S.W.A.L. Tokenomics System (L.A.W.S. Quest Commercial Product)
+**Owner: The L.A.W.S. Collective, LLC**
+**Vision: Journey to Sovereignty through Self → Water → Air → Land**
+
+### S.W.A.L. Token Architecture
+- [x] Create S.W.A.L. token types and constants (swal-tokenomics.ts)
+- [x] Define 10,000 total Unlock Coin supply
+- [x] Implement phased release schedule (5 phases)
+- [x] Build token appreciation model (1x → 16x value curve)
+
+### Phased Realm Unlock System
+- [x] Phase 1: SELF realm unlock (2,500 tokens @ $10 = Genesis tier)
+- [x] Phase 2: WATER realm unlock (2,000 tokens @ $25 = Flow tier)
+- [x] Phase 3: AIR realm unlock (1,500 tokens @ $50 = Ascend tier)
+- [x] Phase 4: LAND realm unlock (1,000 tokens @ $100 = Root tier)
+- [x] Phase 5: SOVEREIGNTY unlock (500 tokens @ $250 = Crown tier)
+- [x] Reserve pool for Academy/Employee benefits (2,500 tokens)
+
+### NFT Collection Structure
+- [x] "The Awakening" series (SELF completions) - with traits and lore
+- [x] "The Healing" series (WATER completions) - with traits and lore
+- [x] "The Enlightenment" series (AIR completions) - with traits and lore
+- [x] "The Foundation" series (LAND completions) - with traits and lore
+- [x] "The Crown" series (SOVEREIGNTY - rarest) - with traits and lore
+- [x] NFT metadata: timestamp, player, achievement, rarity, phase
+- [x] Blockchain hash generation for each NFT
+
+### Token Value Mechanics
+- [x] Scarcity-driven appreciation as supply diminishes
+- [x] Early adopter pricing advantage
+- [x] Secondary market royalty structure (7.5%: 70% creator, 20% community, 10% platform)
+- [ ] Burn mechanism when tokens are used for unlocks
+
+### Database Schema
+- [x] swal_tokens table (id, phase, tier, price, supply, remaining)
+- [x] swal_purchases table (userId, tokenId, purchasePrice, timestamp)
+- [x] swal_nfts table (id, userId, collection, metadata, blockchainHash)
+- [x] swal_unlocks table (userId, realm, unlockedAt, nftId)
+- [x] swal_token_supply table (phase tracking and remaining supply)
+- [x] swal_price_history table (price appreciation tracking)
+- [x] swal_nft_traits table (trait definitions per collection)
+- [x] swal_royalties table (secondary sale royalty tracking)
+
+### Integration Points
+- [x] Connect to existing L.A.W.S. Quest game engine (index.ts exports)
+- [x] Link to LuvLedger token system (token-economy.ts)
+- [x] Academy member benefits (25% discount, earned tokens)
+- [x] Employee benefits (50% discount, earned tokens)
+- [ ] House wallet integration for NFT storage
+
+### UI Components
+- [x] SWALJourney.tsx - Visual journey progression component
+- [x] Phase cards with status indicators (locked/current/completed)
+- [x] Purchase dialog with membership discounts
+- [x] Portfolio value tracking
+
