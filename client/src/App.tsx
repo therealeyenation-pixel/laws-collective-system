@@ -228,6 +228,7 @@ import MyCredential from "@/pages/MyCredential";
 import VirtualLibrary from "@/pages/VirtualLibrary";
 import ReadingDashboard from "@/pages/ReadingDashboard";
 import BookReader from "@/pages/BookReader";
+import ProgressDashboard from "@/pages/ProgressDashboard";
 import ProtectionLayer from "@/pages/ProtectionLayer";
 import ExternalOnboarding from "@/pages/ExternalOnboarding";
 import {
@@ -497,6 +498,7 @@ function Router() {
       <Route path="/games/community-builder">{() => <ProtectedRoute component={CommunityBuilder} minRole="user" />}</Route>
       <Route path="/games/laws-quest-unified">{() => <ProtectedRoute component={LAWSQuestUnified} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
+      <Route path="/progress">{() => <ProtectedRoute component={ProgressDashboard} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>
       <Route path="/purchase-requests">{() => <ProtectedRoute component={PurchaseRequests} minRole="staff" />}</Route>
