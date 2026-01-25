@@ -30,7 +30,8 @@ import {
   Home,
   Heart,
   Scale,
-  PiggyBank
+  PiggyBank,
+  BookOpen
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -181,8 +182,6 @@ const getActionSteps = (currentPath: "ward" | "trust", currentAge: number) => {
     ];
   }
 };
-
-const BookOpen = GraduationCap; // Alias for consistency
 
 export default function PathConvergence({
   currentPath,
