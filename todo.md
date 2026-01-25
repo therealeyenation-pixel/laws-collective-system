@@ -7794,3 +7794,41 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Streak milestone detection (7, 14, 30, 60, 100, 365 days)
 - [x] Streak at-risk reminder system
 - [x] Reading leaderboard
+
+## Phase 37: External Company Onboarding Portal
+### Database Schema
+- [ ] External companies table with profile info
+- [ ] Service subscriptions table
+- [ ] Service catalog table with pricing tiers
+- [ ] Integration configurations table
+- [ ] Onboarding progress tracking table
+
+### Service Catalog
+- [ ] Define all available services (Entity Formation, Payroll, Tax Prep, etc.)
+- [ ] Tiered pricing structure (Standalone, Connected, Full Suite)
+- [ ] Service dependencies and recommended connections
+- [ ] Feature comparison matrix
+
+### Onboarding Wizard UI
+- [ ] Company profile setup form
+- [ ] Service selection interface with tier options
+- [ ] Integration configuration wizard
+- [ ] Pricing calculator based on selections
+- [ ] Terms of service and agreement
+
+### Activation Workflow
+- [ ] Service activation queue
+- [ ] Integration setup automation
+- [ ] Welcome email and onboarding checklist
+- [ ] Dashboard access provisioning
+- [ ] Admin notification for new company signups
+
+### Phase 37 Completion
+- [x] External company database schema (externalCompanies, serviceSubscriptions, serviceIntegrations, onboardingProgress, companyUsers)
+- [x] Service catalog with 10 L.A.W.S. services
+- [x] Tiered pricing (Standalone, Connected, Full Suite)
+- [x] Onboarding wizard UI with 6-step flow
+- [x] Integration configuration matrix
+- [x] Company dashboard API
+- [x] User invitation system
+- [x] Vitest tests for external onboarding

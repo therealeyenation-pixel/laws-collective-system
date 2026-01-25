@@ -16843,3 +16843,257 @@ export const streakNotifications = mysqlTable("streak_notifications", {
 });
 export type StreakNotification = typeof streakNotifications.$inferSelect;
 export type InsertStreakNotification = typeof streakNotifications.$inferInsert;
+
+
+
+
+/**
+ * ===========================================
+ * EXTERNAL COMPANY ONBOARDING PORTAL
+ * ===========================================
+ */
+
+/**
+ * External Companies - Companies using L.A.W.S. management services
+ */
+export const externalCompanies = mysqlTable("external_companies", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Company identification
+  companyName: varchar("companyName", { length: 255 }).notNull(),
+  legalName: varchar("legalName", { length: 255 }),
+  ein: varchar("ein", { length: 20 }),
+  stateOfFormation: varchar("stateOfFormation", { length: 50 }),
+  entityType: mysqlEnum("entityType", [
+    "llc", "corporation", "s_corp", "partnership", "sole_proprietor", "nonprofit", "trust", "other"
+  ]).notNull(),
+  
+  // Contact information
+  primaryContactName: varchar("primaryContactName", { length: 255 }).notNull(),
+  primaryContactEmail: varchar("primaryContactEmail", { length: 255 }).notNull(),
+  primaryContactPhone: varchar("primaryContactPhone", { length: 50 }),
+  
+  // Address
+  streetAddress: varchar("streetAddress", { length: 255 }),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 50 }),
+  zipCode: varchar("zipCode", { length: 20 }),
+  country: varchar("country", { length: 100 }).default("United States"),
+  
+  // Business details
+  industry: varchar("industry", { length: 100 }),
+  employeeCount: mysqlEnum("employeeCount", [
+    "1", "2_10", "11_50", "51_200", "201_500", "500_plus"
+  ]),
+  annualRevenue: mysqlEnum("annualRevenue", [
+    "under_100k", "100k_500k", "500k_1m", "1m_5m", "5m_10m", "10m_plus"
+  ]),
+  yearFounded: int("yearFounded"),
+  website: varchar("website", { length: 255 }),
+  
+  // Subscription tier
+  subscriptionTier: mysqlEnum("subscriptionTier", [
+    "standalone", "connected", "full_suite"
+  ]).default("standalone").notNull(),
+  
+  // Status
+  status: mysqlEnum("externalCompanyStatus", [
+    "pending_verification", "onboarding", "active", "suspended", "cancelled"
+  ]).default("pending_verification").notNull(),
+  
+  // Onboarding
+  onboardingCompletedAt: timestamp("onboardingCompletedAt"),
+  onboardingStep: int("onboardingStep").default(1),
+  
+  // Referral
+  referredBy: int("referredBy"),
+  referralCode: varchar("referralCode", { length: 50 }),
+  
+  // Notes
+  internalNotes: text("internalNotes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ExternalCompany = typeof externalCompanies.$inferSelect;
+export type InsertExternalCompany = typeof externalCompanies.$inferInsert;
+
+/**
+ * Service Subscriptions - Company subscriptions to services
+ */
+export const serviceSubscriptions = mysqlTable("service_subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  companyId: int("companyId").notNull(),
+  serviceId: int("serviceId").notNull(),
+  
+  // Subscription details
+  status: mysqlEnum("subscriptionStatus", [
+    "pending_setup", "trial", "active", "paused", "cancelled", "expired"
+  ]).default("pending_setup").notNull(),
+  
+  // Pricing at time of subscription
+  monthlyPrice: decimal("monthlyPrice", { precision: 10, scale: 2 }),
+  annualPrice: decimal("annualPrice", { precision: 10, scale: 2 }),
+  billingCycle: mysqlEnum("billingCycle", ["monthly", "annual"]).default("monthly"),
+  
+  // Trial
+  trialStartDate: date("trialStartDate"),
+  trialEndDate: date("trialEndDate"),
+  
+  // Active period
+  startDate: date("startDate"),
+  endDate: date("endDate"),
+  nextBillingDate: date("nextBillingDate"),
+  
+  // Usage tracking
+  usageCount: int("usageCount").default(0),
+  usageLimit: int("usageLimit"),
+  lastUsedAt: timestamp("lastUsedAt"),
+  
+  // Configuration
+  configuration: json("configuration"),
+  
+  // Cancellation
+  cancelledAt: timestamp("cancelledAt"),
+  cancellationReason: text("cancellationReason"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ServiceSubscription = typeof serviceSubscriptions.$inferSelect;
+export type InsertServiceSubscription = typeof serviceSubscriptions.$inferInsert;
+
+/**
+ * Service Integrations - Connections between services for a company
+ */
+export const serviceIntegrations = mysqlTable("service_integrations", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  companyId: int("companyId").notNull(),
+  sourceServiceId: int("sourceServiceId").notNull(),
+  targetServiceId: int("targetServiceId").notNull(),
+  
+  // Integration details
+  integrationType: mysqlEnum("integrationType", [
+    "data_sync", "workflow", "reporting", "notification", "payment"
+  ]).notNull(),
+  
+  // Status
+  status: mysqlEnum("integrationStatus", [
+    "pending_setup", "configuring", "active", "paused", "error", "disabled"
+  ]).default("pending_setup").notNull(),
+  
+  // Configuration
+  syncDirection: mysqlEnum("syncDirection", ["one_way", "bidirectional"]).default("one_way"),
+  syncFrequency: mysqlEnum("syncFrequency", [
+    "realtime", "hourly", "daily", "weekly", "manual"
+  ]).default("daily"),
+  
+  // Data mapping
+  fieldMappings: json("fieldMappings"),
+  transformRules: json("transformRules"),
+  
+  // Error handling
+  lastSyncAt: timestamp("lastSyncAt"),
+  lastSyncStatus: mysqlEnum("lastSyncStatus", ["success", "partial", "failed"]),
+  errorCount: int("errorCount").default(0),
+  lastError: text("lastError"),
+  
+  // Audit
+  enabledAt: timestamp("enabledAt"),
+  enabledBy: int("enabledBy"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ServiceIntegration = typeof serviceIntegrations.$inferSelect;
+export type InsertServiceIntegration = typeof serviceIntegrations.$inferInsert;
+
+/**
+ * Onboarding Progress - Track company onboarding steps
+ */
+export const onboardingProgress = mysqlTable("onboarding_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  companyId: int("companyId").notNull(),
+  
+  // Step tracking
+  stepNumber: int("stepNumber").notNull(),
+  stepName: varchar("stepName", { length: 100 }).notNull(),
+  stepCategory: mysqlEnum("stepCategory", [
+    "profile", "services", "integrations", "payment", "verification", "training"
+  ]).notNull(),
+  
+  // Status
+  status: mysqlEnum("onboardingStepStatus", [
+    "not_started", "in_progress", "completed", "skipped", "blocked"
+  ]).default("not_started").notNull(),
+  
+  // Progress data
+  progressData: json("progressData"),
+  completedFields: json("completedFields"),
+  requiredFields: json("requiredFields"),
+  
+  // Timing
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  estimatedMinutes: int("estimatedMinutes"),
+  actualMinutes: int("actualMinutes"),
+  
+  // Notes
+  notes: text("notes"),
+  blockedReason: text("blockedReason"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type OnboardingProgressItem = typeof onboardingProgress.$inferSelect;
+export type InsertOnboardingProgressItem = typeof onboardingProgress.$inferInsert;
+
+/**
+ * Company Users - Users associated with external companies
+ */
+export const companyUsers = mysqlTable("company_users", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Links
+  companyId: int("companyId").notNull(),
+  userId: int("userId"),
+  
+  // User info
+  email: varchar("email", { length: 255 }).notNull(),
+  firstName: varchar("firstName", { length: 100 }),
+  lastName: varchar("lastName", { length: 100 }),
+  
+  // Role
+  role: mysqlEnum("companyUserRole", [
+    "owner", "admin", "manager", "staff", "readonly", "billing"
+  ]).default("staff").notNull(),
+  
+  // Permissions
+  permissions: json("permissions"),
+  
+  // Status
+  status: mysqlEnum("companyUserStatus", [
+    "invited", "active", "suspended", "removed"
+  ]).default("invited").notNull(),
+  
+  // Invitation
+  invitedAt: timestamp("invitedAt"),
+  invitedBy: int("invitedBy"),
+  inviteToken: varchar("inviteToken", { length: 100 }),
+  inviteExpiresAt: timestamp("inviteExpiresAt"),
+  acceptedAt: timestamp("acceptedAt"),
+  
+  // Activity
+  lastActiveAt: timestamp("lastActiveAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CompanyUser = typeof companyUsers.$inferSelect;
+export type InsertCompanyUser = typeof companyUsers.$inferInsert;

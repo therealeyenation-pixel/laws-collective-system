@@ -225,6 +225,7 @@ import VirtualLibrary from "@/pages/VirtualLibrary";
 import ReadingDashboard from "@/pages/ReadingDashboard";
 import BookReader from "@/pages/BookReader";
 import ProtectionLayer from "@/pages/ProtectionLayer";
+import ExternalOnboarding from "@/pages/ExternalOnboarding";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -446,6 +447,7 @@ function Router() {
               <Route path="/reading-dashboard" component={ReadingDashboard} />
       <Route path="/library/book/:bookId" component={BookReader} />
       <Route path="/protection-layer">{() => <ProtectedRoute component={ProtectionLayer} minRole="user" />}</Route>
+      <Route path="/onboarding/business">{() => <ExternalOnboarding />}</Route>
       <Route path="/library/discuss/:bookId" component={BookReader} />
       <Route path="/gaming-dashboard">{() => <ProtectedRoute component={EmployeeGamingDashboard} minRole="user" />}</Route>
       <Route path="/sandbox">{() => <ProtectedRoute component={Sandbox} minRole="user" />}</Route>
