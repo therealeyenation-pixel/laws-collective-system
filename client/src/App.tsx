@@ -59,6 +59,7 @@ import Chess from "@/pages/games/Chess";
 import Battleship from "@/pages/games/Battleship";
 import Solitaire from "@/pages/games/Solitaire";
 import LAWSQuest from "@/pages/games/LAWSQuest";
+import LAWSQuestUnified from "@/pages/games/LAWSQuestUnified";
 import DualPathJourney from "@/pages/games/DualPathJourney";
 import SovereigntyJourney from "@/pages/games/SovereigntyJourney";
 import RainbowJourney from "@/pages/games/RainbowJourney";
@@ -494,6 +495,7 @@ function Router() {
       <Route path="/games/trivia-challenge">{() => <ProtectedRoute component={TriviaChallenge} minRole="user" />}</Route>
       <Route path="/games/simon-says">{() => <ProtectedRoute component={SimonSays} minRole="user" />}</Route>
       <Route path="/games/community-builder">{() => <ProtectedRoute component={CommunityBuilder} minRole="user" />}</Route>
+      <Route path="/games/laws-quest-unified">{() => <ProtectedRoute component={LAWSQuestUnified} minRole="user" />}</Route>
       <Route path="/achievements">{() => <ProtectedRoute component={Achievements} minRole="user" />}</Route>
       <Route path="/software-licenses">{() => <ProtectedRoute component={SoftwareLicenses} minRole="staff" />}</Route>
       <Route path="/office-suite">{() => <ProtectedRoute component={OfficeSuite} minRole="staff" />}</Route>

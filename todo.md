@@ -8021,3 +8021,48 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Connect to real L.A.W.S. job descriptions
 - [x] Add bidding system for service contracts
 - [x] Implement build limitations (zoning, funding, permits, labor, sequence)
+
+
+## Phase 52: Unified L.A.W.S. Quest Game
+
+### Chapter Structure
+- [x] Design 5-chapter progression system
+- [x] Create chapter unlock mechanics (complete previous to unlock next)
+- [x] Build chapter selection hub with progress indicators
+- [x] Implement persistent player state across chapters
+
+### Chapter 1: The Awakening
+- [x] Integrate Dual Path Journey as Chapter 1
+- [x] Add chapter intro narrative
+- [x] Create chapter completion criteria
+- [x] Award tokens/achievements on completion
+
+### Chapter 2: Foundation Building
+- [x] Trust creation tutorial gameplay
+- [x] Entity formation decisions (LLC, 508, Collective)
+- [x] Document generation simulation
+- [x] Family trust structure planning
+
+### Chapter 3: The Protection Layer
+- [ ] Asset protection scenarios
+- [ ] LLC operating agreement decisions
+- [ ] Insurance and liability education
+- [ ] Protection stress tests (lawsuit, divorce, medical)
+
+### Chapter 4: Income Streams
+- [ ] Business development gameplay
+- [ ] W-2 to contractor to owner progression
+- [ ] Passive income building
+- [ ] Investment strategy decisions
+
+### Chapter 5: Generational Transfer
+- [ ] Estate planning gameplay
+- [ ] Trust succession mechanics
+- [ ] Teaching next generation
+- [ ] 100-year legacy planning
+
+### Game-to-Real Bridge
+- [ ] Track player decisions throughout game
+- [ ] Generate summary of recommended real-world actions
+- [ ] Pre-fill Business Formation tools with game choices
+- [ ] Offer direct pathway to actual document generation
