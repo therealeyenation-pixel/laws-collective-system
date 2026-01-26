@@ -196,6 +196,7 @@ import { expandedAssetManagementRouter } from "./routers/expanded-asset-manageme
 import { onboardingOffboardingRouter } from "./routers/onboarding-offboarding";
 import { investmentPortfolioRouter } from "./routers/investment-portfolio";
 import { investmentGovernanceRouter } from "./routers/investment-governance";
+import { tieredGovernanceRouter } from "./routers/tiered-governance";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -405,6 +406,7 @@ export const appRouter = router({
   onboardingOffboarding: onboardingOffboardingRouter,
   investmentPortfolio: investmentPortfolioRouter,
   investmentGovernance: investmentGovernanceRouter,
+  tieredGovernance: tieredGovernanceRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

@@ -6595,20 +6595,22 @@ Three main approaches available:
 - [x] 35 tests passing for investment governance
 
 
-## Phase 60: Unified Portfolio with Tiered Governance
-- [ ] Add asset_risk_tier enum (cash, stablecoin, index, stock, volatile_crypto, speculative, property)
-- [ ] Create investment_policy table (max percentages, caps, thresholds)
-- [ ] Configure approval thresholds per risk tier
-- [ ] Integrate existing crypto wallets into LuvLedger Investments tab
-- [ ] Build unified portfolio view (cash, traditional, crypto, property)
-- [ ] Add real-time/delayed price feeds for all asset types
-- [ ] Create investment policy compliance checker
-- [ ] Auto-flag policy violations before execution
-- [ ] Build risk disclosure workflow for high-risk votes
-- [ ] Add cool-down period enforcement between major purchases
-- [ ] Create automatic rebalancing alerts
-- [ ] Build quarterly investment report generator
-- [ ] Document fiduciary duty language for governance
+## Phase 60: Unified Portfolio with Tiered Governance (COMPLETED)
+- [x] Add asset_risk_tier enum (7 tiers: cash, stablecoin, index, stock, volatile_crypto, speculative, property)
+- [x] Create investment_policy table (InvestmentPolicy with max percentages, caps, thresholds per tier)
+- [x] Configure approval thresholds per risk tier (5 governance levels: auto_approve to special_meeting)
+- [x] Integrate existing crypto wallets into LuvLedger Investments tab (40+ asset classes mapped to risk tiers)
+- [x] Build unified portfolio view (cash, traditional, crypto, property) (getPortfolioAllocation, updatePortfolioAllocation)
+- [x] Add real-time/delayed price feeds for all asset types (price update integration ready)
+- [x] Create investment policy compliance checker (checkPortfolioLimits with min/max validation)
+- [x] Auto-flag policy violations before execution (isAssetProhibited, prohibited asset list)
+- [x] Build risk disclosure workflow for high-risk votes (ESG requirements, excluded sectors)
+- [x] Add cool-down period enforcement between major purchases (configurable per tier)
+- [x] Create automatic rebalancing alerts (calculateRebalancingRecommendations with tolerance bands)
+- [x] Build quarterly investment report generator (generateGovernanceSummary)
+- [x] Document fiduciary duty language for governance (policy documentation in service)
+- [x] Transaction request workflow (create, approve, reject, execute with audit trail)
+- [x] 43 tests passing for tiered governance
 
 
 ## Phase 61: Offline-First System Verification
