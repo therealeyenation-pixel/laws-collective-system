@@ -240,6 +240,7 @@ import BookReader from "@/pages/BookReader";
 import ProgressDashboard from "@/pages/ProgressDashboard";
 import ProtectionLayer from "@/pages/ProtectionLayer";
 import ExternalOnboarding from "@/pages/ExternalOnboarding";
+import AssetManagementDashboard from "@/pages/AssetManagementDashboard";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -360,6 +361,7 @@ function Router() {
       <Route path="/member-business/register" component={MemberBusinessRegistration} />
       <Route path="/register-business" component={MemberRegistration} />
       <Route path="/treasury/acquisition-fund">{() => <ProtectedRoute component={AcquisitionFundDashboard} minRole="admin" />}</Route>
+      <Route path="/asset-management">{() => <ProtectedRoute component={AssetManagementDashboard} minRole="admin" />}</Route>
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
