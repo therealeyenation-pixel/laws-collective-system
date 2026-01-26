@@ -41,6 +41,7 @@ import FormationChecklist from "@/components/FormationChecklist";
 import SplitCalculator from "@/components/SplitCalculator";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { LuvLedgerWidget } from "@/components/LuvLedgerWidget";
 
 type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
@@ -462,6 +463,11 @@ export default function Dashboard() {
           <div className="lg:col-span-1">
             <WeatherWidget compact />
           </div>
+        </div>
+
+        {/* LuvLedger Widget */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <LuvLedgerWidget />
         </div>
 
         {/* Progress Overview */}

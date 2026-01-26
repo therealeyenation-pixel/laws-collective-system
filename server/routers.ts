@@ -181,6 +181,9 @@ import { tokenRegistryRouter } from "./routers/token-registry";
 import { foundationLayerBuildRouter } from "./routers/foundation-layer-build";
 import { coreAdminLayerRouter } from "./routers/core-admin-layer";
 import { programsGovernanceLayerRouter } from "./routers/programs-governance-layer";
+import { legalDocumentTemplatesRouter } from "./routers/legal-document-templates";
+import { contractFundingTemplatesRouter } from "./routers/contract-funding-templates";
+import { pdfLifecycleRouter } from "./routers/pdf-lifecycle";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -374,6 +377,10 @@ export const appRouter = router({
   tokenRegistry: tokenRegistryRouter,
   foundationLayerBuild: foundationLayerBuildRouter,
   coreAdminLayer: coreAdminLayerRouter,
+  programsGovernanceLayer: programsGovernanceLayerRouter,
+  legalDocumentTemplates: legalDocumentTemplatesRouter,
+  contractFundingTemplates: contractFundingTemplatesRouter,
+  pdfLifecycle: pdfLifecycleRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
