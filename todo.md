@@ -528,31 +528,32 @@
     - [x] Output: Complete Business Plan PDF
   - [x] 30 tests passing for Business Setup Course
 
-- [ ] Financial Management Course - learning + spreadsheets:
-  - [ ] Module 1: Startup Costs (lesson + quiz)
-    - [ ] Lesson: Calculating initial investment needs
-    - [ ] Quiz checkpoint
-    - [ ] Output: Startup costs worksheet
-  - [ ] Module 2: Revenue Planning (lesson + quiz)
-    - [ ] Lesson: Projecting income and pricing
-    - [ ] Quiz checkpoint
-    - [ ] Output: Revenue projection spreadsheet
-  - [ ] Module 3: Expense Management (lesson + quiz)
-    - [ ] Lesson: Operating costs and overhead
-    - [ ] Quiz checkpoint
-    - [ ] Output: Expense budget
-  - [ ] Module 4: Cash Flow (lesson + quiz)
-    - [ ] Lesson: Managing money in and out
-    - [ ] Quiz checkpoint
-    - [ ] Output: Cash flow projection
-  - [ ] Module 5: Break-Even & Profitability (lesson + quiz)
-    - [ ] Lesson: Understanding when you make money
-    - [ ] Quiz checkpoint
-    - [ ] Output: Break-even analysis
-  - [ ] Module 6: Financial Plan Assembly (lesson + final)
-    - [ ] Lesson: Complete financial picture
-    - [ ] Final assessment
-    - [ ] Output: Complete Financial Plan PDF
+- [x] Financial Management Course - learning + spreadsheets (COMPLETED):
+  - [x] Module 1: Startup Costs (3 lessons + 5-question quiz)
+    - [x] Lesson: Calculating initial investment needs
+    - [x] Quiz checkpoint (70% pass threshold)
+    - [x] Output: Startup costs worksheet with calculations
+  - [x] Module 2: Revenue Planning (3 lessons + 4-question quiz)
+    - [x] Lesson: Projecting income and pricing strategies
+    - [x] Quiz checkpoint
+    - [x] Output: Revenue projection spreadsheet
+  - [x] Module 3: Expense Management (3 lessons + 5-question quiz)
+    - [x] Lesson: Operating costs, fixed vs variable
+    - [x] Quiz checkpoint
+    - [x] Output: Operating expense budget
+  - [x] Module 4: Cash Flow (3 lessons + 4-question quiz)
+    - [x] Lesson: Managing cash inflows and outflows
+    - [x] Quiz checkpoint
+    - [x] Output: Cash flow projection
+  - [x] Module 5: Break-Even & Profitability (3 lessons + 5-question quiz)
+    - [x] Lesson: Break-even analysis and profit margins
+    - [x] Quiz checkpoint
+    - [x] Output: Break-even analysis worksheet
+  - [x] Module 6: Financial Plan Assembly (3 lessons + 4-question quiz)
+    - [x] Lesson: Complete financial picture
+    - [x] Final assessment
+    - [x] Output: Complete Financial Plan Summary
+  - [x] 30 tests passing for Financial Management Course
 
 - [x] Entity Operations Course - learning + procedures:
   - [ ] Module 1: Organizational Structure (lesson + quiz)
@@ -636,26 +637,27 @@
 - [x] Integrate token earning with blockchain records
 
 
-## Phase 46: Reorder Simulators & Add Certificates
-- [ ] Reorder simulators: Business → Business Plan → Grant → Financial → Trust → Contracts
-- [ ] Update Financial Simulator to teach both personal and business financial literacy
-- [ ] Create certificate of completion system
-- [ ] Record certificates to blockchain (LuvLedger)
-- [ ] Add certificate download functionality
-- [ ] Display earned certificates in user profile
+## Phase 46: Reorder Simulators & Add Certificates (COMPLETED)
+- [x] Reorder simulators: Business → Business Plan → Grant → Financial → Trust → Contracts → Blockchain → Operations → Insurance
+- [x] Update Financial Simulator to teach both personal and business financial literacy (Financial Management Course)
+- [x] Create certificate of completion system (simulator-certificates.ts service + router)
+- [x] Record certificates to blockchain (LuvLedger) with hash and block number
+- [x] Add certificate download functionality (HTML template generation)
+- [x] Display earned certificates in user profile (getProfileCertificates endpoint)
+- [x] 34 tests passing for Simulator Certificates
 
 
-## Phase 47: Blockchain Simulator & Certificate System
-- [ ] Reorder courses: Business → Business Plan → Grant → Financial → Trust → Contracts
-- [ ] Expand Financial course to cover personal AND business financial literacy
-- [ ] Build LuvChain blockchain simulator infrastructure
-- [ ] Create wallet system for each business entity
-- [ ] Implement smart contracts for certificates, transfers, trust distributions
-- [ ] Create certificate generation on course completion
-- [ ] Record certificates to LuvChain with cryptographic hashes
-- [ ] Add Blockchain Simulator course to teach crypto concepts
-- [ ] Create wallet management UI
-- [ ] Display certificates in user profile
+## Phase 47: Blockchain Simulator & Certificate System (COMPLETED - merged with Phase 46)
+- [x] Reorder courses: Business → Business Plan → Grant → Financial → Trust → Contracts (completed in Phase 46)
+- [x] Expand Financial course to cover personal AND business financial literacy (Financial Management Course)
+- [x] Build LuvChain blockchain simulator infrastructure (blockchain_records table)
+- [x] Create wallet system for each business entity (cryptoWallets table)
+- [x] Implement smart contracts for certificates, transfers, trust distributions (smart_contracts table)
+- [x] Create certificate generation on course completion (simulator-certificates router)
+- [x] Record certificates to LuvChain with cryptographic hashes (generateBlockchainRecordData)
+- [x] Add Blockchain Simulator course to teach crypto concepts (BlockchainCourse)
+- [x] Create wallet management UI (existing)
+- [x] Display certificates in user profile (getProfileCertificates endpoint)
 
 
 ## Phase 47: Blockchain Simulator & Course Reordering

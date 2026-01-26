@@ -175,6 +175,8 @@ import { masteryScrollsRouter } from "./routers/mastery-scrolls";
 import { guardianDashboardRouter } from "./routers/guardian-dashboard";
 import { eternalFlameVaultRouter } from "./routers/eternal-flame-vault";
 import { businessSetupCourseRouter } from "./routers/business-setup-course";
+import { financialManagementCourseRouter } from "./routers/financial-management-course";
+import { simulatorCertificatesRouter } from "./routers/simulator-certificates";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -362,6 +364,8 @@ export const appRouter = router({
   guardianDashboard: guardianDashboardRouter,
   eternalFlameVault: eternalFlameVaultRouter,
   businessSetupCourse: businessSetupCourseRouter,
+  financialManagementCourse: financialManagementCourseRouter,
+  simulatorCertificates: simulatorCertificatesRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
