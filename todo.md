@@ -1413,19 +1413,25 @@
 - [x] Generate K-1 schedules (for members)
 - [x] Track payment history
 
-### 58.5: Position Management UI
-- [ ] Position dashboard showing all positions across entities
-- [ ] Add Position form (entity, title, type, compensation)
-- [ ] Assign Position flow (select person, generate docs)
-- [ ] Onboarding checklist (documents to sign)
-- [ ] Payroll entry interface
-- [ ] Tax document center
+### 58.5: Position Management UI (COMPLETE)
+- [x] Position dashboard showing all positions across entities
+- [x] Add Position form (entity, title, type, compensation)
+- [x] Assign Position flow (select person, generate docs)
+- [x] Onboarding checklist (documents to sign)
+- [x] Payroll entry interface
+- [x] Tax document center
 
-### 58.6: Compliance Tracking
-- [ ] Compliance calendar with filing deadlines
-- [ ] Automated reminders for upcoming deadlines
-- [ ] Track document expiration (I-9 reverification, etc.)
-- [ ] Annual report filing reminders
+### 58.6: Compliance Tracking (COMPLETE)
+- [x] Compliance calendar with filing deadlines
+- [x] Automated reminders for upcoming deadlines
+- [x] Track document expiration (I-9 reverification, etc.)
+- [x] Annual report filing reminders
+- [x] Federal filing deadlines (941, 940, W-2, 1099)
+- [x] State annual report deadlines (all 50 states + DC)
+- [x] Recurring task generation
+- [x] Task completion workflow
+- [x] Dashboard with overdue/due soon/upcoming summary
+- [x] 47 unit tests
 
 
 ## Phase 59: Business Formation Verification & Banking/Credit
