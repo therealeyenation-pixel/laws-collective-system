@@ -90,6 +90,8 @@ import Careers from "@/pages/Careers";
 import EmployeeDirectory from "@/pages/EmployeeDirectory";
 import HouseContractManagement from "@/pages/HouseContractManagement";
 import MyProfile from "@/pages/MyProfile";
+import UserPreferences from "@/pages/UserPreferences";
+import SignatureAuditReport from "@/pages/SignatureAuditReport";
 import Onboarding from "@/pages/Onboarding";
 import OnboardingChecklist from "@/pages/OnboardingChecklist";
 import OperatingProcedures from "@/pages/OperatingProcedures";
@@ -365,6 +367,7 @@ function Router() {
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
+      <Route path="/settings/preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} minRole="user" />}</Route>
       <Route path="/house-contracts">{() => <ProtectedRoute component={HouseContractManagement} minRole="user" />}</Route>
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
@@ -553,6 +556,7 @@ function Router() {
       <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} minRole="staff" />}</Route>
       
       {/* Admin routes - entity & business operations */}
+      <Route path="/admin/signature-audit">{() => <ProtectedRoute component={SignatureAuditReport} minRole="admin" />}</Route>
       <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} minRole="admin" />}</Route>
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} minRole="admin" />}</Route>
       <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} minRole="admin" />}</Route>

@@ -8221,3 +8221,23 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Update WeatherWidget to use user's preferred location and temperature unit (F/C conversion)
 - [x] Add unit tests for article-acknowledgment.test.ts (12 tests)
 - [x] Add unit tests for user-preferences.test.ts (10 tests)
+
+
+## Phase 59: User Preferences Settings & Signature Audit Report (COMPLETED)
+- [x] Create user preferences settings page (/settings/preferences)
+  - [x] Weather location input with city search (30+ US cities)
+  - [x] Temperature unit toggle (Fahrenheit/Celsius)
+  - [x] Timezone selector (8 US timezones)
+  - [x] Theme preference (light/dark/system)
+  - [x] Notification preferences toggles
+  - [x] Email notification settings
+  - [x] Dashboard layout preference (default/compact/expanded)
+- [x] Create signature audit report page (/admin/signature-audit)
+  - [x] List all signed documents with timestamps
+  - [x] Display signature hashes and verification status
+  - [x] Filter by date range, user, department, type, status
+  - [x] Export audit report to CSV
+  - [x] Show pending signatures requiring attention
+  - [x] Detailed signature verification dialog
+- [x] Add navigation links to settings and audit pages
+- [x] Routes registered in App.tsx
