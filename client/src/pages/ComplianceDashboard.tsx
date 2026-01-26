@@ -9,7 +9,8 @@ import { trpc } from "@/lib/trpc";
 import { 
   FileSignature, CheckCircle, Clock, AlertTriangle, TrendingUp, TrendingDown,
   Minus, RefreshCw, Bell, Loader2, BarChart3, PieChart, Calendar, Users,
-  Building2, FileText, ArrowUpRight, ArrowDownRight, Target, Plus, Settings2
+  Building2, FileText, ArrowUpRight, ArrowDownRight, Target, Plus, Settings2,
+  AlertCircle, XCircle, Info, CheckCheck, Play
 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ import { format } from "date-fns";
 
 export default function ComplianceDashboard() {
   const [dateRange, setDateRange] = useState<"7d" | "30d" | "90d" | "1y" | "all">("30d");
+  const [showAlertsPanel, setShowAlertsPanel] = useState(false);
 
   // Queries
   const { data: overviewStats, isLoading: loadingOverview, refetch: refetchOverview } = 
@@ -47,6 +49,30 @@ export default function ComplianceDashboard() {
   
   const { data: targetsSummary } = 
     trpc.complianceTargets.getSummary.useQuery();
+
+  // Alerts queries
+  const { data: activeAlerts, isLoading: loadingAlerts, refetch: refetchAlerts } = 
+    trpc.complianceAlerts.getActive.useQuery();
+  
+  const { data: alertStats } = 
+    trpc.complianceAlerts.getStats.useQuery();
+
+  // Alerts mutations
+  const acknowledgeMutation = trpc.complianceAlerts.acknowledge.useMutation({
+    onSuccess: () => {
+      toast.success("Alert acknowledged");
+      refetchAlerts();
+    },
+    onError: () => toast.error("Failed to acknowledge alert")
+  });
+
+  const runCheckMutation = trpc.complianceAlerts.runCheck.useMutation({
+    onSuccess: (result) => {
+      toast.success(`Compliance check complete: ${result.generated} new alerts generated`);
+      refetchAlerts();
+    },
+    onError: () => toast.error("Failed to run compliance check")
+  });
 
   // Target management state
   const [showTargetDialog, setShowTargetDialog] = useState(false);
@@ -156,6 +182,139 @@ export default function ComplianceDashboard() {
             </Button>
           </div>
         </div>
+
+        {/* Alerts Banner */}
+        {activeAlerts && activeAlerts.length > 0 && (
+          <Card className={`border-2 ${
+            activeAlerts.some((a: any) => a.severity === 'critical') ? 'border-red-500 bg-red-50 dark:bg-red-950/20' :
+            activeAlerts.some((a: any) => a.severity === 'warning') ? 'border-orange-500 bg-orange-50 dark:bg-orange-950/20' :
+            'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
+          }`}>
+            <CardContent className="py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-lg ${
+                    activeAlerts.some((a: any) => a.severity === 'critical') ? 'bg-red-500/20' :
+                    activeAlerts.some((a: any) => a.severity === 'warning') ? 'bg-orange-500/20' :
+                    'bg-blue-500/20'
+                  }`}>
+                    {activeAlerts.some((a: any) => a.severity === 'critical') ? (
+                      <XCircle className="w-6 h-6 text-red-600" />
+                    ) : activeAlerts.some((a: any) => a.severity === 'warning') ? (
+                      <AlertCircle className="w-6 h-6 text-orange-600" />
+                    ) : (
+                      <Info className="w-6 h-6 text-blue-600" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      {alertStats?.critical || 0} Critical, {alertStats?.warning || 0} Warning, {alertStats?.info || 0} Info Alerts
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {activeAlerts[0]?.title}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => runCheckMutation.mutate({})}
+                    disabled={runCheckMutation.isPending}
+                  >
+                    {runCheckMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Run Check
+                  </Button>
+                  <Button 
+                    variant="default" 
+                    size="sm"
+                    onClick={() => setShowAlertsPanel(!showAlertsPanel)}
+                  >
+                    <Bell className="w-4 h-4 mr-2" />
+                    View All ({activeAlerts.length})
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Alerts Panel */}
+        {showAlertsPanel && activeAlerts && (
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="w-5 h-5" />
+                    Active Compliance Alerts
+                  </CardTitle>
+                  <CardDescription>Alerts requiring attention</CardDescription>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => setShowAlertsPanel(false)}>
+                  <XCircle className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {activeAlerts.map((alert: any) => (
+                  <div 
+                    key={alert.id} 
+                    className={`p-4 rounded-lg border ${
+                      alert.severity === 'critical' ? 'border-red-300 bg-red-50 dark:bg-red-950/20' :
+                      alert.severity === 'warning' ? 'border-orange-300 bg-orange-50 dark:bg-orange-950/20' :
+                      'border-blue-300 bg-blue-50 dark:bg-blue-950/20'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-3">
+                        {alert.severity === 'critical' ? (
+                          <XCircle className="w-5 h-5 text-red-600 mt-0.5" />
+                        ) : alert.severity === 'warning' ? (
+                          <AlertCircle className="w-5 h-5 text-orange-600 mt-0.5" />
+                        ) : (
+                          <Info className="w-5 h-5 text-blue-600 mt-0.5" />
+                        )}
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-foreground">{alert.title}</span>
+                            <Badge variant={alert.severity === 'critical' ? 'destructive' : alert.severity === 'warning' ? 'default' : 'secondary'} className={alert.severity === 'warning' ? 'bg-orange-500' : ''}>
+                              {alert.severity}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-1">{alert.message}</p>
+                          <p className="text-xs text-muted-foreground mt-2">
+                            {alert.department} • {alert.createdAt ? format(new Date(alert.createdAt), 'MMM d, yyyy h:mm a') : 'Just now'}
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => acknowledgeMutation.mutate({ alertId: alert.id })}
+                        disabled={acknowledgeMutation.isPending}
+                      >
+                        <CheckCheck className="w-4 h-4 mr-1" />
+                        Acknowledge
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {activeAlerts.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <CheckCircle className="w-12 h-12 mx-auto mb-2 text-green-500" />
+                    <p>No active alerts</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Weekly Summary Banner */}
         {weeklySummary && (

@@ -8336,3 +8336,28 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
   - [x] Connect DocumentPreview component with markdown rendering
   - [x] Generate preview content from document metadata
 - [x] All 1286 tests pass
+
+
+## Phase 64: Compliance Alerts & Threshold Notifications
+- [ ] Create compliance alerts database table
+  - [ ] Alert types: below_target, approaching_deadline, overdue_spike
+  - [ ] Alert severity: info, warning, critical
+  - [ ] Track alert history and acknowledgments
+- [ ] Build compliance alerts service
+  - [ ] Monitor department compliance rates against targets
+  - [ ] Detect when rates fall below threshold
+  - [ ] Track approaching due dates for pending signatures
+  - [ ] Identify sudden increases in overdue items
+- [ ] Create compliance alerts router
+  - [ ] getActiveAlerts procedure for current alerts
+  - [ ] acknowledgeAlert procedure to mark as seen
+  - [ ] getAlertHistory for audit trail
+  - [ ] configureAlertThresholds for customization
+- [ ] Add alerts UI to Compliance Dashboard
+  - [ ] Alert banner for critical issues
+  - [ ] Alert list with severity indicators
+  - [ ] Acknowledge/dismiss functionality
+  - [ ] Alert configuration panel
+- [ ] Integrate with notification system
+  - [ ] Send in-app notifications for new alerts
+  - [ ] Support email notifications for critical alerts
