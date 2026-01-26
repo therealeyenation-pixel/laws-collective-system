@@ -184,6 +184,9 @@ import { programsGovernanceLayerRouter } from "./routers/programs-governance-lay
 import { legalDocumentTemplatesRouter } from "./routers/legal-document-templates";
 import { contractFundingTemplatesRouter } from "./routers/contract-funding-templates";
 import { pdfLifecycleRouter } from "./routers/pdf-lifecycle";
+import { internationalOperationsRouter } from "./routers/international-operations";
+import { internationalDocumentTemplatesRouter } from "./routers/international-document-templates";
+import { luvledgerAutoLoggingRouter } from "./routers/luvledger-auto-logging";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -381,6 +384,9 @@ export const appRouter = router({
   legalDocumentTemplates: legalDocumentTemplatesRouter,
   contractFundingTemplates: contractFundingTemplatesRouter,
   pdfLifecycle: pdfLifecycleRouter,
+  internationalOperations: internationalOperationsRouter,
+  internationalDocumentTemplates: internationalDocumentTemplatesRouter,
+  luvledgerAutoLogging: luvledgerAutoLoggingRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
