@@ -6453,11 +6453,16 @@ Three main approaches available:
 - [x] Support donation designations (jobs, education, housing, business, emergency)
 - [x] Allow promotion codes for donations
 
-### Donor Thank-You Email Automation
-- [ ] Create donation acknowledgment email template
-- [ ] Include tax receipt information (508 tax-deductible)
-- [ ] Send automated email on successful donation
-- [ ] Track email delivery status
+### Donor Thank-You Email Automation (COMPLETED)
+- [x] Create donation acknowledgment email template (generateOneTimeThankYouEmail, generateRecurringThankYouEmail)
+- [x] Include tax receipt information (508 tax-deductible) (generateTaxReceiptData with receipt number, org info, tax year)
+- [x] Send automated email on successful donation (sendDonationThankYouEmail with owner notification)
+- [x] Track email delivery status (EmailResult with success, messageId, timestamp)
+- [x] Create recurring payment confirmation emails (generateRecurringPaymentEmail)
+- [x] Create payment failed notification emails (generatePaymentFailedEmail)
+- [x] Support tribute gift acknowledgments (in honor/in memory sections in emails)
+- [x] Create email preview API (donorEmail.previewTemplate)
+- [x] 37 tests passing for donor email service
 
 ### Member Business Registration Form
 - [ ] Create public registration page for 508 membership
@@ -8457,3 +8462,16 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Add recipient management - Allow configuring which users/roles receive specific alert types and weekly digests
 - [ ] Create compliance reporting exports - Add PDF/CSV export functionality for compliance reports and alert history
 - [ ] Implement alert snooze functionality - Allow users to temporarily snooze non-critical alerts with automatic reactivation
+
+
+## Phase 51.4: International Operations Dashboard UI (COMPLETED)
+- [x] Create InternationalOperationsDashboard page with DashboardLayout
+- [x] Add quick stats cards (entity types, jurisdictions, tax treaties, document templates)
+- [x] Add upcoming compliance deadlines alert section
+- [x] Implement search and region filter functionality
+- [x] Create Entity Types tab with cards showing name, jurisdiction, region, features
+- [x] Create Jurisdictions tab with flag, currency, tax rates, features
+- [x] Create Tax Treaties tab with treaty partners and withholding rates table
+- [x] Create Documents tab with template cards and preview/generate buttons
+- [x] Add route at /international-operations (admin protected)
+- [x] Connect to internationalOperations and internationalDocumentTemplates tRPC routers

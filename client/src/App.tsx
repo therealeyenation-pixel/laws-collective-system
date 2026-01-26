@@ -29,6 +29,7 @@ import FamilyOnboarding from "./pages/FamilyOnboarding";
 import RevenueSharing from "./pages/RevenueSharing";
 import BoardMeetings from "./pages/BoardMeetings";
 import InternationalBusiness from "./pages/InternationalBusiness";
+import InternationalOperationsDashboard from "./pages/InternationalOperationsDashboard";
 import BusinessSimulator from "./pages/BusinessSimulator";
 import GrantManagement from "./pages/GrantManagement";
 import GrantSimulator from "./pages/GrantSimulator";
@@ -572,6 +573,7 @@ function Router() {
       <Route path="/revenue-sharing">{() => <ProtectedRoute component={RevenueSharing} minRole="admin" />}</Route>
       <Route path="/board-meetings">{() => <ProtectedRoute component={BoardMeetings} minRole="admin" />}</Route>
       <Route path="/international-business">{() => <ProtectedRoute component={InternationalBusiness} minRole="admin" />}</Route>
+      <Route path="/international-operations">{() => <ProtectedRoute component={InternationalOperationsDashboard} minRole="admin" />}</Route>
       <Route path="/pricing">{() => <ProtectedRoute component={Pricing} minRole="admin" />}</Route>
       <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} minRole="admin" />}</Route>
       
