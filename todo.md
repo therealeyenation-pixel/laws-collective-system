@@ -8241,3 +8241,19 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
   - [x] Detailed signature verification dialog
 - [x] Add navigation links to settings and audit pages
 - [x] Routes registered in App.tsx
+
+
+## Phase 60: Live Signature Audit Data & Navigation Links (COMPLETED)
+- [x] Create signature audit router with database queries
+  - [x] Query article_acknowledgments table for all signatures
+  - [x] Join with users table for user details
+  - [x] Add filtering by date range, department, type, status
+  - [x] Add pagination support for large datasets
+- [x] Update SignatureAuditReport page to use live data
+  - [x] Replace mock data with trpc queries
+  - [x] Add loading states and error handling
+  - [x] Implement real-time compliance metrics
+- [x] Add navigation links to DashboardLayout
+  - [x] Add Settings link to user profile dropdown (My Profile + Settings)
+  - [x] Add Signature Audit link to admin sidebar (Platform Admin section)
+- [x] All 1286 tests pass

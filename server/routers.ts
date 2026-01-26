@@ -162,6 +162,7 @@ import { tournamentsRouter } from "./routers/tournaments";
 import { gameSavesRouter } from "./routers/game-saves";
 import { eloRatingRouter } from "./routers/elo-rating";
 import { articleAcknowledgmentRouter } from "./routers/article-acknowledgment";
+import { signatureAuditRouter } from "./routers/signature-audit";
 import { userPreferencesRouter } from "./routers/user-preferences";
 
 export const appRouter = router({
@@ -337,6 +338,7 @@ export const appRouter = router({
   gameSaves: gameSavesRouter,
   eloRating: eloRatingRouter,
   articleAcknowledgment: articleAcknowledgmentRouter,
+  signatureAudit: signatureAuditRouter,
   userPreferences: userPreferencesRouter,
 
   // TODO: add feature routers here, e.g.

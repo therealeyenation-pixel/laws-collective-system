@@ -460,6 +460,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Settings, label: "Platform Dashboard", path: "/dept/platform-admin", minRole: "admin" },
           { icon: FileText, label: "Document Admin", path: "/admin/documents", minRole: "admin" },
           { icon: Settings, label: "System Settings", path: "/system-settings", minRole: "admin" },
+          { icon: FileSignature, label: "Signature Audit", path: "/admin/signature-audit", minRole: "admin" },
           { icon: Users, label: "User Management", path: "/user-management", minRole: "admin" },
           { icon: Play, label: "Platform Simulator", path: "/platform-simulator", minRole: "admin" },
           { icon: Users, label: "Team", path: "/platform-team", minRole: "admin" },
@@ -840,6 +841,20 @@ function DashboardLayoutContent({
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => setLocation("/my-profile")}
+                    className="cursor-pointer"
+                  >
+                    <UserCircle className="mr-2 h-4 w-4" />
+                    <span>My Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setLocation("/settings/preferences")}
+                    className="cursor-pointer"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={refreshSession}
                     className="cursor-pointer"
