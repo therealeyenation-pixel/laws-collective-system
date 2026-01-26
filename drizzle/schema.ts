@@ -17353,3 +17353,179 @@ export const contractAmendments = mysqlTable("contract_amendments", {
 
 export type ContractAmendment = typeof contractAmendments.$inferSelect;
 export type InsertContractAmendment = typeof contractAmendments.$inferInsert;
+
+
+// ============================================================
+// COMPLIANCE ALERTS & NOTIFICATION SYSTEM
+// ============================================================
+
+/**
+ * Compliance Alerts - Track compliance threshold violations and notifications
+ */
+export const complianceAlerts = mysqlTable("compliance_alerts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Alert identification
+  alertType: mysqlEnum("alertType", [
+    "below_target",           // Department below compliance target
+    "approaching_deadline",   // Signatures due soon
+    "overdue_spike",         // Sudden increase in overdue items
+    "target_achieved",       // Positive - target met
+    "escalated"              // Alert escalated due to non-acknowledgment
+  ]).notNull(),
+  
+  severity: mysqlEnum("severity", ["info", "warning", "critical"]).notNull(),
+  department: varchar("department", { length: 100 }).notNull(),
+  
+  // Alert content
+  title: varchar("title", { length: 500 }).notNull(),
+  message: text("message").notNull(),
+  
+  // Threshold data
+  currentValue: decimal("currentValue", { precision: 10, scale: 2 }),
+  thresholdValue: decimal("thresholdValue", { precision: 10, scale: 2 }),
+  metadata: json("metadata"), // Additional context data
+  
+  // Acknowledgment
+  acknowledgedAt: timestamp("acknowledgedAt"),
+  acknowledgedBy: int("acknowledgedBy"),
+  
+  // Escalation tracking
+  escalatedAt: timestamp("escalatedAt"),
+  escalatedFrom: mysqlEnum("escalatedFrom", ["info", "warning"]),
+  originalAlertId: int("originalAlertId"), // Reference to original alert if escalated
+  
+  // Expiration
+  expiresAt: timestamp("expiresAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ComplianceAlert = typeof complianceAlerts.$inferSelect;
+export type InsertComplianceAlert = typeof complianceAlerts.$inferInsert;
+
+/**
+ * Notification Logs - Track all sent notifications for audit trail
+ */
+export const notificationLogs = mysqlTable("notification_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Notification type
+  notificationType: mysqlEnum("notificationType", [
+    "compliance_alert",       // Compliance threshold alerts
+    "signature_reminder",     // Signature due reminders
+    "weekly_digest",          // Weekly compliance summary
+    "escalation_notice",      // Alert escalation notification
+    "system_notification"     // General system notifications
+  ]).notNull(),
+  
+  // Delivery channel
+  channel: mysqlEnum("channel", ["email", "in_app", "push", "sms"]).notNull(),
+  
+  // Recipient info
+  recipientUserId: int("recipientUserId"),
+  recipientEmail: varchar("recipientEmail", { length: 320 }),
+  recipientDepartment: varchar("recipientDepartment", { length: 100 }),
+  
+  // Content
+  subject: varchar("subject", { length: 500 }).notNull(),
+  body: text("body").notNull(),
+  
+  // Related records
+  relatedAlertId: int("relatedAlertId"),
+  relatedRequestId: int("relatedRequestId"),
+  
+  // Delivery status
+  status: mysqlEnum("status", ["pending", "sent", "delivered", "failed", "bounced"]).default("pending").notNull(),
+  sentAt: timestamp("sentAt"),
+  deliveredAt: timestamp("deliveredAt"),
+  failedAt: timestamp("failedAt"),
+  failureReason: text("failureReason"),
+  
+  // Retry tracking
+  retryCount: int("retryCount").default(0).notNull(),
+  nextRetryAt: timestamp("nextRetryAt"),
+  
+  // Metadata
+  metadata: json("metadata"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type NotificationLog = typeof notificationLogs.$inferSelect;
+export type InsertNotificationLog = typeof notificationLogs.$inferInsert;
+
+/**
+ * Scheduled Compliance Checks - Track scheduled compliance monitoring jobs
+ */
+export const scheduledComplianceChecks = mysqlTable("scheduled_compliance_checks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Check type
+  checkType: mysqlEnum("checkType", [
+    "daily_threshold",        // Daily compliance threshold check
+    "weekly_digest",          // Weekly summary generation
+    "escalation_check",       // Check for alerts needing escalation
+    "reminder_processing"     // Process signature reminders
+  ]).notNull(),
+  
+  // Schedule
+  cronExpression: varchar("cronExpression", { length: 100 }), // e.g., "0 8 * * *" for 8 AM daily
+  intervalMinutes: int("intervalMinutes"), // Alternative to cron
+  
+  // Last execution
+  lastRunAt: timestamp("lastRunAt"),
+  lastRunStatus: mysqlEnum("lastRunStatus", ["success", "partial", "failed"]),
+  lastRunDuration: int("lastRunDuration"), // milliseconds
+  lastRunResults: json("lastRunResults"), // Summary of what was processed
+  
+  // Next execution
+  nextRunAt: timestamp("nextRunAt"),
+  
+  // Configuration
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  config: json("config"), // Check-specific configuration
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ScheduledComplianceCheck = typeof scheduledComplianceChecks.$inferSelect;
+export type InsertScheduledComplianceCheck = typeof scheduledComplianceChecks.$inferInsert;
+
+/**
+ * Alert Escalation Rules - Configure when and how alerts escalate
+ */
+export const alertEscalationRules = mysqlTable("alert_escalation_rules", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Rule identification
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Trigger conditions
+  fromSeverity: mysqlEnum("fromSeverity", ["info", "warning"]).notNull(),
+  toSeverity: mysqlEnum("toSeverity", ["warning", "critical"]).notNull(),
+  
+  // Time threshold
+  hoursUntilEscalation: int("hoursUntilEscalation").notNull(), // Hours without acknowledgment
+  
+  // Notification settings
+  notifyOnEscalation: boolean("notifyOnEscalation").default(true).notNull(),
+  notifyRoles: json("notifyRoles"), // ["admin", "department_head"]
+  notifyEmails: json("notifyEmails"), // Additional email addresses
+  
+  // Scope
+  appliesToDepartments: json("appliesToDepartments"), // null = all departments
+  appliesToAlertTypes: json("appliesToAlertTypes"), // null = all alert types
+  
+  // Status
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AlertEscalationRule = typeof alertEscalationRules.$inferSelect;
+export type InsertAlertEscalationRule = typeof alertEscalationRules.$inferInsert;

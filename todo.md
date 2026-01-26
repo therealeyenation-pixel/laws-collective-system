@@ -8361,3 +8361,51 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Integrate with notification system
   - [ ] Send in-app notifications for new alerts
   - [ ] Support email notifications for critical alerts
+
+
+## Phase 64: Compliance Alerts & Threshold Notifications (COMPLETED)
+- [x] Create compliance alerts database table
+  - [x] compliance_alerts table with type, severity, department, message, acknowledged status
+  - [x] Alert types: below_target, approaching_deadline, overdue_spike
+  - [x] Alert severity: info, warning, critical
+- [x] Build compliance alerts service
+  - [x] checkComplianceThresholds function to monitor rates against targets
+  - [x] Generate alerts when departments fall below target
+  - [x] Track alert history with timestamps
+- [x] Create compliance alerts router
+  - [x] getActive procedure for current unacknowledged alerts
+  - [x] acknowledge procedure to mark alerts as seen
+  - [x] runCheck procedure to trigger threshold monitoring
+  - [x] getStats procedure for alert counts by severity
+- [x] Add alerts UI to Compliance Dashboard
+  - [x] Alert banner showing active alert counts with severity colors
+  - [x] Expandable alerts panel with list view
+  - [x] Acknowledge button for each alert
+  - [x] Color-coded severity indicators (red/yellow/blue)
+- [x] All 1286 tests pass
+
+
+## Phase 65: Scheduled Compliance Checks & Email Notifications (COMPLETED)
+- [x] Create scheduled compliance check service
+  - [x] Daily automated threshold check job (runDailyThresholdCheck)
+  - [x] Weekly compliance summary generation (runWeeklyDigest)
+  - [x] Configurable check intervals via scheduled_compliance_checks table
+- [x] Build email notification system for alerts
+  - [x] Email templates for compliance alerts (critical, warning, escalation)
+  - [x] Send immediate notifications for critical alerts
+  - [x] Weekly digest emails with compliance statistics
+  - [x] HTML and plain text email formats
+- [x] Add alert escalation logic
+  - [x] Auto-escalate unacknowledged warnings based on configurable rules
+  - [x] Escalation rules table with from/to severity and time thresholds
+  - [x] Notify on escalation with configurable settings
+- [x] Create notification history tracking
+  - [x] notification_logs table for all sent notifications
+  - [x] Track delivery status (pending, sent, delivered, failed, bounced)
+  - [x] Retry count and next retry timestamp tracking
+- [x] Add UI for scheduled checks management
+  - [x] ScheduledChecksPanel component with tabs
+  - [x] Scheduled Jobs tab with enable/disable toggles
+  - [x] Escalation Rules tab with CRUD operations
+  - [x] Notification History tab with status badges
+- [x] Write unit tests for scheduled services (18 tests passing)

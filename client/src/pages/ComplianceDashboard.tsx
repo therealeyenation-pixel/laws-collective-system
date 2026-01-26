@@ -19,10 +19,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import ScheduledChecksPanel from "@/components/ScheduledChecksPanel";
 
 export default function ComplianceDashboard() {
   const [dateRange, setDateRange] = useState<"7d" | "30d" | "90d" | "1y" | "all">("30d");
   const [showAlertsPanel, setShowAlertsPanel] = useState(false);
+  const [showScheduledChecks, setShowScheduledChecks] = useState(false);
 
   // Queries
   const { data: overviewStats, isLoading: loadingOverview, refetch: refetchOverview } = 
@@ -176,6 +178,14 @@ export default function ComplianceDashboard() {
                 <SelectItem value="all">All time</SelectItem>
               </SelectContent>
             </Select>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowScheduledChecks(!showScheduledChecks)}
+              className={showScheduledChecks ? 'bg-accent' : ''}
+            >
+              <Settings2 className="w-4 h-4 mr-2" />
+              Scheduled Checks
+            </Button>
             <Button variant="outline" onClick={handleRefresh}>
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
@@ -314,6 +324,11 @@ export default function ComplianceDashboard() {
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Scheduled Checks Panel */}
+        {showScheduledChecks && (
+          <ScheduledChecksPanel onClose={() => setShowScheduledChecks(false)} />
         )}
 
         {/* Weekly Summary Banner */}
