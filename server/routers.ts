@@ -199,6 +199,7 @@ import { investmentGovernanceRouter } from "./routers/investment-governance";
 import { tieredGovernanceRouter } from "./routers/tiered-governance";
 import { quarterlyInvestmentReportRouter } from "./routers/quarterly-investment-report";
 import { complianceTrackingRouter } from "./routers/compliance-tracking";
+import { documentUploadRouter } from "./routers/document-upload";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -411,6 +412,7 @@ export const appRouter = router({
   tieredGovernance: tieredGovernanceRouter,
   quarterlyInvestmentReport: quarterlyInvestmentReportRouter,
   complianceTracking: complianceTrackingRouter,
+  documentUpload: documentUploadRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

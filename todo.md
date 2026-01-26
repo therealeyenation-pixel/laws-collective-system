@@ -1270,9 +1270,13 @@
 - [x] Created OwnerHouseSetup page with 4 tabs (House, Businesses, Heirs, Documents)
 - [x] Added route /owner-setup to App.tsx
 - [x] Added Owner Setup and House Dashboard to sidebar navigation
-- [ ] Create document upload interface for existing trust documents
-- [ ] Link existing businesses to House structure
-- [ ] Set up 70/30 split configuration for existing entities
+- [x] Create document upload interface for existing trust documents
+- [x] Link existing businesses to House structure
+- [x] Set up 70/30 split configuration for existing entities
+- [x] Document upload service with S3 integration (52 unit tests)
+- [x] Trust document checklist with progress tracking
+- [x] Business document checklist by entity type (LLC, Corporation)
+- [x] Document Upload UI page at /document-upload
 
 ### 56.3: Pre-Public Access Configuration
 - [ ] Implement bloodline/mirrored house access logic
