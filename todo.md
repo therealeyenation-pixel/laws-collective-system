@@ -8298,3 +8298,41 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
   - [x] Include download button and sign integration
 - [x] Add navigation link in Platform Admin sidebar (Compliance Dashboard)
 - [x] All 1286 tests pass
+
+
+## Phase 63: Compliance Targets & Document Preview Integration
+- [ ] Create compliance targets database table
+  - [ ] Store department-specific target percentages
+  - [ ] Track target history and changes
+  - [ ] Support default organization-wide target
+- [ ] Build compliance targets router
+  - [ ] CRUD operations for targets
+  - [ ] Get targets with current progress
+  - [ ] Calculate target achievement status
+- [ ] Update Compliance Dashboard with targets
+  - [ ] Display target vs actual progress
+  - [ ] Visual indicators for on-track/at-risk/behind
+  - [ ] Target management modal for admins
+- [ ] Integrate document preview into BulkSignatureRequest
+  - [ ] Add preview button for selected documents
+  - [ ] Show document content before sending requests
+  - [ ] Allow preview of multiple documents
+- [ ] Write unit tests for new functionality
+
+
+## Phase 63: Compliance Targets & Document Preview Integration (COMPLETED)
+- [x] Create compliance targets database table and router
+  - [x] compliance_targets table with department, target percentage, effective date, notes
+  - [x] Router procedures: getAll, getWithProgress, getSummary, upsert, delete
+  - [x] Calculate progress vs target for each department with gap analysis
+- [x] Update Compliance Dashboard with targets display
+  - [x] Add targets section with progress visualization (progress bars with target markers)
+  - [x] Show gap between current rate and target (positive/negative indicators)
+  - [x] Color-coded status (on-track green, at-risk yellow, behind red)
+  - [x] Dialog for setting/editing department targets with effective date and notes
+  - [x] Summary stats: overall rate, depts meeting target, target achievement rate
+- [x] Integrate document preview into BulkSignatureRequest
+  - [x] Add preview button (FileSearch icon) to request table actions
+  - [x] Connect DocumentPreview component with markdown rendering
+  - [x] Generate preview content from document metadata
+- [x] All 1286 tests pass

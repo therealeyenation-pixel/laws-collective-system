@@ -14,8 +14,9 @@ import { trpc } from "@/lib/trpc";
 import { 
   FileSignature, Plus, Send, Users, Clock, CheckCircle, XCircle, 
   AlertTriangle, Bell, RefreshCw, Eye, Loader2, Calendar, Building2,
-  UserCheck, FileText, ChevronRight
+  UserCheck, FileText, ChevronRight, FileSearch
 } from "lucide-react";
+import DocumentPreview from "@/components/DocumentPreview";
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -24,6 +25,13 @@ export default function BulkSignatureRequest() {
   const [activeTab, setActiveTab] = useState("requests");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
+  const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+  const [previewDocument, setPreviewDocument] = useState<{
+    title: string;
+    content: string;
+    type: "pdf" | "text" | "html" | "markdown";
+    url?: string;
+  } | null>(null);
   const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
   const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "active" | "completed" | "cancelled">("all");
 
@@ -129,6 +137,18 @@ export default function BulkSignatureRequest() {
     if (confirm("Are you sure you want to cancel this signature request?")) {
       cancelMutation.mutate({ requestId });
     }
+  };
+
+  const handlePreviewDocument = (title: string, articleId: string, articleType: string) => {
+    // Generate sample document content based on type
+    const sampleContent = `# ${title}\n\n## Document Overview\n\nThis document requires your electronic signature to acknowledge that you have read and understood its contents.\n\n### Key Points\n\n1. **Compliance Requirement**: This document is part of our organizational compliance program.\n2. **Acknowledgment**: By signing, you confirm you have read and understood the content.\n3. **Record Keeping**: Your signature will be recorded with timestamp and verification hash.\n\n### Document Details\n\n- **Document ID**: ${articleId}\n- **Type**: ${articleType}\n- **Status**: Pending Signature\n\n---\n\n*Please review this document carefully before signing.*`;
+
+    setPreviewDocument({
+      title,
+      content: sampleContent,
+      type: "markdown",
+    });
+    setShowPreviewDialog(true);
   };
 
   const getStatusBadge = (status: string) => {
@@ -338,10 +358,19 @@ export default function BulkSignatureRequest() {
                                 <Button
                                   variant="ghost"
                                   size="sm"
+                                  onClick={() => handlePreviewDocument(request.articleTitle, request.articleId, request.articleType)}
+                                  title="Preview Document"
+                                >
+                                  <FileSearch className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
                                   onClick={() => {
                                     setSelectedRequestId(request.id);
                                     setShowDetailsDialog(true);
                                   }}
+                                  title="View Details"
                                 >
                                   <Eye className="w-4 h-4" />
                                 </Button>
@@ -611,6 +640,21 @@ export default function BulkSignatureRequest() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Document Preview */}
+        {previewDocument && (
+          <DocumentPreview
+            isOpen={showPreviewDialog}
+            onClose={() => {
+              setShowPreviewDialog(false);
+              setPreviewDocument(null);
+            }}
+            title={previewDocument.title}
+            content={previewDocument.content}
+            type={previewDocument.type}
+            url={previewDocument.url}
+          />
+        )}
 
         {/* Request Details Dialog */}
         <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>

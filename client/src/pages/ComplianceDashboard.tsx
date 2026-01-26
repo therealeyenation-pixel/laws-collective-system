@@ -9,8 +9,12 @@ import { trpc } from "@/lib/trpc";
 import { 
   FileSignature, CheckCircle, Clock, AlertTriangle, TrendingUp, TrendingDown,
   Minus, RefreshCw, Bell, Loader2, BarChart3, PieChart, Calendar, Users,
-  Building2, FileText, ArrowUpRight, ArrowDownRight
+  Building2, FileText, ArrowUpRight, ArrowDownRight, Target, Plus, Settings2
 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -37,6 +41,22 @@ export default function ComplianceDashboard() {
   const { data: weeklySummary } = 
     trpc.complianceDashboard.getWeeklySummary.useQuery();
 
+  // Targets queries
+  const { data: targetsWithProgress, isLoading: loadingTargets, refetch: refetchTargets } = 
+    trpc.complianceTargets.getWithProgress.useQuery();
+  
+  const { data: targetsSummary } = 
+    trpc.complianceTargets.getSummary.useQuery();
+
+  // Target management state
+  const [showTargetDialog, setShowTargetDialog] = useState(false);
+  const [targetForm, setTargetForm] = useState({
+    department: "",
+    targetPercentage: 95,
+    effectiveDate: new Date().toISOString().split("T")[0],
+    notes: "",
+  });
+
   // Mutations
   const sendReminderMutation = trpc.complianceDashboard.sendReminder.useMutation({
     onSuccess: (data) => {
@@ -47,6 +67,37 @@ export default function ComplianceDashboard() {
       toast.error(error.message || "Failed to send reminder");
     },
   });
+
+  const upsertTargetMutation = trpc.complianceTargets.upsert.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setShowTargetDialog(false);
+      setTargetForm({ department: "", targetPercentage: 95, effectiveDate: new Date().toISOString().split("T")[0], notes: "" });
+      refetchTargets();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to save target");
+    },
+  });
+
+  const handleSaveTarget = () => {
+    if (!targetForm.department) {
+      toast.error("Please enter a department name");
+      return;
+    }
+    upsertTargetMutation.mutate(targetForm);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "behind":
+        return <Badge variant="destructive">Behind</Badge>;
+      case "at-risk":
+        return <Badge variant="default" className="bg-orange-500">At Risk</Badge>;
+      default:
+        return <Badge variant="secondary" className="bg-green-500 text-white">On Track</Badge>;
+    }
+  };
 
   const handleRefresh = () => {
     refetchOverview();
@@ -419,6 +470,184 @@ export default function ComplianceDashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Compliance Targets Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="w-5 h-5" />
+                  Compliance Targets
+                </CardTitle>
+                <CardDescription>Department-specific compliance goals and progress</CardDescription>
+              </div>
+              <Dialog open={showTargetDialog} onOpenChange={setShowTargetDialog}>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    Set Target
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Set Compliance Target</DialogTitle>
+                    <DialogDescription>
+                      Define a compliance target percentage for a department
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="department">Department</Label>
+                      <Input
+                        id="department"
+                        placeholder="e.g., Finance, HR, Legal"
+                        value={targetForm.department}
+                        onChange={(e) => setTargetForm({ ...targetForm, department: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="targetPercentage">Target Percentage</Label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          id="targetPercentage"
+                          type="number"
+                          min={1}
+                          max={100}
+                          value={targetForm.targetPercentage}
+                          onChange={(e) => setTargetForm({ ...targetForm, targetPercentage: parseInt(e.target.value) || 95 })}
+                        />
+                        <span className="text-muted-foreground">%</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="effectiveDate">Effective Date</Label>
+                      <Input
+                        id="effectiveDate"
+                        type="date"
+                        value={targetForm.effectiveDate}
+                        onChange={(e) => setTargetForm({ ...targetForm, effectiveDate: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="notes">Notes (Optional)</Label>
+                      <Textarea
+                        id="notes"
+                        placeholder="Additional context for this target..."
+                        value={targetForm.notes}
+                        onChange={(e) => setTargetForm({ ...targetForm, notes: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setShowTargetDialog(false)}>Cancel</Button>
+                    <Button onClick={handleSaveTarget} disabled={upsertTargetMutation.isPending}>
+                      {upsertTargetMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                      Save Target
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {/* Summary Stats */}
+            {targetsSummary && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-secondary/30 rounded-lg">
+                <div>
+                  <p className="text-sm text-muted-foreground">Overall Rate</p>
+                  <p className={`text-2xl font-bold ${getComplianceColor(targetsSummary.overallRate)}`}>
+                    {targetsSummary.overallRate}%
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Depts Meeting Target</p>
+                  <p className="text-2xl font-bold">
+                    {targetsSummary.departmentsMeetingTarget}/{targetsSummary.totalDepartments}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Target Achievement</p>
+                  <p className={`text-2xl font-bold ${getComplianceColor(targetsSummary.targetAchievementRate)}`}>
+                    {targetsSummary.targetAchievementRate}%
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Signatures</p>
+                  <p className="text-2xl font-bold">
+                    {targetsSummary.signedCount}/{targetsSummary.totalSignatures}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Targets Table */}
+            {loadingTargets ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : targetsWithProgress?.targets && targetsWithProgress.targets.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Target</TableHead>
+                    <TableHead>Current</TableHead>
+                    <TableHead>Gap</TableHead>
+                    <TableHead>Progress</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {targetsWithProgress.targets.map((target, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell className="font-medium">{target.department}</TableCell>
+                      <TableCell>{target.targetPercentage}%</TableCell>
+                      <TableCell className={getComplianceColor(target.currentRate)}>
+                        {target.currentRate}%
+                      </TableCell>
+                      <TableCell>
+                        {target.gap > 0 ? (
+                          <span className="text-red-500 flex items-center gap-1">
+                            <ArrowDownRight className="w-3 h-3" />
+                            -{target.gap}%
+                          </span>
+                        ) : (
+                          <span className="text-green-500 flex items-center gap-1">
+                            <ArrowUpRight className="w-3 h-3" />
+                            +{Math.abs(target.gap)}%
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="w-32">
+                        <div className="relative">
+                          <Progress value={target.currentRate} className="h-2" />
+                          <div 
+                            className={`absolute top-0 left-0 h-2 rounded-full ${getProgressColor(target.currentRate)}`}
+                            style={{ width: `${Math.min(target.currentRate, 100)}%` }}
+                          />
+                          {/* Target marker */}
+                          <div 
+                            className="absolute top-0 w-0.5 h-4 -mt-1 bg-foreground"
+                            style={{ left: `${target.targetPercentage}%` }}
+                            title={`Target: ${target.targetPercentage}%`}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(target.status)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <Target className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>No compliance targets set yet</p>
+                <p className="text-sm">Click "Set Target" to define department goals</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );
