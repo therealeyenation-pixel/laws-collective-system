@@ -206,6 +206,7 @@ import { needStatementsRouter } from "./routers/need-statements";
 import { grantExportRouter } from "./routers/grant-export";
 import { grantDeadlinesRouter } from "./routers/grant-deadlines";
 import { needStatementEditorRouter } from "./routers/need-statement-editor";
+import { grantApplicationHistoryRouter } from "./routers/grant-application-history";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -425,6 +426,7 @@ export const appRouter = router({
   grantExport: grantExportRouter,
   grantDeadlines: grantDeadlinesRouter,
   needStatementEditor: needStatementEditorRouter,
+  grantApplicationHistory: grantApplicationHistoryRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

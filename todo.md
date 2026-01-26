@@ -8785,3 +8785,16 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Implement approval workflow (draft → pending_review → approved/rejected)
 - [x] Add 4 statement templates (nonprofit, LLC, media, education)
 - [x] Write 60 unit tests for need statement editor
+
+
+## Phase 54: Grant Application History Dashboard (COMPLETE)
+- [x] Create grant application history service with CRUD operations
+- [x] Add application status tracking (draft, submitted, under_review, additional_info_requested, approved, rejected, withdrawn)
+- [x] Implement funder response logging with notes and feedback
+- [x] Add 22 grant application history router procedures
+- [x] Build Grant Application History UI page at /grant-history
+- [x] Add filtering by entity, status, funder, and date range with search
+- [x] Include timeline view of application lifecycle with events
+- [x] Add document attachment support for submissions
+- [x] Create analytics dashboard (success rate, average response time, total awarded)
+- [x] Write 51 unit tests for grant application history
