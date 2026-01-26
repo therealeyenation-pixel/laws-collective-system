@@ -8508,3 +8508,20 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Create Documents tab with template cards and preview/generate buttons
 - [x] Add route at /international-operations (admin protected)
 - [x] Connect to internationalOperations and internationalDocumentTemplates tRPC routers
+
+
+## Phase 61: Quarterly Investment Report Generator (COMPLETED)
+- [x] Create automated quarterly reports (generateQuarterlyReport with configurable sections)
+- [x] Include portfolio performance metrics (TWR, dividends, contributions, withdrawals, benchmark comparison)
+- [x] Include allocation changes (quarter-over-quarter and year-over-year comparisons)
+- [x] Include governance decisions (proposals, meetings, key decisions)
+- [x] Include compliance status (policy violations, ESG score, allocation limit checks)
+- [x] Generate board-ready format (exportReportToMarkdown, exportReportToJSON)
+- [x] Annual report generation (aggregates 4 quarters with annual highlights)
+- [x] Custom period reports for flexible date ranges
+- [x] Report scheduling system (quarterly/annual with email recipients)
+- [x] Executive summary with highlights, risks, and recommendations
+- [x] Top holdings and full holdings list in appendices
+- [x] Benchmark comparisons with alpha calculation
+- [x] Transaction summary with buy/sell/dividend totals
+- [x] 38 tests passing for quarterly investment report generator
