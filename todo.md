@@ -8761,3 +8761,14 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add cover letter generation
 - [x] Include budget breakdown tables with narrative and markdown formats
 - [x] Write 37 unit tests for grant export service
+
+
+## Phase 52: Grant Deadline Tracker (COMPLETE)
+- [x] Create grant deadline tracking service with federal/foundation deadlines (10+ grants)
+- [x] Add grant deadline database (NEA, USDA, Ford, Kellogg, MacArthur, Gates, Walton, Lumina)
+- [x] Implement automated reminder generation (30-day, 14-day, 7-day, 1-day)
+- [x] Add 20 grant deadline router procedures (getDeadlines, addCustomDeadline, generateReminders, markAsSubmitted, etc.)
+- [x] Integrate grant deadlines into Compliance Calendar UI with new "Grant Deadlines" tab
+- [x] Add grants closing soon display on dashboard with funding amounts
+- [x] Add calendar events for grant open/close dates and reminders
+- [x] Write 53 unit tests for grant deadline tracker

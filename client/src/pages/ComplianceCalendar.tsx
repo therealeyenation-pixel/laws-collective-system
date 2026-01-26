@@ -26,7 +26,11 @@ import {
   AlertCircle,
   CalendarDays,
   ListTodo,
-  RefreshCw
+  RefreshCw,
+  DollarSign,
+  Building2,
+  ExternalLink,
+  Send
 } from "lucide-react";
 
 const MONTHS = [
@@ -42,6 +46,9 @@ export default function ComplianceCalendar() {
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [completionNotes, setCompletionNotes] = useState("");
+  const [grantFilter, setGrantFilter] = useState<string>("all");
+  const [showReminderDialog, setShowReminderDialog] = useState(false);
+  const [selectedGrant, setSelectedGrant] = useState<any>(null);
 
   const { data: dashboard, isLoading: dashboardLoading, refetch: refetchDashboard } = trpc.complianceTracking.getDashboard.useQuery();
   const { data: calendarData, isLoading: calendarLoading, refetch: refetchCalendar } = trpc.complianceTracking.getCalendar.useQuery({
@@ -50,6 +57,17 @@ export default function ComplianceCalendar() {
   });
   const { data: taskTypesData } = trpc.complianceTracking.getTaskTypes.useQuery();
   const { data: allTasks, refetch: refetchTasks } = trpc.complianceTracking.getTasks.useQuery({ status: "all", limit: 100 });
+
+  // Grant deadlines queries
+  const { data: grantDashboard, refetch: refetchGrantDashboard } = trpc.grantDeadlines.getDashboardSummary.useQuery();
+  const { data: grantDeadlines, refetch: refetchGrantDeadlines } = trpc.grantDeadlines.getDeadlines.useQuery(
+    grantFilter === "all" ? undefined : { category: grantFilter as any }
+  );
+  const { data: grantCalendarEvents } = trpc.grantDeadlines.getCalendarEvents.useQuery({
+    month: currentMonth + 1,
+    year: currentYear
+  });
+  const { data: grantReminders } = trpc.grantDeadlines.getReminders.useQuery({ sent: false });
 
   const createTaskMutation = trpc.complianceTracking.createTask.useMutation({
     onSuccess: () => {
@@ -94,6 +112,25 @@ export default function ComplianceCalendar() {
     onError: (error) => toast.error(error.message),
   });
 
+  const generateRemindersMutation = trpc.grantDeadlines.generateReminders.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Generated ${data.length} reminders`);
+      setShowReminderDialog(false);
+      setSelectedGrant(null);
+      refetchGrantDashboard();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const markSubmittedMutation = trpc.grantDeadlines.markAsSubmitted.useMutation({
+    onSuccess: () => {
+      toast.success("Grant marked as submitted");
+      refetchGrantDeadlines();
+      refetchGrantDashboard();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
   const [newTask, setNewTask] = useState({
     taskType: "custom" as const,
     taskName: "",
@@ -121,6 +158,11 @@ export default function ComplianceCalendar() {
   const openCompleteDialog = (task: any) => {
     setSelectedTask(task);
     setShowCompleteDialog(true);
+  };
+
+  const openReminderDialog = (grant: any) => {
+    setSelectedGrant(grant);
+    setShowReminderDialog(true);
   };
 
   const navigateMonth = (direction: "prev" | "next") => {
@@ -156,20 +198,37 @@ export default function ComplianceCalendar() {
     }
   };
 
+  const getGrantStatusBadge = (status: string) => {
+    switch (status) {
+      case "open":
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Open</Badge>;
+      case "closing_soon":
+        return <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20">Closing Soon</Badge>;
+      case "upcoming":
+        return <Badge variant="outline">Upcoming</Badge>;
+      case "closed":
+        return <Badge variant="secondary">Closed</Badge>;
+      case "submitted":
+        return <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20">Submitted</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
   const getTaskTypeLabel = (type: string) => {
     const taskType = taskTypesData?.taskTypes.find(t => t.type === type);
     return taskType?.name || type;
   };
 
-  // Calendar grid generation
+  // Calendar grid generation with grant events
   const calendarGrid = useMemo(() => {
     const firstDay = new Date(currentYear, currentMonth, 1).getDay();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const days: Array<{ day: number | null; tasks: any[]; deadlines: any[] }> = [];
+    const days: Array<{ day: number | null; tasks: any[]; deadlines: any[]; grantEvents: any[] }> = [];
 
     // Add empty cells for days before the first of the month
     for (let i = 0; i < firstDay; i++) {
-      days.push({ day: null, tasks: [], deadlines: [] });
+      days.push({ day: null, tasks: [], deadlines: [], grantEvents: [] });
     }
 
     // Add days of the month
@@ -184,11 +243,16 @@ export default function ComplianceCalendar() {
         return deadlineDate.getDate() === day;
       }) || [];
 
-      days.push({ day, tasks: dayTasks, deadlines: dayDeadlines });
+      const dayGrantEvents = grantCalendarEvents?.filter(e => {
+        const eventDate = new Date(e.date);
+        return eventDate.getDate() === day;
+      }) || [];
+
+      days.push({ day, tasks: dayTasks, deadlines: dayDeadlines, grantEvents: dayGrantEvents });
     }
 
     return days;
-  }, [currentMonth, currentYear, calendarData]);
+  }, [currentMonth, currentYear, calendarData, grantCalendarEvents]);
 
   if (dashboardLoading) {
     return (
@@ -206,7 +270,7 @@ export default function ComplianceCalendar() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Compliance Calendar</h1>
-            <p className="text-muted-foreground">Track filing deadlines, document expirations, and compliance tasks</p>
+            <p className="text-muted-foreground">Track filing deadlines, grant applications, and compliance tasks</p>
           </div>
           <div className="flex gap-2">
             <Button 
@@ -249,23 +313,23 @@ export default function ComplianceCalendar() {
                   <div className="space-y-2">
                     <Label>Description</Label>
                     <Textarea 
-                      value={newTask.description} 
-                      onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} 
-                      placeholder="Task details and requirements"
+                      value={newTask.description}
+                      onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                      placeholder="Task details..."
                       rows={3}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label>Due Date</Label>
                     <Input 
-                      type="date" 
-                      value={newTask.dueDate} 
-                      onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })} 
+                      type="date"
+                      value={newTask.dueDate}
+                      onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
                     />
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <Checkbox 
-                      id="recurring" 
+                      id="recurring"
                       checked={newTask.isRecurring}
                       onCheckedChange={(checked) => setNewTask({ ...newTask, isRecurring: checked as boolean })}
                     />
@@ -274,11 +338,12 @@ export default function ComplianceCalendar() {
                   {newTask.isRecurring && (
                     <div className="space-y-2">
                       <Label>Recurrence Pattern</Label>
-                      <Select value={newTask.recurrencePattern} onValueChange={(v) => setNewTask({ ...newTask, recurrencePattern: v })}>
+                      <Select 
+                        value={newTask.recurrencePattern || ""} 
+                        onValueChange={(v) => setNewTask({ ...newTask, recurrencePattern: v })}
+                      >
                         <SelectTrigger><SelectValue placeholder="Select pattern" /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="weekly">Weekly</SelectItem>
-                          <SelectItem value="biweekly">Bi-Weekly</SelectItem>
                           <SelectItem value="monthly">Monthly</SelectItem>
                           <SelectItem value="quarterly">Quarterly</SelectItem>
                           <SelectItem value="annually">Annually</SelectItem>
@@ -289,7 +354,7 @@ export default function ComplianceCalendar() {
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
-                  <Button onClick={handleCreateTask} disabled={createTaskMutation.isPending || !newTask.taskName}>
+                  <Button onClick={handleCreateTask} disabled={createTaskMutation.isPending}>
                     {createTaskMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                     Create Task
                   </Button>
@@ -300,7 +365,7 @@ export default function ComplianceCalendar() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <Card className={dashboard?.summary.overdueCount ? "border-destructive" : ""}>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
@@ -340,6 +405,19 @@ export default function ComplianceCalendar() {
               </div>
             </CardContent>
           </Card>
+          <Card className={grantDashboard?.statistics.closingSoon ? "border-green-500" : ""}>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-lg bg-green-500/10">
+                  <DollarSign className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Grants Closing</p>
+                  <p className="text-2xl font-bold">{grantDashboard?.statistics.closingSoon || 0}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
@@ -359,6 +437,7 @@ export default function ComplianceCalendar() {
           <TabsList>
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="calendar">Calendar</TabsTrigger>
+            <TabsTrigger value="grants">Grant Deadlines</TabsTrigger>
             <TabsTrigger value="tasks">All Tasks</TabsTrigger>
             <TabsTrigger value="deadlines">Filing Deadlines</TabsTrigger>
           </TabsList>
@@ -389,6 +468,35 @@ export default function ComplianceCalendar() {
                     </div>
                   ) : (
                     <p className="text-center text-muted-foreground py-4">No overdue tasks</p>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Grants Closing Soon */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-green-600">
+                    <DollarSign className="w-5 h-5" />
+                    Grants Closing Soon
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {grantDashboard?.closingSoonDeadlines && grantDashboard.closingSoonDeadlines.length > 0 ? (
+                    <div className="space-y-3">
+                      {grantDashboard.closingSoonDeadlines.map((grant: any) => (
+                        <div key={grant.id} className="flex items-center justify-between p-3 rounded-lg border border-green-500/20 bg-green-500/5">
+                          <div>
+                            <p className="font-medium">{grant.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {grant.funder} • Up to ${grant.maxFunding.toLocaleString()}
+                            </p>
+                          </div>
+                          <Badge variant="outline">{new Date(grant.closeDate).toLocaleDateString()}</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-center text-muted-foreground py-4">No grants closing soon</p>
                   )}
                 </CardContent>
               </Card>
@@ -486,6 +594,33 @@ export default function ComplianceCalendar() {
                   )}
                 </CardContent>
               </Card>
+
+              {/* Grant Reminders */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="w-5 h-5" />
+                    Grant Reminders
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {grantReminders && grantReminders.length > 0 ? (
+                    <div className="space-y-3">
+                      {grantReminders.slice(0, 5).map((reminder: any) => (
+                        <div key={reminder.id} className="flex items-center justify-between p-3 rounded-lg border">
+                          <div>
+                            <p className="font-medium">{reminder.grantName}</p>
+                            <p className="text-sm text-muted-foreground">{reminder.reminderType.replace('_', ' ')}</p>
+                          </div>
+                          <Badge variant="outline">{new Date(reminder.reminderDate).toLocaleDateString()}</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-center text-muted-foreground py-4">No pending reminders</p>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
@@ -526,7 +661,7 @@ export default function ComplianceCalendar() {
                           <>
                             <p className="text-sm font-medium mb-1">{cell.day}</p>
                             <div className="space-y-1">
-                              {cell.tasks.slice(0, 2).map((task: any, i: number) => (
+                              {cell.tasks.slice(0, 1).map((task: any, i: number) => (
                                 <div 
                                   key={i} 
                                   className={`text-xs p-1 rounded truncate cursor-pointer ${
@@ -544,8 +679,20 @@ export default function ComplianceCalendar() {
                                   {deadline.formNumber}
                                 </div>
                               ))}
-                              {(cell.tasks.length + cell.deadlines.length) > 3 && (
-                                <p className="text-xs text-muted-foreground">+{cell.tasks.length + cell.deadlines.length - 3} more</p>
+                              {cell.grantEvents.slice(0, 1).map((event: any, i: number) => (
+                                <div 
+                                  key={`g-${i}`} 
+                                  className={`text-xs p-1 rounded truncate ${
+                                    event.type === 'close' ? 'bg-green-500/10 text-green-600' :
+                                    event.type === 'reminder' ? 'bg-purple-500/10 text-purple-600' :
+                                    'bg-emerald-500/10 text-emerald-600'
+                                  }`}
+                                >
+                                  {event.type === 'close' ? '💰' : event.type === 'reminder' ? '🔔' : '📅'} {event.title.substring(0, 15)}...
+                                </div>
+                              ))}
+                              {(cell.tasks.length + cell.deadlines.length + cell.grantEvents.length) > 3 && (
+                                <p className="text-xs text-muted-foreground">+{cell.tasks.length + cell.deadlines.length + cell.grantEvents.length - 3} more</p>
                               )}
                             </div>
                           </>
@@ -556,6 +703,143 @@ export default function ComplianceCalendar() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Grant Deadlines Tab */}
+          <TabsContent value="grants" className="space-y-4 mt-4">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <DollarSign className="w-5 h-5" />
+                      Grant Application Deadlines
+                    </CardTitle>
+                    <CardDescription>
+                      Track federal and foundation grant opportunities
+                    </CardDescription>
+                  </div>
+                  <Select value={grantFilter} onValueChange={setGrantFilter}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Filter by type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Grants</SelectItem>
+                      <SelectItem value="federal">Federal</SelectItem>
+                      <SelectItem value="foundation">Foundation</SelectItem>
+                      <SelectItem value="state">State</SelectItem>
+                      <SelectItem value="corporate">Corporate</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {grantDeadlines && grantDeadlines.length > 0 ? (
+                  <div className="space-y-4">
+                    {grantDeadlines.map((grant: any) => (
+                      <div key={grant.id} className="p-4 rounded-lg border">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h4 className="font-medium">{grant.name}</h4>
+                              {getGrantStatusBadge(grant.status)}
+                              <Badge variant="outline" className="capitalize">{grant.category}</Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-2">{grant.description}</p>
+                            <div className="flex flex-wrap items-center gap-4 text-sm">
+                              <span className="flex items-center gap-1">
+                                <Building2 className="w-4 h-4" />
+                                {grant.funder}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <DollarSign className="w-4 h-4" />
+                                Up to ${grant.maxFunding.toLocaleString()}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Calendar className="w-4 h-4" />
+                                Opens: {new Date(grant.openDate).toLocaleDateString()}
+                              </span>
+                              <span className="flex items-center gap-1 font-medium text-amber-600">
+                                <AlertCircle className="w-4 h-4" />
+                                Closes: {new Date(grant.closeDate).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {grant.eligibleEntities.map((entity: string, i: number) => (
+                                <Badge key={i} variant="secondary" className="text-xs">{entity.replace(/_/g, ' ')}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2 ml-4">
+                            {grant.applicationUrl && (
+                              <Button variant="outline" size="sm" asChild>
+                                <a href={grant.applicationUrl} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink className="w-4 h-4 mr-1" />
+                                  Apply
+                                </a>
+                              </Button>
+                            )}
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => openReminderDialog(grant)}
+                            >
+                              <Bell className="w-4 h-4 mr-1" />
+                              Remind
+                            </Button>
+                            {grant.status !== 'submitted' && grant.status !== 'closed' && (
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => markSubmittedMutation.mutate({ id: grant.id })}
+                              >
+                                <CheckCircle2 className="w-4 h-4 mr-1" />
+                                Submitted
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <DollarSign className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
+                    <p className="text-muted-foreground">No grant deadlines found</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Grant Statistics */}
+            {grantDashboard?.statistics && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="pt-6">
+                    <p className="text-sm text-muted-foreground">Total Grants</p>
+                    <p className="text-2xl font-bold">{grantDashboard.statistics.total}</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-6">
+                    <p className="text-sm text-muted-foreground">Open Now</p>
+                    <p className="text-2xl font-bold text-green-600">{grantDashboard.statistics.byStatus.open}</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-6">
+                    <p className="text-sm text-muted-foreground">Total Available Funding</p>
+                    <p className="text-2xl font-bold">${(grantDashboard.statistics.totalFunding / 1000000).toFixed(1)}M</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-6">
+                    <p className="text-sm text-muted-foreground">Pending Reminders</p>
+                    <p className="text-2xl font-bold">{grantDashboard.statistics.upcomingReminders}</p>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
 
           {/* All Tasks Tab */}
@@ -669,6 +953,37 @@ export default function ComplianceCalendar() {
               <Button onClick={handleCompleteTask} disabled={completeTaskMutation.isPending}>
                 {completeTaskMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 Mark Complete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Generate Reminders Dialog */}
+        <Dialog open={showReminderDialog} onOpenChange={setShowReminderDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Generate Reminders</DialogTitle>
+              <DialogDescription>
+                Set up automatic reminders for "{selectedGrant?.name}"
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <p className="text-sm text-muted-foreground">
+                This will create reminders at 30 days, 14 days, 7 days, and 1 day before the deadline ({selectedGrant?.closeDate ? new Date(selectedGrant.closeDate).toLocaleDateString() : ''}).
+              </p>
+              <div className="p-4 bg-muted rounded-lg">
+                <p className="font-medium">{selectedGrant?.funder}</p>
+                <p className="text-sm text-muted-foreground">Max Funding: ${selectedGrant?.maxFunding?.toLocaleString()}</p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowReminderDialog(false)}>Cancel</Button>
+              <Button 
+                onClick={() => selectedGrant && generateRemindersMutation.mutate({ deadlineId: selectedGrant.id })}
+                disabled={generateRemindersMutation.isPending}
+              >
+                {generateRemindersMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                Generate Reminders
               </Button>
             </DialogFooter>
           </DialogContent>
