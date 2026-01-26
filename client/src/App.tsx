@@ -242,6 +242,7 @@ import ProtectionLayer from "@/pages/ProtectionLayer";
 import ExternalOnboarding from "@/pages/ExternalOnboarding";
 import AssetManagementDashboard from "@/pages/AssetManagementDashboard";
 import WorkforceTransitionsDashboard from "@/pages/WorkforceTransitionsDashboard";
+import InvestmentPortfolioDashboard from "@/pages/InvestmentPortfolioDashboard";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -364,6 +365,7 @@ function Router() {
       <Route path="/treasury/acquisition-fund">{() => <ProtectedRoute component={AcquisitionFundDashboard} minRole="admin" />}</Route>
       <Route path="/asset-management">{() => <ProtectedRoute component={AssetManagementDashboard} minRole="admin" />}</Route>
       <Route path="/workforce-transitions">{() => <ProtectedRoute component={WorkforceTransitionsDashboard} minRole="admin" />}</Route>
+      <Route path="/investments">{() => <ProtectedRoute component={InvestmentPortfolioDashboard} minRole="admin" />}</Route>
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />

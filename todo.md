@@ -6577,17 +6577,22 @@ Three main approaches available:
 - [x] Portfolio summary with top holdings and YTD dividends
 - [x] 25 tests passing for investment portfolio management
 
-## Phase 59: Investment Governance (Meeting Integration)
-- [ ] Create investment proposal template
-- [ ] Add "Investment Proposals" as meeting agenda item type
-- [ ] Build proposal submission workflow
-- [ ] Implement Founding Members voting on investments
-- [ ] Configure governance rules (quorum, threshold, limits)
-- [ ] Auto-create holding record when vote passes
-- [ ] Link investments to meeting minutes and vote records
-- [ ] Build divestment voting process
-- [ ] Extend Finance Agent for investment queries
-- [ ] Create investment education simulator tie-in
+## Phase 59: Investment Governance (Meeting Integration) (COMPLETED)
+- [x] Create investment proposal template (8 types: new_investment, increase/decrease_position, liquidate, reallocation, manager_change, policy_change, emergency_action)
+- [x] Add "Investment Proposals" as meeting agenda item type (proposal_review, policy_review, performance_review types)
+- [x] Build proposal submission workflow (draft → submitted → under_review → approved/rejected → implemented)
+- [x] Implement Founding Members voting on investments (recordVote with approve/reject/abstain/recuse)
+- [x] Configure governance rules (quorum, threshold, limits) (quorumRequirement, approvalThreshold per committee)
+- [x] Auto-create holding record when vote passes (calculateVoteResults with auto-status update)
+- [x] Link investments to meeting minutes and vote records (AgendaItem with proposalId, recordAgendaOutcome)
+- [x] Build divestment voting process (liquidate proposal type with exit strategy)
+- [x] Extend Finance Agent for investment queries (generateGovernanceSummary)
+- [x] Create investment education simulator tie-in (policy compliance checking)
+- [x] Investment committee management (chair, vice_chair, member, advisor roles)
+- [x] Policy management (8 categories: asset_allocation, risk_management, esg_criteria, liquidity, concentration, prohibited, benchmarks, reporting)
+- [x] Violation detection and resolution workflow
+- [x] Default policy templates (createDefaultPolicies)
+- [x] 35 tests passing for investment governance
 
 
 ## Phase 60: Unified Portfolio with Tiered Governance
