@@ -6527,16 +6527,20 @@ Three main approaches available:
 - [x] Portfolio and donation pipeline reporting (generatePortfolioSummary, generateDonationPipelineSummary)
 - [x] 87 tests passing for real property system
 
-## Phase 56: Expanded Asset Management
-- [ ] Extend property_assets for equipment, licenses, vehicles
-- [ ] Create equipment_assignments table (who has what)
-- [ ] Create software_licenses table (seats, expiration, users)
-- [ ] Create remote_office_equipment table
-- [ ] Build asset registry dashboard showing all categories
-- [ ] Add equipment checkout/return workflow
-- [ ] Track license utilization and renewals
-- [ ] Implement depreciation tracking
-- [ ] Add maintenance scheduling
+## Phase 56: Expanded Asset Management (COMPLETED)
+- [x] Extend property_assets for equipment, licenses, vehicles (7 asset categories: equipment, software, vehicle, furniture, technology, tools, machinery)
+- [x] Create equipment_assignments table (who has what) (checkoutAsset, returnAsset, getUserActiveCheckouts)
+- [x] Create software_licenses table (seats, expiration, users) (6 license types with seat tracking)
+- [x] Create remote_office_equipment table (asset tracking with location, building, room)
+- [x] Build asset registry dashboard showing all categories (generateInventorySummary)
+- [x] Add equipment checkout/return workflow (checkoutAsset, returnAsset, getOverdueCheckouts)
+- [x] Track license utilization and renewals (assignLicenseSeat, removeLicenseSeat, getLicensesExpiringSoon)
+- [x] Implement depreciation tracking (5 methods: straight_line, declining_balance, double_declining, sum_of_years, units_of_production)
+- [x] Add maintenance scheduling (4 types: preventive, corrective, predictive, condition_based)
+- [x] Vehicle fleet management (7 vehicle types with VIN, mileage, registration, insurance)
+- [x] Asset reservation system with approval workflow
+- [x] License compliance and fleet summary reports
+- [x] 60 tests passing for expanded asset management
 
 ## Phase 57: Integrated Onboarding/Offboarding System
 - [ ] Create onboarding_workflows table
