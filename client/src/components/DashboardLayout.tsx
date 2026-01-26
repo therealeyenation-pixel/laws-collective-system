@@ -462,6 +462,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Settings, label: "System Settings", path: "/system-settings", minRole: "admin" },
           { icon: FileSignature, label: "Signature Audit", path: "/admin/signature-audit", minRole: "admin" },
           { icon: Users, label: "Bulk Signatures", path: "/admin/bulk-signatures", minRole: "admin" },
+          { icon: BarChart3, label: "Compliance Dashboard", path: "/admin/compliance-dashboard", minRole: "admin" },
           { icon: Users, label: "User Management", path: "/user-management", minRole: "admin" },
           { icon: Play, label: "Platform Simulator", path: "/platform-simulator", minRole: "admin" },
           { icon: Users, label: "Team", path: "/platform-team", minRole: "admin" },

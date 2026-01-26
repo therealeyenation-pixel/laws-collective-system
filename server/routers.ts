@@ -165,6 +165,7 @@ import { articleAcknowledgmentRouter } from "./routers/article-acknowledgment";
 import { signatureAuditRouter } from "./routers/signature-audit";
 import { userPreferencesRouter } from "./routers/user-preferences";
 import { bulkSignatureRouter } from "./routers/bulk-signature";
+import { complianceDashboardRouter } from "./routers/compliance-dashboard";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -342,6 +343,7 @@ export const appRouter = router({
   signatureAudit: signatureAuditRouter,
   userPreferences: userPreferencesRouter,
   bulkSignature: bulkSignatureRouter,
+  complianceDashboard: complianceDashboardRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
