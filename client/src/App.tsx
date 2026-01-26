@@ -220,8 +220,8 @@ import LAWSEmploymentPortal from "@/pages/LAWSEmploymentPortal";
 import InternshipPortal from "@/pages/InternshipPortal";
 import Donate508 from "@/pages/Donate508";
 import PublicDonate from "@/pages/PublicDonate";
+import DonateThankYou from "@/pages/DonateThankYou";
 import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
-import DonationThankYou from "@/pages/DonationThankYou";
 import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
 import TrialLanding from "@/pages/TrialLanding";
 import TrialDashboard from "@/pages/TrialDashboard";
@@ -351,10 +351,10 @@ function Router() {
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
       <Route path="/donate/public" component={PublicDonate} />
+      <Route path="/donate/thank-you" component={DonateThankYou} />
       <Route path="/donate/academy" component={Donate508} />
       <Route path="/member-business" component={MemberBusinessDashboard} />
       <Route path="/member-business/register" component={MemberBusinessRegistration} />
-      <Route path="/donate/thank-you" component={DonationThankYou} />
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
