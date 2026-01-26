@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import DocumentAdmin from "./pages/DocumentAdmin";
 import SystemDashboard from "./pages/SystemDashboard";
 import AcademyDashboard from "./pages/AcademyDashboard";
+import GuardianDashboard from "./pages/GuardianDashboard";
 import DocumentVault from "./pages/DocumentVault";
 import Agents from "./pages/Agents";
 import SocialMedia from "./pages/SocialMedia";
@@ -374,6 +375,7 @@ function Router() {
       <Route path="/house-contracts">{() => <ProtectedRoute component={HouseContractManagement} minRole="user" />}</Route>
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
       <Route path="/academy">{() => <ProtectedRoute component={AcademyDashboard} minRole="user" />}</Route>
+      <Route path="/guardian-dashboard">{() => <ProtectedRoute component={GuardianDashboard} minRole="user" />}</Route>
       <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} minRole="user" />}</Route>
       <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>
