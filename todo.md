@@ -8525,3 +8525,38 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Benchmark comparisons with alpha calculation
 - [x] Transaction summary with buy/sell/dividend totals
 - [x] 38 tests passing for quarterly investment report generator
+
+
+## Phase 62: Investment Report Dashboard & Consolidated Financial Dashboard (COMPLETED)
+- [x] Create Investment Report Dashboard UI at /investment-reports
+  - [x] Report configuration panel with period selection (year/quarter)
+  - [x] Toggle sections: governance, compliance, benchmarks, transactions
+  - [x] Comparison options: quarter-over-quarter, year-over-year
+  - [x] Report preview with executive summary, asset allocation, top holdings
+  - [x] Export to Markdown and JSON formats
+  - [x] Report history tab with previous reports
+  - [x] Report schedules tab for automated generation
+  - [x] Annual report preview tab
+- [x] Create Consolidated Financial Dashboard service
+  - [x] Treasury summary (cash accounts, cash flow, projections)
+  - [x] Investment summary (portfolio value, returns, compliance status)
+  - [x] Donation summary (YTD totals, donor counts, designations)
+  - [x] Grant summary (active grants, pending applications, compliance)
+  - [x] Acquisition fund summary (fund balances by category, progress)
+  - [x] Revenue summary (revenue by source, expenses by category, net income)
+  - [x] Financial alerts system (critical, warning, info)
+  - [x] Key metrics with trends and targets
+  - [x] Drill-down data for each module
+  - [x] Historical comparison data (monthly, quarterly, yearly)
+  - [x] Executive summary generation
+- [x] Create Consolidated Financial Dashboard UI at /financial-dashboard
+  - [x] Key metrics row with trend indicators
+  - [x] Critical alerts banner
+  - [x] Overview tab with net worth, revenue vs expenses, module cards
+  - [x] Treasury tab with account breakdown and cash flow analysis
+  - [x] Investments tab with portfolio summary and quick links
+  - [x] Fundraising tab with donation metrics and designations
+  - [x] Grants tab with active grants and compliance status
+  - [x] Operations tab with burn rate, runway, expense variance
+- [x] 41 tests passing for consolidated dashboard service
+- [x] Total: 2380 tests passing
