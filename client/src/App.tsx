@@ -247,6 +247,8 @@ import InvestmentGovernanceDashboard from "@/pages/InvestmentGovernanceDashboard
 import TieredGovernanceDashboard from "@/pages/TieredGovernanceDashboard";
 import InvestmentReportDashboard from "@/pages/InvestmentReportDashboard";
 import ConsolidatedFinancialDashboard from "@/pages/ConsolidatedFinancialDashboard";
+import TrademarkChecklist from "@/pages/TrademarkChecklist";
+import MemberCredentials from "@/pages/MemberCredentials";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -600,6 +602,8 @@ function Router() {
       <Route path="/trust-structure">{() => <ProtectedRoute component={TrustVisualization} minRole="admin" />}</Route>
       <Route path="/entity-structure">{() => <ProtectedRoute component={EntityStructure} minRole="admin" />}</Route>
       <Route path="/trademark-documents">{() => <ProtectedRoute component={TrademarkDocuments} minRole="admin" />}</Route>
+      <Route path="/trademark-checklist">{() => <ProtectedRoute component={TrademarkChecklist} minRole="user" />}</Route>
+      <Route path="/member-credentials">{() => <ProtectedRoute component={MemberCredentials} minRole="admin" />}</Route>
       <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} minRole="owner" />}</Route>
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
