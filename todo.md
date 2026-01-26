@@ -8257,3 +8257,23 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
   - [x] Add Settings link to user profile dropdown (My Profile + Settings)
   - [x] Add Signature Audit link to admin sidebar (Platform Admin section)
 - [x] All 1286 tests pass
+
+
+## Phase 61: Signature Reminders & Bulk Signature Requests (COMPLETED)
+- [x] Create signature reminders service
+  - [x] Build reminder service to check for pending signatures (signature-reminders.ts)
+  - [x] Send in-app notifications for overdue signatures
+  - [x] Track reminder history in signature_reminders table
+  - [x] Support daily, weekly, and overdue reminder intervals
+- [x] Implement bulk signature request functionality
+  - [x] Create signature_requests table for tracking bulk requests
+  - [x] Build bulkSignatureRouter with create, activate, cancel procedures
+  - [x] Support targeting by all users, department, role, or specific users
+  - [x] Track request status (draft, active, completed, cancelled)
+- [x] Create admin UI for bulk signature requests
+  - [x] Build BulkSignatureRequest page at /admin/bulk-signatures
+  - [x] Document selection and user targeting interface
+  - [x] Progress tracking with recipient status table
+  - [x] Manual reminder trigger button for admins
+- [x] Added navigation links in Platform Admin sidebar
+- [x] All 1286 tests pass
