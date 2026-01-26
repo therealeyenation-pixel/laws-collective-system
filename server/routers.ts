@@ -177,6 +177,10 @@ import { eternalFlameVaultRouter } from "./routers/eternal-flame-vault";
 import { businessSetupCourseRouter } from "./routers/business-setup-course";
 import { financialManagementCourseRouter } from "./routers/financial-management-course";
 import { simulatorCertificatesRouter } from "./routers/simulator-certificates";
+import { tokenRegistryRouter } from "./routers/token-registry";
+import { foundationLayerBuildRouter } from "./routers/foundation-layer-build";
+import { coreAdminLayerRouter } from "./routers/core-admin-layer";
+import { programsGovernanceLayerRouter } from "./routers/programs-governance-layer";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -267,6 +271,7 @@ export const appRouter = router({
   eSignature: eSignatureRouter,
   boardGovernanceExtended: boardGovernanceExtendedRouter,
   grantDocuments: grantDocumentsRouter,
+  programsGovernance: programsGovernanceLayerRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -366,6 +371,9 @@ export const appRouter = router({
   businessSetupCourse: businessSetupCourseRouter,
   financialManagementCourse: financialManagementCourseRouter,
   simulatorCertificates: simulatorCertificatesRouter,
+  tokenRegistry: tokenRegistryRouter,
+  foundationLayerBuild: foundationLayerBuildRouter,
+  coreAdminLayer: coreAdminLayerRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
