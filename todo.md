@@ -8716,3 +8716,34 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Quiet hours support
 - [x] Task type exclusion preferences
 - [x] Compliance notifications router with 7 procedures
+
+
+## Phase 68: Notification History Dashboard (COMPLETE)
+- [x] Create notification history service with in-memory storage
+  - [x] Store notification type, recipient, channel, status
+  - [x] Track delivery timestamps and error messages
+  - [x] Link to compliance tasks and documents via relatedEntityType/Id
+- [x] Create notification preferences system
+  - [x] Store user-specific notification settings
+  - [x] Support channel preferences (email, in-app, SMS, push)
+  - [x] Store quiet hours and excluded task types
+  - [x] Digest frequency configuration (daily/weekly/never)
+- [x] Build notification history service
+  - [x] Record sent notifications with delivery status
+  - [x] Query notification history with filters and pagination
+  - [x] Calculate notification statistics (7-day trend, by type/channel)
+- [x] Create notification history router
+  - [x] getHistory procedure with pagination
+  - [x] getStatistics procedure for dashboard
+  - [x] updatePreferences procedure
+  - [x] markAsRead and markMultipleAsRead procedures
+  - [x] getRecentNotifications for notification bell
+  - [x] resendNotification for failed notifications
+- [x] Build Notification History Dashboard UI at /notification-history
+  - [x] Notification list with status indicators (4 tabs: All, Unread, Sent, Failed)
+  - [x] Filter by type, status, date range
+  - [x] Notification preferences management panel
+  - [x] Statistics summary cards with 7-day trend chart
+  - [x] Mark as read functionality
+  - [x] Resend failed notifications
+- [x] Write unit tests for notification history (41 tests)

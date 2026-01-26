@@ -98,6 +98,7 @@ import BulkSignatureRequest from "@/pages/BulkSignatureRequest";
 import ComplianceDashboard from "@/pages/ComplianceDashboard";
 import ComplianceCalendar from "@/pages/ComplianceCalendar";
 import DocumentUpload from "@/pages/DocumentUpload";
+import NotificationHistory from "@/pages/NotificationHistory";
 import Onboarding from "@/pages/Onboarding";
 import OnboardingChecklist from "@/pages/OnboardingChecklist";
 import OperatingProcedures from "@/pages/OperatingProcedures";
@@ -588,6 +589,7 @@ function Router() {
       <Route path="/admin/compliance-dashboard">{() => <ProtectedRoute component={ComplianceDashboard} minRole="admin" />}</Route>
       <Route path="/compliance-calendar">{() => <ProtectedRoute component={ComplianceCalendar} minRole="staff" />}</Route>
       <Route path="/document-upload">{() => <ProtectedRoute component={DocumentUpload} minRole="staff" />}</Route>
+      <Route path="/notification-history">{() => <ProtectedRoute component={NotificationHistory} minRole="staff" />}</Route>
       <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} minRole="admin" />}</Route>
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} minRole="admin" />}</Route>
       <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} minRole="admin" />}</Route>
