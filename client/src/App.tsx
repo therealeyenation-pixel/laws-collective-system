@@ -224,6 +224,8 @@ import PublicDonate from "@/pages/PublicDonate";
 import DonateThankYou from "@/pages/DonateThankYou";
 import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
 import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
+import MemberRegistration from "@/pages/MemberRegistration";
+import AcquisitionFundDashboard from "@/pages/AcquisitionFundDashboard";
 import TrialLanding from "@/pages/TrialLanding";
 import TrialDashboard from "@/pages/TrialDashboard";
 import TrialAnalytics from "@/pages/TrialAnalytics";
@@ -356,6 +358,8 @@ function Router() {
       <Route path="/donate/academy" component={Donate508} />
       <Route path="/member-business" component={MemberBusinessDashboard} />
       <Route path="/member-business/register" component={MemberBusinessRegistration} />
+      <Route path="/register-business" component={MemberRegistration} />
+      <Route path="/treasury/acquisition-fund">{() => <ProtectedRoute component={AcquisitionFundDashboard} minRole="admin" />}</Route>
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
