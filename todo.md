@@ -8203,3 +8203,21 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Check and update Purchasing Dashboard with weather/article widgets
 - [x] Check and update Property Dashboard with weather/article widgets
 - [x] Audit all dashboards for consistent widget placement
+
+
+## Phase 58: Database Migration & Read-and-Sign System (COMPLETED)
+- [x] Create house_contracts and contract_milestones tables via SQL
+- [x] Implement read-and-sign tracking system for articles/documents
+- [x] Create article_acknowledgments table in database schema
+- [x] Build articleAcknowledgmentRouter with sign/verify procedures
+- [x] Update LiveTicker component with read-and-sign functionality:
+  - [x] Checkbox confirmation before signing
+  - [x] Signature hash generation with SHA-256
+  - [x] Loading states during signing process
+  - [x] Electronic signature notice with legal disclaimer
+- [x] Add user weather location preferences to user settings
+- [x] Create user_preferences table with weather location, unit, timezone, theme settings
+- [x] Build userPreferencesRouter with get/update/reset procedures
+- [x] Update WeatherWidget to use user's preferred location and temperature unit (F/C conversion)
+- [x] Add unit tests for article-acknowledgment.test.ts (12 tests)
+- [x] Add unit tests for user-preferences.test.ts (10 tests)

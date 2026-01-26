@@ -161,6 +161,8 @@ import { gameAchievementsRouter } from "./routers/game-achievements";
 import { tournamentsRouter } from "./routers/tournaments";
 import { gameSavesRouter } from "./routers/game-saves";
 import { eloRatingRouter } from "./routers/elo-rating";
+import { articleAcknowledgmentRouter } from "./routers/article-acknowledgment";
+import { userPreferencesRouter } from "./routers/user-preferences";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -334,6 +336,8 @@ export const appRouter = router({
   tournaments: tournamentsRouter,
   gameSaves: gameSavesRouter,
   eloRating: eloRatingRouter,
+  articleAcknowledgment: articleAcknowledgmentRouter,
+  userPreferences: userPreferencesRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

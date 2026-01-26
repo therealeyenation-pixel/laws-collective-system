@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
 import {
   Cloud,
   CloudRain,
@@ -87,18 +88,43 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Get user preferences for weather location and unit
+  const { data: preferences } = trpc.userPreferences.getPreferences.useQuery(undefined, {
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    retry: false,
+  });
+
+  const userLocation = preferences?.weatherLocation || "Atlanta, GA";
+  const temperatureUnit = preferences?.weatherUnit || "fahrenheit";
+
+  // Convert temperature based on user preference
+  const convertTemp = useMemo(() => {
+    return (tempF: number) => {
+      if (temperatureUnit === "celsius") {
+        return Math.round((tempF - 32) * 5 / 9);
+      }
+      return tempF;
+    };
+  }, [temperatureUnit]);
+
+  const unitLabel = temperatureUnit === "celsius" ? "C" : "F";
+
   useEffect(() => {
     // Simulate API call
     const fetchWeather = async () => {
       setLoading(true);
       try {
         // In production, this would be a real API call
-        // const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+        // const response = await fetch(`/api/weather?location=${userLocation}`);
         // const data = await response.json();
         
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 500));
-        setWeather(mockWeatherData);
+        // Update mock data with user's location
+        setWeather({
+          ...mockWeatherData,
+          location: userLocation,
+        });
         setError(null);
       } catch (err) {
         setError("Unable to load weather data");
@@ -109,7 +135,7 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
     };
 
     fetchWeather();
-  }, []);
+  }, [userLocation]);
 
   const handleRefresh = async () => {
     setLoading(true);
@@ -155,8 +181,8 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
               <WeatherIcon className="w-8 h-8 text-blue-500" />
               <div>
                 <div className="flex items-center gap-1">
-                  <span className="text-2xl font-bold">{weather.temperature}°</span>
-                  <span className="text-sm text-muted-foreground">F</span>
+                  <span className="text-2xl font-bold">{convertTemp(weather.temperature)}°</span>
+                  <span className="text-sm text-muted-foreground">{unitLabel}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">{weather.condition}</p>
               </div>
@@ -191,8 +217,8 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
             <WeatherIcon className="w-12 h-12 text-blue-500" />
             <div>
               <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold">{weather.temperature}</span>
-                <span className="text-xl text-muted-foreground">°F</span>
+                <span className="text-4xl font-bold">{convertTemp(weather.temperature)}</span>
+                <span className="text-xl text-muted-foreground">°{unitLabel}</span>
               </div>
               <p className="text-sm text-muted-foreground">{weather.condition}</p>
             </div>
@@ -201,7 +227,7 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Thermometer className="w-4 h-4" />
-              <span>Feels like {weather.feelsLike}°</span>
+              <span>Feels like {convertTemp(weather.feelsLike)}°{unitLabel}</span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Droplets className="w-4 h-4" />
@@ -224,8 +250,8 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
                   <p className="text-xs font-medium mb-1">{day.day}</p>
                   <DayIcon className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
                   <p className="text-xs">
-                    <span className="font-medium">{day.high}°</span>
-                    <span className="text-muted-foreground"> / {day.low}°</span>
+                    <span className="font-medium">{convertTemp(day.high)}°</span>
+                    <span className="text-muted-foreground"> / {convertTemp(day.low)}°</span>
                   </p>
                 </div>
               );
