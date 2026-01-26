@@ -6560,18 +6560,22 @@ Three main approaches available:
 - [x] Exit interview scheduling and completion tracking
 - [x] 30 tests passing for onboarding/offboarding system
 
-## Phase 58: Investment Portfolio Management (LuvLedger Integration)
-- [ ] Create investment_holdings table (ticker, shares, cost_basis)
-- [ ] Create investment_transactions table (buy, sell, dividend)
-- [ ] Create investment_proposals table (for meeting votes)
-- [ ] Add Investments tab to LuvLedger Finance dashboard
-- [ ] Build holdings tracker with real-time/delayed quotes
-- [ ] Implement cost basis and gains/losses calculation
-- [ ] Add dividend/distribution tracking
-- [ ] Create asset allocation visualization
-- [ ] Build performance vs. benchmark comparison
-- [ ] Add investment policy compliance checks
-- [ ] Create rebalancing alerts
+## Phase 58: Investment Portfolio Management (LuvLedger Integration) (COMPLETED)
+- [x] Create investment_holdings table (ticker, shares, cost_basis) - InvestmentHolding with 9 asset classes
+- [x] Create investment_transactions table (buy, sell, dividend) - 10 transaction types with T+2 settlement
+- [x] Create investment_proposals table (for meeting votes) - linkTransactionToLuvLedger for audit trail
+- [x] Add Investments tab to LuvLedger Finance dashboard - investmentPortfolio router with 18 procedures
+- [x] Build holdings tracker with real-time/delayed quotes - updateHoldingPrice with recalculation
+- [x] Implement cost basis and gains/losses calculation - unrealizedGainLoss, unrealizedGainLossPercent
+- [x] Add dividend/distribution tracking - recordDividend with reinvestment support
+- [x] Create asset allocation visualization - calculatePortfolioAllocation by asset class
+- [x] Build performance vs. benchmark comparison - calculatePortfolioPerformance with TWR
+- [x] Add investment policy compliance checks - generateRebalancingSuggestions with target allocation
+- [x] Create rebalancing alerts - deviation thresholds with buy/sell/hold recommendations
+- [x] Tax lot tracking with short/long-term holding periods (calculateTaxLots)
+- [x] 11 account types including nonprofit_endowment and trust
+- [x] Portfolio summary with top holdings and YTD dividends
+- [x] 25 tests passing for investment portfolio management
 
 ## Phase 59: Investment Governance (Meeting Integration)
 - [ ] Create investment proposal template
