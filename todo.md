@@ -8749,3 +8749,15 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
   - [x] Mark as read functionality
   - [x] Resend failed notifications
 - [x] Write unit tests for notification history (41 tests)
+
+
+## Phase 51: Grant Application PDF Export (COMPLETE)
+- [x] Create grant application PDF export service with template system
+- [x] Build PDF templates for federal grants (NEA, USDA, SBA)
+- [x] Build PDF templates for foundation grants (Ford, Kellogg, MacArthur)
+- [x] Add grant export router procedures (14 procedures including generateApplication, exportToMarkdown, exportToJSON)
+- [x] Create Grant Export UI at /grant-export with entity selection and template preview
+- [x] Support auto-population from need statements
+- [x] Add cover letter generation
+- [x] Include budget breakdown tables with narrative and markdown formats
+- [x] Write 37 unit tests for grant export service

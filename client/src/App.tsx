@@ -33,6 +33,7 @@ import InternationalOperationsDashboard from "./pages/InternationalOperationsDas
 import BusinessSimulator from "./pages/BusinessSimulator";
 import GrantManagement from "./pages/GrantManagement";
 import GrantSimulator from "./pages/GrantSimulator";
+import GrantExport from "./pages/GrantExport";
 import BusinessPlanSimulator from "./pages/BusinessPlanSimulator";
 import BusinessPlanUpload from "./pages/BusinessPlanUpload";
 import TaxSimulator from "./pages/TaxSimulator";
@@ -403,6 +404,7 @@ function Router() {
       <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} minRole="user" />}</Route>
       <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>
+      <Route path="/grant-export">{() => <ProtectedRoute component={GrantExport} minRole="user" />}</Route>
       <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} minRole="user" />}</Route>
       <Route path="/health-simulator">{() => <ProtectedRoute component={HealthSimulator} minRole="staff" />}</Route>
       <Route path="/education-simulator">{() => <ProtectedRoute component={EducationSimulator} minRole="staff" />}</Route>
