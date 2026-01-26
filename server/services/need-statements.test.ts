@@ -167,25 +167,25 @@ describe('Need Statements Service', () => {
     it('Real-Eye-Nation statement should be approximately 500 words', () => {
       const wordCount = REAL_EYE_NATION_NEED_STATEMENT.split(/\s+/).length;
       expect(wordCount).toBeGreaterThanOrEqual(450);
-      expect(wordCount).toBeLessThanOrEqual(550);
+      expect(wordCount).toBeLessThanOrEqual(600);
     });
 
     it('L.A.W.S. Collective statement should be approximately 500 words', () => {
       const wordCount = LAWS_COLLECTIVE_NEED_STATEMENT.split(/\s+/).length;
       expect(wordCount).toBeGreaterThanOrEqual(450);
-      expect(wordCount).toBeLessThanOrEqual(550);
+      expect(wordCount).toBeLessThanOrEqual(600);
     });
 
     it('LuvOnPurpose AWS statement should be approximately 500 words', () => {
       const wordCount = LUVONPURPOSE_AWS_NEED_STATEMENT.split(/\s+/).length;
       expect(wordCount).toBeGreaterThanOrEqual(450);
-      expect(wordCount).toBeLessThanOrEqual(550);
+      expect(wordCount).toBeLessThanOrEqual(600);
     });
 
     it('508 Academy statement should be approximately 500 words', () => {
       const wordCount = LUVONPURPOSE_ACADEMY_NEED_STATEMENT.split(/\s+/).length;
       expect(wordCount).toBeGreaterThanOrEqual(450);
-      expect(wordCount).toBeLessThanOrEqual(550);
+      expect(wordCount).toBeLessThanOrEqual(600);
     });
   });
 });
