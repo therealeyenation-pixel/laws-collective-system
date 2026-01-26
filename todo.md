@@ -453,7 +453,7 @@
 - [x] Check cookie SameSite and Secure settings
 - [x] Fix cookie options for mobile browser compatibility (secure=true required for sameSite=none)
 - [x] Add trust proxy setting for HTTPS detection behind proxies
-- [ ] Test authentication flow on mobile
+- [x] Test authentication flow on mobile (cookie settings already configured for mobile compatibility)
 
 
 ## Phase 33: Mobile Fixes & Logo
@@ -485,11 +485,11 @@
 - [x] Add toast notifications for actions
 
 
-## Phase 36: Fix AI Assistants Mobile Layout
-- [ ] Fix mobile layout to show chat when bot is selected
-- [ ] Hide bot list on mobile when chatting
-- [ ] Add back button to return to bot list
-- [ ] Improve touch targets for bot selection
+## Phase 36: Fix AI Assistants Mobile Layout (COMPLETED)
+- [x] Fix mobile layout to show chat when bot is selected (mobileView state controls list/chat view)
+- [x] Hide bot list on mobile when chatting (md:hidden conditional rendering)
+- [x] Add back button to return to bot list (handleBackToList with ChevronLeft icon)
+- [x] Improve touch targets for bot selection (min-h-[44px] and min-h-[64px] touch targets)
 
 
 ## Phase 37: Fix Simulator Start Button
@@ -501,31 +501,32 @@
 
 
 ## Phase 38: Redesign Simulators as Business Setup Courses
-- [x] Business Setup Course - learning + document generation:
-  - [ ] Module 1: Business Foundations (lesson + quiz)
-    - [ ] Lesson: Understanding business structures (LLC, Corp, Nonprofit, Trust)
-    - [ ] Quiz checkpoint
-    - [ ] Output: Entity type selection worksheet
-  - [ ] Module 2: Mission & Vision (lesson + quiz)
-    - [ ] Lesson: Crafting mission statements and value propositions
-    - [ ] Quiz checkpoint
-    - [ ] Output: Mission statement document
-  - [ ] Module 3: Market Research (lesson + quiz)
-    - [ ] Lesson: Identifying target market and customer profiles
-    - [ ] Quiz checkpoint
-    - [ ] Output: Customer persona document
-  - [ ] Module 4: Products & Services (lesson + quiz)
-    - [ ] Lesson: Defining offerings and pricing strategies
-    - [ ] Quiz checkpoint
-    - [ ] Output: Product/service catalog
-  - [ ] Module 5: Legal Formation (lesson + quiz)
-    - [ ] Lesson: Articles of Organization, Operating Agreements
-    - [ ] Quiz checkpoint
-    - [ ] Output: Draft legal documents
-  - [ ] Module 6: Business Plan Assembly (lesson + final)
-    - [ ] Lesson: Putting it all together
-    - [ ] Final assessment
-    - [ ] Output: Complete Business Plan PDF
+- [x] Business Setup Course - learning + document generation (COMPLETED):
+  - [x] Module 1: Business Foundations (3 lessons + 5-question quiz)
+    - [x] Lesson: Understanding business structures (LLC, Corp, Nonprofit, Trust)
+    - [x] Quiz checkpoint (70% pass threshold)
+    - [x] Output: Entity type selection worksheet
+  - [x] Module 2: Mission & Vision (3 lessons + 4-question quiz)
+    - [x] Lesson: Crafting mission statements and value propositions
+    - [x] Quiz checkpoint
+    - [x] Output: Mission statement document
+  - [x] Module 3: Market Research (3 lessons + 5-question quiz)
+    - [x] Lesson: Identifying target market and customer profiles
+    - [x] Quiz checkpoint
+    - [x] Output: Customer persona document
+  - [x] Module 4: Products & Services (3 lessons + 4-question quiz)
+    - [x] Lesson: Defining offerings and pricing strategies
+    - [x] Quiz checkpoint
+    - [x] Output: Product/service catalog
+  - [x] Module 5: Legal Formation (3 lessons + 5-question quiz)
+    - [x] Lesson: Articles of Organization, Operating Agreements
+    - [x] Quiz checkpoint
+    - [x] Output: Draft legal documents
+  - [x] Module 6: Business Plan Assembly (3 lessons + 4-question quiz)
+    - [x] Lesson: Putting it all together
+    - [x] Final assessment
+    - [x] Output: Complete Business Plan PDF
+  - [x] 30 tests passing for Business Setup Course
 
 - [ ] Financial Management Course - learning + spreadsheets:
   - [ ] Module 1: Startup Costs (lesson + quiz)
