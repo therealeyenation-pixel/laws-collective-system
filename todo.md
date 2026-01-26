@@ -6464,12 +6464,19 @@ Three main approaches available:
 - [x] Create email preview API (donorEmail.previewTemplate)
 - [x] 37 tests passing for donor email service
 
-### Member Business Registration Form
-- [ ] Create public registration page for 508 membership
-- [ ] Collect business information (name, type, EIN, etc.)
-- [ ] Add sponsoring House selection
-- [ ] Include terms and membership agreement
-- [ ] Submit to pending approval queue
+### Member Business Registration Form (COMPLETED)
+- [x] Create public registration page for 508 membership (memberRegistration.submitApplication)
+- [x] Collect business information (name, type, EIN, address, contacts, employees, revenue, description)
+- [x] Add sponsoring House selection (sponsoringHouseId field)
+- [x] Include terms and membership agreement (generateTermsAndConditions, generateMembershipAgreement)
+- [x] Submit to pending approval queue (status: pending → under_review → approved/rejected)
+- [x] Add 8 business types (LLC, Corporation, Sole Proprietor, Partnership, etc.)
+- [x] Add 15 industry categories (Technology, Healthcare, Retail, Construction, etc.)
+- [x] Add 4 membership tiers (Community, Professional, Enterprise, Founding)
+- [x] Admin review workflow (listRegistrations, reviewRegistration, getStats)
+- [x] Application status check for applicants (checkStatus)
+- [x] Export registrations (JSON/CSV)
+- [x] 36 tests passing for member registration service
 
 ## Phase 53: Trial/Demo System
 - [x] Create trial_users table (email, name, password_hash, created_at, last_login)
@@ -6490,14 +6497,18 @@ Three main approaches available:
 - [x] Show trial user engagement metrics
 - [x] Write tests for trial system
 
-## Phase 54: Land & Buildings Acquisition Fund
-- [ ] Add fund_categories table with Land & Buildings Acquisition
-- [ ] Update donation form with fund designation dropdown
-- [ ] Add grant allocation field for fund assignment
-- [ ] Create fund balance tracking in treasury
-- [ ] Build fund-specific dashboard widget
-- [ ] Add transfer rules between funds
-- [ ] Update financial reports to show fund breakdowns
+## Phase 54: Land & Buildings Acquisition Fund (COMPLETED)
+- [x] Add fund_categories table with Land & Buildings Acquisition (6 fund categories: land_acquisition, building_acquisition, construction, renovation, emergency_housing, general_operations)
+- [x] Update donation form with fund designation dropdown (allocateDonation with designatedFund)
+- [x] Add grant allocation field for fund assignment (allocateGrant with multi-fund allocations)
+- [x] Create fund balance tracking in treasury (calculateFundBalance, calculateAllFundBalances)
+- [x] Build fund-specific dashboard widget (generateDashboardWidgets with status indicators)
+- [x] Add transfer rules between funds (validateTransfer, createTransferRequest, approve/complete/reject workflow)
+- [x] Update financial reports to show fund breakdowns (generateFundReport with transaction summary)
+- [x] Add disbursement request workflow (createDisbursementRequest, approve/complete/reject)
+- [x] Validate disbursements against fund restrictions (validateDisbursement)
+- [x] Track pending disbursements in available balance
+- [x] 44 tests passing for acquisition fund service
 
 ## Phase 55: Real Property System (Land Trust + House-Linked)
 - [ ] Create property_assets table (land, buildings, improvements)
