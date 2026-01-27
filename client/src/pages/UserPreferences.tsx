@@ -28,6 +28,8 @@ import {
   RotateCcw,
   Loader2,
   Check,
+  FileText,
+  Calendar,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -64,6 +66,10 @@ export default function UserPreferences() {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [dashboardLayout, setDashboardLayout] = useState("default");
   const [hasChanges, setHasChanges] = useState(false);
+  const [emailDigestEnabled, setEmailDigestEnabled] = useState(false);
+  const [emailDigestFrequency, setEmailDigestFrequency] = useState<"daily" | "weekly">("daily");
+  const [emailDigestTime, setEmailDigestTime] = useState("08:00");
+  const [emailDigestDay, setEmailDigestDay] = useState(1);
 
   const { data: preferences, isLoading: preferencesLoading } = trpc.userPreferences.getPreferences.useQuery(
     undefined,
@@ -242,6 +248,82 @@ export default function UserPreferences() {
                     <p className="text-sm text-muted-foreground">Receive email alerts for critical events</p>
                   </div>
                   <Switch checked={emailNotifications} onCheckedChange={setEmailNotifications} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><FileText className="w-5 h-5 text-green-500" />Email Digest Settings</CardTitle>
+              <CardDescription>Receive daily or weekly summaries of your pending tasks</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="space-y-1">
+                    <Label className="flex items-center gap-2"><Mail className="w-4 h-4" />Enable Email Digest</Label>
+                    <p className="text-sm text-muted-foreground">Receive scheduled summaries of pending articles, signatures, approvals, and deadlines</p>
+                  </div>
+                  <Switch checked={emailDigestEnabled} onCheckedChange={setEmailDigestEnabled} />
+                </div>
+                
+                {emailDigestEnabled && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2"><Calendar className="w-4 h-4" />Frequency</Label>
+                      <Select value={emailDigestFrequency} onValueChange={(v) => setEmailDigestFrequency(v as "daily" | "weekly")}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="daily">Daily</SelectItem>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2"><Clock className="w-4 h-4" />Preferred Time</Label>
+                      <Select value={emailDigestTime} onValueChange={setEmailDigestTime}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="06:00">6:00 AM</SelectItem>
+                          <SelectItem value="07:00">7:00 AM</SelectItem>
+                          <SelectItem value="08:00">8:00 AM</SelectItem>
+                          <SelectItem value="09:00">9:00 AM</SelectItem>
+                          <SelectItem value="12:00">12:00 PM</SelectItem>
+                          <SelectItem value="17:00">5:00 PM</SelectItem>
+                          <SelectItem value="18:00">6:00 PM</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {emailDigestFrequency === "weekly" && (
+                      <div className="space-y-2">
+                        <Label>Preferred Day</Label>
+                        <Select value={String(emailDigestDay)} onValueChange={(v) => setEmailDigestDay(Number(v))}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="0">Sunday</SelectItem>
+                            <SelectItem value="1">Monday</SelectItem>
+                            <SelectItem value="2">Tuesday</SelectItem>
+                            <SelectItem value="3">Wednesday</SelectItem>
+                            <SelectItem value="4">Thursday</SelectItem>
+                            <SelectItem value="5">Friday</SelectItem>
+                            <SelectItem value="6">Saturday</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                <div className="text-sm text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-3 rounded-lg">
+                  <p className="font-medium text-blue-700 dark:text-blue-300 mb-1">What's included in your digest:</p>
+                  <ul className="list-disc list-inside space-y-1 text-blue-600 dark:text-blue-400">
+                    <li>Pending articles to read</li>
+                    <li>Documents awaiting your signature</li>
+                    <li>Items requiring your approval</li>
+                    <li>Upcoming deadlines</li>
+                    <li>Overdue tasks summary</li>
+                  </ul>
                 </div>
               </div>
             </CardContent>

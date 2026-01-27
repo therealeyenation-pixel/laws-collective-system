@@ -8985,3 +8985,11 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add My Tasks link to dashboard sidebar
 - [x] Create onboarding tour for new users
 - [x] Implement task due date browser notifications
+
+## Phase 65: Team Productivity Features
+- [x] Create email digest service for task summaries
+- [x] Add email digest preference settings to UserPreferences
+- [x] Build team task dashboard for managers
+- [x] Create team member task list view
+- [x] Implement task delegation with reassignment
+- [x] Add delegation notes and deadline adjustment

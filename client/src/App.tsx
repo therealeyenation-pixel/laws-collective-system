@@ -264,6 +264,8 @@ import ForeignQualification from "@/pages/ForeignQualification";
 import InternationalRegistration from "@/pages/InternationalRegistration";
 import TickerAdmin from "@/pages/TickerAdmin";
 import MyTasks from "@/pages/MyTasks";
+import TeamTaskDashboard from "@/pages/TeamTaskDashboard";
+import TaskDelegation from "@/pages/TaskDelegation";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -407,6 +409,7 @@ function Router() {
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
       <Route path="/settings/preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
+      <Route path="/user-preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} minRole="user" />}</Route>
       <Route path="/house-contracts">{() => <ProtectedRoute component={HouseContractManagement} minRole="user" />}</Route>
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
@@ -711,6 +714,8 @@ function Router() {
       <Route path="/international-registration">{() => <ProtectedRoute component={InternationalRegistration} minRole="user" />}</Route>
       <Route path="/ticker-admin">{() => <ProtectedRoute component={TickerAdmin} minRole="admin" />}</Route>
       <Route path="/my-tasks">{() => <ProtectedRoute component={MyTasks} minRole="user" />}</Route>
+      <Route path="/team-tasks">{() => <ProtectedRoute component={TeamTaskDashboard} minRole="staff" />}</Route>
+      <Route path="/task-delegation">{() => <ProtectedRoute component={TaskDelegation} minRole="user" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

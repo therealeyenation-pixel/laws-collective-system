@@ -39,7 +39,7 @@ import {
   CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye,
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
-  Target, TrendingUp
+  Target, TrendingUp, ArrowLeftRight
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -529,6 +529,8 @@ const menuCategories: MenuCategory[] = [
     items: [
       { icon: UserCircle, label: "My Profile", path: "/my-profile", minRole: "user" },
       { icon: ClipboardList, label: "My Tasks", path: "/my-tasks", minRole: "user" },
+      { icon: Users, label: "Team Tasks", path: "/team-tasks", minRole: "staff" },
+      { icon: ArrowLeftRight, label: "Task Delegation", path: "/task-delegation", minRole: "user" },
       { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
       { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
