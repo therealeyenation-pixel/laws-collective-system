@@ -156,6 +156,8 @@ export default function ExecutiveDashboard() {
               </div>
             </Card>
           ))}
+        </div>
+
         {/* Live Ticker and Weather */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           <div className="lg:col-span-3">
@@ -164,8 +166,6 @@ export default function ExecutiveDashboard() {
           <div className="lg:col-span-1">
             <WeatherWidget compact />
           </div>
-        </div>
-
         </div>
 
         {/* Government Actions */}

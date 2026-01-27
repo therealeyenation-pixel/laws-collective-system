@@ -175,21 +175,23 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
   if (compact) {
     return (
       <Card className={className}>
-        <CardContent className="p-3">
-          <div className="flex items-center justify-between">
+        <CardContent className="p-4">
+          <div className="flex flex-col space-y-3">
+            {/* Location */}
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <MapPin className="w-3 h-3 flex-shrink-0" />
+              <span className="truncate">{weather.location}</span>
+            </div>
+            {/* Temperature and condition */}
             <div className="flex items-center gap-3">
-              <WeatherIcon className="w-8 h-8 text-blue-500" />
-              <div>
-                <div className="flex items-center gap-1">
-                  <span className="text-2xl font-bold">{convertTemp(weather.temperature)}°</span>
+              <WeatherIcon className="w-10 h-10 text-blue-500 flex-shrink-0" />
+              <div className="min-w-0">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold">{convertTemp(weather.temperature)}°</span>
                   <span className="text-sm text-muted-foreground">{unitLabel}</span>
                 </div>
-                <p className="text-xs text-muted-foreground">{weather.condition}</p>
+                <p className="text-sm text-muted-foreground truncate">{weather.condition}</p>
               </div>
-            </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="w-3 h-3" />
-              <span>{weather.location}</span>
             </div>
           </div>
         </CardContent>
