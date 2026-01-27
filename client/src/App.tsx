@@ -274,6 +274,9 @@ import DelegationEscalation from "@/pages/DelegationEscalation";
 import MobileDashboard from "@/pages/MobileDashboard";
 import GlobalSearchPage from "@/pages/GlobalSearchPage";
 import ReportingCenter from "@/pages/ReportingCenter";
+import IntegrationHub from "@/pages/IntegrationHub";
+import OnboardingCenter from "@/pages/OnboardingCenter";
+import BulkOperations from "@/pages/BulkOperations";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -732,6 +735,9 @@ function Router() {
       <Route path="/mobile-dashboard" component={MobileDashboard} />
       <Route path="/global-search">{() => <ProtectedRoute component={GlobalSearchPage} />}</Route>
       <Route path="/reporting-center">{() => <ProtectedRoute component={ReportingCenter} minRole="staff" />}</Route>
+      <Route path="/integration-hub">{() => <ProtectedRoute component={IntegrationHub} minRole="admin" />}</Route>
+      <Route path="/onboarding-center">{() => <ProtectedRoute component={OnboardingCenter} />}</Route>
+      <Route path="/bulk-operations">{() => <ProtectedRoute component={BulkOperations} minRole="staff" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

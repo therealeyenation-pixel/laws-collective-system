@@ -39,7 +39,7 @@ import {
   CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye,
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
-  Target, TrendingUp, ArrowLeftRight, History, Zap
+  Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -539,6 +539,9 @@ const menuCategories: MenuCategory[] = [
       { icon: Zap, label: "Delegation Escalation", path: "/delegation-escalation", minRole: "staff" },
       { icon: Search, label: "Global Search", path: "/global-search", minRole: "user" },
       { icon: BarChart3, label: "Reporting Center", path: "/reporting-center", minRole: "staff" },
+      { icon: Plug, label: "Integration Hub", path: "/integration-hub", minRole: "admin" },
+      { icon: GraduationCap, label: "Onboarding Center", path: "/onboarding-center", minRole: "user" },
+      { icon: FileSpreadsheet, label: "Bulk Import/Export", path: "/bulk-operations", minRole: "staff" },
       { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
       { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
