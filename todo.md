@@ -8887,11 +8887,11 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Advanced Escape Room game UI - Enhanced puzzle rooms with multiple difficulty levels
 
 ## Phase 61: Article Reading & Signature Assignment Features
-- [ ] Article reading tracking - Mark articles as read with user tracking
-- [ ] Article assignment - Assign articles to users for required reading
-- [ ] Signature assignment - Assign documents to other users for signing
-- [ ] Signature request workflow - Request signatures from team members
-- [ ] Reading/signing dashboard - Track assigned items and completion status
+- [x] Article reading tracking - Mark articles as read with user tracking
+- [x] Article assignment - Assign articles to users for required reading
+- [x] Signature assignment - Assign documents to other users for signing
+- [x] Signature request workflow - Request signatures from team members
+- [x] Reading/signing dashboard - Track assigned items and completion status
 
 ## Phase 62: Department News Widget & Government Activity Tracking
 - [x] News widget component with department filtering
@@ -8964,7 +8964,7 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add weather alerts integration from NWS API
 - [x] Populate live ticker with government announcements
 - [x] Create admin panel for ticker management
-- [ ] Add ticker item CRUD operations
-- [ ] Add ticker priority management
-- [ ] Add department-specific ticker filtering
+- [x] Add ticker item CRUD operations
+- [x] Add ticker priority management
+- [x] Add department-specific ticker filtering
 
