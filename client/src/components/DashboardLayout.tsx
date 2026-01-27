@@ -48,6 +48,7 @@ import { NotificationCenter } from "./NotificationCenter";
 import { WhatsNewButton } from "./WhatsNew";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { OnboardingTour, useOnboarding } from "./OnboardingTour";
+import { OfflineStatusBar, OfflineIndicator } from "./OfflineStatusBar";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -940,11 +941,13 @@ function DashboardLayoutContent({
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <OfflineIndicator />
               <WhatsNewButton />
               <NotificationCenter />
             </div>
           </div>
         )}
+        <OfflineStatusBar />
         <main className="flex-1 p-4">{children}</main>
       </SidebarInset>
     </>

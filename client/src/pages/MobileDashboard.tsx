@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useOffline } from "@/hooks/useOffline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Home, ClipboardList, FileText, Users, DollarSign, Bell, Settings,
   ChevronRight, Plus, Search, Calendar, TrendingUp, CheckCircle,
-  Clock, AlertTriangle, Menu, X, BarChart3, Briefcase, GraduationCap
+  Clock, AlertTriangle, Menu, X, BarChart3, Briefcase, GraduationCap,
+  Wifi, WifiOff, RefreshCw, CloudOff
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
@@ -43,6 +45,7 @@ export default function MobileDashboard() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
+  const { isOnline, isSyncing, lastSyncTime, pendingChanges, syncNow } = useOffline();
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -125,13 +128,53 @@ export default function MobileDashboard() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      {/* Offline Status Banner */}
+      {!isOnline && (
+        <div className="bg-yellow-500 text-yellow-900 px-4 py-2 flex items-center justify-between text-sm">
+          <div className="flex items-center gap-2">
+            <WifiOff className="w-4 h-4" />
+            <span>You're offline. Changes will sync when connected.</span>
+          </div>
+          {pendingChanges > 0 && (
+            <Badge variant="secondary" className="bg-yellow-600 text-white">
+              {pendingChanges} pending
+            </Badge>
+          )}
+        </div>
+      )}
+
+      {/* Sync Status Bar */}
+      {isOnline && pendingChanges > 0 && (
+        <div className="bg-blue-500 text-white px-4 py-2 flex items-center justify-between text-sm">
+          <div className="flex items-center gap-2">
+            <CloudOff className="w-4 h-4" />
+            <span>{pendingChanges} changes pending sync</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-blue-600"
+            onClick={syncNow}
+            disabled={isSyncing}
+          >
+            <RefreshCw className={cn("w-4 h-4 mr-1", isSyncing && "animate-spin")} />
+            {isSyncing ? "Syncing..." : "Sync Now"}
+          </Button>
+        </div>
+      )}
+
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
         <div className="flex items-center justify-between p-4">
           <div>
             <h1 className="text-lg font-bold text-foreground">Dashboard</h1>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground flex items-center gap-1">
               Welcome, {user?.name || "User"}
+              {isOnline ? (
+                <Wifi className="w-3 h-3 text-green-500" />
+              ) : (
+                <WifiOff className="w-3 h-3 text-yellow-500" />
+              )}
             </p>
           </div>
           <div className="flex items-center gap-2">
