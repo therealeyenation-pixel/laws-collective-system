@@ -271,6 +271,9 @@ import DelegationAnalytics from "@/pages/DelegationAnalytics";
 import DelegationApprovalQueue from "@/pages/DelegationApprovalQueue";
 import DelegationHistory from "@/pages/DelegationHistory";
 import DelegationEscalation from "@/pages/DelegationEscalation";
+import MobileDashboard from "@/pages/MobileDashboard";
+import GlobalSearchPage from "@/pages/GlobalSearchPage";
+import ReportingCenter from "@/pages/ReportingCenter";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -726,6 +729,9 @@ function Router() {
       <Route path="/delegation-approvals">{() => <ProtectedRoute component={DelegationApprovalQueue} minRole="staff" />}</Route>
       <Route path="/delegation-history">{() => <ProtectedRoute component={DelegationHistory} minRole="staff" />}</Route>
       <Route path="/delegation-escalation">{() => <ProtectedRoute component={DelegationEscalation} minRole="staff" />}</Route>
+      <Route path="/mobile-dashboard" component={MobileDashboard} />
+      <Route path="/global-search">{() => <ProtectedRoute component={GlobalSearchPage} />}</Route>
+      <Route path="/reporting-center">{() => <ProtectedRoute component={ReportingCenter} minRole="staff" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

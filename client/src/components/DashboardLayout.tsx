@@ -536,6 +536,8 @@ const menuCategories: MenuCategory[] = [
       { icon: Shield, label: "Delegation Approvals", path: "/delegation-approvals", minRole: "staff" },
       { icon: History, label: "Delegation History", path: "/delegation-history", minRole: "staff" },
       { icon: Zap, label: "Delegation Escalation", path: "/delegation-escalation", minRole: "staff" },
+      { icon: Search, label: "Global Search", path: "/global-search", minRole: "user" },
+      { icon: BarChart3, label: "Reporting Center", path: "/reporting-center", minRole: "staff" },
       { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
       { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
