@@ -277,6 +277,9 @@ import ReportingCenter from "@/pages/ReportingCenter";
 import IntegrationHub from "@/pages/IntegrationHub";
 import OnboardingCenter from "@/pages/OnboardingCenter";
 import BulkOperations from "@/pages/BulkOperations";
+import BackupRestore from "@/pages/BackupRestore";
+import ActivityFeed from "@/pages/ActivityFeed";
+import CustomDashboard from "@/pages/CustomDashboard";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -738,6 +741,9 @@ function Router() {
       <Route path="/integration-hub">{() => <ProtectedRoute component={IntegrationHub} minRole="admin" />}</Route>
       <Route path="/onboarding-center">{() => <ProtectedRoute component={OnboardingCenter} />}</Route>
       <Route path="/bulk-operations">{() => <ProtectedRoute component={BulkOperations} minRole="staff" />}</Route>
+      <Route path="/backup-restore">{() => <ProtectedRoute component={BackupRestore} minRole="admin" />}</Route>
+      <Route path="/activity-feed">{() => <ProtectedRoute component={ActivityFeed} minRole="user" />}</Route>
+      <Route path="/custom-dashboard">{() => <ProtectedRoute component={CustomDashboard} minRole="user" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
