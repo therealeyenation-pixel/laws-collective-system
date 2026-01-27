@@ -269,6 +269,8 @@ import TaskDelegation from "@/pages/TaskDelegation";
 import TeamWorkload from "@/pages/TeamWorkload";
 import DelegationAnalytics from "@/pages/DelegationAnalytics";
 import DelegationApprovalQueue from "@/pages/DelegationApprovalQueue";
+import DelegationHistory from "@/pages/DelegationHistory";
+import DelegationEscalation from "@/pages/DelegationEscalation";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -722,6 +724,8 @@ function Router() {
       <Route path="/team-workload">{() => <ProtectedRoute component={TeamWorkload} minRole="staff" />}</Route>
       <Route path="/delegation-analytics">{() => <ProtectedRoute component={DelegationAnalytics} minRole="staff" />}</Route>
       <Route path="/delegation-approvals">{() => <ProtectedRoute component={DelegationApprovalQueue} minRole="staff" />}</Route>
+      <Route path="/delegation-history">{() => <ProtectedRoute component={DelegationHistory} minRole="staff" />}</Route>
+      <Route path="/delegation-escalation">{() => <ProtectedRoute component={DelegationEscalation} minRole="staff" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

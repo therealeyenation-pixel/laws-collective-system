@@ -17704,3 +17704,79 @@ export type SignatureRequestSigner = typeof signatureRequestSigners.$inferSelect
 export type InsertSignatureRequestSigner = typeof signatureRequestSigners.$inferInsert;
 
 
+/**
+ * Delegation History - Audit trail for all delegation events
+ */
+export const delegationHistory = mysqlTable("delegation_history", {
+  id: int("id").autoincrement().primaryKey(),
+  delegationId: varchar("delegationId", { length: 100 }).notNull(),
+  
+  // Action tracking
+  action: mysqlEnum("action", [
+    "created",
+    "accepted",
+    "declined",
+    "completed",
+    "approval_requested",
+    "approved",
+    "rejected",
+    "escalated",
+    "cancelled",
+    "reassigned"
+  ]).notNull(),
+  
+  // Actor info
+  actorId: int("actorId").notNull(),
+  actorName: varchar("actorName", { length: 255 }).notNull(),
+  
+  // Additional details (JSON for flexibility)
+  details: json("details"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DelegationHistory = typeof delegationHistory.$inferSelect;
+export type InsertDelegationHistory = typeof delegationHistory.$inferInsert;
+
+/**
+ * Delegation Escalations - Track escalation rules and status
+ */
+export const delegationEscalations = mysqlTable("delegation_escalations", {
+  id: int("id").autoincrement().primaryKey(),
+  delegationId: varchar("delegationId", { length: 100 }).notNull(),
+  
+  // Original approver
+  originalApproverId: int("originalApproverId").notNull(),
+  originalApproverName: varchar("originalApproverName", { length: 255 }).notNull(),
+  
+  // Escalated to
+  escalatedToId: int("escalatedToId").notNull(),
+  escalatedToName: varchar("escalatedToName", { length: 255 }).notNull(),
+  escalationLevel: int("escalationLevel").default(1).notNull(),
+  
+  // Escalation reason
+  reason: mysqlEnum("reason", [
+    "timeout",
+    "manual",
+    "priority_change",
+    "approver_unavailable"
+  ]).notNull(),
+  
+  // Threshold that triggered escalation (in hours)
+  thresholdHours: int("thresholdHours").notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "escalated",
+    "resolved",
+    "further_escalated"
+  ]).default("escalated").notNull(),
+  
+  // Timestamps
+  escalatedAt: timestamp("escalatedAt").defaultNow().notNull(),
+  resolvedAt: timestamp("resolvedAt"),
+});
+
+export type DelegationEscalation = typeof delegationEscalations.$inferSelect;
+export type InsertDelegationEscalation = typeof delegationEscalations.$inferInsert;

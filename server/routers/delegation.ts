@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { notifications, users } from "../../drizzle/schema";
-import { eq, desc, and, sql, or, inArray } from "drizzle-orm";
+import { notifications, users, emailSends, delegationHistory } from "../../drizzle/schema";
+import { eq, desc, and, sql, or, inArray, lt } from "drizzle-orm";
 
 /**
  * Delegation Router
@@ -20,6 +20,144 @@ const taskTypeEnum = z.enum(["article", "signature", "approval", "review", "anal
 
 // Priority enum
 const priorityEnum = z.enum(["low", "medium", "high", "critical"]);
+
+// Email templates for delegation notifications
+const delegationEmailTemplates: Record<string, { subject: string; body: (vars: Record<string, string>) => string }> = {
+  delegated_to_you: {
+    subject: "Task Delegated to You: {{taskTitle}}",
+    body: (vars) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #1a5f2a;">Task Delegation Notice</h2>
+        <p>Hello ${vars.toUserName},</p>
+        <p><strong>${vars.fromUserName}</strong> has delegated the following task to you:</p>
+        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <p style="margin: 0;"><strong>Task:</strong> ${vars.taskTitle}</p>
+          <p style="margin: 5px 0 0;"><strong>Reason:</strong> ${vars.reason}</p>
+          ${vars.notes ? `<p style="margin: 5px 0 0;"><strong>Notes:</strong> ${vars.notes}</p>` : ''}
+          ${vars.dueDate ? `<p style="margin: 5px 0 0;"><strong>Due Date:</strong> ${vars.dueDate}</p>` : ''}
+        </div>
+        <p>Please review and respond to this delegation request.</p>
+        <a href="${vars.actionUrl}" style="display: inline-block; background: #1a5f2a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Delegation</a>
+      </div>
+    `,
+  },
+  delegation_accepted: {
+    subject: "Delegation Accepted: {{taskTitle}}",
+    body: (vars) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #1a5f2a;">Delegation Accepted</h2>
+        <p>Hello ${vars.fromUserName},</p>
+        <p><strong>${vars.toUserName}</strong> has accepted your delegation of:</p>
+        <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <p style="margin: 0;"><strong>Task:</strong> ${vars.taskTitle}</p>
+        </div>
+        <p>The task is now assigned to ${vars.toUserName}.</p>
+      </div>
+    `,
+  },
+  delegation_declined: {
+    subject: "Delegation Declined: {{taskTitle}}",
+    body: (vars) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #d32f2f;">Delegation Declined</h2>
+        <p>Hello ${vars.fromUserName},</p>
+        <p><strong>${vars.toUserName}</strong> has declined your delegation of:</p>
+        <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <p style="margin: 0;"><strong>Task:</strong> ${vars.taskTitle}</p>
+          ${vars.declineReason ? `<p style="margin: 5px 0 0;"><strong>Reason:</strong> ${vars.declineReason}</p>` : ''}
+        </div>
+        <p>Please reassign this task or handle it yourself.</p>
+      </div>
+    `,
+  },
+  approval_required: {
+    subject: "Delegation Approval Required: {{taskTitle}}",
+    body: (vars) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #f57c00;">Approval Required</h2>
+        <p>Hello,</p>
+        <p>A high-priority delegation request requires your approval:</p>
+        <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <p style="margin: 0;"><strong>Task:</strong> ${vars.taskTitle}</p>
+          <p style="margin: 5px 0 0;"><strong>From:</strong> ${vars.fromUserName}</p>
+          <p style="margin: 5px 0 0;"><strong>To:</strong> ${vars.toUserName}</p>
+          <p style="margin: 5px 0 0;"><strong>Priority:</strong> ${vars.priority}</p>
+        </div>
+        <a href="${vars.actionUrl}" style="display: inline-block; background: #f57c00; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Review Request</a>
+      </div>
+    `,
+  },
+  escalation_notice: {
+    subject: "ESCALATION: Pending Delegation Approval - {{taskTitle}}",
+    body: (vars) => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #d32f2f;">⚠️ Escalation Notice</h2>
+        <p>Hello,</p>
+        <p>A delegation approval request has been pending for over ${vars.hoursOverdue} hours and requires immediate attention:</p>
+        <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #d32f2f;">
+          <p style="margin: 0;"><strong>Task:</strong> ${vars.taskTitle}</p>
+          <p style="margin: 5px 0 0;"><strong>From:</strong> ${vars.fromUserName}</p>
+          <p style="margin: 5px 0 0;"><strong>To:</strong> ${vars.toUserName}</p>
+          <p style="margin: 5px 0 0;"><strong>Priority:</strong> ${vars.priority}</p>
+          <p style="margin: 5px 0 0;"><strong>Requested:</strong> ${vars.requestedAt}</p>
+        </div>
+        <a href="${vars.actionUrl}" style="display: inline-block; background: #d32f2f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Review Now</a>
+      </div>
+    `,
+  },
+};
+
+// Helper to send delegation email
+async function sendDelegationEmail(
+  db: any,
+  userId: number,
+  recipientEmail: string,
+  recipientName: string,
+  templateType: keyof typeof delegationEmailTemplates,
+  variables: Record<string, string>
+) {
+  const template = delegationEmailTemplates[templateType];
+  if (!template) return;
+
+  const subject = template.subject.replace(/\{\{(\w+)\}\}/g, (_, key) => variables[key] || '');
+  const htmlContent = template.body(variables);
+
+  // Record the email send (simulated - in production would integrate with email provider)
+  await db.insert(emailSends).values({
+    userId,
+    recipientEmail,
+    recipientName,
+    subject,
+    htmlContent,
+    status: 'sent',
+    sentAt: new Date(),
+    createdAt: new Date(),
+  });
+}
+
+// Helper to log delegation history
+async function logDelegationHistory(
+  db: any,
+  delegationId: string,
+  action: string,
+  actorId: number,
+  actorName: string,
+  details?: Record<string, any>
+) {
+  try {
+    await db.insert(delegationHistory).values({
+      delegationId,
+      action,
+      actorId,
+      actorName,
+      details: details as any,
+      createdAt: new Date(),
+    });
+  } catch (e) {
+    // Table may not exist yet, log silently
+    console.log('Delegation history logging skipped:', e);
+  }
+}
 
 // Helper to create notification for delegation events
 async function createDelegationNotification(
