@@ -88,6 +88,8 @@ import WordLadder from "@/pages/games/WordLadder";
 import TriviaChallenge from "@/pages/games/TriviaChallenge";
 import SimonSays from "@/pages/games/SimonSays";
 import CommunityBuilder from "@/pages/games/CommunityBuilder";
+import FleetCommand from "@/pages/games/FleetCommand";
+import Hearts from "@/pages/games/Hearts";
 import Achievements from "@/pages/Achievements";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
@@ -701,6 +703,8 @@ function Router() {
       <Route path="/article-assignment">{() => <ProtectedRoute component={ArticleAssignment} minRole="staff" />}</Route>
       <Route path="/games/knowledge-quest">{() => <ProtectedRoute component={KnowledgeQuest} minRole="user" />}</Route>
       <Route path="/games/advanced-escape-room">{() => <ProtectedRoute component={AdvancedEscapeRoom} minRole="user" />}</Route>
+      <Route path="/games/fleet-command">{() => <ProtectedRoute component={FleetCommand} minRole="user" />}</Route>
+      <Route path="/games/hearts">{() => <ProtectedRoute component={Hearts} minRole="user" />}</Route>
       <Route path="/foreign-qualification">{() => <ProtectedRoute component={ForeignQualification} minRole="user" />}</Route>
       <Route path="/international-registration">{() => <ProtectedRoute component={InternationalRegistration} minRole="user" />}</Route>
       

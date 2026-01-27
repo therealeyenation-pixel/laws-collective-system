@@ -8881,8 +8881,8 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] All 3,530 tests passing
 
 ## Phase 60: Game Center Frontend UI Completion
-- [ ] Fleet Command game UI - Naval strategy game with ship placement and targeting
-- [ ] Hearts card game UI - Classic 4-player trick-taking card game
+- [x] Fleet Command game UI - Naval strategy game with ship placement and targeting
+- [x] Hearts card game UI - Classic 4-player trick-taking card game
 - [x] Knowledge Quest trivia game UI - Educational trivia with L.A.W.S. categories
 - [x] Advanced Escape Room game UI - Enhanced puzzle rooms with multiple difficulty levels
 
