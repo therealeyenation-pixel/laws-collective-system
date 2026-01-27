@@ -290,6 +290,9 @@ import AuditReports from "@/pages/AuditReports";
 import ApiUsageDashboard from "@/pages/ApiUsageDashboard";
 import RoleDashboard from "@/pages/RoleDashboard";
 import LanguageSettings from "@/pages/LanguageSettings";
+import BiometricSettings from "@/pages/BiometricSettings";
+import WorkflowTemplates from "@/pages/WorkflowTemplates";
+import TranslationPortal from "@/pages/TranslationPortal";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -764,6 +767,9 @@ function Router() {
       <Route path="/api-usage-dashboard">{() => <ProtectedRoute component={ApiUsageDashboard} minRole="admin" />}</Route>
       <Route path="/role-dashboard">{() => <ProtectedRoute component={RoleDashboard} minRole="admin" />}</Route>
       <Route path="/language-settings">{() => <ProtectedRoute component={LanguageSettings} minRole="user" />}</Route>
+      <Route path="/biometric-settings">{() => <ProtectedRoute component={BiometricSettings} minRole="user" />}</Route>
+      <Route path="/workflow-templates">{() => <ProtectedRoute component={WorkflowTemplates} minRole="staff" />}</Route>
+      <Route path="/translation-portal">{() => <ProtectedRoute component={TranslationPortal} minRole="user" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
