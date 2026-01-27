@@ -48,6 +48,7 @@ import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
+import { weatherApiRouter } from "./services/weather-api";
 import { houseContractsRouter } from "./routers/house-contracts";
 import { houseDashboardRouter } from "./routers/house-dashboard";
 import { ownerHouseSetupRouter } from "./routers/owner-house-setup";
@@ -261,6 +262,7 @@ export const appRouter = router({
   lifecycleManager: lifecycleManagerRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
+  weatherApi: weatherApiRouter,
   houseDashboard: houseDashboardRouter,
   ownerHouseSetup: ownerHouseSetupRouter,
   positionManagement: positionManagementRouter,

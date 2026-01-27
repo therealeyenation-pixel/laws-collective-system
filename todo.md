@@ -8953,3 +8953,9 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 ## Phase 64: Bug Fixes
 - [x] Fix weather widget display on Executive Dashboard
 
+
+## Phase 65: Weather & Ticker Improvements
+- [x] Connect weather widget to real weather API
+- [x] Add weather location user preference settings
+- [x] Add live ticker content for announcements
+
