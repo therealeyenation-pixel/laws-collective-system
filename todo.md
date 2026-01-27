@@ -8879,3 +8879,39 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Create infrastructure completion service (tokens, rewards, achievements, notifications)
 - [x] Write 47 unit tests for batch services
 - [x] All 3,530 tests passing
+
+## Phase 60: Game Center Frontend UI Completion
+- [ ] Fleet Command game UI - Naval strategy game with ship placement and targeting
+- [ ] Hearts card game UI - Classic 4-player trick-taking card game
+- [ ] Knowledge Quest trivia game UI - Educational trivia with L.A.W.S. categories
+- [ ] Advanced Escape Room game UI - Enhanced puzzle rooms with multiple difficulty levels
+
+## Phase 61: Article Reading & Signature Assignment Features
+- [ ] Article reading tracking - Mark articles as read with user tracking
+- [ ] Article assignment - Assign articles to users for required reading
+- [ ] Signature assignment - Assign documents to other users for signing
+- [ ] Signature request workflow - Request signatures from team members
+- [ ] Reading/signing dashboard - Track assigned items and completion status
+
+## Phase 62: Department News Widget & Government Activity Tracking
+- [x] News widget component with department filtering
+- [x] Government activity tracking service for regulatory/policy changes
+- [x] Finance department news widget - financial regulations, tax law changes
+- [x] Legal department news widget - court decisions, legal precedents
+- [x] HR department news widget - labor law changes, employment regulations
+- [x] Operations department news widget - industry regulations, compliance updates
+- [x] Grants department news widget - funding announcements, grant deadlines
+- [x] Education department news widget - education policy, accreditation updates
+- [x] IT department news widget - cybersecurity alerts, tech policy
+- [x] Marketing department news widget - advertising regulations, FTC updates
+- [x] Integrate news widget into all department dashboards
+
+## Phase 63: Article Reading & Signature Assignment
+- [x] Article reading tracking database tables
+- [x] Article assignment to users feature
+- [x] Mark article as read functionality
+- [x] Signature request creation with multiple signers
+- [x] Signature assignment to other users
+- [x] Sign document functionality
+- [x] Decline signature functionality
+- [x] User search for assignments

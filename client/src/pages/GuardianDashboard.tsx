@@ -1,4 +1,5 @@
 /**
+import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
  * Guardian Dashboard Page
  * Phase 19.6: Parent/guardian dashboard for monitoring student progress
  */

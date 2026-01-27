@@ -20,6 +20,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import ScheduledChecksPanel from "@/components/ScheduledChecksPanel";
+import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 
 export default function ComplianceDashboard() {
   const [dateRange, setDateRange] = useState<"7d" | "30d" | "90d" | "1y" | "all">("30d");
@@ -822,6 +823,9 @@ export default function ComplianceDashboard() {
             )}
           </CardContent>
         </Card>
+
+        {/* Government Actions & Compliance News */}
+        <DepartmentNewsWidget department="compliance" />
       </div>
     </DashboardLayout>
   );

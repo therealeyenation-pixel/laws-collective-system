@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

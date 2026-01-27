@@ -17529,3 +17529,178 @@ export const alertEscalationRules = mysqlTable("alert_escalation_rules", {
 
 export type AlertEscalationRule = typeof alertEscalationRules.$inferSelect;
 export type InsertAlertEscalationRule = typeof alertEscalationRules.$inferInsert;
+
+
+// ============================================
+// ARTICLE READING & SIGNATURE ASSIGNMENT TABLES
+// ============================================
+
+/**
+ * Articles - Content that can be assigned for reading
+ */
+export const articles = mysqlTable("articles", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Article details
+  title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  content: text("content").notNull(),
+  summary: text("summary"),
+  
+  // Categorization
+  category: varchar("category", { length: 100 }),
+  tags: json("tags"), // Array of tags
+  entityId: int("entityId"), // Related entity if any
+  
+  // Publishing
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  publishedAt: timestamp("publishedAt"),
+  publishedBy: int("publishedBy"),
+  
+  // Reading requirements
+  isRequired: boolean("isRequired").default(false).notNull(),
+  requiredForRoles: json("requiredForRoles"), // Array of roles that must read
+  requiredForDepartments: json("requiredForDepartments"), // Array of departments
+  dueDate: timestamp("dueDate"), // Optional deadline for required reading
+  
+  // Metadata
+  estimatedReadTime: int("estimatedReadTime"), // Minutes
+  attachments: json("attachments"), // Array of file URLs
+  
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Article = typeof articles.$inferSelect;
+export type InsertArticle = typeof articles.$inferInsert;
+
+/**
+ * Article Assignments - Assign articles to specific users for reading
+ */
+export const articleAssignments = mysqlTable("article_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  articleId: int("articleId").notNull(),
+  assignedToUserId: int("assignedToUserId").notNull(),
+  assignedByUserId: int("assignedByUserId").notNull(),
+  
+  // Assignment details
+  priority: mysqlEnum("priority", ["low", "normal", "high", "urgent"]).default("normal").notNull(),
+  dueDate: timestamp("dueDate"),
+  message: text("message"), // Optional message from assigner
+  
+  // Status tracking
+  status: mysqlEnum("status", ["pending", "in_progress", "completed", "overdue"]).default("pending").notNull(),
+  
+  // Reading progress
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  timeSpent: int("timeSpent"), // Seconds spent reading
+  
+  // Acknowledgment
+  acknowledged: boolean("acknowledged").default(false).notNull(),
+  acknowledgedAt: timestamp("acknowledgedAt"),
+  acknowledgmentNotes: text("acknowledgmentNotes"),
+  
+  // Reminders
+  remindersSent: int("remindersSent").default(0).notNull(),
+  lastReminderAt: timestamp("lastReminderAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ArticleAssignment = typeof articleAssignments.$inferSelect;
+export type InsertArticleAssignment = typeof articleAssignments.$inferInsert;
+
+/**
+ * Article Reading Progress - Track reading progress for articles
+ */
+export const articleReadingProgress = mysqlTable("article_reading_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  articleId: int("articleId").notNull(),
+  userId: int("userId").notNull(),
+  
+  // Progress tracking
+  progressPercent: int("progressPercent").default(0).notNull(),
+  lastPosition: int("lastPosition").default(0).notNull(), // Character position
+  
+  // Time tracking
+  totalTimeSpent: int("totalTimeSpent").default(0).notNull(), // Seconds
+  sessionsCount: int("sessionsCount").default(0).notNull(),
+  
+  // Completion
+  isCompleted: boolean("isCompleted").default(false).notNull(),
+  completedAt: timestamp("completedAt"),
+  
+  // First/last access
+  firstAccessedAt: timestamp("firstAccessedAt").defaultNow().notNull(),
+  lastAccessedAt: timestamp("lastAccessedAt").defaultNow().notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ArticleReadingProgress = typeof articleReadingProgress.$inferSelect;
+export type InsertArticleReadingProgress = typeof articleReadingProgress.$inferInsert;
+
+
+
+/**
+ * Signature Request Signers - Individual signers for a signature request
+ */
+export const signatureRequestSigners = mysqlTable("signature_request_signers", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  requestId: int("requestId").notNull(),
+  
+  // Signer info
+  userId: int("userId"), // Null if external signer
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  role: varchar("role", { length: 100 }), // e.g., "Approver", "Witness", "Party A"
+  
+  // Signing order (for sequential signing)
+  signingOrder: int("signingOrder").default(1).notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "pending",
+    "notified",
+    "viewed",
+    "signed",
+    "declined"
+  ]).default("pending").notNull(),
+  
+  // Timestamps
+  notifiedAt: timestamp("notifiedAt"),
+  viewedAt: timestamp("viewedAt"),
+  signedAt: timestamp("signedAt"),
+  declinedAt: timestamp("declinedAt"),
+  
+  // Signature data
+  signatureType: mysqlEnum("signatureType", ["drawn", "typed", "uploaded", "digital"]),
+  signatureData: text("signatureData"), // Base64 or typed name
+  signatureHash: varchar("signatureHash", { length: 255 }),
+  
+  // Decline info
+  declineReason: text("declineReason"),
+  
+  // Verification
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  
+  // Reminders
+  remindersSent: int("remindersSent").default(0).notNull(),
+  lastReminderAt: timestamp("lastReminderAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SignatureRequestSigner = typeof signatureRequestSigners.$inferSelect;
+export type InsertSignatureRequestSigner = typeof signatureRequestSigners.$inferInsert;
+
+

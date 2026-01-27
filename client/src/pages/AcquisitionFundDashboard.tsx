@@ -1,4 +1,5 @@
 /**
+import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
  * Acquisition Fund Dashboard
  * 
  * Treasury dashboard showing fund balances, progress toward targets,
