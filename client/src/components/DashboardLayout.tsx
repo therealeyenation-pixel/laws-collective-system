@@ -46,6 +46,7 @@ import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { NotificationCenter } from "./NotificationCenter";
 import { WhatsNewButton } from "./WhatsNew";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -594,6 +595,9 @@ function DashboardLayoutContent({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const userRole = (user?.role as AccessLevel) || "user";
   const isMobile = useIsMobile();
+  
+  // Enable keyboard shortcuts for navigation
+  useKeyboardShortcuts();
   
   // Track which categories and subcategories are open
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(() => {

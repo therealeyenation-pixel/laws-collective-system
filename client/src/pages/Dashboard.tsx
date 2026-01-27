@@ -43,6 +43,7 @@ import SplitCalculator from "@/components/SplitCalculator";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { LuvLedgerWidget } from "@/components/LuvLedgerWidget";
+import { QuickActionsWidget } from "@/components/QuickActionsWidget";
 
 type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
@@ -470,6 +471,9 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <LuvLedgerWidget />
         </div>
+
+        {/* Quick Actions */}
+        <QuickActionsWidget />
 
         {/* Progress Overview */}
         {totalTokensEarned > 0 && (
