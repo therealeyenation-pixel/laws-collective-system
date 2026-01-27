@@ -40,7 +40,7 @@ import {
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
-  Database, Activity
+  Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -546,6 +546,16 @@ const menuCategories: MenuCategory[] = [
       { icon: Database, label: "Backup & Restore", path: "/backup-restore", minRole: "admin" },
       { icon: Activity, label: "Activity Feed", path: "/activity-feed", minRole: "user" },
       { icon: LayoutDashboard, label: "Custom Dashboard", path: "/custom-dashboard", minRole: "user" },
+      { icon: Shield, label: "Two-Factor Auth", path: "/two-factor-setup", minRole: "user" },
+      { icon: Lock, label: "Permission Matrix", path: "/permission-matrix", minRole: "admin" },
+      { icon: GitBranch, label: "Document Versions", path: "/document-version-control", minRole: "staff" },
+      { icon: Archive, label: "Data Retention", path: "/data-retention-policies", minRole: "admin" },
+      { icon: Workflow, label: "Workflow Builder", path: "/workflow-builder", minRole: "staff" },
+      { icon: Users, label: "Real-Time Collab", path: "/real-time-collaboration", minRole: "user" },
+      { icon: FileText, label: "Audit Reports", path: "/audit-reports", minRole: "admin" },
+      { icon: Activity, label: "API Usage", path: "/api-usage-dashboard", minRole: "admin" },
+      { icon: Layout, label: "Role Dashboards", path: "/role-dashboard", minRole: "admin" },
+      { icon: Globe, label: "Language", path: "/language-settings", minRole: "user" },
       { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
       { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },

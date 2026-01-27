@@ -9138,3 +9138,77 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add widget resize and configuration options
 - [x] Save widget layout per user
 - [x] Create widget library with common widgets
+
+## Phase 73: Security - 2FA & Advanced Permissions
+
+### Two-Factor Authentication (2FA)
+- [ ] Create 2FA service with TOTP generation and verification
+- [ ] Build 2FA setup page with QR code generation
+- [ ] Add 2FA verification to login flow
+- [ ] Create backup codes for account recovery
+- [ ] Add 2FA management to user settings
+
+### Advanced Permission Matrix
+- [ ] Create granular permission system beyond basic roles
+- [ ] Build permission matrix UI for admins
+- [ ] Add entity/house-level permission overrides
+- [ ] Create custom permission sets
+- [ ] Implement permission inheritance hierarchy
+
+## Phase 74: Documents - Version Control & Data Retention
+
+### Document Version Control
+- [ ] Add version history tracking for documents
+- [ ] Create diff comparison between versions
+- [ ] Implement version rollback capability
+- [ ] Add version comments and annotations
+- [ ] Build version timeline visualization
+
+### Data Retention Policies
+- [ ] Create retention policy configuration
+- [ ] Implement automated archival based on age/status
+- [ ] Add legal hold functionality
+- [ ] Build retention compliance dashboard
+- [ ] Create data lifecycle management rules
+
+## Phase 75: Automation - Workflow Builder & Collaboration
+
+### Workflow Automation Builder
+- [ ] Create visual workflow builder with drag-and-drop
+- [ ] Add workflow triggers (events, schedules, conditions)
+- [ ] Implement workflow actions (notifications, tasks, updates)
+- [ ] Build workflow templates library
+- [ ] Add workflow execution history and logs
+
+### Real-Time Collaboration
+- [ ] Add presence indicators for active users
+- [ ] Create real-time document co-editing
+- [ ] Implement live cursor tracking
+- [ ] Add inline comments and mentions
+- [ ] Build collaboration activity feed
+
+## Phase 76: Infrastructure - Audit, API, Dashboards, i18n
+
+### Audit Log Export & Compliance Reporting
+- [ ] Create automated compliance report generation
+- [ ] Add SOC 2, GDPR report templates
+- [ ] Implement scheduled report delivery
+- [ ] Build audit export in multiple formats
+
+### API Rate Limiting & Usage Dashboard
+- [ ] Create API usage tracking service
+- [ ] Build API dashboard with usage metrics
+- [ ] Add rate limit monitoring and alerts
+- [ ] Implement cost tracking for third-party APIs
+
+### Role-Based Dashboard Customization
+- [ ] Create default dashboard configs per role
+- [ ] Add role-specific widget recommendations
+- [ ] Implement dashboard templates by role
+- [ ] Build admin dashboard assignment tool
+
+### Multi-Language Support (i18n)
+- [ ] Create i18n service with language detection
+- [ ] Add language selector to user preferences
+- [ ] Implement translation management system
+- [ ] Create language pack structure for extensibility

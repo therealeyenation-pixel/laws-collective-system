@@ -280,6 +280,16 @@ import BulkOperations from "@/pages/BulkOperations";
 import BackupRestore from "@/pages/BackupRestore";
 import ActivityFeed from "@/pages/ActivityFeed";
 import CustomDashboard from "@/pages/CustomDashboard";
+import TwoFactorSetup from "@/pages/TwoFactorSetup";
+import PermissionMatrix from "@/pages/PermissionMatrix";
+import DocumentVersionControl from "@/pages/DocumentVersionControl";
+import DataRetentionPolicies from "@/pages/DataRetentionPolicies";
+import WorkflowBuilder from "@/pages/WorkflowBuilder";
+import RealTimeCollaboration from "@/pages/RealTimeCollaboration";
+import AuditReports from "@/pages/AuditReports";
+import ApiUsageDashboard from "@/pages/ApiUsageDashboard";
+import RoleDashboard from "@/pages/RoleDashboard";
+import LanguageSettings from "@/pages/LanguageSettings";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -744,6 +754,16 @@ function Router() {
       <Route path="/backup-restore">{() => <ProtectedRoute component={BackupRestore} minRole="admin" />}</Route>
       <Route path="/activity-feed">{() => <ProtectedRoute component={ActivityFeed} minRole="user" />}</Route>
       <Route path="/custom-dashboard">{() => <ProtectedRoute component={CustomDashboard} minRole="user" />}</Route>
+      <Route path="/two-factor-setup">{() => <ProtectedRoute component={TwoFactorSetup} minRole="user" />}</Route>
+      <Route path="/permission-matrix">{() => <ProtectedRoute component={PermissionMatrix} minRole="admin" />}</Route>
+      <Route path="/document-version-control">{() => <ProtectedRoute component={DocumentVersionControl} minRole="staff" />}</Route>
+      <Route path="/data-retention-policies">{() => <ProtectedRoute component={DataRetentionPolicies} minRole="admin" />}</Route>
+      <Route path="/workflow-builder">{() => <ProtectedRoute component={WorkflowBuilder} minRole="staff" />}</Route>
+      <Route path="/real-time-collaboration">{() => <ProtectedRoute component={RealTimeCollaboration} minRole="user" />}</Route>
+      <Route path="/audit-reports">{() => <ProtectedRoute component={AuditReports} minRole="admin" />}</Route>
+      <Route path="/api-usage-dashboard">{() => <ProtectedRoute component={ApiUsageDashboard} minRole="admin" />}</Route>
+      <Route path="/role-dashboard">{() => <ProtectedRoute component={RoleDashboard} minRole="admin" />}</Route>
+      <Route path="/language-settings">{() => <ProtectedRoute component={LanguageSettings} minRole="user" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
