@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,29 @@ export default function TeamWorkload() {
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [teamMembers] = useState<TeamMemberWorkload[]>(() => generateMockWorkloadData(10));
+  const [teamMembers, setTeamMembers] = useState<TeamMemberWorkload[]>(() => generateMockWorkloadData(10));
+  const [isAutoRefresh, setIsAutoRefresh] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [refreshInterval, setRefreshInterval] = useState<number>(30);
+
+  // Refresh workload data
+  const refreshData = useCallback(() => {
+    setTeamMembers(generateMockWorkloadData(10));
+    setLastUpdated(new Date());
+    toast.success("Workload data refreshed");
+  }, []);
+
+  // Auto-refresh effect
+  useEffect(() => {
+    if (!isAutoRefresh) return;
+
+    const interval = setInterval(() => {
+      setTeamMembers(generateMockWorkloadData(10));
+      setLastUpdated(new Date());
+    }, refreshInterval * 1000);
+
+    return () => clearInterval(interval);
+  }, [isAutoRefresh, refreshInterval]);
 
   const filteredMembers = useMemo(() => {
     return teamMembers.filter((member) => {
@@ -64,11 +86,35 @@ export default function TeamWorkload() {
             <p className="text-muted-foreground">
               Monitor team capacity and balance task distribution
             </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Last updated: {lastUpdated.toLocaleTimeString()}
+              {isAutoRefresh && ` • Auto-refresh: ${refreshInterval}s`}
+            </p>
           </div>
-          <Button variant="outline" onClick={() => toast.info("Refreshing workload data...")}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
+          <div className="flex items-center gap-2">
+            <Select value={refreshInterval.toString()} onValueChange={(v) => setRefreshInterval(parseInt(v))}>
+              <SelectTrigger className="w-[100px]">
+                <SelectValue placeholder="Interval" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="15">15 sec</SelectItem>
+                <SelectItem value="30">30 sec</SelectItem>
+                <SelectItem value="60">1 min</SelectItem>
+                <SelectItem value="300">5 min</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              variant={isAutoRefresh ? "default" : "outline"}
+              size="sm"
+              onClick={() => setIsAutoRefresh(!isAutoRefresh)}
+            >
+              {isAutoRefresh ? "Auto" : "Manual"}
+            </Button>
+            <Button variant="outline" onClick={refreshData}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {/* Rebalancing Alert */}

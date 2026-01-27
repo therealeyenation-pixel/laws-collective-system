@@ -268,6 +268,7 @@ import TeamTaskDashboard from "@/pages/TeamTaskDashboard";
 import TaskDelegation from "@/pages/TaskDelegation";
 import TeamWorkload from "@/pages/TeamWorkload";
 import DelegationAnalytics from "@/pages/DelegationAnalytics";
+import DelegationApprovalQueue from "@/pages/DelegationApprovalQueue";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -720,6 +721,7 @@ function Router() {
       <Route path="/task-delegation">{() => <ProtectedRoute component={TaskDelegation} minRole="user" />}</Route>
       <Route path="/team-workload">{() => <ProtectedRoute component={TeamWorkload} minRole="staff" />}</Route>
       <Route path="/delegation-analytics">{() => <ProtectedRoute component={DelegationAnalytics} minRole="staff" />}</Route>
+      <Route path="/delegation-approvals">{() => <ProtectedRoute component={DelegationApprovalQueue} minRole="staff" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

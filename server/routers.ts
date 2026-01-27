@@ -25,6 +25,7 @@ import { entityMediaEngineRouter } from "./routers/entity-media-engine";
 import { entityPlatformEngineRouter } from "./routers/entity-platform-engine";
 import { documentVaultRouter } from "./routers/document-vault";
 import { notificationsRouter } from "./routers/notifications";
+import { delegationRouter } from "./routers/delegation";
 import { agentsRouter } from "./routers/agents";
 import { socialMediaRouter } from "./routers/social-media";
 import { emailServiceRouter } from "./routers/email-service";
@@ -240,6 +241,7 @@ export const appRouter = router({
   entityPlatform: entityPlatformEngineRouter,
   documentVault: documentVaultRouter,
   notifications: notificationsRouter,
+  delegation: delegationRouter,
   agents: agentsRouter,
   socialMedia: socialMediaRouter,
   emailService: emailServiceRouter,

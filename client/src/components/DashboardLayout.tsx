@@ -533,6 +533,7 @@ const menuCategories: MenuCategory[] = [
       { icon: ArrowLeftRight, label: "Task Delegation", path: "/task-delegation", minRole: "user" },
       { icon: Scale, label: "Team Workload", path: "/team-workload", minRole: "staff" },
       { icon: BarChart3, label: "Delegation Analytics", path: "/delegation-analytics", minRole: "staff" },
+      { icon: Shield, label: "Delegation Approvals", path: "/delegation-approvals", minRole: "staff" },
       { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
       { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
