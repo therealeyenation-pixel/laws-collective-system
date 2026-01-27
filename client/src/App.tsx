@@ -266,6 +266,8 @@ import TickerAdmin from "@/pages/TickerAdmin";
 import MyTasks from "@/pages/MyTasks";
 import TeamTaskDashboard from "@/pages/TeamTaskDashboard";
 import TaskDelegation from "@/pages/TaskDelegation";
+import TeamWorkload from "@/pages/TeamWorkload";
+import DelegationAnalytics from "@/pages/DelegationAnalytics";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -716,6 +718,8 @@ function Router() {
       <Route path="/my-tasks">{() => <ProtectedRoute component={MyTasks} minRole="user" />}</Route>
       <Route path="/team-tasks">{() => <ProtectedRoute component={TeamTaskDashboard} minRole="staff" />}</Route>
       <Route path="/task-delegation">{() => <ProtectedRoute component={TaskDelegation} minRole="user" />}</Route>
+      <Route path="/team-workload">{() => <ProtectedRoute component={TeamWorkload} minRole="staff" />}</Route>
+      <Route path="/delegation-analytics">{() => <ProtectedRoute component={DelegationAnalytics} minRole="staff" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
