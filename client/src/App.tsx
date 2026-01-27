@@ -255,6 +255,11 @@ import InvestmentReportDashboard from "@/pages/InvestmentReportDashboard";
 import ConsolidatedFinancialDashboard from "@/pages/ConsolidatedFinancialDashboard";
 import TrademarkChecklist from "@/pages/TrademarkChecklist";
 import MemberCredentials from "@/pages/MemberCredentials";
+import ArticleAssignment from "@/pages/ArticleAssignment";
+import KnowledgeQuest from "@/pages/games/KnowledgeQuest";
+import AdvancedEscapeRoom from "@/pages/games/AdvancedEscapeRoom";
+import ForeignQualification from "@/pages/ForeignQualification";
+import InternationalRegistration from "@/pages/InternationalRegistration";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -693,6 +698,11 @@ function Router() {
       <Route path="/user-management">{() => <ProtectedRoute component={UserManagement} minRole="admin" />}</Route>
       <Route path="/vendor-management">{() => <ProtectedRoute component={VendorManagement} minRole="staff" />}</Route>
       <Route path="/wellness-programs">{() => <ProtectedRoute component={WellnessPrograms} minRole="staff" />}</Route>
+      <Route path="/article-assignment">{() => <ProtectedRoute component={ArticleAssignment} minRole="staff" />}</Route>
+      <Route path="/games/knowledge-quest">{() => <ProtectedRoute component={KnowledgeQuest} minRole="user" />}</Route>
+      <Route path="/games/advanced-escape-room">{() => <ProtectedRoute component={AdvancedEscapeRoom} minRole="user" />}</Route>
+      <Route path="/foreign-qualification">{() => <ProtectedRoute component={ForeignQualification} minRole="user" />}</Route>
+      <Route path="/international-registration">{() => <ProtectedRoute component={InternationalRegistration} minRole="user" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
