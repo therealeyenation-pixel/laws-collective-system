@@ -8980,3 +8980,8 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Create Quick Actions widget for main dashboard
 - [x] Build unified My Tasks page with all pending items
 - [x] Add keyboard shortcuts for navigation
+
+## Phase 64: Onboarding & Notifications
+- [x] Add My Tasks link to dashboard sidebar
+- [x] Create onboarding tour for new users
+- [x] Implement task due date browser notifications

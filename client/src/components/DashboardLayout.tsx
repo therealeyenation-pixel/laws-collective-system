@@ -47,6 +47,7 @@ import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { NotificationCenter } from "./NotificationCenter";
 import { WhatsNewButton } from "./WhatsNew";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { OnboardingTour, useOnboarding } from "./OnboardingTour";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -527,6 +528,8 @@ const menuCategories: MenuCategory[] = [
     defaultOpen: false,
     items: [
       { icon: UserCircle, label: "My Profile", path: "/my-profile", minRole: "user" },
+      { icon: ClipboardList, label: "My Tasks", path: "/my-tasks", minRole: "user" },
+      { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
       { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
     ]
@@ -598,6 +601,9 @@ function DashboardLayoutContent({
   
   // Enable keyboard shortcuts for navigation
   useKeyboardShortcuts();
+  
+  // Onboarding tour for new users
+  const { showTour, completeTour, skipTour } = useOnboarding();
   
   // Track which categories and subcategories are open
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(() => {
@@ -704,6 +710,11 @@ function DashboardLayoutContent({
 
   return (
     <>
+      {/* Onboarding Tour */}
+      {showTour && (
+        <OnboardingTour onComplete={completeTour} onSkip={skipTour} />
+      )}
+      
       <div className="relative" ref={sidebarRef}>
         <Sidebar
           collapsible="icon"
