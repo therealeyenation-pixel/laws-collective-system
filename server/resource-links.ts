@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { seedTickerData } from "./services/ticker-seed-data";
 import { db } from "./db";
 import { resourceLinks, resourceLinkCategories } from "../drizzle/schema";
 import { eq, and, desc, sql, gte } from "drizzle-orm";
@@ -408,5 +409,12 @@ export const resourceLinksRouter = router({
         .orderBy(desc(resourceLinks.createdAt));
       
       return links;
+    }),
+
+  // Seed ticker with government announcements (admin only)
+  seedData: protectedProcedure
+    .mutation(async () => {
+      const result = await seedTickerData();
+      return result;
     }),
 });

@@ -262,6 +262,7 @@ import KnowledgeQuest from "@/pages/games/KnowledgeQuest";
 import AdvancedEscapeRoom from "@/pages/games/AdvancedEscapeRoom";
 import ForeignQualification from "@/pages/ForeignQualification";
 import InternationalRegistration from "@/pages/InternationalRegistration";
+import TickerAdmin from "@/pages/TickerAdmin";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -707,6 +708,7 @@ function Router() {
       <Route path="/games/hearts">{() => <ProtectedRoute component={Hearts} minRole="user" />}</Route>
       <Route path="/foreign-qualification">{() => <ProtectedRoute component={ForeignQualification} minRole="user" />}</Route>
       <Route path="/international-registration">{() => <ProtectedRoute component={InternationalRegistration} minRole="user" />}</Route>
+      <Route path="/ticker-admin">{() => <ProtectedRoute component={TickerAdmin} minRole="admin" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
