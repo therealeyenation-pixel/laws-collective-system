@@ -26,6 +26,8 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import ForceRepairPanel from "@/components/ForceRepairPanel";
+import ScheduledDiagnosticsPanel from "@/components/ScheduledDiagnosticsPanel";
 
 type HealthStatus = "healthy" | "warning" | "critical" | "unknown";
 
@@ -216,6 +218,12 @@ export default function SystemHealthDashboard() {
           </CardContent>
         </Card>
       )}
+
+      {/* Force Repair Panel */}
+      <ForceRepairPanel />
+
+      {/* Scheduled Diagnostics */}
+      <ScheduledDiagnosticsPanel />
 
       {/* Quick Actions */}
       <Card>
