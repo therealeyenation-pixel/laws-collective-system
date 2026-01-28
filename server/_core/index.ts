@@ -8,7 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { addClient, removeClient, clearUserTyping } from "../services/chatSSE";
-import { sdk } from "./sdk";
+import { standaloneAuth } from "./standaloneAuth";
 import { getDb } from "../db";
 import { users } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -63,7 +63,7 @@ async function startServer() {
         return;
       }
       
-      const session = await sdk.verifySession(sessionCookie);
+      const session = await standaloneAuth.verifySession(sessionCookie);
       if (!session) {
         res.status(401).json({ error: "Invalid session" });
         return;

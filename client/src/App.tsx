@@ -5,6 +5,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import DocumentAdmin from "./pages/DocumentAdmin";
 import SystemDashboard from "./pages/SystemDashboard";
@@ -414,6 +415,7 @@ function Router() {
     <Switch>
       {/* Public routes - no authentication required */}
       <Route path="/" component={Home} />
+      <Route path="/login" component={Login} />
       <Route path="/careers" component={Careers} />
       <Route path="/join" component={JoinJourney} />
       <Route path="/my-credential" component={MyCredential} />
