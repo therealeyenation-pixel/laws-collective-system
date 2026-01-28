@@ -40,7 +40,8 @@ import {
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
-  Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout
+  Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
+  Fingerprint
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -547,6 +548,7 @@ const menuCategories: MenuCategory[] = [
       { icon: Activity, label: "Activity Feed", path: "/activity-feed", minRole: "user" },
       { icon: LayoutDashboard, label: "Custom Dashboard", path: "/custom-dashboard", minRole: "user" },
       { icon: Shield, label: "Two-Factor Auth", path: "/two-factor-setup", minRole: "user" },
+      { icon: Fingerprint, label: "Biometric Auth", path: "/biometric-settings", minRole: "user" },
       { icon: Lock, label: "Permission Matrix", path: "/permission-matrix", minRole: "admin" },
       { icon: GitBranch, label: "Document Versions", path: "/document-version-control", minRole: "staff" },
       { icon: Archive, label: "Data Retention", path: "/data-retention-policies", minRole: "admin" },

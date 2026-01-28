@@ -30,7 +30,11 @@ import {
   Sparkles,
   Filter,
   Grid,
-  List
+  List,
+  Share2,
+  Download,
+  Globe,
+  Upload
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -69,11 +73,22 @@ export default function WorkflowTemplatesPage() {
   const [deployName, setDeployName] = useState('');
   const [deployDescription, setDeployDescription] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [activeTab, setActiveTab] = useState<'library' | 'community' | 'shared'>('library');
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [shareTemplate, setShareTemplate] = useState<ExtendedWorkflowTemplate | null>(null);
+  const [shareTags, setShareTags] = useState('');
 
   // tRPC mutations
   const trackUsageMutation = trpc.workflowTemplates.trackUsage.useMutation();
   const rateTemplateMutation = trpc.workflowTemplates.rateTemplate.useMutation();
   const { data: popularTemplates } = trpc.workflowTemplates.getPopularTemplates.useQuery();
+
+  // Community templates
+  const { data: communityTemplates, refetch: refetchCommunity } = trpc.sharedWorkflowTemplates.getCommunityTemplates.useQuery({ category: selectedCategory === 'all' ? undefined : selectedCategory });
+  const { data: mySharedTemplates, refetch: refetchMyShared } = trpc.sharedWorkflowTemplates.getMySharedTemplates.useQuery();
+  const shareTemplateMutation = trpc.sharedWorkflowTemplates.shareTemplate.useMutation();
+  const downloadTemplateMutation = trpc.sharedWorkflowTemplates.downloadTemplate.useMutation();
+  const rateCommunityMutation = trpc.sharedWorkflowTemplates.rateTemplate.useMutation();
 
   useEffect(() => {
     loadData();
@@ -153,6 +168,59 @@ export default function WorkflowTemplatesPage() {
     setDeployName('');
     setDeployDescription('');
     loadData();
+  };
+
+  const handleShareTemplate = (template: ExtendedWorkflowTemplate) => {
+    setShareTemplate(template);
+    setShareTags(template.tags.join(', '));
+    setIsShareOpen(true);
+  };
+
+  const handleConfirmShare = async () => {
+    if (!shareTemplate) return;
+
+    try {
+      await shareTemplateMutation.mutateAsync({
+        templateId: shareTemplate.id,
+        templateName: shareTemplate.name,
+        templateDescription: shareTemplate.description,
+        templateCategory: shareTemplate.category,
+        templateData: {
+          trigger: shareTemplate.trigger,
+          steps: shareTemplate.steps,
+        },
+        tags: shareTags.split(',').map(t => t.trim()).filter(Boolean),
+      });
+      toast.success("Template submitted for community review!");
+      setIsShareOpen(false);
+      refetchMyShared();
+    } catch (error) {
+      toast.error("Failed to share template");
+    }
+  };
+
+  const handleDownloadCommunityTemplate = async (templateId: number) => {
+    try {
+      const result = await downloadTemplateMutation.mutateAsync({ templateId });
+      if (result.templateData) {
+        // Create workflow from downloaded template
+        const workflow = workflowBuilderService.createWorkflow({
+          name: `Community Template ${Date.now()}`,
+          description: 'Downloaded from community',
+          trigger: result.templateData.trigger,
+          steps: result.templateData.steps.map((step: any) => ({
+            ...step,
+            id: `step_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+          })),
+          isActive: false,
+          createdBy: user?.name || 'Unknown'
+        });
+        toast.success("Template downloaded and added to your workflows!");
+        refetchCommunity();
+      }
+    } catch (error) {
+      toast.error("Failed to download template");
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -630,6 +698,53 @@ export default function WorkflowTemplatesPage() {
               <Button onClick={handleConfirmDeploy} disabled={!deployName}>
                 <Play className="w-4 h-4 mr-2" />
                 Create Workflow
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Share Template Dialog */}
+        <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Share2 className="w-5 h-5" />
+                Share Template with Community
+              </DialogTitle>
+              <DialogDescription>
+                Share "{shareTemplate?.name}" so others can use it
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="p-4 bg-muted/50 rounded-lg">
+                <h4 className="font-medium mb-2">{shareTemplate?.name}</h4>
+                <p className="text-sm text-muted-foreground">{shareTemplate?.description}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <Badge variant="outline">{shareTemplate?.category}</Badge>
+                  <span className="text-xs text-muted-foreground">{shareTemplate?.steps.length} steps</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Tags (comma separated)</Label>
+                <Input
+                  value={shareTags}
+                  onChange={(e) => setShareTags(e.target.value)}
+                  placeholder="automation, approval, finance"
+                />
+              </div>
+              <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  Your template will be reviewed by our team before being published to the community library.
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsShareOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmShare}>
+                <Upload className="w-4 h-4 mr-2" />
+                Submit for Review
               </Button>
             </DialogFooter>
           </DialogContent>

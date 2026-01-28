@@ -3,6 +3,13 @@ import { protectedProcedure, router } from "../_core/trpc";
 import { db } from "../db";
 import { translationSuggestions, translationVotes, translationContributors } from "../../drizzle/schema";
 import { eq, and, desc, sql, ne } from "drizzle-orm";
+import {
+  sendTranslationApprovedNotification,
+  sendTranslationRejectedNotification,
+  sendNewTranslationSubmissionNotification,
+  getContributorNotificationPreferences,
+  updateContributorNotificationPreferences,
+} from "../services/translationNotifications";
 
 export const translationContributionsRouter = router({
   // Submit a translation suggestion
@@ -32,6 +39,14 @@ export const translationContributionsRouter = router({
 
       // Update contributor stats
       await updateContributorStats(ctx.user.id, ctx.user.name || 'Anonymous', input.language);
+
+      // Send notification to admins about new submission
+      await sendNewTranslationSubmissionNotification({
+        translationKey: input.translationKey,
+        language: input.language,
+        suggestedText: input.suggestedText,
+        contributorName: ctx.user.name || 'Anonymous',
+      });
 
       return { success: true, id: result.insertId };
     }),
@@ -190,6 +205,48 @@ export const translationContributionsRouter = router({
           .where(eq(translationContributors.id, contributor.id));
       }
 
+      // Send notification to contributor
+      const prefs = await getContributorNotificationPreferences(suggestion.contributorId);
+      
+      if (input.status === 'approved' && prefs.emailOnApproval) {
+        await sendTranslationApprovedNotification({
+          suggestionId: input.suggestionId,
+          translationKey: suggestion.translationKey,
+          language: suggestion.language,
+          suggestedText: suggestion.suggestedText,
+          status: 'approved',
+          contributorUserId: suggestion.contributorId,
+          contributorName: suggestion.contributorName,
+        });
+      } else if (input.status === 'rejected' && prefs.emailOnRejection) {
+        await sendTranslationRejectedNotification({
+          suggestionId: input.suggestionId,
+          translationKey: suggestion.translationKey,
+          language: suggestion.language,
+          suggestedText: suggestion.suggestedText,
+          status: 'rejected',
+          reviewerNotes: input.comment,
+          contributorUserId: suggestion.contributorId,
+          contributorName: suggestion.contributorName,
+        });
+      }
+
+      return { success: true };
+    }),
+
+  // Get/update notification preferences
+  getNotificationPreferences: protectedProcedure.query(async ({ ctx }) => {
+    return await getContributorNotificationPreferences(ctx.user.id);
+  }),
+
+  updateNotificationPreferences: protectedProcedure
+    .input(z.object({
+      emailOnApproval: z.boolean().optional(),
+      emailOnRejection: z.boolean().optional(),
+      emailOnMilestone: z.boolean().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await updateContributorNotificationPreferences(ctx.user.id, input);
       return { success: true };
     }),
 
