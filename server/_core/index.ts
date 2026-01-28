@@ -33,7 +33,37 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+async function runMigrations() {
+  // Run migration to add passwordHash column if it doesn't exist
+  if (process.env.DATABASE_URL) {
+    try {
+      const mysql = await import('mysql2/promise');
+      const connection = await mysql.createConnection(process.env.DATABASE_URL);
+      
+      // Check if passwordHash column exists
+      const [columns] = await connection.execute(
+        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'passwordHash'"
+      ) as any;
+      
+      if (columns.length === 0) {
+        console.log('[Migration] Adding passwordHash column to users table...');
+        await connection.execute('ALTER TABLE `users` ADD COLUMN `passwordHash` varchar(255) NULL');
+        console.log('[Migration] passwordHash column added successfully');
+      } else {
+        console.log('[Migration] passwordHash column already exists');
+      }
+      
+      await connection.end();
+    } catch (error) {
+      console.error('[Migration] Error running migrations:', error);
+    }
+  }
+}
+
 async function startServer() {
+  // Run migrations before starting server
+  await runMigrations();
+  
   const app = express();
   const server = createServer(app);
   
