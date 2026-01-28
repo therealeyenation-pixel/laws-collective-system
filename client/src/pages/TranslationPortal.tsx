@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { 
   translationContributionService,
   TranslationSuggestion,
@@ -77,6 +78,13 @@ export default function TranslationPortalPage() {
   const [selectedKey, setSelectedKey] = useState<TranslationKey | null>(null);
   const [translationText, setTranslationText] = useState('');
 
+  // tRPC queries and mutations
+  const submitSuggestionMutation = trpc.translationContributions.submitSuggestion.useMutation();
+  const voteMutation = trpc.translationContributions.vote.useMutation();
+  const reviewMutation = trpc.translationContributions.reviewSuggestion.useMutation();
+  const { data: dbLeaderboard } = trpc.translationContributions.getLeaderboard.useQuery();
+  const { data: myProfile } = trpc.translationContributions.getMyProfile.useQuery();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -107,12 +115,13 @@ export default function TranslationPortalPage() {
     setIsContributeOpen(true);
   };
 
-  const handleSubmitTranslation = () => {
+  const handleSubmitTranslation = async () => {
     if (!selectedKey || !translationText || !user) {
       toast.error("Please enter a translation");
       return;
     }
 
+    // Submit locally
     translationContributionService.submitSuggestion(
       selectedKey.key,
       selectedKey.namespace,
@@ -122,6 +131,19 @@ export default function TranslationPortalPage() {
       user.id?.toString() || 'unknown',
       user.name || 'Anonymous'
     );
+
+    // Persist to database
+    try {
+      await submitSuggestionMutation.mutateAsync({
+        translationKey: selectedKey.key,
+        namespace: selectedKey.namespace,
+        sourceText: selectedKey.sourceText,
+        language: selectedLanguage,
+        suggestedText: translationText,
+      });
+    } catch (error) {
+      console.error('Failed to persist translation:', error);
+    }
 
     toast.success("Translation submitted for review!");
     setIsContributeOpen(false);

@@ -215,6 +215,9 @@ import { gameCenterCompleteRouter } from "./routers/game-center-complete";
 import { articleSignatureRouter } from "./services/article-signature-service";
 import { assignmentNotificationsRouter } from "./services/assignment-notifications";
 import { foreignEntityFormsRouter } from "./services/foreign-entity-forms";
+import { biometricCredentialsRouter } from "./routers/biometric-credentials";
+import { workflowTemplatesRouter } from "./routers/workflow-templates";
+import { translationContributionsRouter } from "./routers/translation-contributions";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -443,6 +446,9 @@ export const appRouter = router({
   articleSignature: articleSignatureRouter,
   assignmentNotifications: assignmentNotificationsRouter,
   foreignEntityForms: foreignEntityFormsRouter,
+  biometricCredentials: biometricCredentialsRouter,
+  workflowTemplates: workflowTemplatesRouter,
+  translationContributions: translationContributionsRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

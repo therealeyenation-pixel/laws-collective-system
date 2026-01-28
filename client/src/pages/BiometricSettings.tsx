@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { 
   biometricAuthService, 
   BiometricCredential, 
@@ -45,9 +46,25 @@ export default function BiometricSettingsPage() {
   const [editName, setEditName] = useState("");
   const [selectedType, setSelectedType] = useState<'platform' | 'cross-platform'>('platform');
 
+  // tRPC queries and mutations
+  const { data: dbCredentials, refetch: refetchCredentials } = trpc.biometricCredentials.list.useQuery();
+  const registerMutation = trpc.biometricCredentials.register.useMutation();
+  const renameMutation = trpc.biometricCredentials.rename.useMutation();
+  const deleteMutation = trpc.biometricCredentials.delete.useMutation();
+  const updateLastUsedMutation = trpc.biometricCredentials.updateLastUsed.useMutation();
+
   useEffect(() => {
     loadData();
   }, [user?.id]);
+
+  // Sync DB credentials with local state
+  useEffect(() => {
+    if (dbCredentials) {
+      // Merge DB credentials with local WebAuthn data
+      const localCreds = user?.id ? biometricAuthService.getCredentials(user.id.toString()) : [];
+      setCredentials(localCreds);
+    }
+  }, [dbCredentials, user?.id]);
 
   const loadData = async () => {
     setIsLoading(true);
@@ -81,10 +98,20 @@ export default function BiometricSettingsPage() {
         selectedType
       );
 
-      if (result.success) {
+      if (result.success && result.credential) {
+        // Persist to database
+        await registerMutation.mutateAsync({
+          credentialId: result.credential.id,
+          publicKey: result.credential.publicKey || '',
+          name: newCredentialName,
+          deviceType: selectedType,
+          deviceInfo: result.credential.deviceInfo,
+        });
+        
         toast.success("Biometric credential registered successfully");
         setIsRegisterOpen(false);
         setNewCredentialName("");
+        refetchCredentials();
         loadData();
       } else {
         toast.error(result.message);

@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { 
   workflowTemplatesService, 
   ExtendedWorkflowTemplate,
@@ -69,6 +70,11 @@ export default function WorkflowTemplatesPage() {
   const [deployDescription, setDeployDescription] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
+  // tRPC mutations
+  const trackUsageMutation = trpc.workflowTemplates.trackUsage.useMutation();
+  const rateTemplateMutation = trpc.workflowTemplates.rateTemplate.useMutation();
+  const { data: popularTemplates } = trpc.workflowTemplates.getPopularTemplates.useQuery();
+
   useEffect(() => {
     loadData();
   }, []);
@@ -102,7 +108,7 @@ export default function WorkflowTemplatesPage() {
     setIsDeployOpen(true);
   };
 
-  const handleConfirmDeploy = () => {
+  const handleConfirmDeploy = async () => {
     if (!selectedTemplate || !deployName) {
       toast.error("Please enter a workflow name");
       return;
@@ -121,12 +127,26 @@ export default function WorkflowTemplatesPage() {
       createdBy: user?.name || 'Unknown'
     });
 
-    // Record usage
+    // Record usage locally
     workflowTemplatesService.recordUsage(
       selectedTemplate.id,
       user?.id?.toString() || 'unknown',
       workflow.id
     );
+
+    // Persist to database
+    try {
+      await trackUsageMutation.mutateAsync({
+        templateId: selectedTemplate.id,
+        templateName: selectedTemplate.name,
+        templateCategory: selectedTemplate.category,
+        workflowId: workflow.id,
+        workflowName: deployName,
+        customizations: { description: deployDescription },
+      });
+    } catch (error) {
+      console.error('Failed to track template usage:', error);
+    }
 
     toast.success("Workflow created from template! You can now customize it in the Workflow Builder.");
     setIsDeployOpen(false);

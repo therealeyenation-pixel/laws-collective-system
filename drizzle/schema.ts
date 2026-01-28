@@ -17780,3 +17780,151 @@ export const delegationEscalations = mysqlTable("delegation_escalations", {
 
 export type DelegationEscalation = typeof delegationEscalations.$inferSelect;
 export type InsertDelegationEscalation = typeof delegationEscalations.$inferInsert;
+
+
+/**
+ * Biometric Credentials - WebAuthn passkey storage
+ */
+export const biometricCredentials = mysqlTable("biometric_credentials", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  // Credential identification
+  credentialId: varchar("credentialId", { length: 512 }).notNull().unique(),
+  publicKey: text("publicKey").notNull(),
+  
+  // Device info
+  name: varchar("name", { length: 255 }).notNull(),
+  deviceType: mysqlEnum("deviceType", ["platform", "cross-platform"]).notNull(),
+  deviceInfo: varchar("deviceInfo", { length: 255 }),
+  
+  // Counter for replay attack prevention
+  counter: bigint("counter", { mode: "number" }).default(0).notNull(),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  lastUsedAt: timestamp("lastUsedAt"),
+});
+
+export type BiometricCredential = typeof biometricCredentials.$inferSelect;
+export type InsertBiometricCredential = typeof biometricCredentials.$inferInsert;
+
+/**
+ * Workflow Template Usage - Track template deployments
+ */
+export const workflowTemplateUsage = mysqlTable("workflow_template_usage", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  // Template reference
+  templateId: varchar("templateId", { length: 100 }).notNull(),
+  templateName: varchar("templateName", { length: 255 }).notNull(),
+  templateCategory: varchar("templateCategory", { length: 100 }).notNull(),
+  
+  // Created workflow
+  workflowId: varchar("workflowId", { length: 100 }).notNull(),
+  workflowName: varchar("workflowName", { length: 255 }).notNull(),
+  
+  // Customizations applied
+  customizations: json("customizations"),
+  
+  // Timestamps
+  deployedAt: timestamp("deployedAt").defaultNow().notNull(),
+});
+
+export type WorkflowTemplateUsage = typeof workflowTemplateUsage.$inferSelect;
+export type InsertWorkflowTemplateUsage = typeof workflowTemplateUsage.$inferInsert;
+
+/**
+ * Workflow Template Ratings
+ */
+export const workflowTemplateRatings = mysqlTable("workflow_template_ratings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  templateId: varchar("templateId", { length: 100 }).notNull(),
+  rating: int("rating").notNull(), // 1-5
+  comment: text("comment"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type WorkflowTemplateRating = typeof workflowTemplateRatings.$inferSelect;
+export type InsertWorkflowTemplateRating = typeof workflowTemplateRatings.$inferInsert;
+
+/**
+ * Translation Suggestions - Community contributed translations
+ */
+export const translationSuggestions = mysqlTable("translation_suggestions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Translation key info
+  translationKey: varchar("translationKey", { length: 255 }).notNull(),
+  namespace: varchar("namespace", { length: 100 }).notNull(),
+  sourceText: text("sourceText").notNull(),
+  
+  // Suggested translation
+  language: varchar("language", { length: 10 }).notNull(),
+  suggestedText: text("suggestedText").notNull(),
+  
+  // Contributor
+  contributorId: int("contributorId").notNull(),
+  contributorName: varchar("contributorName", { length: 255 }).notNull(),
+  
+  // Review status
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  reviewerId: int("reviewerId"),
+  reviewerComment: text("reviewerComment"),
+  reviewedAt: timestamp("reviewedAt"),
+  
+  // Voting
+  votes: int("votes").default(0).notNull(),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TranslationSuggestion = typeof translationSuggestions.$inferSelect;
+export type InsertTranslationSuggestion = typeof translationSuggestions.$inferInsert;
+
+/**
+ * Translation Votes - Track who voted on suggestions
+ */
+export const translationVotes = mysqlTable("translation_votes", {
+  id: int("id").autoincrement().primaryKey(),
+  suggestionId: int("suggestionId").notNull(),
+  userId: int("userId").notNull(),
+  voteType: mysqlEnum("voteType", ["up", "down"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TranslationVote = typeof translationVotes.$inferSelect;
+export type InsertTranslationVote = typeof translationVotes.$inferInsert;
+
+/**
+ * Translation Contributors - Track contributor stats and rankings
+ */
+export const translationContributors = mysqlTable("translation_contributors", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  userName: varchar("userName", { length: 255 }).notNull(),
+  
+  // Stats
+  totalSuggestions: int("totalSuggestions").default(0).notNull(),
+  approvedSuggestions: int("approvedSuggestions").default(0).notNull(),
+  rejectedSuggestions: int("rejectedSuggestions").default(0).notNull(),
+  totalVotesReceived: int("totalVotesReceived").default(0).notNull(),
+  
+  // Score and rank
+  score: int("score").default(0).notNull(),
+  rank: mysqlEnum("rank", ["beginner", "contributor", "expert", "master"]).default("beginner").notNull(),
+  
+  // Languages contributed to
+  languages: json("languages"), // Array of language codes
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TranslationContributor = typeof translationContributors.$inferSelect;
+export type InsertTranslationContributor = typeof translationContributors.$inferInsert;

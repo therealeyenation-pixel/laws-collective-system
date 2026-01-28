@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS biometric_credentials (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  credentialId VARCHAR(512) NOT NULL UNIQUE,\n  publicKey TEXT NOT NULL,\n  name VARCHAR(255) NOT NULL,\n  deviceType ENUM('platform', 'cross-platform') NOT NULL,\n  deviceInfo VARCHAR(255),\n  counter BIGINT DEFAULT 0 NOT NULL,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  lastUsedAt TIMESTAMP NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS biometric_credentials (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  credentialId VARCHAR(512) NOT NULL UNIQUE,\n  publicKey TEXT NOT NULL,\n  name VARCHAR(255) NOT NULL,\n  deviceType ENUM('platform', 'cross-platform') NOT NULL,\n  deviceInfo VARCHAR(255),\n  counter BIGINT DEFAULT 0 NOT NULL,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  lastUsedAt TIMESTAMP NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1592
+}
