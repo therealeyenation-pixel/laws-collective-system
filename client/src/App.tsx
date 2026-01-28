@@ -303,6 +303,11 @@ import AdminTemplateReviews from "@/pages/AdminTemplateReviews";
 import ExternalApiIntegrations from "@/pages/ExternalApiIntegrations";
 import ComplianceMonitoring from "@/pages/ComplianceMonitoring";
 import MultiTenantManagement from "@/pages/MultiTenantManagement";
+import DataExport from "@/pages/DataExport";
+import DocumentationGenerator from "@/pages/DocumentationGenerator";
+import SystemHealth from "@/pages/SystemHealth";
+import BackupSettings from "@/pages/BackupSettings";
+import OfflineSettings from "@/pages/OfflineSettings";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -789,6 +794,11 @@ function Router() {
       <Route path="/external-api-integrations">{() => <ProtectedRoute component={ExternalApiIntegrations} minRole="admin" />}</Route>
       <Route path="/compliance-monitoring">{() => <ProtectedRoute component={ComplianceMonitoring} minRole="staff" />}</Route>
       <Route path="/multi-tenant-management">{() => <ProtectedRoute component={MultiTenantManagement} minRole="admin" />}</Route>
+      <Route path="/data-export">{() => <ProtectedRoute component={DataExport} minRole="admin" />}</Route>
+      <Route path="/documentation-generator">{() => <ProtectedRoute component={DocumentationGenerator} minRole="admin" />}</Route>
+      <Route path="/system-health">{() => <ProtectedRoute component={SystemHealth} minRole="admin" />}</Route>
+      <Route path="/backup-settings">{() => <ProtectedRoute component={BackupSettings} minRole="admin" />}</Route>
+      <Route path="/offline-settings">{() => <ProtectedRoute component={OfflineSettings} />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
