@@ -50,30 +50,44 @@ async function runMigrations() {
         await connection.execute(`
           CREATE TABLE users (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            openId VARCHAR(255) UNIQUE,
-            name VARCHAR(255),
-            email VARCHAR(255),
-            avatarUrl TEXT,
-            role VARCHAR(50) DEFAULT 'user',
+            openId VARCHAR(64) UNIQUE NOT NULL,
+            name TEXT,
+            email VARCHAR(320),
             passwordHash VARCHAR(255),
-            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            loginMethod VARCHAR(64),
+            role ENUM('user', 'staff', 'admin', 'owner') DEFAULT 'user' NOT NULL,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+            lastSignedIn TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
           )
         `);
         console.log('[Migration] users table created successfully');
       } else {
-        // Table exists, check if passwordHash column exists
-        const [columns] = await connection.execute(
-          "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'passwordHash'"
-        ) as any;
+        // Table exists, add missing columns
+        console.log('[Migration] users table exists, checking for missing columns...');
         
-        if (columns.length === 0) {
-          console.log('[Migration] Adding passwordHash column to users table...');
-          await connection.execute('ALTER TABLE `users` ADD COLUMN `passwordHash` varchar(255) NULL');
-          console.log('[Migration] passwordHash column added successfully');
-        } else {
-          console.log('[Migration] users table and passwordHash column already exist');
+        const columnsToAdd = [
+          { name: 'passwordHash', sql: 'ALTER TABLE `users` ADD COLUMN `passwordHash` VARCHAR(255) NULL' },
+          { name: 'loginMethod', sql: 'ALTER TABLE `users` ADD COLUMN `loginMethod` VARCHAR(64) NULL' },
+          { name: 'lastSignedIn', sql: 'ALTER TABLE `users` ADD COLUMN `lastSignedIn` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL' }
+        ];
+        
+        for (const col of columnsToAdd) {
+          const [columns] = await connection.execute(
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = '${col.name}'`
+          ) as any;
+          
+          if (columns.length === 0) {
+            console.log(`[Migration] Adding ${col.name} column...`);
+            try {
+              await connection.execute(col.sql);
+              console.log(`[Migration] ${col.name} column added successfully`);
+            } catch (e: any) {
+              console.log(`[Migration] ${col.name} column may already exist or error: ${e.message}`);
+            }
+          }
         }
+        console.log('[Migration] Column check complete');
       }
       
       await connection.end();
