@@ -291,8 +291,18 @@ import ApiUsageDashboard from "@/pages/ApiUsageDashboard";
 import RoleDashboard from "@/pages/RoleDashboard";
 import LanguageSettings from "@/pages/LanguageSettings";
 import BiometricSettings from "@/pages/BiometricSettings";
+import CalendarIntegration from "@/pages/CalendarIntegration";
+import AIDocumentAnalysis from "@/pages/AIDocumentAnalysis";
+import DocumentImport from "@/pages/DocumentImport";
+import MemberPortal from "@/pages/MemberPortal";
+import AdvancedReporting from "@/pages/AdvancedReporting";
+import PaymentProcessing from "@/pages/PaymentProcessing";
 import WorkflowTemplates from "@/pages/WorkflowTemplates";
 import TranslationPortal from "@/pages/TranslationPortal";
+import AdminTemplateReviews from "@/pages/AdminTemplateReviews";
+import ExternalApiIntegrations from "@/pages/ExternalApiIntegrations";
+import ComplianceMonitoring from "@/pages/ComplianceMonitoring";
+import MultiTenantManagement from "@/pages/MultiTenantManagement";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -768,8 +778,17 @@ function Router() {
       <Route path="/role-dashboard">{() => <ProtectedRoute component={RoleDashboard} minRole="admin" />}</Route>
       <Route path="/language-settings">{() => <ProtectedRoute component={LanguageSettings} minRole="user" />}</Route>
       <Route path="/biometric-settings">{() => <ProtectedRoute component={BiometricSettings} minRole="user" />}</Route>
+      <Route path="/calendar-integration">{() => <ProtectedRoute component={CalendarIntegration} minRole="user" />}</Route>
+      <Route path="/ai-document-analysis">{() => <ProtectedRoute component={AIDocumentAnalysis} minRole="user" />}</Route>
+      <Route path="/document-import">{() => <ProtectedRoute component={DocumentImport} minRole="user" />}</Route>
+      <Route path="/member-portal">{() => <ProtectedRoute component={MemberPortal} minRole="user" />}</Route>
+      <Route path="/advanced-reporting">{() => <ProtectedRoute component={AdvancedReporting} minRole="staff" />}</Route>
+      <Route path="/payment-processing">{() => <ProtectedRoute component={PaymentProcessing} minRole="admin" />}</Route>
       <Route path="/workflow-templates">{() => <ProtectedRoute component={WorkflowTemplates} minRole="staff" />}</Route>
       <Route path="/translation-portal">{() => <ProtectedRoute component={TranslationPortal} minRole="user" />}</Route>
+      <Route path="/external-api-integrations">{() => <ProtectedRoute component={ExternalApiIntegrations} minRole="admin" />}</Route>
+      <Route path="/compliance-monitoring">{() => <ProtectedRoute component={ComplianceMonitoring} minRole="staff" />}</Route>
+      <Route path="/multi-tenant-management">{() => <ProtectedRoute component={MultiTenantManagement} minRole="admin" />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

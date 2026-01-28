@@ -182,3 +182,86 @@ async function getCacheStatus() {
     version: CACHE_NAME
   };
 }
+
+// Push notification event
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+
+  const data = event.data.json();
+  const options = {
+    body: data.body || 'New notification',
+    icon: '/icons/icon-192x192.png',
+    badge: '/icons/badge-72x72.png',
+    vibrate: [100, 50, 100],
+    data: {
+      url: data.url || '/',
+      dateOfArrival: Date.now(),
+    },
+    actions: data.actions || [
+      { action: 'open', title: 'Open' },
+      { action: 'dismiss', title: 'Dismiss' },
+    ],
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'L.A.W.S. Collective', options)
+  );
+});
+
+// Notification click event
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'dismiss') return;
+
+  const urlToOpen = event.notification.data?.url || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          client.navigate(urlToOpen);
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
+  );
+});
+
+// Background sync event
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-pending-data') {
+    event.waitUntil(syncPendingData());
+  }
+});
+
+// Sync pending data when back online
+async function syncPendingData() {
+  try {
+    const cache = await caches.open(DATA_CACHE);
+    const pendingRequests = await cache.match('pending-requests');
+    
+    if (pendingRequests) {
+      const requests = await pendingRequests.json();
+      
+      for (const req of requests) {
+        try {
+          await fetch(req.url, {
+            method: req.method,
+            headers: req.headers,
+            body: req.body,
+          });
+        } catch (err) {
+          console.error('[SW] Failed to sync request:', err);
+        }
+      }
+      
+      await cache.delete('pending-requests');
+    }
+  } catch (err) {
+    console.error('[SW] Sync failed:', err);
+  }
+}
