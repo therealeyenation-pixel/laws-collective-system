@@ -34,29 +34,54 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function runMigrations() {
-  // Run migration to add passwordHash column if it doesn't exist
+  // Run migration to create tables and add columns if they don't exist
   if (process.env.DATABASE_URL) {
     try {
       const mysql = await import('mysql2/promise');
       const connection = await mysql.createConnection(process.env.DATABASE_URL);
       
-      // Check if passwordHash column exists
-      const [columns] = await connection.execute(
-        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'passwordHash'"
+      // Check if users table exists
+      const [tables] = await connection.execute(
+        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users'"
       ) as any;
       
-      if (columns.length === 0) {
-        console.log('[Migration] Adding passwordHash column to users table...');
-        await connection.execute('ALTER TABLE `users` ADD COLUMN `passwordHash` varchar(255) NULL');
-        console.log('[Migration] passwordHash column added successfully');
+      if (tables.length === 0) {
+        console.log('[Migration] Creating users table...');
+        await connection.execute(`
+          CREATE TABLE users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            openId VARCHAR(255) UNIQUE,
+            name VARCHAR(255),
+            email VARCHAR(255),
+            avatarUrl TEXT,
+            role VARCHAR(50) DEFAULT 'user',
+            passwordHash VARCHAR(255),
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          )
+        `);
+        console.log('[Migration] users table created successfully');
       } else {
-        console.log('[Migration] passwordHash column already exists');
+        // Table exists, check if passwordHash column exists
+        const [columns] = await connection.execute(
+          "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'passwordHash'"
+        ) as any;
+        
+        if (columns.length === 0) {
+          console.log('[Migration] Adding passwordHash column to users table...');
+          await connection.execute('ALTER TABLE `users` ADD COLUMN `passwordHash` varchar(255) NULL');
+          console.log('[Migration] passwordHash column added successfully');
+        } else {
+          console.log('[Migration] users table and passwordHash column already exist');
+        }
       }
       
       await connection.end();
     } catch (error) {
       console.error('[Migration] Error running migrations:', error);
     }
+  } else {
+    console.log('[Migration] DATABASE_URL not set, skipping migrations');
   }
 }
 
