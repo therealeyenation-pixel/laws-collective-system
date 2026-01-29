@@ -48,12 +48,17 @@ class StandaloneAuthService {
     const passwordHash = await this.hashPassword(password);
     const openId = `local_${randomUUID()}`; // Generate a unique ID for local users
 
+    // Check if this is the first user - make them owner
+    const allUsers = await db.getAllUsers();
+    const isFirstUser = !allUsers || allUsers.length === 0;
+
     await db.upsertUser({
       openId,
       email,
       name: name || null,
       loginMethod: "email",
       lastSignedIn: new Date(),
+      role: isFirstUser ? "owner" : "user",
     });
 
     // Update password hash separately

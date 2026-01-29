@@ -112,6 +112,26 @@ export async function updateUserPassword(userId: number, passwordHash: string) {
   await db.update(users).set({ passwordHash }).where(eq(users.id, userId));
 }
 
+export async function getAllUsers() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get users: database not available");
+    return [];
+  }
+
+  return db.select().from(users);
+}
+
+export async function updateUserRole(userId: number, role: 'user' | 'staff' | 'admin' | 'owner') {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update role: database not available");
+    return;
+  }
+
+  await db.update(users).set({ role }).where(eq(users.id, userId));
+}
+
 // LuvOnPurpose-specific helpers
 
 export async function getUserBusinessEntities(userId: number) {
