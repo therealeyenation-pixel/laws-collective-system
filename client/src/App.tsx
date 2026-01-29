@@ -21,6 +21,9 @@ import OwnerHouseSetup from "./pages/OwnerHouseSetup";
 import GenesisCeremony from "./pages/GenesisCeremony";
 import Landing from "./pages/Landing";
 import Shop from "./pages/Shop";
+import Products from "./pages/Products";
+import CourseSuccess from "./pages/CourseSuccess";
+import ConsultingSuccess from "./pages/ConsultingSuccess";
 import MemberOnboarding from "./pages/MemberOnboarding";
 import RevenueCycleDashboard from "./pages/RevenueCycleDashboard";
 import BankingCredit from "./pages/BankingCredit";
@@ -423,6 +426,9 @@ function Router() {
       <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
+      <Route path="/products" component={Products} />
+      <Route path="/course-success" component={CourseSuccess} />
+      <Route path="/consulting-success" component={ConsultingSuccess} />
       <Route path="/donate/public" component={PublicDonate} />
       <Route path="/donate/thank-you" component={DonateThankYou} />
       <Route path="/donate/academy" component={Donate508} />

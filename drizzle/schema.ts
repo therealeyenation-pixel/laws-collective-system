@@ -17929,3 +17929,77 @@ export const translationContributors = mysqlTable("translation_contributors", {
 
 export type TranslationContributor = typeof translationContributors.$inferSelect;
 export type InsertTranslationContributor = typeof translationContributors.$inferInsert;
+
+
+/**
+ * Course Purchases - Track digital course purchases
+ */
+export const coursePurchases = mysqlTable("course_purchases", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Customer info
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  customerName: varchar("customerName", { length: 255 }),
+  userId: int("userId"), // Optional - linked if user is logged in
+  
+  // Product info
+  productId: varchar("productId", { length: 100 }).notNull(),
+  productName: varchar("productName", { length: 255 }).notNull(),
+  productType: varchar("productType", { length: 50 }).notNull().default("course"),
+  
+  // Payment info
+  amount: varchar("amount", { length: 20 }).notNull(),
+  currency: varchar("currency", { length: 10 }).notNull().default("USD"),
+  stripeSessionId: varchar("stripeSessionId", { length: 255 }),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  paymentStatus: mysqlEnum("paymentStatus", ["pending", "completed", "failed", "refunded"]).default("pending").notNull(),
+  
+  // Access
+  accessGranted: boolean("accessGranted").default(false).notNull(),
+  accessExpiresAt: timestamp("accessExpiresAt"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type CoursePurchase = typeof coursePurchases.$inferSelect;
+export type InsertCoursePurchase = typeof coursePurchases.$inferInsert;
+
+/**
+ * Consulting Bookings - Track consulting session bookings
+ */
+export const consultingBookings = mysqlTable("consulting_bookings", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Customer info
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  customerPhone: varchar("customerPhone", { length: 50 }),
+  userId: int("userId"),
+  
+  // Product info
+  productId: varchar("productId", { length: 100 }).notNull(),
+  productName: varchar("productName", { length: 255 }).notNull(),
+  sessionDuration: int("sessionDuration").notNull(), // in minutes
+  
+  // Payment info
+  amount: varchar("amount", { length: 20 }).notNull(),
+  currency: varchar("currency", { length: 10 }).notNull().default("USD"),
+  stripeSessionId: varchar("stripeSessionId", { length: 255 }),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  paymentStatus: mysqlEnum("paymentStatus", ["pending", "completed", "failed", "refunded"]).default("pending").notNull(),
+  
+  // Session scheduling
+  sessionStatus: mysqlEnum("sessionStatus", ["pending_payment", "pending_scheduling", "scheduled", "completed", "cancelled", "no_show"]).default("pending_payment").notNull(),
+  scheduledAt: timestamp("scheduledAt"),
+  meetingLink: varchar("meetingLink", { length: 500 }),
+  notes: text("notes"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type ConsultingBooking = typeof consultingBookings.$inferSelect;
+export type InsertConsultingBooking = typeof consultingBookings.$inferInsert;

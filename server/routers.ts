@@ -221,6 +221,7 @@ import { workflowTemplatesRouter } from "./routers/workflow-templates";
 import { translationContributionsRouter } from "./routers/translation-contributions";
 import { sharedWorkflowTemplatesRouter } from "./routers/shared-workflow-templates";
 import { adminUsersRouter } from "./routers/admin-users";
+import { courseCheckoutRouter } from "./routers/course-checkout";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -487,6 +488,7 @@ export const appRouter = router({
   translationContributions: translationContributionsRouter,
   sharedWorkflowTemplates: sharedWorkflowTemplatesRouter,
   adminUsers: adminUsersRouter,
+  courseCheckout: courseCheckoutRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({
