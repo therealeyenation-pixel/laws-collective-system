@@ -940,32 +940,40 @@ function DashboardLayoutContent({
       </div>
 
       <SidebarInset>
-        {isMobile && (
-          <div className="flex border-b h-14 items-center justify-between bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => window.history.back()}
-                className="h-9 w-9 rounded-lg bg-background flex items-center justify-center hover:bg-accent transition-colors"
-                aria-label="Go back"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </button>
-              <SidebarTrigger className="h-9 w-9 rounded-lg bg-background" />
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col gap-1">
-                  <span className="tracking-tight text-foreground">
-                    {activeMenuItem?.label ?? "Menu"}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <OfflineIndicator />
-              <WhatsNewButton />
-              <NotificationCenter />
+        {/* Navigation header - shows on both mobile and desktop */}
+        <div className="flex border-b h-14 items-center justify-between bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
+          <div className="flex items-center gap-2">
+            {/* Back button */}
+            <button
+              onClick={() => window.history.back()}
+              className="h-9 w-9 rounded-lg bg-secondary/50 flex items-center justify-center hover:bg-accent transition-colors"
+              aria-label="Go back"
+              title="Go Back"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            {/* Home button */}
+            <button
+              onClick={() => setLocation('/dashboard')}
+              className="h-9 w-9 rounded-lg bg-secondary/50 flex items-center justify-center hover:bg-accent transition-colors"
+              aria-label="Go to dashboard"
+              title="Home"
+            >
+              <Home className="h-5 w-5" />
+            </button>
+            {isMobile && <SidebarTrigger className="h-9 w-9 rounded-lg bg-secondary/50" />}
+            <div className="flex items-center gap-3 ml-2">
+              <span className="tracking-tight text-foreground font-medium">
+                {activeMenuItem?.label ?? "Dashboard"}
+              </span>
             </div>
           </div>
-        )}
+          <div className="flex items-center gap-2">
+            <OfflineIndicator />
+            <WhatsNewButton />
+            <NotificationCenter />
+          </div>
+        </div>
         <OfflineStatusBar />
         <main className="flex-1 p-4">{children}</main>
       </SidebarInset>

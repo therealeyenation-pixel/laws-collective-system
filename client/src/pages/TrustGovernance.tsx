@@ -148,12 +148,11 @@ const trustDocuments = [
 // Beneficiaries
 const beneficiaries = [
   { name: "Shanna Russell", relationship: "Founder/Trustee", status: "primary", percentage: 40, notes: "Managing beneficiary" },
-  { name: "Craig", relationship: "House Member", status: "primary", percentage: 15, notes: "Finance lead" },
-  { name: "Amber", relationship: "House Member", status: "contingent", percentage: 10, notes: "Operations" },
-  { name: "Essence", relationship: "House Member", status: "contingent", percentage: 10, notes: "Creative" },
-  { name: "Amandes", relationship: "House Member", status: "contingent", percentage: 10, notes: "Media" },
-  { name: "Cornelius", relationship: "House Member", status: "contingent", percentage: 10, notes: "Education" },
-  { name: "Future Generations", relationship: "Descendants", status: "remainder", percentage: 5, notes: "Remainder beneficiaries" },
+  { name: "Craig", relationship: "House Member", status: "primary", percentage: 10, notes: "Finance lead" },
+  { name: "Amber", relationship: "House Member", status: "contingent", percentage: 13, notes: "Operations" },
+  { name: "Essence", relationship: "House Member", status: "contingent", percentage: 13, notes: "Creative" },
+  { name: "Amandes", relationship: "House Member", status: "contingent", percentage: 13, notes: "Media" },
+  { name: "Future Generations", relationship: "Descendants", status: "remainder", percentage: 11, notes: "Reserved for future beneficiaries" },
 ];
 
 // Distribution history (sample)

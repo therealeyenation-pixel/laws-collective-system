@@ -578,8 +578,11 @@ function Router() {
       <Route path="/games/escape-room">{() => <ProtectedRoute component={EscapeRoom} minRole="user" />}</Route>
       <Route path="/games/detective-academy">{() => <ProtectedRoute component={DetectiveAcademy} minRole="user" />}</Route>
       <Route path="/games/rubiks-cube">{() => <ProtectedRoute component={RubiksCube} minRole="user" />}</Route>
- <Route path="/games/laws-quest">{() => <ProtectedRoute component={LAWSQuest} minRole="user" />}</Route>
-      <Route path="/games/dual-path-journey">{() => <ProtectedRoute component={DualPathJourney} minRole="user" />}</Route>     <Route path="/games/yahtzee">{() => <ProtectedRoute component={Yahtzee} minRole="user" />}</Route>
+      <Route path="/games/spades">{() => <ProtectedRoute component={Spades} minRole="user" />}</Route>
+      <Route path="/games/hearts">{() => <ProtectedRoute component={Hearts} minRole="user" />}</Route>
+      <Route path="/games/laws-quest">{() => <ProtectedRoute component={LAWSQuest} minRole="user" />}</Route>
+      <Route path="/games/dual-path-journey">{() => <ProtectedRoute component={DualPathJourney} minRole="user" />}</Route>
+      <Route path="/games/yahtzee">{() => <ProtectedRoute component={Yahtzee} minRole="user" />}</Route>
       <Route path="/games/scrabble">{() => <ProtectedRoute component={ScrabbleGame} minRole="user" />}</Route>
       <Route path="/games/dominoes">{() => <ProtectedRoute component={Dominoes} minRole="user" />}</Route>
       <Route path="/games/mancala">{() => <ProtectedRoute component={Mancala} minRole="user" />}</Route>

@@ -9460,3 +9460,50 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add cloud storage provider presets
 - [x] Create backup configuration templates
 - [x] Add one-click backup setup for common providers
+
+## Phase 32: Fix Game Issues
+- [ ] Crossword game hints not working
+- [ ] Spades game not working  
+- [ ] Weather Wizards game - check functionality
+
+- [ ] Agents list not complete
+
+## Phase 33: Comprehensive System Check
+- [ ] Document Vault - check for missing files
+- [ ] HR Directory - check employee data
+- [ ] Position Requisitions - check data
+- [ ] Teams links - check functionality
+- [ ] Agents - initialize correct agents
+- [ ] Other sections - full audit
+
+
+## Phase 34: Navigation & Data Sync
+- [ ] Add Home button to page headers
+- [ ] Add Back button to page headers
+- [ ] Seed employee data on Railway
+- [ ] Verify navigation works
+
+- [ ] Remove Matriarch from LaShanna's title (should be CEO only)
+- [ ] Move Cornelius from Trust to Academy (508-LuvOnPurpose Academy)
+
+## Phase 35: Comprehensive System Check & Fixes
+### Known Issues:
+- [x] LaShanna title: Change "Matriarch/CEO" to just "CEO"
+- [x] Cornelius entity: Move from CALEA Freeman Family Trust to Academy
+- [ ] Download buttons not working (Master Software Catalog, CEO Software Access)
+- [x] Weather widget - improved error handling with default location
+- [ ] Agents incomplete on Railway (5 vs 15 expected)
+- [ ] Employee directory empty on Railway (needs sync from Manus)
+- [ ] Business entities missing on Railway
+- [ ] LuvLedger accounts missing on Railway ($0 vs $2M)
+- [x] Home/Back navigation buttons added to DashboardLayout
+- [x] Crossword hints - verified working
+- [x] Spades game - route added
+- [ ] Procedures missing
+- [x] Fix Trust Beneficiaries:
+  - Remove Cornelius as beneficiary
+  - Craig: Change from 15% to 10%
+  - Amber: Change to 13%
+  - Essence: Change to 13%
+  - Amandes: Change to 13%
+  - Add Future placeholder for remaining %
