@@ -2,10 +2,16 @@ import { useState } from "react";
 import { MeetingWidget } from "@/components/widgets/MeetingWidget";
 import { ChatWidget } from "@/components/widgets/ChatWidget";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import DashboardLayout from "@/components/DashboardLayout";
+import { NewsBanner } from "@/components/NewsBanner";
+import { WeatherWidget } from "@/components/WeatherWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Building2,
   Users,
@@ -15,6 +21,8 @@ import {
   GraduationCap,
   FileText,
   ArrowRight,
+  ArrowLeft,
+  Home,
   CheckCircle2,
   Clock,
   AlertCircle,
@@ -34,6 +42,10 @@ import {
   Lock,
   Plus,
   Wallet,
+  Edit,
+  Trash2,
+  Save,
+  X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -145,15 +157,24 @@ const trustDocuments = [
   { name: "Distribution Policy", type: "Financial", status: "draft", date: "2024-04-01", confidential: true },
 ];
 
-// Beneficiaries
-const beneficiaries = [
-  { name: "Shanna Russell", relationship: "Founder/Trustee", status: "primary", percentage: 40, notes: "Managing beneficiary" },
-  { name: "Craig", relationship: "House Member", status: "primary", percentage: 10, notes: "Finance lead" },
-  { name: "Amber", relationship: "House Member", status: "contingent", percentage: 13, notes: "Operations" },
-  { name: "Essence", relationship: "House Member", status: "contingent", percentage: 13, notes: "Creative" },
-  { name: "Amandes", relationship: "House Member", status: "contingent", percentage: 13, notes: "Media" },
-  { name: "Future Generations", relationship: "Descendants", status: "remainder", percentage: 11, notes: "Reserved for future beneficiaries" },
+// Beneficiaries initial data
+const initialBeneficiaries = [
+  { id: 1, name: "Shanna Russell", relationship: "Founder/Trustee", status: "primary", percentage: 40, notes: "Managing beneficiary" },
+  { id: 2, name: "Craig", relationship: "House Member", status: "primary", percentage: 10, notes: "Finance lead" },
+  { id: 3, name: "Amber", relationship: "House Member", status: "contingent", percentage: 13, notes: "Operations" },
+  { id: 4, name: "Essence", relationship: "House Member", status: "contingent", percentage: 13, notes: "Creative" },
+  { id: 5, name: "Amandes", relationship: "House Member", status: "contingent", percentage: 13, notes: "Media" },
+  { id: 6, name: "Future Generations", relationship: "Descendants", status: "remainder", percentage: 11, notes: "Reserved for future beneficiaries" },
 ];
+
+type Beneficiary = {
+  id: number;
+  name: string;
+  relationship: string;
+  status: string;
+  percentage: number;
+  notes: string;
+};
 
 // Distribution history (sample)
 const distributionHistory = [
@@ -163,45 +184,119 @@ const distributionHistory = [
 export default function TrustGovernance() {
   const [selectedEntity, setSelectedEntity] = useState<string | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  
+  // Beneficiary state management
+  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>(initialBeneficiaries);
+  const [showAddBeneficiary, setShowAddBeneficiary] = useState(false);
+  const [editingBeneficiary, setEditingBeneficiary] = useState<Beneficiary | null>(null);
+  const [newBeneficiary, setNewBeneficiary] = useState<Partial<Beneficiary>>({
+    name: "",
+    relationship: "",
+    status: "contingent",
+    percentage: 0,
+    notes: ""
+  });
 
   const totalAllocation = subsidiaryEntities.reduce((sum, e) => sum + e.allocation, 0);
+  
+  // Beneficiary CRUD operations
+  const handleAddBeneficiary = () => {
+    if (!newBeneficiary.name || !newBeneficiary.relationship) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    const totalWithNew = beneficiaries.reduce((sum, b) => sum + b.percentage, 0) + (newBeneficiary.percentage || 0);
+    if (totalWithNew > 100) {
+      toast.error("Total allocation cannot exceed 100%");
+      return;
+    }
+    
+    const newId = Math.max(...beneficiaries.map(b => b.id)) + 1;
+    setBeneficiaries([...beneficiaries, { ...newBeneficiary, id: newId } as Beneficiary]);
+    setNewBeneficiary({ name: "", relationship: "", status: "contingent", percentage: 0, notes: "" });
+    setShowAddBeneficiary(false);
+    toast.success(`${newBeneficiary.name} added as beneficiary`);
+  };
+  
+  const handleEditBeneficiary = () => {
+    if (!editingBeneficiary) return;
+    
+    const otherTotal = beneficiaries.filter(b => b.id !== editingBeneficiary.id).reduce((sum, b) => sum + b.percentage, 0);
+    if (otherTotal + editingBeneficiary.percentage > 100) {
+      toast.error("Total allocation cannot exceed 100%");
+      return;
+    }
+    
+    setBeneficiaries(beneficiaries.map(b => b.id === editingBeneficiary.id ? editingBeneficiary : b));
+    setEditingBeneficiary(null);
+    toast.success("Beneficiary updated");
+  };
+  
+  const handleDeleteBeneficiary = (id: number) => {
+    const beneficiary = beneficiaries.find(b => b.id === id);
+    if (beneficiary?.status === "primary") {
+      toast.error("Cannot remove primary beneficiaries. Change status first.");
+      return;
+    }
+    setBeneficiaries(beneficiaries.filter(b => b.id !== id));
+    toast.success("Beneficiary removed");
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-      {/* Header */}
-      <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container max-w-7xl py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Landmark className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-foreground">Trust Governance Dashboard</h1>
-                  <p className="text-sm text-muted-foreground">Calea Freeman Family Trust | EIN: 98-6109577</p>
+    <DashboardLayout>
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
+        {/* News Banner */}
+        <NewsBanner />
+        
+        {/* Header with Back Button */}
+        <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container max-w-7xl py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Link href="/">
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <ArrowLeft className="w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link href="/">
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Home className="w-5 h-5" />
+                  </Button>
+                </Link>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Landmark className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-foreground">Trust Governance Dashboard</h1>
+                    <p className="text-sm text-muted-foreground">Calea Freeman Family Trust | EIN: 98-6109577</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <Link href="/business-formation">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Building2 className="w-4 h-4" />
-                  Entity Management
-                </Button>
-              </Link>
-              <Link href="/document-vault">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <FileText className="w-4 h-4" />
-                  Document Vault
-                </Button>
-              </Link>
+              <div className="flex gap-2">
+                <Link href="/business-formation">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Building2 className="w-4 h-4" />
+                    Entity Management
+                  </Button>
+                </Link>
+                <Link href="/document-vault">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <FileText className="w-4 h-4" />
+                    Document Vault
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="container max-w-7xl py-8 space-y-8">
+        <main className="container max-w-7xl py-8 space-y-8">
+          {/* Weather Widget */}
+          <div className="flex justify-end">
+            <WeatherWidget compact className="w-64" />
+          </div>
         {/* Trust Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
@@ -471,16 +566,108 @@ export default function TrustGovernance() {
                           Current and contingent beneficiaries of the Trust
                         </CardDescription>
                       </div>
-                      <Button size="sm" className="gap-2" onClick={() => toast.info("Add beneficiary feature coming soon")}>
-                        <Plus className="w-4 h-4" />
-                        Add Beneficiary
-                      </Button>
+                      <Dialog open={showAddBeneficiary} onOpenChange={setShowAddBeneficiary}>
+                        <DialogTrigger asChild>
+                          <Button size="sm" className="gap-2">
+                            <Plus className="w-4 h-4" />
+                            Add Beneficiary
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Add New Beneficiary</DialogTitle>
+                            <DialogDescription>
+                              Add a new beneficiary to the Trust. Total allocation cannot exceed 100%.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="name">Full Name *</Label>
+                              <Input
+                                id="name"
+                                value={newBeneficiary.name}
+                                onChange={(e) => setNewBeneficiary({...newBeneficiary, name: e.target.value})}
+                                placeholder="Enter beneficiary name"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="relationship">Relationship *</Label>
+                              <Select
+                                value={newBeneficiary.relationship}
+                                onValueChange={(value) => setNewBeneficiary({...newBeneficiary, relationship: value})}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select relationship" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="House Member">House Member</SelectItem>
+                                  <SelectItem value="Spouse">Spouse</SelectItem>
+                                  <SelectItem value="Child">Child</SelectItem>
+                                  <SelectItem value="Grandchild">Grandchild</SelectItem>
+                                  <SelectItem value="Sibling">Sibling</SelectItem>
+                                  <SelectItem value="Descendants">Descendants</SelectItem>
+                                  <SelectItem value="Other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="status">Status</Label>
+                              <Select
+                                value={newBeneficiary.status}
+                                onValueChange={(value) => setNewBeneficiary({...newBeneficiary, status: value})}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="primary">Primary</SelectItem>
+                                  <SelectItem value="contingent">Contingent</SelectItem>
+                                  <SelectItem value="remainder">Remainder</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="percentage">Allocation Percentage</Label>
+                              <Input
+                                id="percentage"
+                                type="number"
+                                min="0"
+                                max="100"
+                                value={newBeneficiary.percentage}
+                                onChange={(e) => setNewBeneficiary({...newBeneficiary, percentage: Number(e.target.value)})}
+                              />
+                              <p className="text-xs text-muted-foreground">
+                                Current total: {beneficiaries.reduce((sum, b) => sum + b.percentage, 0)}% | 
+                                Available: {100 - beneficiaries.reduce((sum, b) => sum + b.percentage, 0)}%
+                              </p>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="notes">Notes</Label>
+                              <Textarea
+                                id="notes"
+                                value={newBeneficiary.notes}
+                                onChange={(e) => setNewBeneficiary({...newBeneficiary, notes: e.target.value})}
+                                placeholder="Additional notes about this beneficiary"
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => setShowAddBeneficiary(false)}>
+                              Cancel
+                            </Button>
+                            <Button onClick={handleAddBeneficiary}>
+                              <Save className="w-4 h-4 mr-2" />
+                              Add Beneficiary
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {beneficiaries.map((beneficiary, idx) => (
-                        <div key={idx} className="p-4 border rounded-lg hover:bg-secondary/30 transition-colors">
+                      {beneficiaries.map((beneficiary) => (
+                        <div key={beneficiary.id} className="p-4 border rounded-lg hover:bg-secondary/30 transition-colors">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -491,14 +678,34 @@ export default function TrustGovernance() {
                                 <p className="text-sm text-muted-foreground">{beneficiary.relationship}</p>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <Badge variant={
-                                beneficiary.status === "primary" ? "default" :
-                                beneficiary.status === "contingent" ? "secondary" : "outline"
-                              }>
-                                {beneficiary.status}
-                              </Badge>
-                              <p className="text-lg font-bold text-primary mt-1">{beneficiary.percentage}%</p>
+                            <div className="flex items-start gap-2">
+                              <div className="text-right">
+                                <Badge variant={
+                                  beneficiary.status === "primary" ? "default" :
+                                  beneficiary.status === "contingent" ? "secondary" : "outline"
+                                }>
+                                  {beneficiary.status}
+                                </Badge>
+                                <p className="text-lg font-bold text-primary mt-1">{beneficiary.percentage}%</p>
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => setEditingBeneficiary(beneficiary)}
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-destructive hover:text-destructive"
+                                  onClick={() => handleDeleteBeneficiary(beneficiary.id)}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
                             </div>
                           </div>
                           <p className="text-sm text-muted-foreground">{beneficiary.notes}</p>
@@ -507,6 +714,95 @@ export default function TrustGovernance() {
                     </div>
                   </CardContent>
                 </Card>
+                
+                {/* Edit Beneficiary Dialog */}
+                <Dialog open={!!editingBeneficiary} onOpenChange={(open) => !open && setEditingBeneficiary(null)}>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Edit Beneficiary</DialogTitle>
+                      <DialogDescription>
+                        Update beneficiary information. Total allocation cannot exceed 100%.
+                      </DialogDescription>
+                    </DialogHeader>
+                    {editingBeneficiary && (
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-name">Full Name *</Label>
+                          <Input
+                            id="edit-name"
+                            value={editingBeneficiary.name}
+                            onChange={(e) => setEditingBeneficiary({...editingBeneficiary, name: e.target.value})}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-relationship">Relationship *</Label>
+                          <Select
+                            value={editingBeneficiary.relationship}
+                            onValueChange={(value) => setEditingBeneficiary({...editingBeneficiary, relationship: value})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Founder/Trustee">Founder/Trustee</SelectItem>
+                              <SelectItem value="House Member">House Member</SelectItem>
+                              <SelectItem value="Spouse">Spouse</SelectItem>
+                              <SelectItem value="Child">Child</SelectItem>
+                              <SelectItem value="Grandchild">Grandchild</SelectItem>
+                              <SelectItem value="Sibling">Sibling</SelectItem>
+                              <SelectItem value="Descendants">Descendants</SelectItem>
+                              <SelectItem value="Other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-status">Status</Label>
+                          <Select
+                            value={editingBeneficiary.status}
+                            onValueChange={(value) => setEditingBeneficiary({...editingBeneficiary, status: value})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="primary">Primary</SelectItem>
+                              <SelectItem value="contingent">Contingent</SelectItem>
+                              <SelectItem value="remainder">Remainder</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-percentage">Allocation Percentage</Label>
+                          <Input
+                            id="edit-percentage"
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={editingBeneficiary.percentage}
+                            onChange={(e) => setEditingBeneficiary({...editingBeneficiary, percentage: Number(e.target.value)})}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-notes">Notes</Label>
+                          <Textarea
+                            id="edit-notes"
+                            value={editingBeneficiary.notes}
+                            onChange={(e) => setEditingBeneficiary({...editingBeneficiary, notes: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setEditingBeneficiary(null)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleEditBeneficiary}>
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Changes
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <div className="space-y-6">
@@ -1077,7 +1373,8 @@ export default function TrustGovernance() {
             </div>
           </CardContent>
         </Card>
-      </main>
-    </div>
+        </main>
+      </div>
+    </DashboardLayout>
   );
 }

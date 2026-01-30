@@ -9563,3 +9563,66 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Test complete customer journey
 - [ ] Save final checkpoint
 - [ ] Guide user to publish via UI
+
+
+## Phase 38: Dashboard Fixes
+
+### Beneficiaries Tab
+- [ ] Make Beneficiaries tab functional (remove "Coming Soon")
+- [ ] Build beneficiary management interface
+- [ ] Add/edit/remove beneficiaries
+- [ ] Show beneficiary allocation percentages
+
+### Trust Page Navigation
+- [ ] Add side panel to Trust page
+- [ ] Add back button to Trust page
+- [ ] Improve Trust page layout
+
+### Weather & News Widgets
+- [ ] Fix weather widgets (showing "Weather unavailable")
+- [ ] Add news banner to all dashboards
+- [ ] Ensure widgets work across all department dashboards
+
+### L.A.W.S. Course Platform
+- [ ] Verify /products page is accessible
+- [ ] Verify /course-dashboard page is accessible
+
+## Phase 39: Page Fixes and Trademark Search
+
+### Trademark Search Field
+- [ ] Add trademark search field to Business Formation Simulator (Entity Details step)
+- [ ] Add trademark search to Services page
+
+### Dashboard Fixes (from Phase 38)
+- [ ] Fix weather widgets showing "Weather unavailable"
+- [ ] Add news banner to all dashboards
+- [ ] Fix Beneficiaries tab functionality in Trust Governance
+- [ ] Add sidebar and back button to Trust page
+
+
+
+## Phase 40: Complete Dashboard and Page Fixes
+
+### Service Bundle Section
+- [x] Add Service Bundle Discount section to Services page
+- [x] Include trademark search field in bundle section
+- [x] Add "Build Your Bundle" functionality
+
+### Weather Widget Fix
+- [x] Fix weather widgets to work without authentication
+- [x] Use default location when user preferences unavailable
+- [x] Show actual weather data instead of "Weather unavailable"
+
+### News Banner
+- [x] Create reusable NewsBanner component
+- [x] Add news banner to PropertyDashboard
+- [x] Add news banner to PurchasingDashboard
+- [x] Add news banner to TrustGovernance
+- [x] Add news banner to other dashboards
+
+### Beneficiaries Tab
+- [x] Make Beneficiaries tab fully functional
+- [x] Add ability to add new beneficiaries
+- [x] Add ability to edit existing beneficiaries
+- [x] Add ability to delete beneficiaries
+- [ ] Connect to database for persistence
