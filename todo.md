@@ -9626,3 +9626,49 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add ability to edit existing beneficiaries
 - [x] Add ability to delete beneficiaries
 - [ ] Connect to database for persistence
+
+
+## Phase 41: Comprehensive System Rebuild
+
+### Database-Connected Features
+- [ ] Connect Beneficiaries tab to database (persist changes)
+- [ ] Connect user weather location preferences to database
+- [ ] Sync news feeds from database/external sources
+
+### Missing Dashboard Features
+- [ ] Verify weather widgets work on ALL dashboards
+- [ ] Verify news banner appears on ALL dashboards
+- [ ] Add missing navigation (back button, sidebar) to all pages
+
+### Incomplete Features from Previous Build
+- [ ] Download buttons (Master Software Catalog, CEO Software Access)
+- [ ] Agents list completion (5 vs 15 expected)
+- [ ] Employee directory sync
+- [ ] Business entities sync
+- [ ] LuvLedger accounts sync
+- [ ] Procedures documentation
+- [ ] Certificate of completion display
+- [ ] VIP Day and other offerings links
+- [ ] Calendar/scheduling integration for consulting
+- [ ] Purchase confirmation emails
+- [ ] Customer access management
+
+### Game Fixes
+- [ ] Crossword game hints
+- [ ] Spades game functionality
+- [ ] Weather Wizards game
+
+### Course Platform Completion
+- [ ] Course access system for purchasers
+- [ ] Buy Now buttons throughout site
+
+## Phase 15: System Rebuild After Migration
+- [x] Connect Beneficiaries tab to database with full CRUD operations
+- [x] Add updateHeir and removeHeir procedures to heir-distribution router
+- [x] Verify agents system has 15+ agent types (operations, support, education, analytics, guardian, finance, media, outreach, seo, engagement, hr, qaqc, purchasing, health, design, custom)
+- [x] Verify LuvLedger accounts and balance display
+- [x] Verify crossword hints functionality
+- [x] Verify Spades game functionality
+- [ ] Add download buttons for system data export
+- [ ] Sync LuvLedger to display $2M total balance
+- [ ] Add Buy Now buttons for course access
