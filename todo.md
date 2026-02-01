@@ -9742,3 +9742,50 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Book Session button for consulting
 - [x] Stripe checkout integration with dialogs
 - [x] Course access verification system
+
+
+## Phase 17: Grant Package Staffing Enhancement (Jan 30, 2026)
+
+### 17.1: Grant Template Enhancement
+- [ ] Review existing grant templates for staffing coverage
+- [ ] Add detailed staffing budget sections to grant proposals
+- [ ] Include position descriptions with AI-assisted workflow details
+- [ ] Add cost-effectiveness justifications for human + AI model
+
+### 17.2: Position Descriptions with AI Workflows
+- [ ] Create position descriptions for all funded roles
+- [ ] Document AI agent assistance for each position
+- [ ] Show productivity multiplier from AI collaboration
+- [ ] Include deliverables tied to staff output
+
+### 17.3: Staffing Budget Calculator
+- [ ] Build interactive staffing budget calculator
+- [ ] Show ROI of human + AI collaboration model
+- [ ] Include salary structures (90% initial, 10% merit increase)
+- [ ] Generate budget justifications for grant proposals
+
+
+## Phase 17: Grant Package Staffing Enhancement (COMPLETED)
+
+### 17.1: Grant Template Enhancement
+- [x] Create grant_staffing_budget_template.json with all positions
+- [x] Add salary structure (90% initial, 10% Year 2 merit)
+- [x] Include fringe benefits (20%) and overhead (15%) calculations
+- [x] Add budget narratives for funder justification
+- [x] Document workforce-to-ownership pipeline
+
+### 17.2: Position Descriptions with AI Workflows
+- [x] Create position_descriptions_ai_workflows.json
+- [x] Document AI assistant assignments for each position
+- [x] Define productivity multipliers (3-5x)
+- [x] Include workflow examples showing human-AI collaboration
+- [x] Add hiring process stages with AI assistance
+- [x] Document filled positions (CEO, Finance, Education, Media, Design, Health managers)
+
+### 17.3: Staffing Budget Calculator
+- [x] Create StaffingBudgetCalculator component
+- [x] Add position selection by tier (Executive, Directors, Managers, Coordinators, Specialists)
+- [x] Calculate total costs with fringe and overhead
+- [x] Show ROI analysis comparing to traditional staffing
+- [x] Add export functionality for grant proposals
+- [x] Integrate into Grant Tracking page as "Staffing Budget" tab
