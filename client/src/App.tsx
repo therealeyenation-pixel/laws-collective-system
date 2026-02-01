@@ -53,6 +53,7 @@ import TrainingContentManager from "@/pages/TrainingContentManager";
 import HRManagement from "@/pages/HRManagement";
 import HRApplications from "@/pages/HRApplications";
 import HRDashboard from "@/pages/HRDashboard";
+import HRAdmin from "@/pages/HRAdmin";
 import PerformanceReviews from "@/pages/PerformanceReviews";
 import FinancialLiteracyGame from "@/pages/FinancialLiteracyGame";
 import BusinessTycoonGame from "@/pages/BusinessTycoonGame";
@@ -127,6 +128,7 @@ import SignatureVerification from "./pages/SignatureVerification";
 import BoardGovernance from "./pages/BoardGovernance";
 import ContractorNetwork from "./pages/ContractorNetwork";
 import TransitionTraining from "./pages/TransitionTraining";
+import TransitionSimulator from "./pages/TransitionSimulator";
 import ContractorInvoices from "@/pages/ContractorInvoices";
 import ContractManagement from "@/pages/ContractManagement";
 import Donations from "@/pages/Donations";
@@ -505,6 +507,7 @@ function Router() {
       <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} minRole="staff" />}</Route>
       <Route path="/hr-applications">{() => <ProtectedRoute component={HRApplications} minRole="staff" />}</Route>
       <Route path="/hr-dashboard">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
+      <Route path="/hr-admin">{() => <ProtectedRoute component={HRAdmin} minRole="admin" />}</Route>
       <Route path="/performance-reviews">{() => <ProtectedRoute component={PerformanceReviews} minRole="staff" />}</Route>
       <Route path="/contractor-transition">{() => <ProtectedRoute component={ContractorTransition} minRole="staff" />}</Route>
       <Route path="/contractor-transitions">{() => <ProtectedRoute component={ContractorTransitions} minRole="staff" />}</Route>
@@ -515,6 +518,7 @@ function Router() {
       <Route path="/closed-loop-wealth">{() => <ProtectedRoute component={ClosedLoopWealth} minRole="staff" />}</Route>
       <Route path="/benefits-comparison">{() => <ProtectedRoute component={BenefitsComparison} minRole="user" />}</Route>
       <Route path="/transition-training">{() => <ProtectedRoute component={TransitionTraining} minRole="staff" />}</Route>
+      <Route path="/transition-simulator">{() => <ProtectedRoute component={TransitionSimulator} minRole="staff" />}</Route>
       <Route path="/board-governance">{() => <ProtectedRoute component={BoardGovernance} minRole="admin" />}</Route>
       <Route path="/contractor-network">{() => <ProtectedRoute component={ContractorNetwork} minRole="admin" />}</Route>
       <Route path="/contractor-invoices">{() => <ProtectedRoute component={ContractorInvoices} minRole="staff" />}</Route>
