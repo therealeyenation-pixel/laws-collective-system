@@ -9789,3 +9789,30 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Show ROI analysis comparing to traditional staffing
 - [x] Add export functionality for grant proposals
 - [x] Integrate into Grant Tracking page as "Staffing Budget" tab
+
+
+## Phase 18: Grant Position Bundles (COMPLETED)
+
+### 18.1: Bundle Data Structure
+- [x] Create grant position bundles with pre-configured packages
+- [x] Workforce Development Bundle (Grant Manager, Education Manager, Coordinators)
+- [x] Community Health Bundle (Health Manager, Coordinators, Support)
+- [x] Media & Outreach Bundle (Media Manager, Design, Outreach Coordinators)
+- [x] Administrative Core Bundle (HR, Finance, Operations managers)
+- [x] Full Operations Bundle (all open positions)
+- [x] Executive Leadership Bundle
+- [x] Grant Development Team Bundle
+- [x] Education Program Bundle
+
+### 18.2: Calculator Enhancement
+- [x] Add bundle card grid to staffing calculator
+- [x] Auto-select positions when bundle chosen
+- [x] Show bundle description and typical grant types
+- [x] Allow customization after bundle selection
+- [x] Visual bundle selection with icons and badges
+
+### 18.3: Grant Connection
+- [x] Link bundles to grant opportunity types
+- [x] Add getSuggestedBundles procedure to grant-management router
+- [x] Auto-suggest bundles based on grant focus areas and funder type
+- [x] Score matching based on keywords and funder type

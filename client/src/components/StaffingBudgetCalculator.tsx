@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Calculator,
   Users,
@@ -16,6 +17,12 @@ import {
   Briefcase,
   Building2,
   FileText,
+  Package,
+  GraduationCap,
+  Heart,
+  Megaphone,
+  Settings,
+  Layers,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -32,6 +39,17 @@ interface Position {
   holder?: string;
   familyRate?: boolean;
   adjustedSalary?: number;
+}
+
+interface GrantBundle {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  grantTypes: string[];
+  positionIds: string[];
+  typicalAmount: string;
+  focusAreas: string[];
 }
 
 const POSITIONS: Position[] = [
@@ -78,6 +96,89 @@ const POSITIONS: Position[] = [
   { id: "BSS2-001", title: "Business Support Specialist II", tier: "Tier 5", department: "Operations", salary: 64800, initialOffer: 58320, aiAssistant: "Support", productivityMultiplier: 2, status: "open" },
 ];
 
+const GRANT_BUNDLES: GrantBundle[] = [
+  {
+    id: "workforce-dev",
+    name: "Workforce Development",
+    description: "Staff for workforce training, career development, and employment programs. Ideal for DOL, EDA, and workforce board grants.",
+    icon: <GraduationCap className="w-5 h-5" />,
+    grantTypes: ["DOL Workforce Innovation", "EDA Economic Development", "State Workforce Boards", "WIOA Programs"],
+    positionIds: ["GM-001", "GW-001", "GC-001", "EOC-001", "HRM-001", "HROC-001", "BSS1-001"],
+    typicalAmount: "$250,000 - $750,000",
+    focusAreas: ["Job Training", "Career Pathways", "Skills Development", "Employment Services"],
+  },
+  {
+    id: "community-health",
+    name: "Community Health & Wellness",
+    description: "Staff for community health programs, wellness initiatives, and social services. Perfect for HRSA, CDC, and foundation health grants.",
+    icon: <Heart className="w-5 h-5" />,
+    grantTypes: ["HRSA Community Health", "CDC Prevention Programs", "Foundation Health Grants", "State Health Departments"],
+    positionIds: ["HOC-001", "EOC-001", "BSS1-001", "BSS2-001", "EBC-001"],
+    typicalAmount: "$150,000 - $500,000",
+    focusAreas: ["Community Wellness", "Health Education", "Prevention Programs", "Social Determinants"],
+  },
+  {
+    id: "media-outreach",
+    name: "Media & Community Outreach",
+    description: "Staff for communications, content creation, and community engagement. Suited for arts councils, media foundations, and outreach grants.",
+    icon: <Megaphone className="w-5 h-5" />,
+    grantTypes: ["NEA Arts Grants", "Media Foundations", "Community Foundations", "Corporate Sponsorships"],
+    positionIds: ["MOC-001", "DOC-001", "GW-001", "BSS1-001"],
+    typicalAmount: "$75,000 - $300,000",
+    focusAreas: ["Content Creation", "Community Engagement", "Brand Development", "Public Relations"],
+  },
+  {
+    id: "admin-core",
+    name: "Administrative Core",
+    description: "Essential administrative staff for organizational capacity building. Required foundation for any major grant program.",
+    icon: <Settings className="w-5 h-5" />,
+    grantTypes: ["Capacity Building Grants", "General Operating Support", "Foundation Core Support", "SBA Programs"],
+    positionIds: ["HRM-001", "OM-001", "FOC-001", "HROC-001", "BA-001", "EBC-001"],
+    typicalAmount: "$200,000 - $500,000",
+    focusAreas: ["Organizational Capacity", "Financial Management", "HR Systems", "Operations"],
+  },
+  {
+    id: "grant-team",
+    name: "Grant Development Team",
+    description: "Dedicated staff for grant acquisition, management, and compliance. Essential for organizations scaling grant revenue.",
+    icon: <FileText className="w-5 h-5" />,
+    grantTypes: ["Foundation Grants", "Federal Grants", "State Grants", "Corporate Grants"],
+    positionIds: ["GM-001", "GW-001", "GC-001", "FOC-001"],
+    typicalAmount: "$150,000 - $400,000",
+    focusAreas: ["Grant Writing", "Compliance", "Reporting", "Funder Relations"],
+  },
+  {
+    id: "education-program",
+    name: "Education Program",
+    description: "Staff for educational programs, curriculum development, and training delivery. Ideal for ED, foundation, and corporate education grants.",
+    icon: <GraduationCap className="w-5 h-5" />,
+    grantTypes: ["Department of Education", "Education Foundations", "Corporate Training Grants", "State Education"],
+    positionIds: ["EOC-001", "DOC-001", "PA-001", "BSS1-001"],
+    typicalAmount: "$200,000 - $600,000",
+    focusAreas: ["Curriculum Development", "Training Delivery", "Student Support", "Program Evaluation"],
+  },
+  {
+    id: "full-operations",
+    name: "Full Operations Scale-Up",
+    description: "Complete staffing package for major organizational expansion. For large federal grants or significant foundation investments.",
+    icon: <Layers className="w-5 h-5" />,
+    grantTypes: ["Major Federal Grants", "Large Foundation Awards", "Multi-Year Programs", "Scaling Initiatives"],
+    positionIds: ["ED-001", "OD-001", "GM-001", "HRM-001", "OM-001", "QM-001", "GW-001", "GC-001", "EOC-001", "HOC-001", "DOC-001", "MOC-001", "FOC-001", "HROC-001", "EBC-001", "PA-001", "BA-001", "BSS1-001", "BSS2-001"],
+    typicalAmount: "$1,000,000 - $3,000,000",
+    focusAreas: ["Organizational Scale", "Program Expansion", "Infrastructure", "Sustainability"],
+  },
+  {
+    id: "executive-leadership",
+    name: "Executive Leadership",
+    description: "Senior leadership positions for organizations ready to professionalize management. For capacity building and leadership development grants.",
+    icon: <Building2 className="w-5 h-5" />,
+    grantTypes: ["Leadership Development", "Capacity Building", "Executive Transition", "Strategic Growth"],
+    positionIds: ["CFO-001", "COO-001", "ED-001", "LCD-001", "OD-001"],
+    typicalAmount: "$500,000 - $1,500,000",
+    focusAreas: ["Executive Leadership", "Strategic Management", "Governance", "Organizational Development"],
+  },
+];
+
 const FRINGE_RATE = 0.20;
 const OVERHEAD_RATE = 0.15;
 
@@ -85,6 +186,7 @@ export default function StaffingBudgetCalculator() {
   const [selectedPositions, setSelectedPositions] = useState<Set<string>>(new Set());
   const [grantAmount, setGrantAmount] = useState<number>(500000);
   const [grantYears, setGrantYears] = useState<number>(2);
+  const [selectedBundle, setSelectedBundle] = useState<string>("");
 
   const togglePosition = (id: string) => {
     const newSelected = new Set(selectedPositions);
@@ -94,6 +196,7 @@ export default function StaffingBudgetCalculator() {
       newSelected.add(id);
     }
     setSelectedPositions(newSelected);
+    setSelectedBundle(""); // Clear bundle when manually toggling
   };
 
   const selectTier = (tier: string) => {
@@ -101,10 +204,32 @@ export default function StaffingBudgetCalculator() {
     const newSelected = new Set(selectedPositions);
     tierPositions.forEach(p => newSelected.add(p.id));
     setSelectedPositions(newSelected);
+    setSelectedBundle("");
+  };
+
+  const selectBundle = (bundleId: string) => {
+    if (!bundleId) {
+      setSelectedBundle("");
+      return;
+    }
+    const bundle = GRANT_BUNDLES.find(b => b.id === bundleId);
+    if (bundle) {
+      const newSelected = new Set<string>();
+      bundle.positionIds.forEach(id => {
+        const position = POSITIONS.find(p => p.id === id);
+        if (position && position.status === "open") {
+          newSelected.add(id);
+        }
+      });
+      setSelectedPositions(newSelected);
+      setSelectedBundle(bundleId);
+      toast.success(`${bundle.name} bundle applied`);
+    }
   };
 
   const clearSelection = () => {
     setSelectedPositions(new Set());
+    setSelectedBundle("");
   };
 
   const calculations = useMemo(() => {
@@ -145,10 +270,18 @@ export default function StaffingBudgetCalculator() {
     };
   }, [selectedPositions, grantYears, grantAmount]);
 
+  const currentBundle = GRANT_BUNDLES.find(b => b.id === selectedBundle);
+
   const exportBudget = () => {
     const selected = POSITIONS.filter(p => selectedPositions.has(p.id));
     const budgetData = {
       generatedAt: new Date().toISOString(),
+      bundleUsed: currentBundle ? {
+        name: currentBundle.name,
+        description: currentBundle.description,
+        grantTypes: currentBundle.grantTypes,
+        focusAreas: currentBundle.focusAreas,
+      } : null,
       grantParameters: {
         totalAmount: grantAmount,
         durationYears: grantYears,
@@ -175,14 +308,15 @@ export default function StaffingBudgetCalculator() {
         costSavings: calculations.costSavings,
         roiMultiplier: calculations.roiMultiplier.toFixed(2),
       },
-      budgetNarrative: `This staffing budget requests funding for ${selected.length} positions over ${grantYears} years. Through AI-assisted workflows, these positions will deliver output equivalent to ${calculations.traditionalEquivalent} traditional staff members, representing a ${calculations.roiMultiplier.toFixed(1)}x return on investment. Each position leverages dedicated AI agent assistants to multiply productivity while maintaining human oversight and expertise.`,
+      budgetNarrative: `This staffing budget requests funding for ${selected.length} positions over ${grantYears} years${currentBundle ? ` using the ${currentBundle.name} staffing bundle` : ''}. Through AI-assisted workflows, these positions will deliver output equivalent to ${calculations.traditionalEquivalent} traditional staff members, representing a ${calculations.roiMultiplier.toFixed(1)}x return on investment. Each position leverages dedicated AI agent assistants to multiply productivity while maintaining human oversight and expertise.`,
+      workforceToOwnership: "All positions are designed to support the transition from traditional employment to business ownership. Staff members who complete their tenure can transition to independent contractor status using the skills and AI tools they've mastered, building generational wealth through self-employment.",
     };
     
     const blob = new Blob([JSON.stringify(budgetData, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `staffing_budget_${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `staffing_budget_${currentBundle?.id || 'custom'}_${new Date().toISOString().split("T")[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Budget exported successfully");
@@ -194,6 +328,88 @@ export default function StaffingBudgetCalculator() {
 
   return (
     <div className="space-y-6">
+      {/* Grant Bundles Section */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="w-5 h-5" />
+                Grant Staffing Bundles
+              </CardTitle>
+              <CardDescription>
+                Pre-configured position packages for common grant types
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {GRANT_BUNDLES.map(bundle => (
+              <Card 
+                key={bundle.id}
+                className={`cursor-pointer transition-all hover:shadow-md ${
+                  selectedBundle === bundle.id ? "border-primary ring-2 ring-primary/20" : ""
+                }`}
+                onClick={() => selectBundle(bundle.id)}
+              >
+                <CardContent className="pt-4">
+                  <div className="flex items-start gap-3">
+                    <div className={`p-2 rounded-lg ${selectedBundle === bundle.id ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+                      {bundle.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-sm truncate">{bundle.name}</h4>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{bundle.description}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {bundle.positionIds.length} positions
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">{bundle.typicalAmount}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          
+          {currentBundle && (
+            <div className="mt-4 p-4 bg-primary/5 rounded-lg border border-primary/20">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h4 className="font-semibold flex items-center gap-2">
+                    {currentBundle.icon}
+                    {currentBundle.name} Bundle Selected
+                  </h4>
+                  <p className="text-sm text-muted-foreground mt-1">{currentBundle.description}</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={clearSelection}>Clear</Button>
+              </div>
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground">Typical Grant Types</p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {currentBundle.grantTypes.map((type, i) => (
+                      <Badge key={i} variant="outline" className="text-xs">{type}</Badge>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground">Focus Areas</p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {currentBundle.focusAreas.map((area, i) => (
+                      <Badge key={i} variant="secondary" className="text-xs">{area}</Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Calculator Controls */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
