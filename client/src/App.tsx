@@ -129,6 +129,9 @@ import BoardGovernance from "./pages/BoardGovernance";
 import ContractorNetwork from "./pages/ContractorNetwork";
 import TransitionTraining from "./pages/TransitionTraining";
 import TransitionSimulator from "./pages/TransitionSimulator";
+import HouseOfTongues from "./pages/HouseOfTongues";
+import LearningHouses from "./pages/LearningHouses";
+import Leaderboard from "./pages/Leaderboard";
 import ContractorInvoices from "@/pages/ContractorInvoices";
 import ContractManagement from "@/pages/ContractManagement";
 import Donations from "@/pages/Donations";
@@ -519,6 +522,9 @@ function Router() {
       <Route path="/benefits-comparison">{() => <ProtectedRoute component={BenefitsComparison} minRole="user" />}</Route>
       <Route path="/transition-training">{() => <ProtectedRoute component={TransitionTraining} minRole="staff" />}</Route>
       <Route path="/transition-simulator">{() => <ProtectedRoute component={TransitionSimulator} minRole="staff" />}</Route>
+      <Route path="/house-of-tongues">{() => <ProtectedRoute component={HouseOfTongues} minRole="user" />}</Route>
+      <Route path="/learning-houses">{() => <ProtectedRoute component={LearningHouses} minRole="user" />}</Route>
+      <Route path="/leaderboard">{() => <ProtectedRoute component={Leaderboard} minRole="user" />}</Route>
       <Route path="/board-governance">{() => <ProtectedRoute component={BoardGovernance} minRole="admin" />}</Route>
       <Route path="/contractor-network">{() => <ProtectedRoute component={ContractorNetwork} minRole="admin" />}</Route>
       <Route path="/contractor-invoices">{() => <ProtectedRoute component={ContractorInvoices} minRole="staff" />}</Route>
