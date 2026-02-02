@@ -152,6 +152,12 @@ export default function Home() {
                   Join Our Team
                 </Button>
               </Link>
+              <Link href="/products">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto gap-2">
+                  <GraduationCap className="w-4 h-4" />
+                  Courses & Services
+                </Button>
+              </Link>
               <Link href="/support">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto gap-2 border-primary/50 text-primary hover:bg-primary/10">
                   <Heart className="w-4 h-4" />
