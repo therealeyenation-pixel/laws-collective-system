@@ -421,7 +421,8 @@ function Router() {
   // Public routes: Landing page, Academy, and Dashboard (for viewing courses)
   // Protected routes: Trust System, Document Vault, Agents, Social Media
   return (
-    <Switch>
+    <div className="flex flex-col min-h-screen">
+      <Switch>
       {/* Public routes - no authentication required */}
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
@@ -827,6 +828,12 @@ function Router() {
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
+      <footer className="mt-auto border-t border-border bg-background/50 py-4">
+        <div className="container max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground opacity-60">
+          <p>REAL-EYE-NATION | LuvOnPurpose Academy and Outreach</p>
+        </div>
+      </footer>
+    </div>
   );
 }
 
