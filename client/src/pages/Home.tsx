@@ -35,6 +35,32 @@ function DemoSimulator() {
     decisions: [] as string[],
   });
 
+  // Determine business type based on simulator decisions
+  const getBusinessType = () => {
+    const decisions = simulatorState.decisions.join(' ').toLowerCase();
+    if (decisions.includes('product') || decisions.includes('market')) return 'Tech/E-commerce';
+    if (decisions.includes('training') || decisions.includes('team')) return 'Service/Consulting';
+    if (decisions.includes('marketing')) return 'Retail/Marketing';
+    return 'General Business';
+  };
+
+  const dashboards = [
+    { name: 'Financial Overview', category: 'Standard', icon: '📊' },
+    { name: 'Team Management', category: 'Standard', icon: '👥' },
+    { name: 'Operations', category: 'Standard', icon: '⚙️' },
+    { name: 'LuvLedger Assets', category: 'Standard', icon: '💎' },
+    { name: 'Developer Dashboard', category: 'Optional', icon: '💻' },
+    { name: 'Customer Dashboard', category: 'Optional', icon: '🤝' },
+    { name: 'Project Dashboard', category: 'Optional', icon: '📋' },
+    { name: 'Inventory Dashboard', category: 'Optional', icon: '📦' },
+    { name: 'Production Dashboard', category: 'Optional', icon: '🏭' },
+    { name: 'Supply Chain Dashboard', category: 'Optional', icon: '🚚' },
+    { name: 'Patient/Provider Dashboard', category: 'Optional', icon: '🏥' },
+    { name: 'Student/Curriculum Dashboard', category: 'Optional', icon: '🎓' },
+    { name: 'Property/Tenant Dashboard', category: 'Optional', icon: '🏠' },
+    { name: 'Investment Dashboard', category: 'Optional', icon: '📈' },
+  ];
+
   const handleDecision = (decision: string, impact: { capital: number; revenue: number; employees: number }) => {
     setSimulatorState((prev) => ({
       ...prev,
@@ -157,27 +183,75 @@ function DemoSimulator() {
       )}
 
       {simulatorState.year >= 5 && (
-        <Card className="p-6 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-200">
-          <h4 className="font-bold text-foreground mb-2">Simulation Complete!</h4>
-          <p className="text-sm text-muted-foreground mb-4">
-            You've built a business with ${netProfit.toFixed(0)} in net profit and a team of {simulatorState.employees} people. 
-            Imagine this multiplied across dozens of families in the L.A.W.S. Collective - that's community wealth building in action.
-          </p>
-          <Button
-            variant="outline"
-            onClick={() => setSimulatorState({
-              started: false,
-              year: 1,
-              capital: 50000,
-              revenue: 0,
-              expenses: 0,
-              employees: 2,
-              decisions: [],
-            })}
-          >
-            Reset Simulator
-          </Button>
-        </Card>
+        <div className="space-y-6">
+          <Card className="p-6 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-200">
+            <h4 className="font-bold text-foreground mb-2">Simulation Complete!</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              You've built a business with ${netProfit.toFixed(0)} in net profit and a team of {simulatorState.employees} people. 
+              Imagine this multiplied across dozens of families in the L.A.W.S. Collective - that's community wealth building in action.
+            </p>
+          </Card>
+
+          {/* Dashboard Preview */}
+          <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-blue-200">
+            <h4 className="font-bold text-foreground mb-2">Your Dashboard Suite</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              When you create your real house, you'll have access to all these dashboards. Your business type <span className="font-semibold text-foreground">({getBusinessType()})</span> will highlight the most relevant ones:
+            </p>
+            
+            <div className="space-y-4">
+              {/* Standard Dashboards */}
+              <div>
+                <p className="text-xs font-semibold text-primary uppercase mb-2">Standard Dashboards (All Houses)</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {dashboards.filter(d => d.category === 'Standard').map((dashboard, idx) => (
+                    <div key={idx} className="p-3 bg-background/50 rounded-lg border border-border flex items-center gap-2">
+                      <span className="text-xl">{dashboard.icon}</span>
+                      <span className="text-sm font-medium text-foreground">{dashboard.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Optional Dashboards */}
+              <div>
+                <p className="text-xs font-semibold text-accent uppercase mb-2">Available Dashboards (All Business Types)</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {dashboards.filter(d => d.category === 'Optional').map((dashboard, idx) => (
+                    <div key={idx} className="p-3 bg-background/50 rounded-lg border border-border flex items-center gap-2 opacity-75">
+                      <span className="text-xl">{dashboard.icon}</span>
+                      <span className="text-sm text-muted-foreground">{dashboard.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button
+              size="lg"
+              className="gap-2"
+              onClick={() => setSimulatorState({
+                started: false,
+                year: 1,
+                capital: 50000,
+                revenue: 0,
+                expenses: 0,
+                employees: 2,
+                decisions: [],
+              })}
+            >
+              Try Another Scenario
+            </Button>
+            <Link href="/getting-started">
+              <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto">
+                Get Started <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
       )}
     </div>
   );
