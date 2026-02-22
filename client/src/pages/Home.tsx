@@ -373,6 +373,26 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Luv Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+            <div className="flex justify-center md:justify-start">
+              <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
+            </div>
+            <div className="md:col-span-2">
+              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Meet the Founder</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">About Luv</h2>
+              <p className="text-xl text-muted-foreground mb-6">Founder & Visionary of The L.A.W.S. Collective</p>
+              <div className="space-y-4 text-base text-foreground/80 leading-relaxed">
+                <p>With extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective.</p>
+                <p><strong>Education:</strong> Associates degrees from Bryant and Stratton College (1998) and Bachelor from American Public University (2025, Cum Laude).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Demo Simulator Section - MOVED BELOW CAROUSEL */}
       <section id="simulator" className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-5xl mx-auto px-4">
