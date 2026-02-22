@@ -830,7 +830,7 @@ function Router() {
     </Switch>
       <footer className="mt-auto border-t border-border bg-background/50 py-4">
         <div className="container max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground opacity-60">
-          <p>REAL-EYE-NATION | LuvOnPurpose Academy and Outreach</p>
+          <p>LuvOnPurpose Autonomous Wealth System, LLC | REAL-EYE-NATION | LuvOnPurpose Academy and Outreach</p>
         </div>
       </footer>
     </div>
