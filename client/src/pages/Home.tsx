@@ -719,7 +719,9 @@ export default function Home() {
                 
                 <div className="flex-1 text-center">
                   <p className="text-lg text-foreground/80 mb-6">Explore the vision and framework of The L.A.W.S. Collective ecosystem.</p>
-                  <Button className="px-8 py-4 text-lg">View Full Platform Preview</Button>
+                  <a href="https://laws-collective-system-production.up.railway.app/" target="_blank" rel="noopener noreferrer">
+                    <Button className="px-8 py-4 text-lg">View Full Platform Preview</Button>
+                  </a>
                   <p className="text-sm text-foreground/60 mt-4">Interactive elements disabled - Preview only</p>
                 </div>
               </div>
