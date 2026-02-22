@@ -31,6 +31,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import SlidesCarousel from "@/components/SlidesCarousel";
+import { WaitlistSignup } from "@/components/WaitlistSignup";
 
 // Simplified Demo: Setup + Premium Walkthrough
 const entityTypes = [
@@ -651,23 +652,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Waitlist Section */}
       <section className="py-16 md:py-24 bg-primary/5">
-        <div className="container max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Interested in Our Vision?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            The L.A.W.S. Collective is currently in development. Connect with us to learn more and stay updated on our progress.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
-              <Link href="/about">About La Shanna</Link>
-            </Button>
-            <Button asChild variant="outline" className="px-8 py-6 text-lg">
-              <Link href="/contact">Contact Us</Link>
-            </Button>
+        <div className="container max-w-2xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Be First to Know
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Join our waitlist for exclusive early access and launch updates.
+            </p>
           </div>
+          <WaitlistSignup />
         </div>
       </section>
     </div>

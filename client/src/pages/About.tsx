@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Linkedin, Twitter } from "lucide-react";
+import { ContactForm } from "@/components/ContactForm";
 
 export default function About() {
   return (
@@ -258,10 +259,8 @@ export default function About() {
             </Card>
           </div>
 
-          <div className="mt-12 text-center">
-            <Button className="bg-primary hover:bg-primary/90 px-8 py-6 text-lg">
-              Contact La Shanna
-            </Button>
+          <div className="mt-12">
+            <ContactForm />
           </div>
         </div>
       </section>
