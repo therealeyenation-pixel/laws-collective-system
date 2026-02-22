@@ -53,56 +53,56 @@ const businessTypes = [
 
 const walkthroughSteps = [
   {
-    title: "is Now Live",
-    subtitle: "Entity Registration Complete",
+    title: "Will Be Established",
+    subtitle: "Entity Registration Process",
     items: ["Entity Registration", "EIN Assignment", "Operating Agreement", "Bank Account Setup"],
     gradient: "from-blue-900 via-indigo-900 to-slate-900",
     icon: "Building2",
   },
   {
-    title: "Your House Has Been Created",
+    title: "Your House Will Be Created",
     subtitle: "Private & Sovereign System Instance",
     items: ["Isolated data environment", "Family governance structure", "Multi-entity management", "Secure document vault"],
     gradient: "from-emerald-900 via-green-900 to-teal-900",
     icon: "HomeIcon",
   },
   {
-    title: "LuvLedger Is Now Active",
-    subtitle: "Your Wealth Management Hub",
+    title: "LuvLedger Will Activate",
+    subtitle: "Your Planned Wealth Management Hub",
     items: ["Business income tracking", "Investment portfolio", "Real estate holdings", "Multi-generational history"],
     gradient: "from-purple-900 via-violet-900 to-indigo-900",
     icon: "BarChart3",
   },
   {
-    title: "Education Simulators Unlocked",
+    title: "Education Simulators (Planned)",
     subtitle: "Learn by Doing \u2014 Practice Before You Risk",
     items: ["Business Formation Simulator", "Grant Writing Workshop", "Tax Preparation & Compliance", "Proposal Development Tools", "Financial Planning Scenarios"],
     gradient: "from-violet-900 via-purple-900 to-fuchsia-900",
     icon: "BookOpen",
   },
   {
-    title: "Grant & Tax Tools Activated",
+    title: "Grant & Tax Tools (Planned)",
     subtitle: "Entity-Specific Strategy & Funding Access",
     items: ["Curated grant database for your entity type", "Tax simulators for LLCs, S Corps, nonprofits, Trusts", "Proposal templates & budget builders", "Compliance checklists & filing guides"],
     gradient: "from-amber-900 via-orange-900 to-red-900",
     icon: "TrendingUp",
   },
   {
-    title: "Your Growth Path Is Mapped",
+    title: "Your Growth Path (Planned)",
     subtitle: "Employee to Contractor Transition",
     items: ["Managers transition to Board Members", "Coordinators become independent contractors", "Benefits & legal structure documented", "No one is left behind in the process"],
     gradient: "from-cyan-900 via-blue-900 to-indigo-900",
     icon: "Network",
   },
   {
-    title: "Land Reclamation Initiated",
+    title: "Land Reclamation (Planned)",
     subtitle: "Reconnecting Families to the Land",
     items: ["Ancestral land record research", "Reclamation opportunity identification", "Pathway to land ownership", "Foundational to generational wealth"],
     gradient: "from-green-900 via-emerald-900 to-teal-900",
     icon: "Shield",
   },
   {
-    title: "Your Dashboards Are Online",
+    title: "Your Dashboards (Planned)",
     subtitle: "4 Standard + Specialized Dashboards",
     items: ["Financial Overview", "Team Management", "Operations Center", "LuvLedger Assets"],
     gradient: "from-amber-900 via-yellow-900 to-orange-900",
@@ -110,21 +110,21 @@ const walkthroughSteps = [
     dynamic: true,
   },
   {
-    title: "Academy Access Granted",
+    title: "Academy Access (Planned)",
     subtitle: "Free Education for Heirs \u2022 Scholarships for Community",
     items: ["K-12 Divine STEM curriculum", "Coding & AI technology simulators", "Blockchain-verified certificates", "Apprenticeship partnership pathways"],
     gradient: "from-blue-900 via-sky-900 to-cyan-900",
     icon: "BookOpen",
   },
   {
-    title: "Built for Global Impact",
+    title: "Designed for Global Impact",
     subtitle: "International Considerations & Cross-Border Wealth Building",
     items: ["International business entity structures", "Cross-border asset management", "Indigenous land rights (global context)", "International trade and commerce", "Multi-currency support", "UN Sustainable Development Goals alignment", "Diaspora wealth building"],
     gradient: "from-slate-900 via-blue-950 to-indigo-950",
     icon: "Globe",
   },
   {
-    title: "Connected to the Collective",
+    title: "The Collective Vision",
     subtitle: "The Closed-Loop Wealth Multiplier",
     items: ["1 Family \u2192 $100K wealth", "10 Families \u2192 $1M collective", "100 Families \u2192 $10M community impact", "Sovereign. Closed-loop. Multi-generational."],
     gradient: "from-teal-900 via-cyan-900 to-blue-900",
@@ -186,14 +186,14 @@ function DemoSimulator() {
   if (step === "start") {
     return (
       <div className="text-center space-y-6">
-        <h3 className="text-2xl font-bold text-foreground">Experience the System</h3>
+        <h3 className="text-2xl font-bold text-foreground">Experience the Vision</h3>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Set up a demo business and watch the entire L.A.W.S. system come alive \u2014 from entity formation to community wealth building.
+          Walk through a concept demonstration of how the L.A.W.S. system will work \u2014 from entity formation to community wealth building.
         </p>
         <Button size="lg" onClick={() => setStep("setup")} className="gap-2">
-          Start Demo <Zap className="w-4 h-4" />
+          Start Educational Demo <Zap className="w-4 h-4" />
         </Button>
-        <p className="text-xs text-muted-foreground italic">Interactive demo \u2022 No data saved \u2022 Under 2 minutes</p>
+        <p className="text-xs text-muted-foreground italic">Educational concept demo \u2022 No data saved \u2022 Under 2 minutes</p>
       </div>
     );
   }
@@ -203,8 +203,8 @@ function DemoSimulator() {
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <p className="text-sm text-primary font-semibold uppercase tracking-wider mb-2">Demo Setup</p>
-          <h3 className="text-2xl font-bold text-foreground">Set Up Your LLC</h3>
+          <p className="text-sm text-primary font-semibold uppercase tracking-wider mb-2">Educational Demo Setup</p>
+          <h3 className="text-2xl font-bold text-foreground">Set Up Your Demo LLC</h3>
           <p className="text-sm text-muted-foreground mt-1">Entity Type: <span className="font-semibold text-foreground">LLC — Limited Liability Company</span></p>
         </div>
 
@@ -245,7 +245,7 @@ function DemoSimulator() {
             disabled={!businessType || !businessName.trim()}
             className="w-full gap-2"
           >
-            Set Up Business <ArrowRight className="w-4 h-4" />
+            Start Demo Walkthrough <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
       </div>
@@ -342,19 +342,19 @@ function DemoSimulator() {
       <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto">
         <CheckCircle className="w-8 h-8 text-emerald-500" />
       </div>
-      <h3 className="text-2xl font-bold text-foreground">Ready to Build Your Legacy?</h3>
+      <h3 className="text-2xl font-bold text-foreground">That's the Vision</h3>
       <p className="text-muted-foreground max-w-xl mx-auto">
-        You just saw how <span className="font-semibold text-foreground">"{businessName}"</span> would flow through the entire L.A.W.S. system \u2014 from formation to community wealth building.
+        You just saw a concept demonstration of how <span className="font-semibold text-foreground">"{businessName}"</span> would flow through the L.A.W.S. system \u2014 from formation to community wealth building. This platform is currently in development.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Button size="lg" onClick={resetDemo} variant="outline" className="gap-2">
           Run Demo Again
         </Button>
-        <Link href="/getting-started">
+        <a href="mailto:luvonpurpose@protonmail.com">
           <Button size="lg" className="gap-2 w-full sm:w-auto">
-            Join the Collective <ArrowRight className="w-4 h-4" />
+            Contact Us to Learn More <ArrowRight className="w-4 h-4" />
           </Button>
-        </Link>
+        </a>
       </div>
     </div>
   );
@@ -367,22 +367,22 @@ export default function Home() {
     {
       icon: <TrendingUp className="w-6 h-6" />,
       title: "Business Simulators",
-      description: "Interactive scenarios to practice business decisions and see real-time outcomes",
+      description: "Interactive scenarios designed to help practice business decisions and see real-time outcomes",
     },
     {
       icon: <BookOpen className="w-6 h-6" />,
       title: "Academy & Curriculum",
-      description: "Comprehensive education in financial literacy, business, and wealth building",
+      description: "Planned comprehensive education in financial literacy, business, and wealth building",
     },
     {
       icon: <Network className="w-6 h-6" />,
       title: "Community Network",
-      description: "Connect with other families and houses building wealth together",
+      description: "A planned network to connect families and houses building wealth together",
     },
     {
       icon: <Lock className="w-6 h-6" />,
       title: "Trust Management",
-      description: "Secure governance and asset management for multi-generational wealth",
+      description: "Planned secure governance and asset management for multi-generational wealth",
     },
   ];
 
@@ -404,6 +404,16 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Development Banner */}
+      <div className="bg-primary/10 border-b border-primary/20">
+        <div className="container max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+          <p className="text-sm text-foreground/80 font-medium tracking-wide">
+            Platform in Development <span className="text-muted-foreground mx-1">|</span> Concept Preview <span className="text-muted-foreground mx-1">|</span> Launching 2026
+          </p>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
@@ -436,17 +446,17 @@ export default function Home() {
               A Sovereign <span className="text-primary">Wealth Management</span> & Trust Administration Platform
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-              A sovereign wealth management and trust administration platform that connects families within a closed-loop economic system for multi-generational wealth building.
+              We are building a sovereign wealth management and trust administration platform designed to connect families within a closed-loop economic system for multi-generational wealth building.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <a href="#simulator" className="inline-block">
                 <Button size="lg" className="gap-2 w-full sm:w-auto">
-                  Try the Demo Simulator <ArrowRight className="w-4 h-4" />
+                  Try the Educational Demo <ArrowRight className="w-4 h-4" />
                 </Button>
               </a>
               <a href="#system-overview" className="inline-block">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                  Explore the System
+                  Explore the Vision
                 </Button>
               </a>
             </div>
@@ -458,8 +468,9 @@ export default function Home() {
       <section className="py-12 md:py-16 bg-background">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-8">
+            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Concept Overview</span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">See What We're Building</h2>
-            <p className="text-muted-foreground">Click the sound icon to hear the narration • Use controls to navigate at your own pace</p>
+            <p className="text-muted-foreground">An overview of the platform vision and planned capabilities • Click the sound icon for narration</p>
           </div>
           <SlidesCarousel />
         </div>
@@ -469,11 +480,12 @@ export default function Home() {
       <section id="system-overview" className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
+            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Planned Capabilities</span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              The Complete System
+              The Complete System Vision
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              A comprehensive platform designed to support every aspect of your journey to financial freedom and community prosperity
+              A comprehensive platform being designed to support every aspect of your journey to financial freedom and community prosperity
             </p>
           </div>
 
@@ -495,21 +507,21 @@ export default function Home() {
                   <span className="font-bold text-primary">1</span>
                 </div>
                 <h4 className="font-semibold text-foreground">Learn & Practice</h4>
-                <p className="text-sm text-muted-foreground">Use simulators to practice business decisions in a safe environment</p>
+                <p className="text-sm text-muted-foreground">Use simulators to practice business decisions in a safe, educational environment</p>
               </div>
               <div className="space-y-2">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                   <span className="font-bold text-primary">2</span>
                 </div>
                 <h4 className="font-semibold text-foreground">Build & Grow</h4>
-                <p className="text-sm text-muted-foreground">Apply what you've learned to build your own business and wealth</p>
+                <p className="text-sm text-muted-foreground">Apply what you learn to build your own business and wealth</p>
               </div>
               <div className="space-y-2">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                   <span className="font-bold text-primary">3</span>
                 </div>
                 <h4 className="font-semibold text-foreground">Share & Prosper</h4>
-                <p className="text-sm text-muted-foreground">Connect with other families and build collective community wealth</p>
+                <p className="text-sm text-muted-foreground">Connect with other families to build collective community wealth together</p>
               </div>
             </div>
           </Card>
@@ -524,7 +536,7 @@ export default function Home() {
               Community Wealth Building
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              The L.A.W.S. Collective is built on a revolutionary principle: individual success creates collective prosperity
+              The L.A.W.S. Collective is being built on a foundational principle: individual success creates collective prosperity
             </p>
           </div>
 
@@ -538,7 +550,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">Individual Excellence</h3>
-                  <p className="text-muted-foreground">Each family builds their own thriving business</p>
+                  <p className="text-muted-foreground">Each family will build their own thriving business</p>
                 </div>
               </div>
 
@@ -562,7 +574,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">Generational Impact</h3>
-                  <p className="text-muted-foreground">Build wealth that lasts for generations</p>
+                  <p className="text-muted-foreground">Building wealth designed to last for generations</p>
                 </div>
               </div>
 
@@ -574,35 +586,35 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">Community Prosperity</h3>
-                  <p className="text-muted-foreground">When families thrive, the entire community thrives</p>
+                  <p className="text-muted-foreground">When families thrive, entire communities thrive</p>
                 </div>
               </div>
             </div>
 
             <Card className="p-8 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-200">
-              <h3 className="text-2xl font-bold text-foreground mb-6">The Multiplier Effect</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-6">The Multiplier Effect (Our Goal)</h3>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">1 Family builds $100K business</p>
+                  <p className="text-sm text-muted-foreground mb-2">1 Family builds toward $100K business</p>
                   <div className="w-full bg-secondary rounded-full h-2">
                     <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "20%" }}></div>
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">10 Families = $1M collective wealth</p>
+                  <p className="text-sm text-muted-foreground mb-2">10 Families = $1M collective wealth goal</p>
                   <div className="w-full bg-secondary rounded-full h-2">
                     <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "50%" }}></div>
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">100 Families = $10M community impact</p>
+                  <p className="text-sm text-muted-foreground mb-2">100 Families = $10M community impact goal</p>
                   <div className="w-full bg-secondary rounded-full h-2">
                     <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "100%" }}></div>
                   </div>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mt-6 italic">
-                This is how generational wealth and community prosperity are built together.
+                This is the vision for how generational wealth and community prosperity will be built together.
               </p>
             </Card>
           </div>
@@ -616,10 +628,10 @@ export default function Home() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  LuvLedger: Your Asset Manager
+                  LuvLedger: Your Future Asset Manager
                 </h2>
                 <p className="text-lg text-muted-foreground mb-6">
-                  Every house gets their own LuvLedger when created—your personal wealth management and asset tracking system.
+                  Every house will receive their own LuvLedger—a planned personal wealth management and asset tracking system.
                 </p>
               </div>
 
@@ -632,7 +644,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">Real-Time Asset Tracking</h3>
-                    <p className="text-muted-foreground text-sm">Monitor all your assets, investments, and wealth in one secure location</p>
+                    <p className="text-muted-foreground text-sm">Planned capability to monitor all assets, investments, and wealth in one secure location</p>
                   </div>
                 </div>
 
@@ -644,7 +656,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">Multi-Generational Records</h3>
-                    <p className="text-muted-foreground text-sm">Document and preserve your family's financial history for generations</p>
+                    <p className="text-muted-foreground text-sm">Designed to document and preserve your family's financial history for generations</p>
                   </div>
                 </div>
 
@@ -656,7 +668,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">Integrated System Hub</h3>
-                    <p className="text-muted-foreground text-sm">All simulators, businesses, and transactions flow through LuvLedger</p>
+                    <p className="text-muted-foreground text-sm">All simulators, businesses, and transactions will flow through LuvLedger</p>
                   </div>
                 </div>
 
@@ -668,14 +680,14 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">Secure & Private</h3>
-                    <p className="text-muted-foreground text-sm">Your data is encrypted and only accessible to your house members</p>
+                    <p className="text-muted-foreground text-sm">Your data will be encrypted and only accessible to your house members</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <Card className="p-8 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-blue-200">
-              <h3 className="text-2xl font-bold text-foreground mb-6">What LuvLedger Manages</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-6">What LuvLedger Will Manage</h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-blue-500"></div>
@@ -707,7 +719,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mt-6 italic">
-                LuvLedger is the foundation of your house's financial autonomy and generational wealth building.
+                LuvLedger will be the foundation of your house's financial autonomy and generational wealth building.
               </p>
             </Card>
           </div>
@@ -743,6 +755,11 @@ export default function Home() {
       {/* Demo Simulator Section */}
       <section id="simulator" className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-5xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 px-3 py-1 rounded-full mb-4">Educational Demo</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Interactive System Demo</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Walk through the business setup process and see how the L.A.W.S. system activates for your family</p>
+          </div>
           <Card className="p-8 md:p-12 overflow-hidden">
             <DemoSimulator />
           </Card>
@@ -779,20 +796,20 @@ export default function Home() {
       <section className="py-16 md:py-24 bg-primary/5">
         <div className="container max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Ready to Start Your Journey?
+            Interested in Our Vision?
           </h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join the L.A.W.S. Collective and begin building multi-generational wealth with your community.
+            The L.A.W.S. Collective is currently in development. Connect with us to learn more and stay updated on our progress.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#simulator" className="inline-block">
               <Button size="lg" className="gap-2 w-full sm:w-auto">
-                Try the Simulator <ArrowRight className="w-4 h-4" />
+                Try the Educational Demo <ArrowRight className="w-4 h-4" />
               </Button>
             </a>
-            <a href={getLoginUrl()} className="inline-block">
+            <a href="mailto:luvonpurpose@protonmail.com" className="inline-block">
               <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                Contact Us to Join
+                Contact Us
               </Button>
             </a>
           </div>
@@ -818,17 +835,18 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-foreground mb-4">Get Started</h3>
+              <h3 className="font-bold text-foreground mb-4">Stay Connected</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Ready to begin your journey to financial freedom?
+                Platform launching 2026. Contact us to learn more.
               </p>
-              <a href={getLoginUrl()}>
-                <Button size="sm">Join Now</Button>
+              <a href="mailto:luvonpurpose@protonmail.com">
+                <Button size="sm">Contact Us</Button>
               </a>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} L.A.W.S. Collective. All rights reserved.</p>
+          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground space-y-1">
+            <p>© {new Date().getFullYear()} THE L.A.W.S. COLLECTIVE, LLC. All rights reserved.</p>
+            <p className="text-xs text-muted-foreground/60">Platform in Development • Concept Preview • Not yet operational • luvonpurpose@protonmail.com</p>
           </div>
         </div>
       </footer>

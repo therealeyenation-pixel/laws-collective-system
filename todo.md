@@ -9933,3 +9933,14 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add sound toggle controls (mute/unmute)
 - [x] Update hero description to sovereign wealth management platform
 - [ ] Add background music to carousel and walkthrough
+
+## Phase 96: Under Development Transparency
+- [x] Add tasteful "Platform in Development | Launching 2026" banner
+- [x] Remove pricing references from public pages (Services, BusinessLanding)
+- [x] Update all language to reflect concept/vision/development stage
+- [x] Label demo as "Educational Demo" with concept demonstration language
+- [x] Add international considerations slide to carousel and walkthrough
+- [x] Update Careers page salary ranges to show "Projected" prefix
+- [x] Replace "Join the Collective" CTAs with "Contact Us" links
+- [x] Update walkthrough steps to use future tense (Planned) labels
+- [x] Update done screen to say "That's the Vision" with development notice
