@@ -120,28 +120,104 @@ const audioUrls = [
   "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/UkJfOEMZulWrxMhv.wav",
 ];
 
+type TransitionType = "curtain" | "fade" | "blink" | "slide";
+const transitionTypes: TransitionType[] = ["curtain", "fade", "blink", "slide"];
+
 export default function SlidesCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [speed, setSpeed] = useState(6000);
+  const [speed] = useState(8000);
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [audioReady, setAudioReady] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionType, setTransitionType] = useState<TransitionType>("fade");
+  const [showContent, setShowContent] = useState(true);
+  const [curtainPhase, setCurtainPhase] = useState<"idle" | "closing" | "closed" | "opening">("idle");
+  const pendingSlideRef = useRef<number | null>(null);
+
+  const doTransition = useCallback((nextIndex: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+
+    // Cycle through transition types for variety
+    const nextTransition = transitionTypes[nextIndex % transitionTypes.length];
+    setTransitionType(nextTransition);
+
+    if (nextTransition === "curtain") {
+      // Curtain close → swap → curtain open
+      setCurtainPhase("closing");
+      pendingSlideRef.current = nextIndex;
+      setTimeout(() => {
+        setCurtainPhase("closed");
+        setCurrentSlide(nextIndex);
+        setTimeout(() => {
+          setCurtainPhase("opening");
+          setTimeout(() => {
+            setCurtainPhase("idle");
+            setIsTransitioning(false);
+          }, 600);
+        }, 200);
+      }, 600);
+    } else if (nextTransition === "blink") {
+      // Quick flash/blink effect
+      setShowContent(false);
+      setTimeout(() => {
+        setCurrentSlide(nextIndex);
+        setTimeout(() => {
+          setShowContent(true);
+          setTimeout(() => {
+            setShowContent(false);
+            setTimeout(() => {
+              setShowContent(true);
+              setIsTransitioning(false);
+            }, 80);
+          }, 80);
+        }, 100);
+      }, 150);
+    } else if (nextTransition === "slide") {
+      // Slide out left, new slide in from right
+      setShowContent(false);
+      setTimeout(() => {
+        setCurrentSlide(nextIndex);
+        setTimeout(() => {
+          setShowContent(true);
+          setIsTransitioning(false);
+        }, 50);
+      }, 400);
+    } else {
+      // Fade transition (default)
+      setShowContent(false);
+      setTimeout(() => {
+        setCurrentSlide(nextIndex);
+        setTimeout(() => {
+          setShowContent(true);
+          setIsTransitioning(false);
+        }, 50);
+      }, 500);
+    }
+  }, [isTransitioning]);
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  }, []);
+    const next = (currentSlide + 1) % slides.length;
+    doTransition(next);
+  }, [currentSlide, doTransition]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  }, []);
+    const prev = (currentSlide - 1 + slides.length) % slides.length;
+    doTransition(prev);
+  }, [currentSlide, doTransition]);
+
+  const goToSlide = useCallback((idx: number) => {
+    if (idx === currentSlide) return;
+    doTransition(idx);
+  }, [currentSlide, doTransition]);
 
   // Auto-advance slides
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying || isTransitioning) return;
     const interval = setInterval(nextSlide, speed);
     return () => clearInterval(interval);
-  }, [isPlaying, speed, nextSlide]);
+  }, [isPlaying, speed, nextSlide, isTransitioning]);
 
   // Play audio narration when slide changes
   useEffect(() => {
@@ -185,13 +261,84 @@ export default function SlidesCarousel() {
 
   const slide = slides[currentSlide];
 
+  // Build transition classes
+  const getContentClasses = () => {
+    const base = "flex flex-col items-center justify-center text-center px-8 py-16 md:py-20";
+
+    if (transitionType === "blink") {
+      return `${base} transition-opacity duration-75 ${showContent ? "opacity-100" : "opacity-0"}`;
+    }
+    if (transitionType === "slide") {
+      return `${base} transition-all duration-[400ms] ease-in-out ${showContent ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`;
+    }
+    // fade (default)
+    return `${base} transition-opacity duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`;
+  };
+
+  // Curtain overlay
+  const getCurtainStyle = (): React.CSSProperties => {
+    if (curtainPhase === "idle") return { display: "none" };
+    return {
+      position: "absolute",
+      inset: 0,
+      zIndex: 30,
+      display: "flex",
+      overflow: "hidden",
+    };
+  };
+
+  const getLeftCurtainStyle = (): React.CSSProperties => {
+    const closed = curtainPhase === "closing" || curtainPhase === "closed";
+    return {
+      width: "50%",
+      height: "100%",
+      background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+      transform: closed ? "translateX(0)" : "translateX(-100%)",
+      transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+      boxShadow: "4px 0 20px rgba(0,0,0,0.5)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      paddingRight: "20px",
+    };
+  };
+
+  const getRightCurtainStyle = (): React.CSSProperties => {
+    const closed = curtainPhase === "closing" || curtainPhase === "closed";
+    return {
+      width: "50%",
+      height: "100%",
+      background: "linear-gradient(225deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+      transform: closed ? "translateX(0)" : "translateX(100%)",
+      transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+      boxShadow: "-4px 0 20px rgba(0,0,0,0.5)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      paddingLeft: "20px",
+    };
+  };
+
   return (
-    <div className="relative w-full overflow-hidden rounded-xl">
+    <div className="relative w-full overflow-hidden rounded-xl" style={{ minHeight: "400px" }}>
+      {/* Curtain Overlay */}
+      <div style={getCurtainStyle()}>
+        <div style={getLeftCurtainStyle()}>
+          {/* Left curtain decorative lines */}
+          <div style={{ width: "2px", height: "60%", background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.6), transparent)" }} />
+        </div>
+        <div style={getRightCurtainStyle()}>
+          {/* Right curtain decorative lines */}
+          <div style={{ width: "2px", height: "60%", background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.6), transparent)" }} />
+        </div>
+      </div>
+
+      {/* Main Slide */}
       <div
-        className={`bg-gradient-to-br ${slide.gradient} transition-all duration-700 ease-in-out`}
+        className={`bg-gradient-to-br ${slide.gradient} transition-colors duration-700 ease-in-out`}
         style={{ minHeight: "400px" }}
       >
-        <div className="flex flex-col items-center justify-center text-center px-8 py-16 md:py-20">
+        <div className={getContentClasses()}>
           <p className="text-white/60 text-sm uppercase tracking-widest mb-4">
             {currentSlide + 1} / {slides.length}
           </p>
@@ -207,33 +354,74 @@ export default function SlidesCarousel() {
         </div>
       </div>
 
+      {/* Progress Bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20">
+        <div
+          className="h-full bg-white/50 transition-all ease-linear"
+          style={{
+            width: `${((currentSlide + 1) / slides.length) * 100}%`,
+            transition: `width ${isPlaying ? "0.5s" : "0.3s"} ease-out`,
+          }}
+        />
+      </div>
+
       {/* Controls */}
-      <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-3 px-4">
-        <Button variant="ghost" size="icon" onClick={prevSlide} className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8">
+      <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-3 px-4 z-20">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={prevSlide}
+          disabled={isTransitioning}
+          className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8"
+        >
           <ChevronLeft className="w-5 h-5" />
         </Button>
-        <Button variant="ghost" size="icon" onClick={() => setIsPlaying(!isPlaying)} className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsPlaying(!isPlaying)}
+          className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8"
+        >
           {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </Button>
-        <Button variant="ghost" size="icon" onClick={nextSlide} className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={nextSlide}
+          disabled={isTransitioning}
+          className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8"
+        >
           <ChevronRight className="w-5 h-5" />
         </Button>
-        <Button variant="ghost" size="icon" onClick={toggleMute} className="text-white/80 hover:text-white hover:bg-white/20 h-8 w-8">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleMute}
+          className={`h-8 w-8 ${isMuted ? "text-white/80 hover:text-white hover:bg-white/20" : "text-yellow-300 hover:text-yellow-200 hover:bg-yellow-500/20 ring-1 ring-yellow-400/40"}`}
+        >
           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
         </Button>
-        <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="bg-white/10 text-white/80 text-xs rounded px-2 py-1 border border-white/20">
-          <option value={3000}>3s</option>
-          <option value={6000}>6s</option>
-          <option value={10000}>10s</option>
-          <option value={15000}>15s</option>
-          <option value={20000}>20s</option>
-        </select>
+        {/* Transition type indicator */}
+        <span className="text-white/40 text-[10px] uppercase tracking-wider ml-2 hidden md:inline">
+          {transitionType}
+        </span>
       </div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-16 left-0 right-0 flex justify-center gap-1">
+      <div className="absolute bottom-16 left-0 right-0 flex justify-center gap-1 z-20">
         {slides.map((_, idx) => (
-          <button key={idx} onClick={() => setCurrentSlide(idx)} className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentSlide ? "bg-white w-4" : "bg-white/40"}`} />
+          <button
+            key={idx}
+            onClick={() => goToSlide(idx)}
+            disabled={isTransitioning}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              idx === currentSlide
+                ? "bg-white w-6"
+                : idx < currentSlide
+                  ? "bg-white/60 w-1.5"
+                  : "bg-white/30 w-1.5"
+            }`}
+          />
         ))}
       </div>
     </div>
