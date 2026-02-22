@@ -660,7 +660,7 @@ export default function Home() {
               <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
             </div>
             <div className="md:col-span-2">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell</h2>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell (Luv)</h2>
               <p className="text-2xl text-primary font-semibold mb-6">Founder and CEO of the L.A.W.S. Ecosystem</p>
               
               <div className="space-y-8">
@@ -699,6 +699,33 @@ export default function Home() {
               Join our waitlist for exclusive early access and launch updates.
             </p>
           </div>
+          
+          {/* Coming Soon: Full Platform Section */}
+          <div className="mt-20 py-16 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl border-2 border-primary/30 relative overflow-hidden">
+            {/* Coming Soon Watermark */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="text-8xl font-bold text-primary/10 transform -rotate-45">COMING SOON</div>
+            </div>
+            
+            <div className="relative z-10 max-w-4xl mx-auto px-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-center">Full Platform Preview</h2>
+              <p className="text-xl text-foreground/80 text-center mb-8">Get a sneak peek at the complete L.A.W.S. Collective platform currently in development.</p>
+              
+              <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
+                <div className="flex-1">
+                  <img src="/qr-code-landing.png" alt="QR Code" className="w-48 h-48 object-contain" />
+                  <p className="text-center text-sm text-foreground/70 mt-4">Scan to visit landing page</p>
+                </div>
+                
+                <div className="flex-1 text-center">
+                  <p className="text-lg text-foreground/80 mb-6">Explore the vision and framework of The L.A.W.S. Collective ecosystem.</p>
+                  <Button className="px-8 py-4 text-lg">View Full Platform Preview</Button>
+                  <p className="text-sm text-foreground/60 mt-4">Interactive elements disabled - Preview only</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <WaitlistSignup />
         </div>
       </section>
