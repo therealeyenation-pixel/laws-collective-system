@@ -349,14 +349,7 @@ export default function Home() {
               We are building a sovereign wealth management and trust administration platform designed to connect families within a closed-loop economic system for multi-generational wealth building.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button asChild className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg">
-                <Link href="#simulator">Try the Educational Demo</Link>
-              </Button>
-              <Button asChild variant="outline" className="px-8 py-6 text-lg">
-                <Link href="#system-overview">Explore the Vision</Link>
-              </Button>
-            </div>
+
           </div>
         </div>
       </section>
@@ -370,6 +363,16 @@ export default function Home() {
             <p className="text-muted-foreground">An overview of the platform vision and planned capabilities</p>
           </div>
           <SlidesCarousel />
+          
+          {/* CTA Buttons Under Carousel */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+            <Button asChild className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg">
+              <Link href="#simulator">Try the Educational Demo</Link>
+            </Button>
+            <Button asChild variant="outline" className="px-8 py-6 text-lg">
+              <Link href="#system-overview">Explore the Vision</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
