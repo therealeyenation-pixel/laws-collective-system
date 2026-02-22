@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Pause, Play, Volume2, VolumeX } from "lucide-react";
 
-const BACKGROUND_MUSIC_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/xEMcctlQwYPngzvg.mp3";
+const BACKGROUND_MUSIC_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/XwktlnCpAeGsQKKj.mp3";
 
 const slides = [
   {
