@@ -360,14 +360,6 @@ export default function SlidesCarousel() {
         >
           <ChevronRight className="w-5 h-5" />
         </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleMute}
-          className={`h-8 w-8 ${isMuted ? "text-white/80 hover:text-white hover:bg-white/20" : "text-yellow-300 hover:text-yellow-200 hover:bg-yellow-500/20 ring-1 ring-yellow-400/40"}`}
-        >
-          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-        </Button>
         <span className="text-white/40 text-[10px] uppercase tracking-wider ml-2 hidden md:inline">
           {transitionType}
         </span>
