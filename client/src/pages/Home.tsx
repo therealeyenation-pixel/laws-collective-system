@@ -700,29 +700,83 @@ export default function Home() {
             </p>
           </div>
           
-          {/* Coming Soon: Full Platform Section */}
-          <div className="mt-20 py-16 bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl border-2 border-primary/30 relative overflow-hidden">
-            {/* Coming Soon Watermark */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="text-8xl font-bold text-primary/10 transform -rotate-45">COMING SOON</div>
-            </div>
-            
-            <div className="relative z-10 max-w-4xl mx-auto px-6">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-center">Full Platform Preview</h2>
-              <p className="text-xl text-foreground/80 text-center mb-8">Get a sneak peek at the complete L.A.W.S. Collective platform currently in development.</p>
+          {/* Platform Features in Action Section */}
+          <div className="mt-20 py-16 bg-gradient-to-b from-background to-primary/5 rounded-xl">
+            <div className="max-w-5xl mx-auto px-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-center">Platform Features in Action</h2>
+              <p className="text-xl text-foreground/80 text-center mb-12">See what's already built and ready for your family's wealth journey</p>
               
-              <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-8">
-                <div className="flex-1">
-                  <img src="/qr-code-landing.png" alt="QR Code" className="w-48 h-48 object-contain" />
-                  <p className="text-center text-sm text-foreground/70 mt-4">Scan to visit landing page</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Business Formation Simulator */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">🏢</div>
+                      <p className="text-white font-semibold text-sm">10+ Business Structures</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Business Formation Simulator</h3>
+                    <p className="text-foreground/80 mb-4">Interactive training on 10+ business structures including LLC, S Corp, Nonprofits, Trusts, and more. Learn by doing with guided modules and token rewards.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Interactive</span>
+                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Educational</span>
+                    </div>
+                  </div>
                 </div>
-                
-                <div className="flex-1 text-center">
-                  <p className="text-lg text-foreground/80 mb-6">Explore the vision and framework of The L.A.W.S. Collective ecosystem.</p>
-                  <a href="https://laws-collective-system-production.up.railway.app/owner-setup?locale=en" target="_blank" rel="noopener noreferrer">
-                    <Button className="px-8 py-4 text-lg">View Full Platform Preview</Button>
-                  </a>
-                  <p className="text-sm text-foreground/60 mt-4">Interactive elements disabled - Preview only</p>
+
+                {/* Grants & Funding */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">💰</div>
+                      <p className="text-white font-semibold text-sm">$1.95M Pipeline</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Grants & Funding Management</h3>
+                    <p className="text-foreground/80 mb-4">Track grant applications, deadlines, and reporting. Currently managing $1.95M in grant pipeline with real-time progress tracking and deadline alerts.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">Real Data</span>
+                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">$1.95M Pipeline</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Academy */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">📚</div>
+                      <p className="text-white font-semibold text-sm">K-12 Curriculum</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Luv Learning Academy</h3>
+                    <p className="text-foreground/80 mb-4">K-12 Sovereign Education System with Divine STEM, Languages, Courses, and comprehensive curriculum. 9 training simulators with token rewards.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">K-12 System</span>
+                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">9 Simulators</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LuvLedger */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">📊</div>
+                      <p className="text-white font-semibold text-sm">$2M+ Assets</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">LuvLedger Wealth Management</h3>
+                    <p className="text-foreground/80 mb-4">Personal wealth hub tracking $2M+ in family assets including investments, real estate, and multi-generational financial history.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">Real Data</span>
+                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">$2M+ Assets</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
