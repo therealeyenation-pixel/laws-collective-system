@@ -33,7 +33,7 @@ export default function About() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">My Mission</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">L.A.W.S.' Mission</h3>
                   <p>
                     I exist to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. I operate as both a commercial structure and an ecosystem of purpose. My mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment.
                   </p>
@@ -42,7 +42,7 @@ export default function About() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">My Vision</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Luv's Vision</h3>
                   <p>
                     I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship.
                   </p>
