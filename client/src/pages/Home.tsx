@@ -25,6 +25,7 @@ import {
   Home as HomeIcon,
   BarChart3,
   Shield,
+  Globe,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -35,7 +36,7 @@ import SlidesCarousel from "@/components/SlidesCarousel";
 const entityTypes = [
   { id: "llc", name: "LLC", desc: "Limited Liability Company" },
   { id: "scorp", name: "S Corp", desc: "S Corporation" },
-  { id: "nonprofit", name: "Nonprofit (508)", desc: "Tax-Exempt Organization" },
+  { id: "nonprofit", name: "Nonprofit", desc: "Tax-Exempt Organization" },
   { id: "trust", name: "Trust", desc: "Family Trust" },
 ];
 
@@ -82,7 +83,7 @@ const walkthroughSteps = [
   {
     title: "Grant & Tax Tools Activated",
     subtitle: "Entity-Specific Strategy & Funding Access",
-    items: ["Curated grant database for your entity type", "Tax simulators for LLCs, S Corps, 508s, Trusts", "Proposal templates & budget builders", "Compliance checklists & filing guides"],
+    items: ["Curated grant database for your entity type", "Tax simulators for LLCs, S Corps, nonprofits, Trusts", "Proposal templates & budget builders", "Compliance checklists & filing guides"],
     gradient: "from-amber-900 via-orange-900 to-red-900",
     icon: "TrendingUp",
   },
@@ -116,6 +117,13 @@ const walkthroughSteps = [
     icon: "BookOpen",
   },
   {
+    title: "Built for Global Impact",
+    subtitle: "International Considerations & Cross-Border Wealth Building",
+    items: ["International business entity structures", "Cross-border asset management", "Indigenous land rights (global context)", "International trade and commerce", "Multi-currency support", "UN Sustainable Development Goals alignment", "Diaspora wealth building"],
+    gradient: "from-slate-900 via-blue-950 to-indigo-950",
+    icon: "Globe",
+  },
+  {
     title: "Connected to the Collective",
     subtitle: "The Closed-Loop Wealth Multiplier",
     items: ["1 Family \u2192 $100K wealth", "10 Families \u2192 $1M collective", "100 Families \u2192 $10M community impact", "Sovereign. Closed-loop. Multi-generational."],
@@ -126,7 +134,7 @@ const walkthroughSteps = [
 
 function DemoSimulator() {
   const [step, setStep] = useState<"start" | "setup" | "walkthrough" | "done">("start");
-  const [entityType, setEntityType] = useState("");
+  const [entityType, setEntityType] = useState("llc");
   const [businessType, setBusinessType] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [walkStep, setWalkStep] = useState(0);
@@ -153,6 +161,7 @@ function DemoSimulator() {
     BookOpen: <BookOpen className="w-10 h-10" />,
     TrendingUp: <TrendingUp className="w-10 h-10" />,
     Network: <Network className="w-10 h-10" />,
+    Globe: <Globe className="w-10 h-10" />,
   };
 
   const handleSubmit = () => {
@@ -194,31 +203,12 @@ function DemoSimulator() {
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <p className="text-sm text-primary font-semibold uppercase tracking-wider mb-2">Step 1 of 3</p>
-          <h3 className="text-2xl font-bold text-foreground">Set Up Your Business</h3>
+          <p className="text-sm text-primary font-semibold uppercase tracking-wider mb-2">Demo Setup</p>
+          <h3 className="text-2xl font-bold text-foreground">Set Up Your LLC</h3>
+          <p className="text-sm text-muted-foreground mt-1">Entity Type: <span className="font-semibold text-foreground">LLC — Limited Liability Company</span></p>
         </div>
 
         <div className="space-y-6 max-w-lg mx-auto">
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-3">Choose Entity Type</label>
-            <div className="grid grid-cols-2 gap-3">
-              {entityTypes.map((type) => (
-                <button
-                  key={type.id}
-                  onClick={() => setEntityType(type.id)}
-                  className={`p-4 rounded-lg border-2 text-left transition-all ${
-                    entityType === type.id
-                      ? "border-primary bg-primary/10"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <p className="font-bold text-foreground">{type.name}</p>
-                  <p className="text-xs text-muted-foreground">{type.desc}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
           <div>
             <label className="block text-sm font-semibold text-foreground mb-3">Business Type</label>
             <div className="grid grid-cols-2 gap-2">
@@ -252,7 +242,7 @@ function DemoSimulator() {
           <Button
             size="lg"
             onClick={handleSubmit}
-            disabled={!entityType || !businessType || !businessName.trim()}
+            disabled={!businessType || !businessName.trim()}
             className="w-full gap-2"
           >
             Set Up Business <ArrowRight className="w-4 h-4" />

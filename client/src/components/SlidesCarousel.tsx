@@ -30,7 +30,7 @@ const slides = [
   {
     title: "Tax Preparation & Compliance",
     subtitle: "Entity-Specific Tax Strategy",
-    content: "Tax simulators for LLCs, S Corps, 508(c)(1)(a) nonprofits, and Trusts. Understand deductions, filing requirements, and compliance obligations before tax season arrives.",
+    content: "Tax simulators for LLCs, S Corps, nonprofits, and Trusts. Understand deductions, filing requirements, and compliance obligations before tax season arrives.",
     gradient: "from-teal-900 via-emerald-900 to-green-900",
   },
   {
@@ -82,6 +82,12 @@ const slides = [
     gradient: "from-rose-900 via-pink-900 to-fuchsia-900",
   },
   {
+    title: "Built for Global Impact",
+    subtitle: "International Considerations & Cross-Border Wealth",
+    content: "International business entity structures. Cross-border asset management. Indigenous land rights on a global scale. International trade and commerce. Multi-currency support. Aligned with UN Sustainable Development Goals. Diaspora wealth building across borders.",
+    gradient: "from-slate-900 via-blue-950 to-indigo-950",
+  },
+  {
     title: "Try the Demo Below",
     subtitle: "Set Up a Business. Watch the System Activate.",
     content: "Pick an entity type, name your business, and see the full system come alive \u2014 from formation to House creation to LuvLedger to dashboards to community. Under 2 minutes.",
@@ -110,6 +116,7 @@ const audioUrls = [
   "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/YNBCidhJlMwaHksl.wav",
   "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/ZXlEPsUpCxRMRitu.wav",
   "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/qZCRmNLdbHtjFQvX.wav",
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/HZzuCltkhzGUhabW.wav",
   "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/UkJfOEMZulWrxMhv.wav",
 ];
 
