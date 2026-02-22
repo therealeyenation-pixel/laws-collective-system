@@ -18,27 +18,33 @@ export default function About() {
             {/* Bio Section */}
             <div className="md:col-span-2">
               <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">About</span>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">La Shanna K. Russell (Luv)</h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">About Luv</h1>
               <p className="text-xl text-muted-foreground mb-6">
                 Founder & Visionary of The L.A.W.S. Collective
               </p>
-              <div className="space-y-6 text-base text-foreground/80 leading-relaxed mb-6">
+              <div className="space-y-4 text-base text-foreground/80 leading-relaxed mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Mission</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Background</h3>
                   <p>
-                    LuvOnPurpose exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. The company operates as both a commercial structure and an ecosystem of purpose. Its mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment.
-                  </p>
-                  <p className="mt-3">
-                    By merging business education with real-world application, LuvOnPurpose transforms traditional training models into living systems. Each House established through its platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.
+                    With a Bachelor's degree in Business Administration and a minor in Management, combined with extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective. My background has equipped me with deep insights into business structure, compliance, and the mechanics of building sustainable economic systems.
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Vision</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">My Mission</h3>
                   <p>
-                    LuvOnPurpose envisions a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship.
+                    I exist to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. I operate as both a commercial structure and an ecosystem of purpose. My mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment.
                   </p>
                   <p className="mt-3">
-                    Over time, the LuvOnPurpose ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration. Its ultimate goal is to create measurable impact—educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.
+                    By merging business education with real-world application, I transform traditional training models into living systems. Each House established through my platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">My Vision</h3>
+                  <p>
+                    I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship.
+                  </p>
+                  <p className="mt-3">
+                    Over time, the L.A.W.S. Collective ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration. My ultimate goal is to create measurable impact—educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.
                   </p>
                 </div>
               </div>
