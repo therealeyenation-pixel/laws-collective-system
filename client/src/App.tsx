@@ -247,7 +247,8 @@ import AcquisitionFundDashboard from "@/pages/AcquisitionFundDashboard";
 import TrialLanding from "@/pages/TrialLanding";
 import TrialDashboard from "@/pages/TrialDashboard";
 import TrialAnalytics from "@/pages/TrialAnalytics";
-import OfficeSuite from "@/pages/OfficeSuite";
+import OfficeSuite from "./pages/OfficeSuite";
+import About from "./pages/About";
 import Documentary from "@/pages/Documentary";
 import Podcast from "@/pages/Podcast";
 import JoinJourney from "@/pages/JoinJourney";
@@ -431,7 +432,8 @@ function Router() {
       <Route path="/my-credential" component={MyCredential} />
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
-      <Route path="/support" component={Support} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/about" component={About} />
       <Route path="/donate" component={Donations} />
       <Route path="/products" component={Products} />
       <Route path="/course-success" component={CourseSuccess} />

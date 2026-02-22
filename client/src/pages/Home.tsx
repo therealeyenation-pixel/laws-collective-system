@@ -330,15 +330,15 @@ export default function Home() {
               The L.A.W.S. Collective
             </h1>
 
-            <div className="flex justify-center gap-4 mb-8 text-2xl font-bold">
+            <div className="flex justify-center gap-1 mb-8 text-2xl font-bold tracking-wider">
               <span className="text-green-600">L</span>
-              <span>and</span>
+              <span className="mx-1">and</span>
               <span className="text-blue-600">A</span>
-              <span>ir</span>
+              <span className="mx-1">ir</span>
               <span className="text-cyan-600">W</span>
-              <span>ater</span>
+              <span className="mx-1">ater</span>
               <span className="text-purple-600">S</span>
-              <span>elf</span>
+              <span className="mx-1">elf</span>
             </div>
 
             <p className="text-xl md:text-2xl text-foreground font-semibold mb-4">
@@ -664,9 +664,14 @@ export default function Home() {
           <p className="text-lg text-muted-foreground mb-8">
             The L.A.W.S. Collective is currently in development. Connect with us to learn more and stay updated on our progress.
           </p>
-          <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
-            <Link href="/contact">Contact Us</Link>
-          </Button>
+          <div className="flex gap-4 justify-center">
+            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
+              <Link href="/about">About La Shanna</Link>
+            </Button>
+            <Button asChild variant="outline" className="px-8 py-6 text-lg">
+              <Link href="/contact">Contact Us</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>
