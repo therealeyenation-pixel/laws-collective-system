@@ -22,7 +22,6 @@ import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
-import { NewsBanner } from "@/components/NewsBanner";
 
 export default function PurchasingDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -63,9 +62,6 @@ export default function PurchasingDashboard() {
 
   return (
     <DashboardLayout>
-      {/* News Banner */}
-      <NewsBanner className="-mx-6 -mt-6 mb-6" />
-      
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

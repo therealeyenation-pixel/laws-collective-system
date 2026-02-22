@@ -180,11 +180,12 @@ export default function BusinessLanding() {
                   Try Demo Free
                 </Button>
               </Link>
-              <a href="mailto:luvonpurpose@protonmail.com">
+              <Link href="/pricing">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 gap-2">
-                  Contact Us
+                  <DollarSign className="w-5 h-5" />
+                  View Pricing
                 </Button>
-              </a>
+              </Link>
               <Link href="/dept/business">
                 <Button size="lg" variant="ghost" className="text-white hover:bg-white/10 gap-2">
                   <Briefcase className="w-5 h-5" />
@@ -898,11 +899,12 @@ export default function BusinessLanding() {
                     Try Demo Free
                   </Button>
                 </Link>
-                <a href="mailto:luvonpurpose@protonmail.com">
+                <Link href="/pricing">
                   <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 gap-2">
-                    Contact Us to Learn More
+                    <DollarSign className="w-5 h-5" />
+                    Subscribe Now
                   </Button>
-                </a>
+                </Link>
               </div>
             </CardContent>
           </Card>
