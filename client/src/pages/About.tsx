@@ -9,15 +9,9 @@ export default function About() {
       <section className="py-16 md:py-24 bg-gradient-to-b from-primary/10 to-background">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
-            {/* Photo Placeholder */}
+            {/* Photo */}
             <div className="flex justify-center md:justify-start">
-              <div className="w-64 h-64 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex items-center justify-center border-2 border-primary/30">
-                <div className="text-center">
-                  <div className="text-6xl mb-2">📸</div>
-                  <p className="text-sm text-muted-foreground">Photo Placeholder</p>
-                  <p className="text-xs text-muted-foreground mt-1">Add your professional photo here</p>
-                </div>
-              </div>
+              <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/BqtkKLsjykheEJZJ.jpeg" alt="La Shanna K. Russell" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
             </div>
 
             {/* Bio Section */}

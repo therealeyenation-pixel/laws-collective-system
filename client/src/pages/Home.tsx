@@ -330,15 +330,11 @@ export default function Home() {
               The L.A.W.S. Collective
             </h1>
 
-            <div className="flex justify-center gap-1 mb-8 text-2xl font-bold tracking-wider">
-              <span className="text-green-600">L</span>
-              <span className="mx-1">and</span>
-              <span className="text-blue-600">A</span>
-              <span className="mx-1">ir</span>
-              <span className="text-cyan-600">W</span>
-              <span className="mx-1">ater</span>
-              <span className="text-purple-600">S</span>
-              <span className="mx-1">elf</span>
+            <div className="flex justify-center gap-3 mb-8 text-2xl font-bold">
+              <span><span className="text-green-600">L</span>and</span>
+              <span><span className="text-blue-600">A</span>ir</span>
+              <span><span className="text-cyan-600">W</span>ater</span>
+              <span><span className="text-purple-600">S</span>elf</span>
             </div>
 
             <p className="text-xl md:text-2xl text-foreground font-semibold mb-4">
