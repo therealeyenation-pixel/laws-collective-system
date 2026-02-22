@@ -9963,3 +9963,11 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Slow down walkthrough auto-advance to 12 seconds
 - [x] Fix demo rerun (entityType reset to 'llc' instead of empty)
 - [x] Update subtitle text from 'narration' to 'background music'
+
+
+## Phase 100: Remove Music and Reorganize Page Flow
+- [x] Remove background music from carousel (mute by default, no audio)
+- [x] Move Concept Overview section to top (under "See What We're Building" heading)
+- [x] Add "Try Demo" button and demo video below Concept Overview
+- [x] Reorder remaining sections: Planned Capabilities, How It Works, etc.
+- [x] Test page flow in browser and verify demo works
