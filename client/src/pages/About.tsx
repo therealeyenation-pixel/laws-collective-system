@@ -200,20 +200,20 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* QR Code */}
+            {/* Business Card Front */}
             <div className="flex flex-col items-center">
               <Card className="p-8 bg-background">
-                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/gmyQMAqpOLXMPLbi.png" alt="QR Code" className="w-64 h-64 object-contain" />
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/dLYFUnjFHAmwIKcP.png" alt="Business Card Front" className="w-80 h-48 object-contain" />
               </Card>
-              <p className="text-sm text-muted-foreground mt-4">Scan to visit The L.A.W.S. Collective</p>
+              <p className="text-sm text-muted-foreground mt-4">Business Card - Front (L.A.W.S. Collective + QR Code)</p>
             </div>
 
-            {/* Business Card */}
+            {/* Business Card Back */}
             <div className="flex flex-col items-center">
               <Card className="p-8 bg-background">
-                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/kjCZvCZBAMiNvndz.png" alt="Business Card" className="w-80 h-48 object-contain" />
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/IpKBuXelcvzxGMTO.png" alt="Business Card Back" className="w-80 h-48 object-contain" />
               </Card>
-              <p className="text-sm text-muted-foreground mt-4">Professional business card design</p>
+              <p className="text-sm text-muted-foreground mt-4">Business Card - Back (Contact Information)</p>
             </div>
           </div>
         </div>
