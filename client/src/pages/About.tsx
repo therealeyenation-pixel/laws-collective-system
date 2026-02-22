@@ -24,9 +24,12 @@ export default function About() {
               </p>
               <div className="space-y-4 text-base text-foreground/80 leading-relaxed mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Background</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Background & Education</h3>
                   <p>
-                    With a Bachelor's degree in Business Administration and a minor in Management, combined with extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective. My background has equipped me with deep insights into business structure, compliance, and the mechanics of building sustainable economic systems.
+                    With extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective. My background has equipped me with deep insights into business structure, compliance, and the mechanics of building sustainable economic systems.
+                  </p>
+                  <p className="mt-3">
+                    <strong>Education:</strong> I hold two Associates degrees from Bryant and Stratton College (1998)—in Microcomputers Management and Administrative Assistant with Micro option—where I was inducted into the National Honors Society. I earned my Bachelor's degree in Business Administration with a minor in Management from American Public University in 2025, graduating Cum Laude.
                   </p>
                 </div>
                 <div>
