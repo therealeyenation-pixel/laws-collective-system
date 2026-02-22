@@ -11,19 +11,36 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
             {/* Photo */}
             <div className="flex justify-center md:justify-start">
-              <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/BqtkKLsjykheEJZJ.jpeg" alt="La Shanna K. Russell" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
+              <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
             </div>
 
             {/* Bio Section */}
             <div className="md:col-span-2">
-              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">About the Founder</span>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">La Shanna K. Russell</h1>
+              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">About</span>
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">La Shanna K. Russell (Luv)</h1>
               <p className="text-xl text-muted-foreground mb-6">
                 Founder & Visionary of The L.A.W.S. Collective
               </p>
-              <p className="text-base text-foreground/80 leading-relaxed mb-6">
-                La Shanna K. Russell is the architect of a comprehensive multi-generational wealth-building ecosystem designed to transform how families and communities approach financial sovereignty. With a deep commitment to education, community empowerment, and purposeful enterprise, she has created an integrated system that goes far beyond traditional financial literacy.
-              </p>
+              <div className="space-y-6 text-base text-foreground/80 leading-relaxed mb-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Mission</h3>
+                  <p>
+                    LuvOnPurpose exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. The company operates as both a commercial structure and an ecosystem of purpose. Its mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment.
+                  </p>
+                  <p className="mt-3">
+                    By merging business education with real-world application, LuvOnPurpose transforms traditional training models into living systems. Each House established through its platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Vision</h3>
+                  <p>
+                    LuvOnPurpose envisions a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship.
+                  </p>
+                  <p className="mt-3">
+                    Over time, the LuvOnPurpose ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration. Its ultimate goal is to create measurable impact—educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.
+                  </p>
+                </div>
+              </div>
               <div className="flex gap-3">
                 <Button className="bg-primary hover:bg-primary/90">
                   <Mail className="w-4 h-4 mr-2" />
@@ -39,11 +56,11 @@ export default function About() {
         </div>
       </section>
 
-      {/* Vision Section */}
+            {/* Framework Section */}
       <section className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">The Vision</span>
+            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Framework</span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">A Closed-Loop Wealth Ecosystem</h2>
             <p className="text-muted-foreground max-w-3xl mx-auto">
               Creating a comprehensive approach to building multi-generational wealth through community, education, and purposeful enterprise
