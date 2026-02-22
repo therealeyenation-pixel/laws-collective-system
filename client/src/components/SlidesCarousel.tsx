@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Pause, Play, Volume2, VolumeX } from "lucide-react";
 
+const BACKGROUND_MUSIC_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/xEMcctlQwYPngzvg.mp3";
+
 const slides = [
   {
     title: "The L.A.W.S. Collective",
@@ -101,50 +103,57 @@ const slides = [
   },
 ];
 
-const audioUrls = [
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/GmSepDUuLqOeFuzZ.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/ZxeaupvKTSXmAcIc.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/XpQJAWBtKjwxWTHl.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/gRCMwawGRAqPzEAv.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/tCNraFOvOsACkxqL.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/YMewOqekvMZsUCnZ.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/RtQhUxBaNSErlvpD.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/lmIkiDdcKnqeQMmD.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/IrYHyGTTMXIXcmgu.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/XugXgHpoBOLdgiLC.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/vxQigvxBiEapOaPy.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/YNBCidhJlMwaHksl.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/ZXlEPsUpCxRMRitu.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/qZCRmNLdbHtjFQvX.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/HZzuCltkhzGUhabW.wav",
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/UkJfOEMZulWrxMhv.wav",
-];
-
 type TransitionType = "curtain" | "fade" | "blink" | "slide";
 const transitionTypes: TransitionType[] = ["curtain", "fade", "blink", "slide"];
 
 export default function SlidesCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [speed] = useState(8000);
+  const [speed] = useState(12000); // 12 seconds per slide for readability
   const [isMuted, setIsMuted] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const bgMusicRef = useRef<HTMLAudioElement | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionType, setTransitionType] = useState<TransitionType>("fade");
   const [showContent, setShowContent] = useState(true);
   const [curtainPhase, setCurtainPhase] = useState<"idle" | "closing" | "closed" | "opening">("idle");
   const pendingSlideRef = useRef<number | null>(null);
 
+  // Initialize background music (loops continuously)
+  useEffect(() => {
+    const audio = new Audio(BACKGROUND_MUSIC_URL);
+    audio.loop = true;
+    audio.volume = 0.3;
+    audio.preload = "auto";
+    bgMusicRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.src = "";
+    };
+  }, []);
+
+  // Handle mute/unmute for background music
+  useEffect(() => {
+    const audio = bgMusicRef.current;
+    if (!audio) return;
+
+    if (isMuted) {
+      audio.pause();
+    } else {
+      audio.play().catch((err) => {
+        console.log("Audio autoplay blocked:", err);
+      });
+    }
+  }, [isMuted]);
+
   const doTransition = useCallback((nextIndex: number) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
 
-    // Cycle through transition types for variety
     const nextTransition = transitionTypes[nextIndex % transitionTypes.length];
     setTransitionType(nextTransition);
 
     if (nextTransition === "curtain") {
-      // Curtain close → swap → curtain open
       setCurtainPhase("closing");
       pendingSlideRef.current = nextIndex;
       setTimeout(() => {
@@ -159,7 +168,6 @@ export default function SlidesCarousel() {
         }, 200);
       }, 600);
     } else if (nextTransition === "blink") {
-      // Quick flash/blink effect
       setShowContent(false);
       setTimeout(() => {
         setCurrentSlide(nextIndex);
@@ -175,7 +183,6 @@ export default function SlidesCarousel() {
         }, 100);
       }, 150);
     } else if (nextTransition === "slide") {
-      // Slide out left, new slide in from right
       setShowContent(false);
       setTimeout(() => {
         setCurrentSlide(nextIndex);
@@ -219,49 +226,12 @@ export default function SlidesCarousel() {
     return () => clearInterval(interval);
   }, [isPlaying, speed, nextSlide, isTransitioning]);
 
-  // Play audio narration when slide changes
-  useEffect(() => {
-    if (isMuted) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      return;
-    }
-
-    const url = audioUrls[currentSlide];
-    if (!url) return;
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-
-    const audio = new Audio(url);
-    audio.volume = 0.85;
-    audioRef.current = audio;
-
-    audio.play().catch((err) => {
-      console.log("Audio autoplay blocked:", err);
-    });
-
-    return () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }, [currentSlide, isMuted]);
-
   const toggleMute = () => {
-    if (!isMuted && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
     setIsMuted(!isMuted);
   };
 
   const slide = slides[currentSlide];
 
-  // Build transition classes
   const getContentClasses = () => {
     const base = "flex flex-col items-center justify-center text-center px-8 py-16 md:py-20";
 
@@ -275,7 +245,6 @@ export default function SlidesCarousel() {
     return `${base} transition-opacity duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-0"}`;
   };
 
-  // Curtain overlay
   const getCurtainStyle = (): React.CSSProperties => {
     if (curtainPhase === "idle") return { display: "none" };
     return {
@@ -324,11 +293,9 @@ export default function SlidesCarousel() {
       {/* Curtain Overlay */}
       <div style={getCurtainStyle()}>
         <div style={getLeftCurtainStyle()}>
-          {/* Left curtain decorative lines */}
           <div style={{ width: "2px", height: "60%", background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.6), transparent)" }} />
         </div>
         <div style={getRightCurtainStyle()}>
-          {/* Right curtain decorative lines */}
           <div style={{ width: "2px", height: "60%", background: "linear-gradient(to bottom, transparent, rgba(212,175,55,0.6), transparent)" }} />
         </div>
       </div>
@@ -401,7 +368,6 @@ export default function SlidesCarousel() {
         >
           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
         </Button>
-        {/* Transition type indicator */}
         <span className="text-white/40 text-[10px] uppercase tracking-wider ml-2 hidden md:inline">
           {transitionType}
         </span>

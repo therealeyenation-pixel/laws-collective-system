@@ -9955,3 +9955,11 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add curtain/blink/fade transition effects between slides
 - [x] Audio narration retained from previous version (16 audio files)
 - [x] Test carousel in browser
+
+## Phase 99: Carousel Music, Demo Rerun Fix, Slower Transitions
+- [x] Remove voice narration from carousel (replaced with background music)
+- [x] Add background music to carousel (ambient synthesized track)
+- [x] Slow down carousel transitions to 12 seconds for readability
+- [x] Slow down walkthrough auto-advance to 12 seconds
+- [x] Fix demo rerun (entityType reset to 'llc' instead of empty)
+- [x] Update subtitle text from 'narration' to 'background music'

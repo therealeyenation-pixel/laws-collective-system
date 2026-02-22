@@ -148,7 +148,7 @@ function DemoSimulator() {
       } else {
         setStep("done");
       }
-    }, 6000);
+    }, 12000);
     return () => clearTimeout(timer);
   }, [step, walkStep, isAutoPlaying]);
 
@@ -173,7 +173,7 @@ function DemoSimulator() {
 
   const resetDemo = () => {
     setStep("start");
-    setEntityType("");
+    setEntityType("llc");
     setBusinessType("");
     setBusinessName("");
     setWalkStep(0);
@@ -470,7 +470,7 @@ export default function Home() {
           <div className="text-center mb-8">
             <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Concept Overview</span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">See What We're Building</h2>
-            <p className="text-muted-foreground">An overview of the platform vision and planned capabilities • Click the sound icon for narration</p>
+            <p className="text-muted-foreground">An overview of the platform vision and planned capabilities • Click the sound icon for background music</p>
           </div>
           <SlidesCarousel />
         </div>
