@@ -9981,3 +9981,18 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add About route to App.tsx
 - [x] Add About link to Home.tsx navigation
 - [x] Test About page loads correctly
+
+
+## Phase X: Newsletter System (Future Implementation)
+- [ ] Create newsletter database schema (subscribers, campaigns, templates)
+- [ ] Build newsletter subscription management router
+- [ ] Create newsletter template builder component
+- [ ] Implement email sending via email service
+- [ ] Build newsletter campaign scheduling
+- [ ] Create subscriber list management interface
+- [ ] Add newsletter analytics and tracking
+- [ ] Integrate newsletter signup into landing page (waitlist component)
+- [ ] Create newsletter dashboard for content management
+- [ ] Set up automated newsletter sending workflows
+- [ ] Add newsletter unsubscribe handling
+- [ ] Create newsletter archive/history viewer
