@@ -9922,3 +9922,14 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add "Get Started" CTA button linking to /getting-started onboarding flow
 - [x] Test complete flow: Simulator → Dashboard Preview → Get Started
 - [x] Save checkpoint for March 4th deployment
+
+
+## Phase 95: Enhanced Carousel + Demo + Audio
+- [x] Move carousel section before simulator on landing page
+- [x] Expand carousel slides to cover tangibles: education simulators, grants, proposals, taxes, employee-to-contractor, land reclamation
+- [x] Expand demo walkthrough steps with more system features (10 steps now)
+- [x] Generate AI voiceover narration for all 15 slides
+- [x] Upload narration audio to CDN
+- [x] Add sound toggle controls (mute/unmute)
+- [x] Update hero description to sovereign wealth management platform
+- [ ] Add background music to carousel and walkthrough

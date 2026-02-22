@@ -39,6 +39,17 @@ const entityTypes = [
   { id: "trust", name: "Trust", desc: "Family Trust" },
 ];
 
+const businessTypes = [
+  { id: "tech", name: "Tech / E-Commerce", dashboards: ["Product Analytics", "Customer Acquisition", "Revenue Pipeline", "Tech Infrastructure"] },
+  { id: "service", name: "Service / Consulting", dashboards: ["Client Management", "Project Tracking", "Billing & Invoicing", "Resource Allocation"] },
+  { id: "healthcare", name: "Healthcare / Wellness", dashboards: ["Patient Management", "Compliance Tracking", "Appointment Scheduling", "Insurance & Billing"] },
+  { id: "retail", name: "Retail / Food Service", dashboards: ["Inventory Management", "Point of Sale", "Supplier Relations", "Customer Loyalty"] },
+  { id: "realestate", name: "Real Estate / Property", dashboards: ["Property Portfolio", "Tenant Management", "Maintenance Tracking", "Market Analysis"] },
+  { id: "education", name: "Education / Training", dashboards: ["Student Enrollment", "Curriculum Management", "Instructor Scheduling", "Certification Tracking"] },
+  { id: "creative", name: "Creative / Media", dashboards: ["Content Calendar", "Client Campaigns", "Asset Library", "Performance Analytics"] },
+  { id: "construction", name: "Construction / Trades", dashboards: ["Job Scheduling", "Materials Tracking", "Subcontractor Management", "Safety Compliance"] },
+];
+
 const walkthroughSteps = [
   {
     title: "is Now Live",
@@ -62,16 +73,52 @@ const walkthroughSteps = [
     icon: "BarChart3",
   },
   {
+    title: "Education Simulators Unlocked",
+    subtitle: "Learn by Doing \u2014 Practice Before You Risk",
+    items: ["Business Formation Simulator", "Grant Writing Workshop", "Tax Preparation & Compliance", "Proposal Development Tools", "Financial Planning Scenarios"],
+    gradient: "from-violet-900 via-purple-900 to-fuchsia-900",
+    icon: "BookOpen",
+  },
+  {
+    title: "Grant & Tax Tools Activated",
+    subtitle: "Entity-Specific Strategy & Funding Access",
+    items: ["Curated grant database for your entity type", "Tax simulators for LLCs, S Corps, 508s, Trusts", "Proposal templates & budget builders", "Compliance checklists & filing guides"],
+    gradient: "from-amber-900 via-orange-900 to-red-900",
+    icon: "TrendingUp",
+  },
+  {
+    title: "Your Growth Path Is Mapped",
+    subtitle: "Employee to Contractor Transition",
+    items: ["Managers transition to Board Members", "Coordinators become independent contractors", "Benefits & legal structure documented", "No one is left behind in the process"],
+    gradient: "from-cyan-900 via-blue-900 to-indigo-900",
+    icon: "Network",
+  },
+  {
+    title: "Land Reclamation Initiated",
+    subtitle: "Reconnecting Families to the Land",
+    items: ["Ancestral land record research", "Reclamation opportunity identification", "Pathway to land ownership", "Foundational to generational wealth"],
+    gradient: "from-green-900 via-emerald-900 to-teal-900",
+    icon: "Shield",
+  },
+  {
     title: "Your Dashboards Are Online",
-    subtitle: "4 Standard + 10 Specialized Dashboards",
-    items: ["Financial Overview", "Team Management", "Operations Center", "LuvLedger Assets", "+ Specialized dashboards for your business type"],
-    gradient: "from-amber-900 via-orange-900 to-yellow-900",
+    subtitle: "4 Standard + Specialized Dashboards",
+    items: ["Financial Overview", "Team Management", "Operations Center", "LuvLedger Assets"],
+    gradient: "from-amber-900 via-yellow-900 to-orange-900",
     icon: "Zap",
+    dynamic: true,
+  },
+  {
+    title: "Academy Access Granted",
+    subtitle: "Free Education for Heirs \u2022 Scholarships for Community",
+    items: ["K-12 Divine STEM curriculum", "Coding & AI technology simulators", "Blockchain-verified certificates", "Apprenticeship partnership pathways"],
+    gradient: "from-blue-900 via-sky-900 to-cyan-900",
+    icon: "BookOpen",
   },
   {
     title: "Connected to the Collective",
-    subtitle: "The Multiplier Effect",
-    items: ["1 Family \u2192 $100K wealth", "10 Families \u2192 $1M collective", "100 Families \u2192 $10M community", "Your success multiplies across the network"],
+    subtitle: "The Closed-Loop Wealth Multiplier",
+    items: ["1 Family \u2192 $100K wealth", "10 Families \u2192 $1M collective", "100 Families \u2192 $10M community impact", "Sovereign. Closed-loop. Multi-generational."],
     gradient: "from-teal-900 via-cyan-900 to-blue-900",
     icon: "Shield",
   },
@@ -80,6 +127,7 @@ const walkthroughSteps = [
 function DemoSimulator() {
   const [step, setStep] = useState<"start" | "setup" | "walkthrough" | "done">("start");
   const [entityType, setEntityType] = useState("");
+  const [businessType, setBusinessType] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [walkStep, setWalkStep] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -102,10 +150,13 @@ function DemoSimulator() {
     BarChart3: <BarChart3 className="w-10 h-10" />,
     Zap: <Zap className="w-10 h-10" />,
     Shield: <Shield className="w-10 h-10" />,
+    BookOpen: <BookOpen className="w-10 h-10" />,
+    TrendingUp: <TrendingUp className="w-10 h-10" />,
+    Network: <Network className="w-10 h-10" />,
   };
 
   const handleSubmit = () => {
-    if (!entityType || !businessName.trim()) return;
+    if (!entityType || !businessType || !businessName.trim()) return;
     setStep("walkthrough");
     setWalkStep(0);
     setIsAutoPlaying(true);
@@ -114,10 +165,13 @@ function DemoSimulator() {
   const resetDemo = () => {
     setStep("start");
     setEntityType("");
+    setBusinessType("");
     setBusinessName("");
     setWalkStep(0);
     setIsAutoPlaying(true);
   };
+
+  const selectedBizType = businessTypes.find(b => b.id === businessType);
 
   // START SCREEN
   if (step === "start") {
@@ -140,7 +194,7 @@ function DemoSimulator() {
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <p className="text-sm text-primary font-semibold uppercase tracking-wider mb-2">Step 1 of 2</p>
+          <p className="text-sm text-primary font-semibold uppercase tracking-wider mb-2">Step 1 of 3</p>
           <h3 className="text-2xl font-bold text-foreground">Set Up Your Business</h3>
         </div>
 
@@ -166,6 +220,25 @@ function DemoSimulator() {
           </div>
 
           <div>
+            <label className="block text-sm font-semibold text-foreground mb-3">Business Type</label>
+            <div className="grid grid-cols-2 gap-2">
+              {businessTypes.map((type) => (
+                <button
+                  key={type.id}
+                  onClick={() => setBusinessType(type.id)}
+                  className={`p-3 rounded-lg border-2 text-left transition-all ${
+                    businessType === type.id
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  <p className="font-semibold text-foreground text-sm">{type.name}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
             <label className="block text-sm font-semibold text-foreground mb-2">Business Name</label>
             <input
               type="text"
@@ -179,7 +252,7 @@ function DemoSimulator() {
           <Button
             size="lg"
             onClick={handleSubmit}
-            disabled={!entityType || !businessName.trim()}
+            disabled={!entityType || !businessType || !businessName.trim()}
             className="w-full gap-2"
           >
             Set Up Business <ArrowRight className="w-4 h-4" />
@@ -218,6 +291,19 @@ function DemoSimulator() {
                   <span className="text-white text-sm text-left">{item}</span>
                 </div>
               ))}
+              {(current as any).dynamic && selectedBizType && (
+                <>
+                  <div className="col-span-1 sm:col-span-2 mt-2">
+                    <p className="text-white/60 text-xs uppercase tracking-wider font-semibold">+ {selectedBizType.name} Specialized Dashboards</p>
+                  </div>
+                  {selectedBizType.dashboards.map((db, idx) => (
+                    <div key={`biz-${idx}`} className="flex items-center gap-3 bg-white/15 border border-white/10 rounded-lg px-4 py-3">
+                      <Zap className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                      <span className="text-white text-sm text-left font-medium">{db}</span>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
 
@@ -357,11 +443,10 @@ export default function Home() {
               </div>
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-6">
-              Building <span className="text-primary">Multi-Generational Wealth</span> Through Community
+              A Sovereign <span className="text-primary">Wealth Management</span> & Trust Administration Platform
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-              A complete system for families and communities to build lasting prosperity together. 
-              Learn, simulate, grow, and create generational wealth while supporting your community's collective success.
+              A sovereign wealth management and trust administration platform that connects families within a closed-loop economic system for multi-generational wealth building.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <a href="#simulator" className="inline-block">
@@ -379,12 +464,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Slides Carousel */}
+      {/* Slides Carousel - Overview Presentation */}
       <section className="py-12 md:py-16 bg-background">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">See the Full Vision</h2>
-            <p className="text-muted-foreground">Auto-playing overview of the L.A.W.S. system</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">See What We're Building</h2>
+            <p className="text-muted-foreground">Click the sound icon to hear the narration • Use controls to navigate at your own pace</p>
           </div>
           <SlidesCarousel />
         </div>
