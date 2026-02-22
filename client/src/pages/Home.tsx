@@ -660,10 +660,19 @@ export default function Home() {
               <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
             </div>
             <div className="md:col-span-2">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell (Luv)</h2>
-              <p className="text-2xl text-primary font-semibold mb-8">Founder and CEO</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell</h2>
+              <p className="text-2xl text-primary font-semibold mb-6">Founder and CEO of the L.A.W.S. Ecosystem</p>
               
               <div className="space-y-8">
+                <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
+                  <p className="text-base text-foreground/90 leading-relaxed mb-4">
+                    With over 15 years of hands-on experience in government and commercial contracting, I bring deep operational expertise to The L.A.W.S. Collective. As a lifetime researcher and systems architect, I have spent decades studying wealth-building mechanisms, trust frameworks, and economic sovereignty models across cultures and generations. My background spans enterprise operations, financial systems design, legal entity structuring, and community development—all synthesized into a comprehensive platform designed to transform how families build and preserve multi-generational wealth.
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    <strong>Education:</strong> Associates degrees in Microcomputers Management and Administrative Assistant with Micro option from Bryant and Stratton College (1998, National Honors Society); Bachelor of Business Administration with minor in Management from American Public University (2025, Cum Laude).
+                  </p>
+                </div>
+                
                 <div>
                   <h3 className="text-2xl font-bold text-foreground mb-4">Luv's Vision</h3>
                   <p className="text-base text-foreground/80 leading-relaxed">I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship. Over time, the L.A.W.S. ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration, creating measurable impact by educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.</p>
