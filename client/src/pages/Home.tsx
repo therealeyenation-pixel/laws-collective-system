@@ -660,19 +660,18 @@ export default function Home() {
               <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
             </div>
             <div className="md:col-span-2">
-              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Meet the Founder</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">About Luv</h2>
-              <p className="text-xl text-muted-foreground mb-6">Founder & Visionary of The L.A.W.S. Collective</p>
-              <div className="space-y-4 text-base text-foreground/80 leading-relaxed">
-                <p>With extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective.</p>
-                <p><strong>Education:</strong> Associates degrees from Bryant and Stratton College (1998, National Honors Society) and Bachelor from American Public University (2025, Cum Laude).</p>
-                <div className="mt-6 pt-6 border-t border-primary/20">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">Luv's Vision</h3>
-                  <p className="text-sm mb-4">I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship. Over time, the L.A.W.S. ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration, creating measurable impact by educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell (Luv)</h2>
+              <p className="text-2xl text-primary font-semibold mb-8">Founder and CEO</p>
+              
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">Luv's Vision</h3>
+                  <p className="text-base text-foreground/80 leading-relaxed">I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship. Over time, the L.A.W.S. ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration, creating measurable impact by educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.</p>
                 </div>
-                <div className="pt-4">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">L.A.W.S.' Mission</h3>
-                  <p className="text-sm">The L.A.W.S. Collective exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. We operate as both a commercial structure and an ecosystem of purpose. Our mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment. By merging business education with real-world application, we transform traditional training models into living systems. Each House established through our platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.</p>
+                
+                <div className="border-t border-primary/20 pt-8">
+                  <h3 className="text-2xl font-bold text-foreground mb-4">L.A.W.S.' Mission</h3>
+                  <p className="text-base text-foreground/80 leading-relaxed">The L.A.W.S. Collective exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. We operate as both a commercial structure and an ecosystem of purpose. Our mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment. By merging business education with real-world application, we transform traditional training models into living systems. Each House established through our platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.</p>
                 </div>
               </div>
             </div>
