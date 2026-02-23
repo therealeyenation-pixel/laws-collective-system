@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,8 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import ForceRepairPanel from "@/components/ForceRepairPanel";
+import ScheduledDiagnosticsPanel from "@/components/ScheduledDiagnosticsPanel";
 
 type HealthStatus = "healthy" | "warning" | "critical" | "unknown";
 
@@ -215,6 +218,12 @@ export default function SystemHealthDashboard() {
           </CardContent>
         </Card>
       )}
+
+      {/* Force Repair Panel */}
+      <ForceRepairPanel />
+
+      {/* Scheduled Diagnostics */}
+      <ScheduledDiagnosticsPanel />
 
       {/* Quick Actions */}
       <Card>

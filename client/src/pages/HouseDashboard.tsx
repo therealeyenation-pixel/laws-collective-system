@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";

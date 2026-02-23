@@ -249,8 +249,8 @@ const MEMBERSHIP_TIERS = [
   {
     id: "premium",
     name: "Premium Member",
-    price: "$29/month",
-    description: "Full access to all tools and services",
+    price: "Coming Soon",
+    description: "Full access to all tools and services (pricing TBD)",
     features: [
       "Unlimited contract analysis",
       "Full negotiation strategy",
@@ -265,8 +265,8 @@ const MEMBERSHIP_TIERS = [
   {
     id: "business",
     name: "Business Member",
-    price: "$99/month",
-    description: "Everything plus representation services",
+    price: "Coming Soon",
+    description: "Everything plus representation services (pricing TBD)",
     features: [
       "All Premium features",
       "Representation services",
@@ -283,6 +283,7 @@ const MEMBERSHIP_TIERS = [
 export default function Services() {
   const { user, isAuthenticated } = useAuth();
   const [activeCategory, setActiveCategory] = useState("all");
+  const [trademarkSearch, setTrademarkSearch] = useState("");
 
   const filteredServices = activeCategory === "all" 
     ? SERVICES 
@@ -486,6 +487,59 @@ export default function Services() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Service Bundle Discount */}
+      <section className="py-16 px-4">
+        <div className="container max-w-7xl mx-auto">
+          <Card className="bg-green-50 border-green-200">
+            <CardContent className="p-8">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                <div className="flex-1">
+                  <Badge className="bg-green-600 text-white mb-4">Bundle & Save</Badge>
+                  <h3 className="text-2xl font-bold text-foreground mb-2">Service Bundle Discount</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Combine any 3+ services and receive 15% off. Platform subscribers get an additional 10% discount on all services.
+                  </p>
+                  
+                  {/* Trademark Search */}
+                  <div className="bg-white rounded-lg p-4 border border-green-200 mb-4">
+                    <p className="text-sm font-medium text-foreground mb-2">Check Business Name Availability</p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter business name to search trademarks..."
+                        className="flex-1 px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={trademarkSearch}
+                        onChange={(e) => setTrademarkSearch(e.target.value)}
+                      />
+                      <Button 
+                        variant="outline" 
+                        className="border-green-500 text-green-700 hover:bg-green-50"
+                        onClick={() => {
+                          if (trademarkSearch.trim()) {
+                            window.open(`https://tmsearch.uspto.gov/bin/gate.exe?f=searchss&state=4810:1234.1.1&p_s_PARA1=${encodeURIComponent(trademarkSearch)}&p_s_PARA2=&p_s_PARA1_SRCH=yes&p_s_PARA2_SRCH=yes&p_taession=&p_L=50&p_plural=yes&p_s_ALL=&a_default=search&a_search=Submit+Query`, '_blank');
+                          }
+                        }}
+                      >
+                        Search USPTO
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">Search the USPTO trademark database before registering your business name.</p>
+                  </div>
+                </div>
+                <div>
+                  <Link href="/bundle-builder">
+                    <Button className="bg-green-600 hover:bg-green-700 text-white gap-2">
+                      Build Your Bundle
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
