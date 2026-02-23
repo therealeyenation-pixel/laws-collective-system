@@ -1,0 +1,22 @@
+{
+  "query": "SELECT id, firstName, lastName, jobTitle FROM employees WHERE firstName LIKE '%Shanna%' OR lastName = 'Russell';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, firstName, lastName, jobTitle FROM employees WHERE firstName LIKE '%Shanna%' OR lastName = 'Russell';",
+  "rows": [
+    {
+      "id": "1",
+      "firstName": "LaShanna",
+      "lastName": "Russell",
+      "jobTitle": "CEO"
+    },
+    {
+      "id": "2",
+      "firstName": "Craig",
+      "lastName": "Russell",
+      "jobTitle": "Finance Manager"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tjobTitle\n1\tLaShanna\tRussell\tCEO\n2\tCraig\tRussell\tFinance Manager\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}
