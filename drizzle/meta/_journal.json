@@ -1,1 +1,69 @@
-{"version":"7","dialect":"mysql","entries":[]}
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1771829966437,
+      "tag": "0000_condemned_kinsey_walden",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1771830244925,
+      "tag": "0001_equal_mole_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1771831299268,
+      "tag": "0002_greedy_bastion",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1771831444310,
+      "tag": "0003_moaning_revanche",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1771831721177,
+      "tag": "0004_luxuriant_jigsaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1771832932507,
+      "tag": "0005_hard_warhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1771833061140,
+      "tag": "0006_material_daimon_hellstrom",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1771833121071,
+      "tag": "0007_concerned_black_widow",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1771833209661,
+      "tag": "0008_glamorous_the_executioner",
+      "breakpoints": true
+    }
+  ]
+}
