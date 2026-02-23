@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, entityName, entityType, status, missionStatement FROM business_plans;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, entityName, entityType, status, missionStatement FROM business_plans;",
+  "rows": [
+    {
+      "id": "1",
+      "entityName": "Real-Eye-Nation LLC",
+      "entityType": "llc",
+      "status": "completed",
+      "missionStatement": "To illuminate truth through authentic storytelling, empowering families and communities to document their histories, preserve their legacies, and share narratives that inspire generational transformation."
+    },
+    {
+      "id": "2",
+      "entityName": "Calea Freeman Family Trust",
+      "entityType": "trust",
+      "status": "completed",
+      "missionStatement": "To preserve, protect, and grow the Freeman family's multi-generational wealth while maintaining family unity, cultural identity, and community responsibility through sovereign governance and purpose-driven enterprise."
+    },
+    {
+      "id": "3",
+      "entityName": "LuvOnPurpose LLC",
+      "entityType": "llc",
+      "status": "completed",
+      "missionStatement": "To empower families to build multi-generational wealth through purpose-driven enterprise, providing the technology, training, and systems needed to create lasting legacies that span 100+ years."
+    },
+    {
+      "id": "4",
+      "entityName": "The L.A.W.S. Collective, LLC",
+      "entityType": "collective",
+      "status": "completed",
+      "missionStatement": "To restore communities by reconnecting people with land, strengthening knowledge through education, facilitating healing and balance, and building practical skills that enable purpose-driven, generational wealth."
+    },
+    {
+      "id": "5",
+      "entityName": "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
+      "entityType": "nonprofit_508",
+      "status": "completed",
+      "missionStatement": "To educate, equip, and empower individuals and families with the knowledge, skills, and spiritual foundation needed to build purposeful, multi-generational wealth that serves both family and community."
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tentityName\tentityType\tstatus\tmissionStatement\n1\tReal-Eye-Nation LLC\tllc\tcompleted\tTo illuminate truth through authentic storytelling, empowering families and communities to document their histories, preserve their legacies, and share narratives that inspire generational transformation.\n2\tCalea Freeman Family Trust\ttrust\tcompleted\tTo preserve, protect, and grow the Freeman family's multi-generational wealth while maintaining family unity, cultural identity, and community responsibility through sovereign governance and purpose-driven enterprise.\n3\tLuvOnPurpose LLC\tllc\tcompleted\tTo empower families to build multi-generational wealth through purpose-driven enterprise, providing the technology, training, and systems needed to create lasting legacies that span 100+ years.\n4\tThe L.A.W.S. Collective, LLC\tcollective\tcompleted\tTo restore communities by reconnecting people with land, strengthening knowledge through education, facilitating healing and balance, and building practical skills that enable purpose-driven, generational wealth.\n5\tLuvOnPurpose Outreach Temple and Academy Society, Inc.\tnonprofit_508\tcompleted\tTo educate, equip, and empower individuals and families with the knowledge, skills, and spiritual foundation needed to build purposeful, multi-generational wealth that serves both family and community.\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

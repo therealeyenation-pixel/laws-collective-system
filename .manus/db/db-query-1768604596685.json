@@ -1,0 +1,15 @@
+{
+  "query": "SELECT openId, name, email FROM users WHERE name LIKE '%Shanna%' OR email LIKE '%shanna%' OR role = 'admin' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT openId, name, email FROM users WHERE name LIKE '%Shanna%' OR email LIKE '%shanna%' OR role = 'admin' LIMIT 5;",
+  "rows": [
+    {
+      "openId": "Ls3zKcDhAdCKDwudn4kGB6",
+      "name": "LaShanna Russell",
+      "email": "therealeyenation@gmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "openId\tname\temail\nLs3zKcDhAdCKDwudn4kGB6\tLaShanna Russell\ttherealeyenation@gmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

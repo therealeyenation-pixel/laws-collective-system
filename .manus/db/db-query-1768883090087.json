@@ -1,0 +1,694 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "academy_courses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "academy_houses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "academy_instructors"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "academy_languages"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "academy_lessons"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "accreditation_records"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "achievements"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "activity_audit_trail"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "agent_actions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "agent_conversations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "agent_messages"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "agents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "allocation_pots"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "allocation_transactions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "application_activity_log"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "application_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "approvals"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "artist_revenue_streams"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "artist_training_progress"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "assets"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "audit_events"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "audit_requests"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "autonomous_operations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "blockchain_records"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "board_meetings"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "board_members"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "board_resolutions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "bot_actions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "bot_conversations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "bot_messages"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "bots"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "business_entities"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "business_plans"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "business_positions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "career_tracks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "certificates"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "change_orders"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "compliance_tasks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "contact_submissions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "contract_amendments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "contractor_businesses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "contractor_invoices"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "contractor_network_members"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "contractor_transitions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "contracts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "course_completion_certificates"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "course_progress"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "courses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "creative_artists"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "creative_bookings"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "creative_productions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "creative_training_programs"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "crypto_transactions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "crypto_wallets"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "curriculum_projects"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "curriculum_subjects"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "departments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "design_assets"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "design_projects"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "distribution_events"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "distribution_rules"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "divine_stem_modules"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "document_access"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "document_access_log"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "document_folders"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "document_versions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "donation_campaigns"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "donations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "economic_health_indicators"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "email_sends"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "email_templates"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "employee_onboarding"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "employees"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "employer_tax_forms"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "employment_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "entity_bank_accounts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "facility_plans"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "family_resumes"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "financial_errors"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "flame_lock_codes"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "founder_consulting_engagements"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "founder_income_streams"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "founder_income_summary"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "founder_ip_licenses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "founder_token_earnings"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "founding_members"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "fraud_flags"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "game_achievements"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "game_center_games"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "game_matches"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "game_player_achievements"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "game_player_stats"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "game_sessions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "game_tournaments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "generated_curriculum"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "gift_sale_ratios"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "grant_applications"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "grant_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "grant_opportunities"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "grant_reporting"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "guardian_access"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "heir_education_benefits"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "house_businesses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "house_document_vaults"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "house_ledger_transactions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "house_ledgers"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "house_members"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "houses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "impact_metrics"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "incidents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "income_events"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "inflow_capture"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "inheritance_queue"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "integrity_triggers"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "invoice_line_items"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "invoice_payments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "job_applications"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "language_lessons"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "ledger_access_logs"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "license_assignments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "license_renewals"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "living_scrolls"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "luv_ledger_accounts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "luv_ledger_transactions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "luvchain_blocks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "luvchain_smart_contracts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "luvchain_transactions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "main_house_ledger"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "mastery_certificates"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "member_distributions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "metrics"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "mirror_tokens"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "network_benefits"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "network_houses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "network_referrals"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "network_subscriptions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "notification_preferences"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "notifications"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "offer_package_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "offer_packages"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "onboarding_checklist_items"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "onboarding_checklists"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "onboarding_task_progress"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "online_course_details"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "operating_procedures"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "parcels"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "payroll_records"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "pending_heir_placeholders"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "pending_house_heirs"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "position_holders"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "position_requisitions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "procedure_acknowledgments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "procedure_categories"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "production_credits"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "project_budget_items"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "project_milestones"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "project_risks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "project_status_reports"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "project_tasks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "projects"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "protected_lineage"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "purchase_request_comments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "purchase_requests"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "recurring_donations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "requests"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "resolution_votes"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "risks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "saved_signatures"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scheduled_agent_tasks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scheduled_bot_tasks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scholarship_applications"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scholarship_fund"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scholarship_fund_transactions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scholarship_programs"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scroll_activations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "scroll_seal_status"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "secure_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "signature_audit_log"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "signature_requests"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "signatures"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "signers"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "simulator_sessions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "sme_contributors"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "social_media_integrations"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "social_media_posts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "software_categories"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "software_license_assignments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "software_license_categories"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "software_licenses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "software_vendor_contracts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "sovereign_scrolls"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "spark_tokens"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "specialist_maturity_assessments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "specialist_milestones"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "specialist_tracks"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "staff_members"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "statements_of_work"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "student_enrollments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "student_profiles"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "student_progress"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "sub_contractor_relationships"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "succession_events"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "sync_cycles"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "sync_queue"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "system_audit_log"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "system_settings"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "token_accounts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "token_transactions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_answers"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_completions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_enrollments"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_modules"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_questions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_responses"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_sessions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "training_topics"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "transition_training_requirements"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "treasury_claims"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "trivia_categories"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "trivia_questions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "trust_distribution_contracts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "trust_relationships"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "users"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "vault_access_logs"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "vault_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "vendor_contracts"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB": "ytd_totals"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_SPWUc63a3tjYuzCxiuEomB\n__drizzle_migrations\nacademy_courses\nacademy_houses\nacademy_instructors\nacademy_languages\nacademy_lessons\naccreditation_records\nachievements\nactivity_audit_trail\nagent_actions\nagent_conversations\nagent_messages\nagents\nallocation_pots\nallocation_transactions\napplication_activity_log\napplication_documents\napprovals\nartist_revenue_streams\nartist_training_progress\nassets\naudit_events\naudit_requests\nautonomous_operations\nblockchain_records\nboard_meetings\nboard_members\nboard_resolutions\nbot_actions\nbot_conversations\nbot_messages\nbots\nbusiness_entities\nbusiness_plans\nbusiness_positions\ncareer_tracks\ncertificates\nchange_orders\ncompliance_tasks\ncontact_submissions\ncontract_amendments\ncontractor_businesses\ncontractor_invoices\ncontractor_network_members\ncontractor_transitions\ncontracts\ncourse_completion_certificates\ncourse_progress\ncourses\ncreative_artists\ncreative_bookings\ncreative_productions\ncreative_training_programs\ncrypto_transactions\ncrypto_wallets\ncurriculum_projects\ncurriculum_subjects\ndepartments\ndesign_assets\ndesign_projects\ndistribution_events\ndistribution_rules\ndivine_stem_modules\ndocument_access\ndocument_access_log\ndocument_folders\ndocument_versions\ndonation_campaigns\ndonations\neconomic_health_indicators\nemail_sends\nemail_templates\nemployee_onboarding\nemployees\nemployer_tax_forms\nemployment_documents\nentity_bank_accounts\nfacility_plans\nfamily_resumes\nfinancial_errors\nflame_lock_codes\nfounder_consulting_engagements\nfounder_income_streams\nfounder_income_summary\nfounder_ip_licenses\nfounder_token_earnings\nfounding_members\nfraud_flags\ngame_achievements\ngame_center_games\ngame_matches\ngame_player_achievements\ngame_player_stats\ngame_sessions\ngame_tournaments\ngenerated_curriculum\ngift_sale_ratios\ngrant_applications\ngrant_documents\ngrant_opportunities\ngrant_reporting\nguardian_access\nheir_education_benefits\nhouse_businesses\nhouse_document_vaults\nhouse_ledger_transactions\nhouse_ledgers\nhouse_members\nhouses\nimpact_metrics\nincidents\nincome_events\ninflow_capture\ninheritance_queue\nintegrity_triggers\ninvoice_line_items\ninvoice_payments\njob_applications\nlanguage_lessons\nledger_access_logs\nlicense_assignments\nlicense_renewals\nliving_scrolls\nluv_ledger_accounts\nluv_ledger_transactions\nluvchain_blocks\nluvchain_smart_contracts\nluvchain_transactions\nmain_house_ledger\nmastery_certificates\nmember_distributions\nmetrics\nmirror_tokens\nnetwork_benefits\nnetwork_houses\nnetwork_referrals\nnetwork_subscriptions\nnotification_preferences\nnotifications\noffer_package_documents\noffer_packages\nonboarding_checklist_items\nonboarding_checklists\nonboarding_task_progress\nonline_course_details\noperating_procedures\nparcels\npayroll_records\npending_heir_placeholders\npending_house_heirs\nposition_holders\nposition_requisitions\nprocedure_acknowledgments\nprocedure_categories\nproduction_credits\nproject_budget_items\nproject_milestones\nproject_risks\nproject_status_reports\nproject_tasks\nprojects\nprotected_lineage\npurchase_request_comments\npurchase_requests\nrecurring_donations\nrequests\nresolution_votes\nrisks\nsaved_signatures\nscheduled_agent_tasks\nscheduled_bot_tasks\nscholarship_applications\nscholarship_fund\nscholarship_fund_transactions\nscholarship_programs\nscroll_activations\nscroll_seal_status\nsecure_documents\nsignature_audit_log\nsignature_requests\nsignatures\nsigners\nsimulator_sessions\nsme_contributors\nsocial_media_integrations\nsocial_media_posts\nsoftware_categories\nsoftware_license_assignments\nsoftware_license_categories\nsoftware_licenses\nsoftware_vendor_contracts\nsovereign_scrolls\nspark_tokens\nspecialist_maturity_assessments\nspecialist_milestones\nspecialist_tracks\nstaff_members\nstatements_of_work\nstudent_enrollments\nstudent_profiles\nstudent_progress\nsub_contractor_relationships\nsuccession_events\nsync_cycles\nsync_queue\nsystem_audit_log\nsystem_settings\ntoken_accounts\ntoken_transactions\ntraining_answers\ntraining_completions\ntraining_enrollments\ntraining_modules\ntraining_questions\ntraining_responses\ntraining_sessions\ntraining_topics\ntransition_training_requirements\ntreasury_claims\ntrivia_categories\ntrivia_questions\ntrust_distribution_contracts\ntrust_relationships\nusers\nvault_access_logs\nvault_documents\nvendor_contracts\nytd_totals\n",
+  "stderr": "",
+  "execution_time_ms": 64
+}

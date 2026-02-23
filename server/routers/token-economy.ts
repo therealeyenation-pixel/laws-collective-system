@@ -1,10 +1,28 @@
-import { protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
-import { tokenAccounts, tokenTransactions, gameSessions, achievements, activityAuditTrail } from "../../drizzle/schema";
-import { eq, and } from "drizzle-orm";
+import { tokenAccounts, tokenTransactions, gameSessions, achievements, activityAuditTrail, businessEntities, blockchainRecords, luvLedgerAccounts } from "../../drizzle/schema";
+import { eq, and, sql } from "drizzle-orm";
+import crypto from "crypto";
 
 export const tokenEconomyRouter = router({
+  // Get system-wide token totals (public for dashboard viewing)
+  getSystemTokens: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return { totalTokens: 0 };
+
+    // Sum all token balances from LuvLedger accounts
+    const accounts = await db
+      .select()
+      .from(luvLedgerAccounts);
+
+    const totalTokens = accounts.reduce((sum, acc) => {
+      return sum + parseFloat(acc.balance || "0");
+    }, 0);
+
+    return { totalTokens };
+  }),
+
   // Get user token balance
   getBalance: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
@@ -313,4 +331,182 @@ export const tokenEconomyRouter = router({
       completedGames: userGameSessions.filter((g: any) => g.status === "completed").length,
     };
   }),
+
+  // Entity-level token economy: Distribute tokens from Trust to entities
+  distributeTokensFromTrust: protectedProcedure
+    .input(
+      z.object({
+        trustEntityId: z.number(),
+        distributions: z.array(
+          z.object({
+            recipientEntityId: z.number(),
+            tokenAmount: z.number(),
+            reason: z.string(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const results = [];
+      const txHash = generateTransactionHash();
+
+      for (const distribution of input.distributions) {
+        // Get recipient entity
+        const entities = await db
+          .select()
+          .from(businessEntities)
+          .where(eq(businessEntities.id, distribution.recipientEntityId));
+
+        if (entities.length === 0) continue;
+        const entity = entities[0];
+
+        // Get or create token account for recipient
+        const accounts = await db
+          .select()
+          .from(tokenAccounts)
+          .where(eq(tokenAccounts.userId, ctx.user.id));
+
+        let accountId = accounts.length > 0 ? accounts[0].id : null;
+
+        if (!accountId) {
+          const newAccount = await db.insert(tokenAccounts).values({
+            userId: ctx.user.id,
+            tokenBalance: distribution.tokenAmount.toString(),
+            totalEarned: distribution.tokenAmount.toString(),
+            totalSpent: "0",
+          });
+          accountId = newAccount[0].insertId;
+        } else {
+          // Update balance
+          const currentBalance = Number(accounts[0].tokenBalance);
+          const newBalance = currentBalance + distribution.tokenAmount;
+          await db
+            .update(tokenAccounts)
+            .set({
+              tokenBalance: newBalance.toString(),
+              totalEarned: (Number(accounts[0].totalEarned) + distribution.tokenAmount).toString(),
+            })
+            .where(eq(tokenAccounts.id, accountId));
+        }
+
+        // Create transaction record
+        const txResult = await db.insert(tokenTransactions).values({
+          userId: ctx.user.id,
+          amount: distribution.tokenAmount.toString(),
+          transactionType: "earned",
+          source: "trust_distribution",
+          description: distribution.reason,
+        });
+
+        // Create blockchain record
+        await db.insert(blockchainRecords).values({
+          recordType: "transaction",
+          referenceId: txResult[0].insertId,
+          blockchainHash: txHash,
+          data: {
+            transactionType: "token_distribution",
+            fromEntity: input.trustEntityId,
+            toEntity: distribution.recipientEntityId,
+            toEntityName: entity.name,
+            amount: distribution.tokenAmount,
+            reason: distribution.reason,
+            timestamp: new Date().toISOString(),
+          } as any,
+        });
+
+        results.push({
+          recipientEntityId: distribution.recipientEntityId,
+          recipientName: entity.name,
+          tokenAmount: distribution.tokenAmount,
+          status: "distributed",
+        });
+      }
+
+      // Log to audit trail
+      await db.insert(activityAuditTrail).values({
+        userId: ctx.user.id,
+        activityType: "tokens_distributed",
+        action: "create",
+        details: {
+          fromEntityId: input.trustEntityId,
+          distributions: results,
+          blockchainHash: txHash,
+        } as any,
+      });
+
+      return {
+        status: "completed",
+        distributionsCount: results.length,
+        distributions: results,
+        blockchainHash: txHash,
+      };
+    }),
+
+  // Get entity token balance
+  getEntityTokenBalance: protectedProcedure
+    .input(z.object({ entityId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const accounts = await db
+        .select()
+        .from(tokenAccounts)
+        .where(eq(tokenAccounts.userId, ctx.user.id));
+
+      if (accounts.length === 0) {
+        return {
+          entityId: input.entityId,
+          balance: 0,
+          totalEarned: 0,
+          totalSpent: 0,
+          status: "no_account",
+        };
+      }
+
+      const account = accounts[0];
+      return {
+        entityId: input.entityId,
+        balance: Number(account.tokenBalance),
+        totalEarned: Number(account.totalEarned),
+        totalSpent: Number(account.totalSpent),
+        status: "active",
+      };
+    }),
+
+  // Get token economy summary for all entities
+  getTokenEconomySummary: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return null;
+
+    const accounts = await db.select().from(tokenAccounts);
+    const transactions = await db.select().from(tokenTransactions);
+
+    const summary = {
+      totalTokensInCirculation: accounts.reduce((sum, a) => sum + Number(a.tokenBalance || 0), 0),
+      totalTokensEarned: accounts.reduce((sum, a) => sum + Number(a.totalEarned || 0), 0),
+      totalTokensSpent: accounts.reduce((sum, a) => sum + Number(a.totalSpent || 0), 0),
+      totalTransactions: transactions.length,
+      transactionsByType: {
+        reward: transactions.filter((t) => t.transactionType === "reward").length,
+        earned: transactions.filter((t) => t.transactionType === "earned").length,
+        spent: transactions.filter((t) => t.transactionType === "spent").length,
+        transferred: transactions.filter((t) => t.transactionType === "transferred").length,
+        converted: transactions.filter((t) => t.transactionType === "converted").length,
+      },
+    };
+
+    return summary;
+  }),
 });
+
+// Helper function to generate transaction hash
+function generateTransactionHash(): string {
+  return crypto
+    .createHash("sha256")
+    .update(Date.now().toString() + Math.random().toString())
+    .digest("hex");
+}

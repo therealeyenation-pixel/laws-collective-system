@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO bonus_pools (pool_name, pool_type, source_percentage, source_description, distribution_frequency, is_active, created_at, updated_at) VALUES ('Founding Member Bonus Pool', 'founding_member', 15.00, '15% of L.A.W.S. Collective 60% share from service revenue', 'quarterly', TRUE, UNIX_TIMESTAMP() * 1000, UNIX_TIMESTAMP() * 1000);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO bonus_pools (pool_name, pool_type, source_percentage, source_description, distribution_frequency, is_active, created_at, updated_at) VALUES ('Founding Member Bonus Pool', 'founding_member', 15.00, '15% of L.A.W.S. Collective 60% share from service revenue', 'quarterly', TRUE, UNIX_TIMESTAMP() * 1000, UNIX_TIMESTAMP() * 1000);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 68
+}

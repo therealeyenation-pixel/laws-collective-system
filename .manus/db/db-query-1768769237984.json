@@ -1,0 +1,9 @@
+{
+  "query": "-- Placeholder for Amandes E. Pearsall IV's future children\nINSERT INTO pending_heir_placeholders (parentHouseId, parentMemberId, parentMemberName, placeholderName, projectedHouseType, reservedPercentage, reservedAmount, status, createdBy)\nVALUES (4, 4, 'Amandes E. Pearsall, IV', 'Future Children of Amandes E. Pearsall, IV', 'bloodline', 60.00, 0.00, 'active', 1);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute -- Placeholder for Amandes E. Pearsall IV's future children\nINSERT INTO pending_heir_placeholders (parentHouseId, parentMemberId, parentMemberName, placeholderName, projectedHouseType, reservedPercentage, reservedAmount, status, createdBy)\nVALUES (4, 4, 'Amandes E. Pearsall, IV', 'Future Children of Amandes E. Pearsall, IV', 'bloodline', 60.00, 0.00, 'active', 1);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 66
+}

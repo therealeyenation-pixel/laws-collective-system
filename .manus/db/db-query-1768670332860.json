@@ -1,0 +1,22 @@
+{
+  "query": "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND (TABLE_NAME LIKE '%role%' OR TABLE_NAME LIKE '%position%' OR TABLE_NAME LIKE '%team%' OR TABLE_NAME LIKE '%staff%' OR TABLE_NAME LIKE '%member%');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND (TABLE_NAME LIKE '%role%' OR TABLE_NAME LIKE '%position%' OR TABLE_NAME LIKE '%team%' OR TABLE_NAME LIKE '%staff%' OR TABLE_NAME LIKE '%member%');",
+  "rows": [
+    {
+      "TABLE_NAME": "staff_members"
+    },
+    {
+      "TABLE_NAME": "house_members"
+    },
+    {
+      "TABLE_NAME": "business_positions"
+    },
+    {
+      "TABLE_NAME": "position_holders"
+    }
+  ],
+  "messages": [],
+  "stdout": "TABLE_NAME\nstaff_members\nhouse_members\nbusiness_positions\nposition_holders\n",
+  "stderr": "",
+  "execution_time_ms": 63
+}

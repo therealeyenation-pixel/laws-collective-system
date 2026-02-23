@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS service_payments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  invoice_id INT NOT NULL,\n  payment_amount DECIMAL(10,2) NOT NULL,\n  payment_method ENUM('stripe', 'cash', 'check', 'transfer', 'internal_credit') NOT NULL,\n  stripe_payment_intent_id VARCHAR(255),\n  stripe_charge_id VARCHAR(255),\n  transaction_reference VARCHAR(255),\n  trust_deposit_id INT,\n  revenue_split_processed BOOLEAN DEFAULT FALSE,\n  revenue_split_amount DECIMAL(10,2),\n  trust_allocation_amount DECIMAL(10,2),\n  payment_date BIGINT NOT NULL,\n  notes TEXT,\n  processed_by_id INT,\n  processed_by_name VARCHAR(255),\n  created_at BIGINT NOT NULL,\n  FOREIGN KEY (invoice_id) REFERENCES service_invoices(id)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS service_payments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  invoice_id INT NOT NULL,\n  payment_amount DECIMAL(10,2) NOT NULL,\n  payment_method ENUM('stripe', 'cash', 'check', 'transfer', 'internal_credit') NOT NULL,\n  stripe_payment_intent_id VARCHAR(255),\n  stripe_charge_id VARCHAR(255),\n  transaction_reference VARCHAR(255),\n  trust_deposit_id INT,\n  revenue_split_processed BOOLEAN DEFAULT FALSE,\n  revenue_split_amount DECIMAL(10,2),\n  trust_allocation_amount DECIMAL(10,2),\n  payment_date BIGINT NOT NULL,\n  notes TEXT,\n  processed_by_id INT,\n  processed_by_name VARCHAR(255),\n  created_at BIGINT NOT NULL,\n  FOREIGN KEY (invoice_id) REFERENCES service_invoices(id)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 336
+}

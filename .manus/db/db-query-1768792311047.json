@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE business_plans SET fundingPurpose = 'Real-Eye-Nation LLC requires funding to expand our media production and content creation capabilities that serve community education and cultural preservation. Our platform produces educational content, documentary films, and digital media that amplify underrepresented voices and preserve ancestral knowledge. Investment will enable us to upgrade production equipment, hire additional creative staff, expand distribution channels, and develop interactive educational content that reaches broader audiences while generating sustainable revenue streams.' WHERE entityName = 'Real-Eye-Nation LLC';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE business_plans SET fundingPurpose = 'Real-Eye-Nation LLC requires funding to expand our media production and content creation capabilities that serve community education and cultural preservation. Our platform produces educational content, documentary films, and digital media that amplify underrepresented voices and preserve ancestral knowledge. Investment will enable us to upgrade production equipment, hire additional creative staff, expand distribution channels, and develop interactive educational content that reaches broader audiences while generating sustainable revenue streams.' WHERE entityName = 'Real-Eye-Nation LLC';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 65
+}

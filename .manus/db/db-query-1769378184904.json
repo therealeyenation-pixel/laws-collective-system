@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS spectator_sessions (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  matchId INT NOT NULL,\n  matchType ENUM('game', 'tournament') NOT NULL,\n  spectatorId INT NOT NULL,\n  joinedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  leftAt TIMESTAMP NULL,\n  isActive BOOLEAN DEFAULT TRUE NOT NULL,\n  INDEX idx_match (matchId, matchType),\n  INDEX idx_spectator (spectatorId)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS spectator_sessions (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  matchId INT NOT NULL,\n  matchType ENUM('game', 'tournament') NOT NULL,\n  spectatorId INT NOT NULL,\n  joinedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  leftAt TIMESTAMP NULL,\n  isActive BOOLEAN DEFAULT TRUE NOT NULL,\n  INDEX idx_match (matchId, matchType),\n  INDEX idx_spectator (spectatorId)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 197
+}

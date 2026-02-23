@@ -1,0 +1,190 @@
+{
+  "query": "SELECT COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'design_submissions' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'design_submissions' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "int(11)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "title",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "description",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "category",
+      "COLUMN_TYPE": "enum('apparel','accessories','print','digital','promotional','other')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "apparel"
+    },
+    {
+      "COLUMN_NAME": "product_type",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "design_concept",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "target_audience",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "estimated_cost",
+      "COLUMN_TYPE": "decimal(10,2)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "estimated_price",
+      "COLUMN_TYPE": "decimal(10,2)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "submitted_by_id",
+      "COLUMN_TYPE": "int(11)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "submitted_by_name",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "department",
+      "COLUMN_TYPE": "varchar(100)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "Design"
+    },
+    {
+      "COLUMN_NAME": "house_id",
+      "COLUMN_TYPE": "int(11)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "status",
+      "COLUMN_TYPE": "enum('draft','submitted','in_review','revision_requested','approved','rejected','in_production','completed')",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "draft"
+    },
+    {
+      "COLUMN_NAME": "priority",
+      "COLUMN_TYPE": "enum('low','medium','high','urgent')",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "medium"
+    },
+    {
+      "COLUMN_NAME": "mockup_urls",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "attachments",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "notes",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "bigint(20)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "bigint(20)",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "submitted_at",
+      "COLUMN_TYPE": "bigint(20)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "approved_at",
+      "COLUMN_TYPE": "bigint(20)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "approved_by_id",
+      "COLUMN_TYPE": "int(11)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "approved_by_name",
+      "COLUMN_TYPE": "varchar(255)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approval",
+      "COLUMN_TYPE": "enum('pending','approved','rejected')",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "pending"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approver_id",
+      "COLUMN_TYPE": "int(11)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approval_date",
+      "COLUMN_TYPE": "bigint(20)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approval_notes",
+      "COLUMN_TYPE": "text",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "is_original_design",
+      "COLUMN_TYPE": "tinyint(1)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "0"
+    },
+    {
+      "COLUMN_NAME": "is_logo_design",
+      "COLUMN_TYPE": "tinyint(1)",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tCOLUMN_TYPE\tIS_NULLABLE\tCOLUMN_DEFAULT\nid\tint(11)\tNO\tNULL\ntitle\tvarchar(255)\tNO\tNULL\ndescription\ttext\tYES\tNULL\ncategory\tenum('apparel','accessories','print','digital','promotional','other')\tNO\tapparel\nproduct_type\tvarchar(100)\tYES\tNULL\ndesign_concept\ttext\tYES\tNULL\ntarget_audience\tvarchar(255)\tYES\tNULL\nestimated_cost\tdecimal(10,2)\tYES\tNULL\nestimated_price\tdecimal(10,2)\tYES\tNULL\nsubmitted_by_id\tint(11)\tYES\tNULL\nsubmitted_by_name\tvarchar(255)\tYES\tNULL\ndepartment\tvarchar(100)\tYES\tDesign\nhouse_id\tint(11)\tYES\tNULL\nstatus\tenum('draft','submitted','in_review','revision_requested','approved','rejected','in_production','completed')\tNO\tdraft\npriority\tenum('low','medium','high','urgent')\tYES\tmedium\nmockup_urls\ttext\tYES\tNULL\nattachments\ttext\tYES\tNULL\nnotes\ttext\tYES\tNULL\ncreated_at\tbigint(20)\tNO\tNULL\nupdated_at\tbigint(20)\tNO\tNULL\nsubmitted_at\tbigint(20)\tYES\tNULL\napproved_at\tbigint(20)\tYES\tNULL\napproved_by_id\tint(11)\tYES\tNULL\napproved_by_name\tvarchar(255)\tYES\tNULL\nfounding_house_approval\tenum('pending','approved','rejected')\tYES\tpending\nfounding_house_approver_id\tint(11)\tYES\tNULL\nfounding_house_approval_date\tbigint(20)\tYES\tNULL\nfounding_house_approval_notes\ttext\tYES\tNULL\nis_original_design\ttinyint(1)\tYES\t0\nis_logo_design\ttinyint(1)\tYES\t0\n",
+  "stderr": "",
+  "execution_time_ms": 62
+}

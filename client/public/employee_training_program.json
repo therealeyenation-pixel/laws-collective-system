@@ -1,0 +1,782 @@
+{
+  "metadata": {
+    "classification": "INTERNAL USE ONLY - HR DEPARTMENT",
+    "lastUpdated": "2026-01-17",
+    "approvedBy": "LaShanna Russell, Founder/Matriarch/CEO",
+    "version": "1.0",
+    "managedBy": "HR Department in coordination with CEO-Ed (Cornelius)"
+  },
+  "overview": {
+    "description": "Comprehensive new employee training program for The L.A.W.S. Collective and all subsidiary entities. This program ensures all team members receive consistent foundational training while also receiving role-specific preparation for their departments.",
+    "philosophy": "We believe in investing in our people from day one. Training is not just about skills—it's about understanding our mission, values, and how each role contributes to building generational wealth for our community.",
+    "objectives": [
+      "Integrate new employees into organizational culture",
+      "Provide foundational knowledge of all entities and their missions",
+      "Develop role-specific competencies",
+      "Establish clear expectations and success metrics",
+      "Build relationships across the organization",
+      "Prepare employees for long-term growth and potential contractor transition"
+    ]
+  },
+  "trainingStructure": {
+    "phases": [
+      {
+        "phase": 1,
+        "name": "Pre-boarding",
+        "timing": "1-2 weeks before start date",
+        "description": "Preparation before first day",
+        "responsible": "HR Department",
+        "activities": [
+          {
+            "activity": "Welcome Package",
+            "description": "Send digital welcome kit with organizational overview, team introductions, and first-day logistics",
+            "deliverables": ["Welcome email", "Org chart", "First week schedule", "Required documents checklist"]
+          },
+          {
+            "activity": "System Access Setup",
+            "description": "Create accounts for email, platform, communication tools",
+            "deliverables": ["Email account", "Platform login", "Microsoft Teams access", "Shared drive access"]
+          },
+          {
+            "activity": "Equipment Coordination",
+            "description": "Arrange for any required equipment or software",
+            "deliverables": ["Equipment order/shipment", "Software licenses"]
+          },
+          {
+            "activity": "Buddy Assignment",
+            "description": "Assign an onboarding buddy from the department or organization",
+            "deliverables": ["Buddy introduction email", "Buddy meeting scheduled"]
+          }
+        ]
+      },
+      {
+        "phase": 2,
+        "name": "Orientation Week",
+        "timing": "Days 1-5",
+        "description": "Foundation building and organizational introduction",
+        "responsible": "HR Department + Manager",
+        "activities": [
+          {
+            "day": 1,
+            "name": "Welcome Day",
+            "schedule": [
+              {"time": "9:00 AM", "activity": "Welcome meeting with HR", "duration": "1 hour"},
+              {"time": "10:00 AM", "activity": "Paperwork completion (I-9, W-4, benefits enrollment)", "duration": "1.5 hours"},
+              {"time": "11:30 AM", "activity": "System access verification and tech setup", "duration": "1 hour"},
+              {"time": "1:00 PM", "activity": "Lunch with buddy/team", "duration": "1 hour"},
+              {"time": "2:00 PM", "activity": "Meet with direct supervisor - role overview", "duration": "1.5 hours"},
+              {"time": "3:30 PM", "activity": "Platform tour and navigation training", "duration": "1 hour"}
+            ]
+          },
+          {
+            "day": 2,
+            "name": "Organization Deep Dive",
+            "schedule": [
+              {"time": "9:00 AM", "activity": "L.A.W.S. Framework Training (Land, Air, Water, Self)", "duration": "2 hours"},
+              {"time": "11:00 AM", "activity": "Entity Overview - All 4 entities and their missions", "duration": "1.5 hours"},
+              {"time": "1:00 PM", "activity": "Trust Structure and Governance (overview only)", "duration": "1 hour"},
+              {"time": "2:00 PM", "activity": "Token Economy and Ownership Model", "duration": "1.5 hours"},
+              {"time": "3:30 PM", "activity": "Q&A with CEO-Ed or HR", "duration": "1 hour"}
+            ]
+          },
+          {
+            "day": 3,
+            "name": "Policies and Compliance",
+            "schedule": [
+              {"time": "9:00 AM", "activity": "Employee Handbook Review", "duration": "2 hours"},
+              {"time": "11:00 AM", "activity": "Code of Conduct and Ethics", "duration": "1 hour"},
+              {"time": "1:00 PM", "activity": "Confidentiality and Data Security", "duration": "1 hour"},
+              {"time": "2:00 PM", "activity": "Grant Compliance Basics (for applicable roles)", "duration": "1.5 hours"},
+              {"time": "3:30 PM", "activity": "HR Policies Q&A", "duration": "1 hour"}
+            ]
+          },
+          {
+            "day": 4,
+            "name": "Tools and Systems",
+            "schedule": [
+              {"time": "9:00 AM", "activity": "Communication Tools Training (Teams, Email)", "duration": "1.5 hours"},
+              {"time": "10:30 AM", "activity": "Project Management Tools", "duration": "1.5 hours"},
+              {"time": "1:00 PM", "activity": "Document Management and File Organization", "duration": "1 hour"},
+              {"time": "2:00 PM", "activity": "Time Tracking and Reporting", "duration": "1 hour"},
+              {"time": "3:00 PM", "activity": "Department-Specific Systems Introduction", "duration": "2 hours"}
+            ]
+          },
+          {
+            "day": 5,
+            "name": "Team Integration",
+            "schedule": [
+              {"time": "9:00 AM", "activity": "Department team meeting", "duration": "1.5 hours"},
+              {"time": "10:30 AM", "activity": "Cross-functional introductions", "duration": "1.5 hours"},
+              {"time": "1:00 PM", "activity": "First assignment briefing", "duration": "1.5 hours"},
+              {"time": "2:30 PM", "activity": "Week 1 check-in with supervisor", "duration": "1 hour"},
+              {"time": "3:30 PM", "activity": "Goal setting for first 30 days", "duration": "1 hour"}
+            ]
+          }
+        ]
+      },
+      {
+        "phase": 3,
+        "name": "Department Training",
+        "timing": "Weeks 2-4",
+        "description": "Role-specific skill development",
+        "responsible": "Manager + CEO-Ed",
+        "structure": "See departmentTraining section for specific tracks"
+      },
+      {
+        "phase": 4,
+        "name": "Integration Period",
+        "timing": "Days 30-90",
+        "description": "Full integration with ongoing support",
+        "responsible": "Manager + HR",
+        "milestones": [
+          {
+            "day": 30,
+            "name": "30-Day Review",
+            "activities": [
+              "Performance check-in with supervisor",
+              "Training progress assessment",
+              "Goal adjustment if needed",
+              "Feedback collection from new employee"
+            ]
+          },
+          {
+            "day": 60,
+            "name": "60-Day Review",
+            "activities": [
+              "Skills assessment",
+              "Project contribution review",
+              "Additional training needs identification",
+              "Team integration feedback"
+            ]
+          },
+          {
+            "day": 90,
+            "name": "Probationary Review",
+            "activities": [
+              "Formal performance evaluation",
+              "Confirmation of employment or extension of probation",
+              "Long-term goal setting",
+              "Career development discussion",
+              "Transition to regular performance cycle"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "standardTraining": {
+    "description": "Required training for ALL employees regardless of position or department",
+    "modules": [
+      {
+        "id": "ST-001",
+        "name": "Welcome to The L.A.W.S. Collective",
+        "duration": "2 hours",
+        "format": "Video + Interactive",
+        "content": [
+          "Founder's welcome message",
+          "History and vision of the organization",
+          "The L.A.W.S. framework explained",
+          "How we're different: Building generational wealth"
+        ],
+        "assessment": "Quiz (80% to pass)",
+        "deadline": "Day 2"
+      },
+      {
+        "id": "ST-002",
+        "name": "Understanding Our Entities",
+        "duration": "1.5 hours",
+        "format": "Interactive presentation",
+        "content": [
+          "The L.A.W.S. Collective, LLC - Holding company",
+          "LAWS, LLC - Autonomous wealth platform",
+          "Real-Eye-Nation LLC - Media and narrative",
+          "LuvOnPurpose Outreach Temple and Academy Society - Education and community"
+        ],
+        "assessment": "Entity matching exercise",
+        "deadline": "Day 3"
+      },
+      {
+        "id": "ST-003",
+        "name": "Token Economy and Ownership",
+        "duration": "1 hour",
+        "format": "Video + Q&A",
+        "content": [
+          "How token earnings work",
+          "Ownership stake explained",
+          "Performance metrics and rewards",
+          "Path from W-2 to contractor"
+        ],
+        "assessment": "Comprehension check",
+        "deadline": "Day 5"
+      },
+      {
+        "id": "ST-004",
+        "name": "Code of Conduct",
+        "duration": "1 hour",
+        "format": "Self-paced reading + acknowledgment",
+        "content": [
+          "Professional standards",
+          "Ethical guidelines",
+          "Conflict of interest policy",
+          "Reporting concerns"
+        ],
+        "assessment": "Signed acknowledgment",
+        "deadline": "Day 3"
+      },
+      {
+        "id": "ST-005",
+        "name": "Data Security and Confidentiality",
+        "duration": "1 hour",
+        "format": "Interactive module",
+        "content": [
+          "Handling sensitive information",
+          "Password and access security",
+          "Client/member confidentiality",
+          "Data breach reporting"
+        ],
+        "assessment": "Scenario-based quiz",
+        "deadline": "Day 5"
+      },
+      {
+        "id": "ST-006",
+        "name": "Communication and Collaboration Tools",
+        "duration": "1.5 hours",
+        "format": "Hands-on training",
+        "content": [
+          "Microsoft Teams basics",
+          "Email etiquette and standards",
+          "Document sharing and collaboration",
+          "Meeting scheduling and etiquette"
+        ],
+        "assessment": "Practical demonstration",
+        "deadline": "Day 4"
+      },
+      {
+        "id": "ST-007",
+        "name": "Workplace Harassment Prevention",
+        "duration": "1 hour",
+        "format": "Video + scenarios",
+        "content": [
+          "Recognizing harassment",
+          "Reporting procedures",
+          "Bystander intervention",
+          "Creating respectful workplace"
+        ],
+        "assessment": "Scenario responses",
+        "deadline": "Week 2"
+      },
+      {
+        "id": "ST-008",
+        "name": "Grant Compliance Fundamentals",
+        "duration": "1 hour",
+        "format": "Presentation",
+        "content": [
+          "Why grant compliance matters",
+          "Basic documentation requirements",
+          "Time tracking for grant-funded work",
+          "Who to ask for help"
+        ],
+        "assessment": "Acknowledgment",
+        "deadline": "Week 2",
+        "applicableTo": "All employees (awareness level)"
+      }
+    ],
+    "totalHours": 10,
+    "completionDeadline": "End of Week 2"
+  },
+  "departmentTraining": {
+    "description": "Role-specific training tracks tailored to each department",
+    "tracks": {
+      "hrDepartment": {
+        "name": "Human Resources Training Track",
+        "positions": ["HR Manager", "HR Operations Coordinator"],
+        "duration": "40 hours over 3 weeks",
+        "modules": [
+          {
+            "id": "HR-001",
+            "name": "HR Systems and Tools",
+            "duration": "4 hours",
+            "content": ["HRIS navigation", "Applicant tracking system", "Employee records management", "Reporting tools"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "HR-002",
+            "name": "Recruitment and Selection",
+            "duration": "6 hours",
+            "content": ["Job posting procedures", "Screening applications", "Interview coordination", "Offer process", "Background checks"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "HR-003",
+            "name": "Onboarding Administration",
+            "duration": "4 hours",
+            "content": ["New hire paperwork", "Benefits enrollment", "System access requests", "Orientation scheduling"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "HR-004",
+            "name": "Employee Relations Basics",
+            "duration": "4 hours",
+            "content": ["Handling inquiries", "Confidentiality requirements", "Escalation procedures", "Documentation standards"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "HR-005",
+            "name": "Benefits Administration",
+            "duration": "4 hours",
+            "content": ["Benefits overview", "Enrollment processes", "Common questions", "Vendor contacts"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "HR-006",
+            "name": "Compliance and Recordkeeping",
+            "duration": "6 hours",
+            "content": ["Employment law basics", "Required documentation", "Retention schedules", "Audit preparation"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "HR-007",
+            "name": "Performance Management Support",
+            "duration": "4 hours",
+            "content": ["Review cycle administration", "Goal tracking systems", "Documentation requirements"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "HR-008",
+            "name": "Training Coordination",
+            "duration": "4 hours",
+            "content": ["Training tracking", "Certification management", "Academy coordination", "Reporting completion"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "HR-009",
+            "name": "HR Metrics and Reporting",
+            "duration": "4 hours",
+            "content": ["Key HR metrics", "Report generation", "Data analysis basics", "Presentation to leadership"],
+            "deadline": "Week 4"
+          }
+        ],
+        "practicalAssignments": [
+          "Process a mock new hire through complete onboarding",
+          "Coordinate a practice interview panel",
+          "Generate monthly HR metrics report"
+        ],
+        "certification": "HR Department Certified - Level 1"
+      },
+      "qaqcDepartment": {
+        "name": "Quality Assurance/Quality Control Training Track",
+        "positions": ["QA/QC Manager", "QA/QC Operations Coordinator"],
+        "duration": "36 hours over 3 weeks",
+        "modules": [
+          {
+            "id": "QA-001",
+            "name": "Quality Management Fundamentals",
+            "duration": "4 hours",
+            "content": ["Quality principles", "Our quality standards", "Role of QA/QC in organization", "Quality culture"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "QA-002",
+            "name": "Documentation and SOPs",
+            "duration": "6 hours",
+            "content": ["SOP structure and format", "Document control procedures", "Version management", "Approval workflows"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "QA-003",
+            "name": "Audit Fundamentals",
+            "duration": "6 hours",
+            "content": ["Internal audit process", "Audit planning", "Evidence collection", "Finding documentation", "Corrective actions"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "QA-004",
+            "name": "Grant Compliance for QA",
+            "duration": "4 hours",
+            "content": ["Grant requirements overview", "Compliance monitoring", "Documentation for audits", "Common compliance issues"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "QA-005",
+            "name": "Process Improvement",
+            "duration": "4 hours",
+            "content": ["Identifying improvement opportunities", "Root cause analysis", "Implementing changes", "Measuring results"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "QA-006",
+            "name": "Quality Metrics and Reporting",
+            "duration": "4 hours",
+            "content": ["Key quality metrics", "Data collection", "Trend analysis", "Reporting to leadership"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "QA-007",
+            "name": "Corrective and Preventive Actions",
+            "duration": "4 hours",
+            "content": ["CAPA process", "Tracking and follow-up", "Effectiveness verification", "Documentation"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "QA-008",
+            "name": "QA Tools and Systems",
+            "duration": "4 hours",
+            "content": ["Quality management software", "Tracking spreadsheets", "Audit checklists", "Report templates"],
+            "deadline": "Week 4"
+          }
+        ],
+        "practicalAssignments": [
+          "Create an SOP for a department process",
+          "Conduct a mock internal audit",
+          "Develop a corrective action plan for a sample finding"
+        ],
+        "certification": "QA/QC Department Certified - Level 1"
+      },
+      "purchasingDepartment": {
+        "name": "Purchasing Department Training Track",
+        "positions": ["Purchasing Manager", "Purchasing Operations Coordinator"],
+        "duration": "32 hours over 3 weeks",
+        "modules": [
+          {
+            "id": "PUR-001",
+            "name": "Procurement Fundamentals",
+            "duration": "4 hours",
+            "content": ["Procurement cycle", "Purchasing policies", "Approval thresholds", "Vendor selection"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "PUR-002",
+            "name": "Vendor Management",
+            "duration": "4 hours",
+            "content": ["Vendor evaluation", "Relationship management", "Performance monitoring", "Vendor files"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "PUR-003",
+            "name": "Purchase Order Processing",
+            "duration": "4 hours",
+            "content": ["PO creation", "Approval workflows", "Order tracking", "Receipt verification"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "PUR-004",
+            "name": "Grant-Compliant Purchasing",
+            "duration": "6 hours",
+            "content": ["Grant purchasing requirements", "Documentation standards", "Competitive bidding", "Audit preparation"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "PUR-005",
+            "name": "Invoice Processing",
+            "duration": "4 hours",
+            "content": ["Invoice matching", "Discrepancy resolution", "Payment coordination", "Record retention"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "PUR-006",
+            "name": "Inventory Management",
+            "duration": "4 hours",
+            "content": ["Inventory tracking", "Reorder points", "Asset tagging", "Physical counts"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "PUR-007",
+            "name": "Cost Analysis and Reporting",
+            "duration": "4 hours",
+            "content": ["Cost tracking", "Budget monitoring", "Savings reporting", "Grant budget support"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "PUR-008",
+            "name": "Purchasing Systems and Tools",
+            "duration": "2 hours",
+            "content": ["Purchasing software", "Spreadsheet templates", "Vendor database", "Reporting tools"],
+            "deadline": "Week 4"
+          }
+        ],
+        "practicalAssignments": [
+          "Process a complete purchase from requisition to receipt",
+          "Conduct a vendor evaluation",
+          "Prepare a monthly purchasing report"
+        ],
+        "certification": "Purchasing Department Certified - Level 1"
+      },
+      "operationsDepartment": {
+        "name": "Operations Department Training Track",
+        "positions": ["Operations Manager", "Operations Operations Coordinator"],
+        "duration": "36 hours over 3 weeks",
+        "modules": [
+          {
+            "id": "OPS-001",
+            "name": "Operations Overview",
+            "duration": "4 hours",
+            "content": ["Operations role in organization", "Cross-entity coordination", "Key processes", "Success metrics"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "OPS-002",
+            "name": "Project Coordination",
+            "duration": "6 hours",
+            "content": ["Project tracking methods", "Milestone management", "Status reporting", "Issue escalation"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "OPS-003",
+            "name": "Meeting and Calendar Management",
+            "duration": "4 hours",
+            "content": ["Scheduling best practices", "Meeting preparation", "Minutes and follow-ups", "Calendar coordination"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "OPS-004",
+            "name": "Cross-Department Communication",
+            "duration": "4 hours",
+            "content": ["Communication channels", "Stakeholder management", "Information flow", "Conflict resolution"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "OPS-005",
+            "name": "Platform Operations",
+            "duration": "6 hours",
+            "content": ["LAWS platform overview", "Autonomous systems monitoring", "User support basics", "Escalation procedures"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "OPS-006",
+            "name": "Documentation and Reporting",
+            "duration": "4 hours",
+            "content": ["Operational documentation", "Report templates", "KPI tracking", "Dashboard management"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "OPS-007",
+            "name": "Process Improvement for Operations",
+            "duration": "4 hours",
+            "content": ["Identifying bottlenecks", "Workflow optimization", "Change management", "Measuring improvement"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "OPS-008",
+            "name": "Operations Tools and Systems",
+            "duration": "4 hours",
+            "content": ["Project management software", "Communication tools", "Tracking spreadsheets", "Automation tools"],
+            "deadline": "Week 4"
+          }
+        ],
+        "practicalAssignments": [
+          "Coordinate a cross-department project kickoff",
+          "Create a weekly operations status report",
+          "Identify and document a process improvement opportunity"
+        ],
+        "certification": "Operations Department Certified - Level 1"
+      },
+      "educationDepartment": {
+        "name": "Education Department Training Track",
+        "positions": ["Academy Instructor", "Education Operations Coordinator"],
+        "duration": "40 hours over 3 weeks",
+        "modules": [
+          {
+            "id": "EDU-001",
+            "name": "Academy Overview",
+            "duration": "4 hours",
+            "content": ["Academy mission and vision", "Curriculum structure", "Student journey", "Certification programs"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "EDU-002",
+            "name": "Learning Management System",
+            "duration": "6 hours",
+            "content": ["LMS navigation", "Course management", "Student tracking", "Reporting features"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "EDU-003",
+            "name": "Student Services",
+            "duration": "4 hours",
+            "content": ["Enrollment processing", "Student inquiries", "Support resources", "Escalation procedures"],
+            "deadline": "Week 2"
+          },
+          {
+            "id": "EDU-004",
+            "name": "Certification Administration",
+            "duration": "4 hours",
+            "content": ["Certification requirements", "Completion verification", "Certificate issuance", "Record keeping"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "EDU-005",
+            "name": "Curriculum Support",
+            "duration": "6 hours",
+            "content": ["Course materials management", "Content updates", "Resource organization", "Instructor support"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "EDU-006",
+            "name": "Instructor Coordination",
+            "duration": "4 hours",
+            "content": ["Scheduling classes", "Instructor communications", "Resource allocation", "Feedback collection"],
+            "deadline": "Week 3"
+          },
+          {
+            "id": "EDU-007",
+            "name": "Education Metrics and Reporting",
+            "duration": "4 hours",
+            "content": ["Key education metrics", "Completion rates", "Student satisfaction", "Grant reporting for education"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "EDU-008",
+            "name": "Adult Learning Principles",
+            "duration": "4 hours",
+            "content": ["How adults learn", "Engagement strategies", "Accessibility considerations", "Feedback and improvement"],
+            "deadline": "Week 4"
+          },
+          {
+            "id": "EDU-009",
+            "name": "Educational Technology",
+            "duration": "4 hours",
+            "content": ["Video conferencing for classes", "Interactive tools", "Assessment platforms", "Accessibility tools"],
+            "deadline": "Week 4"
+          }
+        ],
+        "practicalAssignments": [
+          "Process a student through enrollment to certification",
+          "Coordinate an instructor schedule for one week",
+          "Generate a monthly education metrics report"
+        ],
+        "certification": "Education Department Certified - Level 1"
+      }
+    }
+  },
+  "leadershipTraining": {
+    "description": "Additional training for Managers and above",
+    "applicableTo": ["Executive", "Manager"],
+    "modules": [
+      {
+        "id": "LDR-001",
+        "name": "Leadership at L.A.W.S.",
+        "duration": "4 hours",
+        "content": ["Leadership philosophy", "Servant leadership model", "Building trust", "Leading by example"],
+        "deadline": "Week 3"
+      },
+      {
+        "id": "LDR-002",
+        "name": "Managing Remote Teams",
+        "duration": "4 hours",
+        "content": ["Remote work best practices", "Communication strategies", "Building team culture remotely", "Performance management"],
+        "deadline": "Week 3"
+      },
+      {
+        "id": "LDR-003",
+        "name": "Coaching and Development",
+        "duration": "4 hours",
+        "content": ["Coaching conversations", "Giving feedback", "Development planning", "Mentoring team members"],
+        "deadline": "Week 4"
+      },
+      {
+        "id": "LDR-004",
+        "name": "Decision Making and Problem Solving",
+        "duration": "4 hours",
+        "content": ["Decision frameworks", "Problem analysis", "Stakeholder input", "Communicating decisions"],
+        "deadline": "Week 4"
+      },
+      {
+        "id": "LDR-005",
+        "name": "Budget and Resource Management",
+        "duration": "4 hours",
+        "content": ["Department budgeting", "Resource allocation", "Cost management", "Financial reporting"],
+        "deadline": "Week 4"
+      }
+    ],
+    "totalHours": 20,
+    "certification": "L.A.W.S. Leadership Certified"
+  },
+  "continuingEducation": {
+    "description": "Ongoing learning requirements after initial training",
+    "requirements": {
+      "annual": {
+        "minimumHours": 20,
+        "categories": [
+          {"category": "Role-specific skills", "minimumHours": 8},
+          {"category": "Organizational/cultural", "minimumHours": 4},
+          {"category": "Professional development", "minimumHours": 4},
+          {"category": "Elective", "minimumHours": 4}
+        ]
+      }
+    },
+    "resources": [
+      "Academy courses (free for all employees)",
+      "External training (with approval)",
+      "Conference attendance (with approval)",
+      "Cross-training in other departments",
+      "Mentorship programs"
+    ],
+    "tracking": "HR maintains training records; employees can view in platform"
+  },
+  "trainingCompletion": {
+    "requirements": {
+      "standardTraining": {
+        "deadline": "End of Week 2",
+        "passingScore": "80% on all assessments",
+        "consequence": "Extension of probationary period if not completed"
+      },
+      "departmentTraining": {
+        "deadline": "End of Week 4",
+        "passingScore": "80% on all assessments + practical assignments",
+        "consequence": "Performance improvement plan if not completed"
+      },
+      "leadershipTraining": {
+        "deadline": "End of Week 6 (for applicable positions)",
+        "passingScore": "Completion of all modules",
+        "consequence": "Delayed full authority in role"
+      }
+    },
+    "certification": {
+      "description": "Upon completion of all required training, employees receive department certification",
+      "benefits": [
+        "Recognition in team meetings",
+        "Certificate for personnel file",
+        "Eligibility for advanced assignments",
+        "Foundation for future promotions"
+      ]
+    },
+    "remediation": {
+      "process": [
+        "Identify specific areas needing improvement",
+        "Assign additional training or mentoring",
+        "Set new deadline (typically 1-2 weeks)",
+        "Reassess",
+        "Escalate to HR if continued non-completion"
+      ]
+    }
+  },
+  "trainingDelivery": {
+    "methods": {
+      "selfPaced": {
+        "description": "Online modules completed independently",
+        "platform": "Academy LMS",
+        "tracking": "Automatic completion tracking"
+      },
+      "instructorLed": {
+        "description": "Live sessions via Microsoft Teams",
+        "scheduling": "Coordinated by HR/Training",
+        "recording": "Sessions recorded for reference"
+      },
+      "onTheJob": {
+        "description": "Practical application with supervisor guidance",
+        "documentation": "Supervisor signs off on competency",
+        "mentoring": "Buddy or mentor provides support"
+      },
+      "shadowing": {
+        "description": "Observing experienced team members",
+        "duration": "Varies by role",
+        "documentation": "Shadowing log maintained"
+      }
+    },
+    "accessibility": {
+      "accommodations": "Training materials available in multiple formats upon request",
+      "support": "Additional time or support available for those who need it",
+      "technology": "IT support available for any technical issues"
+    }
+  }
+}

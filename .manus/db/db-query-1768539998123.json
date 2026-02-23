@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `house_ledgers` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `house_id` int NOT NULL,\n  `ledger_name` varchar(255) NOT NULL,\n  `ledger_hash` varchar(64) NOT NULL,\n  `ledger_status` enum('active','suspended','archived','under_audit') DEFAULT 'active',\n  `total_balance` decimal(18,2) DEFAULT '0.00',\n  `reserve_balance` decimal(18,2) DEFAULT '0.00',\n  `circulation_balance` decimal(18,2) DEFAULT '0.00',\n  `treasury_contribution` decimal(18,2) DEFAULT '0.00',\n  `house_retained` decimal(18,2) DEFAULT '0.00',\n  `transaction_count` int DEFAULT 0,\n  `last_sync_at` timestamp NULL,\n  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,\n  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `house_ledgers` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `house_id` int NOT NULL,\n  `ledger_name` varchar(255) NOT NULL,\n  `ledger_hash` varchar(64) NOT NULL,\n  `ledger_status` enum('active','suspended','archived','under_audit') DEFAULT 'active',\n  `total_balance` decimal(18,2) DEFAULT '0.00',\n  `reserve_balance` decimal(18,2) DEFAULT '0.00',\n  `circulation_balance` decimal(18,2) DEFAULT '0.00',\n  `treasury_contribution` decimal(18,2) DEFAULT '0.00',\n  `house_retained` decimal(18,2) DEFAULT '0.00',\n  `transaction_count` int DEFAULT 0,\n  `last_sync_at` timestamp NULL,\n  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,\n  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 510
+}

@@ -1,0 +1,25 @@
+{
+  "query": "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME LIKE '%chat%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME LIKE '%chat%';",
+  "rows": [
+    {
+      "TABLE_NAME": "chats"
+    },
+    {
+      "TABLE_NAME": "chat_participants"
+    },
+    {
+      "TABLE_NAME": "chat_messages"
+    },
+    {
+      "TABLE_NAME": "chat_attachments"
+    },
+    {
+      "TABLE_NAME": "meeting_chats"
+    }
+  ],
+  "messages": [],
+  "stdout": "TABLE_NAME\nchats\nchat_participants\nchat_messages\nchat_attachments\nmeeting_chats\n",
+  "stderr": "",
+  "execution_time_ms": 66
+}

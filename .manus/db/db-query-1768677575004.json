@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `application_activity_log` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `applicationId` int NOT NULL,\n  `actorId` int,\n  `actorName` varchar(255),\n  `action` enum('application_received','status_changed','document_uploaded','interview_scheduled','interview_completed','note_added','score_updated','offer_sent','offer_accepted','offer_rejected','hired','rejected','withdrawn') NOT NULL,\n  `previousValue` text,\n  `newValue` text,\n  `notes` text,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `application_activity_log` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `applicationId` int NOT NULL,\n  `actorId` int,\n  `actorName` varchar(255),\n  `action` enum('application_received','status_changed','document_uploaded','interview_scheduled','interview_completed','note_added','score_updated','offer_sent','offer_accepted','offer_rejected','hired','rejected','withdrawn') NOT NULL,\n  `previousValue` text,\n  `newValue` text,\n  `notes` text,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 193
+}

@@ -1,0 +1,9 @@
+{
+  "query": "-- Kyle T. Christopher - DOB 9/19/2012 - turns 18 on 9/19/2030\nINSERT INTO pending_house_heirs (parentHouseId, parentHouseName, parentMemberName, otherParentName, fullName, dateOfBirth, relationship, generation, projectedHouseName, projectedHouseType, activationTrigger, distributionPercentage, percentageLocked, status, registeredBy, notes)\nVALUES (2, 'House of Hunter', 'Amber S. Hunter', 'Cornelius D. Christopher', 'Kyle T. Christopher', '2012-09-19', 'grandchild', 3, 'House of Christopher', 'bloodline', 'age_18', 60.00, true, 'pending', 1, 'Mirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Sept 2030. May issue 3 Gift Tokens.');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute -- Kyle T. Christopher - DOB 9/19/2012 - turns 18 on 9/19/2030\nINSERT INTO pending_house_heirs (parentHouseId, parentHouseName, parentMemberName, otherParentName, fullName, dateOfBirth, relationship, generation, projectedHouseName, projectedHouseType, activationTrigger, distributionPercentage, percentageLocked, status, registeredBy, notes)\nVALUES (2, 'House of Hunter', 'Amber S. Hunter', 'Cornelius D. Christopher', 'Kyle T. Christopher', '2012-09-19', 'grandchild', 3, 'House of Christopher', 'bloodline', 'age_18', 60.00, true, 'pending', 1, 'Mirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Sept 2030. May issue 3 Gift Tokens.');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 77
+}

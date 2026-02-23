@@ -1,0 +1,25 @@
+{
+  "query": "SELECT DISTINCT category FROM transition_training_requirements",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT DISTINCT category FROM transition_training_requirements",
+  "rows": [
+    {
+      "category": "legal"
+    },
+    {
+      "category": "business_operations"
+    },
+    {
+      "category": "tax_compliance"
+    },
+    {
+      "category": "financial"
+    },
+    {
+      "category": "platform"
+    }
+  ],
+  "messages": [],
+  "stdout": "category\nlegal\nbusiness_operations\ntax_compliance\nfinancial\nplatform\n",
+  "stderr": "",
+  "execution_time_ms": 68
+}

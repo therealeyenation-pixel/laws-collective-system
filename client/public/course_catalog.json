@@ -1,0 +1,850 @@
+{
+  "metadata": {
+    "catalogName": "LuvOnPurpose Academy Course Catalog",
+    "lastUpdated": "2026-01-17",
+    "version": "1.0",
+    "managedBy": "CEO-Ed (Cornelius) - Chief Education Officer"
+  },
+  "catalogOverview": {
+    "description": "The LuvOnPurpose Academy offers comprehensive training programs designed to build skills, develop leadership, and prepare individuals for success in building generational wealth. Our courses blend practical knowledge with our L.A.W.S. framework values.",
+    "audienceTypes": [
+      {"type": "Internal", "description": "Employees of The L.A.W.S. Collective and subsidiary entities"},
+      {"type": "Community", "description": "Community members participating in L.A.W.S. programs"},
+      {"type": "Public", "description": "Open enrollment courses available to the general public"}
+    ],
+    "deliveryFormats": [
+      {"format": "Self-Paced Online", "description": "Complete at your own pace with video lessons, readings, and assessments"},
+      {"format": "Instructor-Led Virtual", "description": "Live sessions via Microsoft Teams with real-time interaction"},
+      {"format": "Hybrid", "description": "Combination of self-paced modules and live sessions"},
+      {"format": "Workshop", "description": "Intensive hands-on sessions, typically 2-4 hours"}
+    ]
+  },
+  "courseCategories": [
+    {
+      "categoryId": "ORG",
+      "categoryName": "Organizational Foundations",
+      "description": "Core courses that introduce our organization, mission, and culture",
+      "audience": "Internal",
+      "courses": [
+        {
+          "courseId": "ORG-101",
+          "title": "Welcome to The L.A.W.S. Collective",
+          "shortDescription": "An introduction to our organization, mission, and the L.A.W.S. framework.",
+          "fullDescription": "This foundational course welcomes new team members to The L.A.W.S. Collective family. You'll hear directly from our Founder about the vision that drives our work, learn the history of how our organization came to be, and gain a deep understanding of the L.A.W.S. framework (Land, Air, Water, Self) that guides everything we do. By the end of this course, you'll understand how your role contributes to our mission of building generational wealth for our community.",
+          "duration": "2 hours",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Articulate the mission and vision of The L.A.W.S. Collective",
+            "Explain each element of the L.A.W.S. framework",
+            "Describe the organizational structure and how entities work together",
+            "Identify how your role supports the overall mission"
+          ],
+          "modules": [
+            {"name": "Founder's Welcome", "duration": "20 min", "type": "Video"},
+            {"name": "Our History and Journey", "duration": "25 min", "type": "Interactive"},
+            {"name": "The L.A.W.S. Framework Deep Dive", "duration": "35 min", "type": "Video + Activity"},
+            {"name": "Building Generational Wealth", "duration": "25 min", "type": "Reading + Reflection"},
+            {"name": "Your Role in Our Mission", "duration": "15 min", "type": "Self-Assessment"}
+          ],
+          "assessment": "Quiz (80% passing score)",
+          "certification": "L.A.W.S. Foundations Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"]
+        },
+        {
+          "courseId": "ORG-102",
+          "title": "Understanding Our Entities",
+          "shortDescription": "Learn about each entity in our organizational family and how they work together.",
+          "fullDescription": "Our organization operates through multiple entities, each with a specific purpose and mission. This course provides an in-depth look at The L.A.W.S. Collective (our holding company), LAWS, LLC (our autonomous wealth platform), Real-Eye-Nation LLC (our media and narrative arm), and LuvOnPurpose Outreach Temple and Academy Society (our education and community impact organization). You'll understand how these entities collaborate, share resources, and collectively work toward our vision.",
+          "duration": "1.5 hours",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "ORG-101",
+          "learningObjectives": [
+            "Describe the purpose and function of each organizational entity",
+            "Explain the relationship between the holding company and subsidiaries",
+            "Identify which entity handles specific functions",
+            "Understand how shared services support all entities"
+          ],
+          "modules": [
+            {"name": "The L.A.W.S. Collective Overview", "duration": "20 min", "type": "Video"},
+            {"name": "LAWS, LLC - Autonomous Wealth", "duration": "20 min", "type": "Interactive"},
+            {"name": "Real-Eye-Nation - Media & Narrative", "duration": "15 min", "type": "Video"},
+            {"name": "Temple & Academy - Education & Community", "duration": "20 min", "type": "Video"},
+            {"name": "How We Work Together", "duration": "15 min", "type": "Case Study"}
+          ],
+          "assessment": "Entity matching exercise + short quiz",
+          "certification": "Included in L.A.W.S. Foundations Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"]
+        },
+        {
+          "courseId": "ORG-103",
+          "title": "Token Economy and Ownership Model",
+          "shortDescription": "Understand how our unique compensation and ownership model works.",
+          "fullDescription": "What makes us different? Our commitment to shared ownership and wealth building. This course explains our innovative token economy, how employees earn ownership stakes, and the path from traditional W-2 employment to independent contractor status. You'll learn how performance translates to token earnings, what ownership means for your long-term wealth, and how this model supports our mission of generational wealth building.",
+          "duration": "1 hour",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "ORG-101",
+          "learningObjectives": [
+            "Explain how the token economy functions",
+            "Describe how ownership stakes are earned and accumulated",
+            "Understand the W-2 to contractor transition path",
+            "Calculate potential token earnings based on performance"
+          ],
+          "modules": [
+            {"name": "Why Ownership Matters", "duration": "15 min", "type": "Video"},
+            {"name": "How Tokens Work", "duration": "20 min", "type": "Interactive"},
+            {"name": "Earning Your Stake", "duration": "15 min", "type": "Video + Calculator"},
+            {"name": "The Contractor Transition", "duration": "10 min", "type": "Reading"}
+          ],
+          "assessment": "Comprehension check",
+          "certification": "Included in L.A.W.S. Foundations Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"]
+        }
+      ]
+    },
+    {
+      "categoryId": "COMP",
+      "categoryName": "Compliance & Professional Standards",
+      "description": "Required courses covering policies, ethics, and regulatory compliance",
+      "audience": "Internal",
+      "courses": [
+        {
+          "courseId": "COMP-101",
+          "title": "Code of Conduct and Ethics",
+          "shortDescription": "Our standards for professional behavior and ethical decision-making.",
+          "fullDescription": "Integrity is the foundation of everything we do. This course covers our Code of Conduct, ethical guidelines, and expectations for professional behavior. You'll learn how to navigate ethical dilemmas, understand conflict of interest policies, and know how to report concerns. Through real-world scenarios, you'll practice applying our ethical standards to workplace situations.",
+          "duration": "1 hour",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Identify key elements of our Code of Conduct",
+            "Recognize potential ethical dilemmas and conflicts of interest",
+            "Apply ethical decision-making frameworks",
+            "Know how and when to report concerns"
+          ],
+          "modules": [
+            {"name": "Our Ethical Foundation", "duration": "15 min", "type": "Video"},
+            {"name": "Code of Conduct Review", "duration": "20 min", "type": "Reading + Acknowledgment"},
+            {"name": "Ethical Decision Making", "duration": "15 min", "type": "Scenarios"},
+            {"name": "Reporting and Resources", "duration": "10 min", "type": "Interactive"}
+          ],
+          "assessment": "Signed acknowledgment + scenario responses",
+          "certification": "Compliance Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"],
+          "renewalRequired": "Annual"
+        },
+        {
+          "courseId": "COMP-102",
+          "title": "Data Security and Confidentiality",
+          "shortDescription": "Protecting sensitive information and maintaining data security.",
+          "fullDescription": "In our work, we handle sensitive information about our organization, team members, and community. This course teaches you how to protect that information, maintain confidentiality, and follow security best practices. You'll learn about password security, recognizing phishing attempts, handling confidential documents, and what to do if you suspect a data breach.",
+          "duration": "1 hour",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Classify information by sensitivity level",
+            "Apply security best practices for passwords and access",
+            "Recognize and respond to security threats",
+            "Handle confidential information appropriately"
+          ],
+          "modules": [
+            {"name": "Why Security Matters", "duration": "10 min", "type": "Video"},
+            {"name": "Information Classification", "duration": "15 min", "type": "Interactive"},
+            {"name": "Security Best Practices", "duration": "20 min", "type": "Video + Quiz"},
+            {"name": "Incident Response", "duration": "15 min", "type": "Scenarios"}
+          ],
+          "assessment": "Scenario-based quiz (80% passing)",
+          "certification": "Included in Compliance Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"],
+          "renewalRequired": "Annual"
+        },
+        {
+          "courseId": "COMP-103",
+          "title": "Workplace Harassment Prevention",
+          "shortDescription": "Creating and maintaining a respectful, harassment-free workplace.",
+          "fullDescription": "Everyone deserves a workplace free from harassment and discrimination. This course helps you understand what constitutes harassment, how to prevent it, and what to do if you experience or witness inappropriate behavior. You'll learn about different types of harassment, bystander intervention techniques, and our reporting procedures.",
+          "duration": "1 hour",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Define harassment and discrimination in the workplace",
+            "Recognize different forms of harassment",
+            "Apply bystander intervention techniques",
+            "Follow reporting procedures appropriately"
+          ],
+          "modules": [
+            {"name": "Understanding Harassment", "duration": "20 min", "type": "Video"},
+            {"name": "Recognizing Inappropriate Behavior", "duration": "15 min", "type": "Scenarios"},
+            {"name": "Bystander Intervention", "duration": "15 min", "type": "Interactive"},
+            {"name": "Reporting and Support", "duration": "10 min", "type": "Reading"}
+          ],
+          "assessment": "Scenario responses",
+          "certification": "Included in Compliance Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"],
+          "renewalRequired": "Annual"
+        },
+        {
+          "courseId": "COMP-201",
+          "title": "Grant Compliance Fundamentals",
+          "shortDescription": "Understanding grant requirements and maintaining compliance.",
+          "fullDescription": "As a grant-funded organization, compliance is critical to our sustainability. This course provides an overview of grant compliance requirements, documentation standards, and your role in maintaining compliance. Whether you work directly with grants or not, understanding these requirements helps ensure our continued ability to serve our community.",
+          "duration": "1.5 hours",
+          "format": "Self-Paced Online",
+          "level": "Intermediate",
+          "prerequisites": "ORG-101",
+          "learningObjectives": [
+            "Explain why grant compliance matters",
+            "Identify common grant requirements and restrictions",
+            "Document activities appropriately for grant reporting",
+            "Know when to escalate compliance questions"
+          ],
+          "modules": [
+            {"name": "Introduction to Grant Funding", "duration": "20 min", "type": "Video"},
+            {"name": "Common Grant Requirements", "duration": "25 min", "type": "Interactive"},
+            {"name": "Documentation Best Practices", "duration": "25 min", "type": "Video + Examples"},
+            {"name": "Your Role in Compliance", "duration": "20 min", "type": "Scenarios"}
+          ],
+          "assessment": "Quiz + acknowledgment",
+          "certification": "Grant Compliance Awareness Certificate",
+          "required": true,
+          "requiredFor": ["All employees working on grant-funded activities"]
+        }
+      ]
+    },
+    {
+      "categoryId": "TOOLS",
+      "categoryName": "Tools & Technology",
+      "description": "Training on the systems and tools used in daily work",
+      "audience": "Internal",
+      "courses": [
+        {
+          "courseId": "TOOLS-101",
+          "title": "Communication and Collaboration Tools",
+          "shortDescription": "Master Microsoft Teams, email, and our collaboration platforms.",
+          "fullDescription": "Effective communication is essential for our distributed team. This hands-on course teaches you to use Microsoft Teams for messaging, meetings, and collaboration. You'll also learn email best practices, document sharing protocols, and how to stay connected with your team regardless of location.",
+          "duration": "1.5 hours",
+          "format": "Hybrid (Self-Paced + Live Practice)",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Navigate Microsoft Teams effectively",
+            "Schedule and conduct virtual meetings",
+            "Apply email etiquette standards",
+            "Share and collaborate on documents"
+          ],
+          "modules": [
+            {"name": "Microsoft Teams Basics", "duration": "30 min", "type": "Hands-On"},
+            {"name": "Meetings and Calls", "duration": "20 min", "type": "Interactive"},
+            {"name": "Email Best Practices", "duration": "20 min", "type": "Reading + Examples"},
+            {"name": "Document Collaboration", "duration": "20 min", "type": "Hands-On"}
+          ],
+          "assessment": "Practical demonstration",
+          "certification": "Tools Proficiency Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"]
+        },
+        {
+          "courseId": "TOOLS-102",
+          "title": "Project Management Fundamentals",
+          "shortDescription": "Learn to track projects, manage tasks, and meet deadlines.",
+          "fullDescription": "Whether you're managing projects or contributing to them, understanding project management basics helps you work more effectively. This course covers task management, milestone tracking, status reporting, and using our project management tools to stay organized and on track.",
+          "duration": "2 hours",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "TOOLS-101",
+          "learningObjectives": [
+            "Create and manage tasks effectively",
+            "Track project milestones and deadlines",
+            "Provide clear status updates",
+            "Use project management tools proficiently"
+          ],
+          "modules": [
+            {"name": "Project Management Concepts", "duration": "25 min", "type": "Video"},
+            {"name": "Task Management", "duration": "30 min", "type": "Hands-On"},
+            {"name": "Tracking and Reporting", "duration": "30 min", "type": "Interactive"},
+            {"name": "Tool Deep Dive", "duration": "35 min", "type": "Hands-On"}
+          ],
+          "assessment": "Create a sample project plan",
+          "certification": "Included in Tools Proficiency Certificate",
+          "required": false,
+          "recommended": true
+        },
+        {
+          "courseId": "TOOLS-103",
+          "title": "Document Management and Organization",
+          "shortDescription": "Organize files, manage documents, and maintain records effectively.",
+          "fullDescription": "Good document management saves time and ensures important information is always accessible. This course teaches our file organization standards, naming conventions, version control practices, and how to use our shared drives effectively. You'll also learn about record retention requirements.",
+          "duration": "1 hour",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "TOOLS-101",
+          "learningObjectives": [
+            "Apply file naming conventions consistently",
+            "Organize documents in shared drives",
+            "Manage document versions appropriately",
+            "Understand record retention requirements"
+          ],
+          "modules": [
+            {"name": "File Organization Standards", "duration": "20 min", "type": "Video"},
+            {"name": "Naming Conventions", "duration": "15 min", "type": "Interactive"},
+            {"name": "Version Control", "duration": "15 min", "type": "Examples"},
+            {"name": "Record Retention", "duration": "10 min", "type": "Reading"}
+          ],
+          "assessment": "Organize a sample file structure",
+          "certification": "Included in Tools Proficiency Certificate",
+          "required": true,
+          "requiredFor": ["All new employees"]
+        }
+      ]
+    },
+    {
+      "categoryId": "LEAD",
+      "categoryName": "Leadership & Management",
+      "description": "Courses for current and aspiring leaders",
+      "audience": "Internal",
+      "courses": [
+        {
+          "courseId": "LEAD-101",
+          "title": "Leadership at L.A.W.S.",
+          "shortDescription": "Our approach to leadership and building high-performing teams.",
+          "fullDescription": "Leadership at L.A.W.S. is about service, empowerment, and building others up. This course introduces our leadership philosophy, rooted in the L.A.W.S. framework. You'll learn how to lead by example, build trust with your team, and create an environment where everyone can thrive and contribute to our mission.",
+          "duration": "4 hours",
+          "format": "Hybrid (Self-Paced + Live Workshop)",
+          "level": "Intermediate",
+          "prerequisites": "ORG-101, 6+ months with organization",
+          "learningObjectives": [
+            "Apply servant leadership principles",
+            "Build trust and psychological safety in teams",
+            "Lead by example aligned with L.A.W.S. values",
+            "Develop and empower team members"
+          ],
+          "modules": [
+            {"name": "Our Leadership Philosophy", "duration": "45 min", "type": "Video"},
+            {"name": "Servant Leadership in Practice", "duration": "60 min", "type": "Workshop"},
+            {"name": "Building Trust", "duration": "45 min", "type": "Interactive"},
+            {"name": "Leading by Example", "duration": "45 min", "type": "Case Studies"},
+            {"name": "Action Planning", "duration": "45 min", "type": "Workshop"}
+          ],
+          "assessment": "Leadership action plan + peer feedback",
+          "certification": "L.A.W.S. Leadership Certificate",
+          "required": true,
+          "requiredFor": ["Managers", "Executives"]
+        },
+        {
+          "courseId": "LEAD-102",
+          "title": "Managing Remote Teams",
+          "shortDescription": "Strategies for leading distributed and remote team members.",
+          "fullDescription": "Our team works across locations, making remote leadership skills essential. This course covers communication strategies for remote teams, building culture without physical presence, managing performance from a distance, and maintaining team cohesion. You'll learn practical techniques that work in our virtual environment.",
+          "duration": "4 hours",
+          "format": "Instructor-Led Virtual",
+          "level": "Intermediate",
+          "prerequisites": "LEAD-101",
+          "learningObjectives": [
+            "Communicate effectively with remote team members",
+            "Build and maintain team culture virtually",
+            "Manage performance in a remote environment",
+            "Address common remote work challenges"
+          ],
+          "modules": [
+            {"name": "Remote Work Realities", "duration": "45 min", "type": "Discussion"},
+            {"name": "Communication Strategies", "duration": "60 min", "type": "Interactive"},
+            {"name": "Virtual Team Culture", "duration": "60 min", "type": "Workshop"},
+            {"name": "Performance Management", "duration": "45 min", "type": "Case Studies"},
+            {"name": "Tools and Techniques", "duration": "30 min", "type": "Demonstration"}
+          ],
+          "assessment": "Remote team management plan",
+          "certification": "Included in L.A.W.S. Leadership Certificate",
+          "required": true,
+          "requiredFor": ["Managers", "Executives"]
+        },
+        {
+          "courseId": "LEAD-103",
+          "title": "Coaching and Development",
+          "shortDescription": "Develop your team through effective coaching conversations.",
+          "fullDescription": "Great leaders develop other leaders. This course teaches coaching techniques that help team members grow, improve performance, and reach their potential. You'll learn how to have effective coaching conversations, give constructive feedback, create development plans, and mentor others on their career journey.",
+          "duration": "4 hours",
+          "format": "Hybrid (Self-Paced + Live Practice)",
+          "level": "Intermediate",
+          "prerequisites": "LEAD-101",
+          "learningObjectives": [
+            "Conduct effective coaching conversations",
+            "Provide constructive feedback that drives improvement",
+            "Create meaningful development plans",
+            "Mentor team members for growth"
+          ],
+          "modules": [
+            {"name": "Coaching vs. Managing", "duration": "30 min", "type": "Video"},
+            {"name": "The Coaching Conversation", "duration": "60 min", "type": "Workshop"},
+            {"name": "Giving Feedback", "duration": "45 min", "type": "Role Play"},
+            {"name": "Development Planning", "duration": "45 min", "type": "Interactive"},
+            {"name": "Practice Sessions", "duration": "60 min", "type": "Peer Practice"}
+          ],
+          "assessment": "Coaching demonstration + peer evaluation",
+          "certification": "Included in L.A.W.S. Leadership Certificate",
+          "required": true,
+          "requiredFor": ["Managers", "Executives"]
+        },
+        {
+          "courseId": "LEAD-201",
+          "title": "Decision Making and Problem Solving",
+          "shortDescription": "Frameworks for making sound decisions and solving complex problems.",
+          "fullDescription": "Leaders face decisions every day, often with incomplete information. This course provides frameworks for analyzing problems, gathering input, making decisions, and communicating them effectively. You'll practice with real-world scenarios and develop your decision-making confidence.",
+          "duration": "4 hours",
+          "format": "Instructor-Led Virtual",
+          "level": "Advanced",
+          "prerequisites": "LEAD-101",
+          "learningObjectives": [
+            "Apply structured problem-solving frameworks",
+            "Gather and evaluate input from stakeholders",
+            "Make decisions with incomplete information",
+            "Communicate decisions clearly and build buy-in"
+          ],
+          "modules": [
+            {"name": "Problem Analysis Frameworks", "duration": "60 min", "type": "Interactive"},
+            {"name": "Stakeholder Input", "duration": "45 min", "type": "Discussion"},
+            {"name": "Decision Frameworks", "duration": "60 min", "type": "Case Studies"},
+            {"name": "Communicating Decisions", "duration": "45 min", "type": "Role Play"},
+            {"name": "Practice Scenarios", "duration": "30 min", "type": "Group Work"}
+          ],
+          "assessment": "Decision case study analysis",
+          "certification": "Advanced Leadership Certificate",
+          "required": false,
+          "recommended": true,
+          "recommendedFor": ["Executives", "Senior Managers"]
+        },
+        {
+          "courseId": "LEAD-202",
+          "title": "Budget and Resource Management",
+          "shortDescription": "Managing department budgets and allocating resources effectively.",
+          "fullDescription": "Department leaders are stewards of organizational resources. This course covers budget development, monitoring spending, resource allocation, and financial reporting. You'll learn to make data-driven resource decisions and communicate financial information to leadership.",
+          "duration": "4 hours",
+          "format": "Hybrid (Self-Paced + Live Workshop)",
+          "level": "Advanced",
+          "prerequisites": "LEAD-101",
+          "learningObjectives": [
+            "Develop and manage department budgets",
+            "Allocate resources effectively",
+            "Monitor spending and identify variances",
+            "Report financial information to leadership"
+          ],
+          "modules": [
+            {"name": "Budget Fundamentals", "duration": "45 min", "type": "Video"},
+            {"name": "Building Your Budget", "duration": "60 min", "type": "Workshop"},
+            {"name": "Resource Allocation", "duration": "45 min", "type": "Interactive"},
+            {"name": "Monitoring and Reporting", "duration": "45 min", "type": "Hands-On"},
+            {"name": "Grant Budget Considerations", "duration": "45 min", "type": "Case Study"}
+          ],
+          "assessment": "Create a sample department budget",
+          "certification": "Included in Advanced Leadership Certificate",
+          "required": true,
+          "requiredFor": ["Managers", "Executives"]
+        }
+      ]
+    },
+    {
+      "categoryId": "FIN",
+      "categoryName": "Financial Literacy & Wealth Building",
+      "description": "Courses on personal finance, business finance, and wealth building",
+      "audience": "Community/Public",
+      "courses": [
+        {
+          "courseId": "FIN-101",
+          "title": "Financial Foundations",
+          "shortDescription": "Build a strong foundation in personal financial management.",
+          "fullDescription": "Financial literacy is the first step toward generational wealth. This course covers budgeting basics, understanding credit, managing debt, and building savings. Whether you're just starting your financial journey or looking to strengthen your foundation, this course provides practical tools you can use immediately.",
+          "duration": "4 hours",
+          "format": "Self-Paced Online",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Create and maintain a personal budget",
+            "Understand credit scores and how to improve them",
+            "Develop a debt reduction strategy",
+            "Build an emergency savings fund"
+          ],
+          "modules": [
+            {"name": "Budgeting Basics", "duration": "60 min", "type": "Interactive"},
+            {"name": "Understanding Credit", "duration": "45 min", "type": "Video"},
+            {"name": "Managing Debt", "duration": "45 min", "type": "Calculator + Planning"},
+            {"name": "Building Savings", "duration": "45 min", "type": "Interactive"},
+            {"name": "Your Financial Action Plan", "duration": "45 min", "type": "Workbook"}
+          ],
+          "assessment": "Complete personal financial plan",
+          "certification": "Financial Foundations Certificate",
+          "required": false,
+          "openEnrollment": true,
+          "cost": "Free for community members"
+        },
+        {
+          "courseId": "FIN-201",
+          "title": "Business Finance Essentials",
+          "shortDescription": "Understand business finances for entrepreneurs and business owners.",
+          "fullDescription": "Ready to start or grow a business? This course covers essential business finance concepts including business budgeting, cash flow management, understanding financial statements, and planning for profitability. Designed for aspiring and current entrepreneurs.",
+          "duration": "6 hours",
+          "format": "Hybrid (Self-Paced + Live Q&A)",
+          "level": "Intermediate",
+          "prerequisites": "FIN-101 or equivalent knowledge",
+          "learningObjectives": [
+            "Create and manage a business budget",
+            "Understand and manage cash flow",
+            "Read and interpret financial statements",
+            "Plan for business profitability"
+          ],
+          "modules": [
+            {"name": "Business vs. Personal Finance", "duration": "30 min", "type": "Video"},
+            {"name": "Business Budgeting", "duration": "60 min", "type": "Workshop"},
+            {"name": "Cash Flow Management", "duration": "60 min", "type": "Interactive"},
+            {"name": "Financial Statements", "duration": "90 min", "type": "Video + Practice"},
+            {"name": "Profitability Planning", "duration": "60 min", "type": "Case Study"},
+            {"name": "Live Q&A Session", "duration": "60 min", "type": "Live"}
+          ],
+          "assessment": "Business financial plan",
+          "certification": "Business Finance Certificate",
+          "required": false,
+          "openEnrollment": true,
+          "cost": "$49 (scholarships available)"
+        },
+        {
+          "courseId": "FIN-301",
+          "title": "Building Generational Wealth",
+          "shortDescription": "Strategies for creating and preserving wealth across generations.",
+          "fullDescription": "Generational wealth is at the heart of our mission. This advanced course explores strategies for building wealth that lasts beyond your lifetime. Topics include investment fundamentals, real estate, business ownership, estate planning basics, and teaching financial literacy to the next generation.",
+          "duration": "8 hours",
+          "format": "Instructor-Led Virtual (4 sessions)",
+          "level": "Advanced",
+          "prerequisites": "FIN-101, FIN-201 recommended",
+          "learningObjectives": [
+            "Develop a long-term wealth building strategy",
+            "Understand investment options and principles",
+            "Explore wealth preservation techniques",
+            "Create a plan for transferring wealth to future generations"
+          ],
+          "modules": [
+            {"name": "What is Generational Wealth?", "duration": "60 min", "type": "Discussion"},
+            {"name": "Investment Fundamentals", "duration": "90 min", "type": "Interactive"},
+            {"name": "Real Estate and Business Ownership", "duration": "90 min", "type": "Case Studies"},
+            {"name": "Estate Planning Basics", "duration": "60 min", "type": "Guest Speaker"},
+            {"name": "Teaching the Next Generation", "duration": "60 min", "type": "Workshop"},
+            {"name": "Your Generational Wealth Plan", "duration": "60 min", "type": "Individual Work"},
+            {"name": "Peer Review and Feedback", "duration": "60 min", "type": "Group Session"}
+          ],
+          "assessment": "Generational wealth plan presentation",
+          "certification": "Generational Wealth Builder Certificate",
+          "required": false,
+          "openEnrollment": true,
+          "cost": "$99 (scholarships available)"
+        }
+      ]
+    },
+    {
+      "categoryId": "BUS",
+      "categoryName": "Business Development",
+      "description": "Courses on starting and growing businesses",
+      "audience": "Community/Public",
+      "courses": [
+        {
+          "courseId": "BUS-101",
+          "title": "LLC Formation Fundamentals",
+          "shortDescription": "Learn how to properly form and structure a Limited Liability Company.",
+          "fullDescription": "Thinking about starting a business? An LLC is often the best structure for new entrepreneurs. This comprehensive course walks you through the entire LLC formation process, from choosing a name to filing paperwork to setting up your operating agreement. You'll leave with a clear roadmap for forming your own LLC.",
+          "duration": "4 hours",
+          "format": "Hybrid (Self-Paced + Live Workshop)",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Understand the benefits and limitations of LLC structure",
+            "Complete the LLC formation process step-by-step",
+            "Create a basic operating agreement",
+            "Set up proper business banking and records"
+          ],
+          "modules": [
+            {"name": "Why Choose an LLC?", "duration": "30 min", "type": "Video"},
+            {"name": "Choosing Your Business Name", "duration": "30 min", "type": "Interactive"},
+            {"name": "Filing Your LLC", "duration": "60 min", "type": "Step-by-Step Guide"},
+            {"name": "Operating Agreement Basics", "duration": "60 min", "type": "Workshop"},
+            {"name": "Next Steps After Formation", "duration": "60 min", "type": "Checklist + Q&A"}
+          ],
+          "assessment": "Complete LLC formation checklist",
+          "certification": "LLC Formation Certificate",
+          "required": false,
+          "openEnrollment": true,
+          "cost": "$29 (free for L.A.W.S. program participants)"
+        },
+        {
+          "courseId": "BUS-102",
+          "title": "Business Plan Development",
+          "shortDescription": "Create a comprehensive business plan for your venture.",
+          "fullDescription": "A solid business plan is your roadmap to success. This hands-on course guides you through creating a complete business plan, including market analysis, financial projections, marketing strategy, and operational planning. By the end, you'll have a professional business plan ready for lenders, investors, or your own guidance.",
+          "duration": "8 hours",
+          "format": "Workshop Series (4 sessions)",
+          "level": "Intermediate",
+          "prerequisites": "BUS-101 or existing business",
+          "learningObjectives": [
+            "Conduct market research and competitive analysis",
+            "Develop financial projections",
+            "Create a marketing and sales strategy",
+            "Write a complete, professional business plan"
+          ],
+          "modules": [
+            {"name": "Business Plan Overview", "duration": "30 min", "type": "Video"},
+            {"name": "Market Analysis", "duration": "90 min", "type": "Workshop"},
+            {"name": "Financial Projections", "duration": "120 min", "type": "Workshop"},
+            {"name": "Marketing Strategy", "duration": "90 min", "type": "Workshop"},
+            {"name": "Operations Planning", "duration": "60 min", "type": "Interactive"},
+            {"name": "Writing and Presenting", "duration": "90 min", "type": "Workshop"}
+          ],
+          "assessment": "Complete business plan",
+          "certification": "Business Planning Certificate",
+          "required": false,
+          "openEnrollment": true,
+          "cost": "$79 (scholarships available)"
+        },
+        {
+          "courseId": "BUS-201",
+          "title": "Trust Fundamentals for Families",
+          "shortDescription": "Understanding trusts as tools for asset protection and wealth transfer.",
+          "fullDescription": "Trusts are powerful tools for protecting assets and transferring wealth across generations. This course demystifies trusts, explaining different types, their benefits, and how families can use them strategically. Note: This is educational content, not legal advice. Participants are encouraged to work with qualified attorneys for their specific situations.",
+          "duration": "4 hours",
+          "format": "Instructor-Led Virtual",
+          "level": "Intermediate",
+          "prerequisites": "FIN-101 recommended",
+          "learningObjectives": [
+            "Understand what trusts are and how they work",
+            "Identify different types of trusts and their purposes",
+            "Recognize when a trust might benefit your family",
+            "Know what questions to ask when working with attorneys"
+          ],
+          "modules": [
+            {"name": "Trust Basics", "duration": "45 min", "type": "Video"},
+            {"name": "Types of Trusts", "duration": "60 min", "type": "Interactive"},
+            {"name": "Trusts for Asset Protection", "duration": "45 min", "type": "Case Studies"},
+            {"name": "Trusts for Wealth Transfer", "duration": "45 min", "type": "Discussion"},
+            {"name": "Working with Professionals", "duration": "45 min", "type": "Q&A"}
+          ],
+          "assessment": "Trust planning worksheet",
+          "certification": "Trust Fundamentals Certificate",
+          "required": false,
+          "openEnrollment": true,
+          "cost": "$49 (scholarships available)"
+        }
+      ]
+    },
+    {
+      "categoryId": "LAWS",
+      "categoryName": "L.A.W.S. Framework Programs",
+      "description": "Programs based on the Land, Air, Water, Self framework",
+      "audience": "Community",
+      "courses": [
+        {
+          "courseId": "LAWS-L01",
+          "title": "LAND: Reconnection & Stability",
+          "shortDescription": "Reconnect with your roots and build a foundation of stability.",
+          "fullDescription": "The LAND pillar focuses on understanding where you come from and building stability in your life. This program helps participants explore their family history, understand migrations and cultural heritage, and create stability through connection to place and community. Through reflection, research, and community activities, you'll strengthen your foundation.",
+          "duration": "12 hours (6 sessions)",
+          "format": "Cohort-Based Program",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Research and document family history",
+            "Understand the impact of historical migrations",
+            "Connect with cultural heritage and traditions",
+            "Build stability through community connection"
+          ],
+          "modules": [
+            {"name": "Introduction to LAND", "duration": "2 hours", "type": "Group Session"},
+            {"name": "Family History Research", "duration": "2 hours", "type": "Workshop"},
+            {"name": "Understanding Migrations", "duration": "2 hours", "type": "Discussion"},
+            {"name": "Cultural Heritage", "duration": "2 hours", "type": "Interactive"},
+            {"name": "Community Connection", "duration": "2 hours", "type": "Activity"},
+            {"name": "Building Your Foundation", "duration": "2 hours", "type": "Reflection + Planning"}
+          ],
+          "assessment": "Personal heritage project",
+          "certification": "L.A.W.S. LAND Completion",
+          "required": false,
+          "cohortBased": true,
+          "nextCohort": "TBD",
+          "cost": "Free for community members"
+        },
+        {
+          "courseId": "LAWS-A01",
+          "title": "AIR: Education & Knowledge",
+          "shortDescription": "Expand your knowledge and develop your capacity for learning.",
+          "fullDescription": "The AIR pillar emphasizes education, learning, and the free flow of knowledge. This program helps participants develop learning strategies, improve communication skills, and create a personal education plan. Whether you're pursuing formal education or self-directed learning, this program will help you breathe in knowledge and share it with others.",
+          "duration": "12 hours (6 sessions)",
+          "format": "Cohort-Based Program",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Develop effective learning strategies",
+            "Improve communication and expression",
+            "Create a personal education plan",
+            "Share knowledge with others"
+          ],
+          "modules": [
+            {"name": "Introduction to AIR", "duration": "2 hours", "type": "Group Session"},
+            {"name": "How You Learn Best", "duration": "2 hours", "type": "Assessment + Workshop"},
+            {"name": "Communication Skills", "duration": "2 hours", "type": "Practice"},
+            {"name": "Education Pathways", "duration": "2 hours", "type": "Exploration"},
+            {"name": "Knowledge Sharing", "duration": "2 hours", "type": "Peer Teaching"},
+            {"name": "Your Education Plan", "duration": "2 hours", "type": "Planning + Presentation"}
+          ],
+          "assessment": "Personal education plan + peer teaching demonstration",
+          "certification": "L.A.W.S. AIR Completion",
+          "required": false,
+          "cohortBased": true,
+          "nextCohort": "TBD",
+          "cost": "Free for community members"
+        },
+        {
+          "courseId": "LAWS-W01",
+          "title": "WATER: Healing & Balance",
+          "shortDescription": "Develop emotional resilience and restore balance in your life.",
+          "fullDescription": "The WATER pillar focuses on healing, emotional resilience, and finding balance. This program provides a supportive space to address emotional challenges, develop healthy coping strategies, and create balance in your life. Through reflection, group support, and practical techniques, you'll learn to flow through life's challenges with greater ease.",
+          "duration": "12 hours (6 sessions)",
+          "format": "Cohort-Based Program",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Develop emotional awareness and resilience",
+            "Learn healthy coping strategies",
+            "Create balance across life areas",
+            "Build supportive relationships"
+          ],
+          "modules": [
+            {"name": "Introduction to WATER", "duration": "2 hours", "type": "Group Session"},
+            {"name": "Emotional Awareness", "duration": "2 hours", "type": "Reflection + Discussion"},
+            {"name": "Healing Practices", "duration": "2 hours", "type": "Workshop"},
+            {"name": "Coping Strategies", "duration": "2 hours", "type": "Interactive"},
+            {"name": "Finding Balance", "duration": "2 hours", "type": "Assessment + Planning"},
+            {"name": "Support Networks", "duration": "2 hours", "type": "Community Building"}
+          ],
+          "assessment": "Personal balance plan",
+          "certification": "L.A.W.S. WATER Completion",
+          "required": false,
+          "cohortBased": true,
+          "nextCohort": "TBD",
+          "cost": "Free for community members"
+        },
+        {
+          "courseId": "LAWS-S01",
+          "title": "SELF: Purpose & Skills",
+          "shortDescription": "Discover your purpose and build practical skills for success.",
+          "fullDescription": "The SELF pillar is about understanding who you are and developing the skills to achieve your purpose. This program helps participants identify their strengths, clarify their purpose, and build practical skills for financial literacy, business readiness, and purposeful growth. You'll leave with a clear vision and actionable plan for your future.",
+          "duration": "12 hours (6 sessions)",
+          "format": "Cohort-Based Program",
+          "level": "Beginner",
+          "prerequisites": "None",
+          "learningObjectives": [
+            "Identify personal strengths and values",
+            "Clarify life purpose and goals",
+            "Develop financial literacy skills",
+            "Create a purposeful growth plan"
+          ],
+          "modules": [
+            {"name": "Introduction to SELF", "duration": "2 hours", "type": "Group Session"},
+            {"name": "Strengths and Values", "duration": "2 hours", "type": "Assessment + Reflection"},
+            {"name": "Finding Your Purpose", "duration": "2 hours", "type": "Workshop"},
+            {"name": "Financial Literacy Basics", "duration": "2 hours", "type": "Interactive"},
+            {"name": "Skill Building", "duration": "2 hours", "type": "Practice"},
+            {"name": "Your Growth Plan", "duration": "2 hours", "type": "Planning + Presentation"}
+          ],
+          "assessment": "Personal purpose statement + growth plan",
+          "certification": "L.A.W.S. SELF Completion",
+          "required": false,
+          "cohortBased": true,
+          "nextCohort": "TBD",
+          "cost": "Free for community members"
+        },
+        {
+          "courseId": "LAWS-100",
+          "title": "Complete L.A.W.S. Journey",
+          "shortDescription": "The full L.A.W.S. experience - all four pillars in one comprehensive program.",
+          "fullDescription": "Ready for transformation? The Complete L.A.W.S. Journey takes participants through all four pillars in a comprehensive 24-week program. This cohort-based experience builds community, provides accountability, and guides participants through deep personal development. Graduates emerge with clarity, skills, and a supportive network for their journey ahead.",
+          "duration": "48 hours (24 sessions over 24 weeks)",
+          "format": "Cohort-Based Program",
+          "level": "Comprehensive",
+          "prerequisites": "Application and interview",
+          "learningObjectives": [
+            "Complete all four L.A.W.S. pillars",
+            "Develop a comprehensive personal development plan",
+            "Build lasting community connections",
+            "Prepare for next steps in wealth building"
+          ],
+          "modules": [
+            {"name": "LAND Module (6 sessions)", "duration": "12 hours", "type": "See LAWS-L01"},
+            {"name": "AIR Module (6 sessions)", "duration": "12 hours", "type": "See LAWS-A01"},
+            {"name": "WATER Module (6 sessions)", "duration": "12 hours", "type": "See LAWS-W01"},
+            {"name": "SELF Module (6 sessions)", "duration": "12 hours", "type": "See LAWS-S01"}
+          ],
+          "assessment": "Comprehensive portfolio + graduation presentation",
+          "certification": "L.A.W.S. Complete Journey Graduate",
+          "required": false,
+          "cohortBased": true,
+          "nextCohort": "TBD",
+          "cost": "Free for community members (application required)"
+        }
+      ]
+    }
+  ],
+  "certificationPaths": {
+    "internal": [
+      {
+        "pathName": "L.A.W.S. Foundations",
+        "requiredCourses": ["ORG-101", "ORG-102", "ORG-103"],
+        "description": "Required for all employees within first 2 weeks"
+      },
+      {
+        "pathName": "Compliance Certified",
+        "requiredCourses": ["COMP-101", "COMP-102", "COMP-103"],
+        "description": "Required for all employees, renewed annually"
+      },
+      {
+        "pathName": "Tools Proficiency",
+        "requiredCourses": ["TOOLS-101", "TOOLS-103"],
+        "optionalCourses": ["TOOLS-102"],
+        "description": "Required for all employees within first 2 weeks"
+      },
+      {
+        "pathName": "L.A.W.S. Leadership",
+        "requiredCourses": ["LEAD-101", "LEAD-102", "LEAD-103"],
+        "description": "Required for Managers and Executives"
+      },
+      {
+        "pathName": "Advanced Leadership",
+        "requiredCourses": ["LEAD-201", "LEAD-202"],
+        "prerequisites": ["L.A.W.S. Leadership"],
+        "description": "Recommended for senior leaders"
+      }
+    ],
+    "community": [
+      {
+        "pathName": "Financial Empowerment",
+        "requiredCourses": ["FIN-101", "FIN-201"],
+        "optionalCourses": ["FIN-301"],
+        "description": "Build financial literacy and business finance skills"
+      },
+      {
+        "pathName": "Entrepreneur Ready",
+        "requiredCourses": ["BUS-101", "BUS-102", "FIN-101"],
+        "description": "Prepare to start your own business"
+      },
+      {
+        "pathName": "L.A.W.S. Graduate",
+        "requiredCourses": ["LAWS-100"],
+        "description": "Complete the full L.A.W.S. Journey program"
+      }
+    ]
+  }
+}

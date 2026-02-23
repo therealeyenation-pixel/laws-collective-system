@@ -7,6 +7,12 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { addClient, removeClient, clearUserTyping } from "../services/chatSSE";
+import { sdk } from "./sdk";
+import { getDb } from "../db";
+import { users } from "../../drizzle/schema";
+import { eq } from "drizzle-orm";
+import { handleStripeWebhook } from "../stripe/webhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -30,11 +36,75 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  
+  // Trust proxy for proper HTTPS detection behind load balancers/proxies
+  app.set("trust proxy", 1);
+  
+  // Stripe webhook - MUST be before body parser to get raw body
+  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
+  
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
+  // SSE endpoint for real-time chat events
+  app.get("/api/chat/events", async (req, res) => {
+    try {
+      // Verify user session from cookie
+      const sessionCookie = req.headers.cookie
+        ?.split("; ")
+        .find((c) => c.startsWith("session="))
+        ?.split("=")[1];
+      
+      if (!sessionCookie) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+      
+      const session = await sdk.verifySession(sessionCookie);
+      if (!session) {
+        res.status(401).json({ error: "Invalid session" });
+        return;
+      }
+      
+      // Get user from database
+      const db = await getDb();
+      if (!db) {
+        res.status(500).json({ error: "Database not available" });
+        return;
+      }
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.openId, session.openId))
+        .limit(1);
+      if (!user) {
+        res.status(401).json({ error: "Invalid session" });
+        return;
+      }
+      
+      // Set SSE headers
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+      res.setHeader("X-Accel-Buffering", "no"); // Disable nginx buffering
+      res.flushHeaders();
+      
+      // Add client to connected clients
+      addClient(user.id, res);
+      
+      // Handle client disconnect
+      req.on("close", () => {
+        removeClient(user.id, res);
+        clearUserTyping(user.id);
+      });
+    } catch (error) {
+      console.error("SSE connection error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
   // tRPC API
   app.use(
     "/api/trpc",

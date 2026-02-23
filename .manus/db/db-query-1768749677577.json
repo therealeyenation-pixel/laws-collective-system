@@ -1,0 +1,82 @@
+{
+  "query": "SELECT COLUMN_NAME, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'donations' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COLUMN_NAME, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'donations' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id",
+      "COLUMN_TYPE": "int(11)"
+    },
+    {
+      "COLUMN_NAME": "donor_name",
+      "COLUMN_TYPE": "varchar(255)"
+    },
+    {
+      "COLUMN_NAME": "donor_email",
+      "COLUMN_TYPE": "varchar(255)"
+    },
+    {
+      "COLUMN_NAME": "donor_phone",
+      "COLUMN_TYPE": "varchar(50)"
+    },
+    {
+      "COLUMN_NAME": "donor_address",
+      "COLUMN_TYPE": "text"
+    },
+    {
+      "COLUMN_NAME": "amount",
+      "COLUMN_TYPE": "decimal(10,2)"
+    },
+    {
+      "COLUMN_NAME": "donation_type",
+      "COLUMN_TYPE": "enum('one_time','recurring','pledge','in_kind')"
+    },
+    {
+      "COLUMN_NAME": "payment_method",
+      "COLUMN_TYPE": "enum('credit_card','bank_transfer','check','cash','paypal','other')"
+    },
+    {
+      "COLUMN_NAME": "campaign_id",
+      "COLUMN_TYPE": "int(11)"
+    },
+    {
+      "COLUMN_NAME": "designation",
+      "COLUMN_TYPE": "varchar(255)"
+    },
+    {
+      "COLUMN_NAME": "is_anonymous",
+      "COLUMN_TYPE": "tinyint(1)"
+    },
+    {
+      "COLUMN_NAME": "tax_receipt_number",
+      "COLUMN_TYPE": "varchar(100)"
+    },
+    {
+      "COLUMN_NAME": "tax_receipt_sent",
+      "COLUMN_TYPE": "tinyint(1)"
+    },
+    {
+      "COLUMN_NAME": "tax_receipt_sent_at",
+      "COLUMN_TYPE": "timestamp"
+    },
+    {
+      "COLUMN_NAME": "notes",
+      "COLUMN_TYPE": "text"
+    },
+    {
+      "COLUMN_NAME": "status",
+      "COLUMN_TYPE": "enum('pending','completed','failed','refunded')"
+    },
+    {
+      "COLUMN_NAME": "created_at",
+      "COLUMN_TYPE": "timestamp"
+    },
+    {
+      "COLUMN_NAME": "updated_at",
+      "COLUMN_TYPE": "timestamp"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tCOLUMN_TYPE\nid\tint(11)\ndonor_name\tvarchar(255)\ndonor_email\tvarchar(255)\ndonor_phone\tvarchar(50)\ndonor_address\ttext\namount\tdecimal(10,2)\ndonation_type\tenum('one_time','recurring','pledge','in_kind')\npayment_method\tenum('credit_card','bank_transfer','check','cash','paypal','other')\ncampaign_id\tint(11)\ndesignation\tvarchar(255)\nis_anonymous\ttinyint(1)\ntax_receipt_number\tvarchar(100)\ntax_receipt_sent\ttinyint(1)\ntax_receipt_sent_at\ttimestamp\nnotes\ttext\nstatus\tenum('pending','completed','failed','refunded')\ncreated_at\ttimestamp\nupdated_at\ttimestamp\n",
+  "stderr": "",
+  "execution_time_ms": 59
+}

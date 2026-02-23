@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE business_plans SET fundingPurpose = 'LuvOnPurpose Autonomous Wealth System LLC requires funding to develop and deploy our comprehensive financial automation platform that serves families and small businesses in building autonomous wealth. Our system integrates financial tracking, automated savings, investment management, and wealth preservation tools designed specifically for underserved communities. Investment will enable us to enhance platform security, add advanced analytics features, expand user capacity, and develop educational modules that empower users to take control of their financial futures and build lasting generational wealth.' WHERE entityName = 'LuvOnPurpose Autonomous Wealth System LLC';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE business_plans SET fundingPurpose = 'LuvOnPurpose Autonomous Wealth System LLC requires funding to develop and deploy our comprehensive financial automation platform that serves families and small businesses in building autonomous wealth. Our system integrates financial tracking, automated savings, investment management, and wealth preservation tools designed specifically for underserved communities. Investment will enable us to enhance platform security, add advanced analytics features, expand user capacity, and develop educational modules that empower users to take control of their financial futures and build lasting generational wealth.' WHERE entityName = 'LuvOnPurpose Autonomous Wealth System LLC';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 63
+}

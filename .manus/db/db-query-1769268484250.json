@@ -1,0 +1,46 @@
+{
+  "query": "SELECT id, name, entityType, parentEntityId FROM business_entities ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, entityType, parentEntityId FROM business_entities ORDER BY id;",
+  "rows": [
+    {
+      "id": "6",
+      "name": "CALEA Freeman Family Trust",
+      "entityType": "trust",
+      "parentEntityId": "NULL"
+    },
+    {
+      "id": "7",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "parentEntityId": "NULL"
+    },
+    {
+      "id": "8",
+      "name": "The L.A.W.S. Collective LLC",
+      "entityType": "collective",
+      "parentEntityId": "1"
+    },
+    {
+      "id": "9",
+      "name": "Real-Eye-Nation",
+      "entityType": "llc",
+      "parentEntityId": "1"
+    },
+    {
+      "id": "30004",
+      "name": "CALEA Freeman Family Trust",
+      "entityType": "trust",
+      "parentEntityId": "NULL"
+    },
+    {
+      "id": "60001",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "parentEntityId": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tentityType\tparentEntityId\n6\tCALEA Freeman Family Trust\ttrust\tNULL\n7\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\tNULL\n8\tThe L.A.W.S. Collective LLC\tcollective\t1\n9\tReal-Eye-Nation\tllc\t1\n30004\tCALEA Freeman Family Trust\ttrust\tNULL\n60001\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1187
+}

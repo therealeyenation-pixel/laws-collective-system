@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS department_revenue_ledger (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  department_id INT NOT NULL,\n  house_id INT,\n  ledger_type ENUM('laws_central', 'house_licensed') NOT NULL,\n  period_start BIGINT NOT NULL,\n  period_end BIGINT NOT NULL,\n  gross_revenue DECIMAL(12,2) DEFAULT 0,\n  laws_share DECIMAL(12,2) DEFAULT 0,\n  house_share DECIMAL(12,2) DEFAULT 0,\n  trust_share DECIMAL(12,2) DEFAULT 0,\n  licensing_fees_collected DECIMAL(12,2) DEFAULT 0,\n  total_utilization_hours DECIMAL(8,2) DEFAULT 0,\n  total_invoices INT DEFAULT 0,\n  total_clients_served INT DEFAULT 0,\n  status ENUM('open', 'closed', 'reconciled') DEFAULT 'open',\n  reconciled_by INT,\n  reconciled_at BIGINT,\n  notes TEXT,\n  created_at BIGINT NOT NULL,\n  updated_at BIGINT NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS department_revenue_ledger (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  department_id INT NOT NULL,\n  house_id INT,\n  ledger_type ENUM('laws_central', 'house_licensed') NOT NULL,\n  period_start BIGINT NOT NULL,\n  period_end BIGINT NOT NULL,\n  gross_revenue DECIMAL(12,2) DEFAULT 0,\n  laws_share DECIMAL(12,2) DEFAULT 0,\n  house_share DECIMAL(12,2) DEFAULT 0,\n  trust_share DECIMAL(12,2) DEFAULT 0,\n  licensing_fees_collected DECIMAL(12,2) DEFAULT 0,\n  total_utilization_hours DECIMAL(8,2) DEFAULT 0,\n  total_invoices INT DEFAULT 0,\n  total_clients_served INT DEFAULT 0,\n  status ENUM('open', 'closed', 'reconciled') DEFAULT 'open',\n  reconciled_by INT,\n  reconciled_at BIGINT,\n  notes TEXT,\n  created_at BIGINT NOT NULL,\n  updated_at BIGINT NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 395
+}

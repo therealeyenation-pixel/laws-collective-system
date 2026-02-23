@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, entityName, productsServices FROM business_plans LIMIT 2;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, entityName, productsServices FROM business_plans LIMIT 2;",
+  "rows": [
+    {
+      "id": "1",
+      "entityName": "Real-Eye-Nation LLC",
+      "productsServices": "[{\"name\":\"Documentary Production\",\"description\":\"Full-service documentary creation for families and organizations\",\"target\":\"Families, nonprofits, community organizations\"},{\"name\":\"Legacy Documentation\",\"description\":\"Oral history recording, family archive digitization, story preservation\",\"target\":\"Multi-generational families\"},{\"name\":\"Media Consulting\",\"description\":\"Strategy and guidance for authentic storytelling\",\"target\":\"Small businesses, nonprofits\"},{\"name\":\"Educational Content\",\"description\":\"Video courses, tutorials, and training materials\",\"target\":\"Academy students, community members\"},{\"name\":\"Content Licensing\",\"description\":\"Licensing of original content for educational and commercial use\",\"target\":\"Educational institutions, media companies\"},{\"name\":\"Brand Storytelling\",\"description\":\"Authentic brand narrative development for mission-driven organizations\",\"target\":\"Social enterprises, nonprofits\"}]"
+    },
+    {
+      "id": "2",
+      "entityName": "Calea Freeman Family Trust",
+      "productsServices": "[{\"name\":\"Governance Services\",\"description\":\"Policy establishment and enforcement for family businesses\",\"target\":\"Family entities\"},{\"name\":\"Asset Management\",\"description\":\"Oversight of Trust assets and investments\",\"target\":\"Family wealth\"},{\"name\":\"Distribution Management\",\"description\":\"Allocation of resources per established policy\",\"target\":\"Family members, entities\"},{\"name\":\"Succession Planning\",\"description\":\"Leadership transition and knowledge transfer\",\"target\":\"Next generation\"}]"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tentityName\tproductsServices\n1\tReal-Eye-Nation LLC\t[{\"name\":\"Documentary Production\",\"description\":\"Full-service documentary creation for families and organizations\",\"target\":\"Families, nonprofits, community organizations\"},{\"name\":\"Legacy Documentation\",\"description\":\"Oral history recording, family archive digitization, story preservation\",\"target\":\"Multi-generational families\"},{\"name\":\"Media Consulting\",\"description\":\"Strategy and guidance for authentic storytelling\",\"target\":\"Small businesses, nonprofits\"},{\"name\":\"Educational Content\",\"description\":\"Video courses, tutorials, and training materials\",\"target\":\"Academy students, community members\"},{\"name\":\"Content Licensing\",\"description\":\"Licensing of original content for educational and commercial use\",\"target\":\"Educational institutions, media companies\"},{\"name\":\"Brand Storytelling\",\"description\":\"Authentic brand narrative development for mission-driven organizations\",\"target\":\"Social enterprises, nonprofits\"}]\n2\tCalea Freeman Family Trust\t[{\"name\":\"Governance Services\",\"description\":\"Policy establishment and enforcement for family businesses\",\"target\":\"Family entities\"},{\"name\":\"Asset Management\",\"description\":\"Oversight of Trust assets and investments\",\"target\":\"Family wealth\"},{\"name\":\"Distribution Management\",\"description\":\"Allocation of resources per established policy\",\"target\":\"Family members, entities\"},{\"name\":\"Succession Planning\",\"description\":\"Leadership transition and knowledge transfer\",\"target\":\"Next generation\"}]\n",
+  "stderr": "",
+  "execution_time_ms": 60
+}

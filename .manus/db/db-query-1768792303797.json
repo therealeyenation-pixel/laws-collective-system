@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE business_plans SET fundingPurpose = 'LuvOnPurpose Academy requires funding to establish and expand our sovereign education program that serves families seeking faith-based, culturally-rooted learning alternatives. Our K-12 curriculum integrates ancestral wisdom with modern academic standards, but we need resources to develop additional Divine STEM modules, expand our language programs, train qualified educators, and establish physical learning spaces. This investment will enable us to enroll 200+ students in our first three years, provide scholarship opportunities for underserved families, and create a replicable model for community-based sovereign education.' WHERE entityName = 'LuvOnPurpose Outreach Temple and Academy Society, Inc.';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE business_plans SET fundingPurpose = 'LuvOnPurpose Academy requires funding to establish and expand our sovereign education program that serves families seeking faith-based, culturally-rooted learning alternatives. Our K-12 curriculum integrates ancestral wisdom with modern academic standards, but we need resources to develop additional Divine STEM modules, expand our language programs, train qualified educators, and establish physical learning spaces. This investment will enable us to enroll 200+ students in our first three years, provide scholarship opportunities for underserved families, and create a replicable model for community-based sovereign education.' WHERE entityName = 'LuvOnPurpose Outreach Temple and Academy Society, Inc.';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 69
+}

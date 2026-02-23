@@ -1,0 +1,18 @@
+{
+  "query": "SHOW COLUMNS FROM grant_opportunities WHERE Field = 'status';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SHOW COLUMNS FROM grant_opportunities WHERE Field = 'status';",
+  "rows": [
+    {
+      "Field": "status",
+      "Type": "enum('researching','eligible','not_eligible','applied','archived')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "researching",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nstatus\tenum('researching','eligible','not_eligible','applied','archived')\tYES\t\tresearching\t\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}
