@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import DashboardLayout from "../components/DashboardLayout";
 import { trpc } from "../lib/trpc";
 import { 

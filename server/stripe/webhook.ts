@@ -77,8 +77,33 @@ export async function handleStripeWebhook(req: Request, res: Response) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const userId = session.metadata?.user_id;
   const type = session.metadata?.type;
+  const donationType = session.metadata?.donation_type;
 
-  console.log(`[Stripe] Checkout completed for user ${userId}, type: ${type}`);
+  console.log(`[Stripe] Checkout completed for user ${userId}, type: ${type || donationType}`);
+
+  // Handle donations (may not have user_id for anonymous/public donations)
+  if (donationType) {
+    const amount = (session.amount_total || 0) / 100;
+    const designation = session.metadata?.designation || "where_needed";
+    const tributeType = session.metadata?.tribute_type || "none";
+    const tributeName = session.metadata?.tribute_name;
+    const donorName = session.metadata?.donor_name;
+    const isAnonymous = session.metadata?.is_anonymous === "true";
+
+    console.log(`[Stripe] Donation received: $${amount.toFixed(2)}`);
+    console.log(`[Stripe] Donation type: ${donationType}, designation: ${designation}`);
+    if (tributeType !== "none") {
+      console.log(`[Stripe] Tribute: ${tributeType} - ${tributeName}`);
+    }
+
+    // Log donation for tracking (would be stored in database)
+    // await db.execute(sql`
+    //   INSERT INTO donations (amount, frequency, designation, tribute_type, tribute_name, donor_name, is_anonymous, stripe_session_id, created_at)
+    //   VALUES (${amount}, ${donationType}, ${designation}, ${tributeType}, ${tributeName}, ${donorName}, ${isAnonymous}, ${session.id}, NOW())
+    // `);
+
+    return;
+  }
 
   if (!userId) {
     console.error("[Stripe] No user_id in session metadata");

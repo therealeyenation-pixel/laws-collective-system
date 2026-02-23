@@ -5,10 +5,12 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import DocumentAdmin from "./pages/DocumentAdmin";
 import SystemDashboard from "./pages/SystemDashboard";
 import AcademyDashboard from "./pages/AcademyDashboard";
+import GuardianDashboard from "./pages/GuardianDashboard";
 import DocumentVault from "./pages/DocumentVault";
 import Agents from "./pages/Agents";
 import SocialMedia from "./pages/SocialMedia";
@@ -28,9 +30,13 @@ import FamilyOnboarding from "./pages/FamilyOnboarding";
 import RevenueSharing from "./pages/RevenueSharing";
 import BoardMeetings from "./pages/BoardMeetings";
 import InternationalBusiness from "./pages/InternationalBusiness";
+import InternationalOperationsDashboard from "./pages/InternationalOperationsDashboard";
 import BusinessSimulator from "./pages/BusinessSimulator";
 import GrantManagement from "./pages/GrantManagement";
 import GrantSimulator from "./pages/GrantSimulator";
+import GrantExport from "./pages/GrantExport";
+import GrantHistory from "./pages/GrantHistory";
+import NeedStatementEditor from "./pages/NeedStatementEditor";
 import BusinessPlanSimulator from "./pages/BusinessPlanSimulator";
 import BusinessPlanUpload from "./pages/BusinessPlanUpload";
 import TaxSimulator from "./pages/TaxSimulator";
@@ -83,6 +89,8 @@ import WordLadder from "@/pages/games/WordLadder";
 import TriviaChallenge from "@/pages/games/TriviaChallenge";
 import SimonSays from "@/pages/games/SimonSays";
 import CommunityBuilder from "@/pages/games/CommunityBuilder";
+import FleetCommand from "@/pages/games/FleetCommand";
+import Hearts from "@/pages/games/Hearts";
 import Achievements from "@/pages/Achievements";
 import OperationsDashboard from "@/pages/OperationsDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
@@ -90,6 +98,13 @@ import Careers from "@/pages/Careers";
 import EmployeeDirectory from "@/pages/EmployeeDirectory";
 import HouseContractManagement from "@/pages/HouseContractManagement";
 import MyProfile from "@/pages/MyProfile";
+import UserPreferences from "@/pages/UserPreferences";
+import SignatureAuditReport from "@/pages/SignatureAuditReport";
+import BulkSignatureRequest from "@/pages/BulkSignatureRequest";
+import ComplianceDashboard from "@/pages/ComplianceDashboard";
+import ComplianceCalendar from "@/pages/ComplianceCalendar";
+import DocumentUpload from "@/pages/DocumentUpload";
+import NotificationHistory from "@/pages/NotificationHistory";
 import Onboarding from "@/pages/Onboarding";
 import OnboardingChecklist from "@/pages/OnboardingChecklist";
 import OperatingProcedures from "@/pages/OperatingProcedures";
@@ -215,9 +230,11 @@ import LAWSEmploymentPortal from "@/pages/LAWSEmploymentPortal";
 import InternshipPortal from "@/pages/InternshipPortal";
 import Donate508 from "@/pages/Donate508";
 import PublicDonate from "@/pages/PublicDonate";
+import DonateThankYou from "@/pages/DonateThankYou";
 import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
-import DonationThankYou from "@/pages/DonationThankYou";
 import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
+import MemberRegistration from "@/pages/MemberRegistration";
+import AcquisitionFundDashboard from "@/pages/AcquisitionFundDashboard";
 import TrialLanding from "@/pages/TrialLanding";
 import TrialDashboard from "@/pages/TrialDashboard";
 import TrialAnalytics from "@/pages/TrialAnalytics";
@@ -232,6 +249,66 @@ import BookReader from "@/pages/BookReader";
 import ProgressDashboard from "@/pages/ProgressDashboard";
 import ProtectionLayer from "@/pages/ProtectionLayer";
 import ExternalOnboarding from "@/pages/ExternalOnboarding";
+import AssetManagementDashboard from "@/pages/AssetManagementDashboard";
+import WorkforceTransitionsDashboard from "@/pages/WorkforceTransitionsDashboard";
+import InvestmentPortfolioDashboard from "@/pages/InvestmentPortfolioDashboard";
+import InvestmentGovernanceDashboard from "@/pages/InvestmentGovernanceDashboard";
+import TieredGovernanceDashboard from "@/pages/TieredGovernanceDashboard";
+import InvestmentReportDashboard from "@/pages/InvestmentReportDashboard";
+import ConsolidatedFinancialDashboard from "@/pages/ConsolidatedFinancialDashboard";
+import TrademarkChecklist from "@/pages/TrademarkChecklist";
+import MemberCredentials from "@/pages/MemberCredentials";
+import ArticleAssignment from "@/pages/ArticleAssignment";
+import KnowledgeQuest from "@/pages/games/KnowledgeQuest";
+import AdvancedEscapeRoom from "@/pages/games/AdvancedEscapeRoom";
+import ForeignQualification from "@/pages/ForeignQualification";
+import InternationalRegistration from "@/pages/InternationalRegistration";
+import TickerAdmin from "@/pages/TickerAdmin";
+import MyTasks from "@/pages/MyTasks";
+import TeamTaskDashboard from "@/pages/TeamTaskDashboard";
+import TaskDelegation from "@/pages/TaskDelegation";
+import TeamWorkload from "@/pages/TeamWorkload";
+import DelegationAnalytics from "@/pages/DelegationAnalytics";
+import DelegationApprovalQueue from "@/pages/DelegationApprovalQueue";
+import DelegationHistory from "@/pages/DelegationHistory";
+import DelegationEscalation from "@/pages/DelegationEscalation";
+import MobileDashboard from "@/pages/MobileDashboard";
+import GlobalSearchPage from "@/pages/GlobalSearchPage";
+import ReportingCenter from "@/pages/ReportingCenter";
+import IntegrationHub from "@/pages/IntegrationHub";
+import OnboardingCenter from "@/pages/OnboardingCenter";
+import BulkOperations from "@/pages/BulkOperations";
+import BackupRestore from "@/pages/BackupRestore";
+import ActivityFeed from "@/pages/ActivityFeed";
+import CustomDashboard from "@/pages/CustomDashboard";
+import TwoFactorSetup from "@/pages/TwoFactorSetup";
+import PermissionMatrix from "@/pages/PermissionMatrix";
+import DocumentVersionControl from "@/pages/DocumentVersionControl";
+import DataRetentionPolicies from "@/pages/DataRetentionPolicies";
+import WorkflowBuilder from "@/pages/WorkflowBuilder";
+import RealTimeCollaboration from "@/pages/RealTimeCollaboration";
+import AuditReports from "@/pages/AuditReports";
+import ApiUsageDashboard from "@/pages/ApiUsageDashboard";
+import RoleDashboard from "@/pages/RoleDashboard";
+import LanguageSettings from "@/pages/LanguageSettings";
+import BiometricSettings from "@/pages/BiometricSettings";
+import CalendarIntegration from "@/pages/CalendarIntegration";
+import AIDocumentAnalysis from "@/pages/AIDocumentAnalysis";
+import DocumentImport from "@/pages/DocumentImport";
+import MemberPortal from "@/pages/MemberPortal";
+import AdvancedReporting from "@/pages/AdvancedReporting";
+import PaymentProcessing from "@/pages/PaymentProcessing";
+import WorkflowTemplates from "@/pages/WorkflowTemplates";
+import TranslationPortal from "@/pages/TranslationPortal";
+import AdminTemplateReviews from "@/pages/AdminTemplateReviews";
+import ExternalApiIntegrations from "@/pages/ExternalApiIntegrations";
+import ComplianceMonitoring from "@/pages/ComplianceMonitoring";
+import MultiTenantManagement from "@/pages/MultiTenantManagement";
+import DataExport from "@/pages/DataExport";
+import DocumentationGenerator from "@/pages/DocumentationGenerator";
+import SystemHealth from "@/pages/SystemHealth";
+import BackupSettings from "@/pages/BackupSettings";
+import OfflineSettings from "@/pages/OfflineSettings";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -338,6 +415,7 @@ function Router() {
     <Switch>
       {/* Public routes - no authentication required */}
       <Route path="/" component={Home} />
+      <Route path="/login" component={Login} />
       <Route path="/careers" component={Careers} />
       <Route path="/join" component={JoinJourney} />
       <Route path="/my-credential" component={MyCredential} />
@@ -346,10 +424,19 @@ function Router() {
       <Route path="/support" component={Support} />
       <Route path="/donate" component={Donations} />
       <Route path="/donate/public" component={PublicDonate} />
+      <Route path="/donate/thank-you" component={DonateThankYou} />
       <Route path="/donate/academy" component={Donate508} />
       <Route path="/member-business" component={MemberBusinessDashboard} />
       <Route path="/member-business/register" component={MemberBusinessRegistration} />
-      <Route path="/donate/thank-you" component={DonationThankYou} />
+      <Route path="/register-business" component={MemberRegistration} />
+      <Route path="/treasury/acquisition-fund">{() => <ProtectedRoute component={AcquisitionFundDashboard} minRole="admin" />}</Route>
+      <Route path="/asset-management">{() => <ProtectedRoute component={AssetManagementDashboard} minRole="admin" />}</Route>
+      <Route path="/workforce-transitions">{() => <ProtectedRoute component={WorkforceTransitionsDashboard} minRole="admin" />}</Route>
+      <Route path="/investments">{() => <ProtectedRoute component={InvestmentPortfolioDashboard} minRole="admin" />}</Route>
+      <Route path="/investment-governance">{() => <ProtectedRoute component={InvestmentGovernanceDashboard} minRole="admin" />}</Route>
+      <Route path="/tiered-governance">{() => <ProtectedRoute component={TieredGovernanceDashboard} minRole="admin" />}</Route>
+      <Route path="/investment-reports">{() => <ProtectedRoute component={InvestmentReportDashboard} minRole="admin" />}</Route>
+      <Route path="/financial-dashboard">{() => <ProtectedRoute component={ConsolidatedFinancialDashboard} minRole="admin" />}</Route>
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
       <Route path="/admin/system-jobs" component={SystemJobsAdmin} />
@@ -365,13 +452,19 @@ function Router() {
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
+      <Route path="/settings/preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
+      <Route path="/user-preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} minRole="user" />}</Route>
       <Route path="/house-contracts">{() => <ProtectedRoute component={HouseContractManagement} minRole="user" />}</Route>
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
       <Route path="/academy">{() => <ProtectedRoute component={AcademyDashboard} minRole="user" />}</Route>
+      <Route path="/guardian-dashboard">{() => <ProtectedRoute component={GuardianDashboard} minRole="user" />}</Route>
       <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} minRole="user" />}</Route>
       <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>
+      <Route path="/grant-export">{() => <ProtectedRoute component={GrantExport} minRole="user" />}</Route>
+      <Route path="/grant-history">{() => <ProtectedRoute component={GrantHistory} minRole="user" />}</Route>
+      <Route path="/need-statement-editor">{() => <ProtectedRoute component={NeedStatementEditor} minRole="admin" />}</Route>
       <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} minRole="user" />}</Route>
       <Route path="/health-simulator">{() => <ProtectedRoute component={HealthSimulator} minRole="staff" />}</Route>
       <Route path="/education-simulator">{() => <ProtectedRoute component={EducationSimulator} minRole="staff" />}</Route>
@@ -485,8 +578,11 @@ function Router() {
       <Route path="/games/escape-room">{() => <ProtectedRoute component={EscapeRoom} minRole="user" />}</Route>
       <Route path="/games/detective-academy">{() => <ProtectedRoute component={DetectiveAcademy} minRole="user" />}</Route>
       <Route path="/games/rubiks-cube">{() => <ProtectedRoute component={RubiksCube} minRole="user" />}</Route>
- <Route path="/games/laws-quest">{() => <ProtectedRoute component={LAWSQuest} minRole="user" />}</Route>
-      <Route path="/games/dual-path-journey">{() => <ProtectedRoute component={DualPathJourney} minRole="user" />}</Route>     <Route path="/games/yahtzee">{() => <ProtectedRoute component={Yahtzee} minRole="user" />}</Route>
+      <Route path="/games/spades">{() => <ProtectedRoute component={Spades} minRole="user" />}</Route>
+      <Route path="/games/hearts">{() => <ProtectedRoute component={Hearts} minRole="user" />}</Route>
+      <Route path="/games/laws-quest">{() => <ProtectedRoute component={LAWSQuest} minRole="user" />}</Route>
+      <Route path="/games/dual-path-journey">{() => <ProtectedRoute component={DualPathJourney} minRole="user" />}</Route>
+      <Route path="/games/yahtzee">{() => <ProtectedRoute component={Yahtzee} minRole="user" />}</Route>
       <Route path="/games/scrabble">{() => <ProtectedRoute component={ScrabbleGame} minRole="user" />}</Route>
       <Route path="/games/dominoes">{() => <ProtectedRoute component={Dominoes} minRole="user" />}</Route>
       <Route path="/games/mancala">{() => <ProtectedRoute component={Mancala} minRole="user" />}</Route>
@@ -553,6 +649,12 @@ function Router() {
       <Route path="/rfp-generator">{() => <ProtectedRoute component={RFPGenerator} minRole="staff" />}</Route>
       
       {/* Admin routes - entity & business operations */}
+      <Route path="/admin/signature-audit">{() => <ProtectedRoute component={SignatureAuditReport} minRole="admin" />}</Route>
+      <Route path="/admin/bulk-signatures">{() => <ProtectedRoute component={BulkSignatureRequest} minRole="admin" />}</Route>
+      <Route path="/admin/compliance-dashboard">{() => <ProtectedRoute component={ComplianceDashboard} minRole="admin" />}</Route>
+      <Route path="/compliance-calendar">{() => <ProtectedRoute component={ComplianceCalendar} minRole="staff" />}</Route>
+      <Route path="/document-upload">{() => <ProtectedRoute component={DocumentUpload} minRole="staff" />}</Route>
+      <Route path="/notification-history">{() => <ProtectedRoute component={NotificationHistory} minRole="staff" />}</Route>
       <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} minRole="admin" />}</Route>
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} minRole="admin" />}</Route>
       <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} minRole="admin" />}</Route>
@@ -562,6 +664,7 @@ function Router() {
       <Route path="/revenue-sharing">{() => <ProtectedRoute component={RevenueSharing} minRole="admin" />}</Route>
       <Route path="/board-meetings">{() => <ProtectedRoute component={BoardMeetings} minRole="admin" />}</Route>
       <Route path="/international-business">{() => <ProtectedRoute component={InternationalBusiness} minRole="admin" />}</Route>
+      <Route path="/international-operations">{() => <ProtectedRoute component={InternationalOperationsDashboard} minRole="admin" />}</Route>
       <Route path="/pricing">{() => <ProtectedRoute component={Pricing} minRole="admin" />}</Route>
       <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} minRole="admin" />}</Route>
       
@@ -570,6 +673,8 @@ function Router() {
       <Route path="/trust-structure">{() => <ProtectedRoute component={TrustVisualization} minRole="admin" />}</Route>
       <Route path="/entity-structure">{() => <ProtectedRoute component={EntityStructure} minRole="admin" />}</Route>
       <Route path="/trademark-documents">{() => <ProtectedRoute component={TrademarkDocuments} minRole="admin" />}</Route>
+      <Route path="/trademark-checklist">{() => <ProtectedRoute component={TrademarkChecklist} minRole="user" />}</Route>
+      <Route path="/member-credentials">{() => <ProtectedRoute component={MemberCredentials} minRole="admin" />}</Route>
       <Route path="/owner-setup">{() => <ProtectedRoute component={OwnerHouseSetup} minRole="owner" />}</Route>
       <Route path="/system-overview">{() => <ProtectedRoute component={SystemOverview} minRole="owner" />}</Route>
       <Route path="/trust-governance">{() => <ProtectedRoute component={TrustGovernance} minRole="owner" />}</Route>
@@ -647,6 +752,58 @@ function Router() {
       <Route path="/user-management">{() => <ProtectedRoute component={UserManagement} minRole="admin" />}</Route>
       <Route path="/vendor-management">{() => <ProtectedRoute component={VendorManagement} minRole="staff" />}</Route>
       <Route path="/wellness-programs">{() => <ProtectedRoute component={WellnessPrograms} minRole="staff" />}</Route>
+      <Route path="/article-assignment">{() => <ProtectedRoute component={ArticleAssignment} minRole="staff" />}</Route>
+      <Route path="/games/knowledge-quest">{() => <ProtectedRoute component={KnowledgeQuest} minRole="user" />}</Route>
+      <Route path="/games/advanced-escape-room">{() => <ProtectedRoute component={AdvancedEscapeRoom} minRole="user" />}</Route>
+      <Route path="/games/fleet-command">{() => <ProtectedRoute component={FleetCommand} minRole="user" />}</Route>
+      <Route path="/games/hearts">{() => <ProtectedRoute component={Hearts} minRole="user" />}</Route>
+      <Route path="/foreign-qualification">{() => <ProtectedRoute component={ForeignQualification} minRole="user" />}</Route>
+      <Route path="/international-registration">{() => <ProtectedRoute component={InternationalRegistration} minRole="user" />}</Route>
+      <Route path="/ticker-admin">{() => <ProtectedRoute component={TickerAdmin} minRole="admin" />}</Route>
+      <Route path="/my-tasks">{() => <ProtectedRoute component={MyTasks} minRole="user" />}</Route>
+      <Route path="/team-tasks">{() => <ProtectedRoute component={TeamTaskDashboard} minRole="staff" />}</Route>
+      <Route path="/task-delegation">{() => <ProtectedRoute component={TaskDelegation} minRole="user" />}</Route>
+      <Route path="/team-workload">{() => <ProtectedRoute component={TeamWorkload} minRole="staff" />}</Route>
+      <Route path="/delegation-analytics">{() => <ProtectedRoute component={DelegationAnalytics} minRole="staff" />}</Route>
+      <Route path="/delegation-approvals">{() => <ProtectedRoute component={DelegationApprovalQueue} minRole="staff" />}</Route>
+      <Route path="/delegation-history">{() => <ProtectedRoute component={DelegationHistory} minRole="staff" />}</Route>
+      <Route path="/delegation-escalation">{() => <ProtectedRoute component={DelegationEscalation} minRole="staff" />}</Route>
+      <Route path="/mobile-dashboard" component={MobileDashboard} />
+      <Route path="/global-search">{() => <ProtectedRoute component={GlobalSearchPage} />}</Route>
+      <Route path="/reporting-center">{() => <ProtectedRoute component={ReportingCenter} minRole="staff" />}</Route>
+      <Route path="/integration-hub">{() => <ProtectedRoute component={IntegrationHub} minRole="admin" />}</Route>
+      <Route path="/onboarding-center">{() => <ProtectedRoute component={OnboardingCenter} />}</Route>
+      <Route path="/bulk-operations">{() => <ProtectedRoute component={BulkOperations} minRole="staff" />}</Route>
+      <Route path="/backup-restore">{() => <ProtectedRoute component={BackupRestore} minRole="admin" />}</Route>
+      <Route path="/activity-feed">{() => <ProtectedRoute component={ActivityFeed} minRole="user" />}</Route>
+      <Route path="/custom-dashboard">{() => <ProtectedRoute component={CustomDashboard} minRole="user" />}</Route>
+      <Route path="/two-factor-setup">{() => <ProtectedRoute component={TwoFactorSetup} minRole="user" />}</Route>
+      <Route path="/permission-matrix">{() => <ProtectedRoute component={PermissionMatrix} minRole="admin" />}</Route>
+      <Route path="/document-version-control">{() => <ProtectedRoute component={DocumentVersionControl} minRole="staff" />}</Route>
+      <Route path="/data-retention-policies">{() => <ProtectedRoute component={DataRetentionPolicies} minRole="admin" />}</Route>
+      <Route path="/workflow-builder">{() => <ProtectedRoute component={WorkflowBuilder} minRole="staff" />}</Route>
+      <Route path="/real-time-collaboration">{() => <ProtectedRoute component={RealTimeCollaboration} minRole="user" />}</Route>
+      <Route path="/audit-reports">{() => <ProtectedRoute component={AuditReports} minRole="admin" />}</Route>
+      <Route path="/api-usage-dashboard">{() => <ProtectedRoute component={ApiUsageDashboard} minRole="admin" />}</Route>
+      <Route path="/role-dashboard">{() => <ProtectedRoute component={RoleDashboard} minRole="admin" />}</Route>
+      <Route path="/language-settings">{() => <ProtectedRoute component={LanguageSettings} minRole="user" />}</Route>
+      <Route path="/biometric-settings">{() => <ProtectedRoute component={BiometricSettings} minRole="user" />}</Route>
+      <Route path="/calendar-integration">{() => <ProtectedRoute component={CalendarIntegration} minRole="user" />}</Route>
+      <Route path="/ai-document-analysis">{() => <ProtectedRoute component={AIDocumentAnalysis} minRole="user" />}</Route>
+      <Route path="/document-import">{() => <ProtectedRoute component={DocumentImport} minRole="user" />}</Route>
+      <Route path="/member-portal">{() => <ProtectedRoute component={MemberPortal} minRole="user" />}</Route>
+      <Route path="/advanced-reporting">{() => <ProtectedRoute component={AdvancedReporting} minRole="staff" />}</Route>
+      <Route path="/payment-processing">{() => <ProtectedRoute component={PaymentProcessing} minRole="admin" />}</Route>
+      <Route path="/workflow-templates">{() => <ProtectedRoute component={WorkflowTemplates} minRole="staff" />}</Route>
+      <Route path="/translation-portal">{() => <ProtectedRoute component={TranslationPortal} minRole="user" />}</Route>
+      <Route path="/external-api-integrations">{() => <ProtectedRoute component={ExternalApiIntegrations} minRole="admin" />}</Route>
+      <Route path="/compliance-monitoring">{() => <ProtectedRoute component={ComplianceMonitoring} minRole="staff" />}</Route>
+      <Route path="/multi-tenant-management">{() => <ProtectedRoute component={MultiTenantManagement} minRole="admin" />}</Route>
+      <Route path="/data-export">{() => <ProtectedRoute component={DataExport} minRole="admin" />}</Route>
+      <Route path="/documentation-generator">{() => <ProtectedRoute component={DocumentationGenerator} minRole="admin" />}</Route>
+      <Route path="/system-health">{() => <ProtectedRoute component={SystemHealth} minRole="admin" />}</Route>
+      <Route path="/backup-settings">{() => <ProtectedRoute component={BackupSettings} minRole="admin" />}</Route>
+      <Route path="/offline-settings">{() => <ProtectedRoute component={OfflineSettings} />}</Route>
       
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

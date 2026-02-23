@@ -15,6 +15,7 @@ export const users = mysqlTable("users", {
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
+  passwordHash: varchar("passwordHash", { length: 255 }), // For standalone auth
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "staff", "admin", "owner"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -17353,3 +17354,578 @@ export const contractAmendments = mysqlTable("contract_amendments", {
 
 export type ContractAmendment = typeof contractAmendments.$inferSelect;
 export type InsertContractAmendment = typeof contractAmendments.$inferInsert;
+
+
+// ============================================================
+// COMPLIANCE ALERTS & NOTIFICATION SYSTEM
+// ============================================================
+
+/**
+ * Compliance Alerts - Track compliance threshold violations and notifications
+ */
+export const complianceAlerts = mysqlTable("compliance_alerts", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Alert identification
+  alertType: mysqlEnum("alertType", [
+    "below_target",           // Department below compliance target
+    "approaching_deadline",   // Signatures due soon
+    "overdue_spike",         // Sudden increase in overdue items
+    "target_achieved",       // Positive - target met
+    "escalated"              // Alert escalated due to non-acknowledgment
+  ]).notNull(),
+  
+  severity: mysqlEnum("severity", ["info", "warning", "critical"]).notNull(),
+  department: varchar("department", { length: 100 }).notNull(),
+  
+  // Alert content
+  title: varchar("title", { length: 500 }).notNull(),
+  message: text("message").notNull(),
+  
+  // Threshold data
+  currentValue: decimal("currentValue", { precision: 10, scale: 2 }),
+  thresholdValue: decimal("thresholdValue", { precision: 10, scale: 2 }),
+  metadata: json("metadata"), // Additional context data
+  
+  // Acknowledgment
+  acknowledgedAt: timestamp("acknowledgedAt"),
+  acknowledgedBy: int("acknowledgedBy"),
+  
+  // Escalation tracking
+  escalatedAt: timestamp("escalatedAt"),
+  escalatedFrom: mysqlEnum("escalatedFrom", ["info", "warning"]),
+  originalAlertId: int("originalAlertId"), // Reference to original alert if escalated
+  
+  // Expiration
+  expiresAt: timestamp("expiresAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ComplianceAlert = typeof complianceAlerts.$inferSelect;
+export type InsertComplianceAlert = typeof complianceAlerts.$inferInsert;
+
+/**
+ * Notification Logs - Track all sent notifications for audit trail
+ */
+export const notificationLogs = mysqlTable("notification_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Notification type
+  notificationType: mysqlEnum("notificationType", [
+    "compliance_alert",       // Compliance threshold alerts
+    "signature_reminder",     // Signature due reminders
+    "weekly_digest",          // Weekly compliance summary
+    "escalation_notice",      // Alert escalation notification
+    "system_notification"     // General system notifications
+  ]).notNull(),
+  
+  // Delivery channel
+  channel: mysqlEnum("channel", ["email", "in_app", "push", "sms"]).notNull(),
+  
+  // Recipient info
+  recipientUserId: int("recipientUserId"),
+  recipientEmail: varchar("recipientEmail", { length: 320 }),
+  recipientDepartment: varchar("recipientDepartment", { length: 100 }),
+  
+  // Content
+  subject: varchar("subject", { length: 500 }).notNull(),
+  body: text("body").notNull(),
+  
+  // Related records
+  relatedAlertId: int("relatedAlertId"),
+  relatedRequestId: int("relatedRequestId"),
+  
+  // Delivery status
+  status: mysqlEnum("status", ["pending", "sent", "delivered", "failed", "bounced"]).default("pending").notNull(),
+  sentAt: timestamp("sentAt"),
+  deliveredAt: timestamp("deliveredAt"),
+  failedAt: timestamp("failedAt"),
+  failureReason: text("failureReason"),
+  
+  // Retry tracking
+  retryCount: int("retryCount").default(0).notNull(),
+  nextRetryAt: timestamp("nextRetryAt"),
+  
+  // Metadata
+  metadata: json("metadata"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type NotificationLog = typeof notificationLogs.$inferSelect;
+export type InsertNotificationLog = typeof notificationLogs.$inferInsert;
+
+/**
+ * Scheduled Compliance Checks - Track scheduled compliance monitoring jobs
+ */
+export const scheduledComplianceChecks = mysqlTable("scheduled_compliance_checks", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Check type
+  checkType: mysqlEnum("checkType", [
+    "daily_threshold",        // Daily compliance threshold check
+    "weekly_digest",          // Weekly summary generation
+    "escalation_check",       // Check for alerts needing escalation
+    "reminder_processing"     // Process signature reminders
+  ]).notNull(),
+  
+  // Schedule
+  cronExpression: varchar("cronExpression", { length: 100 }), // e.g., "0 8 * * *" for 8 AM daily
+  intervalMinutes: int("intervalMinutes"), // Alternative to cron
+  
+  // Last execution
+  lastRunAt: timestamp("lastRunAt"),
+  lastRunStatus: mysqlEnum("lastRunStatus", ["success", "partial", "failed"]),
+  lastRunDuration: int("lastRunDuration"), // milliseconds
+  lastRunResults: json("lastRunResults"), // Summary of what was processed
+  
+  // Next execution
+  nextRunAt: timestamp("nextRunAt"),
+  
+  // Configuration
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  config: json("config"), // Check-specific configuration
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ScheduledComplianceCheck = typeof scheduledComplianceChecks.$inferSelect;
+export type InsertScheduledComplianceCheck = typeof scheduledComplianceChecks.$inferInsert;
+
+/**
+ * Alert Escalation Rules - Configure when and how alerts escalate
+ */
+export const alertEscalationRules = mysqlTable("alert_escalation_rules", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Rule identification
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Trigger conditions
+  fromSeverity: mysqlEnum("fromSeverity", ["info", "warning"]).notNull(),
+  toSeverity: mysqlEnum("toSeverity", ["warning", "critical"]).notNull(),
+  
+  // Time threshold
+  hoursUntilEscalation: int("hoursUntilEscalation").notNull(), // Hours without acknowledgment
+  
+  // Notification settings
+  notifyOnEscalation: boolean("notifyOnEscalation").default(true).notNull(),
+  notifyRoles: json("notifyRoles"), // ["admin", "department_head"]
+  notifyEmails: json("notifyEmails"), // Additional email addresses
+  
+  // Scope
+  appliesToDepartments: json("appliesToDepartments"), // null = all departments
+  appliesToAlertTypes: json("appliesToAlertTypes"), // null = all alert types
+  
+  // Status
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AlertEscalationRule = typeof alertEscalationRules.$inferSelect;
+export type InsertAlertEscalationRule = typeof alertEscalationRules.$inferInsert;
+
+
+// ============================================
+// ARTICLE READING & SIGNATURE ASSIGNMENT TABLES
+// ============================================
+
+/**
+ * Articles - Content that can be assigned for reading
+ */
+export const articles = mysqlTable("articles", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Article details
+  title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  content: text("content").notNull(),
+  summary: text("summary"),
+  
+  // Categorization
+  category: varchar("category", { length: 100 }),
+  tags: json("tags"), // Array of tags
+  entityId: int("entityId"), // Related entity if any
+  
+  // Publishing
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  publishedAt: timestamp("publishedAt"),
+  publishedBy: int("publishedBy"),
+  
+  // Reading requirements
+  isRequired: boolean("isRequired").default(false).notNull(),
+  requiredForRoles: json("requiredForRoles"), // Array of roles that must read
+  requiredForDepartments: json("requiredForDepartments"), // Array of departments
+  dueDate: timestamp("dueDate"), // Optional deadline for required reading
+  
+  // Metadata
+  estimatedReadTime: int("estimatedReadTime"), // Minutes
+  attachments: json("attachments"), // Array of file URLs
+  
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Article = typeof articles.$inferSelect;
+export type InsertArticle = typeof articles.$inferInsert;
+
+/**
+ * Article Assignments - Assign articles to specific users for reading
+ */
+export const articleAssignments = mysqlTable("article_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  articleId: int("articleId").notNull(),
+  assignedToUserId: int("assignedToUserId").notNull(),
+  assignedByUserId: int("assignedByUserId").notNull(),
+  
+  // Assignment details
+  priority: mysqlEnum("priority", ["low", "normal", "high", "urgent"]).default("normal").notNull(),
+  dueDate: timestamp("dueDate"),
+  message: text("message"), // Optional message from assigner
+  
+  // Status tracking
+  status: mysqlEnum("status", ["pending", "in_progress", "completed", "overdue"]).default("pending").notNull(),
+  
+  // Reading progress
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  timeSpent: int("timeSpent"), // Seconds spent reading
+  
+  // Acknowledgment
+  acknowledged: boolean("acknowledged").default(false).notNull(),
+  acknowledgedAt: timestamp("acknowledgedAt"),
+  acknowledgmentNotes: text("acknowledgmentNotes"),
+  
+  // Reminders
+  remindersSent: int("remindersSent").default(0).notNull(),
+  lastReminderAt: timestamp("lastReminderAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ArticleAssignment = typeof articleAssignments.$inferSelect;
+export type InsertArticleAssignment = typeof articleAssignments.$inferInsert;
+
+/**
+ * Article Reading Progress - Track reading progress for articles
+ */
+export const articleReadingProgress = mysqlTable("article_reading_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  articleId: int("articleId").notNull(),
+  userId: int("userId").notNull(),
+  
+  // Progress tracking
+  progressPercent: int("progressPercent").default(0).notNull(),
+  lastPosition: int("lastPosition").default(0).notNull(), // Character position
+  
+  // Time tracking
+  totalTimeSpent: int("totalTimeSpent").default(0).notNull(), // Seconds
+  sessionsCount: int("sessionsCount").default(0).notNull(),
+  
+  // Completion
+  isCompleted: boolean("isCompleted").default(false).notNull(),
+  completedAt: timestamp("completedAt"),
+  
+  // First/last access
+  firstAccessedAt: timestamp("firstAccessedAt").defaultNow().notNull(),
+  lastAccessedAt: timestamp("lastAccessedAt").defaultNow().notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ArticleReadingProgress = typeof articleReadingProgress.$inferSelect;
+export type InsertArticleReadingProgress = typeof articleReadingProgress.$inferInsert;
+
+
+
+/**
+ * Signature Request Signers - Individual signers for a signature request
+ */
+export const signatureRequestSigners = mysqlTable("signature_request_signers", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  requestId: int("requestId").notNull(),
+  
+  // Signer info
+  userId: int("userId"), // Null if external signer
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  role: varchar("role", { length: 100 }), // e.g., "Approver", "Witness", "Party A"
+  
+  // Signing order (for sequential signing)
+  signingOrder: int("signingOrder").default(1).notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "pending",
+    "notified",
+    "viewed",
+    "signed",
+    "declined"
+  ]).default("pending").notNull(),
+  
+  // Timestamps
+  notifiedAt: timestamp("notifiedAt"),
+  viewedAt: timestamp("viewedAt"),
+  signedAt: timestamp("signedAt"),
+  declinedAt: timestamp("declinedAt"),
+  
+  // Signature data
+  signatureType: mysqlEnum("signatureType", ["drawn", "typed", "uploaded", "digital"]),
+  signatureData: text("signatureData"), // Base64 or typed name
+  signatureHash: varchar("signatureHash", { length: 255 }),
+  
+  // Decline info
+  declineReason: text("declineReason"),
+  
+  // Verification
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  
+  // Reminders
+  remindersSent: int("remindersSent").default(0).notNull(),
+  lastReminderAt: timestamp("lastReminderAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SignatureRequestSigner = typeof signatureRequestSigners.$inferSelect;
+export type InsertSignatureRequestSigner = typeof signatureRequestSigners.$inferInsert;
+
+
+/**
+ * Delegation History - Audit trail for all delegation events
+ */
+export const delegationHistory = mysqlTable("delegation_history", {
+  id: int("id").autoincrement().primaryKey(),
+  delegationId: varchar("delegationId", { length: 100 }).notNull(),
+  
+  // Action tracking
+  action: mysqlEnum("action", [
+    "created",
+    "accepted",
+    "declined",
+    "completed",
+    "approval_requested",
+    "approved",
+    "rejected",
+    "escalated",
+    "cancelled",
+    "reassigned"
+  ]).notNull(),
+  
+  // Actor info
+  actorId: int("actorId").notNull(),
+  actorName: varchar("actorName", { length: 255 }).notNull(),
+  
+  // Additional details (JSON for flexibility)
+  details: json("details"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DelegationHistory = typeof delegationHistory.$inferSelect;
+export type InsertDelegationHistory = typeof delegationHistory.$inferInsert;
+
+/**
+ * Delegation Escalations - Track escalation rules and status
+ */
+export const delegationEscalations = mysqlTable("delegation_escalations", {
+  id: int("id").autoincrement().primaryKey(),
+  delegationId: varchar("delegationId", { length: 100 }).notNull(),
+  
+  // Original approver
+  originalApproverId: int("originalApproverId").notNull(),
+  originalApproverName: varchar("originalApproverName", { length: 255 }).notNull(),
+  
+  // Escalated to
+  escalatedToId: int("escalatedToId").notNull(),
+  escalatedToName: varchar("escalatedToName", { length: 255 }).notNull(),
+  escalationLevel: int("escalationLevel").default(1).notNull(),
+  
+  // Escalation reason
+  reason: mysqlEnum("reason", [
+    "timeout",
+    "manual",
+    "priority_change",
+    "approver_unavailable"
+  ]).notNull(),
+  
+  // Threshold that triggered escalation (in hours)
+  thresholdHours: int("thresholdHours").notNull(),
+  
+  // Status
+  status: mysqlEnum("status", [
+    "escalated",
+    "resolved",
+    "further_escalated"
+  ]).default("escalated").notNull(),
+  
+  // Timestamps
+  escalatedAt: timestamp("escalatedAt").defaultNow().notNull(),
+  resolvedAt: timestamp("resolvedAt"),
+});
+
+export type DelegationEscalation = typeof delegationEscalations.$inferSelect;
+export type InsertDelegationEscalation = typeof delegationEscalations.$inferInsert;
+
+
+/**
+ * Biometric Credentials - WebAuthn passkey storage
+ */
+export const biometricCredentials = mysqlTable("biometric_credentials", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  // Credential identification
+  credentialId: varchar("credentialId", { length: 512 }).notNull().unique(),
+  publicKey: text("publicKey").notNull(),
+  
+  // Device info
+  name: varchar("name", { length: 255 }).notNull(),
+  deviceType: mysqlEnum("deviceType", ["platform", "cross-platform"]).notNull(),
+  deviceInfo: varchar("deviceInfo", { length: 255 }),
+  
+  // Counter for replay attack prevention
+  counter: bigint("counter", { mode: "number" }).default(0).notNull(),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  lastUsedAt: timestamp("lastUsedAt"),
+});
+
+export type BiometricCredential = typeof biometricCredentials.$inferSelect;
+export type InsertBiometricCredential = typeof biometricCredentials.$inferInsert;
+
+/**
+ * Workflow Template Usage - Track template deployments
+ */
+export const workflowTemplateUsage = mysqlTable("workflow_template_usage", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  // Template reference
+  templateId: varchar("templateId", { length: 100 }).notNull(),
+  templateName: varchar("templateName", { length: 255 }).notNull(),
+  templateCategory: varchar("templateCategory", { length: 100 }).notNull(),
+  
+  // Created workflow
+  workflowId: varchar("workflowId", { length: 100 }).notNull(),
+  workflowName: varchar("workflowName", { length: 255 }).notNull(),
+  
+  // Customizations applied
+  customizations: json("customizations"),
+  
+  // Timestamps
+  deployedAt: timestamp("deployedAt").defaultNow().notNull(),
+});
+
+export type WorkflowTemplateUsage = typeof workflowTemplateUsage.$inferSelect;
+export type InsertWorkflowTemplateUsage = typeof workflowTemplateUsage.$inferInsert;
+
+/**
+ * Workflow Template Ratings
+ */
+export const workflowTemplateRatings = mysqlTable("workflow_template_ratings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  templateId: varchar("templateId", { length: 100 }).notNull(),
+  rating: int("rating").notNull(), // 1-5
+  comment: text("comment"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type WorkflowTemplateRating = typeof workflowTemplateRatings.$inferSelect;
+export type InsertWorkflowTemplateRating = typeof workflowTemplateRatings.$inferInsert;
+
+/**
+ * Translation Suggestions - Community contributed translations
+ */
+export const translationSuggestions = mysqlTable("translation_suggestions", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Translation key info
+  translationKey: varchar("translationKey", { length: 255 }).notNull(),
+  namespace: varchar("namespace", { length: 100 }).notNull(),
+  sourceText: text("sourceText").notNull(),
+  
+  // Suggested translation
+  language: varchar("language", { length: 10 }).notNull(),
+  suggestedText: text("suggestedText").notNull(),
+  
+  // Contributor
+  contributorId: int("contributorId").notNull(),
+  contributorName: varchar("contributorName", { length: 255 }).notNull(),
+  
+  // Review status
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  reviewerId: int("reviewerId"),
+  reviewerComment: text("reviewerComment"),
+  reviewedAt: timestamp("reviewedAt"),
+  
+  // Voting
+  votes: int("votes").default(0).notNull(),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TranslationSuggestion = typeof translationSuggestions.$inferSelect;
+export type InsertTranslationSuggestion = typeof translationSuggestions.$inferInsert;
+
+/**
+ * Translation Votes - Track who voted on suggestions
+ */
+export const translationVotes = mysqlTable("translation_votes", {
+  id: int("id").autoincrement().primaryKey(),
+  suggestionId: int("suggestionId").notNull(),
+  userId: int("userId").notNull(),
+  voteType: mysqlEnum("voteType", ["up", "down"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TranslationVote = typeof translationVotes.$inferSelect;
+export type InsertTranslationVote = typeof translationVotes.$inferInsert;
+
+/**
+ * Translation Contributors - Track contributor stats and rankings
+ */
+export const translationContributors = mysqlTable("translation_contributors", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  userName: varchar("userName", { length: 255 }).notNull(),
+  
+  // Stats
+  totalSuggestions: int("totalSuggestions").default(0).notNull(),
+  approvedSuggestions: int("approvedSuggestions").default(0).notNull(),
+  rejectedSuggestions: int("rejectedSuggestions").default(0).notNull(),
+  totalVotesReceived: int("totalVotesReceived").default(0).notNull(),
+  
+  // Score and rank
+  score: int("score").default(0).notNull(),
+  rank: mysqlEnum("rank", ["beginner", "contributor", "expert", "master"]).default("beginner").notNull(),
+  
+  // Languages contributed to
+  languages: json("languages"), // Array of language codes
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TranslationContributor = typeof translationContributors.$inferSelect;
+export type InsertTranslationContributor = typeof translationContributors.$inferInsert;
