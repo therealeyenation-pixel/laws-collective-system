@@ -501,6 +501,135 @@ export const tokenEconomyRouter = router({
 
     return summary;
   }),
+
+  // Initialize token economy with $2M allocation
+  initializeTokenEconomy: protectedProcedure
+    .input(z.object({
+      totalSupply: z.number().default(2000000),
+      confirm: z.boolean().default(false),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Preview mode
+      if (!input.confirm) {
+        return {
+          status: "preview",
+          message: "Token economy initialization preview",
+          totalSupply: input.totalSupply,
+          distributions: [
+            { entity: "Commercial Engine (L.A.W.S. LLC)", percentage: 40, tokens: input.totalSupply * 0.40 },
+            { entity: "Education Engine (Academy)", percentage: 30, tokens: input.totalSupply * 0.30 },
+            { entity: "Media Engine (Real-Eye-Nation)", percentage: 20, tokens: input.totalSupply * 0.20 },
+            { entity: "Platform Engine (Collective)", percentage: 10, tokens: input.totalSupply * 0.10 },
+          ],
+        };
+      }
+
+      const txHash = generateTransactionHash();
+      const distributions = [
+        { name: "Commercial Engine", accountName: "Commercial Revenue", percentage: 0.40 },
+        { name: "Education Engine", accountName: "Academy Revenue", percentage: 0.30 },
+        { name: "Media Engine", accountName: "Media Revenue", percentage: 0.20 },
+        { name: "Platform Engine", accountName: "Collective Revenue", percentage: 0.10 },
+      ];
+
+      const results = [];
+
+      for (const dist of distributions) {
+        const tokenAmount = Math.floor(input.totalSupply * dist.percentage);
+        
+        const existingAccount = await db
+          .select()
+          .from(luvLedgerAccounts)
+          .where(eq(luvLedgerAccounts.accountName, dist.accountName))
+          .limit(1);
+
+        let accountId: number;
+        if (existingAccount.length === 0) {
+          const newAccount = await db.insert(luvLedgerAccounts).values({
+            accountName: dist.accountName,
+            accountType: "revenue",
+            balance: tokenAmount.toString(),
+            currency: "LUV",
+            status: "active",
+          });
+          accountId = (newAccount[0] as any).insertId;
+        } else {
+          accountId = existingAccount[0].id;
+          const newBalance = (parseFloat(existingAccount[0].balance || "0") + tokenAmount).toFixed(2);
+          await db
+            .update(luvLedgerAccounts)
+            .set({ balance: newBalance })
+            .where(eq(luvLedgerAccounts.id, accountId));
+        }
+
+        await db.insert(blockchainRecords).values({
+          recordType: "token_allocation",
+          referenceId: accountId,
+          blockchainHash: txHash,
+          data: {
+            type: "initial_allocation",
+            engine: dist.name,
+            accountName: dist.accountName,
+            percentage: dist.percentage * 100,
+            tokens: tokenAmount,
+            timestamp: new Date().toISOString(),
+          } as any,
+        });
+
+        results.push({
+          engine: dist.name,
+          accountName: dist.accountName,
+          percentage: dist.percentage * 100,
+          tokens: tokenAmount,
+          accountId,
+        });
+      }
+
+      await db.insert(activityAuditTrail).values({
+        userId: ctx.user.id,
+        activityType: "token_economy_initialized",
+        action: "create",
+        details: {
+          totalSupply: input.totalSupply,
+          distributions: results,
+          blockchainHash: txHash,
+          initializedBy: ctx.user.name || ctx.user.email,
+          timestamp: new Date().toISOString(),
+        } as any,
+      });
+
+      return {
+        status: "completed",
+        message: "Token economy initialized successfully",
+        totalSupply: input.totalSupply,
+        distributions: results,
+        blockchainHash: txHash,
+      };
+    }),
+
+  // Get LuvLedger account balances
+  getLuvLedgerBalances: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return { accounts: [], totalBalance: 0 };
+
+    const accounts = await db.select().from(luvLedgerAccounts);
+    const totalBalance = accounts.reduce((sum, acc) => sum + parseFloat(acc.balance || "0"), 0);
+
+    return {
+      accounts: accounts.map(acc => ({
+        id: acc.id,
+        name: acc.accountName,
+        type: acc.accountType,
+        balance: parseFloat(acc.balance || "0"),
+        currency: acc.currency,
+        status: acc.status,
+      })),
+      totalBalance,
+    };
+  }),
 });
 
 // Helper function to generate transaction hash
@@ -509,4 +638,11 @@ function generateTransactionHash(): string {
     .createHash("sha256")
     .update(Date.now().toString() + Math.random().toString())
     .digest("hex");
+}
+
+// Helper to check if token economy is already initialized
+async function isTokenEconomyInitialized(db: any): Promise<boolean> {
+  const accounts = await db.select().from(luvLedgerAccounts);
+  const totalBalance = accounts.reduce((sum: number, acc: any) => sum + parseFloat(acc.balance || "0"), 0);
+  return totalBalance >= 1000000; // Consider initialized if total > 1M
 }

@@ -77,15 +77,10 @@ const getWeatherIcon = (condition: string) => {
 };
 
 export function WeatherWidget({ className = "", compact = false }: WeatherWidgetProps) {
-  // Get user preferences for weather location and unit
-  const { data: preferences, isError: prefsError } = trpc.userPreferences.getPreferences.useQuery(undefined, {
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    retry: 1,
-  });
-
-  // Default to Atlanta, GA if preferences fail or not set
-  const userLocation = preferences?.weatherLocation || "Atlanta, GA";
-  const temperatureUnit = preferences?.weatherUnit || "fahrenheit";
+  // Use default location directly - no authentication required
+  // This ensures weather widget works for all users
+  const userLocation = "Atlanta";
+  const temperatureUnit = "fahrenheit";
 
   // Fetch real weather data from API
   const { 

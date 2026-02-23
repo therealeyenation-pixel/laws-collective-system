@@ -197,9 +197,9 @@ export default function SystemOverview() {
                   muted 
                   loop 
                   playsInline
-                  poster="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/jegwzoGgrKBkchAD.png"
+                  poster="/video_reference.png"
                 >
-                  <source src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/YCWgiNkqKtgJUzna.mp4" type="video/mp4" />
+                  <source src="/promo_video.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
                 <div className="absolute inset-0 bg-gradient-to-r from-green-900/50 to-transparent lg:hidden" />
