@@ -1,9 +1,0 @@
-{
-  "query": "ALTER TABLE property_vendors \nADD COLUMN IF NOT EXISTS insuranceProvider VARCHAR(255),\nADD COLUMN IF NOT EXISTS insurancePolicyNumber VARCHAR(255),\nADD COLUMN IF NOT EXISTS insuranceExpiration DATETIME,\nADD COLUMN IF NOT EXISTS taxId VARCHAR(100),\nADD COLUMN IF NOT EXISTS paymentTerms VARCHAR(100),\nADD COLUMN IF NOT EXISTS preferredPaymentMethod VARCHAR(100),\nADD COLUMN IF NOT EXISTS rating DECIMAL(3,2);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE property_vendors \nADD COLUMN IF NOT EXISTS insuranceProvider VARCHAR(255),\nADD COLUMN IF NOT EXISTS insurancePolicyNumber VARCHAR(255),\nADD COLUMN IF NOT EXISTS insuranceExpiration DATETIME,\nADD COLUMN IF NOT EXISTS taxId VARCHAR(100),\nADD COLUMN IF NOT EXISTS paymentTerms VARCHAR(100),\nADD COLUMN IF NOT EXISTS preferredPaymentMethod VARCHAR(100),\nADD COLUMN IF NOT EXISTS rating DECIMAL(3,2);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1616
-}

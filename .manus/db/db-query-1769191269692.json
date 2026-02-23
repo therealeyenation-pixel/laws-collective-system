@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS `meeting_live_votes` (\n  `id` INT AUTO_INCREMENT PRIMARY KEY,\n  `meetingId` INT NOT NULL,\n  `agendaItemId` INT NOT NULL,\n  `voterId` INT NOT NULL,\n  `voterName` VARCHAR(255) NOT NULL,\n  `vote` ENUM('for', 'against', 'abstain') NOT NULL,\n  `votingWeight` INT NOT NULL DEFAULT 1,\n  `rationale` TEXT,\n  `votedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  UNIQUE KEY `unique_vote` (`agendaItemId`, `voterId`)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `meeting_live_votes` (\n  `id` INT AUTO_INCREMENT PRIMARY KEY,\n  `meetingId` INT NOT NULL,\n  `agendaItemId` INT NOT NULL,\n  `voterId` INT NOT NULL,\n  `voterName` VARCHAR(255) NOT NULL,\n  `vote` ENUM('for', 'against', 'abstain') NOT NULL,\n  `votingWeight` INT NOT NULL DEFAULT 1,\n  `rationale` TEXT,\n  `votedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  UNIQUE KEY `unique_vote` (`agendaItemId`, `voterId`)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 360
-}

@@ -1,8 +1,0 @@
-{
-  "query": "INSERT INTO secure_documents (owner_id, folder_id, entity_id, type, title, description, file_url, version, status, is_template, access_level, content_hash, created_at, updated_at)\nVALUES (\n  32,\n  NULL,\n  5,\n  'legal',\n  'Management Services Agreement Template',\n  'Template for Founding Manager to Department Executive transition - includes compensation options, service scope, and transition checklist',\n  'https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/fshvLdQwEKOzttoZ.pdf',\n  1,\n  'final',\n  1,\n  'owner_only',\n  'msa-template-hash',\n  NOW(),\n  NOW()\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO secure_documents (owner_id, folder_id, entity_id, type, title, description, file_url, version, status, is_template, access_level, content_hash, created_at, updated_at)\nVALUES (\n  32,\n  NULL,\n  5,\n  'legal',\n  'Management Services Agreement Template',\n  'Template for Founding Manager to Department Executive transition - includes compensation options, service scope, and transition checklist',\n  'https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/fshvLdQwEKOzttoZ.pdf',\n  1,\n  'final',\n  1,\n  'owner_only',\n  'msa-template-hash',\n  NOW(),\n  NOW()\n);",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'owner_id' in 'field list'"
-  ]
-}

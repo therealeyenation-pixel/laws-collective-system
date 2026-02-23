@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS `application_documents` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `applicationId` int NOT NULL,\n  `documentType` enum('resume','cover_letter','portfolio','certification','reference_letter','transcript','other') NOT NULL,\n  `fileName` varchar(255) NOT NULL,\n  `fileKey` varchar(500) NOT NULL,\n  `fileUrl` text NOT NULL,\n  `fileSize` int,\n  `mimeType` varchar(100),\n  `uploadedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `application_documents` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `applicationId` int NOT NULL,\n  `documentType` enum('resume','cover_letter','portfolio','certification','reference_letter','transcript','other') NOT NULL,\n  `fileName` varchar(255) NOT NULL,\n  `fileKey` varchar(500) NOT NULL,\n  `fileUrl` text NOT NULL,\n  `fileSize` int,\n  `mimeType` varchar(100),\n  `uploadedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 366
-}

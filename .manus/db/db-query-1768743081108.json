@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS invoice_payments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  invoiceId INT NOT NULL,\n  paymentDate DATE NOT NULL,\n  amount DECIMAL(12,2) NOT NULL,\n  paymentMethod ENUM('ach', 'wire', 'check', 'credit_card', 'paypal', 'other') NOT NULL,\n  referenceNumber VARCHAR(100),\n  notes TEXT,\n  processedBy INT,\n  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP\n)",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS invoice_payments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  invoiceId INT NOT NULL,\n  paymentDate DATE NOT NULL,\n  amount DECIMAL(12,2) NOT NULL,\n  paymentMethod ENUM('ach', 'wire', 'check', 'credit_card', 'paypal', 'other') NOT NULL,\n  referenceNumber VARCHAR(100),\n  notes TEXT,\n  processedBy INT,\n  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP\n)",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 172
-}

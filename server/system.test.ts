@@ -2,8 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { getDb } from "./db";
 import {
   users,
-  curriculumSubjects,
-  generatedCurriculum,
+  curriculumCourses,
   gameSessions,
   cryptoWallets,
   syncQueue,
@@ -39,23 +38,28 @@ describe("LuvOnPurpose System Integration Tests", () => {
   });
 
   describe("Curriculum Generation", () => {
-    it("should create curriculum subjects", async () => {
-      const subjectResult = await db.insert(curriculumSubjects).values({
-        name: "Business Fundamentals",
-        description: "Learn business basics",
-        category: "business",
+    it("should create curriculum courses", async () => {
+      const courseResult = await db.insert(curriculumCourses).values({
+        subject: "Business Fundamentals",
+        ageLevel: "adult",
+        department: "Finance",
+        content: {
+          objectives: ["Learn business basics"],
+          topics: ["Finance", "Operations"],
+        },
+        status: "active",
       });
 
-      expect(subjectResult[0].insertId).toBeDefined();
+      expect(courseResult[0].insertId).toBeDefined();
     });
 
-    it("should retrieve curriculum by name", async () => {
-      const subjects = await db
+    it("should retrieve curriculum by subject", async () => {
+      const courses = await db
         .select()
-        .from(curriculumSubjects)
-        .where(eq(curriculumSubjects.name, "Business Fundamentals"));
+        .from(curriculumCourses)
+        .where(eq(curriculumCourses.subject, "Business Fundamentals"));
 
-      expect(subjects.length).toBeGreaterThan(0);
+      expect(courses.length).toBeGreaterThan(0);
     });
   });
 
@@ -136,9 +140,8 @@ describe("LuvOnPurpose System Integration Tests", () => {
   describe("LuvLedger Tracking", () => {
     it("should create LuvLedger accounts", async () => {
       const accountResult = await db.insert(luvLedgerAccounts).values({
-        userId: testUserId,
         accountName: "Test Account",
-        accountType: "personal",
+        accountType: "house",
         allocationPercentage: 50,
         status: "active",
       });
@@ -208,12 +211,12 @@ describe("LuvOnPurpose System Integration Tests", () => {
 
     it("should maintain data consistency", async () => {
       const users_data = await db.select().from(users);
-      const subjects = await db.select().from(curriculumSubjects);
-      const curriculum = await db.select().from(generatedCurriculum);
+      const courses = await db.select().from(curriculumCourses);
+      const sessions = await db.select().from(gameSessions);
 
       expect(Array.isArray(users_data)).toBe(true);
-      expect(Array.isArray(subjects)).toBe(true);
-      expect(Array.isArray(curriculum)).toBe(true);
+      expect(Array.isArray(courses)).toBe(true);
+      expect(Array.isArray(sessions)).toBe(true);
     });
   });
 });

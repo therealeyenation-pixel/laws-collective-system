@@ -1,8 +1,0 @@
-{
-  "query": "ALTER TABLE design_submissions \nADD COLUMN design_scope ENUM('laws_collective', 'house', 'business') DEFAULT 'house' AFTER category,\nADD COLUMN is_original_design BOOLEAN DEFAULT FALSE AFTER design_scope,\nADD COLUMN is_logo_design BOOLEAN DEFAULT FALSE AFTER is_original_design,\nADD COLUMN founding_house_approval ENUM('not_required', 'pending', 'approved', 'rejected') DEFAULT 'not_required' AFTER is_logo_design,\nADD COLUMN founding_house_approver_id INT NULL AFTER founding_house_approval,\nADD COLUMN founding_house_approval_date BIGINT NULL AFTER founding_house_approver_id,\nADD COLUMN founding_house_approval_notes TEXT NULL AFTER founding_house_approval_date;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE design_submissions \nADD COLUMN design_scope ENUM('laws_collective', 'house', 'business') DEFAULT 'house' AFTER category,\nADD COLUMN is_original_design BOOLEAN DEFAULT FALSE AFTER design_scope,\nADD COLUMN is_logo_design BOOLEAN DEFAULT FALSE AFTER is_original_design,\nADD COLUMN founding_house_approval ENUM('not_required', 'pending', 'approved', 'rejected') DEFAULT 'not_required' AFTER is_logo_design,\nADD COLUMN founding_house_approver_id INT NULL AFTER founding_house_approval,\nADD COLUMN founding_house_approval_date BIGINT NULL AFTER founding_house_approver_id,\nADD COLUMN founding_house_approval_notes TEXT NULL AFTER founding_house_approval_date;",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1060 (42S21) at line 1: Duplicate column name 'is_original_design'"
-  ]
-}

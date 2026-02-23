@@ -1,9 +1,0 @@
-{
-  "query": "\nCREATE TABLE IF NOT EXISTS laws_positions (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  title VARCHAR(255) NOT NULL,\n  description TEXT,\n  pillar ENUM('LAND', 'AIR', 'WATER', 'SELF') NOT NULL,\n  department VARCHAR(100),\n  employment_type ENUM('w2_full_time', 'w2_part_time', 'contractor', 'apprentice', 'volunteer') NOT NULL DEFAULT 'w2_full_time',\n  salary_min DECIMAL(10,2),\n  salary_max DECIMAL(10,2),\n  hourly_rate DECIMAL(10,2),\n  requirements TEXT,\n  qualifications TEXT,\n  progression_path_id INT,\n  status ENUM('open', 'filled', 'on_hold', 'closed') NOT NULL DEFAULT 'open',\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute \nCREATE TABLE IF NOT EXISTS laws_positions (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  title VARCHAR(255) NOT NULL,\n  description TEXT,\n  pillar ENUM('LAND', 'AIR', 'WATER', 'SELF') NOT NULL,\n  department VARCHAR(100),\n  employment_type ENUM('w2_full_time', 'w2_part_time', 'contractor', 'apprentice', 'volunteer') NOT NULL DEFAULT 'w2_full_time',\n  salary_min DECIMAL(10,2),\n  salary_max DECIMAL(10,2),\n  hourly_rate DECIMAL(10,2),\n  requirements TEXT,\n  qualifications TEXT,\n  progression_path_id INT,\n  status ENUM('open', 'filled', 'on_hold', 'closed') NOT NULL DEFAULT 'open',\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1670
-}

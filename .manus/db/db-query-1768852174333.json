@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO business_positions (businessEntityId, houseId, title, department, description, classificationType, employmentType, exemptionStatus, compensationType, salaryAmount, status, createdAt, updatedAt) \nVALUES (1, 1, 'Health Manager', 'Health', 'Oversees health and wellness programs, employee health initiatives, and health-related compliance. Manages health operations and coordinates with HR on employee wellness benefits.', 'w2_employee', 'full_time', 'exempt', 'salary', 76500, 'open', NOW(), NOW());",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO business_positions (businessEntityId, houseId, title, department, description, classificationType, employmentType, exemptionStatus, compensationType, salaryAmount, status, createdAt, updatedAt) \nVALUES (1, 1, 'Health Manager', 'Health', 'Oversees health and wellness programs, employee health initiatives, and health-related compliance. Manages health operations and coordinates with HR on employee wellness benefits.', 'w2_employee', 'full_time', 'exempt', 'salary', 76500, 'open', NOW(), NOW());",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 62
-}

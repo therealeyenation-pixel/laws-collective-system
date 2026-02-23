@@ -1,9 +1,0 @@
-{
-  "query": "CREATE INDEX IF NOT EXISTS `idx_simulator_progress_user` ON `department_simulator_progress` (`userId`);\nCREATE INDEX IF NOT EXISTS `idx_simulator_progress_simulator` ON `department_simulator_progress` (`simulatorId`);\nCREATE INDEX IF NOT EXISTS `idx_token_transactions_user` ON `token_transaction_log` (`userId`);\nCREATE INDEX IF NOT EXISTS `idx_simulator_certificates_user` ON `simulator_certificates` (`userId`);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE INDEX IF NOT EXISTS `idx_simulator_progress_user` ON `department_simulator_progress` (`userId`);\nCREATE INDEX IF NOT EXISTS `idx_simulator_progress_simulator` ON `department_simulator_progress` (`simulatorId`);\nCREATE INDEX IF NOT EXISTS `idx_token_transactions_user` ON `token_transaction_log` (`userId`);\nCREATE INDEX IF NOT EXISTS `idx_simulator_certificates_user` ON `simulator_certificates` (`userId`);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1877
-}

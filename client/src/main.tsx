@@ -1,33 +1,39 @@
 import { trpc } from "@/lib/trpc";
+import { UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
+import { getLoginUrl } from "./const";
 import "./index.css";
-import { OfflineProvider } from "./contexts/OfflineContext";
 
 const queryClient = new QueryClient();
 
-// Completely disable automatic redirects to prevent login loops
-// Authentication is handled by ProtectedRoute component showing a sign-in prompt
+const redirectToLoginIfUnauthorized = (error: unknown) => {
+  if (!(error instanceof TRPCClientError)) return;
+  if (typeof window === "undefined") return;
+
+  const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
+
+  if (!isUnauthorized) return;
+
+  window.location.href = getLoginUrl();
+};
+
 queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
-    // Just log errors, don't redirect
-    if (error instanceof TRPCClientError) {
-      console.log("[API Query]", error.message);
-    }
+    redirectToLoginIfUnauthorized(error);
+    console.error("[API Query Error]", error);
   }
 });
 
 queryClient.getMutationCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.mutation.state.error;
-    // Just log errors, don't redirect
-    if (error instanceof TRPCClientError) {
-      console.log("[API Mutation]", error.message);
-    }
+    redirectToLoginIfUnauthorized(error);
+    console.error("[API Mutation Error]", error);
   }
 });
 
@@ -49,9 +55,7 @@ const trpcClient = trpc.createClient({
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
     <QueryClientProvider client={queryClient}>
-      <OfflineProvider>
-        <App />
-      </OfflineProvider>
+      <App />
     </QueryClientProvider>
   </trpc.Provider>
 );

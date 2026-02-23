@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO business_entities (userId, name, entityType, status, description, parentEntityId, createdAt, updatedAt) VALUES (1, 'Digital Assets', 'asset', 'active', 'Domain Names - lawscollective.com, digital real estate, member data', 1, NOW(), NOW());",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO business_entities (userId, name, entityType, status, description, parentEntityId, createdAt, updatedAt) VALUES (1, 'Digital Assets', 'asset', 'active', 'Domain Names - lawscollective.com, digital real estate, member data', 1, NOW(), NOW());",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 350
-}

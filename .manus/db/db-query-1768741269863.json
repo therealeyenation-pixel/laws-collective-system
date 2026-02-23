@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS sub_contractor_relationships (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  parentContractorId INT NOT NULL,\n  subContractorId INT NOT NULL,\n  relationshipType ENUM('mentee', 'subcontractor', 'referral', 'pipeline') NOT NULL,\n  startDate DATE NOT NULL,\n  endDate DATE,\n  status ENUM('active', 'completed', 'terminated') NOT NULL DEFAULT 'active',\n  trainingFeeOwed DECIMAL(10,2) DEFAULT 0,\n  trainingFeePaid DECIMAL(10,2) DEFAULT 0,\n  revenueSharePercentage DECIMAL(5,2) DEFAULT 0,\n  totalRevenueShared DECIMAL(12,2) DEFAULT 0,\n  notes TEXT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n)",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS sub_contractor_relationships (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  parentContractorId INT NOT NULL,\n  subContractorId INT NOT NULL,\n  relationshipType ENUM('mentee', 'subcontractor', 'referral', 'pipeline') NOT NULL,\n  startDate DATE NOT NULL,\n  endDate DATE,\n  status ENUM('active', 'completed', 'terminated') NOT NULL DEFAULT 'active',\n  trainingFeeOwed DECIMAL(10,2) DEFAULT 0,\n  trainingFeePaid DECIMAL(10,2) DEFAULT 0,\n  revenueSharePercentage DECIMAL(5,2) DEFAULT 0,\n  totalRevenueShared DECIMAL(12,2) DEFAULT 0,\n  notes TEXT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n)",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 192
-}

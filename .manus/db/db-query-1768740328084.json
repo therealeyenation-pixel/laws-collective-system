@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO system_settings (settingKey, settingValue, settingType, description) VALUES \n('system_phase', 'build', 'enum', 'Current operational phase: build, stabilize, or operations. Controls transition eligibility.'),\n('transition_enabled', 'false', 'boolean', 'Whether contractor transitions are currently enabled'),\n('min_tenure_manager_months', '24', 'number', 'Minimum months as employee before manager can transition'),\n('min_tenure_coordinator_months', '24', 'number', 'Minimum months as employee before coordinator can transition');",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO system_settings (settingKey, settingValue, settingType, description) VALUES \n('system_phase', 'build', 'enum', 'Current operational phase: build, stabilize, or operations. Controls transition eligibility.'),\n('transition_enabled', 'false', 'boolean', 'Whether contractor transitions are currently enabled'),\n('min_tenure_manager_months', '24', 'number', 'Minimum months as employee before manager can transition'),\n('min_tenure_coordinator_months', '24', 'number', 'Minimum months as employee before coordinator can transition');",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 74
-}

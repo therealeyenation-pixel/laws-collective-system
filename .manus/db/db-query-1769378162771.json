@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS tournament_participants (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  tournamentId INT NOT NULL,\n  playerId INT NOT NULL,\n  seed INT,\n  status ENUM('registered', 'checked_in', 'playing', 'eliminated', 'winner') DEFAULT 'registered' NOT NULL,\n  currentRound INT DEFAULT 0,\n  wins INT DEFAULT 0,\n  losses INT DEFAULT 0,\n  pointsScored INT DEFAULT 0,\n  registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  checkedInAt TIMESTAMP NULL,\n  eliminatedAt TIMESTAMP NULL,\n  finalPlacement INT,\n  prizesWon INT DEFAULT 0,\n  INDEX idx_tournament (tournamentId),\n  INDEX idx_player (playerId)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS tournament_participants (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  tournamentId INT NOT NULL,\n  playerId INT NOT NULL,\n  seed INT,\n  status ENUM('registered', 'checked_in', 'playing', 'eliminated', 'winner') DEFAULT 'registered' NOT NULL,\n  currentRound INT DEFAULT 0,\n  wins INT DEFAULT 0,\n  losses INT DEFAULT 0,\n  pointsScored INT DEFAULT 0,\n  registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  checkedInAt TIMESTAMP NULL,\n  eliminatedAt TIMESTAMP NULL,\n  finalPlacement INT,\n  prizesWon INT DEFAULT 0,\n  INDEX idx_tournament (tournamentId),\n  INDEX idx_player (playerId)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1758
-}

@@ -1,8 +1,0 @@
-{
-  "query": "ALTER TABLE employees \nADD COLUMN workerType ENUM('employee', 'contractor', 'volunteer') DEFAULT 'employee' NOT NULL AFTER endDate,\nADD COLUMN contractStartDate TIMESTAMP NULL AFTER workerType,\nADD COLUMN contractEndDate TIMESTAMP NULL AFTER contractStartDate,\nADD COLUMN hourlyRate DECIMAL(10,2) NULL AFTER contractEndDate,\nADD COLUMN is1099 BOOLEAN DEFAULT FALSE AFTER hourlyRate,\nADD COLUMN contractTerms TEXT NULL AFTER is1099;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE employees \nADD COLUMN workerType ENUM('employee', 'contractor', 'volunteer') DEFAULT 'employee' NOT NULL AFTER endDate,\nADD COLUMN contractStartDate TIMESTAMP NULL AFTER workerType,\nADD COLUMN contractEndDate TIMESTAMP NULL AFTER contractStartDate,\nADD COLUMN hourlyRate DECIMAL(10,2) NULL AFTER contractEndDate,\nADD COLUMN is1099 BOOLEAN DEFAULT FALSE AFTER hourlyRate,\nADD COLUMN contractTerms TEXT NULL AFTER is1099;",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'workertype' in 'employees'"
-  ]
-}

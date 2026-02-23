@@ -1,9 +1,0 @@
-{
-  "query": "-- Delete duplicates where there's another record with the same title that has a fileUrl\nDELETE FROM secure_documents \nWHERE id IN (\n  SELECT id FROM (\n    SELECT sd1.id \n    FROM secure_documents sd1\n    WHERE EXISTS (\n      SELECT 1 FROM secure_documents sd2 \n      WHERE sd2.title = sd1.title \n      AND sd2.id != sd1.id \n      AND sd2.fileUrl IS NOT NULL \n      AND sd2.fileUrl != ''\n    )\n    AND (sd1.fileUrl IS NULL OR sd1.fileUrl = '')\n  ) as duplicates\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute -- Delete duplicates where there's another record with the same title that has a fileUrl\nDELETE FROM secure_documents \nWHERE id IN (\n  SELECT id FROM (\n    SELECT sd1.id \n    FROM secure_documents sd1\n    WHERE EXISTS (\n      SELECT 1 FROM secure_documents sd2 \n      WHERE sd2.title = sd1.title \n      AND sd2.id != sd1.id \n      AND sd2.fileUrl IS NOT NULL \n      AND sd2.fileUrl != ''\n    )\n    AND (sd1.fileUrl IS NULL OR sd1.fileUrl = '')\n  ) as duplicates\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 52
-}

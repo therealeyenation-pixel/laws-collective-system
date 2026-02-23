@@ -1,9 +1,0 @@
-{
-  "query": "SHOW TABLES LIKE 'house_ledger%'; SHOW TABLES LIKE 'main_house_ledger'; SHOW TABLES LIKE 'fraud_flags'; SHOW TABLES LIKE 'audit_requests'; SHOW TABLES LIKE 'ledger_access_logs';",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SHOW TABLES LIKE 'house_ledger%'; SHOW TABLES LIKE 'main_house_ledger'; SHOW TABLES LIKE 'fraud_flags'; SHOW TABLES LIKE 'audit_requests'; SHOW TABLES LIKE 'ledger_access_logs';",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 565
-}

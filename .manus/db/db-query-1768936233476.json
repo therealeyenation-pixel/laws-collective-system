@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS system_job_executions (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  job_name VARCHAR(100) NOT NULL,\n  job_type ENUM('signature_expiration_notifications', 'daily_summary_report', 'weekly_compliance_audit', 'monthly_data_cleanup', 'custom') NOT NULL,\n  started_at TIMESTAMP NOT NULL,\n  completed_at TIMESTAMP NULL,\n  duration_ms INT NULL,\n  status ENUM('running', 'completed', 'failed') DEFAULT 'running' NOT NULL,\n  result JSON NULL,\n  error_message TEXT NULL,\n  error_stack TEXT NULL,\n  items_processed INT DEFAULT 0,\n  items_succeeded INT DEFAULT 0,\n  items_failed INT DEFAULT 0,\n  triggered_by ENUM('scheduled', 'manual', 'api') DEFAULT 'scheduled' NOT NULL,\n  triggered_by_user_id INT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS system_job_executions (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  job_name VARCHAR(100) NOT NULL,\n  job_type ENUM('signature_expiration_notifications', 'daily_summary_report', 'weekly_compliance_audit', 'monthly_data_cleanup', 'custom') NOT NULL,\n  started_at TIMESTAMP NOT NULL,\n  completed_at TIMESTAMP NULL,\n  duration_ms INT NULL,\n  status ENUM('running', 'completed', 'failed') DEFAULT 'running' NOT NULL,\n  result JSON NULL,\n  error_message TEXT NULL,\n  error_stack TEXT NULL,\n  items_processed INT DEFAULT 0,\n  items_succeeded INT DEFAULT 0,\n  items_failed INT DEFAULT 0,\n  triggered_by ENUM('scheduled', 'manual', 'api') DEFAULT 'scheduled' NOT NULL,\n  triggered_by_user_id INT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 352
-}

@@ -1,7 +1,7 @@
-import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
+import { protectedProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
-import { businessEntities, autonomousOperations, activityAuditTrail, luvLedgerTransactions, notifications } from "../../drizzle/schema";
+import { businessEntities, autonomousOperations, activityAuditTrail, luvLedgerTransactions } from "../../drizzle/schema";
 import { eq, and } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
 
@@ -140,19 +140,6 @@ Generate a JSON response with:
         });
       }
 
-      // Create notification for the review result
-      if (operation.length) {
-        await db.insert(notifications).values({
-          userId: ctx.user.id,
-          type: input.approved ? "success" : "alert",
-          title: input.approved ? "Operation Approved" : "Operation Rejected",
-          message: `Operation for entity #${operation[0].businessEntityId} has been ${input.approved ? "approved and executed" : "rejected"}.${input.notes ? ` Notes: ${input.notes}` : ""}`,
-          referenceType: "operation",
-          referenceId: input.operationId,
-          actionUrl: "/system",
-        });
-      }
-
       return { success: true, status: input.approved ? "executed" : "rejected" };
     }),
 
@@ -200,134 +187,6 @@ Generate a JSON response with:
         .limit(input.limit);
 
       return operations;
-    }),
-
-  // Get recent operations across all entities (public for dashboard viewing)
-  getRecentOperations: publicProcedure.query(async () => {
-    const db = await getDb();
-    if (!db) return [];
-
-    const operations = await db
-      .select()
-      .from(autonomousOperations)
-      .orderBy(autonomousOperations.createdAt)
-      .limit(20);
-
-    return operations;
-  }),
-
-  // Run autonomous cycle for all entities
-  runAutonomousCycle: protectedProcedure
-    .input(z.object({}).optional())
-    .mutation(async ({ ctx }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database unavailable");
-
-      // Get all active business entities for the user
-      const entities = await db
-        .select()
-        .from(businessEntities)
-        .where(eq(businessEntities.userId, ctx.user.id));
-
-      const results = [];
-
-      for (const entity of entities) {
-        // Determine operation type based on entity type
-        let operationType: "revenue_generation" | "expense_management" | "allocation_distribution" | "market_analysis" | "strategic_decision";
-        const structure = entity.financialStructure as any;
-        
-        switch (structure?.role) {
-          case "commercial_engine":
-            operationType = "revenue_generation";
-            break;
-          case "education_platform":
-            operationType = "allocation_distribution";
-            break;
-          case "media_truth":
-            operationType = "market_analysis";
-            break;
-          case "nonprofit_outreach":
-            operationType = "allocation_distribution";
-            break;
-          default:
-            operationType = "strategic_decision";
-        }
-
-        // Generate operation description based on entity role
-        const descriptions: Record<string, string> = {
-          "commercial_engine": `Generated licensing opportunity for ${entity.name}`,
-          "education_platform": `Created new curriculum module for ${entity.name}`,
-          "media_truth": `Scheduled content publication for ${entity.name}`,
-          "nonprofit_outreach": `Allocated community resources for ${entity.name}`,
-          "root_authority": `Governance review completed for ${entity.name}`,
-        };
-
-        const description = descriptions[structure?.role] || `Autonomous operation for ${entity.name}`;
-
-        // Create autonomous operation record
-        const operationResult = await db.insert(autonomousOperations).values({
-          businessEntityId: entity.id,
-          operationType: operationType,
-          decision: {
-            action: description,
-            timestamp: new Date().toISOString(),
-            entityRole: structure?.role,
-          },
-          reasoning: `Automated cycle execution for ${entity.entityType} entity`,
-          status: "pending",
-        });
-
-        results.push({
-          entityId: entity.id,
-          entityName: entity.name,
-          operationType,
-          description,
-          status: "pending",
-        });
-      }
-
-      // Log to audit trail
-      await db.insert(activityAuditTrail).values({
-        userId: ctx.user.id,
-        activityType: "autonomous_cycle",
-        entityType: "system",
-        entityId: 0,
-        action: "cycle_executed",
-        details: {
-          entitiesProcessed: entities.length,
-          operationsCreated: results.length,
-          timestamp: new Date().toISOString(),
-        } as any,
-      });
-
-      // Create notification for the user
-      await db.insert(notifications).values({
-        userId: ctx.user.id,
-        type: "operation",
-        title: "Autonomous Cycle Complete",
-        message: `Successfully created ${results.length} operations across ${entities.length} entities. Review pending operations in the Trust System Dashboard.`,
-        actionUrl: "/system",
-        isPriority: results.length > 0,
-      });
-
-      // Create individual notifications for each operation
-      for (const result of results) {
-        await db.insert(notifications).values({
-          userId: ctx.user.id,
-          type: "approval",
-          title: `Pending: ${result.entityName}`,
-          message: result.description,
-          entityId: result.entityId,
-          referenceType: "operation",
-          actionUrl: "/system",
-        });
-      }
-
-      return {
-        success: true,
-        operationsCreated: results.length,
-        operations: results,
-      };
     }),
 
   // Generate business metrics and performance report

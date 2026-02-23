@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO blockchain_records (recordType, referenceId, blockchainHash, data) \nSELECT 'entity_creation', id, SHA2(CONCAT(id, name, NOW()), 256), JSON_OBJECT('entityId', id, 'entityName', name, 'entityType', entityType, 'allocationPercentage', allocationPercentage, 'timestamp', NOW())\nFROM business_entities;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO blockchain_records (recordType, referenceId, blockchainHash, data) \nSELECT 'entity_creation', id, SHA2(CONCAT(id, name, NOW()), 256), JSON_OBJECT('entityId', id, 'entityName', name, 'entityType', entityType, 'allocationPercentage', allocationPercentage, 'timestamp', NOW())\nFROM business_entities;",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 382
-}

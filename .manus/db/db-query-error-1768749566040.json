@@ -1,8 +1,0 @@
-{
-  "query": "SELECT id, position_title FROM position_requisitions WHERE position_title LIKE '%Real Estate%';",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, position_title FROM position_requisitions WHERE position_title LIKE '%Real Estate%';",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'position_title' in 'where clause'"
-  ]
-}

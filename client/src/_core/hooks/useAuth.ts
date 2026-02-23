@@ -76,17 +76,9 @@ export function useAuth(options?: UseAuthOptions) {
     state.user,
   ]);
 
-  const refreshSession = useCallback(() => {
-    // Clear local storage and redirect to login
-    localStorage.removeItem("manus-runtime-user-info");
-    utils.auth.me.setData(undefined, null);
-    window.location.href = getLoginUrl();
-  }, [utils]);
-
   return {
     ...state,
     refresh: () => meQuery.refetch(),
     logout,
-    refreshSession,
   };
 }

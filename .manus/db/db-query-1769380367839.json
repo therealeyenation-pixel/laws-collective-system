@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS board_positions (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  entity_id INT NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  description TEXT,\n  responsibilities TEXT,\n  term_length_months INT DEFAULT 12,\n  max_terms INT DEFAULT 3,\n  compensation_type ENUM('none', 'stipend', 'equity', 'hybrid') DEFAULT 'none',\n  compensation_amount DECIMAL(10,2) DEFAULT 0,\n  voting_rights BOOLEAN DEFAULT TRUE,\n  is_officer BOOLEAN DEFAULT FALSE,\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS board_positions (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  entity_id INT NOT NULL,\n  title VARCHAR(100) NOT NULL,\n  description TEXT,\n  responsibilities TEXT,\n  term_length_months INT DEFAULT 12,\n  max_terms INT DEFAULT 3,\n  compensation_type ENUM('none', 'stipend', 'equity', 'hybrid') DEFAULT 'none',\n  compensation_amount DECIMAL(10,2) DEFAULT 0,\n  voting_rights BOOLEAN DEFAULT TRUE,\n  is_officer BOOLEAN DEFAULT FALSE,\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 286
-}

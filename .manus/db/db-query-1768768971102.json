@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS `pending_heir_placeholders` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `parentHouseId` int NOT NULL,\n  `parentMemberId` int NOT NULL,\n  `parentMemberName` varchar(255),\n  `placeholderName` varchar(255) NOT NULL,\n  `projectedHouseType` enum('bloodline', 'mirrored', 'adaptive') DEFAULT 'bloodline',\n  `reservedPercentage` decimal(5,2) NOT NULL,\n  `reservedAmount` decimal(18,2) DEFAULT '0',\n  `status` enum('active', 'converted', 'released') NOT NULL DEFAULT 'active',\n  `convertedToHeirId` int,\n  `convertedAt` timestamp NULL,\n  `expiresAt` timestamp NULL,\n  `createdBy` int NOT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `pending_heir_placeholders` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `parentHouseId` int NOT NULL,\n  `parentMemberId` int NOT NULL,\n  `parentMemberName` varchar(255),\n  `placeholderName` varchar(255) NOT NULL,\n  `projectedHouseType` enum('bloodline', 'mirrored', 'adaptive') DEFAULT 'bloodline',\n  `reservedPercentage` decimal(5,2) NOT NULL,\n  `reservedAmount` decimal(18,2) DEFAULT '0',\n  `status` enum('active', 'converted', 'released') NOT NULL DEFAULT 'active',\n  `convertedToHeirId` int,\n  `convertedAt` timestamp NULL,\n  `expiresAt` timestamp NULL,\n  `createdBy` int NOT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 275
-}

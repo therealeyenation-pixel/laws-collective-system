@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE bonus_pools (id INT AUTO_INCREMENT PRIMARY KEY, pool_name VARCHAR(100) NOT NULL, pool_type VARCHAR(50) DEFAULT 'founding_member', source_percentage DECIMAL(5,2) NOT NULL DEFAULT 15.00, source_description VARCHAR(255), current_balance DECIMAL(15,2) DEFAULT 0.00, total_accumulated DECIMAL(15,2) DEFAULT 0.00, total_distributed DECIMAL(15,2) DEFAULT 0.00, distribution_frequency VARCHAR(50) DEFAULT 'quarterly', last_distribution_date BIGINT, next_distribution_date BIGINT, is_active BOOLEAN DEFAULT TRUE, created_at BIGINT, updated_at BIGINT);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE bonus_pools (id INT AUTO_INCREMENT PRIMARY KEY, pool_name VARCHAR(100) NOT NULL, pool_type VARCHAR(50) DEFAULT 'founding_member', source_percentage DECIMAL(5,2) NOT NULL DEFAULT 15.00, source_description VARCHAR(255), current_balance DECIMAL(15,2) DEFAULT 0.00, total_accumulated DECIMAL(15,2) DEFAULT 0.00, total_distributed DECIMAL(15,2) DEFAULT 0.00, distribution_frequency VARCHAR(50) DEFAULT 'quarterly', last_distribution_date BIGINT, next_distribution_date BIGINT, is_active BOOLEAN DEFAULT TRUE, created_at BIGINT, updated_at BIGINT);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 224
-}

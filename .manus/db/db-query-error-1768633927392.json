@@ -1,8 +1,0 @@
-{
-  "query": "UPDATE business_plans SET \n  entityName = 'LuvOnPurpose Outreach Temple and Academy Society, Inc.',\n  address = '4093 Cottingham Way, Augusta, GA 30909',\n  state = 'Georgia',\n  formationDate = '2025-07-04'\nWHERE entityName LIKE '%508%' OR entityName LIKE '%Academy%Outreach%';",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE business_plans SET \n  entityName = 'LuvOnPurpose Outreach Temple and Academy Society, Inc.',\n  address = '4093 Cottingham Way, Augusta, GA 30909',\n  state = 'Georgia',\n  formationDate = '2025-07-04'\nWHERE entityName LIKE '%508%' OR entityName LIKE '%Academy%Outreach%';",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'address' in 'field list'"
-  ]
-}
