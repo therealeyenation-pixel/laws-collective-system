@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,6 @@ import { Link } from "wouter";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
-import { NewsBanner } from "@/components/NewsBanner";
 
 export default function PropertyDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -64,9 +62,6 @@ export default function PropertyDashboard() {
 
   return (
     <DashboardLayout>
-      {/* News Banner */}
-      <NewsBanner className="-mx-6 -mt-6 mb-6" />
-      
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

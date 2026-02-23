@@ -1,7 +1,6 @@
 
 import { getSessionCookieOptions } from "./_core/cookies";
-import { COOKIE_NAME, ONE_YEAR_MS } from "../shared/const";
-import { z } from "zod";
+import { COOKIE_NAME } from "../shared/const";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { luvSystemRouter } from "./routers/luv-system";
@@ -26,7 +25,6 @@ import { entityMediaEngineRouter } from "./routers/entity-media-engine";
 import { entityPlatformEngineRouter } from "./routers/entity-platform-engine";
 import { documentVaultRouter } from "./routers/document-vault";
 import { notificationsRouter } from "./routers/notifications";
-import { delegationRouter } from "./routers/delegation";
 import { agentsRouter } from "./routers/agents";
 import { socialMediaRouter } from "./routers/social-media";
 import { emailServiceRouter } from "./routers/email-service";
@@ -50,9 +48,6 @@ import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
-import { weatherApiRouter } from "./services/weather-api";
-import { weatherAlertsRouter } from "./services/weather-alerts";
-import { emailDigestRouter } from "./services/email-digest";
 import { houseContractsRouter } from "./routers/house-contracts";
 import { houseDashboardRouter } from "./routers/house-dashboard";
 import { ownerHouseSetupRouter } from "./routers/owner-house-setup";
@@ -166,62 +161,6 @@ import { gameAchievementsRouter } from "./routers/game-achievements";
 import { tournamentsRouter } from "./routers/tournaments";
 import { gameSavesRouter } from "./routers/game-saves";
 import { eloRatingRouter } from "./routers/elo-rating";
-import { articleAcknowledgmentRouter } from "./routers/article-acknowledgment";
-import { signatureAuditRouter } from "./routers/signature-audit";
-import { userPreferencesRouter } from "./routers/user-preferences";
-import { bulkSignatureRouter } from "./routers/bulk-signature";
-import { complianceDashboardRouter } from "./routers/compliance-dashboard";
-import { complianceTargetsRouter } from "./routers/compliance-targets";
-import { complianceAlertsRouter } from "./routers/compliance-alerts";
-import { certificateIssuanceRouter } from "./routers/certificate-issuance";
-import { houseOfTonguesRouter } from "./routers/house-of-tongues";
-import { learningHousesRouter } from "./routers/learning-houses";
-import { masteryScrollsRouter } from "./routers/mastery-scrolls";
-import { guardianDashboardRouter } from "./routers/guardian-dashboard";
-import { eternalFlameVaultRouter } from "./routers/eternal-flame-vault";
-import { businessSetupCourseRouter } from "./routers/business-setup-course";
-import { financialManagementCourseRouter } from "./routers/financial-management-course";
-import { simulatorCertificatesRouter } from "./routers/simulator-certificates";
-import { tokenRegistryRouter } from "./routers/token-registry";
-import { foundationLayerBuildRouter } from "./routers/foundation-layer-build";
-import { coreAdminLayerRouter } from "./routers/core-admin-layer";
-import { programsGovernanceLayerRouter } from "./routers/programs-governance-layer";
-import { legalDocumentTemplatesRouter } from "./routers/legal-document-templates";
-import { contractFundingTemplatesRouter } from "./routers/contract-funding-templates";
-import { pdfLifecycleRouter } from "./routers/pdf-lifecycle";
-import { internationalOperationsRouter } from "./routers/international-operations";
-import { internationalDocumentTemplatesRouter } from "./routers/international-document-templates";
-import { luvledgerAutoLoggingRouter } from "./routers/luvledger-auto-logging";
-import { pdfGenerationRouter } from "./routers/pdf-generation";
-import { donorEmailRouter } from "./routers/donor-email";
-import { memberRegistrationRouter } from "./routers/member-registration";
-import { acquisitionFundRouter } from "./routers/acquisition-fund";
-import { realPropertyRouter } from "./routers/real-property";
-import { expandedAssetManagementRouter } from "./routers/expanded-asset-management";
-import { onboardingOffboardingRouter } from "./routers/onboarding-offboarding";
-import { investmentPortfolioRouter } from "./routers/investment-portfolio";
-import { investmentGovernanceRouter } from "./routers/investment-governance";
-import { tieredGovernanceRouter } from "./routers/tiered-governance";
-import { quarterlyInvestmentReportRouter } from "./routers/quarterly-investment-report";
-import { complianceTrackingRouter } from "./routers/compliance-tracking";
-import { documentUploadRouter } from "./routers/document-upload";
-import { complianceNotificationsRouter } from "./routers/compliance-notifications";
-import { notificationHistoryRouter } from "./routers/notification-history";
-import { needStatementsRouter } from "./routers/need-statements";
-import { grantExportRouter } from "./routers/grant-export";
-import { grantDeadlinesRouter } from "./routers/grant-deadlines";
-import { needStatementEditorRouter } from "./routers/need-statement-editor";
-import { grantApplicationHistoryRouter } from "./routers/grant-application-history";
-import { gameCenterCompleteRouter } from "./routers/game-center-complete";
-import { articleSignatureRouter } from "./services/article-signature-service";
-import { assignmentNotificationsRouter } from "./services/assignment-notifications";
-import { foreignEntityFormsRouter } from "./services/foreign-entity-forms";
-import { biometricCredentialsRouter } from "./routers/biometric-credentials";
-import { workflowTemplatesRouter } from "./routers/workflow-templates";
-import { translationContributionsRouter } from "./routers/translation-contributions";
-import { sharedWorkflowTemplatesRouter } from "./routers/shared-workflow-templates";
-import { adminUsersRouter } from "./routers/admin-users";
-import { courseCheckoutRouter } from "./routers/course-checkout";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -248,7 +187,6 @@ export const appRouter = router({
   entityPlatform: entityPlatformEngineRouter,
   documentVault: documentVaultRouter,
   notifications: notificationsRouter,
-  delegation: delegationRouter,
   agents: agentsRouter,
   socialMedia: socialMediaRouter,
   emailService: emailServiceRouter,
@@ -273,9 +211,6 @@ export const appRouter = router({
   lifecycleManager: lifecycleManagerRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
-  weatherApi: weatherApiRouter,
-  weatherAlerts: weatherAlertsRouter,
-  emailDigest: emailDigestRouter,
   houseDashboard: houseDashboardRouter,
   ownerHouseSetup: ownerHouseSetupRouter,
   positionManagement: positionManagementRouter,
@@ -316,7 +251,6 @@ export const appRouter = router({
   eSignature: eSignatureRouter,
   boardGovernanceExtended: boardGovernanceExtendedRouter,
   grantDocuments: grantDocumentsRouter,
-  programsGovernance: programsGovernanceLayerRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -326,39 +260,6 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
-    login: publicProcedure
-      .input(z.object({
-        email: z.string().email(),
-        password: z.string().min(6),
-      }))
-      .mutation(async ({ input, ctx }) => {
-        const { standaloneAuth } = await import("./_core/standaloneAuth");
-        const user = await standaloneAuth.loginUser(input.email, input.password);
-        const sessionToken = await standaloneAuth.createSessionToken(user.openId, {
-          name: user.name || "",
-          expiresInMs: ONE_YEAR_MS,
-        });
-        const cookieOptions = getSessionCookieOptions(ctx.req);
-        ctx.res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-        return { success: true, user };
-      }),
-    register: publicProcedure
-      .input(z.object({
-        email: z.string().email(),
-        password: z.string().min(6),
-        name: z.string().optional(),
-      }))
-      .mutation(async ({ input, ctx }) => {
-        const { standaloneAuth } = await import("./_core/standaloneAuth");
-        const user = await standaloneAuth.registerUser(input.email, input.password, input.name);
-        const sessionToken = await standaloneAuth.createSessionToken(user.openId, {
-          name: user.name || "",
-          expiresInMs: ONE_YEAR_MS,
-        });
-        const cookieOptions = getSessionCookieOptions(ctx.req);
-        ctx.res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-        return { success: true, user };
-      }),
   }),
 
   offerPackages: offerPackagesRouter,
@@ -433,62 +334,6 @@ export const appRouter = router({
   tournaments: tournamentsRouter,
   gameSaves: gameSavesRouter,
   eloRating: eloRatingRouter,
-  articleAcknowledgment: articleAcknowledgmentRouter,
-  signatureAudit: signatureAuditRouter,
-  userPreferences: userPreferencesRouter,
-  bulkSignature: bulkSignatureRouter,
-  complianceDashboard: complianceDashboardRouter,
-  complianceTargets: complianceTargetsRouter,
-  complianceAlerts: complianceAlertsRouter,
-  certificateIssuance: certificateIssuanceRouter,
-  houseOfTongues: houseOfTonguesRouter,
-  learningHouses: learningHousesRouter,
-  masteryScrolls: masteryScrollsRouter,
-  guardianDashboard: guardianDashboardRouter,
-  eternalFlameVault: eternalFlameVaultRouter,
-  businessSetupCourse: businessSetupCourseRouter,
-  financialManagementCourse: financialManagementCourseRouter,
-  simulatorCertificates: simulatorCertificatesRouter,
-  tokenRegistry: tokenRegistryRouter,
-  foundationLayerBuild: foundationLayerBuildRouter,
-  coreAdminLayer: coreAdminLayerRouter,
-  programsGovernanceLayer: programsGovernanceLayerRouter,
-  legalDocumentTemplates: legalDocumentTemplatesRouter,
-  contractFundingTemplates: contractFundingTemplatesRouter,
-  pdfLifecycle: pdfLifecycleRouter,
-  internationalOperations: internationalOperationsRouter,
-  internationalDocumentTemplates: internationalDocumentTemplatesRouter,
-  luvledgerAutoLogging: luvledgerAutoLoggingRouter,
-  pdfGeneration: pdfGenerationRouter,
-  donorEmail: donorEmailRouter,
-  memberRegistration: memberRegistrationRouter,
-  acquisitionFund: acquisitionFundRouter,
-  realProperty: realPropertyRouter,
-  expandedAssetManagement: expandedAssetManagementRouter,
-  onboardingOffboarding: onboardingOffboardingRouter,
-  investmentPortfolio: investmentPortfolioRouter,
-  investmentGovernance: investmentGovernanceRouter,
-  tieredGovernance: tieredGovernanceRouter,
-  quarterlyInvestmentReport: quarterlyInvestmentReportRouter,
-  complianceTracking: complianceTrackingRouter,
-  documentUpload: documentUploadRouter,
-  complianceNotifications: complianceNotificationsRouter,
-  notificationHistory: notificationHistoryRouter,
-  needStatements: needStatementsRouter,
-  grantExport: grantExportRouter,
-  grantDeadlines: grantDeadlinesRouter,
-  needStatementEditor: needStatementEditorRouter,
-  grantApplicationHistory: grantApplicationHistoryRouter,
-  gameCenterComplete: gameCenterCompleteRouter,
-  articleSignature: articleSignatureRouter,
-  assignmentNotifications: assignmentNotificationsRouter,
-  foreignEntityForms: foreignEntityFormsRouter,
-  biometricCredentials: biometricCredentialsRouter,
-  workflowTemplates: workflowTemplatesRouter,
-  translationContributions: translationContributionsRouter,
-  sharedWorkflowTemplates: sharedWorkflowTemplatesRouter,
-  adminUsers: adminUsersRouter,
-  courseCheckout: courseCheckoutRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

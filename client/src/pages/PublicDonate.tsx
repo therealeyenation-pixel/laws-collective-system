@@ -77,59 +77,23 @@ export default function PublicDonate() {
 
   const currentTier = getCurrentTier();
 
-  // Stripe donation checkout mutation
-  const createCheckout = trpc.stripeDonations.createDonationCheckout.useMutation({
-    onSuccess: (data) => {
-      if (data.checkoutUrl) {
-        toast.success("Redirecting to secure payment...");
-        window.open(data.checkoutUrl, '_blank');
-      } else {
-        toast.error("Failed to create checkout session");
-      }
-      setIsProcessing(false);
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to create checkout session");
-      setIsProcessing(false);
-    },
-  });
-
   const handleDonate = async () => {
     if (finalAmount < 1) {
       toast.error("Please enter a valid donation amount");
       return;
     }
 
-    if (finalAmount < 0.50) {
-      toast.error("Minimum donation amount is $0.50");
-      return;
-    }
-
     setIsProcessing(true);
     
-    // Map frequency to API format
-    const frequencyMap: Record<string, "one_time" | "monthly" | "quarterly" | "annual"> = {
-      "one-time": "one_time",
-      "monthly": "monthly",
-      "quarterly": "quarterly",
-      "annual": "annual",
-    };
-
-    // Map tribute type to API format
-    const tributeTypeMap: Record<string, "none" | "in_honor" | "in_memory"> = {
-      "": "none",
-      "honor": "in_honor",
-      "memory": "in_memory",
-    };
-
-    createCheckout.mutate({
-      amount: finalAmount,
-      frequency: frequencyMap[frequency] || "one_time",
-      designation: designation === "general" ? undefined : designation,
-      tributeType: tributeTypeMap[tributeType || ""] || "none",
-      tributeName: tributeName || undefined,
-      isAnonymous: false,
-    });
+    // In production, this would create a Stripe checkout session
+    toast.success(`Thank you for your ${frequency === 'one-time' ? '' : frequency + ' '}gift of $${finalAmount}!`);
+    toast.info("Redirecting to secure payment...");
+    
+    // Simulate redirect delay
+    setTimeout(() => {
+      setIsProcessing(false);
+      // window.open(checkoutUrl, '_blank');
+    }, 1500);
   };
 
   return (
