@@ -31,7 +31,7 @@ import { ENV } from "../_core/env";
 // Uses OWNER_OPEN_ID env var, but also allows admin role users
 function isOwner(userId: string, userRole?: string): boolean {
   // Check if user matches the owner OpenID OR has admin role
-  return userId === ENV.ownerOpenId || userRole === 'admin' || userRole === 'owner';
+  return userId === ENV.ownerOpenId || userRole === 'admin';
 }
 
 // Generate Registry ID Number (RIN) for house

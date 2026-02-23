@@ -1,7 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/lib/trpc";
 import {
   Cloud,
   CloudRain,
@@ -23,22 +22,17 @@ interface WeatherData {
   temperature: number;
   feelsLike: number;
   condition: string;
-  description: string;
   humidity: number;
   windSpeed: number;
-  windDirection: string;
+  icon: string;
   forecast: ForecastDay[];
-  lastUpdated: string;
 }
 
 interface ForecastDay {
-  date: string;
-  dayOfWeek: string;
+  day: string;
   high: number;
   low: number;
   condition: string;
-  description: string;
-  precipChance: number;
 }
 
 interface WeatherWidgetProps {
@@ -52,7 +46,7 @@ const getWeatherIcon = (condition: string) => {
   if (conditionLower.includes("thunder") || conditionLower.includes("lightning")) {
     return CloudLightning;
   }
-  if (conditionLower.includes("rain") || conditionLower.includes("shower") || conditionLower.includes("drizzle")) {
+  if (conditionLower.includes("rain") || conditionLower.includes("shower")) {
     return CloudRain;
   }
   if (conditionLower.includes("snow") || conditionLower.includes("sleet")) {
@@ -61,60 +55,71 @@ const getWeatherIcon = (condition: string) => {
   if (conditionLower.includes("fog") || conditionLower.includes("mist")) {
     return CloudFog;
   }
+  if (conditionLower.includes("cloud") && conditionLower.includes("sun")) {
+    return CloudSun;
+  }
   if (conditionLower.includes("cloud") || conditionLower.includes("overcast")) {
     return Cloud;
   }
-  if (conditionLower.includes("partly") || conditionLower.includes("mostly")) {
-    return CloudSun;
-  }
-  if (conditionLower.includes("clear") || conditionLower.includes("sunny")) {
-    return Sun;
-  }
-  if (conditionLower.includes("wind")) {
-    return Wind;
-  }
-  return CloudSun;
+  return Sun;
+};
+
+// Mock weather data - in production, this would come from an API
+const mockWeatherData: WeatherData = {
+  location: "Atlanta, GA",
+  temperature: 52,
+  feelsLike: 48,
+  condition: "Partly Cloudy",
+  humidity: 65,
+  windSpeed: 8,
+  icon: "partly-cloudy",
+  forecast: [
+    { day: "Today", high: 55, low: 42, condition: "Partly Cloudy" },
+    { day: "Sat", high: 58, low: 44, condition: "Sunny" },
+    { day: "Sun", high: 54, low: 40, condition: "Cloudy" },
+    { day: "Mon", high: 50, low: 38, condition: "Rain" },
+    { day: "Tue", high: 52, low: 39, condition: "Partly Cloudy" },
+  ],
 };
 
 export function WeatherWidget({ className = "", compact = false }: WeatherWidgetProps) {
-  // Use default location directly - no authentication required
-  // This ensures weather widget works for all users
-  const userLocation = "Atlanta";
-  const temperatureUnit = "fahrenheit";
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch real weather data from API
-  const { 
-    data: weatherData, 
-    isLoading, 
-    error, 
-    refetch 
-  } = trpc.weatherApi.getByCity.useQuery(
-    { city: userLocation },
-    {
-      staleTime: 15 * 60 * 1000, // Cache for 15 minutes
-      refetchOnWindowFocus: false,
-      retry: 2,
-    }
-  );
-
-  // Convert temperature based on user preference
-  const convertTemp = useMemo(() => {
-    return (tempF: number) => {
-      if (temperatureUnit === "celsius") {
-        return Math.round((tempF - 32) * 5 / 9);
+  useEffect(() => {
+    // Simulate API call
+    const fetchWeather = async () => {
+      setLoading(true);
+      try {
+        // In production, this would be a real API call
+        // const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+        // const data = await response.json();
+        
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setWeather(mockWeatherData);
+        setError(null);
+      } catch (err) {
+        setError("Unable to load weather data");
+        toast.error("Failed to load weather data");
+      } finally {
+        setLoading(false);
       }
-      return tempF;
     };
-  }, [temperatureUnit]);
 
-  const unitLabel = temperatureUnit === "celsius" ? "C" : "F";
+    fetchWeather();
+  }, []);
 
   const handleRefresh = async () => {
-    await refetch();
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setWeather(mockWeatherData);
+    setLoading(false);
     toast.success("Weather updated");
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <Card className={className}>
         <CardContent className="p-4">
@@ -126,7 +131,7 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
     );
   }
 
-  if (error || !weatherData) {
+  if (error || !weather) {
     return (
       <Card className={className}>
         <CardContent className="p-4">
@@ -139,28 +144,26 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
     );
   }
 
-  const WeatherIcon = getWeatherIcon(weatherData.condition);
+  const WeatherIcon = getWeatherIcon(weather.condition);
 
   if (compact) {
     return (
       <Card className={className}>
-        <CardContent className="p-4">
-          <div className="flex flex-col space-y-3">
-            {/* Location */}
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="w-3 h-3 flex-shrink-0" />
-              <span className="truncate">{weatherData.location}</span>
-            </div>
-            {/* Temperature and condition */}
+        <CardContent className="p-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <WeatherIcon className="w-10 h-10 text-blue-500 flex-shrink-0" />
-              <div className="min-w-0">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-bold">{convertTemp(weatherData.temperature)}°</span>
-                  <span className="text-sm text-muted-foreground">{unitLabel}</span>
+              <WeatherIcon className="w-8 h-8 text-blue-500" />
+              <div>
+                <div className="flex items-center gap-1">
+                  <span className="text-2xl font-bold">{weather.temperature}°</span>
+                  <span className="text-sm text-muted-foreground">F</span>
                 </div>
-                <p className="text-sm text-muted-foreground truncate">{weatherData.description}</p>
+                <p className="text-xs text-muted-foreground">{weather.condition}</p>
               </div>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <MapPin className="w-3 h-3" />
+              <span>{weather.location}</span>
             </div>
           </div>
         </CardContent>
@@ -175,70 +178,60 @@ export function WeatherWidget({ className = "", compact = false }: WeatherWidget
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <MapPin className="w-4 h-4" />
-            <span>{weatherData.location}</span>
+            <span>{weather.location}</span>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={handleRefresh}
-          >
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleRefresh}>
             <RefreshCw className="w-4 h-4" />
           </Button>
         </div>
 
         {/* Current weather */}
-        <div className="flex items-center gap-4 mb-4">
-          <WeatherIcon className="w-16 h-16 text-blue-500" />
-          <div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-bold">{convertTemp(weatherData.temperature)}°</span>
-              <span className="text-lg text-muted-foreground">{unitLabel}</span>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <WeatherIcon className="w-12 h-12 text-blue-500" />
+            <div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-4xl font-bold">{weather.temperature}</span>
+                <span className="text-xl text-muted-foreground">°F</span>
+              </div>
+              <p className="text-sm text-muted-foreground">{weather.condition}</p>
             </div>
-            <p className="text-muted-foreground">{weatherData.description}</p>
           </div>
-        </div>
 
-        {/* Weather details */}
-        <div className="grid grid-cols-3 gap-2 mb-4 text-sm">
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Thermometer className="w-4 h-4" />
-            <span>Feels {convertTemp(weatherData.feelsLike)}°</span>
-          </div>
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Droplets className="w-4 h-4" />
-            <span>{weatherData.humidity}%</span>
-          </div>
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Wind className="w-4 h-4" />
-            <span>{weatherData.windSpeed} mph {weatherData.windDirection}</span>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Thermometer className="w-4 h-4" />
+              <span>Feels like {weather.feelsLike}°</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Droplets className="w-4 h-4" />
+              <span>{weather.humidity}% humidity</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Wind className="w-4 h-4" />
+              <span>{weather.windSpeed} mph</span>
+            </div>
           </div>
         </div>
 
         {/* 5-day forecast */}
-        {weatherData.forecast && weatherData.forecast.length > 0 && (
-          <div className="border-t pt-4">
-            <p className="text-sm font-medium mb-2">5-Day Forecast</p>
-            <div className="grid grid-cols-5 gap-2">
-              {weatherData.forecast.slice(0, 5).map((day, index) => {
-                const DayIcon = getWeatherIcon(day.condition);
-                return (
-                  <div key={index} className="text-center">
-                    <p className="text-xs text-muted-foreground">{day.dayOfWeek.slice(0, 3)}</p>
-                    <DayIcon className="w-6 h-6 mx-auto my-1 text-blue-400" />
-                    <p className="text-xs">
-                      <span className="font-medium">{convertTemp(day.high)}°</span>
-                      <span className="text-muted-foreground"> / {convertTemp(day.low)}°</span>
-                    </p>
-                    {day.precipChance > 0 && (
-                      <p className="text-xs text-blue-400">{day.precipChance}%</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+        <div className="border-t pt-4">
+          <div className="grid grid-cols-5 gap-2">
+            {weather.forecast.map((day, index) => {
+              const DayIcon = getWeatherIcon(day.condition);
+              return (
+                <div key={index} className="text-center">
+                  <p className="text-xs font-medium mb-1">{day.day}</p>
+                  <DayIcon className="w-5 h-5 mx-auto text-muted-foreground mb-1" />
+                  <p className="text-xs">
+                    <span className="font-medium">{day.high}°</span>
+                    <span className="text-muted-foreground"> / {day.low}°</span>
+                  </p>
+                </div>
+              );
+            })}
           </div>
-        )}
+        </div>
       </CardContent>
     </Card>
   );
