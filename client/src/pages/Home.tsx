@@ -373,6 +373,26 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Luv Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+            <div className="flex justify-center md:justify-start">
+              <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
+            </div>
+            <div className="md:col-span-2">
+              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Meet the Founder</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">About Luv</h2>
+              <p className="text-xl text-muted-foreground mb-6">Founder & Visionary of The L.A.W.S. Collective</p>
+              <div className="space-y-4 text-base text-foreground/80 leading-relaxed">
+                <p>With extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective.</p>
+                <p><strong>Education:</strong> Associates degrees from Bryant and Stratton College (1998) and Bachelor from American Public University (2025, Cum Laude).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Demo Simulator Section - MOVED BELOW CAROUSEL */}
       <section id="simulator" className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-5xl mx-auto px-4">
@@ -652,42 +672,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Luv Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-background to-primary/5">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
-            <div className="flex justify-center md:justify-start">
-              <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
-            </div>
-            <div className="md:col-span-2">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell (Luv)</h2>
-              <p className="text-2xl text-primary font-semibold mb-6">Founder and CEO of the L.A.W.S. Ecosystem</p>
-              
-              <div className="space-y-8">
-                <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
-                  <p className="text-base text-foreground/90 leading-relaxed mb-4">
-                    With over 15 years of hands-on experience in government and commercial contracting, I bring deep operational expertise to The L.A.W.S. Collective. As a lifetime researcher and systems architect, I have spent decades studying wealth-building mechanisms, trust frameworks, and economic sovereignty models across cultures and generations. My background spans enterprise operations, financial systems design, legal entity structuring, and community development. As Minister for LuvOnPurpose Academy and Outreach (nonprofit), I am committed to advancing educational equity and community transformation. All of this expertise is synthesized into a comprehensive platform designed to transform how families build and preserve multi-generational wealth.
-                  </p>
-                  <p className="text-base text-foreground/90 leading-relaxed">
-                    <strong>Education:</strong> Associates degrees in Microcomputers Management and Administrative Assistant with Micro option from Bryant and Stratton College (1998, National Honors Society); Bachelor of Business Administration with minor in Management from American Public University (2025, Cum Laude).
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Luv's Vision</h3>
-                  <p className="text-base text-foreground/80 leading-relaxed">I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship. Over time, the L.A.W.S. ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration, creating measurable impact by educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.</p>
-                </div>
-                
-                <div className="border-t border-primary/20 pt-8">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">L.A.W.S.' Mission</h3>
-                  <p className="text-base text-foreground/80 leading-relaxed">The L.A.W.S. Collective exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. We operate as both a commercial structure and an ecosystem of purpose. Our mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment. By merging business education with real-world application, we transform traditional training models into living systems. Each House established through our platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Waitlist Section */}
       <section className="py-16 md:py-24 bg-primary/5">
         <div className="container max-w-2xl mx-auto px-4">
@@ -699,89 +683,6 @@ export default function Home() {
               Join our waitlist for exclusive early access and launch updates.
             </p>
           </div>
-          
-          {/* Platform Features in Action Section */}
-          <div className="mt-20 py-16 bg-gradient-to-b from-background to-primary/5 rounded-xl">
-            <div className="max-w-5xl mx-auto px-6">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-center">Platform Features in Action</h2>
-              <p className="text-xl text-foreground/80 text-center mb-12">See what's already built and ready for your family's wealth journey</p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Business Formation Simulator */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">🏢</div>
-                      <p className="text-white font-semibold text-sm">10+ Business Structures</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">Business Formation Simulator</h3>
-                    <p className="text-foreground/80 mb-4">Interactive training on 10+ business structures including LLC, S Corp, Nonprofits, Trusts, and more. Learn by doing with guided modules and token rewards.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Interactive</span>
-                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Educational</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Grants & Funding */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">💰</div>
-                      <p className="text-white font-semibold text-sm">$1.95M Pipeline</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">Grants & Funding Management</h3>
-                    <p className="text-foreground/80 mb-4">Track grant applications, deadlines, and reporting. Currently managing $1.95M in grant pipeline with real-time progress tracking and deadline alerts.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">Real Data</span>
-                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">$1.95M Pipeline</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Academy */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">📚</div>
-                      <p className="text-white font-semibold text-sm">K-12 Curriculum</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">Luv Learning Academy</h3>
-                    <p className="text-foreground/80 mb-4">K-12 Sovereign Education System with Divine STEM, Languages, Courses, and comprehensive curriculum. 9 training simulators with token rewards.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">K-12 System</span>
-                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">9 Simulators</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* LuvLedger */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">📊</div>
-                      <p className="text-white font-semibold text-sm">$2M+ Assets</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">LuvLedger Wealth Management</h3>
-                    <p className="text-foreground/80 mb-4">Personal wealth hub tracking $2M+ in family assets including investments, real estate, and multi-generational financial history.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">Real Data</span>
-                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">$2M+ Assets</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
           <WaitlistSignup />
         </div>
       </section>
