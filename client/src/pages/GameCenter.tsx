@@ -220,10 +220,6 @@ export default function GameCenter() {
     "trivia-challenge",
     "simon-says",
     "community-builder",
-    "fleet-command",
-    "hearts",
-    "knowledge-quest",
-    "advanced-escape-room",
   ]);
 
   const isGameImplemented = (slug: string) => implementedGames.has(slug);
@@ -272,10 +268,6 @@ export default function GameCenter() {
       "trivia-challenge": "/games/trivia-challenge",
       "simon-says": "/games/simon-says",
       "community-builder": "/games/community-builder",
-      "fleet-command": "/games/fleet-command",
-      "hearts": "/games/hearts",
-      "knowledge-quest": "/games/knowledge-quest",
-      "advanced-escape-room": "/games/advanced-escape-room",
     };
     
     if (gameRoutes[gameSlug]) {

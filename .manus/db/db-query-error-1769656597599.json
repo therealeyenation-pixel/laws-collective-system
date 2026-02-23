@@ -1,8 +1,0 @@
-{
-  "query": "SELECT id, name, entityType, jurisdiction FROM business_entities WHERE name LIKE '%Academy%' OR name LIKE '%Outreach%' OR (entityType = 'trust' AND jurisdiction = 'Georgia');",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, entityType, jurisdiction FROM business_entities WHERE name LIKE '%Academy%' OR name LIKE '%Outreach%' OR (entityType = 'trust' AND jurisdiction = 'Georgia');",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'jurisdiction' in 'where clause'"
-  ]
-}

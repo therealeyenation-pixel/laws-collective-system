@@ -39,18 +39,13 @@ import {
   CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye,
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
-  Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
-  Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint
+  Target, TrendingUp
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { NotificationCenter } from "./NotificationCenter";
 import { WhatsNewButton } from "./WhatsNew";
-import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { OnboardingTour, useOnboarding } from "./OnboardingTour";
-import { OfflineStatusBar, OfflineIndicator } from "./OfflineStatusBar";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -465,15 +460,11 @@ const menuCategories: MenuCategory[] = [
           { icon: Settings, label: "Platform Dashboard", path: "/dept/platform-admin", minRole: "admin" },
           { icon: FileText, label: "Document Admin", path: "/admin/documents", minRole: "admin" },
           { icon: Settings, label: "System Settings", path: "/system-settings", minRole: "admin" },
-          { icon: FileSignature, label: "Signature Audit", path: "/admin/signature-audit", minRole: "admin" },
-          { icon: Users, label: "Bulk Signatures", path: "/admin/bulk-signatures", minRole: "admin" },
-          { icon: BarChart3, label: "Compliance Dashboard", path: "/admin/compliance-dashboard", minRole: "admin" },
           { icon: Users, label: "User Management", path: "/user-management", minRole: "admin" },
           { icon: Play, label: "Platform Simulator", path: "/platform-simulator", minRole: "admin" },
           { icon: Users, label: "Team", path: "/platform-team", minRole: "admin" },
           { icon: FolderOpen, label: "Documents", path: "/platform-documents", minRole: "admin" },
           { icon: FileText, label: "Changelog", path: "/changelog", minRole: "admin" },
-          { icon: MessageSquare, label: "Ticker Admin", path: "/ticker-admin", minRole: "admin" },
         ]
       },
       // Grants & Funding
@@ -531,34 +522,6 @@ const menuCategories: MenuCategory[] = [
     defaultOpen: false,
     items: [
       { icon: UserCircle, label: "My Profile", path: "/my-profile", minRole: "user" },
-      { icon: ClipboardList, label: "My Tasks", path: "/my-tasks", minRole: "user" },
-      { icon: Users, label: "Team Tasks", path: "/team-tasks", minRole: "staff" },
-      { icon: ArrowLeftRight, label: "Task Delegation", path: "/task-delegation", minRole: "user" },
-      { icon: Scale, label: "Team Workload", path: "/team-workload", minRole: "staff" },
-      { icon: BarChart3, label: "Delegation Analytics", path: "/delegation-analytics", minRole: "staff" },
-      { icon: Shield, label: "Delegation Approvals", path: "/delegation-approvals", minRole: "staff" },
-      { icon: History, label: "Delegation History", path: "/delegation-history", minRole: "staff" },
-      { icon: Zap, label: "Delegation Escalation", path: "/delegation-escalation", minRole: "staff" },
-      { icon: Search, label: "Global Search", path: "/global-search", minRole: "user" },
-      { icon: BarChart3, label: "Reporting Center", path: "/reporting-center", minRole: "staff" },
-      { icon: Plug, label: "Integration Hub", path: "/integration-hub", minRole: "admin" },
-      { icon: GraduationCap, label: "Onboarding Center", path: "/onboarding-center", minRole: "user" },
-      { icon: FileSpreadsheet, label: "Bulk Import/Export", path: "/bulk-operations", minRole: "staff" },
-      { icon: Database, label: "Backup & Restore", path: "/backup-restore", minRole: "admin" },
-      { icon: Activity, label: "Activity Feed", path: "/activity-feed", minRole: "user" },
-      { icon: LayoutDashboard, label: "Custom Dashboard", path: "/custom-dashboard", minRole: "user" },
-      { icon: Shield, label: "Two-Factor Auth", path: "/two-factor-setup", minRole: "user" },
-      { icon: Fingerprint, label: "Biometric Auth", path: "/biometric-settings", minRole: "user" },
-      { icon: Lock, label: "Permission Matrix", path: "/permission-matrix", minRole: "admin" },
-      { icon: GitBranch, label: "Document Versions", path: "/document-version-control", minRole: "staff" },
-      { icon: Archive, label: "Data Retention", path: "/data-retention-policies", minRole: "admin" },
-      { icon: Workflow, label: "Workflow Builder", path: "/workflow-builder", minRole: "staff" },
-      { icon: Users, label: "Real-Time Collab", path: "/real-time-collaboration", minRole: "user" },
-      { icon: FileText, label: "Audit Reports", path: "/audit-reports", minRole: "admin" },
-      { icon: Activity, label: "API Usage", path: "/api-usage-dashboard", minRole: "admin" },
-      { icon: Layout, label: "Role Dashboards", path: "/role-dashboard", minRole: "admin" },
-      { icon: Globe, label: "Language", path: "/language-settings", minRole: "user" },
-      { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
       { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
     ]
@@ -627,12 +590,6 @@ function DashboardLayoutContent({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const userRole = (user?.role as AccessLevel) || "user";
   const isMobile = useIsMobile();
-  
-  // Enable keyboard shortcuts for navigation
-  useKeyboardShortcuts();
-  
-  // Onboarding tour for new users
-  const { showTour, completeTour, skipTour } = useOnboarding();
   
   // Track which categories and subcategories are open
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(() => {
@@ -739,11 +696,6 @@ function DashboardLayoutContent({
 
   return (
     <>
-      {/* Onboarding Tour */}
-      {showTour && (
-        <OnboardingTour onComplete={completeTour} onSkip={skipTour} />
-      )}
-      
       <div className="relative" ref={sidebarRef}>
         <Sidebar
           collapsible="icon"
@@ -889,20 +841,6 @@ function DashboardLayoutContent({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem
-                    onClick={() => setLocation("/my-profile")}
-                    className="cursor-pointer"
-                  >
-                    <UserCircle className="mr-2 h-4 w-4" />
-                    <span>My Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setLocation("/settings/preferences")}
-                    className="cursor-pointer"
-                  >
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
                     onClick={refreshSession}
                     className="cursor-pointer"
                   >
@@ -940,41 +878,31 @@ function DashboardLayoutContent({
       </div>
 
       <SidebarInset>
-        {/* Navigation header - shows on both mobile and desktop */}
-        <div className="flex border-b h-14 items-center justify-between bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
-          <div className="flex items-center gap-2">
-            {/* Back button */}
-            <button
-              onClick={() => window.history.back()}
-              className="h-9 w-9 rounded-lg bg-secondary/50 flex items-center justify-center hover:bg-accent transition-colors"
-              aria-label="Go back"
-              title="Go Back"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            {/* Home button */}
-            <button
-              onClick={() => setLocation('/dashboard')}
-              className="h-9 w-9 rounded-lg bg-secondary/50 flex items-center justify-center hover:bg-accent transition-colors"
-              aria-label="Go to dashboard"
-              title="Home"
-            >
-              <Home className="h-5 w-5" />
-            </button>
-            {isMobile && <SidebarTrigger className="h-9 w-9 rounded-lg bg-secondary/50" />}
-            <div className="flex items-center gap-3 ml-2">
-              <span className="tracking-tight text-foreground font-medium">
-                {activeMenuItem?.label ?? "Dashboard"}
-              </span>
+        {isMobile && (
+          <div className="flex border-b h-14 items-center justify-between bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => window.history.back()}
+                className="h-9 w-9 rounded-lg bg-background flex items-center justify-center hover:bg-accent transition-colors"
+                aria-label="Go back"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+              <SidebarTrigger className="h-9 w-9 rounded-lg bg-background" />
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-1">
+                  <span className="tracking-tight text-foreground">
+                    {activeMenuItem?.label ?? "Menu"}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <WhatsNewButton />
+              <NotificationCenter />
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <OfflineIndicator />
-            <WhatsNewButton />
-            <NotificationCenter />
-          </div>
-        </div>
-        <OfflineStatusBar />
+        )}
         <main className="flex-1 p-4">{children}</main>
       </SidebarInset>
     </>
