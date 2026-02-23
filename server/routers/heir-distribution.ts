@@ -690,6 +690,136 @@ export const heirDistributionRouter = router({
       };
     }),
 
+  // Update an existing heir
+  updateHeir: protectedProcedure
+    .input(z.object({
+      heirId: z.number(),
+      fullName: z.string().optional(),
+      relationship: z.enum([
+        "child", "grandchild", "great_grandchild", "spouse", "sibling",
+        "niece_nephew", "cousin", "adopted", "guardian_ward", "other"
+      ]).optional(),
+      dateOfBirth: z.string().optional(),
+      email: z.string().email().optional(),
+      phone: z.string().optional(),
+      address: z.string().optional(),
+      distributionPercentage: z.number().min(0).max(100).optional(),
+      distributionMethod: z.enum(["immediate", "accumulate", "hybrid"]).optional(),
+      accumulationPercentage: z.number().min(0).max(100).optional(),
+      spendthriftEnabled: z.boolean().optional(),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const userId = ctx.user?.id;
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      // Get existing heir
+      const [heir] = await db.select().from(houseHeirs).where(eq(houseHeirs.id, input.heirId));
+      if (!heir) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Heir not found" });
+      }
+
+      // Check if percentage is locked
+      if (input.distributionPercentage !== undefined && heir.percentageLocked) {
+        throw new TRPCError({ 
+          code: "FORBIDDEN", 
+          message: "Distribution percentage is locked and cannot be changed" 
+        });
+      }
+
+      // If changing percentage, validate total
+      if (input.distributionPercentage !== undefined) {
+        const otherHeirs = await db.select().from(houseHeirs).where(
+          and(
+            eq(houseHeirs.houseId, heir.houseId),
+            eq(houseHeirs.status, "active")
+          )
+        );
+        const otherTotal = otherHeirs
+          .filter(h => h.id !== input.heirId)
+          .reduce((sum, h) => sum + parseFloat(h.distributionPercentage || "0"), 0);
+        
+        if (otherTotal + input.distributionPercentage > 100) {
+          throw new TRPCError({ 
+            code: "BAD_REQUEST", 
+            message: `Total heir percentage would exceed 100%. Other heirs: ${otherTotal}%, Requested: ${input.distributionPercentage}%` 
+          });
+        }
+      }
+
+      // Build update object
+      const updateData: any = {};
+      if (input.fullName) updateData.fullName = input.fullName;
+      if (input.relationship) updateData.relationship = input.relationship;
+      if (input.dateOfBirth) updateData.dateOfBirth = new Date(input.dateOfBirth);
+      if (input.email !== undefined) updateData.email = input.email;
+      if (input.phone !== undefined) updateData.phone = input.phone;
+      if (input.address !== undefined) updateData.address = input.address;
+      if (input.distributionPercentage !== undefined) updateData.distributionPercentage = input.distributionPercentage.toString();
+      if (input.distributionMethod) updateData.distributionMethod = input.distributionMethod;
+      if (input.accumulationPercentage !== undefined) updateData.accumulationPercentage = input.accumulationPercentage.toString();
+      if (input.spendthriftEnabled !== undefined) updateData.spendthriftEnabled = input.spendthriftEnabled;
+
+      await db.update(houseHeirs).set(updateData).where(eq(houseHeirs.id, input.heirId));
+
+      return {
+        success: true,
+        heirId: input.heirId,
+        message: `Heir ${input.fullName || heir.fullName} updated successfully`,
+      };
+    }),
+
+  // Remove (deactivate) an heir
+  removeHeir: protectedProcedure
+    .input(z.object({
+      heirId: z.number(),
+      reason: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      const userId = ctx.user?.id;
+      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+      // Get existing heir
+      const [heir] = await db.select().from(houseHeirs).where(eq(houseHeirs.id, input.heirId));
+      if (!heir) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Heir not found" });
+      }
+
+      // Check if distribution is locked
+      const [lock] = await db.select().from(heirDistributionLocks).where(eq(heirDistributionLocks.houseId, heir.houseId));
+      if (lock?.isLocked) {
+        throw new TRPCError({ 
+          code: "FORBIDDEN", 
+          message: "Heir distributions are locked. Cannot remove heirs." 
+        });
+      }
+
+      // Soft delete - set status to removed
+      await db.update(houseHeirs).set({
+        status: "removed",
+      }).where(eq(houseHeirs.id, input.heirId));
+
+      // Record to blockchain
+      const blockchainHash = await recordToBlockchain("heir_removed", input.heirId, {
+        heirName: heir.fullName,
+        reason: input.reason || "Removed by administrator",
+        removedBy: userId,
+      });
+
+      return {
+        success: true,
+        heirId: input.heirId,
+        message: `Heir ${heir.fullName} has been removed`,
+        blockchainHash,
+      };
+    }),
+
   // Get heir distribution summary for dashboard
   getDistributionSummary: protectedProcedure
     .input(z.object({ houseId: z.number().optional() }).optional())

@@ -24,6 +24,7 @@ import Shop from "./pages/Shop";
 import Products from "./pages/Products";
 import CourseSuccess from "./pages/CourseSuccess";
 import ConsultingSuccess from "./pages/ConsultingSuccess";
+import CourseDashboard from "./pages/CourseDashboard";
 import MemberOnboarding from "./pages/MemberOnboarding";
 import RevenueCycleDashboard from "./pages/RevenueCycleDashboard";
 import BankingCredit from "./pages/BankingCredit";
@@ -52,6 +53,7 @@ import TrainingContentManager from "@/pages/TrainingContentManager";
 import HRManagement from "@/pages/HRManagement";
 import HRApplications from "@/pages/HRApplications";
 import HRDashboard from "@/pages/HRDashboard";
+import HRAdmin from "@/pages/HRAdmin";
 import PerformanceReviews from "@/pages/PerformanceReviews";
 import FinancialLiteracyGame from "@/pages/FinancialLiteracyGame";
 import BusinessTycoonGame from "@/pages/BusinessTycoonGame";
@@ -126,6 +128,10 @@ import SignatureVerification from "./pages/SignatureVerification";
 import BoardGovernance from "./pages/BoardGovernance";
 import ContractorNetwork from "./pages/ContractorNetwork";
 import TransitionTraining from "./pages/TransitionTraining";
+import TransitionSimulator from "./pages/TransitionSimulator";
+import HouseOfTongues from "./pages/HouseOfTongues";
+import LearningHouses from "./pages/LearningHouses";
+import Leaderboard from "./pages/Leaderboard";
 import ContractorInvoices from "@/pages/ContractorInvoices";
 import ContractManagement from "@/pages/ContractManagement";
 import Donations from "@/pages/Donations";
@@ -415,7 +421,8 @@ function Router() {
   // Public routes: Landing page, Academy, and Dashboard (for viewing courses)
   // Protected routes: Trust System, Document Vault, Agents, Social Media
   return (
-    <Switch>
+    <div className="flex flex-col min-h-screen">
+      <Switch>
       {/* Public routes - no authentication required */}
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
@@ -429,6 +436,7 @@ function Router() {
       <Route path="/products" component={Products} />
       <Route path="/course-success" component={CourseSuccess} />
       <Route path="/consulting-success" component={ConsultingSuccess} />
+      <Route path="/course-dashboard" component={CourseDashboard} />
       <Route path="/donate/public" component={PublicDonate} />
       <Route path="/donate/thank-you" component={DonateThankYou} />
       <Route path="/donate/academy" component={Donate508} />
@@ -503,6 +511,7 @@ function Router() {
       <Route path="/hr-management">{() => <ProtectedRoute component={HRManagement} minRole="staff" />}</Route>
       <Route path="/hr-applications">{() => <ProtectedRoute component={HRApplications} minRole="staff" />}</Route>
       <Route path="/hr-dashboard">{() => <ProtectedRoute component={HRDashboard} minRole="staff" />}</Route>
+      <Route path="/hr-admin">{() => <ProtectedRoute component={HRAdmin} minRole="admin" />}</Route>
       <Route path="/performance-reviews">{() => <ProtectedRoute component={PerformanceReviews} minRole="staff" />}</Route>
       <Route path="/contractor-transition">{() => <ProtectedRoute component={ContractorTransition} minRole="staff" />}</Route>
       <Route path="/contractor-transitions">{() => <ProtectedRoute component={ContractorTransitions} minRole="staff" />}</Route>
@@ -513,6 +522,10 @@ function Router() {
       <Route path="/closed-loop-wealth">{() => <ProtectedRoute component={ClosedLoopWealth} minRole="staff" />}</Route>
       <Route path="/benefits-comparison">{() => <ProtectedRoute component={BenefitsComparison} minRole="user" />}</Route>
       <Route path="/transition-training">{() => <ProtectedRoute component={TransitionTraining} minRole="staff" />}</Route>
+      <Route path="/transition-simulator">{() => <ProtectedRoute component={TransitionSimulator} minRole="staff" />}</Route>
+      <Route path="/house-of-tongues">{() => <ProtectedRoute component={HouseOfTongues} minRole="user" />}</Route>
+      <Route path="/learning-houses">{() => <ProtectedRoute component={LearningHouses} minRole="user" />}</Route>
+      <Route path="/leaderboard">{() => <ProtectedRoute component={Leaderboard} minRole="user" />}</Route>
       <Route path="/board-governance">{() => <ProtectedRoute component={BoardGovernance} minRole="admin" />}</Route>
       <Route path="/contractor-network">{() => <ProtectedRoute component={ContractorNetwork} minRole="admin" />}</Route>
       <Route path="/contractor-invoices">{() => <ProtectedRoute component={ContractorInvoices} minRole="staff" />}</Route>
@@ -815,6 +828,12 @@ function Router() {
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
+      <footer className="mt-auto border-t border-border bg-background/50 py-4">
+        <div className="container max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground opacity-60">
+          <p>REAL-EYE-NATION | LuvOnPurpose Academy and Outreach</p>
+        </div>
+      </footer>
+    </div>
   );
 }
 

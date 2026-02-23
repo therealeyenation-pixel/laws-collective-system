@@ -3,7 +3,7 @@ import { router, publicProcedure, protectedProcedure } from "../_core/trpc";
 import Stripe from "stripe";
 import { COURSE_PRODUCTS, CONSULTING_PRODUCTS, ALL_PRODUCTS } from "../stripe/course-products";
 import { db } from "../db";
-import { coursePurchases, consultingBookings } from "../../drizzle/schema";
+import { coursePurchases, consultingBookings, purchasedCourseProgress, courseCompletions } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 
 // Initialize Stripe with secret key
@@ -272,4 +272,154 @@ export const courseCheckoutRouter = router({
 
     return { courses, consultations };
   }),
+
+  // Get course progress for a purchase
+  getCourseProgress: publicProcedure
+    .input(z.object({ purchaseId: z.number(), email: z.string().email() }))
+    .query(async ({ input }) => {
+      const progress = await db
+        .select()
+        .from(purchasedCourseProgress)
+        .where(eq(purchasedCourseProgress.purchaseId, input.purchaseId));
+
+      const purchase = await db
+        .select()
+        .from(coursePurchases)
+        .where(eq(coursePurchases.id, input.purchaseId));
+
+      if (!purchase[0] || purchase[0].customerEmail !== input.email) {
+        throw new Error("Access denied");
+      }
+
+      // Get course structure
+      const course = COURSE_PRODUCTS.lawsFoundation;
+      const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
+      const completedLessons = progress.filter((p) => p.completed).length;
+
+      return {
+        progress,
+        totalLessons,
+        completedLessons,
+        percentComplete: Math.round((completedLessons / totalLessons) * 100),
+        isComplete: completedLessons === totalLessons,
+      };
+    }),
+
+  // Mark lesson as complete
+  markLessonComplete: publicProcedure
+    .input(
+      z.object({
+        purchaseId: z.number(),
+        email: z.string().email(),
+        moduleId: z.string(),
+        lessonIndex: z.number(),
+        lessonTitle: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      // Verify purchase access
+      const purchase = await db
+        .select()
+        .from(coursePurchases)
+        .where(eq(coursePurchases.id, input.purchaseId));
+
+      if (!purchase[0] || purchase[0].customerEmail !== input.email || !purchase[0].accessGranted) {
+        throw new Error("Access denied");
+      }
+
+      // Check if already exists
+      const existing = await db
+        .select()
+        .from(purchasedCourseProgress)
+        .where(eq(purchasedCourseProgress.purchaseId, input.purchaseId));
+
+      const alreadyCompleted = existing.find(
+        (p) => p.moduleId === input.moduleId && p.lessonIndex === input.lessonIndex
+      );
+
+      if (alreadyCompleted) {
+        return { success: true, alreadyCompleted: true };
+      }
+
+      // Insert progress record
+      await db.insert(purchasedCourseProgress).values({
+        purchaseId: input.purchaseId,
+        customerEmail: input.email,
+        courseId: purchase[0].productId,
+        moduleId: input.moduleId,
+        lessonIndex: input.lessonIndex,
+        lessonTitle: input.lessonTitle,
+        completed: true,
+        completedAt: new Date(),
+      });
+
+      // Check if course is now complete
+      const course = COURSE_PRODUCTS.lawsFoundation;
+      const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
+      const updatedProgress = await db
+        .select()
+        .from(purchasedCourseProgress)
+        .where(eq(purchasedCourseProgress.purchaseId, input.purchaseId));
+      const completedLessons = updatedProgress.filter((p) => p.completed).length;
+
+      if (completedLessons === totalLessons) {
+        // Course completed - create completion record
+        await db.insert(courseCompletions).values({
+          purchaseId: input.purchaseId,
+          customerEmail: input.email,
+          courseId: purchase[0].productId,
+          courseName: purchase[0].productName,
+          completedAt: new Date(),
+          certificateIssued: false,
+          upsellOffered: false,
+        });
+      }
+
+      return {
+        success: true,
+        alreadyCompleted: false,
+        courseComplete: completedLessons === totalLessons,
+      };
+    }),
+
+  // Get course completion status and upsell info
+  getCourseCompletion: publicProcedure
+    .input(z.object({ purchaseId: z.number(), email: z.string().email() }))
+    .query(async ({ input }) => {
+      const completion = await db
+        .select()
+        .from(courseCompletions)
+        .where(eq(courseCompletions.purchaseId, input.purchaseId));
+
+      if (!completion[0]) {
+        return { isComplete: false };
+      }
+
+      if (completion[0].customerEmail !== input.email) {
+        throw new Error("Access denied");
+      }
+
+      // Get upsell product info
+      const strategySession = CONSULTING_PRODUCTS.strategySession;
+
+      return {
+        isComplete: true,
+        completion: completion[0],
+        upsellProduct: {
+          ...strategySession,
+          priceFormatted: `$${(strategySession.price / 100).toFixed(2)}`,
+        },
+      };
+    }),
+
+  // Mark upsell as offered
+  markUpsellOffered: publicProcedure
+    .input(z.object({ completionId: z.number() }))
+    .mutation(async ({ input }) => {
+      await db
+        .update(courseCompletions)
+        .set({ upsellOffered: true })
+        .where(eq(courseCompletions.id, input.completionId));
+      return { success: true };
+    }),
 });

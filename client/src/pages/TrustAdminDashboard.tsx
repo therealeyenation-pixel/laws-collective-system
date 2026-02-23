@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
@@ -21,6 +23,9 @@ import {
   Users,
   DollarSign,
   Activity,
+  Coins,
+  Download,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
@@ -30,6 +35,50 @@ import { WeatherWidget } from "@/components/WeatherWidget";
 export default function TrustAdminDashboard() {
   const { user } = useAuth();
   const [showSensitive, setShowSensitive] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  // Token economy initialization
+  const initTokenMutation = trpc.tokenEconomy.initializeTokenEconomy.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Token economy initialized! Total: ${data.totalAllocated?.toLocaleString() || '2,000,000'} LUV tokens`);
+      setIsInitializing(false);
+    },
+    onError: (error) => {
+      toast.error(`Failed to initialize: ${error.message}`);
+      setIsInitializing(false);
+    },
+  });
+
+  // Export system architecture
+  const { data: systemArchitecture, refetch: refetchArchitecture } = trpc.dataExport.exportSystemArchitecture.useQuery(undefined, {
+    enabled: false,
+  });
+
+  const handleInitializeTokens = async () => {
+    setIsInitializing(true);
+    initTokenMutation.mutate({ totalSupply: 2000000, confirm: true });
+  };
+
+  const handleExportArchitecture = async () => {
+    setIsExporting(true);
+    try {
+      const { data } = await refetchArchitecture();
+      if (data) {
+        const dataStr = JSON.stringify(data, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `laws-system-architecture-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        toast.success("System architecture exported successfully");
+      }
+    } catch (error) {
+      toast.error("Failed to export system architecture");
+    }
+    setIsExporting(false);
+  };
 
   // Trust-level assets (internal only - not visible to public)
   const trustAssets = [
@@ -327,6 +376,55 @@ export default function TrustAdminDashboard() {
 
           {/* Governance Tab */}
           <TabsContent value="governance" className="space-y-4">
+            {/* Admin Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <Card className="p-4 border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-amber-100 dark:bg-amber-900 rounded-lg">
+                    <Coins className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Token Economy</p>
+                    <p className="text-xs text-muted-foreground">Initialize $2M LUV token allocation</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={handleInitializeTokens}
+                  disabled={isInitializing}
+                  className="w-full gap-2"
+                >
+                  {isInitializing ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Initializing...</>
+                  ) : (
+                    <><Coins className="w-4 h-4" /> Initialize Token Economy</>
+                  )}
+                </Button>
+              </Card>
+              <Card className="p-4 border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                    <Download className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Export System</p>
+                    <p className="text-xs text-muted-foreground">Download system architecture JSON</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={handleExportArchitecture}
+                  disabled={isExporting}
+                  variant="outline"
+                  className="w-full gap-2"
+                >
+                  {isExporting ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Exporting...</>
+                  ) : (
+                    <><Download className="w-4 h-4" /> Export Architecture</>
+                  )}
+                </Button>
+              </Card>
+            </div>
+
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <Link href="/governance-workflows">
