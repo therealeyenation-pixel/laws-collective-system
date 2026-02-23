@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import { MeetingWidget } from "@/components/widgets/MeetingWidget";
 import { ChatWidget } from "@/components/widgets/ChatWidget";
 import DashboardLayout from "@/components/DashboardLayout";

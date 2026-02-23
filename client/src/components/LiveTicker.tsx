@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -33,8 +32,6 @@ import {
   AlertCircle,
   Info,
   Zap,
-  Check,
-  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -137,13 +134,7 @@ export function LiveTicker({ department, className = "" }: LiveTickerProps) {
   const [selectedItem, setSelectedItem] = useState<TickerItem | null>(null);
   const [showReadSignDialog, setShowReadSignDialog] = useState(false);
   const [showTaskDialog, setShowTaskDialog] = useState(false);
-  const [hasReadArticle, setHasReadArticle] = useState(false);
-  const [isSigningInProgress, setIsSigningInProgress] = useState(false);
   const tickerRef = useRef<HTMLDivElement>(null);
-
-  // Article acknowledgment mutations
-  const markAsReadMutation = trpc.articleAcknowledgment.markAsRead.useMutation();
-  const signArticleMutation = trpc.articleAcknowledgment.signArticle.useMutation();
 
   // Fetch resource links from database
   const { data: dbLinks, isLoading } = trpc.resourceLinks.getByDashboard.useQuery({
@@ -193,23 +184,9 @@ export function LiveTicker({ department, className = "" }: LiveTickerProps) {
     window.open(item.url, "_blank", "noopener,noreferrer");
   };
 
-  const handleConvertToReadSign = async (item: TickerItem) => {
+  const handleConvertToReadSign = (item: TickerItem) => {
     setSelectedItem(item);
-    setHasReadArticle(false);
     setShowReadSignDialog(true);
-    
-    // Mark as read when dialog opens
-    try {
-      await markAsReadMutation.mutateAsync({
-        articleId: `ticker-${item.id}`,
-        articleTitle: item.title,
-        articleType: item.category === 'legal' ? 'compliance' : 
-                     item.category === 'finance' ? 'policy' : 'announcement',
-        department: department
-      });
-    } catch (error) {
-      console.error('Failed to mark as read:', error);
-    }
   };
 
   const handleAddToTaskList = (item: TickerItem) => {
@@ -217,31 +194,11 @@ export function LiveTicker({ department, className = "" }: LiveTickerProps) {
     setShowTaskDialog(true);
   };
 
-  const confirmReadSign = async () => {
-    if (!selectedItem || !hasReadArticle) return;
-    
-    setIsSigningInProgress(true);
-    try {
-      const result = await signArticleMutation.mutateAsync({
-        articleId: `ticker-${selectedItem.id}`,
-        articleTitle: selectedItem.title,
-        articleType: selectedItem.category === 'legal' ? 'compliance' : 
-                     selectedItem.category === 'finance' ? 'policy' : 'announcement',
-        department: department,
-        ipAddress: undefined,
-        userAgent: navigator.userAgent
-      });
-      
-      toast.success(`"${selectedItem.title}" signed successfully`, {
-        description: `Signature hash: ${result.signatureHash?.substring(0, 12)}...`
-      });
+  const confirmReadSign = () => {
+    if (selectedItem) {
+      toast.success(`"${selectedItem.title}" added to Read & Sign queue`);
       setShowReadSignDialog(false);
       setSelectedItem(null);
-      setHasReadArticle(false);
-    } catch (error) {
-      toast.error('Failed to sign article. Please try again.');
-    } finally {
-      setIsSigningInProgress(false);
     }
   };
 
@@ -421,74 +378,39 @@ export function LiveTicker({ department, className = "" }: LiveTickerProps) {
       </Dialog>
 
       {/* Read & Sign Confirmation Dialog */}
-      <Dialog open={showReadSignDialog} onOpenChange={(open) => {
-        setShowReadSignDialog(open);
-        if (!open) setHasReadArticle(false);
-      }}>
+      <Dialog open={showReadSignDialog} onOpenChange={setShowReadSignDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileSignature className="w-5 h-5 text-primary" />
-              Read & Sign Document
-            </DialogTitle>
+            <DialogTitle>Convert to Read & Sign</DialogTitle>
             <DialogDescription>
-              Please read the content below and confirm your acknowledgment by signing electronically.
+              This will create a Read & Sign requirement for employees to acknowledge they have read and understood this content.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
-            <div className="p-4 bg-muted rounded-lg border">
-              <p className="font-semibold text-foreground">{selectedItem?.title}</p>
-              <p className="text-sm text-muted-foreground mt-2">{selectedItem?.description}</p>
-              {selectedItem?.url && (
-                <a 
-                  href={selectedItem.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-xs text-primary hover:underline mt-2 inline-flex items-center gap-1"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  View full article
-                </a>
-              )}
+            <div className="p-4 bg-muted rounded-lg">
+              <p className="font-medium">{selectedItem?.title}</p>
+              <p className="text-sm text-muted-foreground mt-1">{selectedItem?.description}</p>
             </div>
 
-            <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-              <p className="text-sm font-medium text-amber-800 dark:text-amber-200">Electronic Signature Notice</p>
-              <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-                By signing below, you acknowledge that you have read and understood the content above. 
-                Your signature will be recorded with a timestamp and unique hash for compliance purposes.
-              </p>
-            </div>
-
-            <div className="flex items-start gap-3 p-3 border rounded-lg">
-              <Checkbox 
-                id="read-confirm" 
-                checked={hasReadArticle}
-                onCheckedChange={(checked) => setHasReadArticle(checked === true)}
-              />
-              <label htmlFor="read-confirm" className="text-sm cursor-pointer">
-                I confirm that I have read and understood the content above and agree to sign this document electronically.
-              </label>
+            <div className="text-sm text-muted-foreground">
+              <p>This will:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Add to the Read & Sign queue</li>
+                <li>Notify assigned employees</li>
+                <li>Track acknowledgment status</li>
+                <li>Record signatures for compliance</li>
+              </ul>
             </div>
           </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setShowReadSignDialog(false)} disabled={isSigningInProgress}>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowReadSignDialog(false)}>
               Cancel
             </Button>
-            <Button 
-              onClick={confirmReadSign} 
-              disabled={!hasReadArticle || isSigningInProgress}
-              className="min-w-[140px]"
-            >
-              {isSigningInProgress ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Signing...</>
-              ) : hasReadArticle ? (
-                <><Check className="w-4 h-4 mr-2" />Sign Document</>
-              ) : (
-                <><FileSignature className="w-4 h-4 mr-2" />Confirm to Sign</>
-              )}
+            <Button onClick={confirmReadSign}>
+              <FileSignature className="w-4 h-4 mr-2" />
+              Create Read & Sign
             </Button>
           </DialogFooter>
         </DialogContent>

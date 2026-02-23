@@ -1,5 +1,4 @@
 import DashboardLayout from "@/components/DashboardLayout";
-import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
