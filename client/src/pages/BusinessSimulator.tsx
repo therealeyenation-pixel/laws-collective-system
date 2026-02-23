@@ -566,15 +566,17 @@ export default function BusinessSimulator() {
               </div>
             </div>
 
-            {/* Trademark Search - Always visible */}
-            <TrademarkSearch 
-              businessName={simulation.entityName || ""}
-              compact={true}
-              onSearchComplete={(result) => {
-                // Store search result in simulation state if needed
-                console.log("Trademark search completed:", result);
-              }}
-            />
+            {/* Trademark Search */}
+            {simulation.entityName && simulation.entityName.length >= 3 && (
+              <TrademarkSearch 
+                businessName={simulation.entityName}
+                compact={true}
+                onSearchComplete={(result) => {
+                  // Store search result in simulation state if needed
+                  console.log("Trademark search completed:", result);
+                }}
+              />
+            )}
 
             <Card className="bg-amber-50 border-amber-200">
               <CardContent className="pt-6">
