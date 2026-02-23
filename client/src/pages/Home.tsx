@@ -326,12 +326,12 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container max-w-6xl mx-auto px-4">
-          {/* QR Code in Top Left */}
-          <div className="absolute top-4 left-4 md:top-8 md:left-8">
+          {/* QR Code Top Right */}
+          <div className="absolute top-4 right-4 md:top-8 md:right-8">
             <img 
               src="/landing_page_qr.png" 
               alt="L.A.W.S. Collective QR Code" 
-              className="w-20 h-20 md:w-24 md:h-24 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+              className="w-24 h-24 md:w-32 md:h-32 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
               title="Scan to visit L.A.W.S. Collective"
             />
           </div>
