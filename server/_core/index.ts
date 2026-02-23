@@ -8,7 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { addClient, removeClient, clearUserTyping } from "../services/chatSSE";
-import { sdk } from "./sdk";
+import { standaloneAuth } from "./standaloneAuth";
 import { getDb } from "../db";
 import { users } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -33,7 +33,76 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+async function runMigrations() {
+  // Run migration to create tables and add columns if they don't exist
+  if (process.env.DATABASE_URL) {
+    try {
+      const mysql = await import('mysql2/promise');
+      const connection = await mysql.createConnection(process.env.DATABASE_URL);
+      
+      // Check if users table exists
+      const [tables] = await connection.execute(
+        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users'"
+      ) as any;
+      
+      if (tables.length === 0) {
+        console.log('[Migration] Creating users table...');
+        await connection.execute(`
+          CREATE TABLE users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            openId VARCHAR(64) UNIQUE NOT NULL,
+            name TEXT,
+            email VARCHAR(320),
+            passwordHash VARCHAR(255),
+            loginMethod VARCHAR(64),
+            role ENUM('user', 'staff', 'admin', 'owner') DEFAULT 'user' NOT NULL,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+            lastSignedIn TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+          )
+        `);
+        console.log('[Migration] users table created successfully');
+      } else {
+        // Table exists, add missing columns
+        console.log('[Migration] users table exists, checking for missing columns...');
+        
+        const columnsToAdd = [
+          { name: 'passwordHash', sql: 'ALTER TABLE `users` ADD COLUMN `passwordHash` VARCHAR(255) NULL' },
+          { name: 'loginMethod', sql: 'ALTER TABLE `users` ADD COLUMN `loginMethod` VARCHAR(64) NULL' },
+          { name: 'lastSignedIn', sql: 'ALTER TABLE `users` ADD COLUMN `lastSignedIn` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL' }
+        ];
+        
+        for (const col of columnsToAdd) {
+          const [columns] = await connection.execute(
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = '${col.name}'`
+          ) as any;
+          
+          if (columns.length === 0) {
+            console.log(`[Migration] Adding ${col.name} column...`);
+            try {
+              await connection.execute(col.sql);
+              console.log(`[Migration] ${col.name} column added successfully`);
+            } catch (e: any) {
+              console.log(`[Migration] ${col.name} column may already exist or error: ${e.message}`);
+            }
+          }
+        }
+        console.log('[Migration] Column check complete');
+      }
+      
+      await connection.end();
+    } catch (error) {
+      console.error('[Migration] Error running migrations:', error);
+    }
+  } else {
+    console.log('[Migration] DATABASE_URL not set, skipping migrations');
+  }
+}
+
 async function startServer() {
+  // Run migrations before starting server
+  await runMigrations();
+  
   const app = express();
   const server = createServer(app);
   
@@ -63,7 +132,7 @@ async function startServer() {
         return;
       }
       
-      const session = await sdk.verifySession(sessionCookie);
+      const session = await standaloneAuth.verifySession(sessionCookie);
       if (!session) {
         res.status(401).json({ error: "Invalid session" });
         return;

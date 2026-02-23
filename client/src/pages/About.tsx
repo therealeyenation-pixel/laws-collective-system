@@ -1,0 +1,278 @@
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Mail, Phone, MapPin, Linkedin, Twitter } from "lucide-react";
+import { ContactForm } from "@/components/ContactForm";
+
+export default function About() {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-b from-primary/10 to-background">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+            {/* Photo */}
+            <div className="flex justify-center md:justify-start">
+              <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
+            </div>
+
+            {/* Bio Section */}
+            <div className="md:col-span-2">
+              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">About</span>
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">About Luv</h1>
+              <p className="text-xl text-muted-foreground mb-6">
+                Founder & Visionary of The L.A.W.S. Collective
+              </p>
+              <div className="space-y-4 text-base text-foreground/80 leading-relaxed mb-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Background & Education</h3>
+                  <p>
+                    With extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective. My background has equipped me with deep insights into business structure, compliance, and the mechanics of building sustainable economic systems.
+                  </p>
+                  <p className="mt-3">
+                    <strong>Education:</strong> I hold two Associates degrees from Bryant and Stratton College (1998)—in Microcomputers Management and Administrative Assistant with Micro option—where I was inducted into the National Honors Society. I earned my Bachelor's degree in Business Administration with a minor in Management from American Public University in 2025, graduating Cum Laude.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">L.A.W.S.' Mission</h3>
+                  <p>
+                    I exist to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. I operate as both a commercial structure and an ecosystem of purpose. My mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment.
+                  </p>
+                  <p className="mt-3">
+                    By merging business education with real-world application, I transform traditional training models into living systems. Each House established through my platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Luv's Vision</h3>
+                  <p>
+                    I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship.
+                  </p>
+                  <p className="mt-3">
+                    Over time, the L.A.W.S. Collective ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration. My ultimate goal is to create measurable impact—educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Button className="bg-primary hover:bg-primary/90">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Contact
+                </Button>
+                <Button variant="outline">
+                  <Linkedin className="w-4 h-4 mr-2" />
+                  LinkedIn
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+            {/* Framework Section */}
+      <section className="py-16 md:py-24 bg-secondary/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Framework</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">A Closed-Loop Wealth Ecosystem</h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">
+              Creating a comprehensive approach to building multi-generational wealth through community, education, and purposeful enterprise
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold text-foreground mb-4">The L.A.W.S. Framework</h3>
+              <p className="text-muted-foreground mb-6">
+                Built on four interconnected pillars of human flourishing that form the philosophical foundation of all programs and community structures.
+              </p>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-foreground mb-1">🌍 Land</h4>
+                  <p className="text-sm text-muted-foreground">Stability, roots, and ancestral connection through property ownership and generational assets</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-1">💨 Air</h4>
+                  <p className="text-sm text-muted-foreground">Knowledge, communication, and wisdom through education and mentorship</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-1">💧 Water</h4>
+                  <p className="text-sm text-muted-foreground">Healing, balance, and emotional intelligence for resilience and healthy decision-making</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground mb-1">✨ Self</h4>
+                  <p className="text-sm text-muted-foreground">Purpose, skills, and financial sovereignty through personal development</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Key Achievements</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span className="text-foreground/80">Architected multi-entity legal structure for wealth management and community building</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span className="text-foreground/80">Designed comprehensive S.W.A.L. progression model for building financial sovereignty</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span className="text-foreground/80">Created LuvLedger system for personal wealth management and asset tracking</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span className="text-foreground/80">Established Luv Learning Academy with K-12 Divine STEM curriculum</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span className="text-foreground/80">Built business simulators and grant-writing tools for practical financial education</span>
+                </li>
+              </ul>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Values Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Core Values</h2>
+            <p className="text-muted-foreground">Guiding principles that shape every aspect of The L.A.W.S. Collective</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: "Sovereignty",
+                description: "Financial independence and self-determination for every individual and family"
+              },
+              {
+                title: "Community",
+                description: "Collective prosperity alongside individual success and shared growth"
+              },
+              {
+                title: "Education",
+                description: "Practical, hands-on learning through simulators and real-world application"
+              },
+              {
+                title: "Legacy",
+                description: "Building wealth designed to last for generations and create lasting impact"
+              }
+            ].map((value, idx) => (
+              <Card key={idx} className="p-6 text-center">
+                <h3 className="text-lg font-bold text-foreground mb-2">{value.title}</h3>
+                <p className="text-sm text-muted-foreground">{value.description}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Organizations Section */}
+      <section className="py-16 md:py-24 bg-secondary/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Organizations</h2>
+            <p className="text-muted-foreground">A multi-entity structure serving different purposes while maintaining unified vision</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="p-8">
+              <h3 className="text-xl font-bold text-foreground mb-2">LuvOnPurpose Autonomous Wealth System, LLC</h3>
+              <p className="text-sm text-primary/70 mb-4">Parent Holding Company</p>
+              <p className="text-foreground/80">
+                Owns and protects the platform intellectual property, technology infrastructure, and core assets. Manages the LuvLedger system and platform application.
+              </p>
+            </Card>
+
+            <Card className="p-8">
+              <h3 className="text-xl font-bold text-foreground mb-2">The L.A.W.S. Collective, LLC</h3>
+              <p className="text-sm text-primary/70 mb-4">Operating Entity</p>
+              <p className="text-foreground/80">
+                Public-facing operating company for employment, services, consulting, and community engagement. Manages L.A.W.S. Quest, L.A.W.S. Academy, and Wealth System divisions.
+              </p>
+            </Card>
+
+            <Card className="p-8">
+              <h3 className="text-xl font-bold text-foreground mb-2">LuvOnPurpose Outreach Temple and Academy Society</h3>
+              <p className="text-sm text-primary/70 mb-4">508(c)(1)(a) Nonprofit</p>
+              <p className="text-foreground/80">
+                Educational and religious nonprofit handling community outreach, education programs, and spiritual development initiatives.
+              </p>
+            </Card>
+
+            <Card className="p-8">
+              <h3 className="text-xl font-bold text-foreground mb-2">Real-Eye-Nation</h3>
+              <p className="text-sm text-primary/70 mb-4">Media Division</p>
+              <p className="text-foreground/80">
+                Media and communications division supporting content creation, storytelling, and community visibility.
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* QR Code & Business Card Section */}
+      <section className="py-16 md:py-24 bg-secondary/20">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Connect & Share</h2>
+            <p className="text-muted-foreground">Quick ways to connect and share The L.A.W.S. Collective vision</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            {/* Business Card Front */}
+            <div className="flex flex-col items-center">
+              <Card className="p-8 bg-background">
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/dLYFUnjFHAmwIKcP.png" alt="Business Card Front" className="w-80 h-48 object-contain" />
+              </Card>
+              <p className="text-sm text-muted-foreground mt-4">Business Card - Front (L.A.W.S. Collective + QR Code)</p>
+            </div>
+
+            {/* Business Card Back */}
+            <div className="flex flex-col items-center">
+              <Card className="p-8 bg-background">
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/IpKBuXelcvzxGMTO.png" alt="Business Card Back" className="w-80 h-48 object-contain" />
+              </Card>
+              <p className="text-sm text-muted-foreground mt-4">Business Card - Back (Contact Information)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container max-w-4xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Get in Touch</h2>
+            <p className="text-muted-foreground">Connect with La Shanna K. Russell and The L.A.W.S. Collective</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="p-8 text-center">
+              <Phone className="w-8 h-8 text-primary mx-auto mb-4" />
+              <h3 className="font-semibold text-foreground mb-2">Phone</h3>
+              <p className="text-foreground/80">870-413-9074</p>
+            </Card>
+
+            <Card className="p-8 text-center">
+              <Mail className="w-8 h-8 text-primary mx-auto mb-4" />
+              <h3 className="font-semibold text-foreground mb-2">Email</h3>
+              <p className="text-foreground/80">luvonpurpose@protonmail.com</p>
+            </Card>
+
+            <Card className="p-8 text-center">
+              <MapPin className="w-8 h-8 text-primary mx-auto mb-4" />
+              <h3 className="font-semibold text-foreground mb-2">Location</h3>
+              <p className="text-foreground/80">Augusta, GA</p>
+            </Card>
+          </div>
+
+          <div className="mt-12">
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

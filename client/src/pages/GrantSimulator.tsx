@@ -425,6 +425,12 @@ export default function GrantSimulator() {
     { enabled: !!selectedEntity?.name && !autoPopulated }
   );
 
+  // Fetch professional need statement for the selected entity
+  const { data: needStatementData } = trpc.needStatements.getForGrantApplication.useQuery(
+    { entityName: selectedEntity?.name || "" },
+    { enabled: !!selectedEntity?.name && !autoPopulated }
+  );
+
   // Save to tracking mutation
   const saveToTracking = trpc.grantTracking.createFromSimulator.useMutation();
 
@@ -475,7 +481,8 @@ export default function GrantSimulator() {
         missionStatement: businessPlanData.missionStatement || prev.missionStatement,
         yearFounded: businessPlanData.yearFounded?.toString() || prev.yearFounded,
         teamSize: getTeamSizeCategory(businessPlanData.teamSize),
-        needStatement: businessPlanData.fundingPurpose || prev.needStatement,
+        // Use professional need statement if available, otherwise fall back to business plan funding purpose
+        needStatement: needStatementData?.statement?.fullStatement || businessPlanData.fundingPurpose || prev.needStatement,
         problemDescription: businessPlanData.socialImpact || prev.problemDescription,
         targetPopulation: businessPlanData.communityBenefit || prev.targetPopulation,
         // Project Description fields
@@ -488,7 +495,7 @@ export default function GrantSimulator() {
       setAutoPopulated(true);
       toast.success("Auto-populated from your Business Plan!");
     }
-  }, [businessPlanData, autoPopulated]);
+  }, [businessPlanData, needStatementData, autoPopulated]);
 
   // Reset auto-populate flag when entity changes
   useEffect(() => {
