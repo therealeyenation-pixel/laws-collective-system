@@ -8,9 +8,18 @@ import "./index.css";
 
 const queryClient = new QueryClient();
 
-// Completely disable automatic redirects to prevent login loops
-// Authentication is handled by ProtectedRoute component showing a sign-in prompt
+// Auto-redirect authenticated users to dashboard to prevent login loops
 queryClient.getQueryCache().subscribe(event => {
+  if (event.type === "updated" && event.action.type === "success") {
+    const query = event.query;
+    // Check if this is the auth.me query and user is authenticated
+    if (query.queryKey[0] === "auth" && query.queryKey[1] === "me" && query.state.data) {
+      // User is authenticated, redirect to dashboard if on home page
+      if (typeof window !== "undefined" && window.location.pathname === "/") {
+        window.location.href = "/dashboard";
+      }
+    }
+  }
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
     // Just log errors, don't redirect
