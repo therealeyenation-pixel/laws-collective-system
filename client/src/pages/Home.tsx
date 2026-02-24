@@ -154,40 +154,18 @@ function DemoSimulator() {
   }
 
   if (step === "setup") {
+    // Set LLC as default entity type
+    React.useEffect(() => {
+      if (!entityType) setEntityType("llc");
+    }, [entityType]);
+
     return (
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-3">Entity Type (Planned)</label>
-          <div className="grid grid-cols-2 gap-3">
-            {entityTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setEntityType(type.id)}
-                className={`p-3 rounded-lg border-2 transition-all text-left ${
-                  entityType === type.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
-                }`}
-              >
-                <div className="font-semibold text-foreground">{type.name}</div>
-                <div className="text-xs text-muted-foreground">{type.desc}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-3">Business Type (Planned)</label>
-          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-            {businessTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setBusinessType(type.id)}
-                className={`p-2 rounded-lg border-2 transition-all text-left text-sm ${
-                  businessType === type.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
-                }`}
-              >
-                <div className="font-semibold text-foreground">{type.name}</div>
-              </button>
-            ))}
+          <label className="block text-sm font-semibold text-foreground mb-2">Entity Type</label>
+          <div className="p-3 rounded-lg border-2 border-primary bg-primary/10 text-left">
+            <div className="font-semibold text-foreground">LLC</div>
+            <div className="text-xs text-muted-foreground">Limited Liability Company</div>
           </div>
         </div>
 
@@ -203,7 +181,7 @@ function DemoSimulator() {
         </div>
 
         <div className="flex gap-3">
-          <Button onClick={handleSubmit} disabled={!entityType || !businessType || !businessName} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button onClick={handleSubmit} disabled={!entityType || !businessName} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
             Continue
           </Button>
           <Button onClick={resetDemo} variant="outline">
@@ -352,12 +330,12 @@ export default function Home() {
       </section>
 
       {/* QR Code Section - Before Concept Overview */}
-      <section className="py-8 md:py-12 bg-background">
+      <section className="py-4 md:py-6 bg-background">
         <div className="container max-w-2xl mx-auto px-4 flex justify-center">
           <img 
             src="/landing_page_qr.png" 
             alt="L.A.W.S. Collective QR Code" 
-            className="w-32 h-32 md:w-40 md:h-40 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            className="w-24 h-24 md:w-28 md:h-28 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
             title="Scan to visit L.A.W.S. Collective"
           />
         </div>
