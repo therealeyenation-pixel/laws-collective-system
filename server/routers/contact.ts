@@ -37,6 +37,65 @@ export const contactRouter = router({
         content: `From: ${input.name} (${input.email})\n\n${input.message.substring(0, 200)}${input.message.length > 200 ? "..." : ""}`,
       });
 
+      // Send email notification to luvonpurpose@protonmail.com
+      try {
+        const emailContent = `
+New ${input.source === 'waitlist' ? 'Waitlist Signup' : 'Contact Submission'}
+
+Name: ${input.name}
+Email: ${input.email}
+Phone: ${input.phone || 'Not provided'}
+Subject: ${input.subject || 'General Inquiry'}
+Source: ${input.source || 'landing_page'}
+
+Message:
+${input.message}
+
+---
+Submitted at: ${new Date().toISOString()}
+        `;
+
+        // Send email via Manus API
+        const response = await fetch(process.env.BUILT_IN_FORGE_API_URL + '/notification/email', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.BUILT_IN_FORGE_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            to: 'luvonpurpose@protonmail.com',
+            subject: `${input.source === 'waitlist' ? '✨ New Waitlist Signup' : '📧 New Contact'}: ${input.name}`,
+            text: emailContent,
+            html: `
+<html>
+  <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #2d5a27;">${input.source === 'waitlist' ? '✨ New Waitlist Signup' : '📧 New Contact Submission'}</h2>
+      <p><strong>Name:</strong> ${input.name}</p>
+      <p><strong>Email:</strong> <a href="mailto:${input.email}">${input.email}</a></p>
+      ${input.phone ? `<p><strong>Phone:</strong> ${input.phone}</p>` : ''}
+      <p><strong>Subject:</strong> ${input.subject || 'General Inquiry'}</p>
+      <p><strong>Source:</strong> ${input.source || 'landing_page'}</p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+      <h3>Message:</h3>
+      <p style="white-space: pre-wrap;">${input.message}</p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+      <p style="font-size: 12px; color: #999;">Submitted at: ${new Date().toISOString()}</p>
+    </div>
+  </body>
+</html>
+            `,
+          }),
+        });
+
+        if (!response.ok) {
+          console.error('Failed to send email notification:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error sending email notification:', error);
+        // Don't throw - we still want the contact to be saved even if email fails
+      }
+
       return { 
         success: true, 
         message: "Thank you for your message! We'll get back to you soon." 
