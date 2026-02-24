@@ -9922,3 +9922,77 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add "Get Started" CTA button linking to /getting-started onboarding flow
 - [x] Test complete flow: Simulator → Dashboard Preview → Get Started
 - [x] Save checkpoint for March 4th deployment
+
+
+## Phase 95: Enhanced Carousel + Demo + Audio
+- [x] Move carousel section before simulator on landing page
+- [x] Expand carousel slides to cover tangibles: education simulators, grants, proposals, taxes, employee-to-contractor, land reclamation
+- [x] Expand demo walkthrough steps with more system features (10 steps now)
+- [x] Generate AI voiceover narration for all 15 slides
+- [x] Upload narration audio to CDN
+- [x] Add sound toggle controls (mute/unmute)
+- [x] Update hero description to sovereign wealth management platform
+- [ ] Add background music to carousel and walkthrough
+
+## Phase 96: Under Development Transparency
+- [x] Add tasteful "Platform in Development | Launching 2026" banner
+- [x] Remove pricing references from public pages (Services, BusinessLanding)
+- [x] Update all language to reflect concept/vision/development stage
+- [x] Label demo as "Educational Demo" with concept demonstration language
+- [x] Add international considerations slide to carousel and walkthrough
+- [x] Update Careers page salary ranges to show "Projected" prefix
+- [x] Replace "Join the Collective" CTAs with "Contact Us" links
+- [x] Update walkthrough steps to use future tense (Planned) labels
+- [x] Update done screen to say "That's the Vision" with development notice
+
+## Phase 97: Footer Entity Bar Update & Legal Structure Verification
+- [x] Add LuvOnPurpose Autonomous Wealth System, LLC to footer entity bar alongside Real-Eye-Nation and 508
+- [x] Verify legal entity structure documentation is accurate
+
+## Phase 98: Rebuild Slideshow Carousel with Transitions & Audio
+- [x] Rebuild carousel slideshow with all slides
+- [x] Set 8-second auto-advance timing
+- [x] Add curtain/blink/fade transition effects between slides
+- [x] Audio narration retained from previous version (16 audio files)
+- [x] Test carousel in browser
+
+## Phase 99: Carousel Music, Demo Rerun Fix, Slower Transitions
+- [x] Remove voice narration from carousel (replaced with background music)
+- [x] Add background music to carousel (ambient synthesized track)
+- [x] Slow down carousel transitions to 12 seconds for readability
+- [x] Slow down walkthrough auto-advance to 12 seconds
+- [x] Fix demo rerun (entityType reset to 'llc' instead of empty)
+- [x] Update subtitle text from 'narration' to 'background music'
+
+
+## Phase 100: Remove Music and Reorganize Page Flow
+- [x] Remove background music from carousel (mute by default, no audio)
+- [x] Move Concept Overview section to top (under "See What We're Building" heading)
+- [x] Add "Try Demo" button and demo video below Concept Overview
+- [x] Reorder remaining sections: Planned Capabilities, How It Works, etc.
+- [x] Test page flow in browser and verify demo works
+
+
+## Phase 101: About Section, QR Code, and Business Cards
+- [x] Gather professional information from project docs
+- [x] Create About page with bio, vision, and achievements
+- [x] Generate QR code linking to landing page
+- [x] Design business card with photo placeholder
+- [x] Add About route to App.tsx
+- [x] Add About link to Home.tsx navigation
+- [x] Test About page loads correctly
+
+
+## Phase X: Newsletter System (Future Implementation)
+- [ ] Create newsletter database schema (subscribers, campaigns, templates)
+- [ ] Build newsletter subscription management router
+- [ ] Create newsletter template builder component
+- [ ] Implement email sending via email service
+- [ ] Build newsletter campaign scheduling
+- [ ] Create subscriber list management interface
+- [ ] Add newsletter analytics and tracking
+- [ ] Integrate newsletter signup into landing page (waitlist component)
+- [ ] Create newsletter dashboard for content management
+- [ ] Set up automated newsletter sending workflows
+- [ ] Add newsletter unsubscribe handling
+- [ ] Create newsletter archive/history viewer

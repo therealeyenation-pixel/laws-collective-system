@@ -31,6 +31,7 @@ import { agentsRouter } from "./routers/agents";
 import { socialMediaRouter } from "./routers/social-media";
 import { emailServiceRouter } from "./routers/email-service";
 import { contactRouter } from "./routers/contact";
+import { newsletterRouter } from "./routers/newsletter";
 import { luvLedgerAssetManagerRouter } from "./routers/luvledger-asset-manager";
 import { sovereignScrollsRouter } from "./routers/sovereign-scrolls";
 import { foundationLayerRouter } from "./routers/foundation-layer";
@@ -253,6 +254,7 @@ export const appRouter = router({
   socialMedia: socialMediaRouter,
   emailService: emailServiceRouter,
   contact: contactRouter,
+  newsletter: newsletterRouter,
   luvLedgerAssetManager: luvLedgerAssetManagerRouter,
   sovereignScrolls: sovereignScrollsRouter,
   foundationLayer: foundationLayerRouter,

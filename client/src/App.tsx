@@ -247,7 +247,8 @@ import AcquisitionFundDashboard from "@/pages/AcquisitionFundDashboard";
 import TrialLanding from "@/pages/TrialLanding";
 import TrialDashboard from "@/pages/TrialDashboard";
 import TrialAnalytics from "@/pages/TrialAnalytics";
-import OfficeSuite from "@/pages/OfficeSuite";
+import OfficeSuite from "./pages/OfficeSuite";
+import About from "./pages/About";
 import Documentary from "@/pages/Documentary";
 import Podcast from "@/pages/Podcast";
 import JoinJourney from "@/pages/JoinJourney";
@@ -431,7 +432,8 @@ function Router() {
       <Route path="/my-credential" component={MyCredential} />
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
-      <Route path="/support" component={Support} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/about" component={About} />
       <Route path="/donate" component={Donations} />
       <Route path="/products" component={Products} />
       <Route path="/course-success" component={CourseSuccess} />
@@ -830,7 +832,7 @@ function Router() {
     </Switch>
       <footer className="mt-auto border-t border-border bg-background/50 py-4">
         <div className="container max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground opacity-60">
-          <p>REAL-EYE-NATION | LuvOnPurpose Academy and Outreach</p>
+          <p>LuvOnPurpose Autonomous Wealth System, LLC | REAL-EYE-NATION | LuvOnPurpose Academy and Outreach</p>
         </div>
       </footer>
     </div>

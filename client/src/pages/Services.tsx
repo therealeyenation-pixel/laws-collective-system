@@ -249,8 +249,8 @@ const MEMBERSHIP_TIERS = [
   {
     id: "premium",
     name: "Premium Member",
-    price: "$29/month",
-    description: "Full access to all tools and services",
+    price: "Coming Soon",
+    description: "Full access to all tools and services (pricing TBD)",
     features: [
       "Unlimited contract analysis",
       "Full negotiation strategy",
@@ -265,8 +265,8 @@ const MEMBERSHIP_TIERS = [
   {
     id: "business",
     name: "Business Member",
-    price: "$99/month",
-    description: "Everything plus representation services",
+    price: "Coming Soon",
+    description: "Everything plus representation services (pricing TBD)",
     features: [
       "All Premium features",
       "Representation services",
