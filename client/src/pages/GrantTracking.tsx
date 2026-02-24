@@ -26,7 +26,10 @@ import {
   FileCheck,
   Send,
   Award,
+  Calculator,
+  Users,
 } from "lucide-react";
+import StaffingBudgetCalculator from "@/components/StaffingBudgetCalculator";
 
 export default function GrantTracking() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -377,6 +380,10 @@ export default function GrantTracking() {
             <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
+            <TabsTrigger value="staffing" className="gap-1">
+              <Calculator className="w-4 h-4" />
+              Staffing Budget
+            </TabsTrigger>
           </TabsList>
 
           {/* Dashboard Tab */}
@@ -718,6 +725,11 @@ export default function GrantTracking() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* Staffing Budget Tab */}
+          <TabsContent value="staffing" className="space-y-4 mt-6">
+            <StaffingBudgetCalculator />
           </TabsContent>
         </Tabs>
 
