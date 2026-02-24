@@ -278,6 +278,17 @@ export default function Home() {
         </div>
       </section>
 
+      {/* QR Code Section */}
+      <section className="py-12 md:py-16 bg-background flex justify-center items-center">
+        <div className="container max-w-6xl mx-auto px-4 text-center">
+          <img 
+            src="/qr-code.png" 
+            alt="QR Code" 
+            className="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-lg shadow-lg"
+          />
+        </div>
+      </section>
+
       {/* System Overview Section */}
       <section id="system-overview" className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-6xl mx-auto px-4">
@@ -609,17 +620,6 @@ export default function Home() {
               </Button>
             </a>
           </div>
-        </div>
-      </section>
-
-      {/* QR Code Section */}
-      <section className="py-12 md:py-16 bg-background flex justify-center items-center">
-        <div className="container max-w-6xl mx-auto px-4 text-center">
-          <img 
-            src="/qr-code.png" 
-            alt="QR Code" 
-            className="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-lg shadow-lg"
-          />
         </div>
       </section>
 
