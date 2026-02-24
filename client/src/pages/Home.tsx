@@ -330,12 +330,12 @@ export default function Home() {
       </section>
 
       {/* QR Code Section - Before Concept Overview */}
-      <section className="py-2 md:py-3 bg-background">
+      <section className="py-1 md:py-2 bg-background">
         <div className="container max-w-2xl mx-auto px-4 flex justify-center">
           <img 
             src="/landing_page_qr.png" 
             alt="L.A.W.S. Collective QR Code" 
-            className="w-64 h-64 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            className="w-80 h-80 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
             title="Scan to visit L.A.W.S. Collective"
           />
         </div>
