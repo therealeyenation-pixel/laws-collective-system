@@ -326,15 +326,6 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container max-w-6xl mx-auto px-4">
-          {/* QR Code Top Right */}
-          <div className="absolute top-4 right-4 md:top-8 md:right-8">
-            <img 
-              src="/landing_page_qr.png" 
-              alt="L.A.W.S. Collective QR Code" 
-              className="w-24 h-24 md:w-32 md:h-32 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
-              title="Scan to visit L.A.W.S. Collective"
-            />
-          </div>
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               The L.A.W.S. Collective
@@ -357,6 +348,18 @@ export default function Home() {
 
 
           </div>
+        </div>
+      </section>
+
+      {/* QR Code Section - Before Concept Overview */}
+      <section className="py-8 md:py-12 bg-background">
+        <div className="container max-w-2xl mx-auto px-4 flex justify-center">
+          <img 
+            src="/landing_page_qr.png" 
+            alt="L.A.W.S. Collective QR Code" 
+            className="w-32 h-32 md:w-40 md:h-40 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            title="Scan to visit L.A.W.S. Collective"
+          />
         </div>
       </section>
 
