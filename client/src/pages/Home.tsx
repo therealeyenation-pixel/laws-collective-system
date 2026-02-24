@@ -196,7 +196,7 @@ function DemoSimulator() {
           <div className="flex items-start gap-4 mb-4">
             <Zap className="w-8 h-8 flex-shrink-0 mt-1" />
             <div>
-              <p className="text-white/70 text-sm uppercase tracking-wider mb-1">(Planned)</p>
+              <p className="text-white/70 text-sm uppercase tracking-wider mb-1">For: {businessName}</p>
               <h3 className="text-2xl font-bold mb-2">{currentStep.title}</h3>
               <p className="text-white/80">{currentStep.subtitle}</p>
             </div>
