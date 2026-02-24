@@ -296,25 +296,25 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-primary/5 via-background to-background">
+      <section className="relative py-12 md:py-24 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+            <h1 className="text-3xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
               The L.A.W.S. Collective
             </h1>
 
-            <div className="flex justify-center gap-3 mb-8 text-2xl font-bold">
+            <div className="flex justify-center gap-2 md:gap-3 mb-8 text-lg md:text-2xl font-bold flex-wrap">
               <span><span className="text-green-600">L</span>and</span>
               <span><span className="text-blue-600">A</span>ir</span>
               <span><span className="text-cyan-600">W</span>ater</span>
               <span><span className="text-purple-600">S</span>elf</span>
             </div>
 
-            <p className="text-xl md:text-2xl text-foreground font-semibold mb-4">
+            <p className="text-lg md:text-2xl text-foreground font-semibold mb-4">
               A Sovereign Wealth Management & Trust Administration Platform
             </p>
 
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto px-2">
               We are building a sovereign wealth management and trust administration platform designed to connect families within a closed-loop economic system for multi-generational wealth building.
             </p>
 
@@ -324,12 +324,12 @@ export default function Home() {
       </section>
 
       {/* QR Code Section - Before Concept Overview */}
-      <section className="py-1 md:py-2 bg-background">
+      <section className="py-4 md:py-8 bg-background">
         <div className="container max-w-2xl mx-auto px-4 flex justify-center">
           <img 
             src="/landing_page_qr.png" 
             alt="L.A.W.S. Collective QR Code" 
-            className="w-80 h-80 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
+            className="w-48 h-48 md:w-80 md:h-80 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
             title="Scan to visit L.A.W.S. Collective"
           />
         </div>
