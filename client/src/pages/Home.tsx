@@ -154,11 +154,6 @@ function DemoSimulator() {
   }
 
   if (step === "setup") {
-    // Set LLC as default entity type
-    React.useEffect(() => {
-      if (!entityType) setEntityType("llc");
-    }, [entityType]);
-
     return (
       <div className="space-y-6">
         <div>
@@ -194,22 +189,12 @@ function DemoSimulator() {
 
   if (step === "walkthrough") {
     const currentStep = walkthroughSteps[walkStep];
-    const iconMap: Record<string, React.ReactNode> = {
-      "Building2": <Building2 className="w-8 h-8 flex-shrink-0 mt-1" />,
-      "HomeIcon": <HomeIcon className="w-8 h-8 flex-shrink-0 mt-1" />,
-      "BarChart3": <BarChart3 className="w-8 h-8 flex-shrink-0 mt-1" />,
-      "BookOpen": <BookOpen className="w-8 h-8 flex-shrink-0 mt-1" />,
-      "TrendingUp": <TrendingUp className="w-8 h-8 flex-shrink-0 mt-1" />,
-      "Network": <Network className="w-8 h-8 flex-shrink-0 mt-1" />,
-      "Shield": <Shield className="w-8 h-8 flex-shrink-0 mt-1" />,
-    };
-    const IconComponent = iconMap[currentStep.icon] || <Shield className="w-8 h-8 flex-shrink-0 mt-1" />;
 
     return (
       <div className="space-y-6">
         <div className={`bg-gradient-to-br ${currentStep.gradient} rounded-lg p-8 text-white`}>
           <div className="flex items-start gap-4 mb-4">
-            {IconComponent}
+            <Zap className="w-8 h-8 flex-shrink-0 mt-1" />
             <div>
               <p className="text-white/70 text-sm uppercase tracking-wider mb-1">(Planned)</p>
               <h3 className="text-2xl font-bold mb-2">{currentStep.title}</h3>
