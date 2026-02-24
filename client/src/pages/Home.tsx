@@ -121,7 +121,7 @@ function DemoSimulator() {
   };
 
   const handleSubmit = () => {
-    if (!entityType || !businessType || !businessName) return;
+    if (!entityType || !businessName) return;
     setStep("walkthrough");
   };
 
