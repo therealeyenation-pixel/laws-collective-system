@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   GraduationCap,
   Users,
@@ -14,579 +13,212 @@ import {
   Heart,
   ChevronRight,
   Quote,
-  Lock,
-  TrendingUp,
-  Network,
-  BookOpen,
-  Building2,
-  Play,
-  Pause,
-  ChevronLeft,
-  Home as HomeIcon,
-  BarChart3,
-  Shield,
-  Globe,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
-import SlidesCarousel from "@/components/SlidesCarousel";
-import { WaitlistSignup } from "@/components/WaitlistSignup";
-
-// Simplified Demo: Setup + Premium Walkthrough
-const entityTypes = [
-  { id: "llc", name: "LLC", desc: "Limited Liability Company" },
-  { id: "scorp", name: "S Corp", desc: "S Corporation" },
-  { id: "nonprofit", name: "Nonprofit", desc: "Tax-Exempt Organization" },
-  { id: "trust", name: "Trust", desc: "Family Trust" },
-];
-
-const businessTypes = [
-  { id: "tech", name: "Tech / E-Commerce", dashboards: ["Product Analytics", "Customer Acquisition", "Revenue Pipeline", "Tech Infrastructure"] },
-  { id: "service", name: "Service / Consulting", dashboards: ["Client Management", "Project Tracking", "Billing & Invoicing", "Resource Allocation"] },
-  { id: "healthcare", name: "Healthcare / Wellness", dashboards: ["Patient Management", "Compliance Tracking", "Appointment Scheduling", "Insurance & Billing"] },
-  { id: "retail", name: "Retail / Food Service", dashboards: ["Inventory Management", "Point of Sale", "Supplier Relations", "Customer Loyalty"] },
-  { id: "realestate", name: "Real Estate / Property", dashboards: ["Property Portfolio", "Tenant Management", "Maintenance Tracking", "Market Analysis"] },
-  { id: "education", name: "Education / Training", dashboards: ["Student Enrollment", "Curriculum Management", "Instructor Scheduling", "Certification Tracking"] },
-  { id: "creative", name: "Creative / Media", dashboards: ["Content Calendar", "Client Campaigns", "Asset Library", "Performance Analytics"] },
-  { id: "construction", name: "Construction / Trades", dashboards: ["Job Scheduling", "Materials Tracking", "Subcontractor Management", "Safety Compliance"] },
-];
-
-const walkthroughSteps = [
-  {
-    title: "Will Be Established",
-    subtitle: "Entity Registration Process",
-    items: ["Entity Registration", "EIN Assignment", "Operating Agreement", "Bank Account Setup"],
-    gradient: "from-blue-900 via-indigo-900 to-slate-900",
-    icon: "Building2",
-  },
-  {
-    title: "Your House Will Be Created",
-    subtitle: "Private & Sovereign System Instance",
-    items: ["Isolated data environment", "Family governance structure", "Multi-entity management", "Secure document vault"],
-    gradient: "from-emerald-900 via-green-900 to-teal-900",
-    icon: "HomeIcon",
-  },
-  {
-    title: "LuvLedger Will Activate",
-    subtitle: "Your Planned Wealth Management Hub",
-    items: ["Business income tracking", "Investment portfolio", "Real estate holdings", "Multi-generational history"],
-    gradient: "from-purple-900 via-violet-900 to-indigo-900",
-    icon: "BarChart3",
-  },
-  {
-    title: "Education Simulators (Planned)",
-    subtitle: "Learn by Doing — Practice Before You Risk",
-    items: ["Business Formation Simulator", "Grant Writing Workshop", "Tax Preparation & Compliance", "Proposal Development Tools", "Financial Planning Scenarios"],
-    gradient: "from-violet-900 via-purple-900 to-fuchsia-900",
-    icon: "BookOpen",
-  },
-  {
-    title: "Grant & Tax Tools (Planned)",
-    subtitle: "Entity-Specific Strategy & Funding Access",
-    items: ["Curated grant database for your entity type", "Tax simulators for LLCs, S Corps, nonprofits, Trusts", "Proposal templates & budget builders", "Compliance checklists & filing guides"],
-    gradient: "from-amber-900 via-orange-900 to-red-900",
-    icon: "TrendingUp",
-  },
-  {
-    title: "Your Growth Path (Planned)",
-    subtitle: "Employee to Contractor Transition",
-    items: ["Managers transition to Board Members", "Coordinators become independent contractors", "Benefits & legal structure documented", "No one is left behind in the process"],
-    gradient: "from-cyan-900 via-blue-900 to-indigo-900",
-    icon: "Network",
-  },
-  {
-    title: "Land Reclamation (Planned)",
-    subtitle: "Reconnecting Families to the Land",
-    items: ["Ancestral land record research", "Reclamation opportunity identification", "Pathway to land ownership", "Foundational to generational wealth"],
-    gradient: "from-teal-900 via-cyan-900 to-blue-900",
-    icon: "Shield",
-  },
-];
-
-function DemoSimulator() {
-  const [step, setStep] = useState<"start" | "setup" | "walkthrough" | "done">("start");
-  const [entityType, setEntityType] = useState("llc");
-  const [businessType, setBusinessType] = useState("");
-  const [businessName, setBusinessName] = useState("");
-  const [walkStep, setWalkStep] = useState(0);
-  const [autoAdvance, setAutoAdvance] = useState(true);
-
-  const resetDemo = () => {
-    setStep("start");
-    setEntityType("llc");
-    setBusinessType("");
-    setBusinessName("");
-    setWalkStep(0);
-  };
-
-  const handleSubmit = () => {
-    if (!entityType || !businessType || !businessName) return;
-    setStep("walkthrough");
-  };
-
-  // Auto-advance walkthrough every 12 seconds
-  React.useEffect(() => {
-    if (step !== "walkthrough" || !autoAdvance) return;
-    const timer = setTimeout(() => {
-      if (walkStep < walkthroughSteps.length - 1) {
-        setWalkStep(walkStep + 1);
-      } else {
-        setStep("done");
-      }
-    }, 12000);
-    return () => clearTimeout(timer);
-  }, [step, walkStep, autoAdvance]);
-
-  if (step === "start") {
-    return (
-      <div className="space-y-6">
-        <div className="text-center">
-          <h3 className="text-2xl font-bold text-foreground mb-2">Educational Concept Demo</h3>
-          <p className="text-muted-foreground mb-6">Walk through a concept demonstration of how the L.A.W.S. system will work — from entity formation to community wealth building.</p>
-          <Button onClick={() => setStep("setup")} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-            Start Educational Demo
-          </Button>
-        </div>
-        <p className="text-xs text-muted-foreground text-center">Educational concept demo • No data saved • Under 2 minutes</p>
-      </div>
-    );
-  }
-
-  if (step === "setup") {
-    return (
-      <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-3">Entity Type (Planned)</label>
-          <div className="grid grid-cols-2 gap-3">
-            {entityTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setEntityType(type.id)}
-                className={`p-3 rounded-lg border-2 transition-all text-left ${
-                  entityType === type.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
-                }`}
-              >
-                <div className="font-semibold text-foreground">{type.name}</div>
-                <div className="text-xs text-muted-foreground">{type.desc}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-3">Business Type (Planned)</label>
-          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-            {businessTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setBusinessType(type.id)}
-                className={`p-2 rounded-lg border-2 transition-all text-left text-sm ${
-                  businessType === type.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
-                }`}
-              >
-                <div className="font-semibold text-foreground">{type.name}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">Business Name</label>
-          <input
-            type="text"
-            value={businessName}
-            onChange={(e) => setBusinessName(e.target.value)}
-            placeholder="Enter your business name"
-            className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-
-        <div className="flex gap-3">
-          <Button onClick={handleSubmit} disabled={!entityType || !businessType || !businessName} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
-            Continue
-          </Button>
-          <Button onClick={resetDemo} variant="outline">
-            Reset
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (step === "walkthrough") {
-    const currentStep = walkthroughSteps[walkStep];
-    const IconComponent = currentStep.icon === "Building2" ? Building2 : currentStep.icon === "HomeIcon" ? HomeIcon : currentStep.icon === "BarChart3" ? BarChart3 : currentStep.icon === "BookOpen" ? BookOpen : currentStep.icon === "TrendingUp" ? TrendingUp : currentStep.icon === "Network" ? Network : Shield;
-
-    return (
-      <div className="space-y-6">
-        <div className={`bg-gradient-to-br ${currentStep.gradient} rounded-lg p-8 text-white`}>
-          <div className="flex items-start gap-4 mb-4">
-            <IconComponent className="w-8 h-8 flex-shrink-0 mt-1" />
-            <div>
-              <p className="text-white/70 text-sm uppercase tracking-wider mb-1">(Planned)</p>
-              <h3 className="text-2xl font-bold mb-2">{currentStep.title}</h3>
-              <p className="text-white/80">{currentStep.subtitle}</p>
-            </div>
-          </div>
-          <ul className="space-y-2 mt-6">
-            {currentStep.items.map((item, idx) => (
-              <li key={idx} className="flex items-center gap-2 text-white/90">
-                <CheckCircle className="w-4 h-4 flex-shrink-0" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Button onClick={() => setWalkStep(Math.max(0, walkStep - 1))} variant="outline" size="sm">
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <div className="flex-1 h-1 bg-border rounded-full overflow-hidden">
-            <div className="h-full bg-primary transition-all" style={{ width: `${((walkStep + 1) / walkthroughSteps.length) * 100}%` }} />
-          </div>
-          <Button onClick={() => setWalkStep(Math.min(walkthroughSteps.length - 1, walkStep + 1))} variant="outline" size="sm">
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-
-        <div className="flex gap-3">
-          <Button onClick={() => setAutoAdvance(!autoAdvance)} variant="outline" className="flex-1">
-            {autoAdvance ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-            {autoAdvance ? "Pause" : "Play"}
-          </Button>
-          <Button onClick={() => setStep("done")} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
-            Skip to End
-          </Button>
-        </div>
-
-        <p className="text-xs text-muted-foreground text-center">
-          Step {walkStep + 1} of {walkthroughSteps.length}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6 text-center">
-      <div>
-        <h3 className="text-2xl font-bold text-foreground mb-2">That's the Vision</h3>
-        <p className="text-muted-foreground mb-4">
-          This is how the L.A.W.S. system will activate when you join. We're building this platform to help families and communities build lasting prosperity together.
-        </p>
-        <p className="text-sm text-muted-foreground mb-6">
-          Platform in Development • Launching 2026 • Contact us to learn more
-        </p>
-      </div>
-      <Button onClick={resetDemo} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-        Run Demo Again
-      </Button>
-    </div>
-  );
-}
-
-const systemComponents = [
-  {
-    icon: <Zap className="w-6 h-6" />,
-    title: "Business Simulators",
-    description: "Interactive scenarios designed to help practice business decisions and see real-time outcomes",
-  },
-  {
-    icon: <GraduationCap className="w-6 h-6" />,
-    title: "Academy & Curriculum",
-    description: "Planned comprehensive education in financial literacy, business, and wealth building",
-  },
-  {
-    icon: <Users className="w-6 h-6" />,
-    title: "Community Network",
-    description: "A planned network to connect families and houses building wealth together",
-  },
-  {
-    icon: <Lock className="w-6 h-6" />,
-    title: "Trust Management",
-    description: "Planned secure governance and asset management for multi-generational wealth",
-  },
-];
-
-const comingFeatures = [
-  { name: "Multi-Tenant System", description: "Each house gets their own isolated system instance" },
-  { name: "Full Dashboard Suite", description: "Comprehensive management dashboards for all operations" },
-  { name: "Community Collaboration", description: "Tools for houses to collaborate and share resources" },
-  { name: "Token Economy", description: "Wealth sharing and token-based incentives" },
-  { name: "Advanced Analytics", description: "Deep insights into business and community metrics" },
-  { name: "Mobile App", description: "Full system access on iOS and Android" },
-];
 
 export default function Home() {
-  const { user, loading, error, isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
+
+  const entities = [
+    {
+      icon: <GraduationCap className="w-8 h-8" />,
+      title: "Education & Outreach",
+      entity: "Temple & Academy",
+      description: "Learn the foundations of wealth building through our comprehensive educational programs and community workshops.",
+      color: "from-blue-500/20 to-indigo-500/20",
+      iconColor: "text-blue-600",
+    },
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "Community & Support",
+      entity: "The L.A.W.S. Collective",
+      description: "Connect with like-minded individuals committed to building generational wealth and supporting each other's growth.",
+      color: "from-emerald-500/20 to-teal-500/20",
+      iconColor: "text-emerald-600",
+    },
+    {
+      icon: <Zap className="w-8 h-8" />,
+      title: "Business & Automation",
+      entity: "LuvOnPurpose Autonomous Wealth System",
+      description: "Build and scale your ventures with our automated systems, business tools, and wealth-building infrastructure.",
+      color: "from-amber-500/20 to-orange-500/20",
+      iconColor: "text-amber-600",
+    },
+    {
+      icon: <Palette className="w-8 h-8" />,
+      title: "Media & Creative",
+      entity: "Real-Eye-Nation",
+      description: "Tell your story, build your brand, and monetize your creativity through our media production services.",
+      color: "from-purple-500/20 to-pink-500/20",
+      iconColor: "text-purple-600",
+    },
+  ];
+
+  const lawsFramework = [
+    { letter: "L", word: "Land", meaning: "Reconnection & Stability", icon: <Leaf className="w-5 h-5" />, description: "Understanding your roots, migrations, and family history" },
+    { letter: "A", word: "Air", meaning: "Education & Knowledge", icon: <Wind className="w-5 h-5" />, description: "Learning, personal development, and communication" },
+    { letter: "W", word: "Water", meaning: "Healing & Balance", icon: <Droplets className="w-5 h-5" />, description: "Emotional resilience and healthy decision-making" },
+    { letter: "S", word: "Self", meaning: "Purpose & Skills", icon: <Heart className="w-5 h-5" />, description: "Financial literacy, business readiness, and purposeful growth" },
+  ];
+
+  const steps = [
+    { number: "01", title: "Complete Your Profile", description: "Tell us about yourself, your background, and your goals" },
+    { number: "02", title: "Assess Your Needs", description: "We'll help identify the right programs and resources for you" },
+    { number: "03", title: "Get Matched", description: "Connect with the entities and programs that fit your journey" },
+    { number: "04", title: "Build Together", description: "Grow with community support and expert guidance" },
+  ];
+
+  const whoWeServe = [
+    "Families seeking financial literacy and wealth building strategies",
+    "Entrepreneurs needing business structure, support, and automation",
+    "Community members looking for education and personal development",
+    "Creatives wanting to monetize their talents and build their brand",
+    "Individuals ready to break generational cycles and build legacy",
+  ];
+
+  const testimonials = [
+    {
+      quote: "This program changed how I think about building wealth for my family. It's not just about money—it's about legacy.",
+      name: "Community Member",
+      role: "Business Owner",
+      initials: "CM",
+    },
+    {
+      quote: "The L.A.W.S. framework helped me reconnect with my purpose and build a business that aligns with my values.",
+      name: "Program Graduate",
+      role: "Entrepreneur",
+      initials: "PG",
+    },
+    {
+      quote: "Finally, a system that understands multi-generational wealth building from a community-centered perspective.",
+      name: "Academy Student",
+      role: "Financial Literacy Graduate",
+      initials: "AS",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-16 md:py-24 bg-gradient-to-b from-primary/5 via-background to-background">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-              The L.A.W.S. Collective
-            </h1>
-
-            <div className="flex justify-center gap-3 mb-8 text-2xl font-bold">
-              <span><span className="text-green-600">L</span>and</span>
-              <span><span className="text-blue-600">A</span>ir</span>
-              <span><span className="text-cyan-600">W</span>ater</span>
-              <span><span className="text-purple-600">S</span>elf</span>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+        <div className="container max-w-6xl mx-auto px-4 py-20 md:py-32 relative">
+          <div className="max-w-3xl">
+            {/* Brand */}
+            <div className="mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-4">
+                The L.A.W.S. Collective, LLC
+              </h1>
+              
+              {/* LAWS Acronym Display */}
+              <div className="flex flex-wrap gap-4 md:gap-6 mb-6">
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">L</span>
+                  <span className="text-lg md:text-xl text-foreground">and</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">A</span>
+                  <span className="text-lg md:text-xl text-foreground">ir</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">W</span>
+                  <span className="text-lg md:text-xl text-foreground">ater</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl md:text-4xl font-bold text-primary">S</span>
+                  <span className="text-lg md:text-xl text-foreground">elf</span>
+                </div>
+              </div>
             </div>
-
-            <p className="text-xl md:text-2xl text-foreground font-semibold mb-4">
-              A Sovereign Wealth Management & Trust Administration Platform
-            </p>
-
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              We are building a sovereign wealth management and trust administration platform designed to connect families within a closed-loop economic system for multi-generational wealth building.
-            </p>
-
-
-          </div>
-        </div>
-      </section>
-
-      {/* Concept Overview - Carousel Section - MOVED TO TOP */}
-      <section className="py-12 md:py-16 bg-background">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-8">
-            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Concept Overview</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">See What We're Building</h2>
-            <p className="text-muted-foreground">An overview of the platform vision and planned capabilities</p>
-          </div>
-          <SlidesCarousel />
-          
-          {/* CTA Buttons Under Carousel */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
-            <Button asChild className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg">
-              <Link href="#simulator">Try the Educational Demo</Link>
-            </Button>
-            <Button asChild variant="outline" className="px-8 py-6 text-lg">
-              <Link href="#system-overview">Explore the Vision</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Demo Simulator Section - MOVED BELOW CAROUSEL */}
-      <section id="simulator" className="py-16 md:py-24 bg-secondary/30">
-        <div className="container max-w-5xl mx-auto px-4">
-          <div className="text-center mb-8">
-            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 px-3 py-1 rounded-full mb-4">Educational Demo</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Interactive System Demo</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Walk through the business setup process and see how the L.A.W.S. system activates for your family</p>
-          </div>
-          <Card className="p-8 md:p-12 overflow-hidden">
-            <DemoSimulator />
-          </Card>
-        </div>
-      </section>
-
-      {/* System Overview Section */}
-      <section id="system-overview" className="py-16 md:py-24 bg-secondary/30">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Planned Capabilities</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              The Complete System Vision
+            
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-6">
+              Building Multi-Generational Wealth Through{" "}
+              <span className="text-primary">Purpose & Community</span>
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              A comprehensive platform being designed to support every aspect of your journey to financial freedom and community prosperity
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
+              A family enterprise helping individuals and families create lasting prosperity 
+              through education, business development, and community support.
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            {systemComponents.map((component, idx) => (
-              <Card key={idx} className="p-6 hover:shadow-lg transition-shadow">
-                <div className="text-primary mb-4">{component.icon}</div>
-                <h3 className="text-lg font-bold text-foreground mb-2">{component.title}</h3>
-                <p className="text-muted-foreground">{component.description}</p>
-              </Card>
-            ))}
-          </div>
-
-          <Card className="p-8 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-            <h3 className="text-xl font-bold text-foreground mb-4">How It Works</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="font-bold text-primary">1</span>
-                </div>
-                <h4 className="font-semibold text-foreground">Learn & Practice</h4>
-                <p className="text-sm text-muted-foreground">Use simulators to practice business decisions in a safe, educational environment</p>
-              </div>
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="font-bold text-primary">2</span>
-                </div>
-                <h4 className="font-semibold text-foreground">Build & Grow</h4>
-                <p className="text-sm text-muted-foreground">Apply what you learn to build your own business and wealth</p>
-              </div>
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="font-bold text-primary">3</span>
-                </div>
-                <h4 className="font-semibold text-foreground">Share & Prosper</h4>
-                <p className="text-sm text-muted-foreground">Connect with other families to build collective community wealth together</p>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/getting-started">
+                <Button size="lg" className="gap-2 w-full sm:w-auto">
+                  Get Started <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+              <Link href="/careers">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  Join Our Team
+                </Button>
+              </Link>
+              <Link href="/support">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto gap-2 border-primary/50 text-primary hover:bg-primary/10">
+                  <Heart className="w-4 h-4" />
+                  Support the Collective
+                </Button>
+              </Link>
             </div>
-          </Card>
-        </div>
-      </section>
-
-      {/* Community Wealth Building Section */}
-      <section className="py-16 md:py-24">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Community Wealth Building
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              The L.A.W.S. Collective is being built on a foundational principle: individual success creates collective prosperity
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-md bg-primary text-primary-foreground">
-                    <CheckCircle className="w-6 h-6" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Individual Excellence</h3>
-                  <p className="text-muted-foreground">Each family will build their own thriving business</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-md bg-primary text-primary-foreground">
-                    <CheckCircle className="w-6 h-6" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Shared Resources</h3>
-                  <p className="text-muted-foreground">Access to collective knowledge, tools, and support systems</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-md bg-primary text-primary-foreground">
-                    <CheckCircle className="w-6 h-6" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Generational Impact</h3>
-                  <p className="text-muted-foreground">Building wealth designed to last for generations</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-md bg-primary text-primary-foreground">
-                    <CheckCircle className="w-6 h-6" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Community Prosperity</h3>
-                  <p className="text-muted-foreground">When families thrive, entire communities thrive</p>
-                </div>
-              </div>
-            </div>
-
-            <Card className="p-8 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border-emerald-200 dark:border-emerald-800">
-              <h3 className="text-2xl font-bold text-foreground mb-6">The Multiplier Effect (Our Goal)</h3>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="text-3xl font-bold text-emerald-600">1</div>
-                  <div>
-                    <p className="font-semibold text-foreground">Family builds toward $100K business</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-3xl font-bold text-emerald-600">10</div>
-                  <div>
-                    <p className="font-semibold text-foreground">Families = $1M collective wealth goal</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-3xl font-bold text-emerald-600">100</div>
-                  <div>
-                    <p className="font-semibold text-foreground">Families = $10M community impact goal</p>
-                  </div>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground mt-6">
-                This is the vision for how generational wealth and community prosperity will be built together.
-              </p>
-            </Card>
           </div>
         </div>
       </section>
 
-      {/* LuvLedger Section */}
+      {/* Who We Serve */}
       <section className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              LuvLedger: Your Future Asset Manager
+              Who We Serve
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Every house will receive their own LuvLedger—a planned personal wealth management and asset tracking system.
+              Our programs are designed for individuals and families ready to transform their financial future
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <Card className="p-6">
-              <h3 className="text-lg font-bold text-foreground mb-2">Real-Time Asset Tracking</h3>
-              <p className="text-muted-foreground">Planned capability to monitor all assets, investments, and wealth in one secure location</p>
-            </Card>
-            <Card className="p-6">
-              <h3 className="text-lg font-bold text-foreground mb-2">Multi-Generational Records</h3>
-              <p className="text-muted-foreground">Designed to document and preserve your family's financial history for generations</p>
-            </Card>
-            <Card className="p-6">
-              <h3 className="text-lg font-bold text-foreground mb-2">Integrated System Hub</h3>
-              <p className="text-muted-foreground">All simulators, businesses, and transactions will flow through LuvLedger</p>
-            </Card>
-            <Card className="p-6">
-              <h3 className="text-lg font-bold text-foreground mb-2">Secure & Private</h3>
-              <p className="text-muted-foreground">Your data will be encrypted and only accessible to your house members</p>
-            </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            {whoWeServe.map((item, idx) => (
+              <div key={idx} className="flex items-start gap-3 p-4 bg-background rounded-lg">
+                <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                <span className="text-foreground">{item}</span>
+              </div>
+            ))}
           </div>
-
-          <Card className="p-8 bg-gradient-to-br from-primary/5 to-accent/5">
-            <h3 className="text-xl font-bold text-foreground mb-6">What LuvLedger Will Manage</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                "Business operations and income",
-                "Investment portfolios",
-                "Real estate and property",
-                "Cryptocurrency and tokens",
-                "Educational achievements",
-                "Legal documents and records",
-                "Family wealth history",
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                  <span className="text-foreground">{item}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground mt-6">
-              LuvLedger will be the foundation of your house's financial autonomy and generational wealth building.
-            </p>
-          </Card>
         </div>
       </section>
 
-      {/* L.A.W.S. Framework Section */}
+      {/* Our Approach - 4 Entities */}
       <section className="py-16 md:py-24">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Our Approach
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Four specialized entities working together to support your journey to prosperity
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {entities.map((entity, idx) => (
+              <Card key={idx} className={`p-6 bg-gradient-to-br ${entity.color} border-0 hover:shadow-lg transition-shadow`}>
+                <div className={`${entity.iconColor} mb-4`}>
+                  {entity.icon}
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-1">
+                  {entity.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {entity.entity}
+                </p>
+                <p className="text-foreground/80">
+                  {entity.description}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* L.A.W.S. Framework */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-emerald-500/5 to-teal-500/5">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -596,195 +228,162 @@ export default function Home() {
               Our holistic approach to personal and financial development
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="p-6 text-center">
-              <div className="text-4xl mb-3">🌍</div>
-              <h3 className="text-lg font-bold text-foreground mb-2">Land</h3>
-              <p className="text-sm text-muted-foreground mb-3">Reconnection & Stability</p>
-              <p className="text-xs text-muted-foreground">Understanding your roots, migrations, and family history</p>
-            </Card>
-            <Card className="p-6 text-center">
-              <div className="text-4xl mb-3">💨</div>
-              <h3 className="text-lg font-bold text-foreground mb-2">Air</h3>
-              <p className="text-sm text-muted-foreground mb-3">Education & Knowledge</p>
-              <p className="text-xs text-muted-foreground">Learning, personal development, and communication</p>
-            </Card>
-            <Card className="p-6 text-center">
-              <div className="text-4xl mb-3">💧</div>
-              <h3 className="text-lg font-bold text-foreground mb-2">Water</h3>
-              <p className="text-sm text-muted-foreground mb-3">Healing & Balance</p>
-              <p className="text-xs text-muted-foreground">Emotional resilience and healthy decision-making</p>
-            </Card>
-            <Card className="p-6 text-center">
-              <div className="text-4xl mb-3">🔥</div>
-              <h3 className="text-lg font-bold text-foreground mb-2">Self</h3>
-              <p className="text-sm text-muted-foreground mb-3">Purpose & Skills</p>
-              <p className="text-xs text-muted-foreground">Financial literacy, business readiness, and purposeful growth</p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* What's Coming Section */}
-      <section className="py-16 md:py-24 bg-secondary/30">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              What's Coming
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              We're building more features to make the L.A.W.S. system even more powerful
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {comingFeatures.map((feature, idx) => (
-              <Card key={idx} className="p-6 relative overflow-hidden">
-                <div className="absolute top-2 right-2 bg-amber-500/20 text-amber-700 text-xs font-semibold px-2 py-1 rounded">
-                  Coming Soon
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {lawsFramework.map((item, idx) => (
+              <Card key={idx} className="p-6 text-center hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-emerald-600">{item.letter}</span>
                 </div>
-                <h3 className="text-lg font-bold text-foreground mb-2">{feature.name}</h3>
-                <p className="text-muted-foreground text-sm">{feature.description}</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">
+                  {item.word}
+                </h3>
+                <p className="text-sm text-primary mb-2">
+                  {item.meaning}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {item.description}
+                </p>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* About Luv Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-background to-primary/5">
+      {/* How It Works */}
+      <section className="py-16 md:py-24">
         <div className="container max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
-            <div className="flex justify-center md:justify-start">
-              <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
-            </div>
-            <div className="md:col-span-2">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell (Luv)</h2>
-              <p className="text-2xl text-primary font-semibold mb-6">Founder and CEO of the L.A.W.S. Ecosystem</p>
-              
-              <div className="space-y-8">
-                <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
-                  <p className="text-base text-foreground/90 leading-relaxed mb-4">
-                    With over 15 years of hands-on experience in government and commercial contracting, I bring deep operational expertise to The L.A.W.S. Collective. As a lifetime researcher and systems architect, I have spent decades studying wealth-building mechanisms, trust frameworks, and economic sovereignty models across cultures and generations. My background spans enterprise operations, financial systems design, legal entity structuring, and community development. As Minister for LuvOnPurpose Academy and Outreach (nonprofit), I am committed to advancing educational equity and community transformation. All of this expertise is synthesized into a comprehensive platform designed to transform how families build and preserve multi-generational wealth.
-                  </p>
-                  <p className="text-base text-foreground/90 leading-relaxed">
-                    <strong>Education:</strong> Associates degrees in Microcomputers Management and Administrative Assistant with Micro option from Bryant and Stratton College (1998, National Honors Society); Bachelor of Business Administration with minor in Management from American Public University (2025, Cum Laude).
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-4">Luv's Vision</h3>
-                  <p className="text-base text-foreground/80 leading-relaxed">I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship. Over time, the L.A.W.S. ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration, creating measurable impact by educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.</p>
-                </div>
-                
-                <div className="border-t border-primary/20 pt-8">
-                  <h3 className="text-2xl font-bold text-foreground mb-4">L.A.W.S.' Mission</h3>
-                  <p className="text-base text-foreground/80 leading-relaxed">The L.A.W.S. Collective exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. We operate as both a commercial structure and an ecosystem of purpose. Our mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment. By merging business education with real-world application, we transform traditional training models into living systems. Each House established through our platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Waitlist Section */}
-      <section className="py-16 md:py-24 bg-primary/5">
-        <div className="container max-w-2xl mx-auto px-4">
-          <div className="text-center mb-8">
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Be First to Know
+              How It Works
             </h2>
-            <p className="text-lg text-muted-foreground">
-              Join our waitlist for exclusive early access and launch updates.
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Your journey to multi-generational wealth starts with four simple steps
             </p>
           </div>
-          
-          {/* Platform Features in Action Section */}
-          <div className="mt-20 py-16 bg-gradient-to-b from-background to-primary/5 rounded-xl">
-            <div className="max-w-5xl mx-auto px-6">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-center">Platform Features in Action</h2>
-              <p className="text-xl text-foreground/80 text-center mb-12">See what's already built and ready for your family's wealth journey</p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Business Formation Simulator */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">🏢</div>
-                      <p className="text-white font-semibold text-sm">10+ Business Structures</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">Business Formation Simulator</h3>
-                    <p className="text-foreground/80 mb-4">Interactive training on 10+ business structures including LLC, S Corp, Nonprofits, Trusts, and more. Learn by doing with guided modules and token rewards.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Interactive</span>
-                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Educational</span>
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((step, idx) => (
+              <div key={idx} className="relative">
+                <div className="text-6xl font-bold text-primary/10 mb-2">
+                  {step.number}
                 </div>
-
-                {/* Grants & Funding */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">💰</div>
-                      <p className="text-white font-semibold text-sm">$1.95M Pipeline</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">Grants & Funding Management</h3>
-                    <p className="text-foreground/80 mb-4">Track grant applications, deadlines, and reporting. Currently managing $1.95M in grant pipeline with real-time progress tracking and deadline alerts.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">Real Data</span>
-                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">$1.95M Pipeline</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Academy */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">📚</div>
-                      <p className="text-white font-semibold text-sm">K-12 Curriculum</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">Luv Learning Academy</h3>
-                    <p className="text-foreground/80 mb-4">K-12 Sovereign Education System with Divine STEM, Languages, Courses, and comprehensive curriculum. 9 training simulators with token rewards.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">K-12 System</span>
-                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">9 Simulators</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* LuvLedger */}
-                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-5xl mb-2">📊</div>
-                      <p className="text-white font-semibold text-sm">$2M+ Assets</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">LuvLedger Wealth Management</h3>
-                    <p className="text-foreground/80 mb-4">Personal wealth hub tracking $2M+ in family assets including investments, real estate, and multi-generational financial history.</p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">Real Data</span>
-                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">$2M+ Assets</span>
-                    </div>
-                  </div>
-                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-muted-foreground">
+                  {step.description}
+                </p>
+                {idx < steps.length - 1 && (
+                  <ChevronRight className="hidden lg:block absolute top-8 -right-3 w-6 h-6 text-muted-foreground/30" />
+                )}
               </div>
-            </div>
+            ))}
           </div>
-          
-          <WaitlistSignup />
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 md:py-24 bg-secondary/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              What Our Community Says
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Hear from members who are building their legacy with us
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial, idx) => (
+              <Card key={idx} className="p-6 relative">
+                <Quote className="w-8 h-8 text-primary/20 absolute top-4 right-4" />
+                <p className="text-muted-foreground mb-6 italic leading-relaxed">
+                  "{testimonial.quote}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-sm font-bold text-primary">{testimonial.initials}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          <p className="text-center text-sm text-muted-foreground mt-8">
+            *Testimonials represent the experiences of our community members. Individual results may vary.
+          </p>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 bg-primary/5">
+        <div className="container max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Ready to Start Your Journey?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Join our community of families and individuals building lasting prosperity together.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/getting-started">
+              <Button size="lg" className="gap-2 w-full sm:w-auto">
+                Get Started <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <Link href="/system-overview">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                Learn More About Our System
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="font-bold text-foreground mb-4">LuvOnPurpose</h3>
+              <p className="text-sm text-muted-foreground">
+                Building multi-generational wealth through purpose, education, and community.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-foreground mb-4">Quick Links</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/getting-started" className="text-muted-foreground hover:text-foreground">Get Started</Link></li>
+                <li><Link href="/careers" className="text-muted-foreground hover:text-foreground">Careers</Link></li>
+                <li><Link href="/contact" className="text-muted-foreground hover:text-foreground">Contact Us</Link></li>
+                <li><Link href="/system-overview" className="text-muted-foreground hover:text-foreground">System Overview</Link></li>
+                {isAuthenticated && (
+                  <li><Link href="/dashboard" className="text-muted-foreground hover:text-foreground">Dashboard</Link></li>
+                )}
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-foreground mb-4">Get Started</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Ready to begin your journey to financial freedom?
+              </p>
+              {isAuthenticated ? (
+                <Link href="/dashboard">
+                  <Button size="sm">Go to Dashboard</Button>
+                </Link>
+              ) : (
+                <a href={getLoginUrl()}>
+                  <Button size="sm">Sign In</Button>
+                </a>
+              )}
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+            <p>© {new Date().getFullYear()} LuvOnPurpose Family Enterprise. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
