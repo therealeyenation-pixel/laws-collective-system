@@ -121,7 +121,7 @@ function DemoSimulator() {
   };
 
   const handleSubmit = () => {
-    if (!entityType || !businessName) return;
+    if (!entityType || !businessType || !businessName) return;
     setStep("walkthrough");
   };
 
@@ -157,10 +157,37 @@ function DemoSimulator() {
     return (
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">Entity Type</label>
-          <div className="p-3 rounded-lg border-2 border-primary bg-primary/10 text-left">
-            <div className="font-semibold text-foreground">LLC</div>
-            <div className="text-xs text-muted-foreground">Limited Liability Company</div>
+          <label className="block text-sm font-semibold text-foreground mb-3">Entity Type (Planned)</label>
+          <div className="grid grid-cols-2 gap-3">
+            {entityTypes.map((type) => (
+              <button
+                key={type.id}
+                onClick={() => setEntityType(type.id)}
+                className={`p-3 rounded-lg border-2 transition-all text-left ${
+                  entityType === type.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="font-semibold text-foreground">{type.name}</div>
+                <div className="text-xs text-muted-foreground">{type.desc}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-foreground mb-3">Business Type (Planned)</label>
+          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+            {businessTypes.map((type) => (
+              <button
+                key={type.id}
+                onClick={() => setBusinessType(type.id)}
+                className={`p-2 rounded-lg border-2 transition-all text-left text-sm ${
+                  businessType === type.id ? "border-primary bg-primary/10" : "border-border hover:border-primary/50"
+                }`}
+              >
+                <div className="font-semibold text-foreground">{type.name}</div>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -176,7 +203,7 @@ function DemoSimulator() {
         </div>
 
         <div className="flex gap-3">
-          <Button onClick={handleSubmit} disabled={!businessName} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button onClick={handleSubmit} disabled={!entityType || !businessType || !businessName} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
             Continue
           </Button>
           <Button onClick={resetDemo} variant="outline">
@@ -189,14 +216,15 @@ function DemoSimulator() {
 
   if (step === "walkthrough") {
     const currentStep = walkthroughSteps[walkStep];
+    const IconComponent = currentStep.icon === "Building2" ? Building2 : currentStep.icon === "HomeIcon" ? HomeIcon : currentStep.icon === "BarChart3" ? BarChart3 : currentStep.icon === "BookOpen" ? BookOpen : currentStep.icon === "TrendingUp" ? TrendingUp : currentStep.icon === "Network" ? Network : Shield;
 
     return (
       <div className="space-y-6">
         <div className={`bg-gradient-to-br ${currentStep.gradient} rounded-lg p-8 text-white`}>
           <div className="flex items-start gap-4 mb-4">
-            <Zap className="w-8 h-8 flex-shrink-0 mt-1" />
+            <IconComponent className="w-8 h-8 flex-shrink-0 mt-1" />
             <div>
-              <p className="text-white/70 text-sm uppercase tracking-wider mb-1">For: {businessName}</p>
+              <p className="text-white/70 text-sm uppercase tracking-wider mb-1">(Planned)</p>
               <h3 className="text-2xl font-bold mb-2">{currentStep.title}</h3>
               <p className="text-white/80">{currentStep.subtitle}</p>
             </div>
@@ -296,42 +324,30 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-12 md:py-24 bg-gradient-to-b from-primary/5 via-background to-background">
+      <section className="relative py-16 md:py-24 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-3xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               The L.A.W.S. Collective
             </h1>
 
-            <div className="flex justify-center gap-2 md:gap-3 mb-8 text-lg md:text-2xl font-bold flex-wrap">
+            <div className="flex justify-center gap-3 mb-8 text-2xl font-bold">
               <span><span className="text-green-600">L</span>and</span>
               <span><span className="text-blue-600">A</span>ir</span>
               <span><span className="text-cyan-600">W</span>ater</span>
               <span><span className="text-purple-600">S</span>elf</span>
             </div>
 
-            <p className="text-lg md:text-2xl text-foreground font-semibold mb-4">
+            <p className="text-xl md:text-2xl text-foreground font-semibold mb-4">
               A Sovereign Wealth Management & Trust Administration Platform
             </p>
 
-            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto px-2">
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               We are building a sovereign wealth management and trust administration platform designed to connect families within a closed-loop economic system for multi-generational wealth building.
             </p>
 
 
           </div>
-        </div>
-      </section>
-
-      {/* QR Code Section - Before Concept Overview */}
-      <section className="py-4 md:py-8 bg-background">
-        <div className="container max-w-2xl mx-auto px-4 flex justify-center">
-          <img 
-            src="/landing_page_qr.png" 
-            alt="L.A.W.S. Collective QR Code" 
-            className="w-48 h-48 md:w-80 md:h-80 border-2 border-primary/20 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer" 
-            title="Scan to visit L.A.W.S. Collective"
-          />
         </div>
       </section>
 
@@ -644,19 +660,27 @@ export default function Home() {
               <img src="/IMG_0290.jpeg" alt="La Shanna K. Russell (Luv)" className="w-64 h-64 object-cover rounded-xl border-2 border-primary/30 shadow-lg" />
             </div>
             <div className="md:col-span-2">
-              <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary/70 mb-3">Meet the Founder</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">About Luv</h2>
-              <p className="text-xl text-muted-foreground mb-6">Founder & Visionary of The L.A.W.S. Collective</p>
-              <div className="space-y-4 text-base text-foreground/80 leading-relaxed">
-                <p>With extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to The L.A.W.S. Collective.</p>
-                <p><strong>Education:</strong> Associates degrees from Bryant and Stratton College (1998, National Honors Society) and Bachelor from American Public University (2025, Cum Laude).</p>
-                <div className="mt-6 pt-6 border-t border-primary/20">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">Luv's Vision</h3>
-                  <p className="text-sm mb-4">I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship. Over time, the L.A.W.S. ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration, creating measurable impact by educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-2">La Shanna K. Russell (Luv)</h2>
+              <p className="text-2xl text-primary font-semibold mb-6">Founder and CEO of the L.A.W.S. Ecosystem</p>
+              
+              <div className="space-y-8">
+                <div className="bg-primary/5 p-6 rounded-lg border border-primary/20">
+                  <p className="text-base text-foreground/90 leading-relaxed mb-4">
+                    With over 15 years of hands-on experience in government and commercial contracting, I bring deep operational expertise to The L.A.W.S. Collective. As a lifetime researcher and systems architect, I have spent decades studying wealth-building mechanisms, trust frameworks, and economic sovereignty models across cultures and generations. My background spans enterprise operations, financial systems design, legal entity structuring, and community development. As Minister for LuvOnPurpose Academy and Outreach (nonprofit), I am committed to advancing educational equity and community transformation. All of this expertise is synthesized into a comprehensive platform designed to transform how families build and preserve multi-generational wealth.
+                  </p>
+                  <p className="text-base text-foreground/90 leading-relaxed">
+                    <strong>Education:</strong> Associates degrees in Microcomputers Management and Administrative Assistant with Micro option from Bryant and Stratton College (1998, National Honors Society); Bachelor of Business Administration with minor in Management from American Public University (2025, Cum Laude).
+                  </p>
                 </div>
-                <div className="pt-4">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">L.A.W.S.' Mission</h3>
-                  <p className="text-sm">The L.A.W.S. Collective exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. We operate as both a commercial structure and an ecosystem of purpose. Our mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment. By merging business education with real-world application, we transform traditional training models into living systems. Each House established through our platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.</p>
+                
+                <div>
+                  <h3 className="text-2xl font-bold text-foreground mb-4">Luv's Vision</h3>
+                  <p className="text-base text-foreground/80 leading-relaxed">I envision a global community of sovereign Houses—autonomous, ethical, and financially secure. Each House represents a family, collective, or organization operating under shared principles of purpose and prosperity. This vision extends beyond profit, aiming to restore balance in commerce through education, accountability, and legacy stewardship. Over time, the L.A.W.S. ecosystem will expand internationally through academy partnerships, trust frameworks, and digital integration, creating measurable impact by educating 10,000 individuals in lawful entrepreneurship and generating multi-generational economic growth within five years of global rollout.</p>
+                </div>
+                
+                <div className="border-t border-primary/20 pt-8">
+                  <h3 className="text-2xl font-bold text-foreground mb-4">L.A.W.S.' Mission</h3>
+                  <p className="text-base text-foreground/80 leading-relaxed">The L.A.W.S. Collective exists to empower families—particularly within Indigenous and diaspora lineages—to achieve economic sovereignty through lawful enterprise, education, and innovation. We operate as both a commercial structure and an ecosystem of purpose. Our mission is to integrate the tools of modern business—automation, blockchain verification, and financial literacy—with timeless values of stewardship, integrity, and community upliftment. By merging business education with real-world application, we transform traditional training models into living systems. Each House established through our platform functions as an independent yet interconnected entity—building local economies while feeding back into the collective system.</p>
                 </div>
               </div>
             </div>
@@ -675,6 +699,89 @@ export default function Home() {
               Join our waitlist for exclusive early access and launch updates.
             </p>
           </div>
+          
+          {/* Platform Features in Action Section */}
+          <div className="mt-20 py-16 bg-gradient-to-b from-background to-primary/5 rounded-xl">
+            <div className="max-w-5xl mx-auto px-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-center">Platform Features in Action</h2>
+              <p className="text-xl text-foreground/80 text-center mb-12">See what's already built and ready for your family's wealth journey</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Business Formation Simulator */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">🏢</div>
+                      <p className="text-white font-semibold text-sm">10+ Business Structures</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Business Formation Simulator</h3>
+                    <p className="text-foreground/80 mb-4">Interactive training on 10+ business structures including LLC, S Corp, Nonprofits, Trusts, and more. Learn by doing with guided modules and token rewards.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Interactive</span>
+                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded">Educational</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Grants & Funding */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">💰</div>
+                      <p className="text-white font-semibold text-sm">$1.95M Pipeline</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Grants & Funding Management</h3>
+                    <p className="text-foreground/80 mb-4">Track grant applications, deadlines, and reporting. Currently managing $1.95M in grant pipeline with real-time progress tracking and deadline alerts.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">Real Data</span>
+                      <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs px-2 py-1 rounded">$1.95M Pipeline</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Academy */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">📚</div>
+                      <p className="text-white font-semibold text-sm">K-12 Curriculum</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Luv Learning Academy</h3>
+                    <p className="text-foreground/80 mb-4">K-12 Sovereign Education System with Divine STEM, Languages, Courses, and comprehensive curriculum. 9 training simulators with token rewards.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">K-12 System</span>
+                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded">9 Simulators</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LuvLedger */}
+                <div className="rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-5xl mb-2">📊</div>
+                      <p className="text-white font-semibold text-sm">$2M+ Assets</p>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">LuvLedger Wealth Management</h3>
+                    <p className="text-foreground/80 mb-4">Personal wealth hub tracking $2M+ in family assets including investments, real estate, and multi-generational financial history.</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">Real Data</span>
+                      <span className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs px-2 py-1 rounded">$2M+ Assets</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <WaitlistSignup />
         </div>
       </section>
