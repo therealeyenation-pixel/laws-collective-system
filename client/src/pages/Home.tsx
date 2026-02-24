@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,268 +18,167 @@ import {
   TrendingUp,
   Network,
   BookOpen,
-  Building2,
-  Play,
-  Pause,
-  ChevronLeft,
-  Home as HomeIcon,
-  BarChart3,
-  Shield,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
-import SlidesCarousel from "@/components/SlidesCarousel";
 
-// Simplified Demo: Setup + Premium Walkthrough
-const entityTypes = [
-  { id: "llc", name: "LLC", desc: "Limited Liability Company" },
-  { id: "scorp", name: "S Corp", desc: "S Corporation" },
-  { id: "nonprofit", name: "Nonprofit (508)", desc: "Tax-Exempt Organization" },
-  { id: "trust", name: "Trust", desc: "Family Trust" },
-];
-
-const walkthroughSteps = [
-  {
-    title: "is Now Live",
-    subtitle: "Entity Registration Complete",
-    items: ["Entity Registration", "EIN Assignment", "Operating Agreement", "Bank Account Setup"],
-    gradient: "from-blue-900 via-indigo-900 to-slate-900",
-    icon: "Building2",
-  },
-  {
-    title: "Your House Has Been Created",
-    subtitle: "Private & Sovereign System Instance",
-    items: ["Isolated data environment", "Family governance structure", "Multi-entity management", "Secure document vault"],
-    gradient: "from-emerald-900 via-green-900 to-teal-900",
-    icon: "HomeIcon",
-  },
-  {
-    title: "LuvLedger Is Now Active",
-    subtitle: "Your Wealth Management Hub",
-    items: ["Business income tracking", "Investment portfolio", "Real estate holdings", "Multi-generational history"],
-    gradient: "from-purple-900 via-violet-900 to-indigo-900",
-    icon: "BarChart3",
-  },
-  {
-    title: "Your Dashboards Are Online",
-    subtitle: "4 Standard + 10 Specialized Dashboards",
-    items: ["Financial Overview", "Team Management", "Operations Center", "LuvLedger Assets", "+ Specialized dashboards for your business type"],
-    gradient: "from-amber-900 via-orange-900 to-yellow-900",
-    icon: "Zap",
-  },
-  {
-    title: "Connected to the Collective",
-    subtitle: "The Multiplier Effect",
-    items: ["1 Family \u2192 $100K wealth", "10 Families \u2192 $1M collective", "100 Families \u2192 $10M community", "Your success multiplies across the network"],
-    gradient: "from-teal-900 via-cyan-900 to-blue-900",
-    icon: "Shield",
-  },
-];
-
+// Demo Simulator Component
 function DemoSimulator() {
-  const [step, setStep] = useState<"start" | "setup" | "walkthrough" | "done">("start");
-  const [entityType, setEntityType] = useState("");
-  const [businessName, setBusinessName] = useState("");
-  const [walkStep, setWalkStep] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [simulatorState, setSimulatorState] = useState({
+    started: false,
+    year: 1,
+    capital: 50000,
+    revenue: 0,
+    expenses: 0,
+    employees: 2,
+    decisions: [] as string[],
+  });
 
-  useEffect(() => {
-    if (step !== "walkthrough" || !isAutoPlaying) return;
-    const timer = setTimeout(() => {
-      if (walkStep < walkthroughSteps.length - 1) {
-        setWalkStep((prev) => prev + 1);
-      } else {
-        setStep("done");
-      }
-    }, 6000);
-    return () => clearTimeout(timer);
-  }, [step, walkStep, isAutoPlaying]);
-
-  const iconMap: Record<string, React.ReactNode> = {
-    Building2: <Building2 className="w-10 h-10" />,
-    HomeIcon: <HomeIcon className="w-10 h-10" />,
-    BarChart3: <BarChart3 className="w-10 h-10" />,
-    Zap: <Zap className="w-10 h-10" />,
-    Shield: <Shield className="w-10 h-10" />,
+  const handleDecision = (decision: string, impact: { capital: number; revenue: number; employees: number }) => {
+    setSimulatorState((prev) => ({
+      ...prev,
+      year: prev.year + 1,
+      capital: Math.max(0, prev.capital + impact.capital),
+      revenue: prev.revenue + impact.revenue,
+      expenses: prev.expenses + 500,
+      employees: Math.max(1, prev.employees + impact.employees),
+      decisions: [...prev.decisions, decision],
+    }));
   };
 
-  const handleSubmit = () => {
-    if (!entityType || !businessName.trim()) return;
-    setStep("walkthrough");
-    setWalkStep(0);
-    setIsAutoPlaying(true);
-  };
+  const netProfit = simulatorState.revenue - simulatorState.expenses;
 
-  const resetDemo = () => {
-    setStep("start");
-    setEntityType("");
-    setBusinessName("");
-    setWalkStep(0);
-    setIsAutoPlaying(true);
-  };
-
-  // START SCREEN
-  if (step === "start") {
+  if (!simulatorState.started) {
     return (
       <div className="text-center space-y-6">
-        <h3 className="text-2xl font-bold text-foreground">Experience the System</h3>
+        <h3 className="text-2xl font-bold text-foreground">Try the Business Simulator</h3>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Set up a demo business and watch the entire L.A.W.S. system come alive \u2014 from entity formation to community wealth building.
+          Make strategic business decisions and see how your choices impact your company's growth, your family's wealth, and the collective community prosperity.
         </p>
-        <Button size="lg" onClick={() => setStep("setup")} className="gap-2">
-          Start Demo <Zap className="w-4 h-4" />
+        <Button
+          size="lg"
+          onClick={() => setSimulatorState({ ...simulatorState, started: true })}
+          className="gap-2"
+        >
+          Start Demo Simulator <Zap className="w-4 h-4" />
         </Button>
-        <p className="text-xs text-muted-foreground italic">Interactive demo \u2022 No data saved \u2022 Under 2 minutes</p>
+        <p className="text-xs text-muted-foreground italic">
+          This is a sample simulation. No data is saved.
+        </p>
       </div>
     );
   }
 
-  // SETUP SCREEN
-  if (step === "setup") {
-    return (
-      <div className="space-y-8">
-        <div className="text-center">
-          <p className="text-sm text-primary font-semibold uppercase tracking-wider mb-2">Step 1 of 2</p>
-          <h3 className="text-2xl font-bold text-foreground">Set Up Your Business</h3>
-        </div>
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card className="p-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1">Year</p>
+          <p className="text-2xl font-bold text-primary">{simulatorState.year}</p>
+        </Card>
+        <Card className="p-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1">Capital</p>
+          <p className="text-2xl font-bold text-emerald-600">${(simulatorState.capital / 1000).toFixed(1)}K</p>
+        </Card>
+        <Card className="p-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1">Revenue</p>
+          <p className="text-2xl font-bold text-blue-600">${(simulatorState.revenue / 1000).toFixed(1)}K</p>
+        </Card>
+        <Card className="p-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1">Net Profit</p>
+          <p className={`text-2xl font-bold ${netProfit >= 0 ? "text-green-600" : "text-red-600"}`}>
+            ${(netProfit / 1000).toFixed(1)}K
+          </p>
+        </Card>
+        <Card className="p-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1">Team</p>
+          <p className="text-2xl font-bold text-amber-600">{simulatorState.employees}</p>
+        </Card>
+      </div>
 
-        <div className="space-y-6 max-w-lg mx-auto">
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-3">Choose Entity Type</label>
-            <div className="grid grid-cols-2 gap-3">
-              {entityTypes.map((type) => (
-                <button
-                  key={type.id}
-                  onClick={() => setEntityType(type.id)}
-                  className={`p-4 rounded-lg border-2 text-left transition-all ${
-                    entityType === type.id
-                      ? "border-primary bg-primary/10"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <p className="font-bold text-foreground">{type.name}</p>
-                  <p className="text-xs text-muted-foreground">{type.desc}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-2">Business Name</label>
-            <input
-              type="text"
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
-              placeholder="Enter your business name"
-              className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-            />
-          </div>
-
+      <div className="space-y-3">
+        <p className="font-semibold text-foreground">What's your next move?</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Button
-            size="lg"
-            onClick={handleSubmit}
-            disabled={!entityType || !businessName.trim()}
-            className="w-full gap-2"
+            variant="outline"
+            onClick={() => handleDecision("Launched new product line", { capital: -5000, revenue: 8000, employees: 1 })}
+            className="text-left h-auto py-4 justify-start"
           >
-            Set Up Business <ArrowRight className="w-4 h-4" />
+            <div className="text-left">
+              <p className="font-semibold">Launch New Product</p>
+              <p className="text-xs text-muted-foreground">Invest $5K, gain $8K revenue</p>
+            </div>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => handleDecision("Hired marketing specialist", { capital: -2000, revenue: 3000, employees: 1 })}
+            className="text-left h-auto py-4 justify-start"
+          >
+            <div className="text-left">
+              <p className="font-semibold">Hire Marketing Specialist</p>
+              <p className="text-xs text-muted-foreground">Invest $2K, gain $3K revenue</p>
+            </div>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => handleDecision("Expanded to new market", { capital: -8000, revenue: 12000, employees: 2 })}
+            className="text-left h-auto py-4 justify-start"
+          >
+            <div className="text-left">
+              <p className="font-semibold">Expand to New Market</p>
+              <p className="text-xs text-muted-foreground">Invest $8K, gain $12K revenue</p>
+            </div>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => handleDecision("Invested in training", { capital: -1000, revenue: 2000, employees: 0 })}
+            className="text-left h-auto py-4 justify-start"
+          >
+            <div className="text-left">
+              <p className="font-semibold">Invest in Team Training</p>
+              <p className="text-xs text-muted-foreground">Invest $1K, gain $2K revenue</p>
+            </div>
           </Button>
         </div>
       </div>
-    );
-  }
 
-  // WALKTHROUGH - PREMIUM FULL-WIDTH PRESENTATION
-  if (step === "walkthrough") {
-    const current = walkthroughSteps[walkStep];
-    const displayName = businessName || "Your Business";
-    const title = walkStep === 0 ? `"${displayName}" ${current.title}` : current.title;
-
-    return (
-      <div className="-m-8 md:-m-12">
-        <div className={`bg-gradient-to-br ${current.gradient} transition-all duration-700 ease-in-out`} style={{ minHeight: "480px" }}>
-          {/* Progress Bar */}
-          <div className="flex items-center gap-1 px-8 pt-8">
-            {walkthroughSteps.map((_, idx) => (
-              <div key={idx} className={`h-1 flex-1 rounded-full transition-all duration-500 ${idx <= walkStep ? "bg-white" : "bg-white/20"}`} />
+      {simulatorState.decisions.length > 0 && (
+        <div className="space-y-3 p-4 bg-secondary/30 rounded-lg">
+          <p className="font-semibold text-foreground text-sm">Your Journey:</p>
+          <div className="space-y-1">
+            {simulatorState.decisions.map((decision, idx) => (
+              <p key={idx} className="text-sm text-muted-foreground">
+                <span className="text-primary font-semibold">Year {idx + 1}:</span> {decision}
+              </p>
             ))}
           </div>
-          <p className="text-white/50 text-xs px-8 mt-2">Step {walkStep + 1} of {walkthroughSteps.length}</p>
-
-          {/* Content */}
-          <div className="flex flex-col items-center justify-center text-center px-8 py-12 md:py-16">
-            <div className="text-white/80 mb-6">{iconMap[current.icon]}</div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 max-w-4xl">{title}</h2>
-            <p className="text-xl text-white/80 font-medium mb-8">{current.subtitle}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full">
-              {current.items.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                  <span className="text-white text-sm text-left">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-4 pb-8">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setWalkStep(Math.max(0, walkStep - 1))}
-              disabled={walkStep === 0}
-              className="text-white/70 hover:text-white hover:bg-white/20 h-10 w-10"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-              className="text-white/70 hover:text-white hover:bg-white/20 h-10 w-10"
-            >
-              {isAutoPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                if (walkStep < walkthroughSteps.length - 1) {
-                  setWalkStep(walkStep + 1);
-                } else {
-                  setStep("done");
-                }
-              }}
-              className="text-white/70 hover:text-white hover:bg-white/20 h-10 w-10"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
-          </div>
         </div>
-      </div>
-    );
-  }
+      )}
 
-  // DONE SCREEN
-  return (
-    <div className="text-center space-y-6">
-      <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto">
-        <CheckCircle className="w-8 h-8 text-emerald-500" />
-      </div>
-      <h3 className="text-2xl font-bold text-foreground">Ready to Build Your Legacy?</h3>
-      <p className="text-muted-foreground max-w-xl mx-auto">
-        You just saw how <span className="font-semibold text-foreground">"{businessName}"</span> would flow through the entire L.A.W.S. system \u2014 from formation to community wealth building.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Button size="lg" onClick={resetDemo} variant="outline" className="gap-2">
-          Run Demo Again
-        </Button>
-        <Link href="/getting-started">
-          <Button size="lg" className="gap-2 w-full sm:w-auto">
-            Join the Collective <ArrowRight className="w-4 h-4" />
+      {simulatorState.year >= 5 && (
+        <Card className="p-6 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-200">
+          <h4 className="font-bold text-foreground mb-2">Simulation Complete!</h4>
+          <p className="text-sm text-muted-foreground mb-4">
+            You've built a business with ${netProfit.toFixed(0)} in net profit and a team of {simulatorState.employees} people. 
+            Imagine this multiplied across dozens of families in the L.A.W.S. Collective - that's community wealth building in action.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => setSimulatorState({
+              started: false,
+              year: 1,
+              capital: 50000,
+              revenue: 0,
+              expenses: 0,
+              employees: 2,
+              decisions: [],
+            })}
+          >
+            Reset Simulator
           </Button>
-        </Link>
-      </div>
+        </Card>
+      )}
     </div>
   );
 }
@@ -376,17 +275,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Slides Carousel */}
-      <section className="py-12 md:py-16 bg-background">
-        <div className="container max-w-6xl mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">See the Full Vision</h2>
-            <p className="text-muted-foreground">Auto-playing overview of the L.A.W.S. system</p>
-          </div>
-          <SlidesCarousel />
         </div>
       </section>
 
@@ -667,8 +555,8 @@ export default function Home() {
 
       {/* Demo Simulator Section */}
       <section id="simulator" className="py-16 md:py-24 bg-secondary/30">
-        <div className="container max-w-5xl mx-auto px-4">
-          <Card className="p-8 md:p-12 overflow-hidden">
+        <div className="container max-w-4xl mx-auto px-4">
+          <Card className="p-8 md:p-12">
             <DemoSimulator />
           </Card>
         </div>
