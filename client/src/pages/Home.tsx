@@ -278,6 +278,17 @@ export default function Home() {
         </div>
       </section>
 
+      {/* QR Code Section */}
+      <section className="py-12 md:py-16 bg-background flex justify-center items-center">
+        <div className="container max-w-6xl mx-auto px-4 text-center">
+          <img 
+            src="/qr-code.png" 
+            alt="QR Code" 
+            className="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-lg shadow-lg"
+          />
+        </div>
+      </section>
+
       {/* System Overview Section */}
       <section id="system-overview" className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-6xl mx-auto px-4">
@@ -608,6 +619,54 @@ export default function Home() {
                 Contact Us to Join
               </Button>
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* About Luv Section */}
+      <section className="py-16 md:py-24 bg-secondary/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-sm font-semibold text-primary mb-2">MEET THE FOUNDER</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              About Luv
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="flex justify-center">
+              <img 
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663294252884/TWxjphfpSAiQlzJT.png" 
+                alt="La Shanna K. Russell (Luv)" 
+                className="w-64 h-64 md:w-80 md:h-80 rounded-2xl shadow-lg object-cover"
+              />
+            </div>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                  La Shanna K. Russell (Luv)
+                </h3>
+                <p className="text-lg text-primary font-semibold mb-4">
+                  Founder & Visionary of The L.A.W.S. Collective
+                </p>
+              </div>
+              <div className="space-y-4 text-muted-foreground">
+                <p>
+                  With extensive experience in contracting and enterprise operations, I bring both academic rigor and practical expertise to the L.A.W.S. Collective.
+                </p>
+                <p>
+                  My background spans 15+ years in government and commercial contracting, combined with a lifetime of research and systems architecture focused on wealth-building mechanisms and economic sovereignty.
+                </p>
+                <div className="pt-4 border-t">
+                  <p className="font-semibold text-foreground mb-2">Education</p>
+                  <ul className="space-y-2 text-sm">
+                    <li>• Bachelor's Degree in Business Administration with minor in Management (American Public University, 2025, Cum Laude)</li>
+                    <li>• Associates Degree in Microcomputers Management (Bryant & Stratton College, 1998, National Honors Society)</li>
+                    <li>• Associates Degree in Administrative Assistant with Micro option (Bryant & Stratton College, 1998)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
