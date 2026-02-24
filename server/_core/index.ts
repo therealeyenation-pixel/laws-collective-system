@@ -118,6 +118,11 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   
+  // QR Code redirect endpoint - redirects old QR code to landing page
+  app.get("/qr-redirect", (req, res) => {
+    res.redirect("/qr-holding");
+  });
+  
   // SSE endpoint for real-time chat events
   app.get("/api/chat/events", async (req, res) => {
     try {
