@@ -194,13 +194,22 @@ function DemoSimulator() {
 
   if (step === "walkthrough") {
     const currentStep = walkthroughSteps[walkStep];
-    const IconComponent = currentStep.icon === "Building2" ? Building2 : currentStep.icon === "HomeIcon" ? HomeIcon : currentStep.icon === "BarChart3" ? BarChart3 : currentStep.icon === "BookOpen" ? BookOpen : currentStep.icon === "TrendingUp" ? TrendingUp : currentStep.icon === "Network" ? Network : Shield;
+    const iconMap: Record<string, React.ReactNode> = {
+      "Building2": <Building2 className="w-8 h-8 flex-shrink-0 mt-1" />,
+      "HomeIcon": <HomeIcon className="w-8 h-8 flex-shrink-0 mt-1" />,
+      "BarChart3": <BarChart3 className="w-8 h-8 flex-shrink-0 mt-1" />,
+      "BookOpen": <BookOpen className="w-8 h-8 flex-shrink-0 mt-1" />,
+      "TrendingUp": <TrendingUp className="w-8 h-8 flex-shrink-0 mt-1" />,
+      "Network": <Network className="w-8 h-8 flex-shrink-0 mt-1" />,
+      "Shield": <Shield className="w-8 h-8 flex-shrink-0 mt-1" />,
+    };
+    const IconComponent = iconMap[currentStep.icon] || <Shield className="w-8 h-8 flex-shrink-0 mt-1" />;
 
     return (
       <div className="space-y-6">
         <div className={`bg-gradient-to-br ${currentStep.gradient} rounded-lg p-8 text-white`}>
           <div className="flex items-start gap-4 mb-4">
-            <IconComponent className="w-8 h-8 flex-shrink-0 mt-1" />
+            {IconComponent}
             <div>
               <p className="text-white/70 text-sm uppercase tracking-wider mb-1">(Planned)</p>
               <h3 className="text-2xl font-bold mb-2">{currentStep.title}</h3>
