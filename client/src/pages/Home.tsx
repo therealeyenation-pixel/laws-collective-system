@@ -176,7 +176,7 @@ function DemoSimulator() {
         </div>
 
         <div className="flex gap-3">
-          <Button onClick={handleSubmit} disabled={!entityType || !businessName} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button onClick={handleSubmit} disabled={!businessName} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
             Continue
           </Button>
           <Button onClick={resetDemo} variant="outline">
