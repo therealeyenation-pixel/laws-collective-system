@@ -99,6 +99,87 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Slideshow Section */}
+      <section className="py-16 md:py-24">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Platform Highlights</h2>
+            <p className="text-muted-foreground mt-4">Discover the key features that make L.A.W.S. unique</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <div className="text-4xl mb-4">🏛️</div>
+              <h3 className="font-bold text-foreground mb-2">Sovereign Wealth Framework</h3>
+              <p className="text-sm text-muted-foreground">Build wealth within a closed-loop economic system designed for family prosperity and generational transfer</p>
+            </Card>
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <div className="text-4xl mb-4">📚</div>
+              <h3 className="font-bold text-foreground mb-2">Comprehensive Education</h3>
+              <p className="text-sm text-muted-foreground">From financial literacy to business formation, our curriculum covers everything needed for economic independence</p>
+            </Card>
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <div className="text-4xl mb-4">🤝</div>
+              <h3 className="font-bold text-foreground mb-2">Community Network</h3>
+              <p className="text-sm text-muted-foreground">Connect with families, access shared resources, and build collective wealth through community collaboration</p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Luv's Vision Section */}
+      <section className="py-16 md:py-24 bg-secondary/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-sm font-semibold text-primary mb-2">FOUNDER'S VISION</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Luv's Vision</h2>
+          </div>
+          <Card className="p-8 max-w-4xl mx-auto">
+            <p className="text-lg text-foreground leading-relaxed mb-6">
+              "My vision is to create a system that reconnects families with their power to build generational wealth. For too long, our communities have been disconnected from the knowledge and tools needed to create lasting economic sovereignty. The L.A.W.S. Collective is designed to change that narrative—to help families understand that they have the capacity, the right, and the responsibility to build wealth that serves their families for generations to come."
+            </p>
+            <p className="text-lg text-foreground leading-relaxed">
+              "This isn't just about money. It's about reconnecting with our land, our knowledge, our water, and our purpose. It's about creating systems that work for us, not against us. It's about building a legacy of sovereignty and abundance for our children and their children."
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* L.A.W.S. Mission Section */}
+      <section className="py-16 md:py-24">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-sm font-semibold text-primary mb-2">OUR MISSION</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">L.A.W.S. Mission</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Land</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Reconnect families with their roots, understanding their lineage and the importance of land ownership and stewardship. We help families establish stable foundations for wealth building.
+              </p>
+            </Card>
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Air</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Provide education and knowledge that empowers families to make informed decisions. We believe that access to quality education is the foundation for economic freedom.
+              </p>
+            </Card>
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Water</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Create balance and healing in financial relationships. We help families navigate the emotional and practical aspects of wealth, ensuring sustainable and healthy economic systems.
+              </p>
+            </Card>
+            <Card className="p-8">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Self</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Develop practical skills and purpose-driven work. We empower individuals to build businesses, create value, and establish themselves as economic agents in their own right.
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Interactive System Demo Section */}
       <section className="py-16 md:py-24 bg-secondary/30">
         <div className="container max-w-6xl mx-auto px-4">
@@ -422,6 +503,11 @@ export default function Home() {
               <div className="inline-block px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold mb-3">Coming Soon</div>
               <h3 className="font-bold text-foreground mb-2">Blockchain Features</h3>
               <p className="text-muted-foreground">Secure wealth documentation and transfer mechanisms</p>
+            </Card>
+            <Card className="p-6">
+              <div className="inline-block px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold mb-3">Coming Soon</div>
+              <h3 className="font-bold text-foreground mb-2">LuvOnPurpose Academy</h3>
+              <p className="text-muted-foreground">Comprehensive educational programs and certification courses</p>
             </Card>
           </div>
         </div>
