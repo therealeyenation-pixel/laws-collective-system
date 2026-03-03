@@ -1,4 +1,5 @@
 import { useState } from "react";
+import QRCode from "qrcode.react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap } from "lucide-react";
@@ -42,11 +43,15 @@ export default function Home() {
       {/* QR Code Section */}
       <section className="py-12 md:py-16 flex justify-center items-center">
         <div className="container max-w-6xl mx-auto px-4 text-center">
-          <img 
-            src="/qr-code.png" 
-            alt="QR Code" 
-            className="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-lg"
-          />
+          <div className="bg-white p-4 rounded-lg inline-block shadow-lg">
+            <QRCode 
+              value="https://collective-system-production.up.railway.app" 
+              size={256}
+              level="H"
+              includeMargin={true}
+              className="w-48 h-48 md:w-64 md:h-64"
+            />
+          </div>
         </div>
       </section>
 
