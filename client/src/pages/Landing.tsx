@@ -227,6 +227,9 @@ export default function Landing() {
         <div className="container max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-foreground">L.A.W.S. Collective</h1>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => window.location.href = "mailto:luvonpurpose@protonmail.com"}>
+              Contact Us
+            </Button>
             <Button variant="outline" onClick={() => window.location.href = "/demo"}>
               Sign In
             </Button>

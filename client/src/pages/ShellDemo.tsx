@@ -300,7 +300,7 @@ export default function ShellDemo() {
         {stage === "results" && (
           <section className="space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-foreground">Your Personalized Dashboard</h2>
+              <h2 className="text-3xl font-bold text-foreground">{businessName}'s Dashboard</h2>
               <p className="text-lg text-muted-foreground">
                 Based on your answers, here are the tools you'll use most
               </p>
