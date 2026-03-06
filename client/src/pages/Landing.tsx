@@ -551,7 +551,7 @@ export default function Landing() {
             </div>
             <div className="flex justify-center">
               <img
-                src="/luv-photo.jpg"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv-photo_38d8d9aa.jpg"
                 alt="Luv - Founder of L.A.W.S. Collective"
                 className="w-80 h-80 rounded-lg object-cover border border-border shadow-lg"
               />
