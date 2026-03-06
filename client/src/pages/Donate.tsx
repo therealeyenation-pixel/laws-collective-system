@@ -42,7 +42,7 @@ export default function Donate() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => (window.location.href = "/")}
+            onClick={() => window.history.back()}
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />

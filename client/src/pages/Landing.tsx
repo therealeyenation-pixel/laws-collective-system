@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as QRCodeLib from "qrcode.react";
 import { trpc } from "@/lib/trpc";
@@ -227,6 +227,17 @@ export default function Landing() {
         <div className="w-full px-4 py-3 flex flex-col gap-3">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-bold text-foreground">L.A.W.S. Collective</h1>
+            {(stage === "name-input") && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => window.history.back()}
+                className="gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+            )}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <Button variant="outline" onClick={() => window.location.href = "/contact-us"} className="w-full text-sm py-2">

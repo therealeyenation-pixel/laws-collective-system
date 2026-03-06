@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Home, BarChart3, Zap, Mail } from "lucide-react";
+import { ChevronLeft, ChevronRight, Home, BarChart3, Zap, Mail, ArrowLeft } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -198,8 +198,9 @@ export default function ShellDemo() {
             <h1 className="text-2xl font-bold text-foreground">Explore the L.A.W.S. Structure</h1>
             <p className="text-sm text-muted-foreground">Interactive Demo</p>
           </div>
-          <Button variant="outline" onClick={() => window.location.href = "/"}>
-            ← Back to Home
+          <Button variant="outline" onClick={() => window.history.back()} className="gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </Button>
         </div>
       </header>
