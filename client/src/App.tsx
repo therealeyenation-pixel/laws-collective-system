@@ -825,9 +825,12 @@ function Router() {
       <Route path="/system-health">{() => <ProtectedRoute component={SystemHealth} minRole="admin" />}</Route>
       <Route path="/backup-settings">{() => <ProtectedRoute component={BackupSettings} minRole="admin" />}</Route>
       <Route path="/offline-settings">{() => <ProtectedRoute component={OfflineSettings} />}</Route>
+
+      {/* Root landing page */}
+      <Route path="/" component={Landing} />
       
       <Route path="/404" component={NotFound} />
-      {/* Final fallback route */}
+      
       <Route component={NotFound} />
     </Switch>
       <footer className="mt-auto border-t border-border bg-background/50 py-4">
