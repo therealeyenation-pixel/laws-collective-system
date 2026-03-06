@@ -133,10 +133,14 @@ export default function Landing() {
         <div className="container max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-foreground">L.A.W.S. Collective</h1>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              Sign In
-            </Button>
-            <Button size="sm">Get Started</Button>
+            <a href="/house" className="no-underline">
+              <Button variant="outline" size="sm">
+                Sign In
+              </Button>
+            </a>
+            <a href="/house" className="no-underline">
+              <Button size="sm">Get Started</Button>
+            </a>
           </div>
         </div>
       </header>
@@ -238,13 +242,13 @@ export default function Landing() {
                   </p>
                 </div>
 
-                <div className="pt-4">
+                <div className="pt-4 w-full flex flex-col items-center">
                   <input
                     type="text"
                     placeholder="Enter your business name"
                     value={businessName}
-                    onChange={(e) => setBusinessName(e.target.value || "Default LLC")}
-                    className="px-6 py-4 rounded-md border border-border bg-background text-foreground text-center text-lg max-w-md mx-auto block"
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    className="px-6 py-3 rounded-md border-2 border-primary bg-background text-foreground text-center text-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-primary"
                     autoFocus
                   />
                   <p className="text-sm text-muted-foreground mt-3">Default LLC structure</p>
@@ -388,8 +392,8 @@ export default function Landing() {
                 <p><strong>Expertise:</strong> Financial Systems, Community Building, Generational Wealth</p>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg h-64 flex items-center justify-center border border-border">
-              <p className="text-muted-foreground text-center">Luv's Photo</p>
+            <div className="bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg h-64 flex items-center justify-center border border-border overflow-hidden">
+              <img src="/luv-photo.jpg" alt="Luv Russell" className="w-full h-full object-cover" />
             </div>
           </div>
         </section>
