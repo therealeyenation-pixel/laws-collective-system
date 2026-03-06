@@ -9981,3 +9981,99 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add educational section explaining demo vs. full system
 - [x] Update Landing page button to "Explore the L.A.W.S. Structure" linking to Shell Demo
 - [ ] Test complete flow from Landing → Shell Demo
+
+
+## Phase 25: L.A.W.S. Collective Landing Page & Presentation (IN PROGRESS)
+
+### Phase 25.1: Public Landing Page (COMPLETED)
+- [x] Create Landing page at `/` with QR code
+- [x] Add 7-slide intro slideshow (Welcome, Vision, Ecosystem, Framework, Impact, Community, Call to Action)
+- [x] Add business name input field (no default text)
+- [x] Add 7-slide results slideshow (Results, Business Structure, Financial Planning, Training, Dashboard, Opportunities, Ready to Launch)
+- [x] Add Luv's bio section with actual photo
+- [x] Add "Support the Collective" button (Stripe donation)
+- [x] Add "Join the Collective" button (waitlist email signup)
+- [x] Add "Explore the L.A.W.S. Structure" button (links to /demo)
+- [x] Add "Get Started" button (links to /demo)
+- [x] Add "Sign In" button (links to /house)
+- [x] Configure slideshow transitions to 8 seconds
+- [x] Generate QR code linking to landing page
+- [x] Remove education/expertise sections from Luv's bio
+
+### Phase 25.2: Shell Demo Page (COMPLETED)
+- [x] Create ShellDemo page at `/demo`
+- [x] Add generic business simulator questions (no real system data)
+- [x] Add empty dashboard preview (no sidebar navigation)
+- [x] Add "Back to Home" button
+- [x] Add "Start Interactive Demo" button
+- [x] Add "See Full System Features" button
+- [x] Ensure demo doesn't show authenticated system
+
+### Phase 25.3: Donation Page (COMPLETED)
+- [x] Create Donate page at `/donate`
+- [x] Add donation amount selection ($10, $25, $50, $100, $250, $500)
+- [x] Add custom amount input field
+- [x] Add Stripe integration for payment processing
+- [x] Add "Your contribution is secure" message
+- [x] Add "Tax deductible" message
+- [x] Add "Your Impact" section with bullet points
+- [x] Add "Back" button
+- [x] Add "Contact Us" button
+
+### Phase 25.4: Routing Configuration (COMPLETED)
+- [x] Fix `/donate` route to use Donate component (not Donations)
+- [x] Verify `/demo` route points to ShellDemo
+- [x] Verify `/` route points to Landing
+- [x] Test all button routing
+- [x] Ensure three system layers remain separate (public landing, shell demo, private system)
+
+### Phase 25.5: Presentation Deck (COMPLETED)
+- [x] Create 10-slide professional presentation deck
+- [x] Slide 1: Title slide with QR code
+- [x] Slide 2: The L.A.W.S. Framework
+- [x] Slide 3: Luv's Vision
+- [x] Slide 4: The Four Pillars
+- [x] Slide 5: System Dashboards
+- [x] Slide 6: Business Simulator
+- [x] Slide 7: Financial Planning Tools
+- [x] Slide 8: Community & Support
+- [x] Slide 9: Call to Action
+- [x] Slide 10: Contact & QR Code
+- [x] Add QR codes to presentation slides
+
+### Phase 25.6: Testing & Validation (IN PROGRESS)
+- [ ] Test landing page loads correctly
+- [ ] Test QR code scans to landing page
+- [ ] Test all buttons route correctly:
+  - [ ] Sign In → /house (private system)
+  - [ ] Get Started → /demo (shell demo)
+  - [ ] Start Business Demo → /demo (shell demo)
+  - [ ] Support the Collective → /donate (donation page)
+  - [ ] Explore the L.A.W.S. Structure → /demo (shell demo)
+  - [ ] Join the Collective → email capture form
+- [ ] Test slideshow transitions (8 seconds)
+- [ ] Test business name input accepts text
+- [ ] Test Luv's photo displays correctly
+- [ ] Test presentation slides display correctly
+- [ ] Test presentation QR codes link to landing page
+
+### Phase 25.7: Backend Analytics (IN PROGRESS)
+- [ ] Create landing_page_analytics table
+- [ ] Create waitlist table
+- [ ] Implement event tracking endpoints
+- [ ] Test analytics tracking
+- [ ] Verify Stripe webhook configuration
+
+### Phase 25.8: Saturday Presentation Preparation (PENDING)
+- [ ] Finalize presentation content
+- [ ] Test presentation on projector/screen
+- [ ] Create backup offline version
+- [ ] Prepare speaker notes
+- [ ] Test live system URL in QR codes
+- [ ] Verify all links work during presentation
+- [ ] Set up presentation environment
+
+### Phase 25.9: Known Issues
+- [ ] Database migration requires manual confirmation (needs automation)
+- [ ] Analytics tables not yet created (blocking event tracking)
+- [ ] Stripe webhook not yet configured (blocking payment processing)

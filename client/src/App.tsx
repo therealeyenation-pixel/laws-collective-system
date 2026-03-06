@@ -21,8 +21,9 @@ import HouseDashboard from "./pages/HouseDashboard";
 import OwnerHouseSetup from "./pages/OwnerHouseSetup";
 import GenesisCeremony from "./pages/GenesisCeremony";
 import Landing from "./pages/Landing";
-import DemoGate from "./pages/DemoGate";
 import ShellDemo from "./pages/ShellDemo";
+import Donate from "./pages/Donate";
+import DemoGate from "./pages/DemoGate";
 
 import Shop from "./pages/Shop";
 import Products from "./pages/Products";
@@ -438,7 +439,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
-      <Route path="/donate" component={Donations} />
+      <Route path="/donate" component={Donate} />
       <Route path="/products" component={Products} />
       <Route path="/course-success" component={CourseSuccess} />
       <Route path="/consulting-success" component={ConsultingSuccess} />
@@ -830,8 +831,10 @@ function Router() {
       <Route path="/backup-settings">{() => <ProtectedRoute component={BackupSettings} minRole="admin" />}</Route>
       <Route path="/offline-settings">{() => <ProtectedRoute component={OfflineSettings} />}</Route>
 
-      {/* Root landing page */}
+      {/* Public routes */}
       <Route path="/" component={Landing} />
+      <Route path="/demo" component={ShellDemo} />
+      <Route path="/donate" component={Donate} />
       
       <Route path="/404" component={NotFound} />
       
