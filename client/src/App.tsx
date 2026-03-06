@@ -4,7 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+
 import QRHolding from "./pages/QRHolding";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -21,6 +21,7 @@ import HouseDashboard from "./pages/HouseDashboard";
 import OwnerHouseSetup from "./pages/OwnerHouseSetup";
 import GenesisCeremony from "./pages/GenesisCeremony";
 import Landing from "./pages/Landing";
+
 import Shop from "./pages/Shop";
 import Products from "./pages/Products";
 import CourseSuccess from "./pages/CourseSuccess";
@@ -425,7 +426,6 @@ function Router() {
     <div className="flex flex-col min-h-screen">
       <Switch>
       {/* Public routes - no authentication required */}
-      <Route path="/" component={Home} />
       <Route path="/qr-holding" component={QRHolding} />
       <Route path="/login" component={Login} />
       <Route path="/careers" component={Careers} />
