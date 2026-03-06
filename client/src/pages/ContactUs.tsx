@@ -16,7 +16,9 @@ export default function ContactUs() {
 
   const sendEmail = trpc.contact.submit.useMutation({
     onSuccess: () => {
-      toast.success("Email sent successfully!");
+      toast.success("Thank you! Your message has been received. We'll get back to you soon.", {
+        description: "Your submission has been recorded and our team will review it.",
+      });
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     },
     onError: (error) => {

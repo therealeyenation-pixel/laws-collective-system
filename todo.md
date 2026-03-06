@@ -10120,3 +10120,7 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Update documentation
 - [ ] Fix page jumping/layout shift on landing page while reading
 - [x] Fix Contact Us page not working
+- [ ] Create waitlist signups database table and wire up landing page waitlist form
+- [ ] Add email auto-reply for contact form submissions
+- [ ] Build contact submissions inbox page in admin dashboard
+- [ ] Optimize related sections (landing, contact, dashboard)

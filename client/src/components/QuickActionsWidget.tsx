@@ -33,6 +33,7 @@ import {
   Building2,
   Gift,
   Loader2,
+  Mail,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
@@ -138,6 +139,15 @@ const quickActions: QuickAction[] = [
     color: "text-emerald-500",
     action: "navigate",
     path: "/grants",
+  },
+  {
+    id: "contact-inbox",
+    icon: Mail,
+    label: "Contact Inbox",
+    description: "View contact submissions",
+    color: "text-red-500",
+    action: "navigate",
+    path: "/admin/contact-inbox",
   },
 ];
 
