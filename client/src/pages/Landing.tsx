@@ -328,19 +328,8 @@ export default function Landing() {
             </div>
 
             {/* Slideshow - Mobile Optimized */}
-            <div className={`bg-gradient-to-br ${introSlides[currentSlide].color} border border-border rounded-lg p-8 min-h-[400px] flex flex-col justify-center overflow-hidden relative`}>
-              <style>{`
-                @keyframes fadeInOut {
-                  0% { opacity: 0; }
-                  10% { opacity: 1; }
-                  90% { opacity: 1; }
-                  100% { opacity: 0; }
-                }
-                .slide-content {
-                  animation: fadeInOut 5s ease-in-out;
-                }
-              `}</style>
-              <div className="text-center space-y-6 slide-content">
+            <div className={`bg-gradient-to-br ${introSlides[currentSlide].color} border border-border rounded-lg p-8 h-[480px] flex flex-col justify-center overflow-hidden relative transition-colors duration-700`}>
+              <div className="text-center space-y-6">
                 <div className={`text-7xl ${introSlides[currentSlide].accentColor}`}>
                   {introSlides[currentSlide].icon}
                 </div>
@@ -441,19 +430,8 @@ export default function Landing() {
 
             {/* INLINE RESULTS DISPLAY - Video Loop Style */}
             {showResults && businessName.trim() && (
-              <div className={`bg-gradient-to-br ${resultsSlides[resultsSlide].color} border border-border rounded-lg p-12 min-h-[500px] flex flex-col justify-center overflow-hidden relative`}>
-                <style>{`
-                  @keyframes fadeInOut {
-                    0% { opacity: 0; }
-                    10% { opacity: 1; }
-                    90% { opacity: 1; }
-                    100% { opacity: 0; }
-                  }
-                  .slide-content {
-                    animation: fadeInOut 5s ease-in-out;
-                  }
-                `}</style>
-                <div className="text-center space-y-6 slide-content">
+              <div className={`bg-gradient-to-br ${resultsSlides[resultsSlide].color} border border-border rounded-lg p-8 h-[520px] flex flex-col justify-center overflow-hidden relative transition-colors duration-700`}>
+                <div className="text-center space-y-6">
                   <div className={`text-6xl ${resultsSlides[resultsSlide].accentColor}`}>
                     {resultsSlides[resultsSlide].icon}
                   </div>
@@ -506,22 +484,25 @@ export default function Landing() {
                   </Button>
                 </div>
 
-                {/* CTA after results */}
-                <div className="text-center space-y-4 mt-8">
-                  <p className="text-lg text-muted-foreground">
-                    Ready to get started with {businessName}?
-                  </p>
-                  <div className="flex gap-4 justify-center flex-wrap">
-                    <Button variant="outline" onClick={() => setShowResults(false)}>
-                      Try Another Name
-                    </Button>
-                    <Button size="lg" onClick={() => setStage("waitlist-signup")}>
-                      Join Waitlist
-                    </Button>
-                    <Button variant="outline" onClick={() => window.location.href = "/demo"}>
-                      Explore Live System
-                    </Button>
-                  </div>
+              </div>
+            )}
+
+            {/* CTA after results - outside fixed-height container */}
+            {showResults && businessName.trim() && (
+              <div className="text-center space-y-4 pt-4">
+                <p className="text-lg text-muted-foreground">
+                  Ready to get started with {businessName}?
+                </p>
+                <div className="flex gap-4 justify-center flex-wrap">
+                  <Button variant="outline" onClick={() => setShowResults(false)}>
+                    Try Another Name
+                  </Button>
+                  <Button size="lg" onClick={() => setStage("waitlist-signup")}>
+                    Join Waitlist
+                  </Button>
+                  <Button variant="outline" onClick={() => window.location.href = "/demo"}>
+                    Explore Live System
+                  </Button>
                 </div>
               </div>
             )}

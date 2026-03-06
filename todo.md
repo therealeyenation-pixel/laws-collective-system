@@ -10118,3 +10118,4 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 ### Phase 25.6: Save Checkpoint
 - [x] Save checkpoint with interactive simulator enhancements
 - [x] Update documentation
+- [ ] Fix page jumping/layout shift on landing page while reading
