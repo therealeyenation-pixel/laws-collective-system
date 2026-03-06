@@ -387,10 +387,7 @@ export default function Landing() {
               <p className="text-muted-foreground leading-relaxed">
                 With a background in education, business development, and social impact, Luv has dedicated her career to creating systems that empower families and communities to build sustainable wealth while honoring their values and heritage.
               </p>
-              <div className="pt-4 space-y-2 text-sm text-muted-foreground">
-                <p><strong>Education:</strong> Master's in Business Administration, Community Development Specialist</p>
-                <p><strong>Expertise:</strong> Financial Systems, Community Building, Generational Wealth</p>
-              </div>
+
             </div>
             <div className="bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg h-64 flex items-center justify-center border border-border overflow-hidden">
               <img src="/luv-photo.jpg" alt="Luv Russell" className="w-full h-full object-cover" />
