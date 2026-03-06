@@ -9943,3 +9943,12 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - All features must be functional
 - Mobile responsive design
 - QR code points to correct landing page URL
+
+
+## Landing Page Refinements (Saturday Presentation)
+- [x] Display demo results below demo button (inline, not separate stage)
+- [x] Create shell demo version accessible from Sign In button (no actual login)
+- [x] Add "Support the Collective" button to landing page
+- [x] Make slideshows MORE like video loops (continuous smooth auto-play)
+- [x] Remove "Default LLC" text from name input block
+- [x] Add "Live system coming soon" message near waitlist CTA

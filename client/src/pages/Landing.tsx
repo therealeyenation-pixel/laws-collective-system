@@ -5,15 +5,16 @@ import * as QRCodeLib from "qrcode.react";
 import { trpc } from "@/lib/trpc";
 const QRCode = QRCodeLib.QRCodeSVG || QRCodeLib.default || QRCodeLib;
 
-type Stage = "intro-slideshow" | "name-input" | "results-slideshow" | "waitlist-signup";
+type Stage = "intro-slideshow" | "name-input" | "waitlist-signup";
 
 export default function Landing() {
   const [stage, setStage] = useState<Stage>("intro-slideshow");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
-  const [businessName, setBusinessName] = useState("Default LLC");
+  const [businessName, setBusinessName] = useState("");
   const [resultsSlide, setResultsSlide] = useState(0);
   const [autoPlayResults, setAutoPlayResults] = useState(true);
+  const [showResults, setShowResults] = useState(false);
   const [sessionId] = useState(() => `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
   const [email, setEmail] = useState("");
   const [waitlistError, setWaitlistError] = useState("");
@@ -53,13 +54,13 @@ export default function Landing() {
 
   // Results slideshow auto-play
   useEffect(() => {
-    if (stage === "results-slideshow" && autoPlayResults) {
+    if (showResults && autoPlayResults) {
       const timer = setInterval(() => {
         setResultsSlide((prev) => (prev + 1) % resultsSlides.length);
       }, 5000);
       return () => clearInterval(timer);
     }
-  }, [autoPlayResults, stage]);
+  }, [autoPlayResults, showResults]);
 
   // Intro slideshow content - L.A.W.S. framework
   const introSlides = [
@@ -141,7 +142,7 @@ export default function Landing() {
         eventType: "results_slideshow_start",
         businessName: businessName,
       });
-      setStage("results-slideshow");
+      setShowResults(true);
       setResultsSlide(0);
       setAutoPlayResults(true);
     }
@@ -206,46 +207,46 @@ export default function Landing() {
         <div className="container max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-foreground">L.A.W.S. Collective</h1>
           <div className="flex gap-2">
-            <a href="/house" className="no-underline">
-              <Button variant="outline" size="sm">
-                Sign In
-              </Button>
-            </a>
-            <a href="/house" className="no-underline">
-              <Button size="sm">Get Started</Button>
-            </a>
+            <Button variant="outline" onClick={() => window.location.href = "/house"}>
+              Sign In
+            </Button>
+            <Button onClick={() => window.location.href = "/house"}>
+              Get Started
+            </Button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="flex-1 container max-w-6xl mx-auto px-4 py-12 space-y-12">
-        {/* SECTION 1: QR CODE */}
-        <section className="flex flex-col items-center justify-center space-y-6">
-          <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold text-foreground">Scan to Learn More</h2>
-            <p className="text-muted-foreground">Connect with L.A.W.S. Collective</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg border border-border shadow-sm">
-            <QRCode
-              value={typeof window !== "undefined" ? window.location.href : "https://laws-collective.com"}
-              size={256}
-              level="H"
-              includeMargin={true}
-            />
-          </div>
-        </section>
-
         {/* STAGE 1: INTRO SLIDESHOW */}
         {stage === "intro-slideshow" && (
           <section className="space-y-8">
-            <div className="bg-card border border-border rounded-lg p-12 min-h-[400px] flex flex-col justify-center relative">
-              {/* Watermark */}
-              <div className="absolute top-4 right-4 text-xs text-muted-foreground opacity-50">
-                UNDER CONSTRUCTION - DEMO MODE
+            {/* QR Code Section */}
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold text-foreground">Scan to Learn More</h2>
+              <p className="text-lg text-muted-foreground">Connect with L.A.W.S. Collective</p>
+              <div className="flex justify-center">
+                <div className="bg-white p-6 rounded-lg">
+                  <QRCode value={typeof window !== "undefined" ? window.location.href : "https://example.com"} size={200} />
+                </div>
               </div>
+            </div>
 
-              <div className="text-center space-y-6">
+            {/* Slideshow - Video Loop Style */}
+            <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-border rounded-lg p-12 min-h-[500px] flex flex-col justify-center overflow-hidden relative">
+              <style>{`
+                @keyframes fadeInOut {
+                  0% { opacity: 0; }
+                  10% { opacity: 1; }
+                  90% { opacity: 1; }
+                  100% { opacity: 0; }
+                }
+                .slide-content {
+                  animation: fadeInOut 5s ease-in-out;
+                }
+              `}</style>
+              <div className="text-center space-y-6 slide-content">
                 <h2 className="text-4xl font-bold text-foreground">{introSlides[currentSlide].title}</h2>
                 {introSlides[currentSlide].subtitle && (
                   <p className="text-xl text-muted-foreground">{introSlides[currentSlide].subtitle}</p>
@@ -300,16 +301,10 @@ export default function Landing() {
         {/* STAGE 2: NAME INPUT (Single Step) */}
         {stage === "name-input" && (
           <section className="space-y-8">
-            <div className="bg-card border border-border rounded-lg p-12 min-h-[400px] flex flex-col justify-center relative">
-              {/* Watermark */}
-              <div className="absolute top-4 right-4 text-xs text-muted-foreground opacity-50">
-                UNDER CONSTRUCTION - DEMO MODE
-              </div>
-
+            <div className="bg-card border border-border rounded-lg p-12 min-h-[300px] flex flex-col justify-center">
               <div className="text-center space-y-8">
                 <div className="space-y-4">
                   <h2 className="text-4xl font-bold text-foreground">Start Your Business</h2>
-                  <p className="text-xl text-muted-foreground">Default LLC Structure</p>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                     Enter your business name to see what you'll get when you start with L.A.W.S. Collective.
                   </p>
@@ -324,7 +319,6 @@ export default function Landing() {
                     className="px-6 py-3 rounded-md border-2 border-primary bg-background text-foreground text-center text-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-primary"
                     autoFocus
                   />
-                  <p className="text-sm text-muted-foreground mt-3">Default LLC structure</p>
                 </div>
               </div>
 
@@ -334,90 +328,92 @@ export default function Landing() {
                   Back
                 </Button>
                 <Button size="lg" onClick={handleStartSimulator} disabled={!businessName.trim()}>
-                  Continue
+                  Show Demo
                 </Button>
               </div>
             </div>
-          </section>
-        )}
 
-        {/* STAGE 3: RESULTS SLIDESHOW */}
-        {stage === "results-slideshow" && (
-          <section className="space-y-8">
-            <div className="bg-card border border-border rounded-lg p-12 min-h-[400px] flex flex-col justify-center relative">
-              {/* Watermark */}
-              <div className="absolute top-4 right-4 text-xs text-muted-foreground opacity-50">
-                UNDER CONSTRUCTION - DEMO MODE
-              </div>
+            {/* INLINE RESULTS DISPLAY - Video Loop Style */}
+            {showResults && businessName.trim() && (
+              <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-border rounded-lg p-12 min-h-[500px] flex flex-col justify-center overflow-hidden relative">
+                <style>{`
+                  @keyframes fadeInOut {
+                    0% { opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { opacity: 0; }
+                  }
+                  .slide-content {
+                    animation: fadeInOut 5s ease-in-out;
+                  }
+                `}</style>
+                <div className="text-center space-y-6 slide-content">
+                  <h2 className="text-4xl font-bold text-foreground">{resultsSlides[resultsSlide].title}</h2>
+                  {resultsSlides[resultsSlide].subtitle && (
+                    <p className="text-xl text-muted-foreground">{resultsSlides[resultsSlide].subtitle}</p>
+                  )}
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    {resultsSlides[resultsSlide].description}
+                  </p>
+                  {resultsSlides[resultsSlide].features && (
+                    <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto pt-4">
+                      {resultsSlides[resultsSlide].features?.map((feature, idx) => (
+                        <div key={idx} className="p-3 bg-secondary/30 rounded-md">
+                          <p className="text-sm font-medium text-foreground">{feature}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              <div className="text-center space-y-6">
-                <h2 className="text-4xl font-bold text-foreground">{resultsSlides[resultsSlide].title}</h2>
-                {resultsSlides[resultsSlide].subtitle && (
-                  <p className="text-xl text-muted-foreground">{resultsSlides[resultsSlide].subtitle}</p>
-                )}
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  {resultsSlides[resultsSlide].description}
-                </p>
+                {/* Slide indicators */}
+                <div className="flex justify-center gap-2 mt-8">
+                  {resultsSlides.map((_, idx) => (
+                    <button
+                      key={idx}
+                      className={`h-2 rounded-full transition-all ${
+                        idx === resultsSlide ? "bg-primary w-8" : "bg-border w-2"
+                      }`}
+                      onClick={() => {
+                        setResultsSlide(idx);
+                        setAutoPlayResults(false);
+                      }}
+                    />
+                  ))}
+                </div>
 
-                {/* Features grid if available */}
-                {resultsSlides[resultsSlide].features && (
-                  <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto pt-4">
-                    {resultsSlides[resultsSlide].features?.map((feature, idx) => (
-                      <div
-                        key={idx}
-                        className="p-4 bg-secondary/30 rounded-lg border border-border text-foreground text-sm"
-                      >
-                        {feature}
-                      </div>
-                    ))}
+                {/* Navigation */}
+                <div className="flex justify-between items-center mt-8">
+                  <Button variant="outline" size="icon" onClick={handleResultsPrev}>
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    {resultsSlide + 1} / {resultsSlides.length}
+                  </span>
+                  <Button variant="outline" size="icon" onClick={handleResultsNext}>
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+
+                {/* CTA after results */}
+                <div className="text-center space-y-4 mt-8">
+                  <p className="text-lg text-muted-foreground">
+                    Ready to get started with {businessName}?
+                  </p>
+                  <div className="flex gap-4 justify-center flex-wrap">
+                    <Button variant="outline" onClick={() => setShowResults(false)}>
+                      Try Another Name
+                    </Button>
+                    <Button size="lg" onClick={() => setStage("waitlist-signup")}>
+                      Join Waitlist
+                    </Button>
+                    <Button variant="outline" onClick={() => window.location.href = "/house"}>
+                      Explore Live System
+                    </Button>
                   </div>
-                )}
+                </div>
               </div>
-
-              {/* Slide indicators */}
-              <div className="flex justify-center gap-2 mt-8">
-                {resultsSlides.map((_, idx) => (
-                  <button
-                    key={idx}
-                    className={`h-2 rounded-full transition-all ${
-                      idx === resultsSlide ? "bg-primary w-8" : "bg-border w-2"
-                    }`}
-                    onClick={() => {
-                      setResultsSlide(idx);
-                      setAutoPlayResults(false);
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Navigation */}
-              <div className="flex justify-between items-center mt-8">
-                <Button variant="outline" size="icon" onClick={handleResultsPrev}>
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                <span className="text-sm text-muted-foreground">
-                  {resultsSlide + 1} / {resultsSlides.length}
-                </span>
-                <Button variant="outline" size="icon" onClick={handleResultsNext}>
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* CTA after results */}
-            <div className="text-center space-y-4">
-              <p className="text-lg text-muted-foreground">
-                Ready to get started with {businessName}?
-              </p>
-              <div className="flex gap-4 justify-center">
-                <Button variant="outline" onClick={handleBackToIntro}>
-                  Try Another Name
-                </Button>
-                <Button size="lg" onClick={() => setStage("waitlist-signup")}>
-                  Join Waitlist
-                </Button>
-              </div>
-            </div>
+            )}
           </section>
         )}
 
@@ -454,16 +450,19 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="space-y-4">
               <h2 className="text-3xl font-bold text-foreground">Meet Luv</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Founder and visionary behind the L.A.W.S. Collective, Luv brings decades of experience in community building, financial literacy, and multi-generational wealth creation.
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Luv brings decades of experience in community building, financial literacy, and multi-generational wealth creation.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-lg text-muted-foreground leading-relaxed">
                 With a background in education, business development, and social impact, Luv has dedicated her career to creating systems that empower families and communities to build sustainable wealth while honoring their values and heritage.
               </p>
-
             </div>
-            <div className="bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg h-64 flex items-center justify-center border border-border overflow-hidden">
-              <img src="/luv-photo.jpg" alt="Luv Russell" className="w-full h-full object-cover" />
+            <div className="flex justify-center">
+              <img
+                src="/luv-photo.jpg"
+                alt="Luv - Founder of L.A.W.S. Collective"
+                className="w-80 h-80 rounded-lg object-cover border border-border shadow-lg"
+              />
             </div>
           </div>
         </section>
@@ -471,12 +470,7 @@ export default function Landing() {
         {/* STAGE 4: WAITLIST SIGNUP */}
         {stage === "waitlist-signup" && (
           <section className="space-y-8">
-            <div className="bg-card border border-border rounded-lg p-12 min-h-[400px] flex flex-col justify-center relative">
-              {/* Watermark */}
-              <div className="absolute top-4 right-4 text-xs text-muted-foreground opacity-50">
-                UNDER CONSTRUCTION - DEMO MODE
-              </div>
-
+            <div className="bg-card border border-border rounded-lg p-12 min-h-[400px] flex flex-col justify-center">
               <div className="text-center space-y-8">
                 <div className="space-y-4">
                   <h2 className="text-4xl font-bold text-foreground">Join the Collective</h2>
@@ -503,7 +497,7 @@ export default function Landing() {
 
               {/* Navigation */}
               <div className="flex justify-between items-center mt-8">
-                <Button variant="outline" onClick={() => setStage("results-slideshow")}>
+                <Button variant="outline" onClick={() => setStage("name-input")}>
                   Back
                 </Button>
                 <Button size="lg" onClick={handleWaitlistSubmit} disabled={joinWaitlist.isPending}>
@@ -516,33 +510,34 @@ export default function Landing() {
 
         {/* SECTION: SIGN-UP CTA (Bottom of page) */}
         {stage !== "waitlist-signup" && (
-          <section className="bg-secondary/30 border border-border rounded-lg p-8 text-center space-y-4">
-            <h3 className="text-xl font-semibold text-foreground">Join Our Community</h3>
-            <p className="text-muted-foreground">
-              Get notified when we launch the full platform and be part of the L.A.W.S. Collective
-            </p>
-            <form className="flex gap-2 max-w-md mx-auto" onSubmit={(e) => {
-              e.preventDefault();
-              alert("Thank you for signing up! Check your email for updates.");
-            }}>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 rounded-md border border-border bg-background text-foreground"
-                required
-              />
-              <Button type="submit">Sign Up</Button>
-            </form>
+          <section className="bg-secondary/30 border border-border rounded-lg p-8 text-center space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold text-foreground">Join Our Community</h3>
+              <p className="text-muted-foreground">
+                Get notified when we launch the full platform and be part of the L.A.W.S. Collective
+              </p>
+              <p className="text-sm text-muted-foreground italic">Live system coming soon</p>
+            </div>
+            <div className="flex gap-2 max-w-md mx-auto flex-wrap justify-center">
+              <form className="flex gap-2 flex-1 min-w-[250px]" onSubmit={(e) => {
+                e.preventDefault();
+                setStage("waitlist-signup");
+              }}>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 px-4 py-2 rounded-md border border-border bg-background text-foreground"
+                  required
+                />
+                <Button type="submit">Sign Up</Button>
+              </form>
+              <Button variant="outline" onClick={() => window.location.href = "/house"}>
+                Support the Collective
+              </Button>
+            </div>
           </section>
         )}
       </main>
-
-      {/* Footer */}
-      <footer className="mt-auto border-t border-border bg-background/50 py-6">
-        <div className="container max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground opacity-60">
-          <p>L.A.W.S. Collective | Multi-Generational Wealth Building</p>
-        </div>
-      </footer>
     </div>
   );
 }
