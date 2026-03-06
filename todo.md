@@ -9920,3 +9920,26 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Test QR code scannability on mobile devices
 - [x] Ensure responsive design works on all screen sizes
 - [x] Ready for Railway deployment
+
+
+## Phase 26: URGENT - Landing Page Rebuild for Saturday Presentation
+
+### Critical Path - Must Complete Tonight
+- [ ] Rebuild Home.tsx to match exact reference design from L.A.W.S.Collective-Multi-GenerationalWealthBuilding.jpeg
+- [ ] Ensure all sections are in correct order per reference image
+- [ ] Remove bloated/unnecessary sections
+- [ ] Make all interactive features functional (especially business simulator)
+- [ ] Test locally on dev server
+- [ ] Deploy to production (Railway)
+- [ ] Verify on mobile and desktop
+- [ ] Final testing and validation before user goes to bed
+
+### Reference Design Requirements
+- Concise, clean layout matching screenshot
+- Proper visual hierarchy
+- Professional spacing
+- Focused content (not bloated like current version)
+- Better layout and arrangement than current version
+- All features must be functional
+- Mobile responsive design
+- QR code points to correct landing page URL
