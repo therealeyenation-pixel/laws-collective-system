@@ -221,43 +221,47 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-foreground">L.A.W.S. Collective</h1>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => window.location.href = "mailto:luvonpurpose@protonmail.com"}>
+    <div className="min-h-screen bg-background flex flex-col w-screen max-w-full overflow-x-hidden">
+      {/* Header - Mobile Optimized */}
+      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border w-full">
+        <div className="w-full px-4 py-3 flex flex-col gap-3">
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl font-bold text-foreground">L.A.W.S. Collective</h1>
+          </div>
+          <div className="flex flex-col gap-2 w-full">
+            <Button variant="outline" onClick={() => window.location.href = "/contact-us"} className="w-full text-sm py-2">
               Contact Us
             </Button>
-            <Button variant="outline" onClick={() => window.location.href = "/demo"}>
-              Sign In
-            </Button>
-            <Button onClick={() => window.location.href = "/demo"}>
-              Get Started
-            </Button>
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" onClick={() => window.location.href = "/demo"} className="flex-1 text-sm py-2">
+                Sign In
+              </Button>
+              <Button onClick={() => window.location.href = "/demo"} className="flex-1 text-sm py-2">
+                Get Started
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 container max-w-6xl mx-auto px-4 py-12 space-y-12">
+      {/* Main Content - Mobile Optimized */}
+      <main className="flex-1 w-full px-4 py-8 space-y-8">
         {/* STAGE 1: INTRO SLIDESHOW */}
         {stage === "intro-slideshow" && (
           <section className="space-y-8">
-            {/* QR Code Section */}
-            <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-foreground">Scan to Learn More</h2>
-              <p className="text-lg text-muted-foreground">Connect with L.A.W.S. Collective</p>
+            {/* QR Code Section - Mobile Optimized */}
+            <div className="text-center space-y-3">
+              <h2 className="text-2xl font-bold text-foreground">Scan to Learn More</h2>
+              <p className="text-base text-muted-foreground">Connect with L.A.W.S. Collective</p>
               <div className="flex justify-center">
-                <div className="bg-white p-6 rounded-lg">
-                  <QRCode value={typeof window !== "undefined" ? window.location.href : "https://example.com"} size={200} />
+                <div className="bg-white p-4 rounded-lg">
+                  <QRCode value={typeof window !== "undefined" ? window.location.href : "https://example.com"} size={160} />
                 </div>
               </div>
             </div>
 
-            {/* Slideshow - Video Loop Style */}
-            <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-border rounded-lg p-12 min-h-[500px] flex flex-col justify-center overflow-hidden relative">
+            {/* Slideshow - Mobile Optimized */}
+            <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-border rounded-lg p-6 min-h-[350px] flex flex-col justify-center overflow-hidden relative">
               <style>{`
                 @keyframes fadeInOut {
                   0% { opacity: 0; }
@@ -269,14 +273,12 @@ export default function Landing() {
                   animation: fadeInOut 5s ease-in-out;
                 }
               `}</style>
-              <div className="text-center space-y-6 slide-content">
-                <h2 className="text-4xl font-bold text-foreground">{introSlides[currentSlide].title}</h2>
+              <div className="text-center space-y-3 slide-content">
+                <h2 className="text-2xl font-bold text-foreground">{introSlides[currentSlide].title}</h2>
                 {introSlides[currentSlide].subtitle && (
-                  <p className="text-xl text-muted-foreground">{introSlides[currentSlide].subtitle}</p>
+                  <p className="text-base text-muted-foreground">{introSlides[currentSlide].subtitle}</p>
                 )}
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  {introSlides[currentSlide].description}
-                </p>
+                <p className="text-sm text-muted-foreground">{introSlides[currentSlide].description}</p>
               </div>
 
               {/* Slide indicators */}
