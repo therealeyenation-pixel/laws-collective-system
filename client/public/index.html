@@ -445,7 +445,29 @@
         <div class="container">
             <h2>Join the Waitlist</h2>
             <p>Be among the first to access The L.A.W.S. Collective and receive updates about platform launch and exclusive community benefits.</p>
-            <a href="#" class="btn">Join Our Community →</a>
+            <form id="waitlistForm" style="display: flex; gap: 10px; max-width: 500px; margin: 30px auto; justify-content: center; flex-wrap: wrap;">
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required style="padding: 12px 20px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; flex: 1; min-width: 250px;">
+                <button type="submit" class="btn" style="margin: 0; padding: 12px 30px;">Join →</button>
+            </form>
+            <p id="successMessage" style="color: #22c55e; margin-top: 20px; display: none;">Thank you! Check your email for updates.</p>
+            <script>
+                document.getElementById('waitlistForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const form = document.getElementById('waitlistForm');
+                    const successMsg = document.getElementById('successMessage');
+                    
+                    // Store email in localStorage (for now - can be connected to backend later)
+                    const emails = JSON.parse(localStorage.getItem('waitlistEmails') || '[]');
+                    if (!emails.includes(email)) {
+                        emails.push(email);
+                        localStorage.setItem('waitlistEmails', JSON.stringify(emails));
+                    }
+                    
+                    form.style.display = 'none';
+                    successMsg.style.display = 'block';
+                });
+            </script>
         </div>
     </section>
     
