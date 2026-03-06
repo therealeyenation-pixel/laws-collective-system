@@ -562,10 +562,10 @@ export default function Landing() {
             <div className="space-y-4">
               <h2 className="text-3xl font-bold text-foreground">Meet Luv</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Luv brings decades of experience in community building, financial literacy, and multi-generational wealth creation.
+                Luv's journey to building The L.A.W.S. Collective started with a simple question: why do so many families struggle to build wealth that lasts? With a career rooted in contract administration across both government and commercial sectors, she saw firsthand how systems are built — and how they often leave everyday families behind.
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                With a background in education, business development, and social impact, Luv has dedicated her career to creating systems that empower families and communities to build sustainable wealth while honoring their values and heritage.
+                That experience, combined with years of real-world observation, community conversations, and a deep commitment to understanding how wealth actually works, led her to create something different. The L.A.W.S. Collective is her answer — a framework built on purpose, not theory, designed to help families reconnect with their roots and build something that outlasts any single generation.
               </p>
             </div>
             <div className="flex justify-center">
