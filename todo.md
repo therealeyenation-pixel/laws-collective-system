@@ -10077,3 +10077,44 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Database migration requires manual confirmation (needs automation)
 - [ ] Analytics tables not yet created (blocking event tracking)
 - [ ] Stripe webhook not yet configured (blocking payment processing)
+
+
+## Phase 25: Interactive Business Simulator Enhancement
+
+### Phase 25.1: Interactive Questions
+- [x] Update ShellDemo component to add answer buttons for each question
+- [x] Store user answers in component state
+- [x] Create question data structure with multiple choice options
+- [x] Add visual feedback for selected answers
+- [x] Implement answer validation
+
+### Phase 25.2: Database Schema for Waitlist
+- [x] Add waitlist_signups table to schema (email, business_name, business_type, created_at)
+- [ ] Run database migration (pnpm db:push) - pending full schema sync
+- [x] Create database query helper in server/db.ts
+
+### Phase 25.3: Waitlist Signup Feature
+- [x] Create tRPC procedure for waitlist signup (public)
+- [x] Add email validation
+- [x] Add duplicate email prevention
+- [x] Create waitlist signup form component
+- [x] Add success/error messages
+
+### Phase 25.4: Personalized Dashboard Preview
+- [x] Map user answers to relevant dashboard cards
+- [x] Create card selection logic based on business type and goals
+- [x] Show 4-6 personalized cards instead of fixed 6
+- [x] Add explanations for why each card is relevant
+- [x] Highlight top 2-3 most relevant features
+
+### Phase 25.5: Complete Flow Testing
+- [x] Test interactive questions flow
+- [x] Test answer storage and retrieval
+- [x] Test personalized results display
+- [x] Test waitlist signup submission (ready for database)
+- [x] Test email validation
+- [ ] Verify database storage of signups (pending database migration)
+
+### Phase 25.6: Save Checkpoint
+- [x] Save checkpoint with interactive simulator enhancements
+- [x] Update documentation

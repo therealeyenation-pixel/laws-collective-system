@@ -1,68 +1,148 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Home, BarChart3, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight, Home, BarChart3, Zap, Mail } from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+
+type SlideType = {
+  title: string;
+  description: string;
+  icon: string;
+  type: string;
+  options?: string[];
+};
 
 export default function ShellDemo() {
-  const [stage, setStage] = useState<"intro" | "simulator" | "dashboard" | "comparison">("intro");
-  const [businessName, setBusinessName] = useState("");
-  const [showResults, setShowResults] = useState(false);
+  const [stage, setStage] = useState<"intro" | "simulator" | "results" | "waitlist" | "dashboard">("intro");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [businessName, setBusinessName] = useState("");
+  const [email, setEmail] = useState("");
+  const [answers, setAnswers] = useState<Record<number, string>>({});
 
-  // Business Simulator Slides
-  const simulatorSlides = [
+  // Enhanced Business Simulator Slides with Answer Options
+  const simulatorSlides: SlideType[] = [
     {
       title: "Let's Build Your Business",
       description: "Answer a few questions to see how the L.A.W.S. system helps you structure your business.",
       icon: "🏢",
+      type: "intro",
     },
     {
       title: "What Type of Business?",
-      description: "Choose from LLC, S-Corp, C-Corp, Partnership, Sole Proprietorship, or other structures.",
+      description: "Choose the business structure that fits your vision.",
       icon: "📋",
+      type: "multiple-choice",
+      options: ["LLC", "S-Corp", "C-Corp", "Partnership", "Sole Proprietorship"],
     },
     {
       title: "Business Goals",
-      description: "Define your primary goals: Revenue generation, Wealth building, Community impact, or Growth.",
+      description: "What's your primary goal?",
       icon: "🎯",
+      type: "multiple-choice",
+      options: ["Revenue generation", "Wealth building", "Community impact", "Growth & scaling"],
     },
     {
       title: "Timeline & Milestones",
-      description: "Set your 1-year, 3-year, and 5-year milestones for your business.",
+      description: "What's your business timeline?",
       icon: "📅",
+      type: "multiple-choice",
+      options: ["Starting now", "1-3 months", "3-6 months", "6-12 months"],
     },
     {
       title: "Team Structure",
-      description: "Define your team: Solo, Small team (2-5), Medium team (6-20), or Large team (20+).",
+      description: "How do you want to structure your team?",
       icon: "👥",
+      type: "multiple-choice",
+      options: ["Solo", "Small team (2-5)", "Medium team (6-20)", "Large team (20+)"],
     },
     {
       title: "Financial Management",
-      description: "Choose your approach: Self-managed, Professional accounting, or Full automation.",
+      description: "How do you want to manage finances?",
       icon: "💰",
+      type: "multiple-choice",
+      options: ["Self-managed", "Professional accounting", "Full automation"],
     },
     {
       title: "Ready to Launch",
-      description: "Your business structure is ready. In the full system, you'll get professional forms, documents, and tools.",
+      description: "Your business structure is ready. What's your business name?",
       icon: "🚀",
+      type: "text-input",
     },
   ];
 
-  // Dashboard Preview Cards
-  const dashboardCards = [
-    { title: "Business Overview", icon: BarChart3, color: "bg-blue-500/10" },
-    { title: "Financial Dashboard", icon: Zap, color: "bg-green-500/10" },
-    { title: "Team Management", icon: Home, color: "bg-purple-500/10" },
-    { title: "Documents & Compliance", icon: BarChart3, color: "bg-orange-500/10" },
-    { title: "Growth Tracking", icon: Zap, color: "bg-pink-500/10" },
-    { title: "Integration Hub", icon: Home, color: "bg-cyan-500/10" },
-  ];
+  // Dashboard cards mapped to answers
+  const getDashboardCards = () => {
+    const cards = [];
+    
+    // Always show Business Overview
+    cards.push({
+      title: "Business Overview",
+      icon: BarChart3,
+      color: "bg-blue-500/10",
+      reason: "Core dashboard for all businesses",
+    });
+
+    // Show Financial Dashboard if revenue/wealth focused
+    if (answers[1]?.includes("Revenue") || answers[1]?.includes("Wealth")) {
+      cards.push({
+        title: "Financial Dashboard",
+        icon: Zap,
+        color: "bg-green-500/10",
+        reason: "Essential for your financial goals",
+      });
+    }
+
+    // Show Team Management if team size > 1
+    if (answers[3] && answers[3] !== "Solo") {
+      cards.push({
+        title: "Team Management",
+        icon: Home,
+        color: "bg-purple-500/10",
+        reason: "Manage your growing team",
+      });
+    }
+
+    // Show Documents & Compliance for all
+    cards.push({
+      title: "Documents & Compliance",
+      icon: BarChart3,
+      color: "bg-orange-500/10",
+      reason: "Legal protection and compliance",
+    });
+
+    // Show Growth Tracking if growth focused
+    if (answers[1]?.includes("Growth")) {
+      cards.push({
+        title: "Growth Tracking",
+        icon: Zap,
+        color: "bg-pink-500/10",
+        reason: "Monitor your scaling progress",
+      });
+    }
+
+    // Show Integration Hub for professional accounting
+    if (answers[4]?.includes("Professional") || answers[4]?.includes("automation")) {
+      cards.push({
+        title: "Integration Hub",
+        icon: Home,
+        color: "bg-cyan-500/10",
+        reason: "Connect with your tools",
+      });
+    }
+
+    return cards.length > 0 ? cards : [
+      { title: "Business Overview", icon: BarChart3, color: "bg-blue-500/10", reason: "Core dashboard" },
+      { title: "Financial Dashboard", icon: Zap, color: "bg-green-500/10", reason: "Manage finances" },
+      { title: "Documents & Compliance", icon: BarChart3, color: "bg-orange-500/10", reason: "Stay compliant" },
+    ];
+  };
 
   const handleSlideNext = () => {
     if (currentSlide < simulatorSlides.length - 1) {
       setCurrentSlide(currentSlide + 1);
     } else {
-      setShowResults(true);
+      setStage("results");
     }
   };
 
@@ -71,6 +151,43 @@ export default function ShellDemo() {
       setCurrentSlide(currentSlide - 1);
     }
   };
+
+  const handleAnswerSelect = (answer: string) => {
+    setAnswers({ ...answers, [currentSlide]: answer });
+  };
+
+  const handleNameSubmit = () => {
+    if (businessName.trim()) {
+      setStage("results");
+    }
+  };
+
+  const waitlistMutation = trpc.waitlist.signup.useMutation();
+
+  const handleWaitlistSignup = async () => {
+    if (!email.trim()) return;
+    
+    try {
+      const result = await waitlistMutation.mutateAsync({
+        email,
+        businessName: businessName || undefined,
+        source: "demo",
+      });
+      
+      if (result.success) {
+        toast.success(result.message);
+        setStage("dashboard");
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Waitlist signup error:", error);
+      toast.error("Failed to join waitlist. Please try again.");
+    }
+  };
+
+  const currentQuestion = simulatorSlides[currentSlide];
+  const isAnswered = answers[currentSlide] !== undefined;
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,9 +217,6 @@ export default function ShellDemo() {
                 <Button size="lg" onClick={() => setStage("simulator")}>
                   Start Interactive Demo
                 </Button>
-                <Button variant="outline" size="lg" onClick={() => setStage("comparison")}>
-                  See Full System Features
-                </Button>
               </div>
             </div>
           </section>
@@ -115,17 +229,35 @@ export default function ShellDemo() {
               <div className="text-center space-y-8">
                 {/* Current Slide */}
                 <div className="space-y-4">
-                  <div className="text-6xl">{simulatorSlides[currentSlide].icon}</div>
-                  <h2 className="text-3xl font-bold text-foreground">{simulatorSlides[currentSlide].title}</h2>
+                  <div className="text-6xl">{currentQuestion.icon}</div>
+                  <h2 className="text-3xl font-bold text-foreground">{currentQuestion.title}</h2>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    {simulatorSlides[currentSlide].description}
+                    {currentQuestion.description}
                   </p>
                 </div>
 
-                {/* Business Name Input (on last slide) */}
-                {currentSlide === simulatorSlides.length - 1 && !showResults && (
+                {/* Answer Options */}
+                {currentQuestion.type === "multiple-choice" && currentQuestion.options && (
+                  <div className="space-y-3 pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
+                      {currentQuestion.options.map((option) => (
+                        <Button
+                          key={option}
+                          variant={answers[currentSlide] === option ? "default" : "outline"}
+                          className="h-auto py-3 px-4 text-left justify-start"
+                          onClick={() => handleAnswerSelect(option)}
+                        >
+                          {answers[currentSlide] === option && <span className="mr-2">✓</span>}
+                          {option}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Text Input for Business Name */}
+                {currentQuestion.type === "text-input" && (
                   <div className="space-y-4 pt-4">
-                    <p className="text-muted-foreground">What's your business name?</p>
                     <input
                       type="text"
                       placeholder="Enter your business name"
@@ -134,51 +266,15 @@ export default function ShellDemo() {
                       className="px-6 py-4 rounded-md border border-border bg-background text-foreground text-center text-lg max-w-md mx-auto block w-full focus:outline-none focus:ring-2 focus:ring-primary"
                       autoFocus
                     />
-                  </div>
-                )}
-
-                {/* Results Display */}
-                {showResults && (
-                  <div className="space-y-6 pt-8">
-                    <div className="bg-secondary/20 rounded-lg p-8 space-y-4">
-                      <h3 className="text-2xl font-bold text-foreground">
-                        {businessName || "Your Business"} is Ready!
-                      </h3>
-                      <p className="text-lg text-muted-foreground">
-                        In the full L.A.W.S. system, you would now have access to:
-                      </p>
-                      <ul className="text-left space-y-2 max-w-md mx-auto">
-                        <li className="flex items-center gap-2">
-                          <span className="text-green-500">✓</span>
-                          <span>Professional business formation documents</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="text-green-500">✓</span>
-                          <span>Financial management tools and templates</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="text-green-500">✓</span>
-                          <span>Compliance and legal guidance</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="text-green-500">✓</span>
-                          <span>Team management and onboarding</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <span className="text-green-500">✓</span>
-                          <span>Growth tracking and analytics</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <Button size="lg" onClick={() => setStage("dashboard")}>
-                      See Your Dashboard
+                    <Button size="lg" onClick={handleNameSubmit} disabled={!businessName.trim()}>
+                      See Your Results
                     </Button>
                   </div>
                 )}
               </div>
 
               {/* Navigation */}
-              {!showResults && (
+              {currentQuestion.type !== "text-input" && (
                 <div className="flex justify-between items-center mt-12">
                   <Button variant="outline" size="icon" onClick={handleSlidePrev} disabled={currentSlide === 0}>
                     <ChevronLeft className="w-4 h-4" />
@@ -186,7 +282,12 @@ export default function ShellDemo() {
                   <span className="text-sm text-muted-foreground">
                     {currentSlide + 1} / {simulatorSlides.length}
                   </span>
-                  <Button variant="outline" size="icon" onClick={handleSlideNext}>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={handleSlideNext}
+                    disabled={!isAnswered && currentQuestion.type === "multiple-choice"}
+                  >
                     <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -195,44 +296,64 @@ export default function ShellDemo() {
           </section>
         )}
 
-        {/* DASHBOARD STAGE */}
-        {stage === "dashboard" && (
+        {/* RESULTS STAGE */}
+        {stage === "results" && (
           <section className="space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-foreground">Your Business Dashboard</h2>
+              <h2 className="text-3xl font-bold text-foreground">Your Personalized Dashboard</h2>
               <p className="text-lg text-muted-foreground">
-                This is what your dashboard would look like in the full L.A.W.S. system
+                Based on your answers, here are the tools you'll use most
               </p>
             </div>
 
-            {/* Dashboard Preview Cards */}
+            {/* Personalized Dashboard Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {dashboardCards.map((card, idx) => (
+              {getDashboardCards().map((card, idx) => (
                 <Card key={idx} className={`p-6 ${card.color} border border-border`}>
                   <div className="flex items-start gap-4">
                     <card.icon className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
-                    <div>
+                    <div className="text-left">
                       <h3 className="font-semibold text-foreground">{card.title}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">View and manage your {card.title.toLowerCase()}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{card.reason}</p>
                     </div>
                   </div>
                 </Card>
               ))}
             </div>
 
-            {/* CTA Section */}
-            <div className="bg-secondary/30 border border-border rounded-lg p-8 text-center space-y-6">
-              <div className="space-y-2">
+            {/* Waitlist CTA */}
+            <div className="bg-secondary/30 border border-border rounded-lg p-8 space-y-6">
+              <div className="space-y-2 text-center">
                 <h3 className="text-2xl font-bold text-foreground">Ready for the Full Experience?</h3>
                 <p className="text-muted-foreground">
-                  This demo shows the interface. The full system includes professional forms, real data management, and complete business tools.
+                  Join our waitlist to get early access to the complete L.A.W.S. system
                 </p>
               </div>
+
+              <div className="max-w-md mx-auto space-y-4">
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <Button 
+                  size="lg" 
+                  className="w-full"
+                  onClick={handleWaitlistSignup}
+                  disabled={!email.trim()}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Join Waitlist
+                </Button>
+              </div>
+
               <div className="flex gap-4 justify-center flex-wrap">
-                <Button size="lg" onClick={() => window.location.href = "/"}>
+                <Button variant="outline" onClick={() => window.location.href = "/"}>
                   Back to Landing Page
                 </Button>
-                <Button variant="outline" size="lg" onClick={() => window.location.href = "/donate"}>
+                <Button variant="outline" onClick={() => window.location.href = "/donate"}>
                   Support the Collective
                 </Button>
               </div>
@@ -240,97 +361,35 @@ export default function ShellDemo() {
           </section>
         )}
 
-        {/* COMPARISON STAGE */}
-        {stage === "comparison" && (
+        {/* DASHBOARD STAGE */}
+        {stage === "dashboard" && (
           <section className="space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-foreground">Demo vs. Full System</h2>
+              <h2 className="text-3xl font-bold text-foreground">Welcome to the Waitlist!</h2>
               <p className="text-lg text-muted-foreground">
-                Here's what you get in the complete L.A.W.S. system
+                We've sent a confirmation email to <strong>{email}</strong>
+              </p>
+              <p className="text-muted-foreground">
+                You'll be among the first to access the complete L.A.W.S. system
               </p>
             </div>
 
-            {/* Comparison Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full border border-border rounded-lg">
-                <thead className="bg-secondary/50">
-                  <tr>
-                    <th className="px-6 py-4 text-left font-semibold text-foreground">Feature</th>
-                    <th className="px-6 py-4 text-center font-semibold text-foreground">Demo</th>
-                    <th className="px-6 py-4 text-center font-semibold text-foreground">Full System</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Interactive Business Simulator</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Professional Business Forms</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Financial Management Tools</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Data Storage & Tracking</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Compliance & Legal Guidance</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Team Management</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Document Generation</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Analytics & Reporting</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Community Access</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 text-foreground">Ongoing Support</td>
-                    <td className="px-6 py-4 text-center">—</td>
-                    <td className="px-6 py-4 text-center">✓</td>
-                  </tr>
-                </tbody>
-              </table>
+            {/* Success Message */}
+            <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-8 text-center space-y-4">
+              <h3 className="text-xl font-bold text-foreground">Thank you, {businessName}!</h3>
+              <p className="text-muted-foreground">
+                We're building the tools to help you succeed. You'll hear from us soon with exclusive updates and early access opportunities.
+              </p>
             </div>
 
-            {/* CTA Section */}
-            <div className="bg-primary/10 border border-primary/30 rounded-lg p-8 text-center space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-foreground">Join the L.A.W.S. Collective</h3>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Get access to the complete system with professional tools, guidance, and community support to build sustainable wealth.
-                </p>
-              </div>
-              <div className="flex gap-4 justify-center flex-wrap">
-                <Button size="lg" onClick={() => window.location.href = "/"}>
-                  Back to Landing Page
-                </Button>
-                <Button variant="outline" size="lg" onClick={() => window.location.href = "/donate"}>
-                  Support the Collective
-                </Button>
-              </div>
+            {/* CTA Buttons */}
+            <div className="flex gap-4 justify-center flex-wrap">
+              <Button size="lg" onClick={() => window.location.href = "/"}>
+                Back to Home
+              </Button>
+              <Button variant="outline" size="lg" onClick={() => window.location.href = "/donate"}>
+                Support the Collective
+              </Button>
             </div>
           </section>
         )}

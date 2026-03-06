@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import * as schema from "../drizzle/schema";
-import { InsertUser, users, businessEntities, simulatorSessions, certificates, luvLedgerAccounts, trustRelationships, departments, staffMembers, curriculumSubjects, courses, studentEnrollments } from "../drizzle/schema";
+import { InsertUser, users, businessEntities, simulatorSessions, certificates, luvLedgerAccounts, trustRelationships, departments, staffMembers, curriculumSubjects, courses, studentEnrollments, waitlistSignups } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
@@ -446,3 +446,50 @@ export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>> & {
     return undefined;
   }
 });
+
+
+// Waitlist signup helpers
+export async function createWaitlistSignup(email: string, businessName?: string, source: string = "landing_page") {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create waitlist signup: database not available");
+    return null;
+  }
+
+  try {
+    const { waitlistSignups } = schema;
+    const result = await db.insert(waitlistSignups).values({
+      email,
+      businessName: businessName || null,
+      source,
+      status: "pending",
+    });
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create waitlist signup:", error);
+    throw error;
+  }
+}
+
+export async function getWaitlistSignupByEmail(email: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get waitlist signup: database not available");
+    return undefined;
+  }
+
+  const { waitlistSignups } = schema;
+  const result = await db.select().from(waitlistSignups).where(eq(waitlistSignups.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAllWaitlistSignups(limit: number = 100, offset: number = 0) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get waitlist signups: database not available");
+    return [];
+  }
+
+  const { waitlistSignups } = schema;
+  return db.select().from(waitlistSignups).limit(limit).offset(offset);
+}
