@@ -9967,3 +9967,9 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Slow down slide transitions for better readability (5s → 8s)
 - [x] Add 2 more slides to intro slideshow (5 → 7 slides)
 - [x] Add 2 more slides to results slideshow (5 → 7 slides)
+
+
+## Bug Fixes - Saturday Presentation
+- [x] Fix "Support the Collective" button to be a donate button (active/functional)
+- [x] Add separate "Explore Shell Demo" button that links to /demo
+- [x] Verify all buttons on landing page link to correct routes

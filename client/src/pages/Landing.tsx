@@ -427,7 +427,7 @@ export default function Landing() {
                     <Button size="lg" onClick={() => setStage("waitlist-signup")}>
                       Join Waitlist
                     </Button>
-                    <Button variant="outline" onClick={() => window.location.href = "/house"}>
+                    <Button variant="outline" onClick={() => window.location.href = "/demo"}>
                       Explore Live System
                     </Button>
                   </div>
@@ -551,8 +551,11 @@ export default function Landing() {
                 />
                 <Button type="submit">Sign Up</Button>
               </form>
-              <Button variant="outline" onClick={() => window.location.href = "/house"}>
+              <Button variant="outline" onClick={() => window.location.href = "/donate"}>
                 Support the Collective
+              </Button>
+              <Button variant="outline" onClick={() => window.location.href = "/demo"}>
+                Explore Shell Demo
               </Button>
             </div>
           </section>
