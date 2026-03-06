@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { trpc } from "@/lib/trpc";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
@@ -18,603 +18,448 @@ import {
   Heart,
   ArrowRight,
   CheckCircle,
-  Star,
+  ChevronLeft,
+  ChevronRight,
   Send,
-  Loader2,
   Menu,
   X,
-  Crown,
-  Sparkles,
 } from "lucide-react";
 
 export default function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [contactForm, setContactForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [showSimulator, setShowSimulator] = useState(false);
+  const [simulatorStep, setSimulatorStep] = useState(0);
+  const [companyName, setCompanyName] = useState("");
+  const [simulatorComplete, setSimulatorComplete] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupSubmitted, setSignupSubmitted] = useState(false);
 
-  const submitContact = trpc.contact.submit.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message);
-      setContactForm({ name: "", email: "", phone: "", subject: "", message: "" });
+  // Carousel slides
+  const carouselSlides = [
+    {
+      title: "The L.A.W.S. Collective",
+      subtitle: "Multi-Generational Wealth Building",
+      description: "Land • Air • Water • Self",
+      color: "bg-gradient-to-br from-green-600 to-green-800",
     },
-    onError: (err) => toast.error(err.message),
-  });
+    {
+      title: "LAND - Reconnection & Stability",
+      subtitle: "Understanding roots and family history",
+      description: "Establish stable foundations for wealth building",
+      color: "bg-gradient-to-br from-green-500 to-green-700",
+    },
+    {
+      title: "AIR - Education & Knowledge",
+      subtitle: "Learning and personal development",
+      description: "Access quality education and training programs",
+      color: "bg-gradient-to-br from-blue-500 to-blue-700",
+    },
+    {
+      title: "WATER - Healing & Balance",
+      subtitle: "Emotional resilience and healthy decisions",
+      description: "Build emotional intelligence and financial wellness",
+      color: "bg-gradient-to-br from-cyan-500 to-cyan-700",
+    },
+    {
+      title: "SELF - Purpose & Skills",
+      subtitle: "Financial literacy and business readiness",
+      description: "Develop practical skills for wealth creation",
+      color: "bg-gradient-to-br from-purple-500 to-purple-700",
+    },
+  ];
 
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!contactForm.name || !contactForm.email || !contactForm.message) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    submitContact.mutate(contactForm);
+  const simulatorSteps = [
+    {
+      title: "Welcome to Business Simulator",
+      description: "Let's create your business in 3 steps",
+      action: "Start",
+    },
+    {
+      title: "What's your company name?",
+      description: "Enter the name for your business",
+      action: "Next",
+      input: true,
+    },
+    {
+      title: "Business Created!",
+      description: `Congratulations! ${companyName} has been established.`,
+      action: "View Details",
+    },
+  ];
+
+  const handleCarouselNext = () => {
+    setCarouselIndex((prev) => (prev + 1) % carouselSlides.length);
   };
 
-  const pillars = [
-    {
-      icon: <Shield className="w-8 h-8" />,
-      title: "Sovereign Trust System",
-      description: "Build and manage multi-generational wealth through legally structured trusts and business entities.",
-    },
-    {
-      icon: <BookOpen className="w-8 h-8" />,
-      title: "Luv Academy",
-      description: "Comprehensive education platform with courses, certifications, and skill-building programs.",
-    },
-    {
-      icon: <Coins className="w-8 h-8" />,
-      title: "Autonomous Wealth",
-      description: "AI-powered systems that work 24/7 to grow and protect your family's financial future.",
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: "Community Collective",
-      description: "Join a network of families committed to restoration, education, and generational prosperity.",
-    },
-  ];
+  const handleCarouselPrev = () => {
+    setCarouselIndex((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+  };
 
-  const lawsFramework = [
-    {
-      icon: <Leaf className="w-6 h-6" />,
-      letter: "L",
-      title: "LAND",
-      subtitle: "Reconnection & Stability",
-      description: "Understanding roots, migrations, and family history",
-      color: "bg-green-100 text-green-700 border-green-300",
-    },
-    {
-      icon: <Wind className="w-6 h-6" />,
-      letter: "A",
-      title: "AIR",
-      subtitle: "Education & Knowledge",
-      description: "Learning, personal development, and communication",
-      color: "bg-sky-100 text-sky-700 border-sky-300",
-    },
-    {
-      icon: <Droplets className="w-6 h-6" />,
-      letter: "W",
-      title: "WATER",
-      subtitle: "Healing & Balance",
-      description: "Emotional resilience, healing cycles, and healthy decision-making",
-      color: "bg-blue-100 text-blue-700 border-blue-300",
-    },
-    {
-      icon: <Heart className="w-6 h-6" />,
-      letter: "S",
-      title: "SELF",
-      subtitle: "Purpose & Skills",
-      description: "Financial literacy, business readiness, and purposeful growth",
-      color: "bg-green-100 text-green-700 border-green-300",
-    },
-  ];
+  const handleSimulatorStep = () => {
+    if (simulatorStep === 1 && !companyName.trim()) {
+      toast.error("Please enter a company name");
+      return;
+    }
 
-  const testimonials = [
-    {
-      name: "Community Leader",
-      role: "Founding Member",
-      quote: "The L.A.W.S. Collective, LLC helped us structure our family's future and create a legacy that will last for generations.",
-      rating: 5,
-    },
-    {
-      name: "Community Member",
-      role: "Academy Graduate",
-      quote: "The education I received through the Academy transformed my understanding of wealth building.",
-      rating: 5,
-    },
-    {
-      name: "Business Owner",
-      role: "Collective Member",
-      quote: "The autonomous systems run my business operations while I focus on what matters most - my family.",
-      rating: 5,
-    },
-  ];
+    if (simulatorStep === 2) {
+      setSimulatorComplete(true);
+      return;
+    }
 
-  const membershipTiers = [
-    {
-      name: "Community Member",
-      price: "Free",
-      period: "",
-      description: "Start your journey with access to basic resources",
-      features: [
-        "L.A.W.S. Framework introduction",
-        "Community forum access",
-        "Basic financial literacy content",
-        "Newsletter updates",
-      ],
-      cta: "Join Free",
-      popular: false,
-    },
-    {
-      name: "Academy Member",
-      price: "$29",
-      period: "/month",
-      description: "Full access to education and training programs",
-      features: [
-        "All Community features",
-        "Complete Academy curriculum",
-        "Business simulators",
-        "Certificate programs",
-        "Live workshops",
-        "Priority support",
-      ],
-      cta: "Start Learning",
-      popular: true,
-    },
-    {
-      name: "House Builder",
-      price: "$99",
-      period: "/month",
-      description: "Build your family's sovereign business structure",
-      features: [
-        "All Academy features",
-        "House registration & setup",
-        "Trust formation guidance",
-        "Business entity creation",
-        "Document vault (unlimited)",
-        "Revenue tracking dashboard",
-        "1-on-1 consultation (monthly)",
-      ],
-      cta: "Build Your House",
-      popular: false,
-    },
-    {
-      name: "Founding Member",
-      price: "$299",
-      period: "/month",
-      description: "Full partnership with governance rights",
-      features: [
-        "All House Builder features",
-        "Decision Board voting rights",
-        "Network Pool participation",
-        "Branded merchandise discounts",
-        "Grant application support",
-        "Dedicated success manager",
-        "Early access to new features",
-      ],
-      cta: "Become a Founder",
-      popular: false,
-    },
-  ];
+    setSimulatorStep((prev) => prev + 1);
+  };
 
-  const services = [
-    "Trust & Entity Formation",
-    "Business Plan Development",
-    "Grant Application Support",
-    "Financial Literacy Training",
-    "Community Restoration Programs",
-    "AI-Powered Business Automation",
-    "Document Vault & Security",
-    "Multi-Generational Planning",
-  ];
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!signupEmail.trim()) {
+      toast.error("Please enter your email");
+      return;
+    }
+    toast.success("Thank you for signing up! Check your email for updates.");
+    setSignupEmail("");
+    setSignupSubmitted(true);
+    setTimeout(() => setSignupSubmitted(false), 3000);
+  };
+
+  const currentSlide = carouselSlides[carouselIndex];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-50 to-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="The L.A.W.S. Collective, LLC" className="h-10 w-10" />
-              <span className="text-xl font-bold text-stone-900">
-                L.A.W.S.<span className="text-green-600"> Collective</span>
-              </span>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
-              <a href="#about" className="text-stone-600 hover:text-stone-900 transition">About</a>
-              <a href="#services" className="text-stone-600 hover:text-stone-900 transition">Services</a>
-              <a href="#pricing" className="text-stone-600 hover:text-stone-900 transition">Pricing</a>
-              <Link href="/shop" className="text-stone-600 hover:text-stone-900 transition">Shop</Link>
-              <a href="#laws" className="text-stone-600 hover:text-stone-900 transition">L.A.W.S.</a>
-              <a href="#contact" className="text-stone-600 hover:text-stone-900 transition">Contact</a>
-              <a href={getLoginUrl("/dashboard")}>
-                <Button className="bg-green-600 hover:bg-green-700">
-                  Get Started
-                </Button>
-              </a>
-            </div>
+    <div className="min-h-screen bg-white">
+      {/* Watermark */}
+      <div className="fixed top-4 right-4 z-50 opacity-30 pointer-events-none">
+        <div className="text-xs font-bold text-red-500 rotate-45 whitespace-nowrap">
+          UNDER CONSTRUCTION - DEMO MODE
+        </div>
+      </div>
 
-            {/* Mobile menu button */}
-            <button
-              className="md:hidden p-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+      {/* Navigation */}
+      <nav className="sticky top-0 z-40 bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="text-2xl font-bold text-green-700">L.A.W.S. Collective</div>
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex gap-4">
+            <a href={getLoginUrl()} className="text-sm font-medium text-gray-700 hover:text-green-700">
+              Sign In
+            </a>
+            <Button className="bg-green-600 hover:bg-green-700">Get Started</Button>
           </div>
 
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-stone-200">
-              <div className="flex flex-col gap-4">
-                <a href="#about" className="text-stone-600 hover:text-stone-900">About</a>
-                <a href="#services" className="text-stone-600 hover:text-stone-900">Services</a>
-                <a href="#pricing" className="text-stone-600 hover:text-stone-900">Pricing</a>
-                <Link href="/shop" className="text-stone-600 hover:text-stone-900">Shop</Link>
-                <a href="#laws" className="text-stone-600 hover:text-stone-900">L.A.W.S.</a>
-                <a href="#contact" className="text-stone-600 hover:text-stone-900">Contact</a>
-                <a href={getLoginUrl("/dashboard")}>
-                  <Button className="w-full bg-green-600 hover:bg-green-700">
-                    Get Started
-                  </Button>
-                </a>
-              </div>
-            </div>
-          )}
+          {/* Mobile Menu */}
+          <button
+            className="md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 p-4 space-y-2">
+            <a href={getLoginUrl()} className="block text-sm font-medium text-gray-700 hover:text-green-700">
+              Sign In
+            </a>
+            <Button className="w-full bg-green-600 hover:bg-green-700">Get Started</Button>
+          </div>
+        )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-transparent to-stone-50" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-stone-900 leading-tight">
-              Build <span className="text-green-600">Multi-Generational</span> Wealth
-              <br />Through Purpose & Community
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-stone-600 max-w-2xl mx-auto">
-              A sovereign system designed to help families reconnect with their roots, 
-              build lasting wealth, and create a legacy that spans generations.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <a href={getLoginUrl("/dashboard")}>
-                <Button size="lg" className="bg-green-600 hover:bg-green-700 gap-2 w-full sm:w-auto">
-                  Start Your Journey
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </a>
-              <a href="#about">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  Learn More
-                </Button>
-              </a>
-            </div>
+      {/* QR Code Section */}
+      <section className="py-12 bg-gray-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold mb-6">Scan to Explore</h2>
+          <div className="inline-block bg-white p-4 rounded-lg shadow-md">
+            <svg width="200" height="200" viewBox="0 0 200 200" className="w-48 h-48">
+              {/* Simple QR code placeholder - in production, generate real QR code */}
+              <rect width="200" height="200" fill="white" />
+              <rect x="10" y="10" width="30" height="30" fill="black" />
+              <rect x="160" y="10" width="30" height="30" fill="black" />
+              <rect x="10" y="160" width="30" height="30" fill="black" />
+              {/* Pattern */}
+              {Array.from({ length: 15 }).map((_, i) =>
+                Array.from({ length: 15 }).map((_, j) => {
+                  const isPattern = (i + j) % 2 === 0;
+                  return isPattern ? (
+                    <rect
+                      key={`${i}-${j}`}
+                      x={50 + i * 10}
+                      y={50 + j * 10}
+                      width="8"
+                      height="8"
+                      fill="black"
+                    />
+                  ) : null;
+                })
+              )}
+            </svg>
           </div>
+          <p className="mt-4 text-gray-600">Scan with your phone to visit this page</p>
         </div>
       </section>
 
-      {/* About / Pillars Section */}
-      <section id="about" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-stone-900">
-              The Four Pillars of Sovereign Wealth
-            </h2>
-            <p className="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
-              Our comprehensive system addresses every aspect of building and preserving 
-              generational wealth.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {pillars.map((pillar, index) => (
-              <Card key={index} className="p-6 hover:shadow-lg transition-shadow border-t-4 border-t-green-500">
-                <div className="text-green-600 mb-4">{pillar.icon}</div>
-                <h3 className="text-xl font-semibold text-stone-900 mb-2">{pillar.title}</h3>
-                <p className="text-stone-600">{pillar.description}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services" className="py-20 bg-stone-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-6">
-                Comprehensive Services for Your Family's Future
-              </h2>
-              <p className="text-lg text-stone-600 mb-8">
-                From trust formation to business automation, we provide everything you need 
-                to build and protect your family's wealth for generations to come.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {services.map((service, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-stone-700">{service}</span>
-                  </div>
-                ))}
-              </div>
+      {/* Carousel Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className={`${currentSlide.color} rounded-2xl p-12 md:p-16 text-white relative overflow-hidden`}>
+            {/* Carousel Content */}
+            <div className="relative z-10 max-w-2xl">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">{currentSlide.title}</h2>
+              <p className="text-xl md:text-2xl mb-2 opacity-90">{currentSlide.subtitle}</p>
+              <p className="text-lg opacity-80">{currentSlide.description}</p>
             </div>
-            <div className="relative">
-              <Card className="p-8 bg-gradient-to-br from-green-600 to-green-700 text-white">
-                <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
-                <p className="mb-6 text-green-100">
-                  Join hundreds of families who are building their sovereign future with The L.A.W.S. Collective, LLC.
-                </p>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
-                    Free consultation
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
-                    Personalized roadmap
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
-                    Ongoing support
-                  </li>
-                </ul>
-                <a href={getLoginUrl("/dashboard")}>
-                  <Button size="lg" variant="secondary" className="w-full">
-                    Create Your Account
-                  </Button>
-                </a>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-stone-900">
-              Choose Your Path to Sovereignty
-            </h2>
-            <p className="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
-              Start free and grow at your own pace. Every tier builds on the previous one.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {membershipTiers.map((tier, index) => (
-              <Card 
-                key={index} 
-                className={`p-6 relative ${tier.popular ? 'border-2 border-green-500 shadow-lg' : ''}`}
+            {/* Carousel Controls */}
+            <div className="flex gap-4 mt-8">
+              <button
+                onClick={handleCarouselPrev}
+                className="bg-white/20 hover:bg-white/30 p-2 rounded-full transition"
               >
-                {tier.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
-                      <Sparkles className="w-3 h-3" /> Most Popular
-                    </span>
+                <ChevronLeft className="w-6 h-6 text-white" />
+              </button>
+              <button
+                onClick={handleCarouselNext}
+                className="bg-white/20 hover:bg-white/30 p-2 rounded-full transition"
+              >
+                <ChevronRight className="w-6 h-6 text-white" />
+              </button>
+            </div>
+
+            {/* Slide Indicators */}
+            <div className="flex gap-2 mt-6">
+              {carouselSlides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCarouselIndex(index)}
+                  className={`h-2 rounded-full transition ${
+                    index === carouselIndex ? "bg-white w-8" : "bg-white/50 w-2"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Business Simulator Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Try Our Business Simulator</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Experience how easy it is to start and manage your business with our platform
+            </p>
+          </div>
+
+          {!showSimulator ? (
+            <div className="text-center">
+              <Button
+                onClick={() => setShowSimulator(true)}
+                size="lg"
+                className="bg-green-600 hover:bg-green-700"
+              >
+                Launch Demo
+              </Button>
+            </div>
+          ) : (
+            <Card className="max-w-2xl mx-auto">
+              <CardHeader>
+                <CardTitle>{simulatorSteps[simulatorStep].title}</CardTitle>
+                <CardDescription>{simulatorSteps[simulatorStep].description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {simulatorStep === 1 && (
+                  <div>
+                    <Input
+                      placeholder="Enter your company name"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      className="text-lg"
+                    />
                   </div>
                 )}
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-semibold text-stone-900">{tier.name}</h3>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold text-stone-900">{tier.price}</span>
-                    <span className="text-stone-500">{tier.period}</span>
+
+                {simulatorComplete && (
+                  <div className="space-y-6 bg-green-50 p-6 rounded-lg border border-green-200">
+                    <div className="text-center">
+                      <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+                      <h3 className="text-2xl font-bold text-green-900 mb-2">{companyName}</h3>
+                      <p className="text-green-700 mb-6">Successfully Established</p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg">
+                      <h4 className="font-bold mb-4">What You Get:</h4>
+                      <ul className="space-y-3">
+                        <li className="flex gap-3">
+                          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>Automated business formation and legal entity setup</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>Financial management and compliance tracking</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>Grant discovery and proposal writing assistance</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>Business planning and financial projections</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span>Educational resources and training programs</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <p className="mt-2 text-sm text-stone-600">{tier.description}</p>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  {tier.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-stone-600">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <a href={getLoginUrl("/dashboard")}>
-                  <Button 
-                    className={`w-full ${tier.popular ? 'bg-green-600 hover:bg-green-700' : ''}`}
-                    variant={tier.popular ? 'default' : 'outline'}
+                )}
+
+                <div className="flex gap-4">
+                  <Button
+                    onClick={() => {
+                      setShowSimulator(false);
+                      setSimulatorStep(0);
+                      setCompanyName("");
+                      setSimulatorComplete(false);
+                    }}
+                    variant="outline"
                   >
-                    {tier.cta}
+                    Close
                   </Button>
-                </a>
-              </Card>
-            ))}
-          </div>
+                  {!simulatorComplete && (
+                    <Button
+                      onClick={handleSimulatorStep}
+                      className="bg-green-600 hover:bg-green-700 flex-1"
+                    >
+                      {simulatorSteps[simulatorStep].action}
+                    </Button>
+                  )}
+                  {simulatorComplete && (
+                    <Button className="bg-green-600 hover:bg-green-700 flex-1">
+                      Join Now
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </section>
 
       {/* L.A.W.S. Framework Section */}
-      <section id="laws" className="py-20 bg-stone-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-stone-900">
-              The L.A.W.S. Collective, LLC Framework
-            </h2>
-            <p className="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
-              A holistic approach to personal and community development, 
-              helping you reconnect with what matters most.
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">The L.A.W.S. Framework</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { icon: Leaf, letter: "L", title: "LAND", color: "bg-green-100 border-green-300" },
+              { icon: Wind, letter: "A", title: "AIR", color: "bg-blue-100 border-blue-300" },
+              { icon: Droplets, letter: "W", title: "WATER", color: "bg-cyan-100 border-cyan-300" },
+              { icon: Heart, letter: "S", title: "SELF", color: "bg-purple-100 border-purple-300" },
+            ].map((item) => (
+              <Card key={item.letter} className={`${item.color} border-2`}>
+                <CardHeader>
+                  <item.icon className="w-8 h-8 mb-2" />
+                  <CardTitle>{item.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-700">
+                    {item.letter === "L" && "Reconnection & Stability"}
+                    {item.letter === "A" && "Education & Knowledge"}
+                    {item.letter === "W" && "Healing & Balance"}
+                    {item.letter === "S" && "Purpose & Skills"}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Sign Up Section */}
+      <section className="py-16 bg-green-50 border-t border-green-200">
+        <div className="max-w-2xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-4">Join Our Community</h2>
+          <p className="text-center text-gray-600 mb-8">
+            Be the first to know about our platform launch and exclusive opportunities
+          </p>
+
+          <form onSubmit={handleSignup} className="flex gap-2">
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={signupEmail}
+              onChange={(e) => setSignupEmail(e.target.value)}
+              className="flex-1"
+            />
+            <Button type="submit" className="bg-green-600 hover:bg-green-700 gap-2">
+              <Send className="w-4 h-4" />
+              Sign Up
+            </Button>
+          </form>
+
+          {signupSubmitted && (
+            <p className="text-center text-green-600 mt-4 font-medium">
+              ✓ Thank you for signing up!
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {lawsFramework.map((item, index) => (
-              <Card key={index} className={`p-6 border-2 ${item.color}`}>
-                <div className="flex items-center gap-3 mb-4">
-                  {item.icon}
-                  <span className="text-3xl font-bold">{item.letter}</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-1">{item.title}</h3>
-                <p className="text-sm font-medium mb-3">{item.subtitle}</p>
-                <p className="text-sm opacity-80">{item.description}</p>
-              </Card>
-            ))}
-          </div>
+          )}
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-stone-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-stone-900">
-              What Our Community Says
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="p-6">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-stone-600 mb-6 italic">"{testimonial.quote}"</p>
-                <div>
-                  <p className="font-semibold text-stone-900">{testimonial.name}</p>
-                  <p className="text-sm text-stone-500">{testimonial.role}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-6">
-                Get in Touch
-              </h2>
-              <p className="text-lg text-stone-600 mb-8">
-                Have questions about building your family's sovereign future? 
-                We're here to help. Send us a message and we'll get back to you shortly.
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                    <Send className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-stone-900">Email Us</p>
-                    <p className="text-stone-600">1luvonpurpose@gmail.com</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Card className="p-6">
-              <form onSubmit={handleContactSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-stone-700">Name *</label>
-                    <Input
-                      placeholder="Your name"
-                      value={contactForm.name}
-                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-stone-700">Email *</label>
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={contactForm.email}
-                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-stone-700">Phone</label>
-                    <Input
-                      placeholder="(555) 123-4567"
-                      value={contactForm.phone}
-                      onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-stone-700">Subject</label>
-                    <Input
-                      placeholder="How can we help?"
-                      value={contactForm.subject}
-                      onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-stone-700">Message *</label>
-                  <Textarea
-                    placeholder="Tell us about your goals..."
-                    rows={5}
-                    value={contactForm.message}
-                    onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                    required
-                  />
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full bg-green-600 hover:bg-green-700 gap-2"
-                  disabled={submitContact.isPending}
-                >
-                  {submitContact.isPending ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
-                  )}
-                  Send Message
-                </Button>
-              </form>
-            </Card>
-          </div>
+      {/* System Shell Link */}
+      <section className="py-16 bg-white border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-6">Ready to Explore the Full System?</h2>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            View our complete platform with all features and modules
+          </p>
+          <Link href="/system-shell">
+            <Button size="lg" className="bg-green-600 hover:bg-green-700 gap-2">
+              View Complete System <ArrowRight className="w-5 h-5" />
+            </Button>
+          </Link>
+          <p className="text-sm text-gray-500 mt-4">Coming Soon - Demo Mode</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-stone-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <span className="text-xl font-bold">
-                L.A.W.S.<span className="text-green-400"> Collective</span>
-              </span>
-              <p className="mt-4 text-stone-400 max-w-md">
-                Building multi-generational wealth through purpose, community, and sovereign systems.
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <h3 className="font-bold mb-4">The L.A.W.S. Collective</h3>
+              <p className="text-gray-400 text-sm">
+                Building multi-generational wealth through purpose and community
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-stone-400">
-                <li><a href="#about" className="hover:text-white transition">About Us</a></li>
-                <li><a href="#services" className="hover:text-white transition">Services</a></li>
-                <li><a href="#laws" className="hover:text-white transition">L.A.W.S. Framework</a></li>
-                <li><a href="#contact" className="hover:text-white transition">Contact</a></li>
+              <h4 className="font-bold mb-4">Platform</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white">Features</a></li>
+                <li><a href="#" className="hover:text-white">Pricing</a></li>
+                <li><a href="#" className="hover:text-white">About</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Platform</h4>
-              <ul className="space-y-2 text-stone-400">
-                <li><a href={getLoginUrl("/dashboard")} className="hover:text-white transition">Login</a></li>
-                <li><a href={getLoginUrl("/dashboard")} className="hover:text-white transition">Create Account</a></li>
-                <li><Link href="/dashboard" className="hover:text-white transition">Dashboard</Link></li>
+              <h4 className="font-bold mb-4">Resources</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white">Blog</a></li>
+                <li><a href="#" className="hover:text-white">Guides</a></li>
+                <li><a href="#" className="hover:text-white">Support</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white">Privacy</a></li>
+                <li><a href="#" className="hover:text-white">Terms</a></li>
+                <li><a href="#" className="hover:text-white">Contact</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-stone-800 text-center text-stone-400">
-            <p>&copy; {new Date().getFullYear()} The L.A.W.S. Collective, LLC. All rights reserved.</p>
-            <p className="mt-2 text-sm">Multi-Generational Wealth Architecture | Building Legacy Through Purpose & Community</p>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2026 The L.A.W.S. Collective. All rights reserved.</p>
           </div>
         </div>
       </footer>
