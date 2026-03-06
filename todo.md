@@ -9973,3 +9973,11 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Fix "Support the Collective" button to be a donate button (active/functional)
 - [x] Add separate "Explore Shell Demo" button that links to /demo
 - [x] Verify all buttons on landing page link to correct routes
+
+
+## Shell Demo Page (Saturday Presentation)
+- [x] Create Shell Demo page with Business Simulator (full, no data creation)
+- [x] Add Business Dashboard preview (empty template)
+- [x] Add educational section explaining demo vs. full system
+- [x] Update Landing page button to "Explore the L.A.W.S. Structure" linking to Shell Demo
+- [ ] Test complete flow from Landing → Shell Demo

@@ -555,7 +555,7 @@ export default function Landing() {
                 Support the Collective
               </Button>
               <Button variant="outline" onClick={() => window.location.href = "/demo"}>
-                Explore Shell Demo
+                Explore the L.A.W.S. Structure
               </Button>
             </div>
           </section>
