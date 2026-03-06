@@ -10119,3 +10119,4 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Save checkpoint with interactive simulator enhancements
 - [x] Update documentation
 - [ ] Fix page jumping/layout shift on landing page while reading
+- [x] Fix Contact Us page not working

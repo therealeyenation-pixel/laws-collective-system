@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `contact_submissions` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `name` varchar(100) NOT NULL,\n  `email` varchar(255) NOT NULL,\n  `phone` varchar(20),\n  `subject` varchar(200) DEFAULT 'General Inquiry',\n  `message` text NOT NULL,\n  `source` varchar(50) DEFAULT 'landing_page',\n  `status` varchar(20) DEFAULT 'new',\n  `replied_at` datetime,\n  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `contact_submissions` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `name` varchar(100) NOT NULL,\n  `email` varchar(255) NOT NULL,\n  `phone` varchar(20),\n  `subject` varchar(200) DEFAULT 'General Inquiry',\n  `message` text NOT NULL,\n  `source` varchar(50) DEFAULT 'landing_page',\n  `status` varchar(20) DEFAULT 'new',\n  `replied_at` datetime,\n  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 438
+}
