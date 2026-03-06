@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as QRCodeLib from "qrcode.react";
+import { trpc } from "@/lib/trpc";
 const QRCode = QRCodeLib.QRCodeSVG || QRCodeLib.default || QRCodeLib;
 
 type Stage = "intro-slideshow" | "name-input" | "results-slideshow" | "waitlist-signup";
@@ -13,6 +14,32 @@ export default function Landing() {
   const [businessName, setBusinessName] = useState("Default LLC");
   const [resultsSlide, setResultsSlide] = useState(0);
   const [autoPlayResults, setAutoPlayResults] = useState(true);
+  const [sessionId] = useState(() => `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+  const [email, setEmail] = useState("");
+  const [waitlistError, setWaitlistError] = useState("");
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+
+  // Analytics tracking
+  const trackEvent = trpc.landingAnalytics.trackEvent.useMutation();
+  const joinWaitlist = trpc.landingAnalytics.joinWaitlist.useMutation();
+
+  // Track page view on mount
+  useEffect(() => {
+    trackEvent.mutate({
+      sessionId,
+      eventType: "page_view",
+    });
+  }, []);
+
+  // Track intro slideshow start
+  useEffect(() => {
+    if (stage === "intro-slideshow") {
+      trackEvent.mutate({
+        sessionId,
+        eventType: "intro_slideshow_start",
+      });
+    }
+  }, [stage]);
 
   // Intro slideshow auto-play
   useEffect(() => {
@@ -104,6 +131,16 @@ export default function Landing() {
 
   const handleStartSimulator = () => {
     if (businessName.trim()) {
+      trackEvent.mutate({
+        sessionId,
+        eventType: "name_input_submit",
+        businessName: businessName,
+      });
+      trackEvent.mutate({
+        sessionId,
+        eventType: "results_slideshow_start",
+        businessName: businessName,
+      });
       setStage("results-slideshow");
       setResultsSlide(0);
       setAutoPlayResults(true);
@@ -124,6 +161,42 @@ export default function Landing() {
     setStage("intro-slideshow");
     setCurrentSlide(0);
     setAutoPlay(true);
+  };
+
+  const handleWaitlistSubmit = async () => {
+    if (!email.trim()) {
+      setWaitlistError("Please enter a valid email");
+      return;
+    }
+
+    try {
+      const result = await joinWaitlist.mutateAsync({
+        email: email,
+        businessName: businessName,
+        source: "landing_page",
+      });
+
+      if (result.success) {
+        trackEvent.mutate({
+          sessionId,
+          eventType: "waitlist_signup",
+          businessName: businessName,
+          metadata: { email },
+        });
+        setWaitlistSuccess(true);
+        setEmail("");
+        setTimeout(() => {
+          setStage("intro-slideshow");
+          setCurrentSlide(0);
+          setAutoPlay(true);
+          setWaitlistSuccess(false);
+        }, 2000);
+      } else {
+        setWaitlistError(result.error || "Failed to join waitlist");
+      }
+    } catch (error) {
+      setWaitlistError("An error occurred. Please try again.");
+    }
   };
 
   return (
@@ -417,9 +490,13 @@ export default function Landing() {
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="px-6 py-4 rounded-md border border-border bg-background text-foreground text-center text-lg max-w-md mx-auto block w-full"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="px-6 py-4 rounded-md border border-border bg-background text-foreground text-center text-lg max-w-md mx-auto block w-full focus:outline-none focus:ring-2 focus:ring-primary"
                     autoFocus
                   />
+                  {waitlistError && <p className="text-sm text-red-500">{waitlistError}</p>}
+                  {waitlistSuccess && <p className="text-sm text-green-500">Successfully joined the waitlist!</p>}
                   <p className="text-sm text-muted-foreground">Business: {businessName}</p>
                 </div>
               </div>
@@ -429,13 +506,8 @@ export default function Landing() {
                 <Button variant="outline" onClick={() => setStage("results-slideshow")}>
                   Back
                 </Button>
-                <Button size="lg" onClick={() => {
-                  alert("Thank you for joining the waitlist! We'll be in touch soon.");
-                  setStage("intro-slideshow");
-                  setCurrentSlide(0);
-                  setAutoPlay(true);
-                }}>
-                  Confirm
+                <Button size="lg" onClick={handleWaitlistSubmit} disabled={joinWaitlist.isPending}>
+                  {joinWaitlist.isPending ? "Joining..." : "Confirm"}
                 </Button>
               </div>
             </div>
