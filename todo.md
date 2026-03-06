@@ -9952,3 +9952,11 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Make slideshows MORE like video loops (continuous smooth auto-play)
 - [x] Remove "Default LLC" text from name input block
 - [x] Add "Live system coming soon" message near waitlist CTA
+
+
+## Demo & Shell System (Saturday Presentation)
+- [x] Create demo passcode gate page at /demo
+- [x] Create shell demo page with limited system preview
+- [x] Update landing page Sign In button to link to /demo
+- [ ] Test complete flow: Landing → Demo Gate → Shell Demo
+- [ ] Ensure full system at /house remains separate and private

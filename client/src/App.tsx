@@ -21,6 +21,7 @@ import HouseDashboard from "./pages/HouseDashboard";
 import OwnerHouseSetup from "./pages/OwnerHouseSetup";
 import GenesisCeremony from "./pages/GenesisCeremony";
 import Landing from "./pages/Landing";
+import DemoGate from "./pages/DemoGate";
 
 import Shop from "./pages/Shop";
 import Products from "./pages/Products";
@@ -428,6 +429,7 @@ function Router() {
       {/* Public routes - no authentication required */}
       <Route path="/qr-holding" component={QRHolding} />
       <Route path="/login" component={Login} />
+      <Route path="/demo" component={DemoGate} />
       <Route path="/careers" component={Careers} />
       <Route path="/join" component={JoinJourney} />
       <Route path="/my-credential" component={MyCredential} />
