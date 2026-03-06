@@ -27,6 +27,49 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 /**
+ * Waitlist Sign-ups - Track people interested in L.A.W.S. Collective
+ */
+export const waitlistSignups = mysqlTable("waitlist_signups", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  businessName: varchar("businessName", { length: 255 }),
+  source: varchar("source", { length: 100 }).default("landing_page"),
+  status: mysqlEnum("status", ["pending", "confirmed", "unsubscribed"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  confirmedAt: timestamp("confirmedAt"),
+});
+
+export type WaitlistSignup = typeof waitlistSignups.$inferSelect;
+export type InsertWaitlistSignup = typeof waitlistSignups.$inferInsert;
+
+/**
+ * Landing Page Analytics - Track user interactions with the L.A.W.S. landing page
+ */
+export const landingPageAnalytics = mysqlTable("landing_page_analytics", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("sessionId", { length: 100 }).notNull(),
+  eventType: mysqlEnum("eventType", [
+    "page_view",
+    "qr_scan",
+    "intro_slideshow_start",
+    "intro_slideshow_complete",
+    "name_input_start",
+    "name_input_submit",
+    "results_slideshow_start",
+    "results_slideshow_complete",
+    "waitlist_signup",
+    "sign_in_click",
+    "get_started_click"
+  ]).notNull(),
+  businessName: varchar("businessName", { length: 255 }),
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LandingPageAnalytic = typeof landingPageAnalytics.$inferSelect;
+export type InsertLandingPageAnalytic = typeof landingPageAnalytics.$inferInsert;
+
+/**
  * Business Entities created through the system
  * Part of the closed-loop economic system
  */
