@@ -9960,3 +9960,10 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Update landing page Sign In button to link to /demo
 - [ ] Test complete flow: Landing → Demo Gate → Shell Demo
 - [ ] Ensure full system at /house remains separate and private
+
+
+## Final Presentation Refinements
+- [x] Use single QR code from website (already correct)
+- [x] Slow down slide transitions for better readability (5s → 8s)
+- [x] Add 2 more slides to intro slideshow (5 → 7 slides)
+- [x] Add 2 more slides to results slideshow (5 → 7 slides)

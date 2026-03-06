@@ -47,7 +47,7 @@ export default function Landing() {
     if (stage === "intro-slideshow" && autoPlay) {
       const timer = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % introSlides.length);
-      }, 5000);
+      }, 8000);
       return () => clearInterval(timer);
     }
   }, [autoPlay, stage]);
@@ -57,12 +57,12 @@ export default function Landing() {
     if (showResults && autoPlayResults) {
       const timer = setInterval(() => {
         setResultsSlide((prev) => (prev + 1) % resultsSlides.length);
-      }, 5000);
+      }, 8000);
       return () => clearInterval(timer);
     }
   }, [autoPlayResults, showResults]);
 
-  // Intro slideshow content - L.A.W.S. framework
+  // Intro slideshow content - L.A.W.S. framework (7 slides)
   const introSlides = [
     {
       title: "Welcome to L.A.W.S. Collective",
@@ -85,9 +85,17 @@ export default function Landing() {
       title: "SELF - Purpose & Skills",
       description: "Financial literacy, business readiness, and purposeful growth.",
     },
+    {
+      title: "The Ecosystem",
+      description: "All four pillars work together to create a complete system for generational wealth and community empowerment.",
+    },
+    {
+      title: "Join the Collective",
+      description: "Enter your business name below to see what you can build with L.A.W.S. Collective.",
+    },
   ];
 
-  // Results slideshow - what they get with their business name
+  // Results slideshow - what they get with their business name (7 slides)
   const resultsSlides = [
     {
       title: `Welcome, ${businessName}`,
@@ -117,6 +125,18 @@ export default function Landing() {
       subtitle: "Networking & Community Access",
       description: "Connect with other L.A.W.S. Collective members and access exclusive resources.",
       features: ["Community Network", "Resource Library", "Mentorship Program", "Growth Opportunities"],
+    },
+    {
+      title: `${businessName} - Training & Development`,
+      subtitle: "Continuous Learning",
+      description: "Access comprehensive training programs and development resources to scale your business.",
+      features: ["Online Courses", "Workshops", "Expert Mentorship", "Certification Programs"],
+    },
+    {
+      title: `${businessName} - Ready to Launch`,
+      subtitle: "Join the Collective Today",
+      description: "Everything you need to build sustainable wealth and create generational impact.",
+      features: ["Full System Access", "Community Support", "Expert Guidance", "Ongoing Growth"],
     },
   ];
 
