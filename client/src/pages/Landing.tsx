@@ -63,35 +63,70 @@ export default function Landing() {
   }, [autoPlayResults, showResults]);
 
   // Intro slideshow content - L.A.W.S. framework (7 slides)
-  const introSlides = [
+  const introSlides: Array<{
+    title: string;
+    subtitle?: string;
+    description: string;
+    icon: string;
+    color: string;
+    accentColor: string;
+    details?: string[];
+  }> = [
     {
       title: "Welcome to L.A.W.S. Collective",
       subtitle: "Multi-Generational Wealth Building",
       description: "A comprehensive system for building sustainable wealth through purpose and community.",
+      icon: "🌍",
+      color: "from-blue-500/20 to-cyan-500/20",
+      accentColor: "text-blue-600 dark:text-blue-400",
     },
     {
       title: "LAND - Reconnection & Stability",
       description: "Understanding roots, migrations, and family history to build a strong foundation.",
+      icon: "🌱",
+      color: "from-green-500/20 to-emerald-500/20",
+      accentColor: "text-green-600 dark:text-green-400",
+      details: ["Family History", "Ancestral Roots", "Foundation Building"],
     },
     {
       title: "AIR - Education & Knowledge",
       description: "Learning, personal development, and communication for continuous growth.",
+      icon: "📚",
+      color: "from-purple-500/20 to-pink-500/20",
+      accentColor: "text-purple-600 dark:text-purple-400",
+      details: ["Continuous Learning", "Personal Growth", "Communication"],
     },
     {
       title: "WATER - Healing & Balance",
       description: "Emotional resilience, healing cycles, and healthy decision-making.",
+      icon: "💧",
+      color: "from-blue-500/20 to-indigo-500/20",
+      accentColor: "text-blue-600 dark:text-blue-400",
+      details: ["Emotional Resilience", "Healing Cycles", "Balance"],
     },
     {
       title: "SELF - Purpose & Skills",
       description: "Financial literacy, business readiness, and purposeful growth.",
+      icon: "⭐",
+      color: "from-yellow-500/20 to-orange-500/20",
+      accentColor: "text-yellow-600 dark:text-yellow-500",
+      details: ["Financial Literacy", "Business Skills", "Purpose-Driven"],
     },
     {
       title: "The Ecosystem",
       description: "All four pillars work together to create a complete system for generational wealth and community empowerment.",
+      icon: "🔄",
+      color: "from-indigo-500/20 to-purple-500/20",
+      accentColor: "text-indigo-600 dark:text-indigo-400",
+      details: ["Integrated System", "Community Empowerment", "Generational Impact"],
     },
     {
       title: "Join the Collective",
       description: "Enter your business name below to see what you can build with L.A.W.S. Collective.",
+      icon: "🚀",
+      color: "from-green-500/20 to-teal-500/20",
+      accentColor: "text-green-600 dark:text-green-400",
+      details: ["Start Your Journey", "Build Your Business", "Join Community"],
     },
   ];
 
@@ -101,41 +136,62 @@ export default function Landing() {
       title: `Welcome, ${businessName}`,
       subtitle: "Your Business Dashboard",
       description: "Here's what you'll access when you set up your business with L.A.W.S. Collective.",
+      icon: "🎯",
+      color: "from-blue-500/20 to-cyan-500/20",
+      accentColor: "text-blue-600 dark:text-blue-400",
     },
     {
       title: `${businessName} - Financial Management`,
       subtitle: "Complete Financial Suite",
       description: "Manage your business finances with integrated tools for accounting, invoicing, and financial reporting.",
+      icon: "💰",
+      color: "from-green-500/20 to-emerald-500/20",
+      accentColor: "text-green-600 dark:text-green-400",
       features: ["Accounting Dashboard", "Invoice Management", "Financial Reporting", "Tax Preparation"],
     },
     {
       title: `${businessName} - Team & Operations`,
       subtitle: "Employee & Operations Management",
       description: "Manage your team, operations, and compliance with integrated tools.",
+      icon: "👥",
+      color: "from-purple-500/20 to-pink-500/20",
+      accentColor: "text-purple-600 dark:text-purple-400",
       features: ["Employee Management", "Payroll Integration", "Scheduling", "Performance Tracking"],
     },
     {
       title: `${businessName} - Legal & Compliance`,
       subtitle: "Contracts & Compliance Tracking",
       description: "Stay compliant with automated legal document management and compliance tracking.",
+      icon: "⚖️",
+      color: "from-orange-500/20 to-red-500/20",
+      accentColor: "text-orange-600 dark:text-orange-400",
       features: ["Contract Management", "Compliance Tracking", "Document Storage", "Legal Templates"],
     },
     {
       title: `${businessName} - Community & Growth`,
       subtitle: "Networking & Community Access",
       description: "Connect with other L.A.W.S. Collective members and access exclusive resources.",
+      icon: "🌐",
+      color: "from-indigo-500/20 to-blue-500/20",
+      accentColor: "text-indigo-600 dark:text-indigo-400",
       features: ["Community Network", "Resource Library", "Mentorship Program", "Growth Opportunities"],
     },
     {
       title: `${businessName} - Training & Development`,
       subtitle: "Continuous Learning",
       description: "Access comprehensive training programs and development resources to scale your business.",
+      icon: "📖",
+      color: "from-pink-500/20 to-rose-500/20",
+      accentColor: "text-pink-600 dark:text-pink-400",
       features: ["Online Courses", "Workshops", "Expert Mentorship", "Certification Programs"],
     },
     {
       title: `${businessName} - Ready to Launch`,
       subtitle: "Join the Collective Today",
       description: "Everything you need to build sustainable wealth and create generational impact.",
+      icon: "🚀",
+      color: "from-yellow-500/20 to-orange-500/20",
+      accentColor: "text-yellow-600 dark:text-yellow-500",
       features: ["Full System Access", "Community Support", "Expert Guidance", "Ongoing Growth"],
     },
   ];
@@ -272,7 +328,7 @@ export default function Landing() {
             </div>
 
             {/* Slideshow - Mobile Optimized */}
-            <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-border rounded-lg p-6 min-h-[350px] flex flex-col justify-center overflow-hidden relative">
+            <div className={`bg-gradient-to-br ${introSlides[currentSlide].color} border border-border rounded-lg p-8 min-h-[400px] flex flex-col justify-center overflow-hidden relative`}>
               <style>{`
                 @keyframes fadeInOut {
                   0% { opacity: 0; }
@@ -284,12 +340,26 @@ export default function Landing() {
                   animation: fadeInOut 5s ease-in-out;
                 }
               `}</style>
-              <div className="text-center space-y-3 slide-content">
-                <h2 className="text-2xl font-bold text-foreground">{introSlides[currentSlide].title}</h2>
-                {introSlides[currentSlide].subtitle && (
-                  <p className="text-base text-muted-foreground">{introSlides[currentSlide].subtitle}</p>
+              <div className="text-center space-y-6 slide-content">
+                <div className={`text-7xl ${introSlides[currentSlide].accentColor}`}>
+                  {introSlides[currentSlide].icon}
+                </div>
+                <div className="space-y-3">
+                  <h2 className="text-3xl font-bold text-foreground">{introSlides[currentSlide].title}</h2>
+                  {introSlides[currentSlide].subtitle && (
+                    <p className="text-lg text-muted-foreground font-semibold">{introSlides[currentSlide].subtitle}</p>
+                  )}
+                  <p className="text-base text-muted-foreground max-w-2xl mx-auto">{introSlides[currentSlide].description}</p>
+                </div>
+                {introSlides[currentSlide].details && (
+                  <div className="flex flex-wrap justify-center gap-3 pt-4">
+                    {introSlides[currentSlide].details?.map((detail, idx) => (
+                      <span key={idx} className={`px-4 py-2 rounded-full text-sm font-medium ${introSlides[currentSlide].accentColor} bg-white/10 backdrop-blur-sm`}>
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
                 )}
-                <p className="text-sm text-muted-foreground">{introSlides[currentSlide].description}</p>
               </div>
 
               {/* Slide indicators */}
@@ -371,7 +441,7 @@ export default function Landing() {
 
             {/* INLINE RESULTS DISPLAY - Video Loop Style */}
             {showResults && businessName.trim() && (
-              <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-border rounded-lg p-12 min-h-[500px] flex flex-col justify-center overflow-hidden relative">
+              <div className={`bg-gradient-to-br ${resultsSlides[resultsSlide].color} border border-border rounded-lg p-12 min-h-[500px] flex flex-col justify-center overflow-hidden relative`}>
                 <style>{`
                   @keyframes fadeInOut {
                     0% { opacity: 0; }
@@ -384,18 +454,23 @@ export default function Landing() {
                   }
                 `}</style>
                 <div className="text-center space-y-6 slide-content">
-                  <h2 className="text-4xl font-bold text-foreground">{resultsSlides[resultsSlide].title}</h2>
-                  {resultsSlides[resultsSlide].subtitle && (
-                    <p className="text-xl text-muted-foreground">{resultsSlides[resultsSlide].subtitle}</p>
-                  )}
-                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    {resultsSlides[resultsSlide].description}
-                  </p>
+                  <div className={`text-6xl ${resultsSlides[resultsSlide].accentColor}`}>
+                    {resultsSlides[resultsSlide].icon}
+                  </div>
+                  <div className="space-y-3">
+                    <h2 className="text-4xl font-bold text-foreground">{resultsSlides[resultsSlide].title}</h2>
+                    {resultsSlides[resultsSlide].subtitle && (
+                      <p className="text-xl font-semibold text-muted-foreground">{resultsSlides[resultsSlide].subtitle}</p>
+                    )}
+                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                      {resultsSlides[resultsSlide].description}
+                    </p>
+                  </div>
                   {resultsSlides[resultsSlide].features && (
                     <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto pt-4">
                       {resultsSlides[resultsSlide].features?.map((feature, idx) => (
-                        <div key={idx} className="p-3 bg-secondary/30 rounded-md">
-                          <p className="text-sm font-medium text-foreground">{feature}</p>
+                        <div key={idx} className={`p-3 rounded-lg font-medium text-sm ${resultsSlides[resultsSlide].accentColor} bg-white/10 backdrop-blur-sm`}>
+                          <p>{feature}</p>
                         </div>
                       ))}
                     </div>
