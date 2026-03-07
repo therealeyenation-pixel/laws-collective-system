@@ -31,7 +31,7 @@ export default function PurpleHeart() {
       amount: amount,
       timestamp: new Date().toISOString(),
     });
-    window.open('/donate/public', '_blank');
+    window.location.href = '/donate?tier=' + encodeURIComponent(tierName) + '&amount=' + encodeURIComponent(amount);
   };
 
   const handleCustomCollaboration = () => {
@@ -46,7 +46,7 @@ export default function PurpleHeart() {
       button: 'Support The L.A.W.S. Collective Now',
       timestamp: new Date().toISOString(),
     });
-    window.open('/donate/public', '_blank');
+    window.location.href = '/donate';
   };
 
   const supportTiers = [

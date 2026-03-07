@@ -456,9 +456,7 @@ function Router() {
       <Route path="/course-success" component={CourseSuccess} />
       <Route path="/consulting-success" component={ConsultingSuccess} />
       <Route path="/course-dashboard" component={CourseDashboard} />
-      <Route path="/donate/public" component={PurpleHeart} />
-      <Route path="/donate/thank-you" component={PurpleHeart} />
-      <Route path="/donate/academy" component={PurpleHeart} />
+
       <Route path="/member-business" component={MemberBusinessDashboard} />
       <Route path="/member-business/register" component={MemberBusinessRegistration} />
       <Route path="/register-business" component={MemberRegistration} />
