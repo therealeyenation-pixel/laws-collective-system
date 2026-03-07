@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "../db";
 import { waitlistSignups, landingPageAnalytics } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
+import { notifyOwner } from "../_core/notification";
 
 export const landingAnalyticsRouter = router({
   /**
@@ -76,6 +77,12 @@ export const landingAnalyticsRouter = router({
           businessName: input.businessName,
           source: input.source,
           status: "pending",
+        });
+
+        // Notify owner about new waitlist signup
+        await notifyOwner({
+          title: "New Waitlist Signup",
+          content: `Email: ${input.email}${input.businessName ? `\nBusiness: ${input.businessName}` : ""}\nSource: ${input.source}`,
         });
 
         return {

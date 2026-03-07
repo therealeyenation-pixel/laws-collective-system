@@ -10124,3 +10124,6 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Add email auto-reply for contact form submissions
 - [ ] Build contact submissions inbox page in admin dashboard
 - [ ] Optimize related sections (landing, contact, dashboard)
+- [x] Implement email notifications for waitlist signups
+- [x] Implement email notifications for contact form submissions
+- [x] Create public FAQ page
