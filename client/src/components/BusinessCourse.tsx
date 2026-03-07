@@ -128,9 +128,9 @@ const businessSetupModules: CourseModule[] = [
         },
         {
           heading: "Nonprofit Organization",
-          text: "Organized for purposes other than generating profit. Can apply for tax-exempt status (501(c)(3) or 508(c)(1)(a)). Must reinvest surplus revenues into the organization's mission.",
+          text: "Organized for purposes other than generating profit. Can apply for tax-exempt status. Must reinvest surplus revenues into the organization's mission.",
           tips: [
-            "508(c)(1)(a) is automatic tax-exempt for religious organizations",
+            "Faith-based organizations may have automatic tax-exempt status",
             "501(c)(3) requires IRS application and approval",
             "Donations may be tax-deductible for donors",
           ],
@@ -168,9 +168,9 @@ const businessSetupModules: CourseModule[] = [
         },
         {
           question: "Which type of nonprofit status is automatic for religious organizations?",
-          options: ["501(c)(3)", "508(c)(1)(a)", "501(c)(4)", "527"],
-          correctIndex: 1,
-          explanation: "508(c)(1)(a) provides automatic tax-exempt status for churches and religious organizations without requiring IRS application.",
+          options: ["501(c)(3)", "501(c)(4)", "527", "Trust"],
+          correctIndex: 2,
+          explanation: "Religious organizations may have automatic tax-exempt status without requiring IRS application. Consult with a tax professional for your specific situation.",
         },
       ],
     } as QuizContent,
@@ -191,7 +191,7 @@ const businessSetupModules: CourseModule[] = [
             { value: "Trust", label: "Trust" },
             { value: "Sole Proprietorship", label: "Sole Proprietorship" },
             { value: "501c3", label: "501(c)(3) Nonprofit", disabled: true, requiresApproval: true },
-            { value: "508c1a", label: "508(c)(1)(a) Faith-Based Organization", disabled: true, requiresApproval: true },
+            { value: "faith_based", label: "Faith-Based Organization", disabled: false, requiresApproval: false },
           ], required: true },
       ],
       outputTemplate: "Entity Selection: {{businessName}} will be structured as a {{entityType}}.",

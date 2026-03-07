@@ -3,8 +3,51 @@ import { Heart, ArrowLeft, Users, Leaf, Zap, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
+const trackAnalyticsEvent = (eventName: string, eventData?: Record<string, any>) => {
+  // Track analytics event for support button clicks
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', eventName, eventData || {});
+  }
+  // Log to console for development
+  console.log(`[Analytics] ${eventName}`, eventData || {});
+};
+
 export default function PurpleHeart() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
+
+  const handleTierSelect = (tierId: string, tierName: string, amount: string) => {
+    trackAnalyticsEvent('support_tier_selected', {
+      tier_id: tierId,
+      tier_name: tierName,
+      amount: amount,
+      timestamp: new Date().toISOString(),
+    });
+    setSelectedTier(selectedTier === tierId ? null : tierId);
+  };
+
+  const handleSupportNow = (tierName: string, amount: string) => {
+    trackAnalyticsEvent('support_now_clicked', {
+      tier_name: tierName,
+      amount: amount,
+      timestamp: new Date().toISOString(),
+    });
+    window.open('/donate/public', '_blank');
+  };
+
+  const handleCustomCollaboration = () => {
+    trackAnalyticsEvent('custom_collaboration_clicked', {
+      timestamp: new Date().toISOString(),
+    });
+    window.location.href = '/contact-us';
+  };
+
+  const handleFinalCTA = () => {
+    trackAnalyticsEvent('final_cta_clicked', {
+      button: 'Support The L.A.W.S. Collective Now',
+      timestamp: new Date().toISOString(),
+    });
+    window.open('/donate/public', '_blank');
+  };
 
   const supportTiers = [
     {
@@ -169,7 +212,7 @@ export default function PurpleHeart() {
                   className={`p-6 border-2 ${tier.borderColor} bg-gradient-to-br ${tier.color} hover:shadow-lg transition-all cursor-pointer ${
                     selectedTier === tier.id ? "ring-2 ring-purple-600" : ""
                   }`}
-                  onClick={() => setSelectedTier(selectedTier === tier.id ? null : tier.id)}
+                  onClick={() => handleTierSelect(tier.id, tier.name, tier.amount)}
                 >
                   <div className="flex items-center gap-2 mb-4">
                     <TierIcon className="w-6 h-6 text-purple-600" />
@@ -194,7 +237,7 @@ export default function PurpleHeart() {
                     className="w-full bg-purple-600 hover:bg-purple-700 text-white"
                     onClick={(e) => {
                       e.stopPropagation();
-                      window.open("/donate/public", "_blank");
+                      handleSupportNow(tier.name, tier.amount);
                     }}
                   >
                     Support Now
@@ -216,7 +259,7 @@ export default function PurpleHeart() {
             <Button
               variant="outline"
               className="border-purple-300 hover:bg-purple-50"
-              onClick={() => (window.location.href = "/contact-us")}
+              onClick={handleCustomCollaboration}
             >
               Discuss Custom Collaboration
             </Button>
@@ -268,7 +311,7 @@ export default function PurpleHeart() {
             <Button
               size="lg"
               className="bg-white text-purple-600 hover:bg-purple-50"
-              onClick={() => window.open("/donate/public", "_blank")}
+              onClick={handleFinalCTA}
             >
               <Heart className="w-5 h-5 mr-2 fill-current" />
               Support The L.A.W.S. Collective Now

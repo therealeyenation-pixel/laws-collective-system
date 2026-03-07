@@ -445,7 +445,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
-      <Route path="/donate" component={Donate} />
+      <Route path="/donate" component={PurpleHeart} />
       <Route path="/contact-us" component={ContactUs} />
       <Route path="/brand-guide" component={BrandGuide} />
       <Route path="/faq" component={FAQ} />
@@ -456,9 +456,9 @@ function Router() {
       <Route path="/course-success" component={CourseSuccess} />
       <Route path="/consulting-success" component={ConsultingSuccess} />
       <Route path="/course-dashboard" component={CourseDashboard} />
-      <Route path="/donate/public" component={PublicDonate} />
-      <Route path="/donate/thank-you" component={DonateThankYou} />
-      <Route path="/donate/academy" component={Donate508} />
+      <Route path="/donate/public" component={PurpleHeart} />
+      <Route path="/donate/thank-you" component={PurpleHeart} />
+      <Route path="/donate/academy" component={PurpleHeart} />
       <Route path="/member-business" component={MemberBusinessDashboard} />
       <Route path="/member-business/register" component={MemberBusinessRegistration} />
       <Route path="/register-business" component={MemberRegistration} />

@@ -300,7 +300,13 @@ export default function Landing() {
               <Button variant="outline" onClick={() => window.location.href = "/indigenous-rights"} className="flex-1 text-sm py-2">
                 Indigenous Rights
               </Button>
-              <Button variant="outline" onClick={() => window.location.href = "/purple-heart"} className="flex-1 text-sm py-2">
+              <Button variant="outline" onClick={() => {
+                if (typeof window !== 'undefined' && (window as any).gtag) {
+                  (window as any).gtag('event', 'support_us_header_clicked', { timestamp: new Date().toISOString() });
+                }
+                console.log('[Analytics] support_us_header_clicked');
+                window.location.href = "/purple-heart";
+              }} className="flex-1 text-sm py-2">
                 Support Us
               </Button>
             </div>
@@ -631,7 +637,13 @@ export default function Landing() {
                 />
                 <Button type="submit">Sign Up</Button>
               </form>
-              <Button variant="outline" onClick={() => window.location.href = "/purple-heart"}>
+              <Button variant="outline" onClick={() => {
+                if (typeof window !== 'undefined' && (window as any).gtag) {
+                  (window as any).gtag('event', 'support_collective_community_clicked', { timestamp: new Date().toISOString() });
+                }
+                console.log('[Analytics] support_collective_community_clicked');
+                window.location.href = "/purple-heart";
+              }}>
                 Support the Collective
               </Button>
               <Button variant="outline" onClick={() => window.location.href = "/demo"}>
