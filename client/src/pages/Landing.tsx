@@ -301,7 +301,7 @@ export default function Landing() {
                 Indigenous Rights
               </Button>
               <Button variant="outline" onClick={() => window.location.href = "/purple-heart"} className="flex-1 text-sm py-2">
-                Purple Heart
+                Support Us
               </Button>
             </div>
             <Button variant="outline" onClick={() => window.location.href = "/contact-us"} className="w-full text-sm py-2">

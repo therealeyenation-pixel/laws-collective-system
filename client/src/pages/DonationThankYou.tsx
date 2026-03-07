@@ -106,7 +106,7 @@ export default function DonationThankYou() {
             </h3>
             <p className="text-sm text-muted-foreground">
               A tax receipt has been sent to <strong>{session?.customerEmail || "your email"}</strong>. 
-              The L.A.W.S. Collective is a 508(c)(1)(a) tax-exempt organization. Your donation is 
+              The L.A.W.S. Collective is a faith-based organization. Your donation is 
               tax-deductible to the extent allowed by law. No goods or services were provided 
               in exchange for this contribution.
             </p>

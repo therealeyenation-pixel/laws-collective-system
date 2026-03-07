@@ -54,16 +54,16 @@ export default function PurpleHeart() {
     },
     {
       id: "founder",
-      name: "Founding Partner",
+      name: "Strategic Collaborator",
       amount: "$2,500+",
-      description: "Shape the future",
+      description: "Shape the future together",
       benefits: [
         "All Guardian benefits",
-        "Founding Partner status",
+        "Strategic Collaborator status",
         "Annual in-person gathering",
-        "Strategic advisory input",
+        "Collaborative business opportunities",
         "Perpetual recognition",
-        "Custom partnership terms",
+        "Custom collaboration terms",
       ],
       color: "from-purple-400 to-purple-300",
       borderColor: "border-purple-500",
@@ -111,7 +111,7 @@ export default function PurpleHeart() {
               <div>
                 <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
                   <Heart className="w-8 h-8 text-purple-600 fill-purple-600" />
-                  Purple Heart
+                  Allies & Supporters
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   Support The L.A.W.S. Collective
@@ -132,9 +132,8 @@ export default function PurpleHeart() {
                 Support The L.A.W.S. Collective
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl">
-                The Purple Heart represents your commitment to building generational wealth,
-                community strength, and lasting impact. Every contribution helps us create systems
-                that empower families and communities to thrive.
+                Your commitment to building generational wealth, community strength, and lasting impact
+                helps us create systems that empower families and communities to thrive.
               </p>
               <p className="text-base text-foreground font-semibold">
                 Your support directly funds education, community building, and system development
@@ -212,14 +211,14 @@ export default function PurpleHeart() {
             <h3 className="text-2xl font-bold text-foreground mb-4">Custom Support</h3>
             <p className="text-muted-foreground mb-6">
               Have a specific way you'd like to support The L.A.W.S. Collective? We welcome
-              partnerships, in-kind donations, and creative collaborations.
+              in-kind donations, collaborative opportunities, and creative partnerships.
             </p>
             <Button
               variant="outline"
               className="border-purple-300 hover:bg-purple-50"
               onClick={() => (window.location.href = "/contact-us")}
             >
-              Discuss Custom Partnership
+              Discuss Custom Collaboration
             </Button>
           </Card>
         </section>
@@ -261,7 +260,7 @@ export default function PurpleHeart() {
         <section className="mt-16 text-center">
           <Card className="p-12 bg-gradient-to-r from-purple-600 to-purple-700">
             <h3 className="text-3xl font-bold text-white mb-4">
-              Ready to Join The Purple Heart?
+              Ready to Become an Ally & Supporter?
             </h3>
             <p className="text-purple-100 mb-8 max-w-2xl mx-auto">
               Your support today shapes the future of generational wealth and community strength.

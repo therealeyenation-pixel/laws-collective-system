@@ -224,7 +224,7 @@ export default function DonateThankYou() {
           <CardContent className="pt-6">
             <h3 className="font-semibold mb-2">Tax-Deductible Donation</h3>
             <p className="text-sm text-muted-foreground">
-              The L.A.W.S. Collective operates under a 508(c)(1)(a) tax-exempt organization. 
+              The L.A.W.S. Collective is a faith-based organization. 
               Your donation of ${donationDetails.amount?.toFixed(2)} is tax-deductible to the fullest extent allowed by law.
               Please retain your email receipt for your tax records.
             </p>

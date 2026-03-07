@@ -120,7 +120,7 @@ export default function Donate508() {
               and support our community through faith-based stewardship programs.
             </p>
             <p className="text-sm text-muted-foreground">
-              508(c)(1)(a) Faith-Based Organization
+              Faith-Based Organization
             </p>
           </div>
         </div>
@@ -380,7 +380,7 @@ export default function Donate508() {
                       Secure & Tax-Deductible
                     </div>
                     <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                      LuvOnPurpose Academy and Outreach is a 508(c)(1)(a) faith-based organization.
+                      LuvOnPurpose Academy and Outreach is a faith-based organization.
                       All donations are tax-deductible.
                     </p>
                   </div>

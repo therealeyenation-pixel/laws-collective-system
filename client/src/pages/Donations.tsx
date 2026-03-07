@@ -325,10 +325,10 @@ export default function Donations() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
-                  {taxInfo?.organizationType || "508(c)(1)(a) Faith-Based Organization"}
+                  {taxInfo?.organizationType || "Faith-Based Organization"}
                 </Badge>
                 <p className="text-sm text-muted-foreground">
-                  {taxInfo?.description || "LuvOnPurpose operates as a 508(c)(1)(a) faith-based organization, automatically exempt from federal income tax."}
+                  {taxInfo?.description || "LuvOnPurpose operates as a faith-based organization, automatically exempt from federal income tax."}
                 </p>
                 <div className="border-t pt-4">
                   <h4 className="font-semibold text-sm mb-2">Tax Deductibility</h4>
