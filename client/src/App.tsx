@@ -32,6 +32,7 @@ import PurpleHeart from '@/pages/PurpleHeart';
 import PublicDonate from '@/pages/PublicDonate';
 import ImpactDashboard from '@/pages/ImpactDashboard';
 import IndigenousRights from "./pages/IndigenousRights";
+import DonorDashboard from "./pages/DonorDashboard";
 
 import Shop from "./pages/Shop";
 import Products from "./pages/Products";
@@ -447,6 +448,7 @@ function Router() {
       <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
       <Route path="/donate" component={PublicDonate} />
+      <Route path="/donor-dashboard">{() => <ProtectedRoute component={DonorDashboard} />}</Route>
       <Route path="/contact-us" component={ContactUs} />
       <Route path="/brand-guide" component={BrandGuide} />
       <Route path="/faq" component={FAQ} />

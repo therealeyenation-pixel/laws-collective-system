@@ -141,6 +141,7 @@ import { closedLoopWealthRouter } from "./routers/closed-loop-wealth";
 import { lawsEmploymentRouter } from "./routers/laws-employment";
 import { enhancedDonationsRouter } from "./routers/enhanced-donations";
 import { stripeDonationsRouter } from "./routers/stripe-donations";
+import { donationAnalyticsRouter } from "./routers/donation-analytics";
 import { trialRouter } from "./routers/trial";
 import { contractsRouter } from "./routers/contracts";
 import { trustGovernanceRouter } from "./routers/trust-governance";
@@ -410,6 +411,7 @@ export const appRouter = router({
   lawsEmployment: lawsEmploymentRouter,
   enhancedDonations: enhancedDonationsRouter,
   stripeDonations: stripeDonationsRouter,
+  donationAnalytics: donationAnalyticsRouter,
   trial: trialRouter,
   contracts: contractsRouter,
   trustGovernance: trustGovernanceRouter,
