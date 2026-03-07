@@ -10127,3 +10127,4 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Implement email notifications for waitlist signups
 - [x] Implement email notifications for contact form submissions
 - [x] Create public FAQ page
+- [x] Create Purple Heart support/donation page for The L.A.W.S. Collective

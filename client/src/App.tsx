@@ -28,6 +28,7 @@ import ContactUs from "./pages/ContactUs";
 import ContactInbox from "./pages/ContactInbox";
 import BrandGuide from "./pages/BrandGuide";
 import FAQ from "./pages/FAQ";
+import PurpleHeart from "./pages/PurpleHeart";
 
 import Shop from "./pages/Shop";
 import Products from "./pages/Products";
@@ -447,6 +448,7 @@ function Router() {
       <Route path="/contact-us" component={ContactUs} />
       <Route path="/brand-guide" component={BrandGuide} />
       <Route path="/faq" component={FAQ} />
+      <Route path="/purple-heart" component={PurpleHeart} />
       <Route path="/admin/contact-inbox">{() => <ProtectedRoute component={ContactInbox} minRole="admin" />}</Route>
       <Route path="/products" component={Products} />
       <Route path="/course-success" component={CourseSuccess} />
