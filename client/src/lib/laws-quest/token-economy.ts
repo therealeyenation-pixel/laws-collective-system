@@ -1,12 +1,12 @@
 /**
  * L.A.W.S. Quest - Commercial Game Product
- * Owned by The The The L.A.W.S. Collective, LLC
+ * Owned by The L.A.W.S. Collective, LLC
  * 
  * Token Economy System - Connecting Game Rewards to LuvLedger
  * 
  * This system manages the in-game token economy and provides
  * integration points for connecting to the real-world LuvLedger
- * system when players are The The L.A.W.S. Collective members.
+ * system when players are The L.A.W.S. Collective members.
  */
 
 // ============================================
@@ -124,7 +124,7 @@ export const TOKEN_EARNING_RATES: TokenEarningRate[] = [
   {
     source: "employee_bonus",
     baseAmount: 150,
-    description: "Bonus for The The L.A.W.S. Collective employees",
+    description: "Bonus for The L.A.W.S. Collective employees",
     multiplierEligible: false,
   },
   {
@@ -178,7 +178,7 @@ export const MULTIPLIER_TIERS: TokenMultiplier[] = [
   {
     id: "mult-employee",
     name: "Collective Employee",
-    description: "The The L.A.W.S. Collective employee bonus",
+    description: "The L.A.W.S. Collective employee bonus",
     multiplier: 2.0,
     source: "membership_tier",
     stackable: false,

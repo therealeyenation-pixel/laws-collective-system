@@ -214,7 +214,7 @@ const departments: Department[] = [
     name: 'Community Outreach',
     code: 'COMM',
     description: 'Community engagement and programs',
-    entity: 'The The L.A.W.S. Collective',
+    entity: 'The L.A.W.S. Collective',
     members: [],
     budget: { allocated: 250000, spent: 62500, remaining: 187500, fiscalYear: 2026, categories: [
       { name: 'Salaries', allocated: 120000, spent: 30000 },

@@ -135,7 +135,7 @@ export default function LAWSEmploymentPortal() {
           <div>
             <h1 className="text-3xl font-bold">L.A.W.S. Employment Portal</h1>
             <p className="text-muted-foreground mt-1">
-              Community job opportunities through the The The L.A.W.S. Collective
+              Community job opportunities through the The L.A.W.S. Collective
             </p>
           </div>
         </div>
@@ -150,7 +150,7 @@ export default function LAWSEmploymentPortal() {
               <div>
                 <h3 className="font-semibold text-lg">Building Generational Wealth Through Employment</h3>
                 <p className="text-muted-foreground mt-1">
-                  The The L.A.W.S. Collective creates job opportunities that lead to ownership. Start as a W-2 employee, 
+                  The L.A.W.S. Collective creates job opportunities that lead to ownership. Start as a W-2 employee, 
                   develop your skills, transition to contractor, build your own business, and become a House member 
                   in our wealth-building ecosystem.
                 </p>

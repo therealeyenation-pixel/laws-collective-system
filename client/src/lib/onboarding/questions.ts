@@ -456,7 +456,7 @@ export const LAND_QUESTIONS: OnboardingQuestion[] = [
   {
     id: 'land_q8',
     realm: 'land',
-    questionText: 'What is the "House" concept in the The The L.A.W.S. Collective?',
+    questionText: 'What is the "House" concept in the The L.A.W.S. Collective?',
     options: [
       'A physical building',
       'A personal or family trust structure for managing and protecting assets',
@@ -464,7 +464,7 @@ export const LAND_QUESTIONS: OnboardingQuestion[] = [
       'A real estate investment'
     ],
     correctOptionIndex: 1,
-    explanation: 'In the The The L.A.W.S. Collective, a House is a personal or family trust structure that helps you manage, protect, and grow assets across generations.',
+    explanation: 'In the The L.A.W.S. Collective, a House is a personal or family trust structure that helps you manage, protect, and grow assets across generations.',
     difficulty: 'easy'
   }
 ];

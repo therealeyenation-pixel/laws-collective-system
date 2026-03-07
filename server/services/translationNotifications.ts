@@ -73,7 +73,7 @@ export async function sendTranslationApprovedNotification(
       <p>You've earned points for this contribution. Check your contributor profile to see your updated rank.</p>
     </div>
     <div class="footer">
-      <p>The The L.A.W.S. Collective - Building Multi-Generational Wealth Through Purpose & Community</p>
+      <p>The L.A.W.S. Collective - Building Multi-Generational Wealth Through Purpose & Community</p>
     </div>
   </div>
 </body>
@@ -177,7 +177,7 @@ export async function sendTranslationRejectedNotification(
       </ul>
     </div>
     <div class="footer">
-      <p>The The L.A.W.S. Collective - Building Multi-Generational Wealth Through Purpose & Community</p>
+      <p>The L.A.W.S. Collective - Building Multi-Generational Wealth Through Purpose & Community</p>
     </div>
   </div>
 </body>

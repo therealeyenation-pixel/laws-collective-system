@@ -786,7 +786,7 @@ Agreement Number: ${agreement.agreementNumber}
 This Ground Lease Agreement ("Agreement") is entered into as of ${agreement.startDate.toLocaleDateString()}.
 
 PARTIES:
-Landlord: The The L.A.W.S. Collective Land Trust ("Trust")
+Landlord: The L.A.W.S. Collective Land Trust ("Trust")
 Tenant: ${houseName} ("House")
 
 PROPERTY:

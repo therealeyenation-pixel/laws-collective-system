@@ -84,7 +84,7 @@ export default function Support() {
           <Link href="/">
             <span className="flex items-center gap-2 text-primary font-bold text-xl cursor-pointer">
               <Sparkles className="w-6 h-6" />
-              The The The L.A.W.S. Collective, LLC
+              The L.A.W.S. Collective, LLC
             </span>
           </Link>
           <nav className="flex items-center gap-6">
@@ -351,7 +351,7 @@ export default function Support() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              <span className="font-semibold">The The The L.A.W.S. Collective, LLC</span>
+              <span className="font-semibold">The L.A.W.S. Collective, LLC</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Building Multi-Generational Wealth Through Purpose & Community

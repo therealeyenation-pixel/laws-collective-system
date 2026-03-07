@@ -85,7 +85,7 @@ describe("L.A.W.S. Quest Unified Game", () => {
       const structure = {
         trust: "CALEA Freeman Family Trust",
         parentLLC: "LuvOnPurpose Autonomous Wealth System, LLC",
-        operatingLLC: "The The The L.A.W.S. Collective, LLC",
+        operatingLLC: "The L.A.W.S. Collective, LLC",
         foundation: "LuvOnPurpose Academy & Outreach",
       };
 

@@ -73,7 +73,7 @@ describe('Grant Application History Service', () => {
     it('should create a new application', () => {
       const newApp = createApplication({
         entityId: 'laws',
-        entityName: 'The The The L.A.W.S. Collective, LLC',
+        entityName: 'The L.A.W.S. Collective, LLC',
         grantName: 'Test Grant',
         funderName: 'Test Foundation',
         funderType: 'foundation',
@@ -201,7 +201,7 @@ describe('Grant Application History Service', () => {
     it('should update application status', () => {
       const newApp = createApplication({
         entityId: 'laws',
-        entityName: 'The The The L.A.W.S. Collective, LLC',
+        entityName: 'The L.A.W.S. Collective, LLC',
         grantName: 'Status Update Test',
         funderName: 'Status Foundation',
         funderType: 'foundation',
@@ -332,7 +332,7 @@ describe('Grant Application History Service', () => {
     it('should add timeline event when response added', () => {
       const newApp = createApplication({
         entityId: 'laws',
-        entityName: 'The The The L.A.W.S. Collective, LLC',
+        entityName: 'The L.A.W.S. Collective, LLC',
         grantName: 'Response Timeline Test',
         funderName: 'Test Foundation',
         funderType: 'foundation',
@@ -598,7 +598,7 @@ describe('Grant Application History Service', () => {
       const names = getEntityNames();
       
       expect(names['realeyenation']).toBe('Real-Eye-Nation LLC');
-      expect(names['laws']).toBe('The The The L.A.W.S. Collective, LLC');
+      expect(names['laws']).toBe('The L.A.W.S. Collective, LLC');
     });
   });
 });

@@ -313,7 +313,7 @@ describe("Certificate Issuance Service", () => {
         { id: "simulator_completion", name: "Simulator Completion", description: "Awarded upon completing all modules of a simulator" },
         { id: "course_completion", name: "Course Completion", description: "Awarded upon completing an Academy course" },
         { id: "mastery_certificate", name: "Mastery Certificate", description: "Awarded for demonstrating mastery in a subject area" },
-        { id: "member_credential", name: "Member Credential", description: "The The L.A.W.S. Collective membership credential" },
+        { id: "member_credential", name: "Member Credential", description: "The L.A.W.S. Collective membership credential" },
         { id: "house_graduation", name: "House Graduation", description: "Awarded upon completing House requirements" },
         { id: "language_mastery", name: "Language Mastery", description: "Awarded for achieving language proficiency" },
         { id: "stem_mastery", name: "STEM Mastery", description: "Awarded for STEM subject mastery" },

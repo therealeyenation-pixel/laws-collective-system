@@ -173,7 +173,7 @@ const NEW_EMPLOYEE_MODULES = [
   {
     id: "company-orientation",
     title: "Company Orientation",
-    description: "Introduction to The The L.A.W.S. Collective and our mission",
+    description: "Introduction to The L.A.W.S. Collective and our mission",
     icon: Building2,
     duration: "40 min",
     modules: 5,

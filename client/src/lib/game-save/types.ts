@@ -1,7 +1,7 @@
 /**
  * Universal Game Save System
  * L.A.W.S. Quest - Commercial Game Product
- * Owned by The The The L.A.W.S. Collective, LLC
+ * Owned by The L.A.W.S. Collective, LLC
  * 
  * Provides pause and auto-save functionality across all Game Center games
  */

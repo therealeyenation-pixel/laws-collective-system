@@ -212,7 +212,7 @@ export default function ShellDemo() {
             <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg p-12 text-center space-y-6">
               <h2 className="text-4xl font-bold text-foreground">Welcome to the L.A.W.S. Demo</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experience how the The The L.A.W.S. Collective helps you build and manage your business with professional tools, guidance, and community support.
+                Experience how the The L.A.W.S. Collective helps you build and manage your business with professional tools, guidance, and community support.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Button size="lg" onClick={() => setStage("simulator")}>

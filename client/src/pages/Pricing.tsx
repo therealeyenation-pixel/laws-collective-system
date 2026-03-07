@@ -262,7 +262,7 @@ export default function Pricing() {
         <div className="container max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
-              <span className="text-xl font-bold text-primary cursor-pointer">The The L.A.W.S. Collective</span>
+              <span className="text-xl font-bold text-primary cursor-pointer">The L.A.W.S. Collective</span>
             </Link>
             <nav className="hidden md:flex items-center gap-6">
               <Link href="/services">
@@ -353,7 +353,7 @@ export default function Pricing() {
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">{tier.description}</p>
                   <Badge variant="outline" className="text-xs border-primary/30 text-primary mb-4">
-                    Provided by: The The The L.A.W.S. Collective, LLC
+                    Provided by: The L.A.W.S. Collective, LLC
                   </Badge>
                   <Button
                     className="w-full mb-6"
@@ -502,7 +502,7 @@ export default function Pricing() {
       {/* Footer */}
       <footer className="border-t border-border mt-16 py-8">
         <div className="container max-w-7xl mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2025 The The L.A.W.S. Collective. All rights reserved.</p>
+          <p>© 2025 The L.A.W.S. Collective. All rights reserved.</p>
         </div>
       </footer>
     </div>

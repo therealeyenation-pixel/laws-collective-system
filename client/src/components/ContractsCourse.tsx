@@ -787,7 +787,7 @@ export default function ContractsCourse({ onExit, onComplete, connectedEntity }:
     content += `### Liability Limitations\n${worksheetData.liabilityLimitations || "[To be completed]"}\n\n`;
     
     content += "---\n\n";
-    content += "*Generated through The The The L.A.W.S. Collective, LLC Contracts Workshop*\n";
+    content += "*Generated through The L.A.W.S. Collective, LLC Contracts Workshop*\n";
     content += "*All records immutably stored on LuvLedger blockchain*\n";
 
     const blob = new Blob([content], { type: "text/markdown" });

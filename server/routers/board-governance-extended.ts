@@ -51,7 +51,7 @@ export const boardGovernanceExtendedRouter = router({
       return positions as unknown as any[];
     }),
 
-  // Initialize default board positions for The The L.A.W.S. Collective
+  // Initialize default board positions for The L.A.W.S. Collective
   initializeDefaultPositions: adminProcedure
     .input(z.object({ entityId: z.number() }))
     .mutation(async ({ input }) => {
@@ -356,7 +356,7 @@ export const boardGovernanceExtendedRouter = router({
       return attendance as unknown as any[];
     }),
 
-  // Initialize The The L.A.W.S. Collective board with La Shanna and Amber
+  // Initialize The L.A.W.S. Collective board with La Shanna and Amber
   initializeLAWSBoard: adminProcedure
     .input(z.object({ entityId: z.number() }))
     .mutation(async ({ input, ctx }) => {
@@ -387,6 +387,6 @@ export const boardGovernanceExtendedRouter = router({
         VALUES (${secPositionId}, 'Amber S. Hunter', NULL, 'active', NOW(), ${ctx.user.id}, NOW(), NOW())
       `);
 
-      return { success: true, message: "The The L.A.W.S. Collective board initialized with La Shanna K. Russell as President/CEO and Amber S. Hunter as Secretary/Treasurer" };
+      return { success: true, message: "The L.A.W.S. Collective board initialized with La Shanna K. Russell as President/CEO and Amber S. Hunter as Secretary/Treasurer" };
     }),
 });

@@ -1,5 +1,5 @@
 # USPTO Trademark Application
-## The The L.A.W.S. Collective
+## The L.A.W.S. Collective
 
 ---
 
@@ -20,7 +20,7 @@
 
 ### INTERNATIONAL CLASS SELECTIONS
 
-Based on the nature of The The L.A.W.S. Collective's services, the following International Classes are recommended:
+Based on the nature of The L.A.W.S. Collective's services, the following International Classes are recommended:
 
 | Class | Description | Goods/Services |
 |-------|-------------|----------------|

@@ -6,7 +6,7 @@
     "version": "1.0"
   },
   "overview": {
-    "description": "Standardized hiring process for The The The L.A.W.S. Collective and all subsidiary entities. This process ensures fair, consistent, and thorough evaluation of all candidates while reflecting our organizational values.",
+    "description": "Standardized hiring process for The L.A.W.S. Collective and all subsidiary entities. This process ensures fair, consistent, and thorough evaluation of all candidates while reflecting our organizational values.",
     "principles": [
       "Transparency in all communications",
       "Fair and equitable evaluation",
@@ -306,7 +306,7 @@
     "universal": {
       "opening": [
         "Tell us about yourself and what drew you to this opportunity.",
-        "What do you know about The The The L.A.W.S. Collective and our mission?",
+        "What do you know about The L.A.W.S. Collective and our mission?",
         "How does this role align with your career goals?"
       ],
       "behavioral": [
@@ -510,10 +510,10 @@
     }
   },
   "communicationTemplates": {
-    "applicationReceived": "Thank you for your interest in [Position] at The The The L.A.W.S. Collective. We have received your application and will review it within [X] business days. We appreciate your patience.",
+    "applicationReceived": "Thank you for your interest in [Position] at The L.A.W.S. Collective. We have received your application and will review it within [X] business days. We appreciate your patience.",
     "advancingToScreen": "Congratulations! We would like to schedule a phone/video screen for the [Position] role. Please reply with your availability for a [X]-minute call.",
     "advancingToPanel": "We enjoyed speaking with you and would like to invite you to a panel interview. The interview will be conducted via Microsoft Teams and will last approximately [X] minutes.",
-    "notAdvancing": "Thank you for your interest in [Position] at The The The L.A.W.S. Collective. After careful consideration, we have decided to move forward with other candidates whose qualifications more closely match our current needs. We encourage you to apply for future opportunities.",
+    "notAdvancing": "Thank you for your interest in [Position] at The L.A.W.S. Collective. After careful consideration, we have decided to move forward with other candidates whose qualifications more closely match our current needs. We encourage you to apply for future opportunities.",
     "offerExtended": "We are pleased to extend an offer for the position of [Position]. Please find the attached offer letter with complete details. We request your response within 7 business days."
   }
 }

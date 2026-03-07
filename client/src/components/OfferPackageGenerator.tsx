@@ -53,7 +53,7 @@ interface OfferPackageGeneratorProps {
 }
 
 const entities = [
-  { id: "laws", name: "The The L.A.W.S. Collective, LLC" },
+  { id: "laws", name: "The L.A.W.S. Collective, LLC" },
   { id: "98trust", name: "98 Trust" },
   { id: "temple", name: "Temple of Alkebulan" },
   { id: "realeye", name: "Real-Eye Technologies, LLC" },

@@ -195,7 +195,7 @@ ${request.content.substring(0, 10000)}`;
       entities: [
         {
           type: 'organization',
-          value: 'The The L.A.W.S. Collective',
+          value: 'The L.A.W.S. Collective',
           context: 'Primary party in the document',
           confidence: 0.95,
         },

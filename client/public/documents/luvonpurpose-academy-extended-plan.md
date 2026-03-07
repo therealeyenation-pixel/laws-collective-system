@@ -10,7 +10,7 @@ LuvOnPurpose Outreach Temple and Academy Society, Inc. is a faith-based K-12 edu
 
 Traditional education prepares students to work for others. We prepare students to work for themselves and their communities. Our graduates emerge with high school diplomas, industry-recognized trade certifications, business formation skills, and technology literacy—equipped to become the contractors, business owners, and community builders who will construct and maintain affordable housing, launch enterprises, and create jobs.
 
-The Academy operates as the educational foundation of a multi-generational wealth building ecosystem. As our partner Trust acquires land and properties, Academy graduates gain hands-on experience through supervised renovation projects. As The The L.A.W.S. Collective business owners need skilled workers, they hire our graduates. As Real-Eye-Nation documents community progress, our media students contribute. This closed-loop system keeps wealth circulating within the community while building the next generation of leaders.
+The Academy operates as the educational foundation of a multi-generational wealth building ecosystem. As our partner Trust acquires land and properties, Academy graduates gain hands-on experience through supervised renovation projects. As The L.A.W.S. Collective business owners need skilled workers, they hire our graduates. As Real-Eye-Nation documents community progress, our media students contribute. This closed-loop system keeps wealth circulating within the community while building the next generation of leaders.
 
 We seek funding of $2,000,000 to $5,000,000 to build transformational educational infrastructure including certified teachers, trade instructors, simulation lab equipment, workshop facilities, and storage space for tools and materials. Our proof of concept: students will train on actual community housing renovation projects, graduating with real-world experience and direct employment pathways.
 
@@ -116,7 +116,7 @@ Direct pathways from education to employment:
 
 - Formal agreements with trade unions and employers
 - Supervised work experience on community projects
-- Mentorship from The The L.A.W.S. Collective business owners
+- Mentorship from The L.A.W.S. Collective business owners
 - Job placement support and career counseling
 - Continuing education partnerships
 
@@ -501,7 +501,7 @@ The Academy serves as the educational foundation of a multi-generational wealth 
 
 | Partner | Role | Integration Point |
 |---------|------|-------------------|
-| The The L.A.W.S. Collective | Workforce-to-ownership platform | Graduates hired by L.A.W.S. businesses; apprenticeship placements |
+| The L.A.W.S. Collective | Workforce-to-ownership platform | Graduates hired by L.A.W.S. businesses; apprenticeship placements |
 | Real-Eye-Nation | Media production | Media students contribute; progress documented |
 | LuvOnPurpose Wealth System | Financial automation platform | Student savings accounts; financial literacy integration |
 | Family Trust | Land and property acquisition | Students train on community renovation projects |
@@ -517,7 +517,7 @@ The Academy serves as the educational foundation of a multi-generational wealth 
 
 ### Shared Resources
 
-- Equipment sharing with The The L.A.W.S. Collective tool library
+- Equipment sharing with The L.A.W.S. Collective tool library
 - Supervised student work on Trust renovation projects
 - Cross-promotion through Real-Eye-Nation media
 - Financial accounts through Wealth System platform

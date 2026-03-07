@@ -61,7 +61,7 @@ export default function BusinessDashboard() {
       isParent: true,
       children: [
         { 
-          name: "The The The L.A.W.S. Collective, LLC", 
+          name: "The L.A.W.S. Collective, LLC", 
           type: "LLC", 
           status: "Active", 
           description: "Community Operating Entity",
@@ -79,7 +79,7 @@ export default function BusinessDashboard() {
   // Flat list for simple display
   const entitiesFlat = [
     { name: "LuvOnPurpose Autonomous Wealth System, LLC", type: "LLC", status: "Active", description: "Parent Operating LLC - The House" },
-    { name: "The The The L.A.W.S. Collective, LLC", type: "LLC", status: "Active", description: "Community Operating Entity" },
+    { name: "The L.A.W.S. Collective, LLC", type: "LLC", status: "Active", description: "Community Operating Entity" },
     { name: "LuvOnPurpose Academy & Outreach", type: "508(c)(1)(a)", status: "Pending EIN", description: "Education Division - 30%" },
     { name: "Real-Eye-Nation", type: "Division", status: "Active", description: "Media Division - 20%" },
   ];
@@ -88,7 +88,7 @@ export default function BusinessDashboard() {
     { action: "Grant Application Submitted", entity: "Amber Grant", date: "Today", status: "Pending" },
     { action: "Grant Application Submitted", entity: "Freed Fellowship", date: "Today", status: "Pending" },
     { action: "Offer Letters Created", entity: "12 Manager Positions", date: "Today", status: "Complete" },
-    { action: "Business Plan Updated", entity: "The The L.A.W.S. Collective", date: "Yesterday", status: "Complete" },
+    { action: "Business Plan Updated", entity: "The L.A.W.S. Collective", date: "Yesterday", status: "Complete" },
   ];
 
   const upcomingTasks = [
@@ -230,12 +230,12 @@ export default function BusinessDashboard() {
               <MeetingWidget
                 entityType="business"
                 entityId={1}
-                entityName="The The L.A.W.S. Collective, LLC"
+                entityName="The L.A.W.S. Collective, LLC"
               />
               <ChatWidget
                 entityType="business"
                 entityId={1}
-                entityName="The The L.A.W.S. Collective, LLC"
+                entityName="The L.A.W.S. Collective, LLC"
               />
             </div>
 
@@ -275,7 +275,7 @@ export default function BusinessDashboard() {
             {/* House Participation Integration */}
             <HouseParticipationToggle
               businessId={1}
-              businessName="The The L.A.W.S. Collective, LLC"
+              businessName="The L.A.W.S. Collective, LLC"
               currentStatus="pending"
               onStatusChange={(newStatus, reason) => {
                 console.log("Status changed to:", newStatus, reason);

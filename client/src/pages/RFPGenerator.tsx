@@ -294,7 +294,7 @@ ${rfpData.teamingPartners || "[Partners to be identified]"}
 
 ---
 
-*This response was prepared using The The L.A.W.S. Collective RFP Response Generator*
+*This response was prepared using The L.A.W.S. Collective RFP Response Generator*
     `.trim();
   };
 

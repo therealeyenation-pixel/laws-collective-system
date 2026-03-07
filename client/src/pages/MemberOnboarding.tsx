@@ -112,7 +112,7 @@ export default function MemberOnboarding() {
       // Here we would save the onboarding data
       // For now, just simulate success
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("Welcome to The The L.A.W.S. Collective!");
+      toast.success("Welcome to The L.A.W.S. Collective!");
       setLocation("/house");
     } catch (error) {
       toast.error("Failed to complete onboarding");
@@ -129,7 +129,7 @@ export default function MemberOnboarding() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Leaf className="w-6 h-6 text-green-600" />
-              <span className="text-lg font-bold text-stone-900">The The L.A.W.S. Collective</span>
+              <span className="text-lg font-bold text-stone-900">The L.A.W.S. Collective</span>
             </div>
             <div className="text-sm text-stone-500">
               Step {currentStep} of {steps.length}
@@ -174,7 +174,7 @@ export default function MemberOnboarding() {
             <div className="space-y-6">
               <div className="text-center mb-8">
                 <h1 className="text-2xl font-bold text-stone-900 mb-2">
-                  Welcome to The The L.A.W.S. Collective
+                  Welcome to The L.A.W.S. Collective
                 </h1>
                 <p className="text-stone-600">
                   Let's set up your profile and get you started on your wealth-building journey.
@@ -327,7 +327,7 @@ export default function MemberOnboarding() {
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
                 <h3 className="font-semibold text-green-800 mb-2">What is a House?</h3>
                 <p className="text-sm text-green-700">
-                  A House is your family's wealth-building entity within the The The L.A.W.S. Collective. 
+                  A House is your family's wealth-building entity within the The L.A.W.S. Collective. 
                   It provides structure for asset protection, business operations, and generational 
                   wealth transfer using our 60/40 trust model.
                 </p>
@@ -417,7 +417,7 @@ export default function MemberOnboarding() {
                 You're All Set!
               </h1>
               <p className="text-stone-600 mb-8 max-w-md mx-auto">
-                Welcome to the The The L.A.W.S. Collective, {data.displayName || "Member"}! 
+                Welcome to the The L.A.W.S. Collective, {data.displayName || "Member"}! 
                 Your House "{data.houseName || "Your House"}" has been established. 
                 Let's start building your legacy.
               </p>

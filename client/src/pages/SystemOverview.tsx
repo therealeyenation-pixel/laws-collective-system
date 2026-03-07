@@ -120,7 +120,7 @@ export default function SystemOverview() {
                 <span>•</span>
                 <span>Multi-Generational Wealth Architecture</span>
                 <span>•</span>
-                <span className="text-xs">A The The L.A.W.S. Collective Enterprise</span>
+                <span className="text-xs">A The L.A.W.S. Collective Enterprise</span>
               </div>
             </div>
             <div className="flex gap-2">
@@ -169,7 +169,7 @@ export default function SystemOverview() {
                   Build Multi-Generational Wealth Through Purpose & Community
                 </h2>
                 <p className="text-green-100 mb-6 text-lg">
-                  Join thousands of families creating lasting legacies through our sovereign wealth system. The The The L.A.W.S. Collective, LLC provides the framework, tools, and community to transform your family's financial future.
+                  Join thousands of families creating lasting legacies through our sovereign wealth system. The L.A.W.S. Collective, LLC provides the framework, tools, and community to transform your family's financial future.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Button 
@@ -212,7 +212,7 @@ export default function SystemOverview() {
         <section id="learn-more" className="mb-12">
           <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
             <h2 className="text-2xl font-bold text-foreground mb-4">
-              The The The L.A.W.S. Collective, LLC Framework
+              The L.A.W.S. Collective, LLC Framework
             </h2>
             <p className="text-muted-foreground mb-6">
               A community-focused framework helping people reconnect with land, strengthen identity, restore balance, and build practical skills for generational wealth.

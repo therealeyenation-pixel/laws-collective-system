@@ -241,7 +241,7 @@ export default function ComplianceMonitoringPage() {
                     <Input
                       value={newItem.entity}
                       onChange={(e) => setNewItem({ ...newItem, entity: e.target.value })}
-                      placeholder="e.g., The The L.A.W.S. Collective LLC"
+                      placeholder="e.g., The L.A.W.S. Collective LLC"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">

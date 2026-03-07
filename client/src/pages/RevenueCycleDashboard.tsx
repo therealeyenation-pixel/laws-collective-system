@@ -126,7 +126,7 @@ export default function RevenueCycleDashboard() {
               <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Leaf className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="font-semibold text-foreground">The The L.A.W.S. Collective</h3>
+              <h3 className="font-semibold text-foreground">The L.A.W.S. Collective</h3>
               <p className="text-sm text-muted-foreground">Revenue Generation</p>
               <p className="text-lg font-bold text-blue-600 mt-2">
                 ${revenueData.totalRevenue.toLocaleString()}

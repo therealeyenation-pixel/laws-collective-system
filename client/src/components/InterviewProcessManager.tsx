@@ -201,7 +201,7 @@ const POSITION_QUESTIONS: Record<string, InterviewQuestion[]> = {
     {
       id: "def-2",
       category: "Values",
-      question: "What attracted you to The The L.A.W.S. Collective's mission of building multi-generational wealth through community?",
+      question: "What attracted you to The L.A.W.S. Collective's mission of building multi-generational wealth through community?",
       evaluationCriteria: ["Mission alignment", "Values fit", "Motivation"],
       aiSuggested: false,
     },
@@ -295,7 +295,7 @@ export default function InterviewProcessManager() {
       stages: INTERVIEW_STAGES,
       questions: getQuestions(selectedPosition),
       generatedAt: new Date().toISOString(),
-      organization: "The The L.A.W.S. Collective, LLC",
+      organization: "The L.A.W.S. Collective, LLC",
     };
     const blob = new Blob([JSON.stringify(guide, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);

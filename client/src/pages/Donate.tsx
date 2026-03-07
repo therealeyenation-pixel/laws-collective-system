@@ -18,7 +18,7 @@ export default function Donate() {
         },
         body: JSON.stringify({
           amount: amount * 100, // Convert to cents
-          description: "Support the The The L.A.W.S. Collective",
+          description: "Support the The L.A.W.S. Collective",
         }),
       });
 
@@ -38,7 +38,7 @@ export default function Donate() {
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="container max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-foreground">The The L.A.W.S. Collective</h1>
+          <h1 className="text-2xl font-bold text-foreground">The L.A.W.S. Collective</h1>
           <Button
             variant="outline"
             size="sm"

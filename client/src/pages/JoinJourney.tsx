@@ -1,6 +1,6 @@
 /**
  * Join Journey Page
- * The Direct Onboarding path for joining The The L.A.W.S. Collective
+ * The Direct Onboarding path for joining The L.A.W.S. Collective
  */
 
 import { useState, useEffect } from 'react';
@@ -270,7 +270,7 @@ export default function JoinJourney() {
       <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
         <div className="container max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-lg font-semibold">Join The The L.A.W.S. Collective</h1>
+            <h1 className="text-lg font-semibold">Join The L.A.W.S. Collective</h1>
             <span className="text-sm text-muted-foreground">{progress}% Complete</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -324,7 +324,7 @@ function WelcomeStep({ onContinue }: { onContinue: () => void }) {
         <h1 className="text-3xl font-bold mb-4">Welcome to the L.A.W.S. Journey</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           You're about to embark on a transformative experience that will prepare you 
-          for membership in the The The L.A.W.S. Collective — a community dedicated to building 
+          for membership in the The L.A.W.S. Collective — a community dedicated to building 
           multi-generational wealth through purpose, healing, knowledge, and stability.
         </p>
       </Card>
@@ -412,7 +412,7 @@ function HouseSetupStep({
         <Home className="w-16 h-16 mx-auto mb-4 text-green-600" />
         <h1 className="text-3xl font-bold mb-2">Establish Your House</h1>
         <p className="text-muted-foreground">
-          Your House is your personal trust structure within the The The L.A.W.S. Collective.
+          Your House is your personal trust structure within the The L.A.W.S. Collective.
         </p>
       </Card>
 
@@ -541,7 +541,7 @@ function ValuesAgreementStep({
         <FileCheck className="w-16 h-16 mx-auto mb-4 text-primary" />
         <h1 className="text-3xl font-bold mb-2">Community Values Agreement</h1>
         <p className="text-muted-foreground">
-          The The The L.A.W.S. Collective is built on shared values. Please review and agree to uphold these principles.
+          The L.A.W.S. Collective is built on shared values. Please review and agree to uphold these principles.
         </p>
       </Card>
 
@@ -566,7 +566,7 @@ function ValuesAgreementStep({
             className="mt-1 w-5 h-5 rounded border-2 border-primary"
           />
           <span className="text-sm">
-            I have read and agree to uphold the The The L.A.W.S. Collective community values. 
+            I have read and agree to uphold the The L.A.W.S. Collective community values. 
             I understand that membership in the Collective comes with both privileges and 
             responsibilities, and I commit to contributing positively to our community.
           </span>
@@ -639,7 +639,7 @@ function CredentialIssuanceStep({
         </h1>
         <p className="text-muted-foreground">
           {issued 
-            ? 'Welcome to the The The L.A.W.S. Collective! Your Member Credential is ready.'
+            ? 'Welcome to the The L.A.W.S. Collective! Your Member Credential is ready.'
             : 'You\'ve completed all requirements. Click below to receive your Member Credential.'
           }
         </p>
@@ -710,7 +710,7 @@ function CompletionStep({ onViewCredential }: { onViewCredential: () => void }) 
         </div>
         <h1 className="text-3xl font-bold mb-2">Welcome to the Collective!</h1>
         <p className="text-lg text-muted-foreground">
-          You are now a credentialed member of the The The L.A.W.S. Collective.
+          You are now a credentialed member of the The L.A.W.S. Collective.
         </p>
       </Card>
 

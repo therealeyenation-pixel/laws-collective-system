@@ -781,7 +781,7 @@ export default function InternationalBusiness() {
                 <div className="mt-6 p-4 bg-muted rounded-lg">
                   <h4 className="font-semibold mb-2">Need a Specific Partner?</h4>
                   <p className="text-sm text-muted-foreground">
-                    Contact The The The L.A.W.S. Collective, LLC team for personalized referrals to vetted service providers in your target market.
+                    Contact The L.A.W.S. Collective, LLC team for personalized referrals to vetted service providers in your target market.
                   </p>
                 </div>
               </CardContent>

@@ -380,7 +380,7 @@ export default function MemberRegistration() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-green-800">
-                Join The The L.A.W.S. Collective
+                Join The L.A.W.S. Collective
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
                 Member Business Registration
@@ -893,7 +893,7 @@ export default function MemberRegistration() {
                             I agree to the Terms and Conditions *
                           </Label>
                           <p className="text-xs text-muted-foreground mt-1">
-                            By checking this box, you agree to abide by the The The L.A.W.S. Collective
+                            By checking this box, you agree to abide by the The L.A.W.S. Collective
                             terms of service, code of conduct, and community guidelines.
                           </p>
                         </div>
@@ -1048,7 +1048,7 @@ export default function MemberRegistration() {
                       <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                         <CheckCircle2 className="w-8 h-8 text-green-600 mx-auto mb-2" />
                         <p className="font-semibold text-green-800">
-                          Welcome to The The L.A.W.S. Collective!
+                          Welcome to The L.A.W.S. Collective!
                         </p>
                         <p className="text-sm text-green-700 mt-1">
                           Your membership has been approved. Check your email for next steps.

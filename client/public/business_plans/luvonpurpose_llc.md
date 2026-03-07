@@ -43,7 +43,7 @@ A world where every family has access to the tools, knowledge, and systems to bu
 
 LuvOnPurpose Autonomous Wealth System LLC operates the technology infrastructure and business operations that power the entire family ecosystem. The company was founded to solve a critical problem: families, particularly those in underserved communities, lack access to the integrated systems and knowledge needed to build and maintain wealth across generations.
 
-The company develops and maintains the LuvOnPurpose platform, which includes modules for financial tracking (LuvLedger), business formation (Business Simulator), grant management, document storage (Document Vault), family governance, training and certification (Academy integration), and community programs (The The L.A.W.S. Collective integration).
+The company develops and maintains the LuvOnPurpose platform, which includes modules for financial tracking (LuvLedger), business formation (Business Simulator), grant management, document storage (Document Vault), family governance, training and certification (Academy integration), and community programs (The L.A.W.S. Collective integration).
 
 LuvOnPurpose Autonomous Wealth System LLC serves as the operational center that coordinates all family business activities. It provides shared services to other entities including technology infrastructure, administrative support, and strategic planning.
 
@@ -128,7 +128,7 @@ LuvOnPurpose Autonomous Wealth System LLC's competitive advantages include:
 
 **Proven Model**: The Freeman family serves as the proof of concept, demonstrating the system's effectiveness before offering it to others.
 
-**Community Connection**: Integration with The The The L.A.W.S. Collective, LLC and LuvOnPurpose Outreach Temple and Academy Society, Inc. provides community credibility and distribution channels.
+**Community Connection**: Integration with The L.A.W.S. Collective, LLC and LuvOnPurpose Outreach Temple and Academy Society, Inc. provides community credibility and distribution channels.
 
 **Technology Foundation**: Modern platform architecture enables continuous improvement and integration with emerging technologies.
 
@@ -213,7 +213,7 @@ LuvOnPurpose Autonomous Wealth System LLC creates social impact through:
 
 **Family Strengthening**: Providing governance structures that keep families unified and purposeful across generations.
 
-**Community Development**: Supporting community economic development through The The L.A.W.S. Collective integration and nonprofit partnerships.
+**Community Development**: Supporting community economic development through The L.A.W.S. Collective integration and nonprofit partnerships.
 
 **Model Replication**: Creating a system that can be adopted by thousands of families, multiplying impact beyond direct users.
 

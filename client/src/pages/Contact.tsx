@@ -145,7 +145,7 @@ export default function Contact() {
               </Button>
             </Link>
             <div className="text-center">
-              <h1 className="text-lg font-bold text-foreground">The The The L.A.W.S. Collective, LLC</h1>
+              <h1 className="text-lg font-bold text-foreground">The L.A.W.S. Collective, LLC</h1>
               <p className="text-xs text-muted-foreground">Land • Air • Water • Self</p>
             </div>
             <div className="w-16" /> {/* Spacer for centering */}

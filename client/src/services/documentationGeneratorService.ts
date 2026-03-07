@@ -46,7 +46,7 @@ class DocumentationGeneratorService {
     ]);
 
     return {
-      title: 'The The L.A.W.S. Collective System Documentation',
+      title: 'The L.A.W.S. Collective System Documentation',
       version: '1.0.0',
       generatedAt: new Date(),
       sections: systemOverview,
@@ -270,7 +270,7 @@ class DocumentationGeneratorService {
       {
         id: 'getting-started',
         title: 'Getting Started',
-        content: 'Welcome to the The The L.A.W.S. Collective system. This guide will help you navigate and use all features effectively.',
+        content: 'Welcome to the The L.A.W.S. Collective system. This guide will help you navigate and use all features effectively.',
         lastUpdated: new Date(),
         subsections: [
           {
@@ -376,7 +376,7 @@ class DocumentationGeneratorService {
       {
         id: 'architecture',
         title: 'System Architecture',
-        content: 'The The The L.A.W.S. Collective system is built on a modern, portable technology stack designed for longevity and independence.',
+        content: 'The L.A.W.S. Collective system is built on a modern, portable technology stack designed for longevity and independence.',
         lastUpdated: new Date(),
         subsections: [
           {

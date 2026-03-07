@@ -4,7 +4,7 @@ import { protectedProcedure, router } from "../_core/trpc";
 // ENTITY STRUCTURE:
 // CALEA Freeman Family Trust (Root)
 //   └── LuvOnPurpose Autonomous Wealth System, LLC (Parent LLC)
-//         └── The The The L.A.W.S. Collective, LLC (Operating Entity - 100%)
+//         └── The L.A.W.S. Collective, LLC (Operating Entity - 100%)
 //               ├── LuvOnPurpose Academy & Outreach (508) - 30%
 //               ├── Real-Eye-Nation (Media Division) - 20%
 //               └── Services/Operations - 50%
@@ -43,8 +43,8 @@ export const unifiedGovernanceRouter = router({
         },
         {
           id: "collective",
-          name: "The The The L.A.W.S. Collective, LLC",
-          shortName: "The The L.A.W.S. Collective",
+          name: "The L.A.W.S. Collective, LLC",
+          shortName: "The L.A.W.S. Collective",
           type: "operating_llc",
           taxStatus: "Partnership (Multi-member LLC)",
           ownership: { owner: "LuvOnPurpose Autonomous Wealth System, LLC", percentage: 100 },
@@ -107,7 +107,7 @@ export const unifiedGovernanceRouter = router({
           { stage: 1, name: "Intern", entity: "Any", description: "Educational experience and skill development", duration: "3-6 months" },
           { stage: 2, name: "W-2 Employee", entity: "Any", description: "Stable employment with benefits", duration: "1-3 years" },
           { stage: 3, name: "Independent Contractor", entity: "Any", description: "Specialized services with flexibility", duration: "1-5 years" },
-          { stage: 4, name: "Business Owner", entity: "Collective", description: "The The L.A.W.S. Collective member with own enterprise", duration: "Ongoing" },
+          { stage: 4, name: "Business Owner", entity: "Collective", description: "The L.A.W.S. Collective member with own enterprise", duration: "Ongoing" },
         ],
         wealthLoop: [
           "External funding (grants/donations) → 508 Treasury",
@@ -138,7 +138,7 @@ export const unifiedGovernanceRouter = router({
         keyDocuments: ["Operating Agreement", "Certificate of Formation", "EIN Documentation", "Annual Report"],
       },
       collective: {
-        name: "The The The L.A.W.S. Collective, LLC",
+        name: "The L.A.W.S. Collective, LLC",
         status: "Active",
         managementType: "Member-Managed with Advisory Board",
         keyDocuments: ["Operating Agreement", "Membership Agreement Template", "Profit Interest Grant Template", "Community Reinvestment Policy"],
@@ -271,7 +271,7 @@ export const unifiedGovernanceRouter = router({
         },
         {
           id: "collective",
-          name: "The The The L.A.W.S. Collective, LLC",
+          name: "The L.A.W.S. Collective, LLC",
           tracks: [
             { id: "member_services", name: "Member Services", duration: "3-6 months", focus: "Member relations, onboarding, support" },
             { id: "community_operations", name: "Community Operations", duration: "3-6 months", focus: "Event coordination, community programs" },

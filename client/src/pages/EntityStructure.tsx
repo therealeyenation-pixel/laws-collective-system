@@ -103,7 +103,7 @@ const entities: Entity[] = [
         children: [
           {
             id: "laws-collective",
-            name: "The The L.A.W.S. Collective",
+            name: "The L.A.W.S. Collective",
             type: "collective",
             description: "Public-facing community organization",
             purpose: "Community engagement, education, and public services through Land, Air, Water, and Self framework",
@@ -381,13 +381,13 @@ function FinancialFlowDiagram() {
               </div>
             </div>
 
-            {/* The The L.A.W.S. Collective */}
+            {/* The L.A.W.S. Collective */}
             <div className="text-center">
               <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-lg">
                 <div className="flex items-center gap-2">
                   <Users className="w-6 h-6" />
                   <div className="text-left">
-                    <h4 className="font-bold">The The L.A.W.S. Collective</h4>
+                    <h4 className="font-bold">The L.A.W.S. Collective</h4>
                     <p className="text-xs text-green-100">Public Programs</p>
                   </div>
                 </div>
@@ -498,12 +498,12 @@ function HierarchyDiagram() {
               <div className="w-px h-8 bg-border" />
             </div>
 
-            {/* The The L.A.W.S. Collective */}
+            {/* The L.A.W.S. Collective */}
             <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white px-5 py-3 rounded-xl shadow-lg">
               <div className="flex items-center gap-2">
                 <Users className="w-6 h-6" />
                 <div className="text-left">
-                  <h4 className="font-bold">The The L.A.W.S. Collective</h4>
+                  <h4 className="font-bold">The L.A.W.S. Collective</h4>
                   <p className="text-xs text-green-100">Public-Facing Entity</p>
                 </div>
               </div>
@@ -548,7 +548,7 @@ function EntitySummaryTable() {
     { name: "REAL-EYE-NATION", type: "System", state: "—", purpose: "Master governance framework", status: "Active", nextDeadline: "—" },
     { name: "LuvOnPurpose Academy and Outreach", type: "508(c)(1)(a)", state: "GA", purpose: "Education, training & community outreach", status: "Active", nextDeadline: "Apr 1 - Annual Registration" },
     { name: "LuvOnPurpose AWS", type: "LLC", state: "DE", purpose: "Core operations & IP holding", status: "Active", nextDeadline: "Jun 1 - Franchise Tax" },
-    { name: "The The L.A.W.S. Collective", type: "Collective", state: "—", purpose: "Public engagement & education", status: "Active", nextDeadline: "—" },
+    { name: "The L.A.W.S. Collective", type: "Collective", state: "—", purpose: "Public engagement & education", status: "Active", nextDeadline: "—" },
   ];
 
   return (

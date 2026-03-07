@@ -75,7 +75,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
     { id: "4", title: "Michael Chen", description: "Finance Department - Budget Analyst", type: "employee", path: "/employee-directory", relevance: 80 },
     { id: "5", title: "Annual Budget Meeting", description: "Scheduled for Jan 30, 2026", type: "event", path: "/company-calendar", relevance: 75 },
     { id: "6", title: "Budget Services Contract", description: "Vendor agreement for consulting services", type: "contract", path: "/contracts-dashboard", relevance: 70 },
-    { id: "7", title: "The The L.A.W.S. Collective Budget", description: "Entity financial overview", type: "business", path: "/business", relevance: 65 },
+    { id: "7", title: "The L.A.W.S. Collective Budget", description: "Entity financial overview", type: "business", path: "/business", relevance: 65 },
   ];
 
   const typeIcons: Record<string, React.ReactNode> = {

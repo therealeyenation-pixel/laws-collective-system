@@ -339,7 +339,7 @@ export default function ContractorNetwork() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                   {[
-                    { icon: Building2, title: "The The L.A.W.S. Collective", desc: "Hires employees" },
+                    { icon: Building2, title: "The L.A.W.S. Collective", desc: "Hires employees" },
                     { icon: Users, title: "Employee Pipeline", desc: "2-year development" },
                     { icon: ArrowUpRight, title: "Contractor Transition", desc: "Form own LLC" },
                     { icon: Network, title: "Network Member", desc: "Platform subscription" },

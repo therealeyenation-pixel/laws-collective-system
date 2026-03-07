@@ -51,7 +51,7 @@ describe('Grant Export Service', () => {
       });
     });
 
-    it('should return templates for The The L.A.W.S. Collective', () => {
+    it('should return templates for The L.A.W.S. Collective', () => {
       const templates = getTemplatesForEntity('laws_collective');
       expect(templates.length).toBeGreaterThan(0);
       templates.forEach(t => {
@@ -104,10 +104,10 @@ describe('Grant Export Service', () => {
       expect(info?.taxStatus).toBe('LLC (Single-Member)');
     });
 
-    it('should return info for The The L.A.W.S. Collective', () => {
+    it('should return info for The L.A.W.S. Collective', () => {
       const info = getEntityInfo('laws_collective');
       expect(info).not.toBeNull();
-      expect(info?.legalName).toBe('The The The L.A.W.S. Collective, LLC');
+      expect(info?.legalName).toBe('The L.A.W.S. Collective, LLC');
     });
 
     it('should return info for 508 Academy', () => {
@@ -129,7 +129,7 @@ describe('Grant Export Service', () => {
       templateType: 'foundation_ford',
       applicantName: 'John Smith',
       applicantTitle: 'Executive Director',
-      organizationName: 'The The The L.A.W.S. Collective, LLC',
+      organizationName: 'The L.A.W.S. Collective, LLC',
       organizationAddress: '456 Community Blvd, Birmingham, AL 35203',
       organizationPhone: '(205) 555-0202',
       organizationEmail: 'grants@lawscollective.org',

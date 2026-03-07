@@ -337,7 +337,7 @@ export default function SwotAnalysis() {
         </div>
         
         <div class="footer">
-          <p>The The L.A.W.S. Collective - Multi-Generational Wealth Building</p>
+          <p>The L.A.W.S. Collective - Multi-Generational Wealth Building</p>
           <p>This SWOT analysis is part of the strategic planning framework.</p>
         </div>
       </body>

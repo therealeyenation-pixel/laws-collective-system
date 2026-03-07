@@ -34,7 +34,7 @@ const SIMULATOR_MANAGERS: Record<string, { name: string; title: string }> = {
   llc: { name: "LaShanna Russell", title: "LLC Formation Director" },
   trust: { name: "LaShanna Russell", title: "Trust Systems Director" },
   nonprofit: { name: "LaShanna Russell", title: "LuvOnPurpose Academy Director" },
-  collective: { name: "LaShanna Russell", title: "The The The L.A.W.S. Collective, LLC Director" },
+  collective: { name: "LaShanna Russell", title: "The L.A.W.S. Collective, LLC Director" },
 };
 
 // Entity types with descriptions
@@ -928,7 +928,7 @@ export default function BusinessSimulator() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs font-medium">
-                The The L.A.W.S. Collective
+                The L.A.W.S. Collective
               </Badge>
             </div>
             <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">

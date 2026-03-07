@@ -30,7 +30,7 @@
 ## 1. EXECUTIVE FINANCIAL SUMMARY
 
 ### Organization Overview
-The The The L.A.W.S. Collective, LLC is a community-focused organization dedicated to building multi-generational wealth through education, financial literacy, and workforce development. Our mission centers on transitioning individuals from traditional workforce employment to self-employment and entrepreneurship.
+The L.A.W.S. Collective, LLC is a community-focused organization dedicated to building multi-generational wealth through education, financial literacy, and workforce development. Our mission centers on transitioning individuals from traditional workforce employment to self-employment and entrepreneurship.
 
 ### Financial Highlights (Year 1 Projections)
 
@@ -404,12 +404,12 @@ Funds will support salaries for key program staff including:
 
 ## CERTIFICATION
 
-I certify that the financial information presented in this document is accurate to the best of my knowledge and represents a good-faith projection of The The The L.A.W.S. Collective, LLC's financial position and operations.
+I certify that the financial information presented in this document is accurate to the best of my knowledge and represents a good-faith projection of The L.A.W.S. Collective, LLC's financial position and operations.
 
 ___________________________________  
 **LaShanna Russell**  
 Founder & Managing Member  
-The The The L.A.W.S. Collective, LLC
+The L.A.W.S. Collective, LLC
 
 Date: January 19, 2026
 

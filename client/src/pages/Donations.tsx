@@ -110,7 +110,7 @@ export default function Donations() {
       <header className="bg-green-800 text-white py-16">
         <div className="container max-w-6xl mx-auto px-4 text-center">
           <Heart className="w-16 h-16 mx-auto mb-4 text-green-300" />
-          <h1 className="text-4xl font-bold mb-4">Support The The L.A.W.S. Collective</h1>
+          <h1 className="text-4xl font-bold mb-4">Support The L.A.W.S. Collective</h1>
           <p className="text-xl text-green-100 max-w-2xl mx-auto">
             Your contribution helps build multi-generational wealth through education, 
             business development, and community support.
@@ -433,7 +433,7 @@ export default function Donations() {
                 </TabsList>
                 <TabsContent value="mission" className="mt-4">
                   <p className="text-muted-foreground">
-                    The The L.A.W.S. Collective (Land, Air, Water, Self) is dedicated to building 
+                    The L.A.W.S. Collective (Land, Air, Water, Self) is dedicated to building 
                     multi-generational wealth through education, business development, and 
                     community support. We help individuals and families create lasting prosperity 
                     by providing the tools, training, and resources needed to achieve financial 

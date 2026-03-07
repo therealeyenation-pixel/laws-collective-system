@@ -9,7 +9,7 @@
       "id": "coo",
       "title": "Chief Operating Officer",
       "abbreviation": "COO",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Executive Leadership",
       "reportsTo": "Matriarch/CEO (LaShanna Russell)",
       "classification": "Full-Time",
@@ -23,7 +23,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "tokenMetrics": "Organizational efficiency and growth metrics"
       },
@@ -105,14 +105,14 @@
       "id": "ceo",
       "title": "Chief Executive Officer / Matriarch",
       "currentHolder": "LaShanna Russell",
-      "entity": "Calea Freeman Family Trust / The The The L.A.W.S. Collective, LLC",
+      "entity": "Calea Freeman Family Trust / The L.A.W.S. Collective, LLC",
       "description": "Vision and strategic direction for all entities. Final authority on major decisions. Trust governance and succession planning."
     },
     {
       "id": "cfo",
       "title": "Chief Financial Officer",
       "currentHolder": "Craig",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "salaryRange": {
         "min": 65000,
         "max": 90000,
@@ -134,8 +134,8 @@
       "title": "Chief Education Officer",
       "abbreviation": "CEO-Ed",
       "currentHolder": "Cornelius",
-      "entity": "The The The L.A.W.S. Collective, LLC",
-      "crossEntityScope": ["LuvOnPurpose Outreach Temple and Academy Society, Inc.", "LuvOnPurpose Autonomous Wealth System LLC", "Real-Eye-Nation LLC", "The The The L.A.W.S. Collective, LLC"],
+      "entity": "The L.A.W.S. Collective, LLC",
+      "crossEntityScope": ["LuvOnPurpose Outreach Temple and Academy Society, Inc.", "LuvOnPurpose Autonomous Wealth System LLC", "Real-Eye-Nation LLC", "The L.A.W.S. Collective, LLC"],
       "salaryRange": {
         "min": 130000,
         "max": 150000,
@@ -181,7 +181,7 @@
     {
       "id": "hr-manager",
       "title": "HR Manager",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Human Resources",
       "reportsTo": "Trust Governance (LaShanna Russell)",
       "classification": "Full-Time",
@@ -195,7 +195,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "tokenMetrics": "Recruitment and retention metrics",
         "allocationSplit": {
@@ -227,7 +227,7 @@
     {
       "id": "qaqc-manager",
       "title": "QA/QC Manager",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Quality Assurance / Quality Control",
       "reportsTo": "Trust Governance (LaShanna Russell)",
       "classification": "Full-Time",
@@ -241,7 +241,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "tokenMetrics": "Compliance and quality metrics",
         "performanceBonus": "Tied to grant compliance success",
@@ -274,7 +274,7 @@
     {
       "id": "purchasing-manager",
       "title": "Purchasing Manager",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Purchasing",
       "reportsTo": "Trust Governance (LaShanna Russell)",
       "classification": "Full-Time",
@@ -288,7 +288,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "allocationSplit": {
           "interHouse": "60/40",
@@ -501,7 +501,7 @@
     {
       "id": "grant-writer",
       "title": "Grant Writer / Proposal Specialist",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Grants & Proposals",
       "reportsTo": "Trust Governance (LaShanna Russell)",
       "classification": "Full-Time",
@@ -515,7 +515,7 @@
       },
       "compensation": {
         "type": "ownership_stake_plus_performance",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "performanceBonus": "Percentage of grants won",
         "tokenEarnings": true,
         "allocationSplit": {
@@ -592,7 +592,7 @@
     {
       "id": "programs-coordinator",
       "title": "Community Programs Coordinator",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Community Programs",
       "reportsTo": "Trust Governance (LaShanna Russell)",
       "classification": "Full-Time",
@@ -606,7 +606,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "allocationSplit": {
           "interHouse": "60/40",
@@ -637,7 +637,7 @@
     {
       "id": "health-manager",
       "title": "Health Manager",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Health & Wellness",
       "reportsTo": "COO / CEO",
       "classification": "Full-Time",
@@ -651,7 +651,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "allocationSplit": {
           "interHouse": "60/40",
@@ -689,7 +689,7 @@
     {
       "id": "procurement-manager",
       "title": "Procurement Manager",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Procurement",
       "reportsTo": "COO / CEO",
       "classification": "Full-Time",
@@ -703,7 +703,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "allocationSplit": {
           "interHouse": "60/40",
@@ -740,7 +740,7 @@
     {
       "id": "contracts-manager",
       "title": "Contracts Manager",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Contracts",
       "reportsTo": "COO / CEO",
       "classification": "Full-Time",
@@ -754,7 +754,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true,
         "allocationSplit": {
           "interHouse": "60/40",
@@ -899,7 +899,7 @@
     {
       "id": "lead-ops-coordinator",
       "title": "Lead Operations Coordinator",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Operations",
       "reportsTo": "COO / CEO",
       "classification": "Full-Time",
@@ -913,7 +913,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true
       },
       "benefits": {
@@ -951,7 +951,7 @@
     {
       "id": "ops-coordinator-hr",
       "title": "HR Operations Coordinator",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Human Resources",
       "reportsTo": "HR Manager",
       "classification": "Full-Time",
@@ -965,7 +965,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true
       },
       "benefits": {
@@ -993,7 +993,7 @@
     {
       "id": "ops-coordinator-qaqc",
       "title": "QA/QC Operations Coordinator",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Quality Assurance / Quality Control",
       "reportsTo": "QA/QC Manager",
       "classification": "Full-Time",
@@ -1007,7 +1007,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true
       },
       "benefits": {
@@ -1035,7 +1035,7 @@
     {
       "id": "ops-coordinator-purchasing",
       "title": "Purchasing Operations Coordinator",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Purchasing",
       "reportsTo": "Purchasing Manager",
       "classification": "Full-Time",
@@ -1049,7 +1049,7 @@
       },
       "compensation": {
         "type": "ownership_stake",
-        "ownershipEntity": "The The The L.A.W.S. Collective, LLC",
+        "ownershipEntity": "The L.A.W.S. Collective, LLC",
         "tokenEarnings": true
       },
       "benefits": {
@@ -1161,7 +1161,7 @@
     {
       "id": "health-ops-coordinator",
       "title": "Health Operations Coordinator",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Health",
       "reportsTo": "Lead Operations Coordinator",
       "classification": "Full-Time",
@@ -1204,7 +1204,7 @@
     {
       "id": "contracts-ops-coordinator",
       "title": "Contracts Operations Coordinator",
-      "entity": "The The The L.A.W.S. Collective, LLC",
+      "entity": "The L.A.W.S. Collective, LLC",
       "department": "Contracts",
       "reportsTo": "Contracts Manager",
       "classification": "Full-Time",

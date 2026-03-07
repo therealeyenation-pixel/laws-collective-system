@@ -52,24 +52,24 @@ import { useLocation } from "wouter";
 // Available positions for requisition
 const POSITIONS = [
   // Tier 3 Managers
-  { id: "hr-manager", title: "HR Manager", department: "Human Resources", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$75,000 - $95,000" },
-  { id: "qa-manager", title: "QA/QC Manager", department: "Quality Assurance", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$80,000 - $100,000" },
-  { id: "purchasing-manager", title: "Purchasing Manager", department: "Purchasing", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$75,000 - $95,000" },
-  { id: "legal-manager", title: "Legal Manager", department: "Legal", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$95,000 - $130,000" },
+  { id: "hr-manager", title: "HR Manager", department: "Human Resources", entity: "The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$75,000 - $95,000" },
+  { id: "qa-manager", title: "QA/QC Manager", department: "Quality Assurance", entity: "The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$80,000 - $100,000" },
+  { id: "purchasing-manager", title: "Purchasing Manager", department: "Purchasing", entity: "The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$75,000 - $95,000" },
+  { id: "legal-manager", title: "Legal Manager", department: "Legal", entity: "The L.A.W.S. Collective, LLC", tier: "tier3_open", salaryRange: "$95,000 - $130,000" },
   
   // Tier 4 Coordinators
-  { id: "ops-coordinator-finance", title: "Finance Operations Coordinator", department: "Finance", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
+  { id: "ops-coordinator-finance", title: "Finance Operations Coordinator", department: "Finance", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
   { id: "ops-coordinator-education", title: "Education Operations Coordinator", department: "Education", entity: "Divine STEM Academy", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
-  { id: "ops-coordinator-technology", title: "Technology Operations Coordinator", department: "Technology", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$60,000 - $80,000" },
-  { id: "ops-coordinator-hr", title: "HR Operations Coordinator", department: "Human Resources", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$50,000 - $70,000" },
-  { id: "ops-coordinator-qa", title: "QA/QC Operations Coordinator", department: "Quality Assurance", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
-  { id: "ops-coordinator-grants", title: "Grants Operations Coordinator", department: "Grants", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
-  { id: "ops-coordinator-procurement", title: "Procurement Operations Coordinator", department: "Procurement", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
-  { id: "ops-coordinator-purchasing", title: "Purchasing Operations Coordinator", department: "Purchasing", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
-  { id: "ops-coordinator-contracts", title: "Contracts Operations Coordinator", department: "Contracts", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
-  { id: "ops-coordinator-legal", title: "Legal Operations Coordinator", department: "Legal", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
-  { id: "ops-coordinator-real-estate", title: "Real Estate Operations Coordinator", department: "Real Estate", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
-  { id: "ops-coordinator-business", title: "Business Operations Coordinator", department: "Business Management", entity: "The The The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
+  { id: "ops-coordinator-technology", title: "Technology Operations Coordinator", department: "Technology", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$60,000 - $80,000" },
+  { id: "ops-coordinator-hr", title: "HR Operations Coordinator", department: "Human Resources", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$50,000 - $70,000" },
+  { id: "ops-coordinator-qa", title: "QA/QC Operations Coordinator", department: "Quality Assurance", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
+  { id: "ops-coordinator-grants", title: "Grants Operations Coordinator", department: "Grants", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
+  { id: "ops-coordinator-procurement", title: "Procurement Operations Coordinator", department: "Procurement", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
+  { id: "ops-coordinator-purchasing", title: "Purchasing Operations Coordinator", department: "Purchasing", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
+  { id: "ops-coordinator-contracts", title: "Contracts Operations Coordinator", department: "Contracts", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
+  { id: "ops-coordinator-legal", title: "Legal Operations Coordinator", department: "Legal", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
+  { id: "ops-coordinator-real-estate", title: "Real Estate Operations Coordinator", department: "Real Estate", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000" },
+  { id: "ops-coordinator-business", title: "Business Operations Coordinator", department: "Business Management", entity: "The L.A.W.S. Collective, LLC", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000" },
 ];
 
 const getStatusBadge = (status: string) => {

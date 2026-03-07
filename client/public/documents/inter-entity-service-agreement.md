@@ -1,6 +1,6 @@
 # INTER-ENTITY SERVICE AGREEMENT
 
-**Between The The L.A.W.S. Collective, LLC and Real-Eye-Nation LLC**
+**Between The L.A.W.S. Collective, LLC and Real-Eye-Nation LLC**
 
 ---
 
@@ -27,7 +27,7 @@
 
 ### SERVICE RECIPIENT
 
-**The The The L.A.W.S. Collective, LLC**
+**The L.A.W.S. Collective, LLC**
 - **EIN:** 39-3122993
 - **State of Formation:** ____________________
 - **Principal Address:** ____________________
@@ -39,7 +39,7 @@
 ## ARTICLE 1: PURPOSE AND SCOPE
 
 ### 1.1 Purpose
-This Agreement establishes the terms and conditions under which Real-Eye-Nation LLC ("Provider") will provide creative, design, and media production services to The The The L.A.W.S. Collective, LLC ("Recipient").
+This Agreement establishes the terms and conditions under which Real-Eye-Nation LLC ("Provider") will provide creative, design, and media production services to The L.A.W.S. Collective, LLC ("Recipient").
 
 ### 1.2 Scope of Services
 Provider agrees to furnish the following categories of services:
@@ -304,7 +304,7 @@ All notices shall be in writing and delivered to the addresses listed above.
 
 ---
 
-### SERVICE RECIPIENT: The The The L.A.W.S. Collective, LLC
+### SERVICE RECIPIENT: The L.A.W.S. Collective, LLC
 
 **Signature:** ____________________________________
 

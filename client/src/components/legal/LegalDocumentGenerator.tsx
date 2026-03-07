@@ -205,7 +205,7 @@ const mockGeneratedDocuments: GeneratedDocument[] = [
   {
     id: "doc-001",
     templateId: "llc-operating-agreement",
-    name: "The The L.A.W.S. Collective LLC Operating Agreement",
+    name: "The L.A.W.S. Collective LLC Operating Agreement",
     createdAt: new Date("2025-01-15"),
     status: "executed",
   },

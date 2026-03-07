@@ -161,7 +161,7 @@ export default function MemberBusinessRegistration() {
               Application Submitted!
             </h1>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Thank you for applying to become a member of The The L.A.W.S. Collective. 
+              Thank you for applying to become a member of The L.A.W.S. Collective. 
               Our team will review your application and contact you within 5-7 business days.
             </p>
             <div className="bg-amber-50 dark:bg-amber-900/30 rounded-lg p-4 mb-6">
@@ -192,7 +192,7 @@ export default function MemberBusinessRegistration() {
             508 Member Business Registration
           </h1>
           <p className="text-muted-foreground">
-            Join The The L.A.W.S. Collective and become part of the closed-loop wealth ecosystem
+            Join The L.A.W.S. Collective and become part of the closed-loop wealth ecosystem
           </p>
         </div>
 
@@ -483,7 +483,7 @@ export default function MemberBusinessRegistration() {
                   <Textarea
                     value={formData.communityCommitment}
                     onChange={(e) => updateField("communityCommitment", e.target.value)}
-                    placeholder="Describe how your business will contribute to the The The L.A.W.S. Collective community and support generational wealth building..."
+                    placeholder="Describe how your business will contribute to the The L.A.W.S. Collective community and support generational wealth building..."
                     rows={4}
                   />
                 </div>
@@ -499,7 +499,7 @@ export default function MemberBusinessRegistration() {
                     onCheckedChange={(checked) => updateField("agreeToTerms", !!checked)}
                   />
                   <Label htmlFor="terms" className="text-sm text-muted-foreground">
-                    I agree to the The The L.A.W.S. Collective membership terms and conditions, 
+                    I agree to the The L.A.W.S. Collective membership terms and conditions, 
                     including operating according to the shared values and principles of 
                     generational wealth building and community empowerment.
                   </Label>

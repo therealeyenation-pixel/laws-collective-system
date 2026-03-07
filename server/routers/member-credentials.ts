@@ -1,6 +1,6 @@
 /**
  * Member Credentials Router
- * Handles credential management for The The L.A.W.S. Collective members
+ * Handles credential management for The L.A.W.S. Collective members
  */
 
 import { z } from "zod";

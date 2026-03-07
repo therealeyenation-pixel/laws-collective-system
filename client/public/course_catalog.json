@@ -8,7 +8,7 @@
   "catalogOverview": {
     "description": "The LuvOnPurpose Academy offers comprehensive training programs designed to build skills, develop leadership, and prepare individuals for success in building generational wealth. Our courses blend practical knowledge with our L.A.W.S. framework values.",
     "audienceTypes": [
-      {"type": "Internal", "description": "Employees of The The The L.A.W.S. Collective and subsidiary entities"},
+      {"type": "Internal", "description": "Employees of The L.A.W.S. Collective and subsidiary entities"},
       {"type": "Community", "description": "Community members participating in L.A.W.S. programs"},
       {"type": "Public", "description": "Open enrollment courses available to the general public"}
     ],
@@ -28,15 +28,15 @@
       "courses": [
         {
           "courseId": "ORG-101",
-          "title": "Welcome to The The The L.A.W.S. Collective",
+          "title": "Welcome to The L.A.W.S. Collective",
           "shortDescription": "An introduction to our organization, mission, and the L.A.W.S. framework.",
-          "fullDescription": "This foundational course welcomes new team members to The The The L.A.W.S. Collective family. You'll hear directly from our Founder about the vision that drives our work, learn the history of how our organization came to be, and gain a deep understanding of the L.A.W.S. framework (Land, Air, Water, Self) that guides everything we do. By the end of this course, you'll understand how your role contributes to our mission of building generational wealth for our community.",
+          "fullDescription": "This foundational course welcomes new team members to The L.A.W.S. Collective family. You'll hear directly from our Founder about the vision that drives our work, learn the history of how our organization came to be, and gain a deep understanding of the L.A.W.S. framework (Land, Air, Water, Self) that guides everything we do. By the end of this course, you'll understand how your role contributes to our mission of building generational wealth for our community.",
           "duration": "2 hours",
           "format": "Self-Paced Online",
           "level": "Beginner",
           "prerequisites": "None",
           "learningObjectives": [
-            "Articulate the mission and vision of The The The L.A.W.S. Collective",
+            "Articulate the mission and vision of The L.A.W.S. Collective",
             "Explain each element of the L.A.W.S. framework",
             "Describe the organizational structure and how entities work together",
             "Identify how your role supports the overall mission"
@@ -57,7 +57,7 @@
           "courseId": "ORG-102",
           "title": "Understanding Our Entities",
           "shortDescription": "Learn about each entity in our organizational family and how they work together.",
-          "fullDescription": "Our organization operates through multiple entities, each with a specific purpose and mission. This course provides an in-depth look at The The The L.A.W.S. Collective (our holding company), LAWS, LLC (our autonomous wealth platform), Real-Eye-Nation LLC (our media and narrative arm), and LuvOnPurpose Outreach Temple and Academy Society (our education and community impact organization). You'll understand how these entities collaborate, share resources, and collectively work toward our vision.",
+          "fullDescription": "Our organization operates through multiple entities, each with a specific purpose and mission. This course provides an in-depth look at The L.A.W.S. Collective (our holding company), LAWS, LLC (our autonomous wealth platform), Real-Eye-Nation LLC (our media and narrative arm), and LuvOnPurpose Outreach Temple and Academy Society (our education and community impact organization). You'll understand how these entities collaborate, share resources, and collectively work toward our vision.",
           "duration": "1.5 hours",
           "format": "Self-Paced Online",
           "level": "Beginner",
@@ -69,7 +69,7 @@
             "Understand how shared services support all entities"
           ],
           "modules": [
-            {"name": "The The The L.A.W.S. Collective Overview", "duration": "20 min", "type": "Video"},
+            {"name": "The L.A.W.S. Collective Overview", "duration": "20 min", "type": "Video"},
             {"name": "LAWS, LLC - Autonomous Wealth", "duration": "20 min", "type": "Interactive"},
             {"name": "Real-Eye-Nation - Media & Narrative", "duration": "15 min", "type": "Video"},
             {"name": "Temple & Academy - Education & Community", "duration": "20 min", "type": "Video"},

@@ -823,7 +823,7 @@ export const designDepartmentRouter = router({
         const submittedAt = input.submitImmediately ? now : null;
         
         // Determine if Founding House approval is required:
-        // Only The The L.A.W.S. Collective original designs and logos require Founding House approval
+        // Only The L.A.W.S. Collective original designs and logos require Founding House approval
         // House/Business designs are self-governed
         const requiresFoundingHouseApproval = 
           input.designScope === 'laws_collective' && 

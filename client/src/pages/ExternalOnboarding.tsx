@@ -143,7 +143,7 @@ export default function ExternalOnboarding() {
   const completeOnboarding = trpc.externalOnboarding.completeOnboarding.useMutation({
     onSuccess: () => {
       setCurrentStep("complete");
-      toast.success("Welcome to The The L.A.W.S. Collective!");
+      toast.success("Welcome to The L.A.W.S. Collective!");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -228,7 +228,7 @@ export default function ExternalOnboarding() {
         <div className="container max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-green-800">The The L.A.W.S. Collective</h1>
+              <h1 className="text-2xl font-bold text-green-800">The L.A.W.S. Collective</h1>
               <p className="text-sm text-muted-foreground">Business Services Onboarding</p>
             </div>
             <div className="flex items-center gap-4">
@@ -251,7 +251,7 @@ export default function ExternalOnboarding() {
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Building2 className="w-8 h-8 text-green-700" />
                 </div>
-                <CardTitle className="text-2xl">Welcome to The The L.A.W.S. Collective</CardTitle>
+                <CardTitle className="text-2xl">Welcome to The L.A.W.S. Collective</CardTitle>
                 <CardDescription>
                   Let's get your company set up with our management services.
                   This process takes about 10-15 minutes.
@@ -876,7 +876,7 @@ export default function ExternalOnboarding() {
                   <Check className="w-10 h-10 text-green-700" />
                 </div>
                 <h2 className="text-2xl font-bold text-green-800 mb-2">
-                  Welcome to The The L.A.W.S. Collective!
+                  Welcome to The L.A.W.S. Collective!
                 </h2>
                 <p className="text-muted-foreground mb-6">
                   Your account is now active. You'll receive an email with login instructions

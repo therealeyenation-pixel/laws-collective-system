@@ -88,7 +88,7 @@ describe('Grant Deadlines Service', () => {
       });
     });
 
-    it('should return deadlines for The The L.A.W.S. Collective', () => {
+    it('should return deadlines for The L.A.W.S. Collective', () => {
       const deadlines = getDeadlinesForEntity('laws_collective');
       expect(deadlines.length).toBeGreaterThan(0);
       deadlines.forEach(d => {

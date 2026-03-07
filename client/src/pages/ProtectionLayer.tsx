@@ -967,7 +967,7 @@ export default function ProtectionLayer() {
                 <CardHeader>
                   <CardTitle className="text-lg">L.A.W.S. Member Dispute Protocol</CardTitle>
                   <CardDescription>
-                    Internal dispute resolution for The The L.A.W.S. Collective members
+                    Internal dispute resolution for The L.A.W.S. Collective members
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

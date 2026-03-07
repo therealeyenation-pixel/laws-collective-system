@@ -20,10 +20,10 @@ describe("Need Statements Router Integration", () => {
       expect(statement?.wordCount).toBeGreaterThan(400);
     });
 
-    it("should return need statement for The The L.A.W.S. Collective", () => {
+    it("should return need statement for The L.A.W.S. Collective", () => {
       const statement = getNeedStatement("laws");
       expect(statement).not.toBeNull();
-      expect(statement?.entityName).toBe("The The The L.A.W.S. Collective, LLC");
+      expect(statement?.entityName).toBe("The L.A.W.S. Collective, LLC");
       expect(statement?.entityType).toBe("LLC");
       expect(statement?.wordCount).toBeGreaterThan(400);
     });
@@ -96,7 +96,7 @@ describe("Need Statements Router Integration", () => {
     });
   });
 
-  describe("The The L.A.W.S. Collective Funding Amount", () => {
+  describe("The L.A.W.S. Collective Funding Amount", () => {
     it("should include $1M-$3M funding range in statement", () => {
       const statement = getNeedStatement("laws");
       expect(statement?.statement).toContain("$1 million to $3 million");

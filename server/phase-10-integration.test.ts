@@ -42,7 +42,7 @@ describe("Phase 10.7: Integration Testing Suite", () => {
   describe("Entity Creation and Relationships", () => {
     it("should validate company entity structure", () => {
       const entities = [
-        { id: 1, name: "The The The L.A.W.S. Collective, LLC", type: "llc", parentId: null, allocation: 100 },
+        { id: 1, name: "The L.A.W.S. Collective, LLC", type: "llc", parentId: null, allocation: 100 },
         { id: 2, name: "LuvOnPurpose, Inc.", type: "c_corp", parentId: 1, allocation: 40 },
         { id: 3, name: "LuvOnPurpose Media, LLC", type: "llc", parentId: 1, allocation: 20 },
         { id: 4, name: "LuvOnPurpose Academy, LLC", type: "llc", parentId: 1, allocation: 25 },

@@ -54,7 +54,7 @@ export interface EmailResult {
 // Organization details for 508(c)(1)(a) tax-exempt status
 const ORGANIZATION_INFO = {
   name: "LuvOnPurpose Academy and Outreach",
-  shortName: "The The L.A.W.S. Collective",
+  shortName: "The L.A.W.S. Collective",
   ein: "XX-XXXXXXX", // Placeholder - would be set via environment
   type: "508(c)(1)(a) Tax-Exempt Organization",
   address: {

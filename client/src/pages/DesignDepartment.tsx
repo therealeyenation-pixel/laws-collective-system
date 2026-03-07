@@ -159,7 +159,7 @@ export default function DesignDepartment() {
           <div>
             <h1 className="text-3xl font-bold text-foreground">Design Department</h1>
             <p className="text-muted-foreground">
-              The The L.A.W.S. Collective Digital Creation & Design Services
+              The L.A.W.S. Collective Digital Creation & Design Services
             </p>
           </div>
           <div className="flex gap-2">
@@ -635,7 +635,7 @@ export default function DesignDepartment() {
               <div>
                 <h2 className="text-xl font-semibold">Merchandise Concepts</h2>
                 <p className="text-sm text-muted-foreground">
-                  Submit and manage branded merchandise designs for the The The L.A.W.S. Collective Shop
+                  Submit and manage branded merchandise designs for the The L.A.W.S. Collective Shop
                 </p>
               </div>
               <Button onClick={() => setShowAddMerchandise(true)} className="gap-2">
@@ -750,7 +750,7 @@ export default function DesignDepartment() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            {/* Founding House Approval - only shown for The The L.A.W.S. Collective original/logo designs */}
+                            {/* Founding House Approval - only shown for The L.A.W.S. Collective original/logo designs */}
                             {item.design_scope === 'laws_collective' && (item.is_original_design || item.is_logo_design) ? (
                               <Badge variant={
                                 item.founding_house_approval === 'approved' ? 'default' :
@@ -893,13 +893,13 @@ export default function DesignDepartment() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="laws_collective">The The L.A.W.S. Collective (Central Brand)</SelectItem>
+                    <SelectItem value="laws_collective">The L.A.W.S. Collective (Central Brand)</SelectItem>
                     <SelectItem value="house">My House (Self-Governed)</SelectItem>
                     <SelectItem value="business">My Business (Self-Governed)</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  The The L.A.W.S. Collective designs require Founding House approval. House/Business designs are self-governed.
+                  The L.A.W.S. Collective designs require Founding House approval. House/Business designs are self-governed.
                 </p>
               </div>
               

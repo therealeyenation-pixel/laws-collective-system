@@ -101,7 +101,7 @@ const subsidiaryEntities = [
   },
   {
     id: "laws",
-    name: "The The The L.A.W.S. Collective, LLC",
+    name: "The L.A.W.S. Collective, LLC",
     type: "LLC",
     state: "Delaware",
     allocation: 10,
@@ -152,7 +152,7 @@ const implementationTimeline = [
 const trustDocuments = [
   { name: "Trust Agreement", type: "Legal", status: "draft", date: "2024-01-15", confidential: true },
   { name: "Operating Agreement - LAWS, LLC", type: "Entity", status: "active", date: "2024-02-01", confidential: true },
-  { name: "Operating Agreement - The The L.A.W.S. Collective", type: "Entity", status: "active", date: "2024-02-01", confidential: true },
+  { name: "Operating Agreement - The L.A.W.S. Collective", type: "Entity", status: "active", date: "2024-02-01", confidential: true },
   { name: "Bylaws - Temple/Academy", type: "Entity", status: "active", date: "2024-02-15", confidential: true },
   { name: "Operating Agreement - Real-Eye-Nation", type: "Entity", status: "active", date: "2024-02-01", confidential: true },
   { name: "Family Governance Charter", type: "Governance", status: "draft", date: "2024-03-01", confidential: false },

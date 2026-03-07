@@ -38,7 +38,7 @@ export default function DonateThankYou() {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: "I just donated to the The The L.A.W.S. Collective!",
+        title: "I just donated to the The L.A.W.S. Collective!",
         text: "Join me in supporting community wealth building and generational prosperity.",
         url: window.location.origin + "/donate/public",
       });
@@ -224,7 +224,7 @@ export default function DonateThankYou() {
           <CardContent className="pt-6">
             <h3 className="font-semibold mb-2">Tax-Deductible Donation</h3>
             <p className="text-sm text-muted-foreground">
-              The The The L.A.W.S. Collective operates under a 508(c)(1)(a) tax-exempt organization. 
+              The L.A.W.S. Collective operates under a 508(c)(1)(a) tax-exempt organization. 
               Your donation of ${donationDetails.amount?.toFixed(2)} is tax-deductible to the fullest extent allowed by law.
               Please retain your email receipt for your tax records.
             </p>
@@ -236,7 +236,7 @@ export default function DonateThankYou() {
       <footer className="bg-green-900 text-white py-8 mt-12">
         <div className="container max-w-4xl mx-auto px-4 text-center">
           <p className="text-green-200">
-            Thank you for being part of the The The L.A.W.S. Collective family!
+            Thank you for being part of the The L.A.W.S. Collective family!
           </p>
           <p className="text-sm text-green-300 mt-2">
             Building Generational Wealth Through Purpose & Community

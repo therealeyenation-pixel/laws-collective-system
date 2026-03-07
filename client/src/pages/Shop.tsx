@@ -189,7 +189,7 @@ export default function Shop() {
                       Official Merchandise Coming Soon!
                     </h3>
                     <p className="text-green-700 text-sm mb-4">
-                      Our Design Department is currently developing exclusive The The L.A.W.S. Collective branded items. 
+                      Our Design Department is currently developing exclusive The L.A.W.S. Collective branded items. 
                       Each piece will be thoughtfully designed to represent our mission of building multi-generational wealth through purpose and community.
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -209,7 +209,7 @@ export default function Shop() {
             </Card>
             
             <p className="text-stone-600 mb-8">
-              Support the The The L.A.W.S. Collective and represent the movement with our branded merchandise. 
+              Support the The L.A.W.S. Collective and represent the movement with our branded merchandise. 
               Every purchase supports community programs and wealth-building initiatives.
             </p>
 
@@ -391,7 +391,7 @@ export default function Shop() {
       <footer className="bg-stone-900 text-white py-8 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-stone-400">
-            &copy; {new Date().getFullYear()} The The L.A.W.S. Collective. All proceeds support community programs.
+            &copy; {new Date().getFullYear()} The L.A.W.S. Collective. All proceeds support community programs.
           </p>
         </div>
       </footer>

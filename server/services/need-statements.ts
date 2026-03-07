@@ -36,14 +36,14 @@ Real-Eye-Nation LLC has already demonstrated proof of concept through our pilot 
 We are not simply asking for funding—we are inviting partners to join us in rewriting the narrative of Black economic empowerment, one story at a time.`;
 
 /**
- * The The The L.A.W.S. Collective LLC Need Statement
+ * The L.A.W.S. Collective LLC Need Statement
  * Focus: Workforce development, technology platform, community building
  */
-export const LAWS_COLLECTIVE_NEED_STATEMENT = `The The The L.A.W.S. Collective LLC confronts one of the most pressing challenges facing American workers today: the transition from traditional employment to entrepreneurship and self-sufficiency. Our name represents our foundational pillars—Land, Air, Water, and Self—symbolizing the holistic approach required to help individuals and families achieve true economic independence. We operate at the intersection of workforce development, technology innovation, and community empowerment.
+export const LAWS_COLLECTIVE_NEED_STATEMENT = `The L.A.W.S. Collective LLC confronts one of the most pressing challenges facing American workers today: the transition from traditional employment to entrepreneurship and self-sufficiency. Our name represents our foundational pillars—Land, Air, Water, and Self—symbolizing the holistic approach required to help individuals and families achieve true economic independence. We operate at the intersection of workforce development, technology innovation, and community empowerment.
 
 The employment landscape has fundamentally shifted. The Bureau of Labor Statistics reports that the average American will hold 12 different jobs before age 52, while the gig economy has grown to encompass 36% of the workforce. Yet traditional workforce development programs remain anchored in outdated models that prepare workers for jobs that no longer exist or fail to provide pathways to business ownership. This disconnect leaves millions of Americans—particularly those from underserved communities—without the skills, resources, or support systems needed to thrive in the modern economy.
 
-The The The L.A.W.S. Collective addresses this gap through our comprehensive Business Management Platform, a technology solution designed specifically for individuals transitioning from W-2 employment to self-employment and business ownership. Our platform provides integrated tools for business formation, financial management, compliance tracking, and strategic planning—all within a single, user-friendly interface. More importantly, we pair this technology with human support through our collective membership model, where entrepreneurs learn from and support one another.
+The L.A.W.S. Collective addresses this gap through our comprehensive Business Management Platform, a technology solution designed specifically for individuals transitioning from W-2 employment to self-employment and business ownership. Our platform provides integrated tools for business formation, financial management, compliance tracking, and strategic planning—all within a single, user-friendly interface. More importantly, we pair this technology with human support through our collective membership model, where entrepreneurs learn from and support one another.
 
 Our target population includes workers displaced by economic shifts, veterans transitioning to civilian careers, formerly incarcerated individuals seeking legitimate pathways to income, and anyone seeking to build generational wealth through business ownership. We focus particularly on communities in the Southeast United States, where economic opportunity gaps remain most severe and where our founding team has deep roots and relationships.
 
@@ -51,7 +51,7 @@ The funding we seek—ranging from $1 million to $3 million depending on scope�
 
 The economic impact of our work extends beyond individual participants. Research from the Kauffman Foundation demonstrates that new businesses create an average of 3 million jobs annually, with minority-owned businesses showing the fastest growth rates. By equipping more individuals with the tools and knowledge to start and sustain businesses, we contribute to broader economic development and community resilience.
 
-The The The L.A.W.S. Collective has already served over 200 members through our pilot programs, with 78% reporting increased income within 12 months and 45% successfully launching registered businesses. With $1M in funding, we can reach 1,000 new entrepreneurs within two years. With $2M, we can establish two regional hubs and serve 3,000 entrepreneurs. With $3M or more, we can create a national model reaching 5,000+ entrepreneurs across five states while building a fully self-sustaining organization through membership fees and platform subscriptions.
+The L.A.W.S. Collective has already served over 200 members through our pilot programs, with 78% reporting increased income within 12 months and 45% successfully launching registered businesses. With $1M in funding, we can reach 1,000 new entrepreneurs within two years. With $2M, we can establish two regional hubs and serve 3,000 entrepreneurs. With $3M or more, we can create a national model reaching 5,000+ entrepreneurs across five states while building a fully self-sustaining organization through membership fees and platform subscriptions.
 
 Together, we can transform the American workforce—one entrepreneur at a time.`;
 
@@ -108,7 +108,7 @@ export function getNeedStatement(entityId: string): NeedStatement | null {
       statement: REAL_EYE_NATION_NEED_STATEMENT,
     },
     'laws': {
-      name: 'The The The L.A.W.S. Collective, LLC',
+      name: 'The L.A.W.S. Collective, LLC',
       type: 'LLC',
       statement: LAWS_COLLECTIVE_NEED_STATEMENT,
     },

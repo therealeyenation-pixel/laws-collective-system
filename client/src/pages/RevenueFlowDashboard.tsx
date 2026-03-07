@@ -243,7 +243,7 @@ export default function RevenueFlowDashboard() {
                 <div className="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-2">
                   <Users className="w-8 h-8 text-purple-600" />
                 </div>
-                <p className="text-sm font-medium text-center">The The L.A.W.S. Collective</p>
+                <p className="text-sm font-medium text-center">The L.A.W.S. Collective</p>
                 <p className="text-xs text-muted-foreground text-center">Revenue Generation</p>
               </div>
               

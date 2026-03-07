@@ -259,7 +259,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     console.log(`[Stripe] Recording revenue: $${(session.amount_total / 100).toFixed(2)}`);
     
     try {
-      // Record in main The The L.A.W.S. Collective account
+      // Record in main The L.A.W.S. Collective account
       const collectiveAccount = await db
         .select()
         .from(luvLedgerAccounts)

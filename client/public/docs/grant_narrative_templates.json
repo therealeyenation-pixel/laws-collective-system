@@ -1,12 +1,12 @@
 {
   "version": "1.0",
   "lastUpdated": "2026-02-01",
-  "organization": "The The L.A.W.S. Collective, LLC",
+  "organization": "The L.A.W.S. Collective, LLC",
   "narrativeTemplates": {
     "workforce-dev": {
       "bundleName": "Workforce Development",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective employs an innovative AI-assisted workforce model that maximizes productivity while maintaining competitive salaries. Each human manager is paired with specialized AI agents that handle routine tasks, data analysis, and documentation, allowing staff to focus on high-value activities such as participant engagement, strategic planning, and community relationship building.",
+        "overview": "The L.A.W.S. Collective employs an innovative AI-assisted workforce model that maximizes productivity while maintaining competitive salaries. Each human manager is paired with specialized AI agents that handle routine tasks, data analysis, and documentation, allowing staff to focus on high-value activities such as participant engagement, strategic planning, and community relationship building.",
         "positionNarratives": {
           "GM-001": "The Grant Manager oversees all grant-funded activities, ensuring compliance and reporting requirements are met. With AI assistance for deadline tracking, compliance monitoring, and report generation, this position achieves 4x productivity compared to traditional grant management roles. The AI Grant Agent handles routine documentation while the human manager focuses on funder relationships and strategic alignment.",
           "GW-001": "The Grant Writer develops compelling proposals and manages the full grant lifecycle. AI assistance enables rapid research of funding opportunities, draft generation, and compliance checking, resulting in 5x more proposals submitted annually. The human writer provides strategic narrative development and relationship cultivation that AI cannot replicate.",
@@ -28,7 +28,7 @@
     "community-health": {
       "bundleName": "Community Health & Wellness",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective's Community Health & Wellness team combines human expertise with AI-assisted care coordination to deliver comprehensive health services to underserved communities. Our model emphasizes holistic wellness encompassing physical, mental, financial, and spiritual health aligned with the L.A.W.S. framework (Land, Air, Water, Self).",
+        "overview": "The L.A.W.S. Collective's Community Health & Wellness team combines human expertise with AI-assisted care coordination to deliver comprehensive health services to underserved communities. Our model emphasizes holistic wellness encompassing physical, mental, financial, and spiritual health aligned with the L.A.W.S. framework (Land, Air, Water, Self).",
         "positionNarratives": {
           "HOC-001": "The Health & Wellness Coordinator manages community health programming and care coordination. AI assistance handles appointment scheduling, health education content delivery, and outcome tracking, enabling the coordinator to focus on direct participant care and community health advocacy.",
           "EOC-001": "The Education & Outreach Coordinator delivers health education programming and connects participants to resources. AI assistance personalizes educational content and tracks engagement metrics, allowing focus on relationship building and community trust development.",
@@ -50,7 +50,7 @@
     "media-outreach": {
       "bundleName": "Media & Community Outreach",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective's Media & Outreach team amplifies community voices and builds awareness of programs and services. Our AI-assisted approach enables high-quality content production and broad reach while maintaining authentic community representation and culturally relevant messaging.",
+        "overview": "The L.A.W.S. Collective's Media & Outreach team amplifies community voices and builds awareness of programs and services. Our AI-assisted approach enables high-quality content production and broad reach while maintaining authentic community representation and culturally relevant messaging.",
         "positionNarratives": {
           "MOC-001": "The Media & Outreach Coordinator manages all external communications and community engagement. AI assistance handles content scheduling, analytics tracking, and initial draft creation, allowing the coordinator to focus on authentic storytelling and community relationship building.",
           "DOC-001": "The Design & Operations Coordinator creates visual content and manages production workflows. AI assistance accelerates design iteration and handles routine production tasks, enabling focus on creative direction and brand consistency.",
@@ -71,7 +71,7 @@
     "admin-core": {
       "bundleName": "Administrative Core",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective's Administrative Core provides the operational foundation for all programs and services. Our AI-assisted administrative model ensures compliance, efficiency, and scalability while maintaining the human judgment essential for organizational leadership and community accountability.",
+        "overview": "The L.A.W.S. Collective's Administrative Core provides the operational foundation for all programs and services. Our AI-assisted administrative model ensures compliance, efficiency, and scalability while maintaining the human judgment essential for organizational leadership and community accountability.",
         "positionNarratives": {
           "HRM-001": "The HR Manager oversees all human capital functions including recruitment, development, and retention. AI assistance automates compliance tracking, benefits administration, and routine HR inquiries, enabling focus on culture development and strategic talent management.",
           "OM-001": "The Operations Manager ensures efficient daily operations across all programs. AI assistance monitors operational metrics, identifies bottlenecks, and generates performance reports, allowing focus on process improvement and cross-functional coordination.",
@@ -94,7 +94,7 @@
     "education-program": {
       "bundleName": "Education Program",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective's Education Program delivers transformative learning experiences that prepare participants for economic self-sufficiency. Our AI-assisted educational model personalizes learning pathways while maintaining the human mentorship essential for lasting behavior change and skill development.",
+        "overview": "The L.A.W.S. Collective's Education Program delivers transformative learning experiences that prepare participants for economic self-sufficiency. Our AI-assisted educational model personalizes learning pathways while maintaining the human mentorship essential for lasting behavior change and skill development.",
         "positionNarratives": {
           "EOC-001": "The Education & Outreach Coordinator designs and delivers educational programming. AI assistance personalizes curriculum, tracks learning outcomes, and generates progress reports, enabling focus on direct instruction and participant mentorship.",
           "DOC-001": "The Design & Operations Coordinator creates educational materials and manages learning platforms. AI assistance accelerates content development and handles technical operations, allowing focus on instructional design and learner experience.",
@@ -115,7 +115,7 @@
     "grant-development": {
       "bundleName": "Grant Development Team",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective's Grant Development Team secures sustainable funding to support organizational mission and growth. Our AI-assisted grant development model maximizes proposal quality and submission volume while maintaining the strategic relationships and authentic storytelling that win competitive awards.",
+        "overview": "The L.A.W.S. Collective's Grant Development Team secures sustainable funding to support organizational mission and growth. Our AI-assisted grant development model maximizes proposal quality and submission volume while maintaining the strategic relationships and authentic storytelling that win competitive awards.",
         "positionNarratives": {
           "GM-001": "The Grant Manager leads all grant development and compliance activities. AI assistance tracks deadlines, monitors compliance requirements, and generates routine reports, enabling focus on funder relationships and strategic portfolio management.",
           "GW-001": "The Grant Writer develops compelling proposals and manages submissions. AI assistance researches opportunities, generates initial drafts, and ensures compliance, allowing focus on narrative excellence and competitive positioning.",
@@ -136,7 +136,7 @@
     "executive-leadership": {
       "bundleName": "Executive Leadership",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective's Executive Leadership team provides strategic direction and organizational stewardship. Our AI-assisted leadership model enhances decision-making through data-driven insights while preserving the human judgment, vision, and relationship skills essential for organizational success.",
+        "overview": "The L.A.W.S. Collective's Executive Leadership team provides strategic direction and organizational stewardship. Our AI-assisted leadership model enhances decision-making through data-driven insights while preserving the human judgment, vision, and relationship skills essential for organizational success.",
         "positionNarratives": {
           "ED-001": "The Executive Director provides overall organizational leadership and external representation. AI assistance handles scheduling, communication drafting, and data synthesis, enabling focus on strategic vision, stakeholder relationships, and organizational culture.",
           "CFO-001": "The Chief Financial Officer oversees all financial operations and strategy. AI assistance automates financial analysis, forecasting, and compliance monitoring, allowing focus on strategic financial planning and risk management.",
@@ -157,11 +157,11 @@
     "full-operations": {
       "bundleName": "Full Operations",
       "budgetJustification": {
-        "overview": "The The The L.A.W.S. Collective's Full Operations staffing model provides comprehensive organizational capacity across all functional areas. This integrated approach ensures seamless coordination between programs, administration, and leadership while maximizing the efficiency gains of our AI-assisted workforce model.",
+        "overview": "The L.A.W.S. Collective's Full Operations staffing model provides comprehensive organizational capacity across all functional areas. This integrated approach ensures seamless coordination between programs, administration, and leadership while maximizing the efficiency gains of our AI-assisted workforce model.",
         "positionNarratives": {
           "allPositions": "Each position in the Full Operations model is paired with specialized AI agents that handle routine tasks, enabling human staff to focus on high-value activities. The integrated staffing approach ensures cross-functional collaboration and organizational agility, with AI assistance providing the connective tissue that enables efficient coordination across departments."
         },
-        "productivityModel": "Our comprehensive AI-assisted model achieves organizational-wide efficiency through: (1) Integrated AI systems that share data across functions, (2) Automated workflows that span departmental boundaries, (3) Real-time organizational visibility for leadership, (4) Scalable capacity that grows with organizational needs. This model positions The The L.A.W.S. Collective for sustainable growth and expanded community impact.",
+        "productivityModel": "Our comprehensive AI-assisted model achieves organizational-wide efficiency through: (1) Integrated AI systems that share data across functions, (2) Automated workflows that span departmental boundaries, (3) Real-time organizational visibility for leadership, (4) Scalable capacity that grows with organizational needs. This model positions The L.A.W.S. Collective for sustainable growth and expanded community impact.",
         "transitionFocus": "The Full Operations model demonstrates a complete organizational structure that participants can adapt for their own enterprises. From executive leadership to front-line service delivery, participants see professional operations in action and learn the systems and practices needed for business success at any scale."
       },
       "outcomeStatements": [
@@ -174,9 +174,9 @@
     }
   },
   "commonElements": {
-    "aiProductivityExplanation": "The The L.A.W.S. Collective employs an innovative AI-assisted workforce model where each human staff member is paired with specialized AI agents. These AI assistants handle routine tasks such as scheduling, documentation, data entry, and initial draft creation, freeing human staff to focus on high-value activities including relationship building, strategic thinking, direct service delivery, and complex problem-solving. This model typically achieves 3-5x productivity gains compared to traditional staffing approaches, allowing us to serve more community members while maintaining competitive salaries that attract top talent.",
+    "aiProductivityExplanation": "The L.A.W.S. Collective employs an innovative AI-assisted workforce model where each human staff member is paired with specialized AI agents. These AI assistants handle routine tasks such as scheduling, documentation, data entry, and initial draft creation, freeing human staff to focus on high-value activities including relationship building, strategic thinking, direct service delivery, and complex problem-solving. This model typically achieves 3-5x productivity gains compared to traditional staffing approaches, allowing us to serve more community members while maintaining competitive salaries that attract top talent.",
     "salaryStructure": "All positions are offered at 90% of the stated salary range initially, with the remaining 10% reserved for merit increases in Year 2 based on performance. This structure incentivizes excellence while providing clear advancement pathways. Fringe benefits (20%) and indirect costs (15%) are calculated on total salary costs.",
-    "workforceToSelfEmployment": "A distinguishing feature of The The L.A.W.S. Collective programming is our explicit focus on preparing participants for the transition from traditional workforce employment to self-employment and business ownership. Rather than perpetuating cycles of job placement, we equip participants with the knowledge, skills, and resources needed to create their own economic opportunities. This approach builds sustainable community wealth and reduces long-term dependence on workforce development services.",
+    "workforceToSelfEmployment": "A distinguishing feature of The L.A.W.S. Collective programming is our explicit focus on preparing participants for the transition from traditional workforce employment to self-employment and business ownership. Rather than perpetuating cycles of job placement, we equip participants with the knowledge, skills, and resources needed to create their own economic opportunities. This approach builds sustainable community wealth and reduces long-term dependence on workforce development services.",
     "fringeRateJustification": "The 20% fringe benefit rate covers: health insurance contributions, retirement plan matching, payroll taxes (FICA, unemployment), workers compensation insurance, and professional development allowances. This rate is competitive with industry standards and essential for attracting qualified professionals.",
     "indirectRateJustification": "The 15% indirect cost rate covers: facility costs, utilities, technology infrastructure, insurance, audit and legal services, and general administrative support. This rate reflects efficient operations enabled by our AI-assisted model and is below the federally negotiated rates of many comparable organizations."
   }

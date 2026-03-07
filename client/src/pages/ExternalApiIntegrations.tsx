@@ -45,7 +45,7 @@ export default function ExternalApiIntegrationsPage() {
     try {
       const [grantsData, regsData, accountsData] = await Promise.all([
         externalApiService.searchGrants({}),
-        externalApiService.checkStateRegistrations('The The L.A.W.S. Collective', ['GA', 'FL', 'TX', 'CA', 'NY']),
+        externalApiService.checkStateRegistrations('The L.A.W.S. Collective', ['GA', 'FL', 'TX', 'CA', 'NY']),
         externalApiService.getBankAccounts(),
       ]);
       

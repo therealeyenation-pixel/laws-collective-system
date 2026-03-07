@@ -259,7 +259,7 @@ export default function SpecialistTracks() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="entityName">Entity</Label>
-                      <Input id="entityName" name="entityName" placeholder="e.g., The The L.A.W.S. Collective" />
+                      <Input id="entityName" name="entityName" placeholder="e.g., The L.A.W.S. Collective" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="department">Department</Label>

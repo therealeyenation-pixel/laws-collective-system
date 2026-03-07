@@ -1283,7 +1283,7 @@ NET PAY: ${formatCurrency(selectedPayStub.netPay)}
               <div className="space-y-4 print:text-black">
                 <div className="border rounded-lg p-4 space-y-3">
                   <div className="text-center border-b pb-2">
-                    <h3 className="font-bold">The The L.A.W.S. Collective, LLC</h3>
+                    <h3 className="font-bold">The L.A.W.S. Collective, LLC</h3>
                     <p className="text-sm text-muted-foreground">Pay Statement</p>
                   </div>
 

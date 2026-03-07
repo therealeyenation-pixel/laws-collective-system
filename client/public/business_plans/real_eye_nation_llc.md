@@ -48,7 +48,7 @@ Real-Eye-Nation LLC operates as the media and content division within the LuvOnP
 
 The company was established to address the gap in authentic family storytelling and community narrative preservation. Many families lack the resources, platforms, or guidance to document their histories in meaningful ways. Real-Eye-Nation provides the infrastructure, training, and distribution channels to change this reality.
 
-Real-Eye-Nation works in close coordination with the other LuvOnPurpose entities. It creates educational content for LuvOnPurpose Outreach Temple and Academy Society, Inc., produces marketing materials for The The The L.A.W.S. Collective, LLC programs, and documents the family governance activities of the Calea Freeman Family Trust.
+Real-Eye-Nation works in close coordination with the other LuvOnPurpose entities. It creates educational content for LuvOnPurpose Outreach Temple and Academy Society, Inc., produces marketing materials for The L.A.W.S. Collective, LLC programs, and documents the family governance activities of the Calea Freeman Family Trust.
 
 ---
 
@@ -127,7 +127,7 @@ The Creative Enterprise Division operates as a business-first arts program, ensu
 
 ### Integration with L.A.W.S. Design Department
 
-The Creative Enterprise Division works closely with the The The L.A.W.S. Collective Design Department to create a complete creative pipeline:
+The Creative Enterprise Division works closely with the The L.A.W.S. Collective Design Department to create a complete creative pipeline:
 
 - **Concept to Production**: Design creates visual assets, Creative Enterprise produces content
 - **Shared IP Management**: Unified licensing and rights management across both divisions
@@ -171,7 +171,7 @@ Real-Eye-Nation's competitive advantages include:
 
 **Purpose-Driven Approach**: Unlike commercial media companies focused on entertainment value, Real-Eye-Nation prioritizes truth, healing, and empowerment in every project.
 
-**Community Trust**: The company's connection to The The The L.A.W.S. Collective, LLC and LuvOnPurpose Outreach Temple and Academy Society, Inc. builds credibility within communities that are often skeptical of external media organizations.
+**Community Trust**: The company's connection to The L.A.W.S. Collective, LLC and LuvOnPurpose Outreach Temple and Academy Society, Inc. builds credibility within communities that are often skeptical of external media organizations.
 
 **Technology Integration**: The LuvOnPurpose platform provides blockchain-verified documentation, ensuring the authenticity and permanence of preserved narratives.
 

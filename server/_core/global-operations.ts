@@ -2,7 +2,7 @@
  * Global Operations & Localization Service
  * 
  * Provides multi-language, multi-currency, and jurisdiction-aware operations
- * for the The The L.A.W.S. Collective global expansion.
+ * for the The L.A.W.S. Collective global expansion.
  */
 
 // ============================================================================

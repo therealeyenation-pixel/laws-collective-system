@@ -86,7 +86,7 @@ export const MERCHANDISE_CATEGORIES = {
 export const MERCHANDISE_PRODUCTS = [
   {
     id: "laws_tshirt",
-    name: "The The L.A.W.S. Collective T-Shirt",
+    name: "The L.A.W.S. Collective T-Shirt",
     description: "Premium cotton t-shirt with L.A.W.S. logo",
     price: 3500, // $35.00
     category: "apparel",
@@ -96,7 +96,7 @@ export const MERCHANDISE_PRODUCTS = [
   },
   {
     id: "laws_hoodie",
-    name: "The The L.A.W.S. Collective Hoodie",
+    name: "The L.A.W.S. Collective Hoodie",
     description: "Comfortable hoodie with embroidered logo",
     price: 6500, // $65.00
     category: "apparel",
@@ -106,7 +106,7 @@ export const MERCHANDISE_PRODUCTS = [
   },
   {
     id: "laws_cap",
-    name: "The The L.A.W.S. Collective Cap",
+    name: "The L.A.W.S. Collective Cap",
     description: "Adjustable cap with embroidered logo",
     price: 2500, // $25.00
     category: "accessories",

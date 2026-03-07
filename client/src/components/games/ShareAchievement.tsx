@@ -132,7 +132,7 @@ export function ShareAchievement({
 
   const handleShareToCollective = () => {
     // This would integrate with the Collective feed system
-    toast.success("Achievement shared to The The L.A.W.S. Collective feed!");
+    toast.success("Achievement shared to The L.A.W.S. Collective feed!");
     setIsOpen(false);
   };
 
@@ -240,7 +240,7 @@ export function ShareAchievement({
               onClick={handleShareToCollective}
             >
               <Users className="w-4 h-4" />
-              Share to The The L.A.W.S. Collective
+              Share to The L.A.W.S. Collective
             </Button>
             <p className="text-xs text-muted-foreground text-center mt-2">
               Your achievement will appear in the Collective community feed

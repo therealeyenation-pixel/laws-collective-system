@@ -34,7 +34,7 @@ import {
 
 export default function FinancialStatements() {
   const [activeTab, setActiveTab] = useState("startup");
-  const [entityName, setEntityName] = useState("The The L.A.W.S. Collective, LLC");
+  const [entityName, setEntityName] = useState("The L.A.W.S. Collective, LLC");
   const [asOfDate, setAsOfDate] = useState(new Date().toISOString().split('T')[0]);
   const [initialCapital, setInitialCapital] = useState(0);
   const [generatedStatements, setGeneratedStatements] = useState<any>(null);

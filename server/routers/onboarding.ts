@@ -276,7 +276,7 @@ export const onboardingRouter = router({
         .where(eq(businessEntities.name, entityName))
         .limit(1);
 
-      const entityId = entities.length > 0 ? entities[0].id : 5; // Default to The The L.A.W.S. Collective
+      const entityId = entities.length > 0 ? entities[0].id : 5; // Default to The L.A.W.S. Collective
 
       // Create employee record
       const employeeResult = await db.insert(employees).values({

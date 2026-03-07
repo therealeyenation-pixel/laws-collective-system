@@ -18,7 +18,7 @@ Our entities include educational programs, media production, community outreach,
 
 ### Chief Operating Officer (COO)
 
-**Entity:** The The The L.A.W.S. Collective, LLC  
+**Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Remote with regular in-person leadership meetings  
 **Type:** Full-Time  
 **Salary Range:** $70,000 - $95,000 annually
@@ -76,7 +76,7 @@ The Executive Director provides overall leadership for the 508(c)(1)(a) faith-ba
 
 ### 1. HR Manager
 
-**Entity:** The The The L.A.W.S. Collective, LLC  
+**Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Remote with occasional in-person events  
 **Type:** Full-Time  
 **Salary Range:** $55,000 - $75,000 annually
@@ -100,7 +100,7 @@ The HR Manager builds and maintains the human capital infrastructure across all 
 
 ### 2. QA/QC Manager
 
-**Entity:** The The The L.A.W.S. Collective, LLC  
+**Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Remote with periodic on-site reviews  
 **Type:** Full-Time  
 **Salary Range:** $50,000 - $70,000 annually
@@ -124,7 +124,7 @@ The QA/QC Manager establishes and maintains quality standards across all subsidi
 
 ### 3. Purchasing Manager
 
-**Entity:** The The The L.A.W.S. Collective, LLC  
+**Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Remote with vendor site visits as needed  
 **Type:** Full-Time  
 **Salary Range:** $48,000 - $65,000 annually
@@ -246,7 +246,7 @@ The Academy Instructor delivers educational content and develops new courses for
 
 ### 8. Grant Writer / Proposal Specialist
 
-**Entity:** The The The L.A.W.S. Collective, LLC (serving all entities)  
+**Entity:** The L.A.W.S. Collective, LLC (serving all entities)  
 **Location:** Remote  
 **Type:** Full-Time  
 **Salary Range:** $50,000 - $72,000 annually
@@ -295,7 +295,7 @@ The Platform Administrator maintains and improves the technology infrastructure 
 
 ### 10. Community Programs Coordinator
 
-**Entity:** The The The L.A.W.S. Collective, LLC  
+**Entity:** The L.A.W.S. Collective, LLC  
 **Location:** Hybrid (program delivery + remote coordination)  
 **Type:** Full-Time  
 **Salary Range:** $45,000 - $60,000 annually
@@ -371,7 +371,7 @@ Additional benefits are discussed during the interview process and vary by posit
 | Entity | Focus Area |
 |--------|------------|
 | LuvOnPurpose Autonomous Wealth System LLC | Services & Consulting |
-| The The The L.A.W.S. Collective, LLC | Products & Platform |
+| The L.A.W.S. Collective, LLC | Products & Platform |
 | Real-Eye-Nation LLC | Media & Content |
 | LuvOnPurpose Outreach Temple and Academy Society, Inc. | Training & Education |
 | Calea Freeman Family Trust | Asset Holding & Governance |

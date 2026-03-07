@@ -43,7 +43,7 @@ const ENTITIES = {
     ]
   },
   collective: {
-    name: "The The The L.A.W.S. Collective, LLC",
+    name: "The L.A.W.S. Collective, LLC",
     shortName: "Collective",
     icon: Users,
     color: "bg-green-500",
@@ -121,7 +121,7 @@ const TRANSITION_PATHS = [
   { 
     id: "member", 
     name: "Collective Member", 
-    description: "Join the The The L.A.W.S. Collective with profit interest",
+    description: "Join the The L.A.W.S. Collective with profit interest",
     requirements: ["Complete all phases", "Score 85%+ on evaluation", "House activation eligible"],
     benefits: ["Profit interest grant", "Voting rights", "Token economy participation", "House benefits"]
   }

@@ -42,7 +42,7 @@ export const revenueFlowRouter = router({
       splits: splitData,
       progression: {
         businessCreation: { stage: 1, label: "Business Creation", description: "Create and manage businesses" },
-        lawsCollective: { stage: 2, label: "The The L.A.W.S. Collective", description: "Revenue generation through brand" },
+        lawsCollective: { stage: 2, label: "The L.A.W.S. Collective", description: "Revenue generation through brand" },
         trustDeposit: { stage: 3, label: "Trust Deposit", description: "Revenue flows into Trust" },
         splitEngine: { stage: 4, label: "60/40 Split", description: "Automated wealth distribution" },
         wealthAccumulation: { stage: 5, label: "Wealth Accumulation", description: "Long-term wealth building" },
@@ -93,7 +93,7 @@ export const revenueFlowRouter = router({
       sourceType: z.enum(["merchandise", "academy", "consulting", "membership", "services", "licensing", "investment", "donation", "other"]),
       businessId: z.string().optional(),
       houseId: z.string().optional(),
-      brand: z.string().optional().default("The The L.A.W.S. Collective"),
+      brand: z.string().optional().default("The L.A.W.S. Collective"),
       monthlyTarget: z.number().optional(),
       yearlyTarget: z.number().optional(),
     }))
@@ -147,7 +147,7 @@ export const revenueFlowRouter = router({
       
       await db.query(`
         INSERT INTO revenue_flow_logs (id, flow_stage, transaction_id, amount, from_entity, to_entity, description)
-        VALUES (?, 'received', ?, ?, 'The The L.A.W.S. Collective', 'Trust', ?)
+        VALUES (?, 'received', ?, ?, 'The L.A.W.S. Collective', 'Trust', ?)
       `, [logReceived, transactionId, input.amount, `Revenue received: ${input.description || 'Transaction'}`]);
       
       await db.query(`

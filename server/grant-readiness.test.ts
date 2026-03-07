@@ -10,7 +10,7 @@ describe("Financial Statement Generator", () => {
   describe("Balance Sheet Generation", () => {
     it("should generate balance sheet with zero balances for startup", () => {
       const balanceSheet = generateBalanceSheet({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         asOfDate: "2026-01-18",
         assets: {
           current: { cash: 0, accountsReceivable: 0, inventory: 0, prepaidExpenses: 0 },
@@ -29,7 +29,7 @@ describe("Financial Statement Generator", () => {
       });
 
       expect(balanceSheet.documentTitle).toBe("Balance Sheet");
-      expect(balanceSheet.entityName).toBe("The The L.A.W.S. Collective, LLC");
+      expect(balanceSheet.entityName).toBe("The L.A.W.S. Collective, LLC");
       expect(balanceSheet.totals.totalAssets).toBe(0);
       expect(balanceSheet.totals.totalLiabilities).toBe(0);
       expect(balanceSheet.totals.totalEquity).toBe(0);
@@ -71,7 +71,7 @@ describe("Financial Statement Generator", () => {
   describe("Income Statement Generation", () => {
     it("should generate income statement with zero revenue for startup", () => {
       const incomeStatement = generateIncomeStatement({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         periodStart: "2026-01-01",
         periodEnd: "2026-01-18",
         revenue: {
@@ -139,7 +139,7 @@ describe("Financial Statement Generator", () => {
   describe("Cash Flow Statement Generation", () => {
     it("should generate cash flow statement for startup", () => {
       const cashFlow = generateCashFlowStatement({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         periodStart: "2026-01-01",
         periodEnd: "2026-01-18",
         operating: {
@@ -179,7 +179,7 @@ describe("Board Resolution Generator", () => {
   describe("Grant Authorization", () => {
     it("should generate grant authorization resolution", () => {
       const resolution = generateGrantAuthorization({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         entityType: "LLC",
         grantName: "Community Development Block Grant",
         grantorName: "U.S. Department of Housing",
@@ -208,7 +208,7 @@ describe("Board Resolution Generator", () => {
   describe("Bank Authorization", () => {
     it("should generate bank authorization resolution", () => {
       const resolution = generateBankAuthorization({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         entityType: "LLC",
         bankName: "Chase Bank",
         accountTypes: ["Business Checking", "Business Savings"],
@@ -233,7 +233,7 @@ describe("Board Resolution Generator", () => {
   describe("Officer Appointment", () => {
     it("should generate officer appointment resolution", () => {
       const resolution = generateOfficerAppointment({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         entityType: "LLC",
         appointments: [
           { name: "John Doe", position: "President", responsibilities: "Overall management" },
@@ -258,7 +258,7 @@ describe("Contingency Offer Generator", () => {
   describe("Letter of Intent", () => {
     it("should generate letter of intent with contingency clause", () => {
       const loi = generateLetterOfIntent({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         candidateName: "Jane Smith",
         positionTitle: "Program Coordinator",
         positionType: "full_time",
@@ -286,7 +286,7 @@ describe("Contingency Offer Generator", () => {
   describe("Conditional Employment Offer", () => {
     it("should generate conditional offer with funding trigger", () => {
       const offer = generateConditionalOffer({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         candidateName: "Jane Smith",
         positionTitle: "Program Coordinator",
         positionType: "full_time",
@@ -329,7 +329,7 @@ describe("Contingency Offer Generator", () => {
   describe("Batch Offer Creation", () => {
     it("should create multiple offers from batch input", () => {
       const result = batchCreateOffers({
-        entityName: "The The L.A.W.S. Collective, LLC",
+        entityName: "The L.A.W.S. Collective, LLC",
         fundingCondition: "Securing grant funding",
         fundingDeadline: "2026-06-30",
         candidates: [

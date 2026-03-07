@@ -10,7 +10,7 @@ export default function QRHolding() {
             Coming Soon
           </h1>
           <p className="text-lg text-muted-foreground">
-            The The The L.A.W.S. Collective Platform
+            The L.A.W.S. Collective Platform
           </p>
         </div>
 

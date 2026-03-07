@@ -112,7 +112,7 @@ export default function Products() {
             Transform Your Financial Future
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            The The L.A.W.S. Collective Products
+            The L.A.W.S. Collective Products
           </h1>
           <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
             Build multi-generational wealth through education, strategy, and community support
@@ -305,7 +305,7 @@ export default function Products() {
                   building wealth for my family. The personalized roadmap gave me clear 
                   action steps I could implement immediately."
                 </blockquote>
-                <p className="mt-4 font-semibold">— The The L.A.W.S. Collective Member</p>
+                <p className="mt-4 font-semibold">— The L.A.W.S. Collective Member</p>
               </CardContent>
             </Card>
           </TabsContent>

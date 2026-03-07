@@ -103,7 +103,7 @@ const sampleRequests: ApprovalRequest[] = [
     currentApprovals: 1,
     requiredApprovals: 2,
     amount: 25000,
-    entity: "The The The L.A.W.S. Collective, LLC",
+    entity: "The L.A.W.S. Collective, LLC",
     approvers: [
       { name: "Division Director", role: "Division Director", decision: "approved", decidedAt: "2026-01-21T09:00:00Z", comment: "Approved - aligns with growth strategy" },
       { name: "CFO", role: "CFO", decision: "pending" },
@@ -423,7 +423,7 @@ export default function GovernanceWorkflows() {
                         <SelectContent>
                           <SelectItem value="CALEA Freeman Family Trust">CALEA Freeman Family Trust</SelectItem>
                           <SelectItem value="LuvOnPurpose Autonomous Wealth System, LLC">LuvOnPurpose Autonomous Wealth System, LLC</SelectItem>
-                          <SelectItem value="The The The L.A.W.S. Collective, LLC">The The The L.A.W.S. Collective, LLC</SelectItem>
+                          <SelectItem value="The L.A.W.S. Collective, LLC">The L.A.W.S. Collective, LLC</SelectItem>
                           <SelectItem value="LuvOnPurpose Academy & Outreach">LuvOnPurpose Academy & Outreach</SelectItem>
                           <SelectItem value="Real-Eye-Nation">Real-Eye-Nation</SelectItem>
                         </SelectContent>

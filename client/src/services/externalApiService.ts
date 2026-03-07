@@ -201,7 +201,7 @@ class ExternalApiService {
   }> {
     const [grants, registrations, accounts] = await Promise.all([
       this.searchGrants({}),
-      this.checkStateRegistrations('The The L.A.W.S. Collective', ['GA', 'FL', 'TX', 'CA', 'NY']),
+      this.checkStateRegistrations('The L.A.W.S. Collective', ['GA', 'FL', 'TX', 'CA', 'NY']),
       this.getBankAccounts(),
     ]);
 

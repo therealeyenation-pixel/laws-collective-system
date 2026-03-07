@@ -236,7 +236,7 @@ export default function ServiceDepartments() {
                     L.A.W.S. Central Services
                   </CardTitle>
                   <CardDescription>
-                    Compliance-sensitive services operated exclusively by The The L.A.W.S. Collective
+                    Compliance-sensitive services operated exclusively by The L.A.W.S. Collective
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -330,7 +330,7 @@ export default function ServiceDepartments() {
                     </h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span>The The L.A.W.S. Collective</span>
+                        <span>The L.A.W.S. Collective</span>
                         <span className="font-medium">60%</span>
                       </div>
                       <div className="flex justify-between">
@@ -350,7 +350,7 @@ export default function ServiceDepartments() {
                         <span className="font-medium">60%</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>The The L.A.W.S. Collective</span>
+                        <span>The L.A.W.S. Collective</span>
                         <span className="font-medium">30%</span>
                       </div>
                       <div className="flex justify-between">
@@ -670,7 +670,7 @@ export default function ServiceDepartments() {
               <p className="font-medium mb-2">Revenue Split for Licensed Services:</p>
               <ul className="space-y-1 text-muted-foreground">
                 <li>• Your House: {selectedDepartment?.revenue_split_house}%</li>
-                <li>• The The L.A.W.S. Collective: {selectedDepartment?.revenue_split_laws}%</li>
+                <li>• The L.A.W.S. Collective: {selectedDepartment?.revenue_split_laws}%</li>
                 <li>• Trust: {selectedDepartment?.revenue_split_trust}%</li>
               </ul>
             </div>

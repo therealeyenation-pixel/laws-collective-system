@@ -100,7 +100,7 @@ let documentIdCounter = 1;
 // Entity metadata
 const ENTITY_NAMES: Record<string, string> = {
   'realeyenation': 'Real-Eye-Nation LLC',
-  'laws': 'The The The L.A.W.S. Collective, LLC',
+  'laws': 'The L.A.W.S. Collective, LLC',
   'luvonpurpose': 'LuvOnPurpose Autonomous Wealth System LLC',
   '508academy': 'LuvOnPurpose Outreach Temple and Academy Society, Inc.',
 };

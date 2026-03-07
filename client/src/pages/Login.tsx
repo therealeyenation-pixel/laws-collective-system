@@ -56,7 +56,7 @@ export default function Login() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">
-            The The L.A.W.S. Collective
+            The L.A.W.S. Collective
           </CardTitle>
           <CardDescription>
             {isLogin ? "Sign in to your account" : "Create a new account"}

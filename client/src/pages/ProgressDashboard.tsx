@@ -136,7 +136,7 @@ export default function ProgressDashboard() {
   const recentActivity = [
     { type: "achievement", title: "First Steps", time: "2 hours ago", icon: Medal },
     { type: "chapter", title: "Completed Chapter 1", time: "Yesterday", icon: CheckCircle2 },
-    { type: "community", title: "Joined The The L.A.W.S. Collective", time: "2 days ago", icon: Users },
+    { type: "community", title: "Joined The L.A.W.S. Collective", time: "2 days ago", icon: Users },
     { type: "vote", title: "Voted on Academy Expansion", time: "3 days ago", icon: Target },
     { type: "building", title: "Built Community Center", time: "1 week ago", icon: Building },
   ];
