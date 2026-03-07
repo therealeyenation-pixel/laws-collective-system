@@ -22,9 +22,9 @@ const checklistItems: ChecklistItem[] = [
   { id: "trust-agreement", label: "Draft Trust Agreement", category: "trust" },
   { id: "trust-fund", label: "Fund the Trust with initial assets", category: "trust" },
   
-  // Nonprofit/508 Items
-  { id: "nonprofit-ein", label: "Apply for EIN for 508(c)(1)(a) Academy", category: "nonprofit" },
-  { id: "nonprofit-declaration", label: "Prepare 508(c)(1)(a) declaration documentation", category: "nonprofit" },
+  // Nonprofit Items
+  { id: "nonprofit-ein", label: "Apply for EIN for Faith-Based Academy", category: "nonprofit" },
+  { id: "nonprofit-declaration", label: "Prepare faith-based organization documentation", category: "nonprofit" },
   { id: "nonprofit-bylaws", label: "Draft Academy bylaws", category: "nonprofit" },
 ];
 

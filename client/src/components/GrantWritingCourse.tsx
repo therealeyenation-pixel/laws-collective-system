@@ -122,10 +122,10 @@ const grantModules: CourseModule[] = [
         },
         {
           heading: "Grant Eligibility",
-          text: "Most grants require 501(c)(3) or 508(c)(1)(a) tax-exempt status. Some grants are available to other entity types for specific purposes. Government grants may be available to for-profit businesses for research or economic development. Always verify eligibility before investing time in an application.",
+          text: "Most grants require tax-exempt status. Some grants are available to other entity types for specific purposes. Government grants may be available to for-profit businesses for research or economic development. Always verify eligibility before investing time in an application.",
           tips: [
-            "501(c)(3) status opens the most grant opportunities",
-            "508(c)(1)(a) organizations have similar eligibility",
+            "Tax-exempt status opens the most grant opportunities",
+            "Faith-based organizations may have similar eligibility",
             "Some funders accept fiscal sponsorship arrangements",
           ],
         },
@@ -195,7 +195,7 @@ const grantModules: CourseModule[] = [
         { id: "organizationName", label: "Organization Name", type: "text", placeholder: "Enter your organization's legal name", required: true },
         { id: "entityType", label: "Entity Type", type: "select", options: [
             "501(c)(3) Nonprofit",
-            "508(c)(1)(a) Faith-Based",
+            "Faith-Based Organization",
             "LLC",
             "Corporation",
             "Trust",

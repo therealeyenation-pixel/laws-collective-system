@@ -27,7 +27,7 @@ interface NewsItem {
 const NEWS_ITEMS: NewsItem[] = [
   {
     id: "1",
-    title: "New Grant Opportunities for 508(c)(1)(a) Organizations",
+    title: "New Grant Opportunities for Faith-Based Organizations",
     summary: "Federal funding available for faith-based educational nonprofits. Application deadline: March 15, 2026.",
     category: "financial",
     date: "2026-01-30",
