@@ -28,7 +28,8 @@ import ContactUs from "./pages/ContactUs";
 import ContactInbox from "./pages/ContactInbox";
 import BrandGuide from "./pages/BrandGuide";
 import FAQ from "./pages/FAQ";
-import PurpleHeart from "./pages/PurpleHeart";
+import PurpleHeart from '@/pages/PurpleHeart';
+import DonationCheckout from '@/pages/DonationCheckout';
 import IndigenousRights from "./pages/IndigenousRights";
 
 import Shop from "./pages/Shop";
@@ -445,7 +446,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
-      <Route path="/donate" component={PurpleHeart} />
+      <Route path="/donate" component={DonationCheckout} />
       <Route path="/contact-us" component={ContactUs} />
       <Route path="/brand-guide" component={BrandGuide} />
       <Route path="/faq" component={FAQ} />
