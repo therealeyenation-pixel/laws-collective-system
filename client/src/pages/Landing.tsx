@@ -631,7 +631,7 @@ export default function Landing() {
                 />
                 <Button type="submit">Sign Up</Button>
               </form>
-              <Button variant="outline" onClick={() => window.location.href = "/donate"}>
+              <Button variant="outline" onClick={() => window.location.href = "/purple-heart"}>
                 Support the Collective
               </Button>
               <Button variant="outline" onClick={() => window.location.href = "/demo"}>
