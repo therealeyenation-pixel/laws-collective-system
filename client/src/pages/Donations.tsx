@@ -484,8 +484,7 @@ export default function Donations() {
                   <div>
                     <p className="font-medium">Is my donation tax-deductible?</p>
                     <p className="text-sm text-muted-foreground">
-                      As a 508(c)(1)(a) faith-based organization, contributions may be 
-                      tax-deductible. Please consult your tax advisor for specific guidance.
+                      Contributions may be tax-deductible. Please consult your tax advisor for specific guidance.
                     </p>
                   </div>
                   <div>

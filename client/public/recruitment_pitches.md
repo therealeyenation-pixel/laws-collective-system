@@ -175,7 +175,7 @@
 > You'll be the face of our community work. Every person you reach is a life potentially transformed.
 >
 > **What we offer:**
-> - Role in a 508(c)(1)(a) spiritual organization
+> - Role in a faith-based spiritual organization
 > - Direct community impact
 > - Event planning experience
 > - Academy certification in community development

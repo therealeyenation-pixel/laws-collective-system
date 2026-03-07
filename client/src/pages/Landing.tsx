@@ -296,6 +296,14 @@ export default function Landing() {
             )}
           </div>
           <div className="flex flex-col gap-2 w-full">
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" onClick={() => window.location.href = "/indigenous-rights"} className="flex-1 text-sm py-2">
+                Indigenous Rights
+              </Button>
+              <Button variant="outline" onClick={() => window.location.href = "/purple-heart"} className="flex-1 text-sm py-2">
+                Purple Heart
+              </Button>
+            </div>
             <Button variant="outline" onClick={() => window.location.href = "/contact-us"} className="w-full text-sm py-2">
               Contact Us
             </Button>

@@ -81,9 +81,9 @@
       "requirements": {
         "experience": "3+ years in nonprofit leadership or program management",
         "skills": ["Grant compliance", "Community engagement", "Public speaking", "Program development"],
-        "preferred": ["508(c)(1)(a) or 501(c)(3) experience", "Faith-based organization background", "Fundraising experience"]
+        "preferred": ["Faith-based nonprofit experience", "Faith-based organization background", "Fundraising experience"]
       },
-      "description": "The Executive Director provides overall leadership for the 508(c)(1)(a) faith-based organization, ensuring program excellence, grant compliance, and community impact. This role is essential for nonprofit credibility with funders and partners.",
+      "description": "The Executive Director provides overall leadership for the faith-based organization, ensuring program excellence, grant compliance, and community impact. This role is essential for nonprofit credibility with funders and partners.",
       "responsibilities": [
         "Overall leadership of Temple/Academy operations",
         "Grant compliance and reporting for nonprofit programs",
@@ -378,7 +378,7 @@
       },
       "compensation": {
         "type": "role_based",
-        "organizationType": "508(c)(1)(a) spiritual organization",
+        "organizationType": "faith-based spiritual organization",
         "tokenEarnings": true,
         "allocationSplit": {
           "interHouse": "60/40",
@@ -1133,7 +1133,7 @@
       },
       "compensation": {
         "type": "role_based",
-        "organizationType": "508(c)(1)(a) spiritual organization",
+        "organizationType": "faith-based spiritual organization",
         "tokenEarnings": true
       },
       "benefits": {

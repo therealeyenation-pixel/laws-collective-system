@@ -51,7 +51,7 @@ The Chief Operating Officer oversees day-to-day operations across all five subsi
 **Type:** Full-Time  
 **Salary Range:** $55,000 - $75,000 annually
 
-The Executive Director provides overall leadership for the 508(c)(1)(a) faith-based organization, ensuring program excellence, grant compliance, and community impact. This role is essential for nonprofit credibility with funders and partners.
+The Executive Director provides overall leadership for the faith-based organization, ensuring program excellence, grant compliance, and community impact. This role is essential for nonprofit credibility with funders and partners.
 
 **Key Responsibilities:**
 - Overall leadership of Temple/Academy operations
@@ -64,7 +64,7 @@ The Executive Director provides overall leadership for the 508(c)(1)(a) faith-ba
 
 **Requirements:**
 - 3+ years experience in nonprofit leadership or program management
-- Understanding of 508(c)(1)(a) or 501(c)(3) compliance requirements
+- Understanding of faith-based nonprofit compliance requirements
 - Grant management and reporting experience
 - Strong public speaking and community engagement skills
 - Passion for education and community development
