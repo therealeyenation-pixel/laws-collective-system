@@ -358,7 +358,7 @@ export default function PublicDonate() {
                 <CardContent className="pt-6">
                   <h3 className="font-semibold mb-2">Tax-Deductible</h3>
                   <p className="text-sm text-muted-foreground">
-                    The L.A.W.S. Collective operates under a 508(c)(1)(a) tax-exempt organization. 
+                    The L.A.W.S. Collective is a faith-based organization. 
                     Your donation is tax-deductible to the fullest extent allowed by law.
                   </p>
                   <p className="text-sm text-muted-foreground mt-2">
@@ -378,7 +378,7 @@ export default function PublicDonate() {
             The L.A.W.S. Collective | Building Generational Wealth Through Purpose & Community
           </p>
           <p className="text-sm text-green-300 mt-2">
-            508(c)(1)(a) Tax-Exempt Organization
+            Faith-Based Organization
           </p>
         </div>
       </footer>

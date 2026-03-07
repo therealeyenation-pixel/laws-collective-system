@@ -29,7 +29,8 @@ import ContactInbox from "./pages/ContactInbox";
 import BrandGuide from "./pages/BrandGuide";
 import FAQ from "./pages/FAQ";
 import PurpleHeart from '@/pages/PurpleHeart';
-import DonationCheckout from '@/pages/DonationCheckout';
+import PublicDonate from '@/pages/PublicDonate';
+import ImpactDashboard from '@/pages/ImpactDashboard';
 import IndigenousRights from "./pages/IndigenousRights";
 
 import Shop from "./pages/Shop";
@@ -250,7 +251,6 @@ import ClosedLoopWealth from "@/pages/ClosedLoopWealth";
 import LAWSEmploymentPortal from "@/pages/LAWSEmploymentPortal";
 import InternshipPortal from "@/pages/InternshipPortal";
 import Donate508 from "@/pages/Donate508";
-import PublicDonate from "@/pages/PublicDonate";
 import DonateThankYou from "@/pages/DonateThankYou";
 import MemberBusinessDashboard from "@/pages/MemberBusinessDashboard";
 import MemberBusinessRegistration from "@/pages/MemberBusinessRegistration";
@@ -446,11 +446,12 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
       <Route path="/support" component={Support} />
-      <Route path="/donate" component={DonationCheckout} />
+      <Route path="/donate" component={PublicDonate} />
       <Route path="/contact-us" component={ContactUs} />
       <Route path="/brand-guide" component={BrandGuide} />
       <Route path="/faq" component={FAQ} />
       <Route path="/purple-heart" component={PurpleHeart} />
+      <Route path="/impact-dashboard" component={ImpactDashboard} />
       <Route path="/indigenous-rights" component={IndigenousRights} />
       <Route path="/admin/contact-inbox">{() => <ProtectedRoute component={ContactInbox} minRole="admin" />}</Route>
       <Route path="/products" component={Products} />
@@ -845,7 +846,6 @@ function Router() {
       {/* Public routes */}
       <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />
-      <Route path="/donate" component={Donate} />
       
       <Route path="/404" component={NotFound} />
       

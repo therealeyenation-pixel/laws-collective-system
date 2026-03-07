@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Heart, ArrowLeft } from 'lucide-react';
+import { Heart, ArrowLeft, Loader2 } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 interface DonationTier {
   name: string;
@@ -64,6 +66,10 @@ export default function DonationCheckout() {
   const [, setLocation] = useLocation();
   const [selectedTier, setSelectedTier] = useState<DonationTier | null>(null);
   const [customAmount, setCustomAmount] = useState('');
+  const [donorName, setDonorName] = useState('');
+  const [donorEmail, setDonorEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const createCheckout = trpc.stripeDonations.createDonationCheckout.useMutation();
 
   useEffect(() => {
     // Get tier from URL params
@@ -78,9 +84,43 @@ export default function DonationCheckout() {
     }
   }, []);
 
-  const handleDonate = () => {
-    // TODO: Integrate with Stripe checkout
-    alert('Payment processing is coming soon. Thank you for your interest in supporting The L.A.W.S. Collective!');
+  const handleDonate = async () => {
+    if (!donorName.trim()) {
+      toast.error('Please enter your name');
+      return;
+    }
+    if (!donorEmail.trim()) {
+      toast.error('Please enter your email');
+      return;
+    }
+
+    const amount = selectedTier ? parseFloat(selectedTier.amount) : parseFloat(customAmount);
+    if (!amount || amount < 1) {
+      toast.error('Please enter a valid donation amount');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = await createCheckout.mutateAsync({
+        amount,
+        frequency: 'one_time',
+        donorEmail,
+        donorName,
+        designation: selectedTier?.name || 'general',
+      });
+
+      if (result.checkoutUrl) {
+        window.location.href = result.checkoutUrl;
+      } else {
+        toast.error('Failed to create checkout session');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error('Failed to process donation. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -139,6 +179,8 @@ export default function DonationCheckout() {
               <input
                 type="text"
                 placeholder="Your name"
+                value={donorName}
+                onChange={(e) => setDonorName(e.target.value)}
                 className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-600"
               />
             </div>
@@ -150,6 +192,8 @@ export default function DonationCheckout() {
               <input
                 type="email"
                 placeholder="your@email.com"
+                value={donorEmail}
+                onChange={(e) => setDonorEmail(e.target.value)}
                 className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-600"
               />
             </div>
@@ -193,10 +237,20 @@ export default function DonationCheckout() {
             </Button>
             <Button
               onClick={handleDonate}
+              disabled={isLoading}
               className="flex-1 bg-purple-600 hover:bg-purple-700 text-white gap-2"
             >
-              <Heart className="w-4 h-4" />
-              Complete Donation
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Heart className="w-4 h-4" />
+                  Complete Donation
+                </>
+              )}
             </Button>
           </div>
 

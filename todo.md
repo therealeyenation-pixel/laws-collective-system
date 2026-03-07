@@ -10156,3 +10156,17 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Create real-time update mechanism
 - [ ] Add supporter tier breakdown visualization
 - [ ] Deploy impact dashboard to public page
+
+
+## Phase 73: Stripe Donations & Impact
+
+- [ ] Implement Stripe checkout integration on DonationCheckout page
+- [ ] Create tRPC procedure for Stripe checkout session creation
+- [ ] Set up Stripe webhook handler for payment_intent.succeeded events
+- [ ] Store donation records in database
+- [ ] Build email confirmation workflow with receipts
+- [ ] Create email template for thank-you messages with donation details
+- [ ] Implement impact dashboard to display funds raised and metrics
+- [ ] Add real-time donation counter to Allies & Supporters page
+- [ ] Test all three features end-to-end
+- [ ] Publish to production
