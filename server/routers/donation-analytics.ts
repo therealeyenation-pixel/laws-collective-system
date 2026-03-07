@@ -190,8 +190,6 @@ export const donationAnalyticsRouter = router({
       const result = await db.execute(sql`
         SELECT 
           CASE 
-            WHEN total_donated >= 5000 THEN 'Legacy Partner'
-            WHEN total_donated >= 1000 THEN 'Benefactor'
             WHEN total_donated >= 500 THEN 'Champion'
             WHEN total_donated >= 100 THEN 'Supporter'
             ELSE 'Friend'
@@ -415,18 +413,10 @@ export const donationAnalyticsRouter = router({
       let nextMilestone = 100;
       let milestoneName = "Supporter";
 
-      if (total >= 5000) {
-        tier = "Legacy Partner";
-        nextMilestone = total;
-        milestoneName = "Legacy Partner";
-      } else if (total >= 1000) {
-        tier = "Benefactor";
-        nextMilestone = 5000;
-        milestoneName = "Legacy Partner";
-      } else if (total >= 500) {
+      if (total >= 500) {
         tier = "Champion";
-        nextMilestone = 1000;
-        milestoneName = "Benefactor";
+        nextMilestone = total;
+        milestoneName = "Champion";
       } else if (total >= 100) {
         tier = "Supporter";
         nextMilestone = 500;
@@ -489,8 +479,6 @@ function generateMockMonthlyTrends(months: number) {
 
 function generateMockDonorSegments() {
   return [
-    { tier: "Legacy Partner", donorCount: 5, averageDonated: 6500, totalRaised: 32500 },
-    { tier: "Benefactor", donorCount: 12, averageDonated: 2500, totalRaised: 30000 },
     { tier: "Champion", donorCount: 28, averageDonated: 750, totalRaised: 21000 },
     { tier: "Supporter", donorCount: 95, averageDonated: 250, totalRaised: 23750 },
     { tier: "Friend", donorCount: 202, averageDonated: 35, totalRaised: 7070 },
