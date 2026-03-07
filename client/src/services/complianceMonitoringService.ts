@@ -87,7 +87,7 @@ class ComplianceMonitoringService {
         type: 'registration',
         title: 'Georgia Annual Registration',
         description: 'Annual business registration renewal with Georgia Secretary of State',
-        entity: 'L.A.W.S. Collective LLC',
+        entity: 'The The L.A.W.S. Collective LLC',
         jurisdiction: 'Georgia',
         dueDate: new Date(now.getFullYear(), 3, 1), // April 1
         status: 'upcoming',
@@ -101,7 +101,7 @@ class ComplianceMonitoringService {
         type: 'tax_filing',
         title: 'Q1 Estimated Tax Payment',
         description: 'Federal estimated tax payment for Q1',
-        entity: 'L.A.W.S. Collective LLC',
+        entity: 'The The L.A.W.S. Collective LLC',
         dueDate: new Date(now.getFullYear(), 3, 15), // April 15
         status: 'upcoming',
         priority: 'critical',
@@ -114,7 +114,7 @@ class ComplianceMonitoringService {
         type: 'grant_report',
         title: 'Community Development Grant - Quarterly Report',
         description: 'Q1 progress report for HUD Community Development Block Grant',
-        entity: 'L.A.W.S. Collective',
+        entity: 'The The L.A.W.S. Collective',
         dueDate: new Date(now.getFullYear(), 3, 30), // April 30
         status: 'upcoming',
         priority: 'high',
@@ -140,7 +140,7 @@ class ComplianceMonitoringService {
         type: 'license',
         title: 'Business License Renewal',
         description: 'City of Atlanta business license renewal',
-        entity: 'L.A.W.S. Collective LLC',
+        entity: 'The The L.A.W.S. Collective LLC',
         jurisdiction: 'Atlanta, GA',
         dueDate: new Date(now.getFullYear(), 11, 31), // December 31
         status: 'compliant',
@@ -154,7 +154,7 @@ class ComplianceMonitoringService {
         type: 'insurance',
         title: 'General Liability Insurance',
         description: 'Annual general liability insurance policy renewal',
-        entity: 'L.A.W.S. Collective LLC',
+        entity: 'The The L.A.W.S. Collective LLC',
         dueDate: new Date(now.getFullYear(), 5, 1), // June 1
         status: 'upcoming',
         priority: 'high',

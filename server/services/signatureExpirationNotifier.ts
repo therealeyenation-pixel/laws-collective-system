@@ -454,7 +454,7 @@ function generateExpirationEmailHtml(params: {
   
   <div style="background: #1f2937; padding: 20px; border-radius: 0 0 12px 12px; text-align: center;">
     <p style="color: #9ca3af; margin: 0; font-size: 12px;">
-      This is an automated message from the L.A.W.S. Collective system.
+      This is an automated message from the The The L.A.W.S. Collective system.
     </p>
   </div>
 </body>

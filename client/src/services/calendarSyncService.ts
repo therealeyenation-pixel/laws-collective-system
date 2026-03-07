@@ -123,7 +123,7 @@ class CalendarSyncService {
     return {
       id: `board-meeting-${meeting.id}`,
       title: meeting.title,
-      description: 'Board Meeting - L.A.W.S. Collective',
+      description: 'Board Meeting - The The L.A.W.S. Collective',
       startTime: meeting.date,
       endTime,
       location: meeting.location,
@@ -198,7 +198,7 @@ class CalendarSyncService {
     const ics = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//L.A.W.S. Collective//Calendar//EN',
+      'PRODID:-//The The L.A.W.S. Collective//Calendar//EN',
       'BEGIN:VEVENT',
       `UID:${event.id}@laws-collective.com`,
       `DTSTART:${formatDate(event.startTime)}`,

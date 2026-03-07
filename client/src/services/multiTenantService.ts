@@ -107,12 +107,12 @@ class MultiTenantService {
     return [
       {
         id: 'tenant-main',
-        name: 'L.A.W.S. Collective',
+        name: 'The The L.A.W.S. Collective',
         slug: 'laws-collective',
         branding: {
           primaryColor: '#4F46E5',
           secondaryColor: '#10B981',
-          companyName: 'L.A.W.S. Collective',
+          companyName: 'The The L.A.W.S. Collective',
           tagline: 'Building Multi-Generational Wealth',
         },
         settings: {

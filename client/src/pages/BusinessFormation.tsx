@@ -88,7 +88,7 @@ const REAL_ENTITIES: EntityData[] = [
   },
   {
     id: 4,
-    name: "The L.A.W.S. Collective, LLC",
+    name: "The The The L.A.W.S. Collective, LLC",
     entityType: "llc",
     state: "Delaware",
     formationStatus: "active",

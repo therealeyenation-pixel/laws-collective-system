@@ -193,7 +193,7 @@ export default function CompletionCertificate({
           <br />
           Training content reviewed and approved by the Education Department.
           <br />
-          LuvOnPurpose Sovereign System • The L.A.W.S. Collective, LLC
+          LuvOnPurpose Sovereign System • The The The L.A.W.S. Collective, LLC
         </p>
       </div>
 

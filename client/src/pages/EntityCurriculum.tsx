@@ -395,7 +395,7 @@ const curricula: EntityCurriculumData[] = [
   },
   {
     entityId: "commercial",
-    entityName: "The L.A.W.S. Collective - Services",
+    entityName: "The The The L.A.W.S. Collective - Services",
     curriculumName: "Product Development",
     description: "From idea to market: developing products and services that create value and generate sustainable revenue.",
     targetAudience: "Entrepreneurs, product managers, business developers, and innovators",
@@ -472,7 +472,7 @@ const curricula: EntityCurriculumData[] = [
   },
   {
     entityId: "platform",
-    entityName: "The L.A.W.S. Collective - Platform",
+    entityName: "The The The L.A.W.S. Collective - Platform",
     curriculumName: "Platform Administration",
     description: "Managing and administering the L.A.W.S. platform, including simulators, member tools, and infrastructure.",
     targetAudience: "Platform administrators, system operators, and technical staff",

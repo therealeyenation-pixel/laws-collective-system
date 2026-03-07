@@ -89,8 +89,8 @@ const entities: Entity[] = [
   },
   {
     id: "laws",
-    name: "The L.A.W.S. Collective, LLC",
-    shortName: "L.A.W.S. Collective",
+    name: "The The The L.A.W.S. Collective, LLC",
+    shortName: "The The L.A.W.S. Collective",
     type: "Delaware LLC",
     state: "Delaware",
     status: "Active",

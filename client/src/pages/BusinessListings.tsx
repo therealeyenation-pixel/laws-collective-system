@@ -67,7 +67,7 @@ const internalEntities = [
   },
   {
     id: "laws-collective",
-    name: "The L.A.W.S. Collective, LLC",
+    name: "The The The L.A.W.S. Collective, LLC",
     type: "LLC",
     state: "GA",
     ein: "39-3122993",

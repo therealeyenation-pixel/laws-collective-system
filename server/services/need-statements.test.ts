@@ -24,10 +24,10 @@ describe('Need Statements Service', () => {
       expect(statement?.wordCount).toBeGreaterThan(400);
     });
 
-    it('should return need statement for L.A.W.S. Collective', () => {
+    it('should return need statement for The The L.A.W.S. Collective', () => {
       const statement = getNeedStatement('laws');
       expect(statement).not.toBeNull();
-      expect(statement?.entityName).toBe('The L.A.W.S. Collective, LLC');
+      expect(statement?.entityName).toBe('The The The L.A.W.S. Collective, LLC');
       expect(statement?.entityType).toBe('LLC');
       expect(statement?.wordCount).toBeGreaterThan(400);
     });
@@ -107,7 +107,7 @@ describe('Need Statements Service', () => {
       expect(REAL_EYE_NATION_NEED_STATEMENT).toContain('storytelling');
     });
 
-    it('L.A.W.S. Collective statement should mention workforce development', () => {
+    it('The The L.A.W.S. Collective statement should mention workforce development', () => {
       expect(LAWS_COLLECTIVE_NEED_STATEMENT).toContain('workforce');
       expect(LAWS_COLLECTIVE_NEED_STATEMENT).toContain('employment');
       expect(LAWS_COLLECTIVE_NEED_STATEMENT).toContain('entrepreneurship');
@@ -170,7 +170,7 @@ describe('Need Statements Service', () => {
       expect(wordCount).toBeLessThanOrEqual(600);
     });
 
-    it('L.A.W.S. Collective statement should be approximately 500 words', () => {
+    it('The The L.A.W.S. Collective statement should be approximately 500 words', () => {
       const wordCount = LAWS_COLLECTIVE_NEED_STATEMENT.split(/\s+/).length;
       expect(wordCount).toBeGreaterThanOrEqual(450);
       expect(wordCount).toBeLessThanOrEqual(600);

@@ -20,7 +20,7 @@ The Calea Freeman Family Trust serves as the sovereign governance entity and ult
 
 Unlike traditional family trusts focused solely on asset protection, the Calea Freeman Family Trust operates as an active governance body that oversees a network of purpose-driven businesses. The Trust's mission extends beyond wealth preservation to include family unity, cultural preservation, and community impact.
 
-The Trust derives income from ownership distributions from subsidiary entities (Real-Eye-Nation LLC, LuvOnPurpose Autonomous Wealth System LLC, The L.A.W.S. Collective, LLC, LuvOnPurpose Outreach Temple and Academy Society, Inc.) and manages these funds according to established allocation policies that balance current needs with long-term wealth building.
+The Trust derives income from ownership distributions from subsidiary entities (Real-Eye-Nation LLC, LuvOnPurpose Autonomous Wealth System LLC, The The The L.A.W.S. Collective, LLC, LuvOnPurpose Outreach Temple and Academy Society, Inc.) and manages these funds according to established allocation policies that balance current needs with long-term wealth building.
 
 ---
 
@@ -78,7 +78,7 @@ The Trust holds ownership interests in four operating entities:
 |--------|------|----------|------------|
 | Real-Eye-Nation LLC | LLC | Media, content, truth documentation | 20% |
 | LuvOnPurpose LLC | LLC | Platform operations, technology | 40% |
-| The L.A.W.S. Collective, LLC | LLC (Delaware) | Community programs, membership, products | 10% |
+| The The The L.A.W.S. Collective, LLC | LLC (Delaware) | Community programs, membership, products | 10% |
 | LuvOnPurpose Outreach Temple and Academy Society, Inc. | 508(c)(1)(A) Nonprofit | Spiritual education, training, property | 30% |
 
 These allocation percentages represent the distribution of Trust resources and attention, not ownership percentages. The Trust maintains majority or full ownership of each entity.
@@ -301,7 +301,7 @@ The Trust creates social impact through:
 
 **Economic Empowerment**: Creating employment, training, and ownership opportunities for family members and community partners.
 
-**Community Investment**: Directing resources to community programs through L.A.W.S. Collective and 508 Academy.
+**Community Investment**: Directing resources to community programs through The The L.A.W.S. Collective and 508 Academy.
 
 **Model Development**: Creating a replicable model that other families can adapt for their own multi-generational wealth building.
 
@@ -312,7 +312,7 @@ The Trust creates social impact through:
 The Trust benefits the broader community by:
 
 - Funding educational programs through LuvOnPurpose Outreach Temple and Academy Society, Inc.
-- Supporting community healing and development through The L.A.W.S. Collective, LLC
+- Supporting community healing and development through The The The L.A.W.S. Collective, LLC
 - Creating employment opportunities in underserved communities
 - Documenting and preserving community histories through Real-Eye-Nation
 - Sharing the LuvOnPurpose model with other families seeking to build generational wealth

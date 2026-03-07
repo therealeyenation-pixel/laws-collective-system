@@ -1,6 +1,6 @@
 /**
  * S.W.A.L. Tokenomics System
- * Owner: The L.A.W.S. Collective, LLC
+ * Owner: The The The L.A.W.S. Collective, LLC
  * 
  * Journey to Sovereignty: Self → Water → Air → Land → Sovereignty
  * 
@@ -483,7 +483,7 @@ export function generateNFTMetadata(
 
 export const ROYALTY_CONFIG = {
   secondaryMarketRoyalty: 0.075, // 7.5% on resales
-  creatorShare: 0.70, // 70% to The L.A.W.S. Collective
+  creatorShare: 0.70, // 70% to The The The L.A.W.S. Collective
   communityShare: 0.20, // 20% to community treasury
   platformShare: 0.10, // 10% to platform maintenance
 };

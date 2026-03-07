@@ -16,7 +16,7 @@ async function seedPayrollTestData() {
 
   console.log("Starting payroll test data seed...");
 
-  // Get or create L.A.W.S. Collective entity
+  // Get or create The The L.A.W.S. Collective entity
   let entityId = 1;
   const existingEntities = await db.select().from(businessEntities).limit(1);
   if (existingEntities.length > 0) {
@@ -25,7 +25,7 @@ async function seedPayrollTestData() {
   } else {
     const entityResult = await db.insert(businessEntities).values({
       userId: 1,
-      name: "L.A.W.S. Collective, LLC",
+      name: "The The L.A.W.S. Collective, LLC",
       entityType: "llc",
       status: "active",
       trustLevel: 1,
@@ -33,7 +33,7 @@ async function seedPayrollTestData() {
       stateOfFormation: "Georgia",
     });
     entityId = entityResult[0].insertId;
-    console.log(`Created entity: L.A.W.S. Collective, LLC (ID: ${entityId})`);
+    console.log(`Created entity: The The L.A.W.S. Collective, LLC (ID: ${entityId})`);
   }
 
   // Sample employees for payroll testing

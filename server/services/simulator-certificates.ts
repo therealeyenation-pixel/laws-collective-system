@@ -402,7 +402,7 @@ export function getCertificateTemplate(
     </div>
     <div class="date">Issued on ${formattedDate}</div>
     ${blockchainHash ? `<div class="blockchain">Blockchain Verified: ${blockchainHash}</div>` : ''}
-    <div class="seal">🏛️ L.A.W.S. Collective</div>
+    <div class="seal">🏛️ The The L.A.W.S. Collective</div>
   </div>
 </body>
 </html>

@@ -44,7 +44,7 @@ interface BudgetItem {
 
 const entityLabels: Record<EntityType, string> = {
   real_eye_nation: 'Real-Eye-Nation LLC',
-  laws_collective: 'L.A.W.S. Collective LLC',
+  laws_collective: 'The The L.A.W.S. Collective LLC',
   luvonpurpose_aws: 'LuvOnPurpose AWS LLC',
   '508_academy': '508-LuvOnPurpose Academy'
 };
@@ -267,7 +267,7 @@ export default function GrantExport() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="real_eye_nation">Real-Eye-Nation LLC</SelectItem>
-                    <SelectItem value="laws_collective">L.A.W.S. Collective LLC</SelectItem>
+                    <SelectItem value="laws_collective">The The L.A.W.S. Collective LLC</SelectItem>
                     <SelectItem value="luvonpurpose_aws">LuvOnPurpose AWS LLC</SelectItem>
                     <SelectItem value="508_academy">508-LuvOnPurpose Academy</SelectItem>
                   </SelectContent>

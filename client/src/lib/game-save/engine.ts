@@ -1,7 +1,7 @@
 /**
  * Universal Game Save Engine
  * L.A.W.S. Quest - Commercial Game Product
- * Owned by The L.A.W.S. Collective, LLC
+ * Owned by The The The L.A.W.S. Collective, LLC
  * 
  * Core engine for pause and auto-save functionality
  */

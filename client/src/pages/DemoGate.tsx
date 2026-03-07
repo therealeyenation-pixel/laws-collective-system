@@ -38,7 +38,7 @@ export default function DemoGate() {
           </div>
           <h1 className="text-4xl font-bold text-foreground">Shell Demo</h1>
           <p className="text-lg text-muted-foreground">
-            Enter the passcode to preview the L.A.W.S. Collective system
+            Enter the passcode to preview the The The L.A.W.S. Collective system
           </p>
         </div>
 
@@ -64,10 +64,10 @@ export default function DemoGate() {
         {/* Footer */}
         <div className="text-center space-y-2 pt-4 border-t border-border">
           <p className="text-sm text-muted-foreground">
-            This is a limited preview of the L.A.W.S. Collective system.
+            This is a limited preview of the The The L.A.W.S. Collective system.
           </p>
           <p className="text-xs text-muted-foreground">
-            For full access, contact the L.A.W.S. Collective team.
+            For full access, contact the The The L.A.W.S. Collective team.
           </p>
         </div>
       </div>
@@ -82,7 +82,7 @@ function DemoShell() {
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="container max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-foreground">L.A.W.S. Collective - Demo</h1>
+          <h1 className="text-2xl font-bold text-foreground">The The L.A.W.S. Collective - Demo</h1>
           <div className="text-sm text-muted-foreground">Shell Preview</div>
         </div>
       </header>
@@ -93,7 +93,7 @@ function DemoShell() {
         <section className="text-center space-y-6">
           <h2 className="text-4xl font-bold text-foreground">Welcome to the L.A.W.S. System</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            This is a limited preview of the full L.A.W.S. Collective platform. Below you can see the main sections of the system.
+            This is a limited preview of the full The The L.A.W.S. Collective platform. Below you can see the main sections of the system.
           </p>
         </section>
 
@@ -203,7 +203,7 @@ function DemoShell() {
         <section className="text-center space-y-6 py-12 border-t border-border">
           <h3 className="text-2xl font-bold text-foreground">Ready for Full Access?</h3>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            This demo provides a preview of the L.A.W.S. Collective system. To access the full platform with all features enabled, contact the L.A.W.S. Collective team.
+            This demo provides a preview of the The The L.A.W.S. Collective system. To access the full platform with all features enabled, contact the The The L.A.W.S. Collective team.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Button variant="outline" onClick={() => window.history.back()}>

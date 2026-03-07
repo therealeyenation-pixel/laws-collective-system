@@ -812,7 +812,7 @@ export default function FinancialLiteracyGame() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-amber-800">+{tokensEarned} Tokens Earned</p>
-                <p className="text-sm text-amber-600">Added to your L.A.W.S. Collective balance</p>
+                <p className="text-sm text-amber-600">Added to your The The L.A.W.S. Collective balance</p>
               </div>
             </div>
           </div>

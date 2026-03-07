@@ -177,7 +177,7 @@ export default function ContractorTransition() {
       employeeName: `${employee.firstName} ${employee.lastName}`,
       currentRole: employee.jobTitle,
       department: employee.department,
-      entityName: "L.A.W.S. Collective, LLC",
+      entityName: "The The L.A.W.S. Collective, LLC",
       initiatedDate: new Date().toISOString().split('T')[0],
       currentStep: 1,
       steps: TRANSITION_STEPS.map((step, idx) => ({

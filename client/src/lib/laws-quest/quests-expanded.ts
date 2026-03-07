@@ -1,6 +1,6 @@
 /**
  * L.A.W.S. Quest - Commercial Game Product
- * Owned by The L.A.W.S. Collective, LLC
+ * Owned by The The The L.A.W.S. Collective, LLC
  * 
  * Expanded quest content for all four realms
  * Each realm has 20+ quests organized into storylines

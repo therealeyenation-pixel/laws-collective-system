@@ -2,7 +2,7 @@
  * L.A.W.S. Quest - Meditation Mini-Game
  * A breathing and mindfulness exercise for the Water realm
  * 
- * Product of The L.A.W.S. Collective, LLC
+ * Product of The The The L.A.W.S. Collective, LLC
  */
 
 import { useState, useEffect, useCallback } from "react";

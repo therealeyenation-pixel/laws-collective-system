@@ -74,7 +74,7 @@ export default function DonationThankYou() {
           )}
 
           <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            Your contribution directly supports L.A.W.S. Collective's mission of building 
+            Your contribution directly supports The The L.A.W.S. Collective's mission of building 
             generational wealth and empowering communities through Land, Air, Water, and Self.
           </p>
 
@@ -106,7 +106,7 @@ export default function DonationThankYou() {
             </h3>
             <p className="text-sm text-muted-foreground">
               A tax receipt has been sent to <strong>{session?.customerEmail || "your email"}</strong>. 
-              L.A.W.S. Collective is a 508(c)(1)(a) tax-exempt organization. Your donation is 
+              The The L.A.W.S. Collective is a 508(c)(1)(a) tax-exempt organization. Your donation is 
               tax-deductible to the extent allowed by law. No goods or services were provided 
               in exchange for this contribution.
             </p>
@@ -146,7 +146,7 @@ export default function DonationThankYou() {
               variant="outline"
               size="sm"
               onClick={() => {
-                const text = "I just donated to L.A.W.S. Collective to support community wealth building! Join me in making a difference.";
+                const text = "I just donated to The The L.A.W.S. Collective to support community wealth building! Join me in making a difference.";
                 window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
               }}
             >
@@ -156,7 +156,7 @@ export default function DonationThankYou() {
               variant="outline"
               size="sm"
               onClick={() => {
-                const text = "I just donated to L.A.W.S. Collective to support community wealth building!";
+                const text = "I just donated to The The L.A.W.S. Collective to support community wealth building!";
                 window.open(`https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}`, "_blank");
               }}
             >

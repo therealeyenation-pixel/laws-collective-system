@@ -255,7 +255,7 @@ export default function TaxSimulator() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs font-medium">
-                L.A.W.S. Collective
+                The The L.A.W.S. Collective
               </Badge>
             </div>
             <h1 className="text-2xl font-bold text-foreground">Tax Preparation Simulator</h1>

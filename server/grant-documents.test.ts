@@ -147,14 +147,14 @@ describe("Grant Documents Router", () => {
     it("should have all ecosystem entities defined", () => {
       const entities = {
         "real_eye_nation": "Real-Eye-Nation LLC",
-        "laws_collective": "The L.A.W.S. Collective LLC",
+        "laws_collective": "The The The L.A.W.S. Collective LLC",
         "luvonpurpose_wealth": "LuvOnPurpose Autonomous Wealth System LLC",
         "academy": "LuvOnPurpose Outreach Temple and Academy Society Inc.",
         "trust_98": "98 Trust - CALEA Freeman Family Trust"
       };
       
       expect(Object.keys(entities).length).toBe(5);
-      expect(entities.laws_collective).toBe("The L.A.W.S. Collective LLC");
+      expect(entities.laws_collective).toBe("The The The L.A.W.S. Collective LLC");
       expect(entities.academy).toContain("Academy");
       expect(entities.trust_98).toContain("Trust");
     });

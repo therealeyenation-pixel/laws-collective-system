@@ -18,7 +18,7 @@
 ---
 
 ### 1. HR DEPARTMENT LEAD
-**Entity:** The L.A.W.S. Collective, LLC  
+**Entity:** The The The L.A.W.S. Collective, LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** All Entities, Academy (Cornelius), Outreach
 
@@ -39,7 +39,7 @@
 > You're not just hiring—you're building a family enterprise. Every person you bring in becomes a stakeholder in generational wealth.
 >
 > **What we offer:**
-> - Ownership stake in The L.A.W.S. Collective, LLC
+> - Ownership stake in The The The L.A.W.S. Collective, LLC
 > - Leadership of your own department
 > - All Academy certifications (free)
 > - Direct impact on organizational growth
@@ -53,7 +53,7 @@
 ---
 
 ### 2. QA/QC DEPARTMENT LEAD
-**Entity:** The L.A.W.S. Collective, LLC  
+**Entity:** The The The L.A.W.S. Collective, LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** All Entities, Grant Management, Purchasing
 
@@ -74,7 +74,7 @@
 > When grants require compliance reports, you'll have the documentation. When auditors ask questions, you'll have answers. You're the reason the organization runs clean.
 >
 > **What we offer:**
-> - Ownership stake in The L.A.W.S. Collective, LLC
+> - Ownership stake in The The The L.A.W.S. Collective, LLC
 > - Leadership of your own department
 > - Process design authority
 > - Critical role in grant success
@@ -88,7 +88,7 @@
 ---
 
 ### 3. PURCHASING DEPARTMENT LEAD
-**Entity:** The L.A.W.S. Collective, LLC  
+**Entity:** The The The L.A.W.S. Collective, LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** Finance (Craig), Proposal Workshop, Outreach (Temple)
 
@@ -107,7 +107,7 @@
 > This isn't a job—it's a stake in building generational wealth. You'll have a seat at the table, your own department, and the satisfaction of knowing every dollar you manage strengthens a family legacy.
 >
 > **What we offer:**
-> - Ownership stake in The L.A.W.S. Collective, LLC
+> - Ownership stake in The The The L.A.W.S. Collective, LLC
 > - Training through our Academy (Financial Literacy, Business Operations)
 > - Voice in Trust governance decisions
 > - Flexible, purpose-driven work
@@ -257,7 +257,7 @@
 ---
 
 ### 8. GRANT WRITER / PROPOSAL SPECIALIST
-**Entity:** The L.A.W.S. Collective, LLC (serving all entities)  
+**Entity:** The The The L.A.W.S. Collective, LLC (serving all entities)  
 **Reports To:** Trust Governance  
 **Collaborates With:** Purchasing, Finance (Craig), All Entity Leads
 
@@ -325,7 +325,7 @@
 ---
 
 ### 10. COMMUNITY PROGRAMS COORDINATOR
-**Entity:** The L.A.W.S. Collective, LLC  
+**Entity:** The The The L.A.W.S. Collective, LLC  
 **Reports To:** Trust Governance  
 **Collaborates With:** Outreach, Education (Cornelius), Temple
 
@@ -388,5 +388,5 @@ If that's you, let's talk.
 *"Building Multi-Generational Wealth Through Purpose & Community"*
 
 **Calea Freeman Family Trust**  
-LuvOnPurpose Autonomous Wealth System LLC | The L.A.W.S. Collective, LLC  
+LuvOnPurpose Autonomous Wealth System LLC | The The The L.A.W.S. Collective, LLC  
 Real-Eye-Nation LLC | LuvOnPurpose Outreach Temple and Academy Society, Inc.

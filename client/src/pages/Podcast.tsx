@@ -59,7 +59,7 @@ const podcastShows: PodcastShow[] = [
     id: "1",
     name: "Real-Eye-Nation Radio",
     description: "Truth-telling conversations about sovereignty, wealth, and generational legacy.",
-    host: "L.A.W.S. Collective",
+    host: "The The L.A.W.S. Collective",
     category: "Education",
     totalEpisodes: 24,
     subscribers: 3450,

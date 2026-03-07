@@ -118,7 +118,7 @@ function generateChatMessageEmail(notification: ChatMessageNotification, recipie
       </div>
     </div>
     <div class="footer">
-      <p>L.A.W.S. Collective - Building Multi-Generational Wealth</p>
+      <p>The The L.A.W.S. Collective - Building Multi-Generational Wealth</p>
       <p><a href="${process.env.VITE_APP_URL || ""}/settings/notifications" class="unsubscribe">Manage notification preferences</a></p>
     </div>
   </div>
@@ -228,7 +228,7 @@ function generateMeetingInviteEmail(notification: MeetingNotification, recipient
       </div>
     </div>
     <div class="footer">
-      <p>L.A.W.S. Collective - Building Multi-Generational Wealth</p>
+      <p>The The L.A.W.S. Collective - Building Multi-Generational Wealth</p>
       <p><a href="${process.env.VITE_APP_URL || ""}/settings/notifications" style="color: #999; text-decoration: underline;">Manage notification preferences</a></p>
     </div>
   </div>
@@ -291,7 +291,7 @@ function generateMeetingReminderEmail(notification: MeetingNotification, recipie
       </div>
     </div>
     <div class="footer">
-      <p>L.A.W.S. Collective - Building Multi-Generational Wealth</p>
+      <p>The The L.A.W.S. Collective - Building Multi-Generational Wealth</p>
     </div>
   </div>
 </body>
@@ -348,7 +348,7 @@ function generateICSLink(meeting: MeetingNotification): string {
   
   const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//L.A.W.S. Collective//Meeting//EN
+PRODID:-//The The L.A.W.S. Collective//Meeting//EN
 BEGIN:VEVENT
 UID:${meeting.meetingId}@laws-collective.com
 DTSTAMP:${formatICSDate(new Date())}

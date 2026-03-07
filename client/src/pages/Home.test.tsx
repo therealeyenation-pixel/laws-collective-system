@@ -18,7 +18,7 @@ vi.mock('@/const', () => ({
 describe('Home Landing Page', () => {
   it('renders the hero section with title', () => {
     render(<Home />);
-    expect(screen.getByText('The L.A.W.S. Collective')).toBeInTheDocument();
+    expect(screen.getByText('The The The L.A.W.S. Collective')).toBeInTheDocument();
   });
 
   it('renders the tagline with colored letters', () => {
@@ -85,11 +85,11 @@ describe('Home Landing Page', () => {
   it('renders the waitlist section', () => {
     render(<Home />);
     expect(screen.getByText('Join the Waitlist')).toBeInTheDocument();
-    expect(screen.getByText('Be among the first to access The L.A.W.S. Collective')).toBeInTheDocument();
+    expect(screen.getByText('Be among the first to access The The The L.A.W.S. Collective')).toBeInTheDocument();
   });
 
   it('renders the footer', () => {
     render(<Home />);
-    expect(screen.getByText(/© 2026 The L.A.W.S. Collective/)).toBeInTheDocument();
+    expect(screen.getByText(/© 2026 The The The L.A.W.S. Collective/)).toBeInTheDocument();
   });
 });

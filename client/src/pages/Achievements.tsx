@@ -158,7 +158,7 @@ export default function Achievements() {
 
   const handleShare = (platform: "twitter" | "facebook" | "linkedin" | "copy", achievementId: number) => {
     const shareUrl = `${window.location.origin}${selectedAchievement?.shareUrl}`;
-    const shareText = `I just earned the "${selectedAchievement?.achievement?.name}" achievement on L.A.W.S. Collective! 🏆`;
+    const shareText = `I just earned the "${selectedAchievement?.achievement?.name}" achievement on The The L.A.W.S. Collective! 🏆`;
     
     recordShareMutation.mutate({ achievementId, platform });
     

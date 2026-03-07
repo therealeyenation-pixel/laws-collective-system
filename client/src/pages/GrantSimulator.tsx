@@ -44,7 +44,7 @@ import { toast } from "sonner";
 
 // Entity-specific grant recommendations
 const entityGrantRecommendations: Record<string, string[]> = {
-  "laws": ["dol_workforce", "sba_emerging", "sbir", "nsf_convergence", "digital_equity", "mbda", "naacp", "amber", "herrise", "freed"], // L.A.W.S. Collective - workforce development + technology focus
+  "laws": ["dol_workforce", "sba_emerging", "sbir", "nsf_convergence", "digital_equity", "mbda", "naacp", "amber", "herrise", "freed"], // The The L.A.W.S. Collective - workforce development + technology focus
   "508academy": ["lilly", "cdbg", "blank", "csra", "rcdi"], // LuvOnPurpose Academy - faith-based education focus
   "realeyenation": ["amber", "herrise", "ifundwomen", "empowher", "freed"],
   "luvonpurpose": ["amber", "herrise", "naacp", "mbda", "wish"],
@@ -52,8 +52,8 @@ const entityGrantRecommendations: Record<string, string[]> = {
 };
 
 const availableGrants = [
-  // WORKFORCE DEVELOPMENT GRANTS (Best for L.A.W.S. Collective)
-  // TECHNOLOGY & INNOVATION GRANTS (Best for L.A.W.S. Collective SaaS Platform)
+  // WORKFORCE DEVELOPMENT GRANTS (Best for The The L.A.W.S. Collective)
+  // TECHNOLOGY & INNOVATION GRANTS (Best for The The L.A.W.S. Collective SaaS Platform)
   {
     id: "sbir",
     name: "SBIR/STTR Phase I Grant",
@@ -327,7 +327,7 @@ const entities = [
   { id: "realeyenation", name: "Real-Eye-Nation LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "small_business"] },
   { id: "trust", name: "Calea Freeman Family Trust", type: "Trust", eligibility: ["family_trust"] },
   { id: "luvonpurpose", name: "LuvOnPurpose Autonomous Wealth System LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "small_business"] },
-  { id: "laws", name: "The L.A.W.S. Collective, LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "community", "small_business", "technology", "workforce_development"] },
+  { id: "laws", name: "The The The L.A.W.S. Collective, LLC", type: "LLC", eligibility: ["women_owned", "minority_owned", "black_owned", "community", "small_business", "technology", "workforce_development"] },
   { id: "508academy", name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "508(c)(1)(a)", eligibility: ["faith_based", "nonprofit", "education", "community"] },
 ];
 
@@ -916,7 +916,7 @@ export default function GrantSimulator() {
 
 6. SUSTAINABILITY: Briefly explain how the impact of this grant will continue beyond the funding period.
 
-Example: 'Our community of 50,000 residents has only one workforce development center, leaving over 3,000 unemployed adults without access to job training. The L.A.W.S. Collective's Business Management Platform will provide comprehensive entrepreneurship training to 200 participants annually, with a projected 60% business launch rate within 12 months...'"
+Example: 'Our community of 50,000 residents has only one workforce development center, leaving over 3,000 unemployed adults without access to job training. The The The L.A.W.S. Collective's Business Management Platform will provide comprehensive entrepreneurship training to 200 participants annually, with a projected 60% business launch rate within 12 months...'"
                   value={data.needStatement}
                   onChange={(e) => updateData("needStatement", e.target.value)}
                   rows={20}
@@ -1337,7 +1337,7 @@ Example: 'Our community of 50,000 residents has only one workforce development c
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs font-medium">
-              L.A.W.S. Collective
+              The The L.A.W.S. Collective
             </Badge>
           </div>
           <h1 className="text-3xl font-bold">Grant Application Simulator</h1>

@@ -1,6 +1,6 @@
 /**
  * Onboarding Journey Tests
- * Tests for the Direct Onboarding path for joining L.A.W.S. Collective
+ * Tests for the Direct Onboarding path for joining The The L.A.W.S. Collective
  */
 
 import { describe, it, expect } from 'vitest';

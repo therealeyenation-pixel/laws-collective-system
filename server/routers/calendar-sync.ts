@@ -32,7 +32,7 @@ function generateICSContent(meeting: {
 
   return `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//L.A.W.S. Collective//Meeting System//EN
+PRODID:-//The The L.A.W.S. Collective//Meeting System//EN
 CALSCALE:GREGORIAN
 METHOD:REQUEST
 BEGIN:VEVENT
@@ -361,10 +361,10 @@ export const calendarSyncRouter = router({
 
       let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//L.A.W.S. Collective//Meeting System//EN
+PRODID:-//The The L.A.W.S. Collective//Meeting System//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:L.A.W.S. Collective Meetings
+X-WR-CALNAME:The The L.A.W.S. Collective Meetings
 `;
 
       for (const meeting of userMeetings) {

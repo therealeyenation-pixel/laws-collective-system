@@ -132,7 +132,7 @@ export const contractManagementRouter = router({
             autoRenew, renewalTermMonths, contractValue, paymentTerms, 
             noticePeriodDays, notes, createdBy, status, signatureStatus)
            VALUES (${contractNumber}, ${mappedType}, ${input.title}, ${input.description || null},
-            1, 'L.A.W.S. Collective',
+            1, 'The The L.A.W.S. Collective',
             'Contractor', 'individual', 
             ${input.effectiveDate ? new Date(input.effectiveDate) : null}, 
             ${input.expirationDate ? new Date(input.expirationDate) : null}, 

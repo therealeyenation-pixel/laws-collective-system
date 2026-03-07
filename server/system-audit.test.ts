@@ -394,7 +394,7 @@ describe("LuvOnPurpose System Audit", () => {
         systemName: "LuvOnPurpose Autonomous Wealth System (LAWS)",
         components: {
           "508 Organization": "Configured",
-          "L.A.W.S. Collective": "Active",
+          "The The L.A.W.S. Collective": "Active",
           "House/Trust System": "Active",
           "Token Economy": "Active",
           "Closed-Loop Wealth": "Active",

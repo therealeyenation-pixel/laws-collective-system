@@ -230,7 +230,7 @@ Brand context: LuvOnPurpose is a multi-generational wealth building system focus
 - Community restoration and sovereignty
 - Education through the Luv Academy
 - Autonomous wealth generation
-- L.A.W.S. Collective (Land, Air, Water, Self)
+- The The L.A.W.S. Collective (Land, Air, Water, Self)
 
 Generate both:
 1. Email subject line (compelling, under 60 characters)

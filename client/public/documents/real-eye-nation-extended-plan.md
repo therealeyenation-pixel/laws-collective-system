@@ -382,7 +382,7 @@ Real-Eye-Nation operates as an integral component of a multi-generational wealth
 | Partner | Role | Integration Point |
 |---------|------|-------------------|
 | LuvOnPurpose Academy | K-12 education + trade certification | Document student progress; train youth in media |
-| L.A.W.S. Collective | Workforce-to-ownership platform | Document business launches; train entrepreneur storytellers |
+| The The L.A.W.S. Collective | Workforce-to-ownership platform | Document business launches; train entrepreneur storytellers |
 | LuvOnPurpose Tech | Financial automation platform | Document wealth building; create financial literacy content |
 | Family Trust | Land and property acquisition | Document property acquisitions and renovations |
 

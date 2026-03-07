@@ -147,7 +147,7 @@ export default function MarketingDashboard() {
           <div>
             <h1 className="text-3xl font-bold">Marketing Dashboard</h1>
             <p className="text-muted-foreground mt-1">
-              L.A.W.S. Collective marketing strategy and campaign management
+              The The L.A.W.S. Collective marketing strategy and campaign management
             </p>
           </div>
           <div className="flex gap-2">

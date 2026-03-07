@@ -11,7 +11,7 @@
       "Founder/Matriarch",
       "Chief Executive Officer",
       "Trustee - Calea Freeman Family Trust",
-      "Managing Member - The L.A.W.S. Collective, LLC",
+      "Managing Member - The The The L.A.W.S. Collective, LLC",
       "Managing Member - LuvOnPurpose Autonomous Wealth System LLC",
       "Managing Member - Real-Eye-Nation LLC"
     ]
@@ -44,7 +44,7 @@
       "taxTreatment": "Pass-through income on Schedule K-1, self-employment tax on active income",
       "entities": [
         {
-          "name": "The L.A.W.S. Collective, LLC",
+          "name": "The The The L.A.W.S. Collective, LLC",
           "ownershipPercentage": "TBD per Operating Agreement",
           "distributionPriority": "After operating expenses and reserves",
           "ledgerCategory": "LLC_DISTRIBUTION_LAWS_COLLECTIVE"

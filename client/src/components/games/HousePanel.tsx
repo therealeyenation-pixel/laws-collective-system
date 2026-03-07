@@ -2,7 +2,7 @@
  * L.A.W.S. Quest - House Building Panel
  * Manage your family legacy and House progression
  * 
- * Product of The L.A.W.S. Collective, LLC
+ * Product of The The The L.A.W.S. Collective, LLC
  */
 
 import { useState } from "react";

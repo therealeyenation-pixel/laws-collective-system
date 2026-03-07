@@ -73,7 +73,7 @@ export default function Landing() {
     details?: string[];
   }> = [
     {
-      title: "Welcome to L.A.W.S. Collective",
+      title: "Welcome to The The L.A.W.S. Collective",
       subtitle: "Multi-Generational Wealth Building",
       description: "A comprehensive system for building sustainable wealth through purpose and community.",
       icon: "🌍",
@@ -122,7 +122,7 @@ export default function Landing() {
     },
     {
       title: "Join the Collective",
-      description: "Enter your business name below to see what you can build with L.A.W.S. Collective.",
+      description: "Enter your business name below to see what you can build with The The L.A.W.S. Collective.",
       icon: "🚀",
       color: "from-green-500/20 to-teal-500/20",
       accentColor: "text-green-600 dark:text-green-400",
@@ -135,7 +135,7 @@ export default function Landing() {
     {
       title: `Welcome, ${businessName}`,
       subtitle: "Your Business Dashboard",
-      description: "Here's what you'll access when you set up your business with L.A.W.S. Collective.",
+      description: "Here's what you'll access when you set up your business with The The L.A.W.S. Collective.",
       icon: "🎯",
       color: "from-blue-500/20 to-cyan-500/20",
       accentColor: "text-blue-600 dark:text-blue-400",
@@ -170,7 +170,7 @@ export default function Landing() {
     {
       title: `${businessName} - Community & Growth`,
       subtitle: "Networking & Community Access",
-      description: "Connect with other L.A.W.S. Collective members and access exclusive resources.",
+      description: "Connect with other The The L.A.W.S. Collective members and access exclusive resources.",
       icon: "🌐",
       color: "from-indigo-500/20 to-blue-500/20",
       accentColor: "text-indigo-600 dark:text-indigo-400",
@@ -282,7 +282,7 @@ export default function Landing() {
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border w-full">
         <div className="w-full px-4 py-3 flex flex-col gap-3">
           <div className="flex justify-between items-center">
-            <h1 className="text-xl font-bold text-foreground">L.A.W.S. Collective</h1>
+            <h1 className="text-xl font-bold text-foreground">The The L.A.W.S. Collective</h1>
             {(stage === "name-input") && (
               <Button 
                 variant="outline" 
@@ -319,7 +319,7 @@ export default function Landing() {
             {/* QR Code Section - Mobile Optimized */}
             <div className="text-center space-y-3">
               <h2 className="text-2xl font-bold text-foreground">Scan to Learn More</h2>
-              <p className="text-base text-muted-foreground">Connect with L.A.W.S. Collective</p>
+              <p className="text-base text-muted-foreground">Connect with The The L.A.W.S. Collective</p>
               <div className="flex justify-center">
                 <div className="bg-white p-4 rounded-lg">
                   <QRCode value={typeof window !== "undefined" ? window.location.href : "https://example.com"} size={160} />
@@ -401,7 +401,7 @@ export default function Landing() {
                 <div className="space-y-4">
                   <h2 className="text-4xl font-bold text-foreground">Start Your Business</h2>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Enter your business name to see what you'll get when you start with L.A.W.S. Collective.
+                    Enter your business name to see what you'll get when you start with The The L.A.W.S. Collective.
                   </p>
                 </div>
 
@@ -514,7 +514,7 @@ export default function Landing() {
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold text-foreground">Luv's Vision and L.A.W.S. Mission</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              The L.A.W.S. Collective represents a revolutionary approach to multi-generational wealth building. By integrating the four pillars—LAND, AIR, WATER, and SELF—we create a comprehensive framework that honors cultural heritage while building sustainable financial futures.
+              The The The L.A.W.S. Collective represents a revolutionary approach to multi-generational wealth building. By integrating the four pillars—LAND, AIR, WATER, and SELF—we create a comprehensive framework that honors cultural heritage while building sustainable financial futures.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -543,16 +543,16 @@ export default function Landing() {
             <div className="space-y-4">
               <h2 className="text-3xl font-bold text-foreground">Meet Luv</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Luv's journey to building The L.A.W.S. Collective started with a simple question: why do so many families struggle to build wealth that lasts? With a career rooted in contract administration across both government and commercial sectors, she saw firsthand how systems are built — and how they often leave everyday families behind.
+                Luv's journey to building The The The L.A.W.S. Collective started with a simple question: why do so many families struggle to build wealth that lasts? With a career rooted in contract administration across both government and commercial sectors, she saw firsthand how systems are built — and how they often leave everyday families behind.
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                That experience, combined with years of real-world observation, community conversations, and a deep commitment to understanding how wealth actually works, led her to create something different. The L.A.W.S. Collective is her answer — a framework built on purpose, not theory, designed to help families reconnect with their roots and build something that outlasts any single generation.
+                That experience, combined with years of real-world observation, community conversations, and a deep commitment to understanding how wealth actually works, led her to create something different. The The The L.A.W.S. Collective is her answer — a framework built on purpose, not theory, designed to help families reconnect with their roots and build something that outlasts any single generation.
               </p>
             </div>
             <div className="flex justify-center">
               <img
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv-photo_38d8d9aa.jpg"
-                alt="Luv - Founder of L.A.W.S. Collective"
+                alt="Luv - Founder of The The L.A.W.S. Collective"
                 className="w-80 h-80 rounded-lg object-cover border border-border shadow-lg"
               />
             </div>
@@ -568,7 +568,7 @@ export default function Landing() {
                   <h2 className="text-4xl font-bold text-foreground">Join the Collective</h2>
                   <p className="text-xl text-muted-foreground">Get Early Access</p>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Be among the first to access the complete L.A.W.S. Collective platform when we launch. Enter your email to join our waitlist.
+                    Be among the first to access the complete The The L.A.W.S. Collective platform when we launch. Enter your email to join our waitlist.
                   </p>
                 </div>
 
@@ -606,7 +606,7 @@ export default function Landing() {
             <div className="space-y-2">
               <h3 className="text-xl font-semibold text-foreground">Join Our Community</h3>
               <p className="text-muted-foreground">
-                Get notified when we launch the full platform and be part of the L.A.W.S. Collective
+                Get notified when we launch the full platform and be part of the The The L.A.W.S. Collective
               </p>
               <p className="text-sm text-muted-foreground italic">Live system coming soon</p>
             </div>

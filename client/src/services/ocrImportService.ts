@@ -232,7 +232,7 @@ Date: January 15, 2024
 Due Date: February 15, 2024
 
 Bill To:
-L.A.W.S. Collective
+The The L.A.W.S. Collective
 123 Main Street
 Atlanta, GA 30301
 
@@ -258,7 +258,7 @@ Please make checks payable to ABC Services LLC`;
 This Agreement is entered into as of January 1, 2024 ("Effective Date")
 
 BETWEEN:
-L.A.W.S. Collective ("Client")
+The The L.A.W.S. Collective ("Client")
 AND
 Professional Services Inc. ("Provider")
 

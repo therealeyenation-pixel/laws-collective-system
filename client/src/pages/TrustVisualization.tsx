@@ -61,7 +61,7 @@ export default function TrustVisualization() {
     // For now, create a sample structure with the first house as root
     const rootHouse: HouseNode = {
       id: 1,
-      name: "Root House (L.A.W.S. Collective)",
+      name: "Root House (The The L.A.W.S. Collective)",
       status: "active",
       tier: "partner",
       pathway: "founder",

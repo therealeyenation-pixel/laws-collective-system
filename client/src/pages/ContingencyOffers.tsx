@@ -45,7 +45,7 @@ export default function ContingencyOffers() {
   const [generatedDocument, setGeneratedDocument] = useState<any>(null);
 
   // Common form state
-  const [entityName, setEntityName] = useState("L.A.W.S. Collective, LLC");
+  const [entityName, setEntityName] = useState("The The L.A.W.S. Collective, LLC");
   const [fundingCondition, setFundingCondition] = useState("Securing grant funding from identified sources");
   const [fundingDeadline, setFundingDeadline] = useState("");
 

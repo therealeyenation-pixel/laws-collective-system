@@ -581,10 +581,10 @@ export const documentVaultRouter = router({
           accessLevel: "owner_only" as const,
         },
         {
-          title: "The L.A.W.S. Collective LLC Business Plan",
+          title: "The The The L.A.W.S. Collective LLC Business Plan",
           description: "Business plan for the community-focused collective helping people reconnect with land, strengthen identity, and build practical skills.",
           documentType: "business_plan" as const,
-          content: `# The L.A.W.S. Collective LLC\n\n## Framework\n- LAND: Reconnection & Stability\n- AIR: Education & Knowledge\n- WATER: Healing & Balance\n- SELF: Purpose & Skills\n\n## Mission\nA community-focused framework helping people reconnect with land, strengthen identity, restore balance, and build practical skills for generational wealth.\n\n## Programs\n- Land stewardship education\n- Financial literacy workshops\n- Healing and wellness circles\n- Skills development training\n\n## Impact Goals\n- 1,000 families served annually\n- 100 acres of community land\n- 50 certified practitioners`,
+          content: `# The The The L.A.W.S. Collective LLC\n\n## Framework\n- LAND: Reconnection & Stability\n- AIR: Education & Knowledge\n- WATER: Healing & Balance\n- SELF: Purpose & Skills\n\n## Mission\nA community-focused framework helping people reconnect with land, strengthen identity, restore balance, and build practical skills for generational wealth.\n\n## Programs\n- Land stewardship education\n- Financial literacy workshops\n- Healing and wellness circles\n- Skills development training\n\n## Impact Goals\n- 1,000 families served annually\n- 100 acres of community land\n- 50 certified practitioners`,
           status: "final" as const,
           accessLevel: "owner_only" as const,
         },

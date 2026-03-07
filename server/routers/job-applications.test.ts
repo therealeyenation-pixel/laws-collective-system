@@ -41,7 +41,7 @@ describe('Job Applications Router', () => {
       const validInput = {
         positionId: 'hr-lead',
         positionTitle: 'HR Manager',
-        entity: 'The L.A.W.S. Collective, LLC',
+        entity: 'The The The L.A.W.S. Collective, LLC',
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@example.com',
@@ -56,7 +56,7 @@ describe('Job Applications Router', () => {
       const inputWithOptionals = {
         positionId: 'hr-lead',
         positionTitle: 'HR Manager',
-        entity: 'The L.A.W.S. Collective, LLC',
+        entity: 'The The The L.A.W.S. Collective, LLC',
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@example.com',

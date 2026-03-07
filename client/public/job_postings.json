@@ -63,9 +63,9 @@
     }
   },
   "companyOverview": {
-    "name": "The L.A.W.S. Collective, LLC",
+    "name": "The The The L.A.W.S. Collective, LLC",
     "tagline": "Building Generational Wealth Through Purpose",
-    "description": "The L.A.W.S. Collective is a family-based enterprise dedicated to building generational wealth through education, community development, and innovative business solutions. Our L.A.W.S. framework (Land, Air, Water, Self) guides our approach to helping individuals and families achieve financial independence and purposeful living.",
+    "description": "The The The L.A.W.S. Collective is a family-based enterprise dedicated to building generational wealth through education, community development, and innovative business solutions. Our L.A.W.S. framework (Land, Air, Water, Self) guides our approach to helping individuals and families achieve financial independence and purposeful living.",
     "culture": [
       "Family-first values with professional excellence",
       "Commitment to community impact and generational wealth",
@@ -87,7 +87,7 @@
       "postingId": "OPS-HR-001",
       "title": "HR Operations Coordinator",
       "department": "Human Resources",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
       "employmentType": "Full-Time",
       "salaryRange": "$68,000 - $88,000",
@@ -142,7 +142,7 @@
       "postingId": "OPS-QA-001",
       "title": "QA/QC Operations Coordinator",
       "department": "Quality Assurance/Quality Control",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
       "employmentType": "Full-Time",
       "salaryRange": "$68,000 - $88,000",
@@ -197,7 +197,7 @@
       "postingId": "OPS-PUR-001",
       "title": "Purchasing Operations Coordinator",
       "department": "Purchasing",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
       "employmentType": "Full-Time",
       "salaryRange": "$68,000 - $88,000",
@@ -362,7 +362,7 @@
       "postingId": "OPS-HEALTH-001",
       "title": "Health Operations Coordinator",
       "department": "Health",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
       "employmentType": "Full-Time",
       "salaryRange": "$55,000 - $72,000",
@@ -419,7 +419,7 @@
       "postingId": "MGR-CONTRACTS-001",
       "title": "Contracts Manager",
       "department": "Contracts",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
       "employmentType": "Full-Time",
       "salaryRange": "$95,000 - $130,000",
@@ -478,7 +478,7 @@
       "postingId": "OPS-CONTRACTS-001",
       "title": "Contracts Operations Coordinator",
       "department": "Contracts",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "location": "Remote (US-based)",
       "employmentType": "Full-Time",
       "salaryRange": "$52,000 - $72,000",
@@ -750,7 +750,7 @@
     {
       "title": "COO - Chief Operating Officer",
       "department": "Executive",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "salaryRange": "$125,000 - $165,000",
       "expectedPostingDate": "Q1 2026",
       "priority": "High"
@@ -766,7 +766,7 @@
     {
       "title": "HR Manager",
       "department": "Human Resources",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "salaryRange": "$85,000 - $115,000",
       "expectedPostingDate": "Q1 2026",
       "priority": "High"
@@ -782,7 +782,7 @@
     {
       "title": "Grant Writer",
       "department": "Development",
-      "entity": "The L.A.W.S. Collective, LLC",
+      "entity": "The The The L.A.W.S. Collective, LLC",
       "salaryRange": "$85,000 - $115,000",
       "expectedPostingDate": "Q1 2026",
       "priority": "High"
@@ -834,5 +834,5 @@
       "Prepare questions to ask the interview panel"
     ]
   },
-  "equalOpportunity": "The L.A.W.S. Collective is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees. We do not discriminate based on race, color, religion, sex, sexual orientation, gender identity, national origin, disability, veteran status, or any other protected characteristic."
+  "equalOpportunity": "The The The L.A.W.S. Collective is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees. We do not discriminate based on race, color, religion, sex, sexual orientation, gender identity, national origin, disability, veteran status, or any other protected characteristic."
 }

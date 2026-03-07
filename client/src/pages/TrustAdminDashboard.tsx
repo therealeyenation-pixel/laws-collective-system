@@ -135,7 +135,7 @@ export default function TrustAdminDashboard() {
           allocation: "100%",
           children: [
             {
-              name: "The L.A.W.S. Collective, LLC",
+              name: "The The The L.A.W.S. Collective, LLC",
               type: "LLC",
               role: "Community Operating Entity",
               allocation: "100%",

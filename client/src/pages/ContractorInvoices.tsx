@@ -182,7 +182,7 @@ export default function ContractorInvoices() {
               <DialogHeader>
                 <DialogTitle>Create New Invoice</DialogTitle>
                 <DialogDescription>
-                  Create an invoice for services rendered to L.A.W.S. Collective
+                  Create an invoice for services rendered to The The L.A.W.S. Collective
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-6 py-4">

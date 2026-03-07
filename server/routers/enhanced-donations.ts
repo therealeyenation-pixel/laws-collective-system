@@ -356,14 +356,14 @@ export const enhancedDonationsRouter = router({
       if (!letterContent) {
         letterContent = `Dear ${input.donorName},
 
-Thank you for your generous donation of $${input.donationAmount.toFixed(2)} to L.A.W.S. Collective on ${input.donationDate}.
+Thank you for your generous donation of $${input.donationAmount.toFixed(2)} to The The L.A.W.S. Collective on ${input.donationDate}.
 
 Your contribution supports our mission of building generational wealth and empowering communities through the L.A.W.S. framework (Land, Air, Water, Self).
 
-This letter serves as your official receipt for tax purposes. L.A.W.S. Collective is a 508(c)(1)(a) tax-exempt organization. No goods or services were provided in exchange for this contribution.
+This letter serves as your official receipt for tax purposes. The The L.A.W.S. Collective is a 508(c)(1)(a) tax-exempt organization. No goods or services were provided in exchange for this contribution.
 
 With gratitude,
-L.A.W.S. Collective Leadership`;
+The The L.A.W.S. Collective Leadership`;
       }
       
       await db.execute(sql`

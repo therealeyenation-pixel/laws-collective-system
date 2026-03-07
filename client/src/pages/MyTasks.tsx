@@ -48,7 +48,7 @@ const mockTasks: Task[] = [
   {
     id: "1",
     type: "signature",
-    title: "Operating Agreement - L.A.W.S. Collective",
+    title: "Operating Agreement - The The L.A.W.S. Collective",
     description: "Review and sign the updated operating agreement",
     dueDate: addDays(new Date(), 2),
     priority: "high",

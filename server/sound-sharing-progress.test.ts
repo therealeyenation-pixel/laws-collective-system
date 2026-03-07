@@ -168,7 +168,7 @@ describe("Progress Dashboard", () => {
     const recentActivity = [
       { type: "achievement", title: "First Steps", time: "2 hours ago" },
       { type: "chapter", title: "Completed Chapter 1", time: "Yesterday" },
-      { type: "community", title: "Joined L.A.W.S. Collective", time: "2 days ago" },
+      { type: "community", title: "Joined The The L.A.W.S. Collective", time: "2 days ago" },
     ];
 
     expect(recentActivity).toHaveLength(3);

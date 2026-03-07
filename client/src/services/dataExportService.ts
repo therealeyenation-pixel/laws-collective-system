@@ -237,7 +237,7 @@ class DataExportService {
   // Export configuration for migration
   async exportConfiguration(): Promise<object> {
     return {
-      systemName: 'L.A.W.S. Collective',
+      systemName: 'The The L.A.W.S. Collective',
       version: '1.0.0',
       modules: EXPORTABLE_MODULES.map(m => m.id),
       settings: {

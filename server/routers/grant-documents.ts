@@ -25,7 +25,7 @@ const GRANT_DOCUMENT_CATEGORIES = [
 // Entity IDs for the ecosystem
 const ENTITY_IDS: Record<string, string> = {
   "real_eye_nation": "Real-Eye-Nation LLC",
-  "laws_collective": "The L.A.W.S. Collective LLC",
+  "laws_collective": "The The The L.A.W.S. Collective LLC",
   "luvonpurpose_wealth": "LuvOnPurpose Autonomous Wealth System LLC",
   "academy": "LuvOnPurpose Outreach Temple and Academy Society Inc.",
   "trust_98": "98 Trust - CALEA Freeman Family Trust"

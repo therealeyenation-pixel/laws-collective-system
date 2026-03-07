@@ -38,40 +38,40 @@ import {
 // Position data synced with Careers.tsx - includes all open/recruiting positions
 const POSITIONS = [
   // TIER 3: OPEN MANAGER POSITIONS
-  { id: "health-manager", title: "Health Manager", entity: "The L.A.W.S. Collective, LLC", department: "Health", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
-  { id: "hr-lead", title: "HR Manager", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
-  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
-  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "health-manager", title: "Health Manager", entity: "The The The L.A.W.S. Collective, LLC", department: "Health", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "hr-lead", title: "HR Manager", entity: "The The The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "qaqc-lead", title: "QA/QC Manager", entity: "The The The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
+  { id: "purchasing-lead", title: "Purchasing Manager", entity: "The The The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
   { id: "operations-manager", title: "Operations Manager", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "standard" },
-  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The L.A.W.S. Collective, LLC", department: "Grants & Proposals", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "grant-compliant" },
+  { id: "grant-writer", title: "Grant Writer / Proposal Specialist", entity: "The The The L.A.W.S. Collective, LLC", department: "Grants & Proposals", tier: "tier3_manager", salaryRange: "$95,000 - $120,000", recommendedBenefits: "grant-compliant" },
   { id: "platform-admin", title: "Platform Administrator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Technology", tier: "tier3_open", salaryRange: "$95,000 - $130,000", recommendedBenefits: "remote-work" },
   
   // TIER 4: OPERATIONS COORDINATORS - All Open Positions
-  { id: "finance-ops-coordinator", title: "Finance Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Finance", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
+  { id: "finance-ops-coordinator", title: "Finance Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Finance", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
   { id: "ops-coordinator-education", title: "Education Operations Coordinator", entity: "508-LuvOnPurpose Academy and Outreach", department: "Education", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
   { id: "outreach-coordinator", title: "Outreach Coordinator", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Community Outreach", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
   { id: "content-creator", title: "Content Creator / Media Assistant", entity: "Real-Eye-Nation LLC", department: "Media Production", tier: "tier4_coordinator", salaryRange: "$35,000 - $55,000", recommendedBenefits: "part-time" },
   { id: "academy-instructor", title: "Academy Instructor / Curriculum Developer", entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", department: "Education", tier: "tier4_coordinator", salaryRange: "$75,000 - $100,000", recommendedBenefits: "standard" },
-  { id: "programs-coordinator", title: "Community Programs Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Community Programs", tier: "tier4_coordinator", salaryRange: "$80,000 - $110,000", recommendedBenefits: "grant-compliant" },
-  { id: "lead-ops-coordinator", title: "Lead Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Operations", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-business", title: "Business Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Business Management", tier: "tier4_coordinator", salaryRange: "$60,000 - $80,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-hr", title: "HR Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-qaqc", title: "QA/QC Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-purchasing", title: "Purchasing Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
+  { id: "programs-coordinator", title: "Community Programs Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Community Programs", tier: "tier4_coordinator", salaryRange: "$80,000 - $110,000", recommendedBenefits: "grant-compliant" },
+  { id: "lead-ops-coordinator", title: "Lead Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Operations", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-business", title: "Business Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Business Management", tier: "tier4_coordinator", salaryRange: "$60,000 - $80,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-hr", title: "HR Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Human Resources", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-qaqc", title: "QA/QC Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Quality Assurance", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-purchasing", title: "Purchasing Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Purchasing", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "standard" },
   { id: "ops-coordinator-operations", title: "Operations Operations Coordinator", entity: "LuvOnPurpose Autonomous Wealth System LLC", department: "Operations", tier: "tier4_coordinator", salaryRange: "$52,000 - $68,000", recommendedBenefits: "remote-work" },
-  { id: "ops-coordinator-health", title: "Health Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Health", tier: "tier4_coordinator", salaryRange: "$55,000 - $72,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-procurement", title: "Procurement Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Procurement", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-contracts", title: "Contracts Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Contracts", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-health", title: "Health Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Health", tier: "tier4_coordinator", salaryRange: "$55,000 - $72,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-procurement", title: "Procurement Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Procurement", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-contracts", title: "Contracts Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Contracts", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "standard" },
   { id: "ops-coordinator-design", title: "Design Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Design & Creative", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "remote-work" },
   { id: "ops-coordinator-media", title: "Media Operations Coordinator", entity: "Real-Eye-Nation, LLC", department: "Media Production", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "remote-work" },
-  { id: "ops-coordinator-project-controls", title: "Project Controls Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Project Controls", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-project-controls", title: "Project Controls Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Project Controls", tier: "tier4_coordinator", salaryRange: "$68,000 - $88,000", recommendedBenefits: "standard" },
   
   // LEGAL DEPARTMENT
-  { id: "legal-manager", title: "Legal Manager", entity: "The L.A.W.S. Collective, LLC", department: "Legal", tier: "tier3_open", salaryRange: "$95,000 - $130,000", recommendedBenefits: "standard" },
-  { id: "ops-coordinator-legal", title: "Legal Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Legal", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
+  { id: "legal-manager", title: "Legal Manager", entity: "The The The L.A.W.S. Collective, LLC", department: "Legal", tier: "tier3_open", salaryRange: "$95,000 - $130,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-legal", title: "Legal Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Legal", tier: "tier4_coordinator", salaryRange: "$55,000 - $75,000", recommendedBenefits: "standard" },
   
   // REAL ESTATE DEPARTMENT
-  { id: "ops-coordinator-real-estate", title: "Real Estate Operations Coordinator", entity: "The L.A.W.S. Collective, LLC", department: "Real Estate", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "standard" },
+  { id: "ops-coordinator-real-estate", title: "Real Estate Operations Coordinator", entity: "The The The L.A.W.S. Collective, LLC", department: "Real Estate", tier: "tier4_coordinator", salaryRange: "$52,000 - $72,000", recommendedBenefits: "standard" },
 ];
 
 const BENEFITS_PACKAGES = [

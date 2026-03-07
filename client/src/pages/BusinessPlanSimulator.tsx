@@ -61,7 +61,7 @@ const EXISTING_ENTITIES = [
   { id: 1, name: "Real-Eye-Nation LLC", type: "llc", status: "formed", ein: "84-4976416" },
   { id: 2, name: "Calea Freeman Family Trust", type: "trust", status: "formed", ein: "98-6109577" },
   { id: 3, name: "LuvOnPurpose Autonomous Wealth System LLC", type: "llc", status: "formed", ein: "41-3683894" },
-  { id: 4, name: "The L.A.W.S. Collective, LLC", type: "llc", status: "formed", ein: "39-3122993" },
+  { id: 4, name: "The The The L.A.W.S. Collective, LLC", type: "llc", status: "formed", ein: "39-3122993" },
   { id: 5, name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "nonprofit_508", status: "formed" },
 ];
 
@@ -917,7 +917,7 @@ export default function BusinessPlanSimulator() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs font-medium">
-              L.A.W.S. Collective
+              The The L.A.W.S. Collective
             </Badge>
           </div>
           <h1 className="text-3xl font-bold text-foreground">Business Plan Simulator</h1>

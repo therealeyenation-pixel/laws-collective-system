@@ -47,7 +47,7 @@ const POSITIONS = [
   { 
     id: "finance-manager", 
     title: "Finance Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Finance",
     type: "Full-Time",
@@ -96,7 +96,7 @@ const POSITIONS = [
   { 
     id: "hr-lead", 
     title: "HR Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Human Resources",
     type: "Full-Time",
@@ -111,7 +111,7 @@ const POSITIONS = [
   { 
     id: "qaqc-lead", 
     title: "QA/QC Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Quality Assurance",
     type: "Full-Time",
@@ -126,7 +126,7 @@ const POSITIONS = [
   { 
     id: "it-manager", 
     title: "IT Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Information Technology",
     type: "Full-Time",
@@ -144,7 +144,7 @@ const POSITIONS = [
   { 
     id: "purchasing-lead", 
     title: "Purchasing Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Purchasing",
     type: "Full-Time",
@@ -178,7 +178,7 @@ const POSITIONS = [
   { 
     id: "finance-ops-coordinator", 
     title: "Finance Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Finance",
     type: "Full-Time",
@@ -238,7 +238,7 @@ const POSITIONS = [
   { 
     id: "grant-writer", 
     title: "Grant Writer / Proposal Specialist", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Grants & Proposals",
     type: "Full-Time",
@@ -268,7 +268,7 @@ const POSITIONS = [
   { 
     id: "programs-coordinator", 
     title: "Community Programs Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Community Programs",
     type: "Full-Time",
@@ -283,7 +283,7 @@ const POSITIONS = [
   { 
     id: "lead-ops-coordinator", 
     title: "Lead Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Operations",
     type: "Full-Time",
@@ -298,7 +298,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-business", 
     title: "Business Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Business Management",
     type: "Full-Time",
@@ -313,7 +313,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-hr", 
     title: "HR Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Human Resources",
     type: "Full-Time",
@@ -328,7 +328,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-qaqc", 
     title: "QA/QC Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Quality Assurance",
     type: "Full-Time",
@@ -343,7 +343,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-it", 
     title: "IT Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Information Technology",
     type: "Full-Time",
@@ -359,7 +359,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-purchasing", 
     title: "Purchasing Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Purchasing",
     type: "Full-Time",
@@ -405,7 +405,7 @@ const POSITIONS = [
   { 
     id: "health-manager", 
     title: "Health Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Health & Wellness",
     type: "Full-Time",
@@ -420,7 +420,7 @@ const POSITIONS = [
   { 
     id: "procurement-manager", 
     title: "Procurement Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Procurement",
     type: "Full-Time",
@@ -435,7 +435,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-procurement", 
     title: "Procurement Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Procurement",
     type: "Full-Time",
@@ -450,7 +450,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-health", 
     title: "Health Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Health",
     type: "Full-Time",
@@ -465,7 +465,7 @@ const POSITIONS = [
   { 
     id: "contracts-manager", 
     title: "Contracts Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Contracts",
     type: "Full-Time",
@@ -480,7 +480,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-contracts", 
     title: "Contracts Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Contracts",
     type: "Full-Time",
@@ -558,7 +558,7 @@ const POSITIONS = [
   { 
     id: "project-controls-manager", 
     title: "Project Controls Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Project Controls",
     type: "Full-Time",
@@ -573,7 +573,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-project-controls", 
     title: "Project Controls Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Project Controls",
     type: "Full-Time",
@@ -591,7 +591,7 @@ const POSITIONS = [
   { 
     id: "legal-manager", 
     title: "Legal Manager", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Legal",
     type: "Full-Time",
@@ -606,7 +606,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-legal", 
     title: "Legal Operations Coordinator", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Legal",
     type: "Full-Time",
@@ -624,7 +624,7 @@ const POSITIONS = [
   { 
     id: "real-estate-manager-sc", 
     title: "Real Estate Manager - South Carolina", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Real Estate",
     type: "Full-Time",
@@ -639,7 +639,7 @@ const POSITIONS = [
   { 
     id: "real-estate-manager-ga", 
     title: "Real Estate Manager - Georgia", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Real Estate",
     type: "Full-Time",
@@ -654,7 +654,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-real-estate-sc", 
     title: "Real Estate Operations Coordinator - South Carolina", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Real Estate",
     type: "Full-Time",
@@ -669,7 +669,7 @@ const POSITIONS = [
   { 
     id: "ops-coordinator-real-estate-ga", 
     title: "Real Estate Operations Coordinator - Georgia", 
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     entityShort: "L.A.W.S.",
     department: "Real Estate",
     type: "Full-Time",
@@ -869,7 +869,7 @@ export default function Careers() {
             <Link href="/" className="flex items-center gap-3">
                 <Sparkles className="w-6 h-6 text-primary" />
                 <div>
-                  <span className="font-bold text-foreground">The L.A.W.S. Collective, LLC</span>
+                  <span className="font-bold text-foreground">The The The L.A.W.S. Collective, LLC</span>
                   <span className="text-xs text-muted-foreground block">Land • Air • Water • Self</span>
                 </div>
             </Link>

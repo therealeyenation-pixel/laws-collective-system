@@ -63,7 +63,7 @@ export default function ContactUs() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground">Contact Us</h1>
-              <p className="text-sm text-muted-foreground mt-1">Get in touch with the L.A.W.S. Collective</p>
+              <p className="text-sm text-muted-foreground mt-1">Get in touch with the The The L.A.W.S. Collective</p>
             </div>
             <Button variant="outline" onClick={() => window.history.back()} className="gap-2">
               <ArrowLeft className="w-4 h-4" />

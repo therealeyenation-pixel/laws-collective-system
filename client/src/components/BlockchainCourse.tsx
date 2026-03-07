@@ -121,7 +121,7 @@ const COURSE_MODULES: CourseModule[] = [
         },
         {
           heading: "LuvChain - Our Native Blockchain",
-          text: "LuvChain is The L.A.W.S. Collective, LLC's native blockchain designed for business formation, certificate issuance, trust management, and token economics. All your course completions, business documents, and financial transactions are recorded immutably on LuvChain.",
+          text: "LuvChain is The The The L.A.W.S. Collective, LLC's native blockchain designed for business formation, certificate issuance, trust management, and token economics. All your course completions, business documents, and financial transactions are recorded immutably on LuvChain.",
           tips: [
             "LuvChain is optimized for business and educational use cases",
             "All certificates are minted as NFTs on LuvChain",
@@ -131,7 +131,7 @@ const COURSE_MODULES: CourseModule[] = [
       ],
       keyTakeaways: [
         "Blockchain is a secure, transparent, decentralized ledger",
-        "LuvChain powers The L.A.W.S. Collective, LLC ecosystem",
+        "LuvChain powers The The The L.A.W.S. Collective, LLC ecosystem",
         "All your achievements and documents are permanently recorded"
       ]
     }
@@ -165,7 +165,7 @@ const COURSE_MODULES: CourseModule[] = [
           explanation: "Decentralization means the network is distributed across many participants, removing single points of failure and control."
         },
         {
-          question: "What is LuvChain used for in The L.A.W.S. Collective, LLC?",
+          question: "What is LuvChain used for in The The The L.A.W.S. Collective, LLC?",
           options: [
             "A) Social media only",
             "B) Gaming and entertainment",
@@ -249,7 +249,7 @@ const COURSE_MODULES: CourseModule[] = [
         },
         {
           heading: "LUV Token - Our Native Currency",
-          text: "LUV is the native token of The L.A.W.S. Collective, LLC ecosystem. You earn LUV by completing courses, contributing to the community, and achieving milestones. LUV can be used for services, governance voting, and accessing premium features.",
+          text: "LUV is the native token of The The The L.A.W.S. Collective, LLC ecosystem. You earn LUV by completing courses, contributing to the community, and achieving milestones. LUV can be used for services, governance voting, and accessing premium features.",
           tips: [
             "Earn LUV through education and contribution",
             "Use LUV for services within the ecosystem",
@@ -280,7 +280,7 @@ const COURSE_MODULES: CourseModule[] = [
     content: {
       questions: [
         {
-          question: "How do you earn LUV tokens in The L.A.W.S. Collective, LLC?",
+          question: "How do you earn LUV tokens in The The The L.A.W.S. Collective, LLC?",
           options: [
             "A) Only by purchasing them",
             "B) Completing courses and contributing to the community",

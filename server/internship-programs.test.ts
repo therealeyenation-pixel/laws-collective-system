@@ -6,7 +6,7 @@ describe("Internship Programs Router", () => {
       const entityStructure = {
         root: "CALEA Freeman Family Trust",
         parent: "LuvOnPurpose Autonomous Wealth System, LLC",
-        operating: "The L.A.W.S. Collective, LLC",
+        operating: "The The The L.A.W.S. Collective, LLC",
         divisions: [
           { name: "LuvOnPurpose Academy & Outreach", allocation: 30 },
           { name: "Real-Eye-Nation", allocation: 20 },
@@ -16,7 +16,7 @@ describe("Internship Programs Router", () => {
 
       expect(entityStructure.root).toBe("CALEA Freeman Family Trust");
       expect(entityStructure.parent).toBe("LuvOnPurpose Autonomous Wealth System, LLC");
-      expect(entityStructure.operating).toBe("The L.A.W.S. Collective, LLC");
+      expect(entityStructure.operating).toBe("The The The L.A.W.S. Collective, LLC");
       expect(entityStructure.divisions.reduce((sum, d) => sum + d.allocation, 0)).toBe(100);
     });
   });
@@ -73,7 +73,7 @@ describe("Internship Programs Router", () => {
       { stage: 1, name: "Intern", description: "Educational experience and skill development" },
       { stage: 2, name: "W-2 Employee", description: "Stable employment with benefits" },
       { stage: 3, name: "Independent Contractor", description: "Specialized services with flexibility" },
-      { stage: 4, name: "Business Owner", description: "L.A.W.S. Collective member with own enterprise" },
+      { stage: 4, name: "Business Owner", description: "The The L.A.W.S. Collective member with own enterprise" },
     ];
 
     it("should have 4 career stages", () => {

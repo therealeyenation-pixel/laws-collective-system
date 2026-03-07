@@ -45,7 +45,7 @@ export default function ExecutiveDashboard() {
       employees: 1
     },
     { 
-      name: "L.A.W.S. Collective", 
+      name: "The The L.A.W.S. Collective", 
       type: "501(c)(3)",
       icon: Leaf,
       color: "text-green-500",

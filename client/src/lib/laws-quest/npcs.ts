@@ -1,6 +1,6 @@
 /**
  * L.A.W.S. Quest - Commercial Game Product
- * Owned by The L.A.W.S. Collective, LLC
+ * Owned by The The The L.A.W.S. Collective, LLC
  * 
  * NPC system with dialogue trees, relationships, and interactions
  */
@@ -569,7 +569,7 @@ export const DIALOGUE_TREES: DialogueTree[] = [
       },
       "tutorial-tokens": {
         id: "tutorial-tokens",
-        text: "Tokens are the currency of L.A.W.S. Quest. Earn them by completing quests and daily logins. Spend them at shops to buy helpful items. In the future, tokens may connect to real-world benefits through the L.A.W.S. Collective!",
+        text: "Tokens are the currency of L.A.W.S. Quest. Earn them by completing quests and daily logins. Spend them at shops to buy helpful items. In the future, tokens may connect to real-world benefits through the The The L.A.W.S. Collective!",
         choices: [
           { text: "How do quests work?", nextNodeId: "tutorial-quests" },
           { text: "How do I level up?", nextNodeId: "tutorial-levels" },

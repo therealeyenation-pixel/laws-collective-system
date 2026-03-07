@@ -182,7 +182,7 @@ const entityInfo: Record<EntityType, {
     missionStatement: 'Documenting truth and preserving cultural narratives through authentic media production'
   },
   laws_collective: {
-    legalName: 'The L.A.W.S. Collective, LLC',
+    legalName: 'The The The L.A.W.S. Collective, LLC',
     ein: '88-2345678',
     address: '456 Community Blvd, Birmingham, AL 35203',
     phone: '(205) 555-0202',

@@ -60,7 +60,7 @@ export const stripeDonationsRouter = router({
                 price_data: {
                   currency: "usd",
                   product_data: {
-                    name: "Donation to L.A.W.S. Collective",
+                    name: "Donation to The The L.A.W.S. Collective",
                     description: input.designation 
                       ? `Designated for: ${input.designation}`
                       : "Supporting community wealth building",
@@ -96,7 +96,7 @@ export const stripeDonationsRouter = router({
                 price_data: {
                   currency: "usd",
                   product_data: {
-                    name: `${input.frequency.charAt(0).toUpperCase() + input.frequency.slice(1)} Donation to L.A.W.S. Collective`,
+                    name: `${input.frequency.charAt(0).toUpperCase() + input.frequency.slice(1)} Donation to The The L.A.W.S. Collective`,
                     description: input.designation 
                       ? `Designated for: ${input.designation}`
                       : "Recurring support for community wealth building",

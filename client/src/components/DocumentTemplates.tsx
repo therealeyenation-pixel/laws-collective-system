@@ -244,7 +244,7 @@ const formatIcons: Record<string, string> = {
 
 // Entity data for customization
 const entities = [
-  { id: "laws", name: "L.A.W.S. Collective, LLC", ein: "XX-XXXXXXX" },
+  { id: "laws", name: "The The L.A.W.S. Collective, LLC", ein: "XX-XXXXXXX" },
   { id: "508", name: "LuvOnPurpose 508 Trust", ein: "XX-XXXXXXX" },
   { id: "real-eye", name: "Real-Eye Productions, LLC", ein: "XX-XXXXXXX" },
   { id: "lop-inc", name: "LuvOnPurpose Inc.", ein: "XX-XXXXXXX" },
@@ -1914,7 +1914,7 @@ establishing physical presence.
 Best For:
 • Educational programs (Academy partnerships)
 • Documentary/media projects (Real-Eye-Nation)
-• Workforce development (L.A.W.S. Collective)
+• Workforce development (The The L.A.W.S. Collective)
 
 Structure:
 • Trust or U.S. entity signs MOU with foreign partner

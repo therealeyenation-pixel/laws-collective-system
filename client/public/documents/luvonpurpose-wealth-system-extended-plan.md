@@ -463,7 +463,7 @@ LuvOnPurpose Autonomous Wealth System serves as the financial backbone of a mult
 | Partner | Role | Integration Point |
 |---------|------|-------------------|
 | LuvOnPurpose Academy | K-12 education + trade certification | Financial literacy curriculum; student savings accounts |
-| L.A.W.S. Collective | Workforce-to-ownership platform | Business owner financial management; contractor payments |
+| The The L.A.W.S. Collective | Workforce-to-ownership platform | Business owner financial management; contractor payments |
 | Real-Eye-Nation | Media production | Content creator royalty tracking; licensing payments |
 | Family Trust | Land and property acquisition | Tokenized property ownership; investment pool management |
 

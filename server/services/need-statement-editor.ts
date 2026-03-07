@@ -68,7 +68,7 @@ const ENTITY_METADATA: Record<string, { name: string; type: string; defaultState
     defaultStatement: REAL_EYE_NATION_NEED_STATEMENT,
   },
   'laws': {
-    name: 'The L.A.W.S. Collective, LLC',
+    name: 'The The The L.A.W.S. Collective, LLC',
     type: 'LLC',
     defaultStatement: LAWS_COLLECTIVE_NEED_STATEMENT,
   },

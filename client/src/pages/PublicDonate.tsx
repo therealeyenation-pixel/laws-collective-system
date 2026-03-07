@@ -138,7 +138,7 @@ export default function PublicDonate() {
       <header className="bg-green-800 text-white py-16">
         <div className="container max-w-6xl mx-auto px-4 text-center">
           <Heart className="w-16 h-16 mx-auto mb-4 text-green-300" />
-          <h1 className="text-4xl font-bold mb-4">Support the L.A.W.S. Collective</h1>
+          <h1 className="text-4xl font-bold mb-4">Support the The The L.A.W.S. Collective</h1>
           <p className="text-xl text-green-100 max-w-2xl mx-auto">
             Your donation helps build generational wealth, create jobs, and transform communities through education and opportunity.
           </p>
@@ -358,7 +358,7 @@ export default function PublicDonate() {
                 <CardContent className="pt-6">
                   <h3 className="font-semibold mb-2">Tax-Deductible</h3>
                   <p className="text-sm text-muted-foreground">
-                    The L.A.W.S. Collective operates under a 508(c)(1)(a) tax-exempt organization. 
+                    The The The L.A.W.S. Collective operates under a 508(c)(1)(a) tax-exempt organization. 
                     Your donation is tax-deductible to the fullest extent allowed by law.
                   </p>
                   <p className="text-sm text-muted-foreground mt-2">
@@ -375,7 +375,7 @@ export default function PublicDonate() {
       <footer className="bg-green-900 text-white py-8">
         <div className="container max-w-6xl mx-auto px-4 text-center">
           <p className="text-green-200">
-            The L.A.W.S. Collective | Building Generational Wealth Through Purpose & Community
+            The The The L.A.W.S. Collective | Building Generational Wealth Through Purpose & Community
           </p>
           <p className="text-sm text-green-300 mt-2">
             508(c)(1)(a) Tax-Exempt Organization

@@ -71,7 +71,7 @@ export default function GlobalSearchPage() {
     { id: "4", title: "Michael Chen", description: "Finance Department - Budget Analyst - Active Employee", type: "employee", path: "/employee-directory", date: "Jan 15, 2026", relevance: 80 },
     { id: "5", title: "Annual Budget Meeting", description: "Scheduled for Jan 30, 2026 at 10:00 AM", type: "event", path: "/company-calendar", date: "Jan 30, 2026", relevance: 75 },
     { id: "6", title: "Budget Services Contract", description: "Vendor agreement for consulting services - Active", type: "contract", path: "/contracts-dashboard", date: "Jan 10, 2026", relevance: 70 },
-    { id: "7", title: "L.A.W.S. Collective Budget", description: "Entity financial overview and allocation details", type: "business", path: "/business", date: "Jan 5, 2026", relevance: 65 },
+    { id: "7", title: "The The L.A.W.S. Collective Budget", description: "Entity financial overview and allocation details", type: "business", path: "/business", date: "Jan 5, 2026", relevance: 65 },
     { id: "8", title: "Budget Amendment Form", description: "Template for requesting budget changes", type: "document", path: "/document-templates", date: "Dec 20, 2025", relevance: 60 },
   ];
 

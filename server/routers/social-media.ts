@@ -275,7 +275,7 @@ Posts per day: ${input.postsPerDay}
 ${input.themes?.length ? `Focus themes: ${input.themes.join(", ")}` : ""}
 
 Brand context: LuvOnPurpose is a multi-generational wealth building system with these pillars:
-- L.A.W.S. Collective (Land, Air, Water, Self)
+- The The L.A.W.S. Collective (Land, Air, Water, Self)
 - Academy for education and skill building
 - Autonomous wealth generation
 - Community restoration and sovereignty
@@ -359,12 +359,12 @@ Format as JSON array with structure:
 
       for (const integration of platformIntegrations) {
         // Generate optimized caption for each platform
-        const captionPrompt = `Create an engaging caption for a promotional video about L.A.W.S. Collective on ${integration.platform}.
+        const captionPrompt = `Create an engaging caption for a promotional video about The The L.A.W.S. Collective on ${integration.platform}.
 
 Video Title: ${input.title}
 Video Description: ${input.description}
 
-L.A.W.S. Collective helps families build multi-generational wealth through:
+The The L.A.W.S. Collective helps families build multi-generational wealth through:
 - Land reconnection and stability
 - Air (education and knowledge)
 - Water (healing and balance)

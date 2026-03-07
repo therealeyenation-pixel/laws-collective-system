@@ -700,7 +700,7 @@ export default function ContractManagement() {
                                   size="icon"
                                   onClick={() => signAsClientMutation.mutate({ 
                                     contractId: contract.id, 
-                                    signerName: 'L.A.W.S. Collective' 
+                                    signerName: 'The The L.A.W.S. Collective' 
                                   })}
                                 >
                                   <FileSignature className="w-4 h-4 text-green-500" />
@@ -804,7 +804,7 @@ export default function ContractManagement() {
                               size="sm"
                               onClick={() => signAsClientMutation.mutate({ 
                                 contractId: contract.id, 
-                                signerName: 'L.A.W.S. Collective' 
+                                signerName: 'The The L.A.W.S. Collective' 
                               })}
                             >
                               <FileSignature className="w-4 h-4 mr-1" />

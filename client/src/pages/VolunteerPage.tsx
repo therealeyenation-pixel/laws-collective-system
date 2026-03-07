@@ -93,7 +93,7 @@ export default function VolunteerPage() {
               </p>
             </div>
             <div className="p-3 bg-background rounded-lg">
-              <p className="font-medium text-foreground">L.A.W.S. Collective</p>
+              <p className="font-medium text-foreground">The The L.A.W.S. Collective</p>
               <p className="text-muted-foreground">
                 Workforce development, re-entry support, skills training
               </p>

@@ -650,7 +650,7 @@ export default function CreativeEnterprise() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="real_eye_nation">Real-Eye-Nation</SelectItem>
-                      <SelectItem value="laws_collective">L.A.W.S. Collective</SelectItem>
+                      <SelectItem value="laws_collective">The The L.A.W.S. Collective</SelectItem>
                       <SelectItem value="both">Both</SelectItem>
                     </SelectContent>
                   </Select>
@@ -744,7 +744,7 @@ export default function CreativeEnterprise() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="real_eye_nation">Real-Eye-Nation</SelectItem>
-                      <SelectItem value="laws_collective">L.A.W.S. Collective</SelectItem>
+                      <SelectItem value="laws_collective">The The L.A.W.S. Collective</SelectItem>
                       <SelectItem value="joint">Joint Production</SelectItem>
                     </SelectContent>
                   </Select>

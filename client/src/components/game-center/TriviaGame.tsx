@@ -121,7 +121,7 @@ const sampleQuestions: TriviaQuestion[] = [
   },
   {
     id: "q3",
-    question: "What is the 'L' in L.A.W.S. Collective?",
+    question: "What is the 'L' in The The L.A.W.S. Collective?",
     options: [
       "Legacy",
       "Learning",

@@ -391,7 +391,7 @@ export const companySetupRouter = router({
     // Create Platform (10%)
     const platformResult = await db.insert(businessEntities).values({
       userId: ctx.user.id,
-      name: "The L.A.W.S. Collective LLC",
+      name: "The The The L.A.W.S. Collective LLC",
       entityType: "collective",
       description: "Curriculum and simulation platform infrastructure",
       trustLevel: 2,
@@ -403,13 +403,13 @@ export const companySetupRouter = router({
       userId: ctx.user.id,
       businessEntityId: platformId,
       accountType: "collective",
-      accountName: "The L.A.W.S. Collective LLC",
+      accountName: "The The The L.A.W.S. Collective LLC",
       allocationPercentage: "10",
       status: "active",
     });
 
     results.push({
-      name: "The L.A.W.S. Collective LLC",
+      name: "The The The L.A.W.S. Collective LLC",
       entityId: platformId,
       accountId: platformAccountResult[0].insertId,
       percentage: 10,

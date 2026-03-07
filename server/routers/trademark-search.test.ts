@@ -42,7 +42,7 @@ describe("Trademark Search Router", () => {
       const testCases = [
         { input: "My Business LLC", expected: "my business llc" },
         { input: "REAL-EYE-NATION", expected: "realeyenation" },
-        { input: "L.A.W.S. Collective", expected: "laws collective" },
+        { input: "The The L.A.W.S. Collective", expected: "laws collective" },
         { input: "Test & Company, Inc.", expected: "test  company inc" },
       ];
 

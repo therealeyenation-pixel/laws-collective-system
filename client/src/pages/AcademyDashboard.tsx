@@ -517,7 +517,7 @@ export default function AcademyDashboard() {
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
                   <div className="flex items-center gap-2 mb-3">
                     <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300 text-xs font-medium">
-                      L.A.W.S. Collective Partner Program
+                      The The L.A.W.S. Collective Partner Program
                     </Badge>
                   </div>
                   <h2 className="text-xl font-bold text-green-900 mb-2 flex items-center gap-2">
@@ -525,7 +525,7 @@ export default function AcademyDashboard() {
                     Business Training Simulators
                   </h2>
                   <p className="text-green-800 mb-4">
-                    Business training simulators are provided through our partnership with The L.A.W.S. Collective, LLC. 
+                    Business training simulators are provided through our partnership with The The The L.A.W.S. Collective, LLC. 
                     These practical simulations complement the Academy's sovereign education curriculum with real-world 
                     financial literacy and business readiness training.
                   </p>
@@ -540,7 +540,7 @@ export default function AcademyDashboard() {
                 <div className="bg-amber-50 rounded-xl p-6 border border-amber-200">
                   <h3 className="text-lg font-bold text-amber-900 mb-3">Available Training Programs</h3>
                   <p className="text-amber-800 text-sm mb-4">
-                    The following simulators are available through L.A.W.S. Collective:
+                    The following simulators are available through The The L.A.W.S. Collective:
                   </p>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* Trust Formation Simulator */}

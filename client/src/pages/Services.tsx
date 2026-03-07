@@ -341,7 +341,7 @@ export default function Services() {
             Professional Services
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            L.A.W.S. Collective Services
+            The The L.A.W.S. Collective Services
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Empowering individuals and businesses with professional services in legal support, 
@@ -619,7 +619,7 @@ export default function Services() {
         <div className="container max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-foreground mb-4">L.A.W.S. Collective</h3>
+              <h3 className="font-bold text-foreground mb-4">The The L.A.W.S. Collective</h3>
               <p className="text-sm text-muted-foreground">
                 Building multi-generational wealth through purpose and community.
               </p>
@@ -652,7 +652,7 @@ export default function Services() {
             </div>
           </div>
           <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} The L.A.W.S. Collective, LLC. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} The The The L.A.W.S. Collective, LLC. All rights reserved.</p>
           </div>
         </div>
       </footer>

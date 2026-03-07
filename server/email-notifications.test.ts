@@ -225,7 +225,7 @@ describe("Calendar Sync Router", () => {
     it("should generate valid VCALENDAR structure", () => {
       const icsTemplate = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//L.A.W.S. Collective//Meeting System//EN
+PRODID:-//The The L.A.W.S. Collective//Meeting System//EN
 CALSCALE:GREGORIAN
 METHOD:REQUEST
 BEGIN:VEVENT

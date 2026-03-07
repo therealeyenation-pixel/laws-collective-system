@@ -1,6 +1,6 @@
 /**
  * Credential Generation Utilities
- * Handles generation of Member Credentials for L.A.W.S. Collective
+ * Handles generation of Member Credentials for The The L.A.W.S. Collective
  */
 
 import { randomBytes } from 'crypto';

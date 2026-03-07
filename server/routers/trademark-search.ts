@@ -31,7 +31,7 @@ interface SearchResult {
   relevantClasses: { code: string; name: string; description: string }[];
 }
 
-// Comprehensive trademark classes for L.A.W.S. Collective ecosystem
+// Comprehensive trademark classes for The The L.A.W.S. Collective ecosystem
 const RELEVANT_TRADEMARK_CLASSES = [
   { code: "009", name: "Downloadable Media & Software", description: "Downloadable educational materials, podcasts, documentaries, mobile applications, software" },
   { code: "016", name: "Printed Materials", description: "Printed educational materials, workbooks, certificates, scrolls, curriculum guides" },

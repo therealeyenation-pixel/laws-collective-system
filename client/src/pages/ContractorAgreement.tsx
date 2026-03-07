@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 
 const ENTITIES = [
-  { id: "laws-llc", name: "The L.A.W.S. Collective, LLC" },
+  { id: "laws-llc", name: "The The The L.A.W.S. Collective, LLC" },
   { id: "laws-system", name: "LuvOnPurpose Autonomous Wealth System LLC" },
   { id: "temple", name: "LuvOnPurpose Outreach Temple and Academy Society, Inc." },
   { id: "real-eye", name: "Real-Eye-Nation, LLC" },
@@ -80,7 +80,7 @@ const SAMPLE_AGREEMENTS: ContractorAgreement[] = [
     contractorEmail: "marcus@mjconsulting.com",
     contractorBusinessName: "MJ Consulting LLC",
     contractorEIN: "XX-XXXXXXX",
-    entity: "The L.A.W.S. Collective, LLC",
+    entity: "The The The L.A.W.S. Collective, LLC",
     serviceCategory: "consulting",
     scopeOfWork: "Business development consulting and strategic planning support for grant acquisition initiatives.",
     hourlyRate: "$125",
@@ -101,7 +101,7 @@ const SAMPLE_AGREEMENTS: ContractorAgreement[] = [
     contractorBusinessName: "Creative Studio Co",
     entity: "Real-Eye-Nation, LLC",
     serviceCategory: "creative",
-    scopeOfWork: "Brand design, marketing materials, and visual content creation for L.A.W.S. Collective campaigns.",
+    scopeOfWork: "Brand design, marketing materials, and visual content creation for The The L.A.W.S. Collective campaigns.",
     projectRate: "$5,000",
     paymentTerms: "50% upfront, 50% on completion",
     startDate: "2026-01-20",

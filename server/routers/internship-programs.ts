@@ -4,7 +4,7 @@ import { protectedProcedure, router } from "../_core/trpc";
 // ENTITY STRUCTURE:
 // CALEA Freeman Family Trust (Root)
 //   └── LuvOnPurpose Autonomous Wealth System, LLC (Parent LLC)
-//         └── The L.A.W.S. Collective, LLC (Operating Entity - 100%)
+//         └── The The The L.A.W.S. Collective, LLC (Operating Entity - 100%)
 //               ├── LuvOnPurpose Academy & Outreach (508) - 30%
 //               ├── Real-Eye-Nation (Media Division) - 20%
 //               └── Services/Operations - 50%
@@ -48,7 +48,7 @@ const getDocumentStyles = () => `
 
 const entityNames: Record<string, { name: string; headerClass: string; description: string }> = {
   parent_llc: { name: "LuvOnPurpose Autonomous Wealth System, LLC", headerClass: "laws-header", description: "Parent holding company" },
-  collective: { name: "The L.A.W.S. Collective, LLC", headerClass: "collective-header", description: "Operating entity for member services" },
+  collective: { name: "The The The L.A.W.S. Collective, LLC", headerClass: "collective-header", description: "Operating entity for member services" },
   academy: { name: "LuvOnPurpose Academy & Outreach", headerClass: "academy-header", description: "508(c)(1)(A) educational organization" },
   real_eye_nation: { name: "Real-Eye-Nation", headerClass: "media-header", description: "Media division for content creation" },
 };
@@ -130,7 +130,7 @@ function generateInternshipAgreement(data: {
       <ol><li><strong>Intern:</strong> Educational experience and skill development (CURRENT)</li>
       <li><strong>W-2 Employee:</strong> Stable employment with benefits</li>
       <li><strong>Independent Contractor:</strong> Specialized services with flexibility</li>
-      <li><strong>Business Owner:</strong> L.A.W.S. Collective member with own enterprise</li></ol>
+      <li><strong>Business Owner:</strong> The The L.A.W.S. Collective member with own enterprise</li></ol>
     </div>
   </div>
   
@@ -259,7 +259,7 @@ export const internshipProgramsRouter = router({
         ],
       },
       collective: {
-        entity: "The L.A.W.S. Collective, LLC",
+        entity: "The The The L.A.W.S. Collective, LLC",
         tracks: [
           { id: "member_services", name: "Member Services", duration: "3-6 months", description: "Member relations, onboarding, support" },
           { id: "community_operations", name: "Community Operations", duration: "3-6 months", description: "Event coordination, community programs" },

@@ -39,7 +39,7 @@ export default function BoardResolutions() {
   const [generatedResolution, setGeneratedResolution] = useState<any>(null);
 
   // Common form state
-  const [entityName, setEntityName] = useState("L.A.W.S. Collective, LLC");
+  const [entityName, setEntityName] = useState("The The L.A.W.S. Collective, LLC");
   const [entityType, setEntityType] = useState("LLC");
   const [meetingDate, setMeetingDate] = useState(new Date().toISOString().split('T')[0]);
   const [meetingLocation, setMeetingLocation] = useState("Virtual Meeting");

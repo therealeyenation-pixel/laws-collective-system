@@ -399,7 +399,7 @@ export function generateMembershipAgreement(
   return `
 MEMBERSHIP AGREEMENT
 
-This Membership Agreement ("Agreement") is entered into between The L.A.W.S. Collective, LLC 
+This Membership Agreement ("Agreement") is entered into between The The The L.A.W.S. Collective, LLC 
 ("Collective") and ${businessName} ("Member").
 
 1. MEMBERSHIP TIER
@@ -446,7 +446,7 @@ export function generateTermsAndConditions(): string {
 TERMS AND CONDITIONS FOR MEMBERSHIP
 
 1. ELIGIBILITY
-Membership in The L.A.W.S. Collective is open to businesses and organizations that:
+Membership in The The The L.A.W.S. Collective is open to businesses and organizations that:
 • Are legally formed and in good standing
 • Share the Collective's commitment to community development
 • Agree to abide by the Collective's code of conduct

@@ -39,9 +39,9 @@ import {
 const familyMembers = [
   { id: "craig", name: "Craig Freeman", position: "Financial Manager", entity: "98 Trust" },
   { id: "calea", name: "CALEA Freeman", position: "Executive Director", entity: "Temple of Alkebulan" },
-  { id: "amber", name: "Amber S. Hunter", position: "Health Manager", entity: "L.A.W.S. Collective" },
+  { id: "amber", name: "Amber S. Hunter", position: "Health Manager", entity: "The The L.A.W.S. Collective" },
   { id: "calvin", name: "Calvin Freeman", position: "Technology Director", entity: "Real-Eye Technologies" },
-  { id: "cameron", name: "Cameron Freeman", position: "Operations Coordinator", entity: "L.A.W.S. Collective" },
+  { id: "cameron", name: "Cameron Freeman", position: "Operations Coordinator", entity: "The The L.A.W.S. Collective" },
   { id: "caleb", name: "Caleb Freeman", position: "Media Production Lead", entity: "Real-Eye Technologies" },
   { id: "chloe", name: "Chloe Freeman", position: "Academy Coordinator", entity: "Divine STEM Academy" },
 ];

@@ -70,7 +70,7 @@ function buildOrgDataFromEmployees(employees: any[]): OrgNode {
       title: manager.jobTitle,
       name: `${manager.firstName} ${manager.lastName}`,
       department: manager.department,
-      entity: manager.entityName || "The L.A.W.S. Collective LLC",
+      entity: manager.entityName || "The The The L.A.W.S. Collective LLC",
       tier: "tier1_executive" as const,
       status: "filled" as const,
       employeeId: manager.id,
@@ -79,7 +79,7 @@ function buildOrgDataFromEmployees(employees: any[]): OrgNode {
         title: coord.jobTitle,
         name: `${coord.firstName} ${coord.lastName}`,
         department: coord.department,
-        entity: coord.entityName || "The L.A.W.S. Collective LLC",
+        entity: coord.entityName || "The The The L.A.W.S. Collective LLC",
         tier: "tier4_coordinator" as const,
         status: "filled" as const,
         employeeId: coord.id
@@ -92,7 +92,7 @@ function buildOrgDataFromEmployees(employees: any[]): OrgNode {
     title: ceo ? ceo.jobTitle : "Chief Executive Officer",
     name: ceo ? `${ceo.firstName} ${ceo.lastName}` : "LaShanna Russell",
     department: "Executive",
-    entity: ceo?.entityName || "The L.A.W.S. Collective LLC",
+    entity: ceo?.entityName || "The The The L.A.W.S. Collective LLC",
     tier: "tier1_executive",
     status: "filled",
     employeeId: ceo?.id,
@@ -106,7 +106,7 @@ const staticOrgData: OrgNode = {
   title: "Chief Executive Officer",
   name: "LaShanna Russell",
   department: "Executive",
-  entity: "The L.A.W.S. Collective LLC",
+  entity: "The The The L.A.W.S. Collective LLC",
   tier: "tier1_executive",
   status: "filled",
   children: [
@@ -115,7 +115,7 @@ const staticOrgData: OrgNode = {
       title: "Finance Manager",
       name: "Craig Russell",
       department: "Finance",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier1_executive",
       status: "filled",
       children: [
@@ -123,7 +123,7 @@ const staticOrgData: OrgNode = {
           id: "finance-ops-coordinator",
           title: "Finance Operations Coordinator",
           department: "Finance",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -161,7 +161,7 @@ const staticOrgData: OrgNode = {
       title: "Health Manager",
       name: "Amber Hunter",
       department: "Health",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier1_executive",
       status: "filled",
       children: [
@@ -169,7 +169,7 @@ const staticOrgData: OrgNode = {
           id: "health-ops-coordinator",
           title: "Health Operations Coordinator",
           department: "Health",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -225,7 +225,7 @@ const staticOrgData: OrgNode = {
       id: "hr-manager",
       title: "HR Manager",
       department: "Human Resources",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier3_open",
       status: "open",
       children: [
@@ -233,7 +233,7 @@ const staticOrgData: OrgNode = {
           id: "hr-ops-coordinator",
           title: "HR Operations Coordinator",
           department: "Human Resources",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -243,7 +243,7 @@ const staticOrgData: OrgNode = {
       id: "operations-manager",
       title: "Operations Manager",
       department: "Operations",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier3_open",
       status: "open",
       children: [
@@ -251,7 +251,7 @@ const staticOrgData: OrgNode = {
           id: "operations-coordinator",
           title: "Operations Coordinator",
           department: "Operations",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -261,7 +261,7 @@ const staticOrgData: OrgNode = {
       id: "platform-admin",
       title: "Platform Administrator",
       department: "Technology",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier3_open",
       status: "open",
       children: [
@@ -269,7 +269,7 @@ const staticOrgData: OrgNode = {
           id: "tech-ops-coordinator",
           title: "Technology Operations Coordinator",
           department: "Technology",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -279,7 +279,7 @@ const staticOrgData: OrgNode = {
       id: "qaqc-manager",
       title: "QA/QC Manager",
       department: "Quality Assurance",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier3_open",
       status: "open",
       children: [
@@ -287,7 +287,7 @@ const staticOrgData: OrgNode = {
           id: "qaqc-ops-coordinator",
           title: "QA/QC Operations Coordinator",
           department: "Quality Assurance",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -298,7 +298,7 @@ const staticOrgData: OrgNode = {
       title: "Procurement Manager",
       name: "Maia Rylandlesesene",
       department: "Procurement",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
       status: "identified",
       children: [
@@ -306,7 +306,7 @@ const staticOrgData: OrgNode = {
           id: "procurement-ops-coordinator",
           title: "Procurement Operations Coordinator",
           department: "Procurement",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -317,7 +317,7 @@ const staticOrgData: OrgNode = {
       title: "Purchasing Manager",
       name: "Latisha Cox",
       department: "Purchasing",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
       status: "identified",
       children: [
@@ -325,7 +325,7 @@ const staticOrgData: OrgNode = {
           id: "purchasing-ops-coordinator",
           title: "Purchasing Operations Coordinator",
           department: "Purchasing",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -336,7 +336,7 @@ const staticOrgData: OrgNode = {
       title: "Contracts Manager",
       name: "Roshonda Parker",
       department: "Contracts",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
       status: "identified",
       children: [
@@ -344,7 +344,7 @@ const staticOrgData: OrgNode = {
           id: "contracts-ops-coordinator",
           title: "Contracts Operations Coordinator",
           department: "Contracts",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -355,7 +355,7 @@ const staticOrgData: OrgNode = {
       title: "Property Manager",
       name: "Talbert Cox",
       department: "Property",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
       status: "identified",
       children: [
@@ -363,7 +363,7 @@ const staticOrgData: OrgNode = {
           id: "property-ops-coordinator",
           title: "Property Operations Coordinator",
           department: "Property",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -374,7 +374,7 @@ const staticOrgData: OrgNode = {
       title: "Project Controls Manager",
       name: "Christopher Battle Sr.",
       department: "Project Controls",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
       status: "identified",
       children: [
@@ -382,7 +382,7 @@ const staticOrgData: OrgNode = {
           id: "project-controls-coordinator",
           title: "Project Controls Coordinator",
           department: "Project Controls",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -392,7 +392,7 @@ const staticOrgData: OrgNode = {
       id: "grant-manager",
       title: "Grant Manager",
       department: "Grants",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier3_open",
       status: "open",
       children: [
@@ -400,7 +400,7 @@ const staticOrgData: OrgNode = {
           id: "grant-coordinator",
           title: "Grant Coordinator",
           department: "Grants",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -410,7 +410,7 @@ const staticOrgData: OrgNode = {
       id: "legal-manager",
       title: "Legal Manager",
       department: "Legal",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier3_open",
       status: "open",
       children: [
@@ -418,7 +418,7 @@ const staticOrgData: OrgNode = {
           id: "legal-ops-coordinator",
           title: "Legal Operations Coordinator",
           department: "Legal",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -429,7 +429,7 @@ const staticOrgData: OrgNode = {
       title: "Real Estate Manager - SC",
       name: "Treiva Hunter",
       department: "Real Estate",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
       status: "identified",
       children: [
@@ -437,7 +437,7 @@ const staticOrgData: OrgNode = {
           id: "realestate-ops-coordinator-sc",
           title: "Real Estate Ops Coordinator - SC",
           department: "Real Estate",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }
@@ -448,7 +448,7 @@ const staticOrgData: OrgNode = {
       title: "Real Estate Manager - GA",
       name: "Kenneth Coleman",
       department: "Real Estate",
-      entity: "The L.A.W.S. Collective LLC",
+      entity: "The The The L.A.W.S. Collective LLC",
       tier: "tier2_identified",
       status: "identified",
       children: [
@@ -456,7 +456,7 @@ const staticOrgData: OrgNode = {
           id: "realestate-ops-coordinator-ga",
           title: "Real Estate Ops Coordinator - GA",
           department: "Real Estate",
-          entity: "The L.A.W.S. Collective LLC",
+          entity: "The The The L.A.W.S. Collective LLC",
           tier: "tier4_coordinator",
           status: "open"
         }

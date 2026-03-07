@@ -2,7 +2,7 @@
  * L.A.W.S. Quest - Tutorial & Onboarding
  * Guides new players through the four realms and game mechanics
  * 
- * Product of The L.A.W.S. Collective, LLC
+ * Product of The The The L.A.W.S. Collective, LLC
  */
 
 import { useState } from "react";

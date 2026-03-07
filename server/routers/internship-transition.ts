@@ -35,7 +35,7 @@ const getDocumentStyles = () => `
 
 const entityNames: Record<string, { name: string; description: string }> = {
   parent_llc: { name: "LuvOnPurpose Autonomous Wealth System, LLC", description: "Parent holding company" },
-  collective: { name: "The L.A.W.S. Collective, LLC", description: "Operating entity for member services" },
+  collective: { name: "The The The L.A.W.S. Collective, LLC", description: "Operating entity for member services" },
   academy: { name: "LuvOnPurpose Academy & Outreach", description: "508(c)(1)(A) educational organization" },
   real_eye_nation: { name: "Real-Eye-Nation", description: "Media division" },
 };
@@ -101,7 +101,7 @@ function generateInternToEmployeeTransition(data: {
       <ol><li><strong>Intern:</strong> Educational experience and skill development (COMPLETED)</li>
       <li><strong>W-2 Employee:</strong> Stable employment with benefits (CURRENT)</li>
       <li><strong>Independent Contractor:</strong> Specialized services with flexibility (FUTURE)</li>
-      <li><strong>Business Owner:</strong> L.A.W.S. Collective member with own enterprise (FUTURE)</li></ol>
+      <li><strong>Business Owner:</strong> The The L.A.W.S. Collective member with own enterprise (FUTURE)</li></ol>
     </div>
   </div>
   
@@ -199,7 +199,7 @@ function generateInternToMemberTransition(data: {
 <body><div class="document-container">
   <div class="transition-header">
     <h1 style="color: white; margin: 0;">Internship to Collective Member Transition</h1>
-    <p style="color: white; margin: 10px 0 0 0;">The L.A.W.S. Collective, LLC</p>
+    <p style="color: white; margin: 10px 0 0 0;">The The The L.A.W.S. Collective, LLC</p>
   </div>
   
   <div class="pathway-box">
@@ -212,7 +212,7 @@ function generateInternToMemberTransition(data: {
   </div>
   
   <div class="section"><p>This Internship to Collective Member Transition Agreement is entered into as of <strong>${data.transitionDate}</strong>, by and between:</p>
-    <ol><li><strong>The L.A.W.S. Collective, LLC</strong> (the "Collective"); and</li>
+    <ol><li><strong>The The The L.A.W.S. Collective, LLC</strong> (the "Collective"); and</li>
     <li><strong>${data.individualName}</strong>, owner of <strong>${data.businessName}</strong> (the "New Member").</li></ol>
   </div>
   
@@ -236,13 +236,13 @@ function generateInternToMemberTransition(data: {
       <ol><li><strong>Intern:</strong> Educational experience and skill development ✓</li>
       <li><strong>W-2 Employee:</strong> Stable employment with benefits ✓</li>
       <li><strong>Independent Contractor:</strong> Specialized services with flexibility ✓</li>
-      <li><strong>Business Owner:</strong> L.A.W.S. Collective member with own enterprise ✓ <strong>(ACHIEVED)</strong></li></ol>
+      <li><strong>Business Owner:</strong> The The L.A.W.S. Collective member with own enterprise ✓ <strong>(ACHIEVED)</strong></li></ol>
     </div>
   </div>
   
   <div class="signature-block"><p>IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.</p>
     <div class="signature-line" style="margin-top: 40px;">
-      <div class="signature-box"><p><strong>The L.A.W.S. Collective, LLC</strong></p><div class="line"></div><div class="label">Authorized Representative</div><div class="line" style="margin-top: 20px;"></div><div class="label">Date</div></div>
+      <div class="signature-box"><p><strong>The The The L.A.W.S. Collective, LLC</strong></p><div class="line"></div><div class="label">Authorized Representative</div><div class="line" style="margin-top: 20px;"></div><div class="label">Date</div></div>
       <div class="signature-box"><p><strong>NEW MEMBER</strong></p><div class="line"></div><div class="label">${data.individualName}</div><p style="font-size: 10pt;">Owner, ${data.businessName}</p><div class="line" style="margin-top: 20px;"></div><div class="label">Date</div></div>
     </div>
   </div>
@@ -324,7 +324,7 @@ export const internshipTransitionRouter = router({
       { stage: 1, name: "Intern", description: "Educational experience and skill development", status: "entry" },
       { stage: 2, name: "W-2 Employee", description: "Stable employment with benefits", status: "growth" },
       { stage: 3, name: "Independent Contractor", description: "Specialized services with flexibility", status: "advancement" },
-      { stage: 4, name: "Business Owner", description: "L.A.W.S. Collective member with own enterprise", status: "achievement" },
+      { stage: 4, name: "Business Owner", description: "The The L.A.W.S. Collective member with own enterprise", status: "achievement" },
     ];
   }),
 

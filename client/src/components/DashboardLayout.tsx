@@ -170,7 +170,7 @@ const menuCategories: MenuCategory[] = [
   // L.A.W.S. COLLECTIVE - Operating Company with Departments
   {
     icon: Building2,
-    label: "L.A.W.S. Collective",
+    label: "The The L.A.W.S. Collective",
     minRole: "staff",
     defaultOpen: true,
     subCategories: [
@@ -812,7 +812,7 @@ function DashboardLayoutContent({
                             );
                           })}
                           
-                          {/* SubCategories (for L.A.W.S. Collective departments) */}
+                          {/* SubCategories (for The The L.A.W.S. Collective departments) */}
                           {category.subCategories?.map(subCat => {
                             const subIsOpen = openSubCategories[subCat.label] ?? false;
                             const subHasActive = subCategoryHasActiveItem(subCat);

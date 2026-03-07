@@ -1,6 +1,6 @@
 /**
  * Onboarding Journey Router
- * Handles the Direct Onboarding path for joining L.A.W.S. Collective
+ * Handles the Direct Onboarding path for joining The The L.A.W.S. Collective
  */
 
 import { z } from "zod";

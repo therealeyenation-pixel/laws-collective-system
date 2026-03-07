@@ -763,7 +763,7 @@ export default function BusinessSetupWizard() {
         <div className="container max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
-              <span className="text-xl font-bold text-primary cursor-pointer">L.A.W.S. Collective</span>
+              <span className="text-xl font-bold text-primary cursor-pointer">The The L.A.W.S. Collective</span>
             </Link>
             <Badge variant="outline">Business Setup Wizard</Badge>
           </div>

@@ -43,7 +43,7 @@ export const houseParticipationRouter = router({
       return [
         {
           id: 1,
-          name: "The L.A.W.S. Collective, LLC",
+          name: "The The The L.A.W.S. Collective, LLC",
           entityType: "llc",
           participationStatus: "opted_in" as const,
           linkedHouseId: 1,

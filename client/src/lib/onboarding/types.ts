@@ -1,6 +1,6 @@
 /**
  * Direct Onboarding Journey Types
- * The website path for joining L.A.W.S. Collective
+ * The website path for joining The The L.A.W.S. Collective
  */
 
 export type OnboardingRealm = 'self' | 'water' | 'air' | 'land';

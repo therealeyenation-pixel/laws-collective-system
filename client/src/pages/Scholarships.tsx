@@ -347,7 +347,7 @@ export default function Scholarships() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="entityName">Primary Entity</Label>
-                        <Input id="entityName" name="entityName" placeholder="e.g., L.A.W.S. Collective, LLC" />
+                        <Input id="entityName" name="entityName" placeholder="e.g., The The L.A.W.S. Collective, LLC" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="benefitGenerations">Benefit Generations</Label>

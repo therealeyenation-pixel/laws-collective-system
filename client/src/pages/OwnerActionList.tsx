@@ -52,7 +52,7 @@ const actionCategories = [
       { id: 2, title: "Create LuvOnPurpose Academy & Outreach business entity", status: "pending", priority: "high" },
       { id: 3, title: "Create Real-Eye-Nation business entity", status: "pending", priority: "high" },
       { id: 4, title: "Create LuvOnPurpose Autonomous Wealth System LLC business entity", status: "pending", priority: "high" },
-      { id: 5, title: "Create The L.A.W.S. Collective LLC business entity", status: "pending", priority: "high" },
+      { id: 5, title: "Create The The The L.A.W.S. Collective LLC business entity", status: "pending", priority: "high" },
       { id: 6, title: "Set up hierarchical relationships (all report to Trust)", status: "pending", priority: "high" },
       { id: 7, title: "Configure allocation percentages (40/30/20/10 split)", status: "pending", priority: "high" },
       { id: 8, title: "Initialize LuvLedger accounts for each entity", status: "pending", priority: "medium" },

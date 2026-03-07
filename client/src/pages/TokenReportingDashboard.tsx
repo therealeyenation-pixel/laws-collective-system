@@ -79,7 +79,7 @@ const mockDistributionHistory = [
 
 const mockTopHolders = [
   { name: "98 Trust", type: "Trust", luvBalance: 500000, crownBalance: 500, sparkBalance: 1000, legacyBalance: 200 },
-  { name: "L.A.W.S. Collective", type: "Entity", luvBalance: 250000, crownBalance: 100, sparkBalance: 3000, legacyBalance: 50 },
+  { name: "The The L.A.W.S. Collective", type: "Entity", luvBalance: 250000, crownBalance: 100, sparkBalance: 3000, legacyBalance: 50 },
   { name: "508 Academy", type: "Entity", luvBalance: 150000, crownBalance: 50, sparkBalance: 5000, legacyBalance: 25 },
   { name: "Real-Eye-Nation", type: "Entity", luvBalance: 100000, crownBalance: 50, sparkBalance: 2000, legacyBalance: 25 },
   { name: "LuvOnPurpose AWS", type: "Entity", luvBalance: 100000, crownBalance: 50, sparkBalance: 1500, legacyBalance: 25 },
@@ -87,7 +87,7 @@ const mockTopHolders = [
 
 const mockEntityDistribution = [
   { entity: "98 Trust", percentage: 40, tokens: 800000 },
-  { entity: "L.A.W.S. Collective", percentage: 25, tokens: 500000 },
+  { entity: "The The L.A.W.S. Collective", percentage: 25, tokens: 500000 },
   { entity: "508 Academy", percentage: 15, tokens: 300000 },
   { entity: "Real-Eye-Nation", percentage: 10, tokens: 200000 },
   { entity: "LuvOnPurpose AWS", percentage: 10, tokens: 200000 },
@@ -444,7 +444,7 @@ export default function TokenReportingDashboard() {
               <CardContent>
                 <div className="space-y-3">
                   {[
-                    { type: "distribution", from: "Treasury", to: "L.A.W.S. Collective", amount: 5000, token: "LUV", time: "2 hours ago" },
+                    { type: "distribution", from: "Treasury", to: "The The L.A.W.S. Collective", amount: 5000, token: "LUV", time: "2 hours ago" },
                     { type: "reward", from: "System", to: "User: Craig R.", amount: 50, token: "SPARK", time: "4 hours ago" },
                     { type: "transfer", from: "508 Academy", to: "Real-Eye-Nation", amount: 1000, token: "LUV", time: "6 hours ago" },
                     { type: "mint", from: "System", to: "User: Essence H.", amount: 1, token: "LEGACY", time: "1 day ago" },

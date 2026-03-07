@@ -33,7 +33,7 @@ import DocumentTemplates from "@/components/DocumentTemplates";
 // Entity mapping
 const ENTITIES = [
   { id: "real_eye_nation", name: "Real-Eye-Nation LLC", type: "Media & Narrative" },
-  { id: "laws_collective", name: "The L.A.W.S. Collective LLC", type: "Workforce Development" },
+  { id: "laws_collective", name: "The The The L.A.W.S. Collective LLC", type: "Workforce Development" },
   { id: "luvonpurpose_wealth", name: "LuvOnPurpose Autonomous Wealth System LLC", type: "Technology Platform" },
   { id: "academy", name: "LuvOnPurpose Outreach Temple and Academy Society Inc.", type: "Education (501c3)" },
   { id: "trust_98", name: "98 Trust - CALEA Freeman Family Trust", type: "Family Trust" },

@@ -588,10 +588,10 @@ export const truthNarrativeCurriculum: EntityCurriculum = {
   ]
 };
 
-// Commercial - Product Development Curriculum (now under L.A.W.S. Collective Services)
+// Commercial - Product Development Curriculum (now under The The L.A.W.S. Collective Services)
 export const productDevelopmentCurriculum: EntityCurriculum = {
   entityId: "commercial",
-  entityName: "The L.A.W.S. Collective LLC - Services Division",
+  entityName: "The The The L.A.W.S. Collective LLC - Services Division",
   curriculumName: "Product Development",
   description: "From idea to market: developing products and services that create value and generate sustainable revenue.",
   targetAudience: "Entrepreneurs, product managers, business developers, and innovators",
@@ -768,7 +768,7 @@ export const productDevelopmentCurriculum: EntityCurriculum = {
 // Platform - Platform Administration Curriculum
 export const platformAdministrationCurriculum: EntityCurriculum = {
   entityId: "platform",
-  entityName: "The L.A.W.S. Collective LLC - Platform Division",
+  entityName: "The The The L.A.W.S. Collective LLC - Platform Division",
   curriculumName: "Platform Administration",
   description: "Managing and administering the L.A.W.S. platform, including simulators, member tools, and infrastructure.",
   targetAudience: "Platform administrators, system operators, and technical staff",

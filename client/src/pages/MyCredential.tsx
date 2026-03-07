@@ -32,7 +32,7 @@ export default function MyCredential() {
               <Shield className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
               <CardTitle>Sign In Required</CardTitle>
               <CardDescription>
-                Please sign in to view your L.A.W.S. Collective Member Credential
+                Please sign in to view your The The L.A.W.S. Collective Member Credential
               </CardDescription>
             </CardHeader>
           </Card>
@@ -50,7 +50,7 @@ export default function MyCredential() {
               <Award className="w-16 h-16 mx-auto text-amber-500 mb-4" />
               <CardTitle>Earn Your Member Credential</CardTitle>
               <CardDescription className="text-base mt-2">
-                Complete one of the following paths to earn your L.A.W.S. Collective Member Credential:
+                Complete one of the following paths to earn your The The L.A.W.S. Collective Member Credential:
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -122,8 +122,8 @@ export default function MyCredential() {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: "L.A.W.S. Collective Member Credential",
-        text: "Verify my L.A.W.S. Collective membership: " + credentialId,
+        title: "The The L.A.W.S. Collective Member Credential",
+        text: "Verify my The The L.A.W.S. Collective membership: " + credentialId,
         url: qrData,
       });
     } else {
@@ -139,7 +139,7 @@ export default function MyCredential() {
           <div className="bg-gradient-to-r from-primary to-primary/80 p-6 text-primary-foreground">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold">L.A.W.S. Collective</h1>
+                <h1 className="text-2xl font-bold">The The L.A.W.S. Collective</h1>
                 <p className="text-primary-foreground/80">Member Credential</p>
               </div>
               <Shield className="w-12 h-12" />

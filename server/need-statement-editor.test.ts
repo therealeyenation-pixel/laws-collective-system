@@ -41,11 +41,11 @@ describe('Need Statement Editor Service', () => {
       expect(realEyeNation?.entityType).toBe('LLC');
     });
 
-    it('should include L.A.W.S. Collective', () => {
+    it('should include The The L.A.W.S. Collective', () => {
       const entities = getEditableEntities();
       const laws = entities.find(e => e.entityId === 'laws');
       expect(laws).toBeDefined();
-      expect(laws?.entityName).toBe('The L.A.W.S. Collective, LLC');
+      expect(laws?.entityName).toBe('The The The L.A.W.S. Collective, LLC');
     });
 
     it('should include LuvOnPurpose AWS', () => {

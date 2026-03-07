@@ -34,7 +34,7 @@ const entities = [
   { id: "real-eye-nation", name: "Real-Eye-Nation LLC", type: "llc" as const, ein: "84-4976416" },
   { id: "calea-trust", name: "Calea Freeman Family Trust", type: "trust" as const, ein: "98-6109577" },
   { id: "luvonpurpose", name: "LuvOnPurpose Autonomous Wealth System LLC", type: "llc" as const, ein: null },
-  { id: "laws-collective", name: "The L.A.W.S. Collective, LLC", type: "llc" as const, ein: "39-3122993" },
+  { id: "laws-collective", name: "The The The L.A.W.S. Collective, LLC", type: "llc" as const, ein: "39-3122993" },
   { id: "508-academy", name: "LuvOnPurpose Outreach Temple and Academy Society, Inc.", type: "nonprofit_508" as const, ein: null },
 ];
 

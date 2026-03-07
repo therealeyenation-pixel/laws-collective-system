@@ -400,7 +400,7 @@ export default function SignatureVerification() {
       {/* Footer */}
       <footer className="border-t mt-12 py-6">
         <div className="container max-w-4xl mx-auto text-center text-sm text-muted-foreground">
-          <p>The L.A.W.S. Collective, LLC - Electronic Signature Verification System</p>
+          <p>The The The L.A.W.S. Collective, LLC - Electronic Signature Verification System</p>
         </div>
       </footer>
     </div>

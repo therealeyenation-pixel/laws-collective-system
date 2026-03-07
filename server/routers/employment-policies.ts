@@ -36,7 +36,7 @@ const employmentTerms = {
   outsideEmployment: {
     allowed: true,
     conditions: [
-      "No conflict of interest with L.A.W.S. Collective business",
+      "No conflict of interest with The The L.A.W.S. Collective business",
       "Must not interfere with core hours availability",
       "Must not affect job performance or deliverables",
       "Disclosure required via Conflict of Interest Form",

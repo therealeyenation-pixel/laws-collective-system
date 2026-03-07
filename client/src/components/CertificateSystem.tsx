@@ -204,7 +204,7 @@ export function CertificateSystem() {
                 </div>
                 <div className="text-center">
                   <p className="text-xs uppercase tracking-widest text-amber-600 mb-2">
-                    L.A.W.S. Collective
+                    The The L.A.W.S. Collective
                   </p>
                   <h2 className="text-2xl font-bold mb-1">Certificate of Completion</h2>
                   <p className="text-muted-foreground mb-4">This certifies that</p>
