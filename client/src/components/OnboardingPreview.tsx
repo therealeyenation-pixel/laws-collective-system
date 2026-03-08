@@ -93,27 +93,19 @@ export default function OnboardingPreview({ isOpen, onClose }: OnboardingPreview
       description: "Create your foundation",
       content: (
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-semibold mb-2">House/Business Name</label>
-            <input
-              type="text"
-              placeholder="e.g., Smith Family House"
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm"
-              disabled
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold mb-2">Business Type</label>
-            <select className="w-full px-3 py-2 border border-border rounded-lg text-sm" disabled>
-              <option>Family House</option>
-              <option>Business Entity</option>
-              <option>Non-Profit Organization</option>
-            </select>
-          </div>
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-            <p className="text-xs text-blue-800 dark:text-blue-200">
-              💡 You can customize your avatar in the next step
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <p className="text-sm text-amber-800 dark:text-amber-200">
+              After you log in, you'll set up your house/business details and customize your avatar to represent your unique identity.
             </p>
+          </div>
+          <div className="space-y-3">
+            <h4 className="font-semibold">What you'll do:</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>✓ Name your house or business</li>
+              <li>✓ Select your entity type</li>
+              <li>✓ Customize your Brain avatar</li>
+              <li>✓ Set your Brain's personality</li>
+            </ul>
           </div>
         </div>
       ),
