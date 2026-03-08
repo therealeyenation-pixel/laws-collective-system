@@ -10249,7 +10249,7 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 
 ### Phase 31.2: Onboarding Flow with Luv Welcome Guide (COMPLETED)
 - [x] Create onboarding page at /onboarding
-- [x] Build Luv welcome screen with avatar display
+- [x] Build Luv welcome screen with holographic avatar display
 - [x] Create system introduction flow (Luv explains LuvLedger)
 - [x] Build step-by-step onboarding wizard (5 steps: Welcome, System Explanation, House Setup, Avatar Customization, Ready)
 - [x] Implement house/business activation flow
@@ -10259,6 +10259,9 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Add preview button to landing page
 - [x] Create OnboardingPreview modal component
 - [x] Test full onboarding flow end-to-end
+- [x] Create custom Luv holographic avatar (longer locs with ombre, soft purple blazer, thoughtful pose)
+- [x] Upload avatar to S3/CDN
+- [x] Update onboarding page with new avatar image
 
 ### Phase 31.3: Avatar Customization System (IN PROGRESS)
 - [x] Create avatar customization step in onboarding

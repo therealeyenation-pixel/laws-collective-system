@@ -42,7 +42,7 @@ export default function LuvOnboarding() {
           <div className="flex justify-center mb-8">
             <div className="w-48 h-48 relative">
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv_avatar_locs_long_neutral_3f2665f6.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv_avatar_hologram_locs_muted_22d75ba4.png"
                 alt="Luv Avatar"
                 className="w-full h-full object-contain"
               />
