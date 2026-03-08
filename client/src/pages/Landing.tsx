@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import * as QRCodeLib from "qrcode.react";
 import { trpc } from "@/lib/trpc";
+import OnboardingPreview from "@/components/OnboardingPreview";
 const QRCode = QRCodeLib.QRCodeSVG || QRCodeLib.default || QRCodeLib;
 
 type Stage = "intro-slideshow" | "name-input" | "waitlist-signup";
@@ -19,6 +20,7 @@ export default function Landing() {
   const [email, setEmail] = useState("");
   const [waitlistError, setWaitlistError] = useState("");
   const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+  const [showOnboardingPreview, setShowOnboardingPreview] = useState(false);
 
   // Analytics tracking
   const trackEvent = trpc.landingAnalytics.trackEvent.useMutation();
@@ -277,8 +279,13 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col w-screen max-w-full overflow-x-hidden">
-      {/* Header - Mobile Optimized */}
+    <>
+      <OnboardingPreview
+        isOpen={showOnboardingPreview}
+        onClose={() => setShowOnboardingPreview(false)}
+      />
+      <div className="min-h-screen bg-background flex flex-col w-screen max-w-full overflow-x-hidden">
+        {/* Header - Mobile Optimized */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border w-full">
         <div className="w-full px-4 py-3 flex flex-col gap-3">
           <div className="flex justify-between items-center">
@@ -313,13 +320,24 @@ export default function Landing() {
             <Button variant="outline" onClick={() => window.location.href = "/contact-us"} className="w-full text-sm py-2">
               Contact Us
             </Button>
-            <div className="flex gap-2 w-full">
-              <Button variant="outline" onClick={() => window.location.href = "/demo"} className="flex-1 text-sm py-2">
-                Sign In
+            <div className="flex gap-2 w-full flex-col">
+              <Button variant="outline" onClick={() => {
+                setShowOnboardingPreview(true);
+                trackEvent.mutate({
+                  sessionId,
+                  eventType: "onboarding_preview_opened",
+                });
+              }} className="w-full text-sm py-2">
+                Preview Onboarding
               </Button>
-              <Button onClick={() => window.location.href = "/demo"} className="flex-1 text-sm py-2">
-                Get Started
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => window.location.href = "/demo"} className="flex-1 text-sm py-2">
+                  Sign In
+                </Button>
+                <Button onClick={() => window.location.href = "/demo"} className="flex-1 text-sm py-2">
+                  Get Started
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -654,5 +672,6 @@ export default function Landing() {
         )}
       </main>
     </div>
+    </>
   );
 }
