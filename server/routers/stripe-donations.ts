@@ -77,6 +77,11 @@ export const stripeDonationsRouter = router({
             allow_promotion_codes: true,
           });
           
+          if (!session.url) {
+            console.error("[Stripe] Session created but URL is null", { sessionId: session.id, session });
+            throw new Error("Stripe checkout URL is not available");
+          }
+          console.log("[Stripe] Checkout session created successfully", { sessionId: session.id, url: session.url });
           return { checkoutUrl: session.url, sessionId: session.id };
         } else {
           // Recurring donation - create subscription
@@ -120,6 +125,11 @@ export const stripeDonationsRouter = router({
             allow_promotion_codes: true,
           });
           
+          if (!session.url) {
+            console.error("[Stripe] Session created but URL is null", { sessionId: session.id, session });
+            throw new Error("Stripe checkout URL is not available");
+          }
+          console.log("[Stripe] Checkout session created successfully", { sessionId: session.id, url: session.url });
           return { checkoutUrl: session.url, sessionId: session.id };
         }
       } catch (error: any) {

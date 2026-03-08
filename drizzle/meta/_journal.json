@@ -1,1 +1,13 @@
-{"version":"7","dialect":"mysql","entries":[]}
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1773007617193,
+      "tag": "0000_thick_leopardon",
+      "breakpoints": true
+    }
+  ]
+}

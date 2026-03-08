@@ -18103,3 +18103,122 @@ export const courseCompletions = mysqlTable("course_completions", {
 
 export type CourseCompletion = typeof courseCompletions.$inferSelect;
 export type InsertCourseCompletion = typeof courseCompletions.$inferInsert;
+
+
+/**
+ * Brain Permissions - Control what the Brain (AI automation) can do
+ * Ensures Brain never has uncontrollable autonomous rights
+ */
+export const brainPermissions = mysqlTable("brain_permissions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  houseId: int("houseId").notNull(),
+  permissionLevel: mysqlEnum("permissionLevel", [
+    "none",
+    "view",
+    "suggest",
+    "execute_low",
+    "execute_med",
+    "execute_high"
+  ]).default("suggest").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BrainPermission = typeof brainPermissions.$inferSelect;
+export type InsertBrainPermission = typeof brainPermissions.$inferInsert;
+
+/**
+ * Brain Approvals - Track human decisions on Brain-suggested actions
+ * Every significant Brain action requires human approval
+ */
+export const brainApprovals = mysqlTable("brain_approvals", {
+  id: int("id").autoincrement().primaryKey(),
+  actionId: varchar("actionId", { length: 100 }).notNull(),
+  approverUserId: int("approverUserId").notNull(),
+  decision: mysqlEnum("decision", ["approved", "rejected"]).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BrainApproval = typeof brainApprovals.$inferSelect;
+export type InsertBrainApproval = typeof brainApprovals.$inferInsert;
+
+/**
+ * Brain Audit Log - Complete audit trail of all Brain actions
+ * Ensures transparency and accountability for all automation
+ */
+export const brainAuditLog = mysqlTable("brain_audit_log", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  houseId: int("houseId"),
+  operationType: varchar("operationType", { length: 100 }).notNull(),
+  status: mysqlEnum("status", [
+    "approved",
+    "rejected",
+    "pending_approval",
+    "executed",
+    "failed"
+  ]).notNull(),
+  description: text("description").notNull(),
+  details: text("details"),
+  data: json("data"),
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BrainAuditLog = typeof brainAuditLog.$inferSelect;
+export type InsertBrainAuditLog = typeof brainAuditLog.$inferInsert;
+
+/**
+ * Avatar Profiles - Personalized AI assistant avatars for each house/business
+ * Each house owner gets their own customized avatar
+ */
+export const avatarProfiles = mysqlTable("avatar_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  houseId: int("houseId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  title: varchar("title", { length: 255 }),
+  photoUrl: varchar("photoUrl", { length: 500 }),
+  personality: mysqlEnum("personality", [
+    "professional",
+    "friendly",
+    "creative",
+    "mix"
+  ]).default("mix").notNull(),
+  voiceId: varchar("voiceId", { length: 100 }),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AvatarProfile = typeof avatarProfiles.$inferSelect;
+export type InsertAvatarProfile = typeof avatarProfiles.$inferInsert;
+
+/**
+ * Brain Recommendations - Track suggestions made by the Brain
+ * Allows users to approve/reject and provides feedback for improvement
+ */
+export const brainRecommendations = mysqlTable("brain_recommendations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  houseId: int("houseId").notNull(),
+  recommendationType: varchar("recommendationType", { length: 100 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  data: json("data"),
+  status: mysqlEnum("status", [
+    "pending",
+    "approved",
+    "rejected",
+    "executed"
+  ]).default("pending").notNull(),
+  approvedAt: timestamp("approvedAt"),
+  rejectedAt: timestamp("rejectedAt"),
+  executedAt: timestamp("executedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BrainRecommendation = typeof brainRecommendations.$inferSelect;
+export type InsertBrainRecommendation = typeof brainRecommendations.$inferInsert;

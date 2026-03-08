@@ -10233,3 +10233,87 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Create deployment checklist
 - [ ] Save checkpoint with all features
 - [ ] Publish updated site
+
+
+## Phase 31: LuvLedger Brain System - Avatar Assistant & Automation Engine
+
+### Phase 31.1: Brain Safety Framework (COMPLETED)
+- [x] Design permission system with role-based access control
+- [x] Create approval workflow engine for critical operations
+- [x] Implement audit logging system for all Brain actions
+- [x] Build safety gates preventing autonomous control
+- [x] Create human override mechanisms
+- [x] Implement circuit breakers for anomaly detection
+- [x] Design decision tracking and transparency system
+- [x] Create safety documentation and guidelines
+
+### Phase 31.2: Onboarding Flow with Luv Welcome Guide (IN PROGRESS)
+- [x] Create onboarding page at /onboarding
+- [x] Build Luv welcome screen with avatar display
+- [x] Create system introduction flow (Luv explains LuvLedger)
+- [x] Build step-by-step onboarding wizard (4 steps: Welcome, System Explanation, Avatar Customization, House Setup)
+- [x] Implement house/business activation flow
+- [x] Create progress tracking for onboarding
+- [x] Add skip/continue options for users
+- [ ] Build onboarding completion milestone (saving to database)
+
+### Phase 31.3: Avatar Customization System (IN PROGRESS)
+- [x] Create avatar customization step in onboarding
+- [ ] Create dedicated avatar upload page at /customize-avatar
+- [ ] Build photo processing and cropping UI
+- [ ] Implement avatar generation from user photos
+- [x] Create name/title customization interface
+- [ ] Build personality/tone selection (professional, friendly, creative, mix)
+- [x] Implement avatar preview system
+- [ ] Create avatar storage and retrieval
+- [ ] Build avatar versioning system
+
+### Phase 31.4: Brain Automation Framework
+- [ ] Create brain-automation router with core procedures
+- [ ] Implement recommendation engine (data analysis → suggestions)
+- [ ] Build alert system (notifications for important events)
+- [ ] Create insight generation (financial analysis, progress tracking)
+- [ ] Implement workflow automation (non-critical processes)
+- [ ] Build approval workflow for critical actions
+- [ ] Create decision logging and audit trail
+- [ ] Implement human engagement checkpoints
+
+### Phase 31.5: Dashboard Integration with Avatar
+- [ ] Add avatar widget to main dashboard
+- [ ] Create Brain communication interface (avatar speaks recommendations)
+- [ ] Build approval/rejection interface for Brain suggestions
+- [ ] Implement real-time Brain status display
+- [ ] Create Brain action history timeline
+- [ ] Build Brain settings and customization
+- [ ] Add avatar animation/movement on dashboard
+- [ ] Create Brain personality display
+
+### Phase 31.6: Podcast/Export Features
+- [ ] Create talking head video generation from text
+- [ ] Build podcast intro/outro generation
+- [ ] Implement presentation mode for panels
+- [ ] Create video export functionality
+- [ ] Build audio sync for talking head videos
+- [ ] Implement custom message generation
+- [ ] Create podcast template library
+- [ ] Build export quality settings
+
+### Phase 31.7: Testing & Validation
+- [ ] Write vitest tests for Brain safety framework
+- [ ] Test permission system and access control
+- [ ] Test approval workflows and human gates
+- [ ] Test onboarding flow end-to-end
+- [ ] Test avatar customization system
+- [ ] Test Brain automation procedures
+- [ ] Test dashboard integration
+- [ ] Performance test with multiple avatars
+
+### Phase 31.8: Deployment & Documentation
+- [ ] Update README with Brain system documentation
+- [ ] Create Brain system user guide
+- [ ] Document safety framework and guardrails
+- [ ] Create avatar customization guide
+- [ ] Document automation workflows
+- [ ] Create troubleshooting guide
+- [ ] Save checkpoint with Brain system
+- [ ] Publish updated system
