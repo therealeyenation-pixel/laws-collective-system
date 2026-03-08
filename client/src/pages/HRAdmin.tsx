@@ -161,7 +161,7 @@ export default function HRAdmin() {
                   {[
                     {
                       title: "AI Agent Collaboration Training",
-                      description: "Learn to effectively work with AI assistants to maximize productivity",
+                      description: "Learn to effectively work with automated house managers to maximize productivity",
                       duration: "4 hours",
                       status: "Required",
                     },

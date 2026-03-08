@@ -14,7 +14,7 @@ export default function OnboardingPreview({ isOpen, onClose }: OnboardingPreview
   const steps = [
     {
       title: "Meet Luv",
-      description: "Your personalized AI guide for LuvLedger",
+      description: "Your personalized automated house manager",
       content: (
         <div className="space-y-6">
           <div className="flex justify-center">
@@ -29,7 +29,7 @@ export default function OnboardingPreview({ isOpen, onClose }: OnboardingPreview
           <div className="text-center space-y-3">
             <h3 className="text-2xl font-bold">Hello! I'm Luv</h3>
             <p className="text-muted-foreground">
-              I'm the Brain of LuvLedger - your AI assistant that will guide you through building and managing your house/business.
+              I'm the Brain of LuvLedger - your automated house manager that will guide you through building and managing your house/business.
             </p>
           </div>
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
@@ -112,7 +112,7 @@ export default function OnboardingPreview({ isOpen, onClose }: OnboardingPreview
     },
     {
       title: "Avatar Customization",
-      description: "Personalize your Brain assistant",
+      description: "Personalize your automated house manager",
       content: (
         <div className="space-y-4">
           <div>

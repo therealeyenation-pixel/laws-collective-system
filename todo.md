@@ -10323,3 +10323,11 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [ ] Create troubleshooting guide
 - [ ] Save checkpoint with Brain system
 - [ ] Publish updated system
+
+## Phase 31.2.1: Terminology Update - AI Assistant → Automated House Manager
+- [x] Update LuvOnboarding.tsx references
+- [x] Update OnboardingPreview.tsx references
+- [x] Update InsuranceCourse.tsx references
+- [x] Update HRAdmin.tsx references
+- [x] Update agents.ts references
+- [x] Verify all changes across codebase

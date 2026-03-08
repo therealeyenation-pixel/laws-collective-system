@@ -36,13 +36,13 @@ export default function LuvOnboarding() {
     {
       id: "welcome",
       title: "Welcome to LuvLedger",
-      description: "Meet your AI assistant Brain",
+      description: "Meet your automated house manager",
       content: (
         <div className="space-y-6">
           <div className="flex justify-center mb-8">
             <div className="w-48 h-48 relative">
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv_avatar_hologram_locs_muted_22d75ba4.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv_avatar_hologram_locs_muted_22d75ba4.png?v=2"
                 alt="Luv Avatar"
                 className="w-full h-full object-contain"
               />
@@ -55,7 +55,7 @@ export default function LuvOnboarding() {
               Hello! I'm Luv
             </h2>
             <p className="text-lg text-muted-foreground">
-              I'm the Brain of LuvLedger - your AI assistant that will guide you
+              I'm the Brain of LuvLedger - your automated house manager that will guide you
               through building and managing your house/business.
             </p>
             <p className="text-sm text-muted-foreground">

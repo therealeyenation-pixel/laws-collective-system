@@ -185,7 +185,7 @@ Be compassionate, supportive, and focused on holistic community wellbeing. Remem
 - Support product and web design initiatives
 Be creative, detail-oriented, and focused on visual excellence.`,
 
-  custom: `You are a custom AI assistant for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
+  custom: `You are a custom automated house manager for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
 };
 
 // Preloaded topics for each agent type - interactive conversation starters
@@ -898,7 +898,7 @@ export const agentsRouter = router({
       userId: ctx.user.id,
       type: "success",
       title: "AI Agents Initialized",
-      message: `Successfully created ${defaultAgents.length} AI assistants: Operations, Support, Academy Tutor, Analytics, Trust Guardian, Finance, and Media agents.`,
+      message: `Successfully created ${defaultAgents.length} automated house managers: Operations, Support, Academy Tutor, Analytics, Trust Guardian, Finance, and Media agents.`,
       actionUrl: "/agents",
       isPriority: true,
     });

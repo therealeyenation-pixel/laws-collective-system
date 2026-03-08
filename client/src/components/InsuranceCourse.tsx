@@ -207,7 +207,7 @@ const insuranceModules: CourseModule[] = [
     type: "worksheet",
     content: {
       title: "Personal Insurance Needs Assessment",
-      description: "Complete this assessment to identify your personal insurance needs. The AI assistant can help you determine appropriate coverage levels based on your situation.",
+      description: "Complete this assessment to identify your personal insurance needs. Your automated house manager can help you determine appropriate coverage levels based on your situation.",
       fields: [
         {
           id: "fullName",
