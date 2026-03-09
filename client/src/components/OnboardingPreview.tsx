@@ -20,7 +20,7 @@ export default function OnboardingPreview({ isOpen, onClose }: OnboardingPreview
           <div className="flex justify-center">
             <div className="w-40 h-40 relative">
               <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv_avatar_locs_long_neutral_3f2665f6.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv_avatar_hologram_locs_muted_22d75ba4.png?v=3"
                 alt="Luv Avatar"
                 className="w-full h-full object-contain"
               />
