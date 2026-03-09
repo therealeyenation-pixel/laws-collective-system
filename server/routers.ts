@@ -52,6 +52,7 @@ import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { portfolioIncomeRouter } from "./routers/portfolio-income";
 import { portfolioManagementRouter } from "./routers/portfolio-management";
+import { collectiveInvestmentPoolsRouter } from "./routers/collective-investment-pools";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
 import { weatherApiRouter } from "./services/weather-api";
@@ -423,6 +424,7 @@ export const appRouter = router({
   brainEmploymentAutomation: brainEmploymentAutomationRouter,
   portfolioIncome: portfolioIncomeRouter,
   portfolioManagement: portfolioManagementRouter,
+  collectiveInvestmentPools: collectiveInvestmentPoolsRouter,
   donationAnalytics: donationAnalyticsRouter,
   trial: trialRouter,
   contracts: contractsRouter,
