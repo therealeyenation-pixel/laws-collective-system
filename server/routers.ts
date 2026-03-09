@@ -50,6 +50,8 @@ import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
+import { portfolioIncomeRouter } from "./routers/portfolio-income";
+import { portfolioManagementRouter } from "./routers/portfolio-management";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
 import { weatherApiRouter } from "./services/weather-api";
@@ -145,6 +147,8 @@ import { enhancedDonationsRouter } from "./routers/enhanced-donations";
 import { stripeDonationsRouter } from "./routers/stripe-donations";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
+import { portfolioIncomeRouter } from "./routers/portfolio-income";
+import { portfolioManagementRouter } from "./routers/portfolio-management";
 import { donationAnalyticsRouter } from "./routers/donation-analytics";
 import { trialRouter } from "./routers/trial";
 import { contractsRouter } from "./routers/contracts";
@@ -417,6 +421,8 @@ export const appRouter = router({
   stripeDonations: stripeDonationsRouter,
   brainAutomation: brainAutomationRouter,
   brainEmploymentAutomation: brainEmploymentAutomationRouter,
+  portfolioIncome: portfolioIncomeRouter,
+  portfolioManagement: portfolioManagementRouter,
   donationAnalytics: donationAnalyticsRouter,
   trial: trialRouter,
   contracts: contractsRouter,
