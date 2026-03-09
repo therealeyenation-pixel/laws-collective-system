@@ -580,6 +580,11 @@ export default function Services() {
                   <Button 
                     className="w-full" 
                     variant={tier.highlighted ? "default" : "outline"}
+                    onClick={() => {
+                      if (tier.id === 'free' || tier.id === 'premium' || tier.id === 'business') {
+                        window.location.href = '/signup';
+                      }
+                    }}
                   >
                     {tier.cta}
                   </Button>
