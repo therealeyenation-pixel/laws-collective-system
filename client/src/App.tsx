@@ -34,6 +34,7 @@ import ImpactDashboard from '@/pages/ImpactDashboard';
 import IndigenousRights from "./pages/IndigenousRights";
 import DonorDashboard from "./pages/DonorDashboard";
 import LuvOnboarding from "./pages/LuvOnboarding";
+import SignUp from "./pages/SignUp";
 
 import Shop from "./pages/Shop";
 import Products from "./pages/Products";
@@ -447,6 +448,7 @@ function Router() {
       <Route path="/my-credential" component={MyCredential} />
       <Route path="/contact" component={Contact} />
       <Route path="/services" component={Services} />
+      <Route path="/signup" component={SignUp} />
       <Route path="/support" component={Support} />
       <Route path="/donate" component={PublicDonate} />
       <Route path="/donor-dashboard">{() => <ProtectedRoute component={DonorDashboard} />}</Route>

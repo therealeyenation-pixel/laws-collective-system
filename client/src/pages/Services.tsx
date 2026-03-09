@@ -321,12 +321,12 @@ export default function Services() {
                 </Link>
               ) : (
                 <>
-                  <a href={getLoginUrl()}>
+                  <Link href="/signup">
                     <Button variant="outline">Sign In</Button>
-                  </a>
-                  <a href={getLoginUrl()}>
+                  </Link>
+                  <Link href="/signup">
                     <Button>Get Started</Button>
-                  </a>
+                  </Link>
                 </>
               )}
             </div>
