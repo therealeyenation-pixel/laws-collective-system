@@ -49,6 +49,7 @@ import { restorationRouter } from "./routers/restoration";
 import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import { brainAutomationRouter } from "./routers/brain-automation";
+import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
 import { weatherApiRouter } from "./services/weather-api";
@@ -143,6 +144,7 @@ import { lawsEmploymentRouter } from "./routers/laws-employment";
 import { enhancedDonationsRouter } from "./routers/enhanced-donations";
 import { stripeDonationsRouter } from "./routers/stripe-donations";
 import { brainAutomationRouter } from "./routers/brain-automation";
+import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { donationAnalyticsRouter } from "./routers/donation-analytics";
 import { trialRouter } from "./routers/trial";
 import { contractsRouter } from "./routers/contracts";
@@ -414,6 +416,7 @@ export const appRouter = router({
   enhancedDonations: enhancedDonationsRouter,
   stripeDonations: stripeDonationsRouter,
   brainAutomation: brainAutomationRouter,
+  brainEmploymentAutomation: brainEmploymentAutomationRouter,
   donationAnalytics: donationAnalyticsRouter,
   trial: trialRouter,
   contracts: contractsRouter,

@@ -3,14 +3,17 @@
  * 
  * First experience when house/business is activated
  * Luv introduces the system and guides through setup
+ * 
+ * Step 4: Avatar Customization - Integrated with photo upload, personality selection, and preview
  */
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import { Loader2, ChevronRight, CheckCircle } from "lucide-react";
+import { Loader2, ChevronRight, CheckCircle, Upload, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
 interface OnboardingStep {
   id: string;
@@ -20,17 +23,152 @@ interface OnboardingStep {
   completed: boolean;
 }
 
+type Personality = "professional" | "friendly" | "creative" | "mix";
+
 export default function LuvOnboarding() {
   const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const [houseSetup, setHouseSetup] = useState({
     houseName: "",
     businessType: "",
     avatarName: "",
+    avatarPersonality: "friendly" as Personality,
+    photoFile: null as File | null,
+    photoPreview: null as string | null,
   });
+  
+  const [avatarGenerationState, setAvatarGenerationState] = useState({
+    isGenerating: false,
+    generatedAvatarUrl: null as string | null,
+    error: null as string | null,
+  });
+  
   const [isLoading, setIsLoading] = useState(false);
 
   const initBrainMutation = trpc.brainAutomation.initializeForHouse.useMutation();
+  const generateAvatarMutation = trpc.avatar.generateFromPhoto.useMutation();
+  const saveAvatarMutation = trpc.avatar.saveCustomAvatar.useMutation();
+
+  const personalityOptions: { value: Personality; label: string; description: string }[] = [
+    {
+      value: "professional",
+      label: "Professional",
+      description: "Authoritative, business-focused, confident",
+    },
+    {
+      value: "friendly",
+      label: "Friendly",
+      description: "Warm, approachable, welcoming",
+    },
+    {
+      value: "creative",
+      label: "Creative",
+      description: "Innovative, artistic, imaginative",
+    },
+    {
+      value: "mix",
+      label: "Balanced Mix",
+      description: "Combination of all traits",
+    },
+  ];
+
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5MB");
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setHouseSetup({
+        ...houseSetup,
+        photoFile: file,
+        photoPreview: event.target?.result as string,
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleGenerateAvatar = async () => {
+    if (!houseSetup.photoFile || !houseSetup.photoPreview) {
+      toast.error("Please select a photo first");
+      return;
+    }
+
+    if (!houseSetup.avatarName.trim()) {
+      toast.error("Please enter an avatar name");
+      return;
+    }
+
+    setAvatarGenerationState({
+      isGenerating: true,
+      generatedAvatarUrl: null,
+      error: null,
+    });
+
+    try {
+      // Upload photo to get URL, then generate avatar
+      // For now, we'll use the data URL directly
+      const result = await generateAvatarMutation.mutateAsync({
+        photoUrl: houseSetup.photoPreview,
+        avatarName: houseSetup.avatarName,
+        personality: houseSetup.avatarPersonality,
+      });
+
+      setAvatarGenerationState({
+        isGenerating: false,
+        generatedAvatarUrl: result.avatarUrl,
+        error: null,
+      });
+
+      toast.success("Avatar generated successfully!");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to generate avatar";
+      setAvatarGenerationState({
+        isGenerating: false,
+        generatedAvatarUrl: null,
+        error: errorMessage,
+      });
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleSaveAvatar = async () => {
+    if (!avatarGenerationState.generatedAvatarUrl) {
+      toast.error("Please generate an avatar first");
+      return;
+    }
+
+    try {
+      await saveAvatarMutation.mutateAsync({
+        avatarUrl: avatarGenerationState.generatedAvatarUrl,
+        avatarName: houseSetup.avatarName,
+        personality: houseSetup.avatarPersonality,
+      });
+
+      toast.success("Avatar saved successfully!");
+      // Move to next step
+      setCurrentStep(currentStep + 1);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to save avatar";
+      toast.error(errorMessage);
+    }
+  };
 
   const steps: OnboardingStep[] = [
     {
@@ -191,51 +329,196 @@ export default function LuvOnboarding() {
       completed: false,
     },
     {
-      id: "avatar-intro",
+      id: "avatar-customization",
       title: "Create Your Avatar",
       description: "Personalize your Brain assistant",
       content: (
         <div className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold mb-2">
-                Avatar Name
-              </label>
-              <input
-                type="text"
-                value={houseSetup.avatarName}
-                onChange={(e) =>
-                  setHouseSetup({ ...houseSetup, avatarName: e.target.value })
-                }
-                placeholder="e.g., Maya, Alex, The Manager"
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                This is what your personalized Brain assistant will be called
-              </p>
-            </div>
+          {/* Avatar Name */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold">
+              Avatar Name
+            </label>
+            <input
+              type="text"
+              value={houseSetup.avatarName}
+              onChange={(e) =>
+                setHouseSetup({ ...houseSetup, avatarName: e.target.value })
+              }
+              placeholder="e.g., Maya, Alex, The Manager"
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <p className="text-xs text-muted-foreground">
+              This is what your personalized Brain assistant will be called
+            </p>
+          </div>
 
-            <div>
-              <label className="block text-sm font-semibold mb-2">
-                Upload Your Photo (Optional)
-              </label>
-              <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-muted/50 cursor-pointer transition">
-                <div className="text-4xl mb-2">📸</div>
+          {/* Personality Selection */}
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold">
+              Avatar Personality
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {personalityOptions.map((option) => (
+                <div
+                  key={option.value}
+                  onClick={() =>
+                    setHouseSetup({
+                      ...houseSetup,
+                      avatarPersonality: option.value,
+                    })
+                  }
+                  className={`p-4 border-2 rounded-lg cursor-pointer transition ${
+                    houseSetup.avatarPersonality === option.value
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  <p className="font-semibold text-sm">{option.label}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {option.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Photo Upload */}
+          <div className="space-y-3">
+            <label className="block text-sm font-semibold">
+              Upload Your Photo (Optional)
+            </label>
+
+            {houseSetup.photoPreview ? (
+              <div className="space-y-3">
+                <div className="relative w-full h-48 rounded-lg overflow-hidden border border-border">
+                  <img
+                    src={houseSetup.photoPreview}
+                    alt="Selected photo"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full"
+                >
+                  Change Photo
+                </Button>
+              </div>
+            ) : (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-muted/50 cursor-pointer transition"
+              >
+                <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
                 <p className="text-sm font-medium">Click to upload photo</p>
                 <p className="text-xs text-muted-foreground">
                   We'll create an animated avatar with your appearance
                 </p>
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Your avatar will have 4 expressions: Neutral, Talking, Thinking, and Celebrating
-              </p>
-            </div>
+            )}
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoSelect}
+              className="hidden"
+            />
+
+            <p className="text-xs text-muted-foreground">
+              Supported formats: JPG, PNG, WebP (Max 5MB)
+            </p>
           </div>
 
+          {/* Avatar Generation */}
+          {houseSetup.photoPreview && !avatarGenerationState.generatedAvatarUrl && (
+            <Button
+              onClick={handleGenerateAvatar}
+              disabled={
+                avatarGenerationState.isGenerating ||
+                !houseSetup.avatarName.trim()
+              }
+              className="w-full"
+            >
+              {avatarGenerationState.isGenerating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Generating Avatar...
+                </>
+              ) : (
+                "Generate Avatar"
+              )}
+            </Button>
+          )}
+
+          {/* Error Message */}
+          {avatarGenerationState.error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex gap-3">
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-red-900">Error</p>
+                <p className="text-sm text-red-800">
+                  {avatarGenerationState.error}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Avatar Preview */}
+          {avatarGenerationState.generatedAvatarUrl && (
+            <div className="space-y-3">
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <p className="text-sm font-semibold text-purple-900 mb-3">
+                  Avatar Preview
+                </p>
+                <div className="relative w-full h-64 rounded-lg overflow-hidden border border-purple-200 bg-white">
+                  <img
+                    src={avatarGenerationState.generatedAvatarUrl}
+                    alt="Generated avatar"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setAvatarGenerationState({
+                      isGenerating: false,
+                      generatedAvatarUrl: null,
+                      error: null,
+                    });
+                  }}
+                  className="flex-1"
+                >
+                  Regenerate
+                </Button>
+                <Button
+                  onClick={handleSaveAvatar}
+                  disabled={saveAvatarMutation.isPending}
+                  className="flex-1"
+                >
+                  {saveAvatarMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Avatar"
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Info Box */}
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
             <p className="text-sm text-purple-800">
-              🎨 <strong>Customization:</strong> You can change your avatar's
-              appearance, clothing, and personality at any time
+              💡 <strong>Tip:</strong> You can change your avatar's appearance
+              and personality at any time from your dashboard settings
             </p>
           </div>
         </div>
@@ -294,6 +577,7 @@ export default function LuvOnboarding() {
         window.location.href = "/dashboard";
       } catch (error) {
         console.error("Failed to complete onboarding:", error);
+        toast.error("Failed to complete onboarding");
       } finally {
         setIsLoading(false);
       }
