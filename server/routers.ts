@@ -209,8 +209,10 @@ import { acquisitionFundRouter } from "./routers/acquisition-fund";
 import { realPropertyRouter } from "./routers/real-property";
 import { expandedAssetManagementRouter } from "./routers/expanded-asset-management";
 import { onboardingOffboardingRouter } from "./routers/onboarding-offboarding";
+import { investmentPortfolioRouter } from "./routers/investment-portfolio";
 import { investmentEducationRouter } from "./routers/investment-education";
 import { employmentOpportunitiesRouter } from "./routers/employment-opportunities";
+import { complianceRegulatoryRouter } from "./routers/compliance-regulatory";
 import { investmentGovernanceRouter } from "./routers/investment-governance";
 import { tieredGovernanceRouter } from "./routers/tiered-governance";
 import { quarterlyInvestmentReportRouter } from "./routers/quarterly-investment-report";
@@ -512,6 +514,7 @@ export const appRouter = router({
   waitlist: waitlistRouter,
   investmentEducation: investmentEducationRouter,
   employmentOpportunities: employmentOpportunitiesRouter,
+  complianceRegulatory: complianceRegulatoryRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
