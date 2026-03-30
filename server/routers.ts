@@ -243,6 +243,7 @@ import { phase35IntegrationRouter } from "./routers/phase-35-integration";
 import { memberDashboardUIRouter } from "./routers/member-dashboard-ui";
 import { adminAnalyticsDashboardRouter } from "./routers/admin-analytics-dashboard";
 import { stripePaymentIntegrationRouter } from "./routers/stripe-payment-integration";
+import { adminDashboardRouter } from "./routers/admin-dashboard";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -527,6 +528,7 @@ export const appRouter = router({
   memberDashboardUI: memberDashboardUIRouter,
   adminAnalyticsDashboard: adminAnalyticsDashboardRouter,
   stripePaymentIntegration: stripePaymentIntegrationRouter,
+  adminDashboard: adminDashboardRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
