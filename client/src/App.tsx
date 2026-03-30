@@ -98,6 +98,9 @@ import ClimbSlide from "@/pages/games/ClimbSlide";
 import EscapeRoom from "@/pages/games/EscapeRoom";
 import DetectiveAcademy from "@/pages/games/DetectiveAcademy";
 import RubiksCube from "@/pages/games/RubiksCube";
+import MemberCommunicationHub from "@/pages/MemberCommunicationHub";
+import AdvancedSegmentationUI from "@/pages/AdvancedSegmentationUI";
+import FinancialReconciliationUI from "@/pages/FinancialReconciliationUI";
 import Spades from "@/pages/games/Spades";
 import Yahtzee from "@/pages/games/Yahtzee";
 import ScrabbleGame from "@/pages/games/ScrabbleGame";
@@ -848,6 +851,9 @@ function Router() {
       <Route path="/system-health">{() => <ProtectedRoute component={SystemHealth} minRole="admin" />}</Route>
       <Route path="/backup-settings">{() => <ProtectedRoute component={BackupSettings} minRole="admin" />}</Route>
       <Route path="/offline-settings">{() => <ProtectedRoute component={OfflineSettings} />}</Route>
+      <Route path="/communication-hub">{() => <ProtectedRoute component={MemberCommunicationHub} />}</Route>
+      <Route path="/segmentation-engine">{() => <ProtectedRoute component={AdvancedSegmentationUI} />}</Route>
+      <Route path="/financial-reconciliation">{() => <ProtectedRoute component={FinancialReconciliationUI} />}</Route>
 
       {/* Public routes */}
       <Route path="/" component={Landing} />
