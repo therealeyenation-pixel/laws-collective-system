@@ -246,6 +246,10 @@ import { stripePaymentIntegrationRouter } from "./routers/stripe-payment-integra
 import { adminDashboardRouter } from "./routers/admin-dashboard";
 import { emailCampaignAutomationRouter } from "./routers/email-campaign-automation";
 import { emailCampaignDashboardRouter } from "./routers/email-campaign-dashboard";
+import { smsNotificationSystemRouter } from "./routers/sms-notification-system";
+import { mobileAppRouter } from "./routers/mobile-app";
+import { roleBasedAccessControlRouter } from "./routers/role-based-access-control";
+import { memberSegmentationEngineRouter } from "./routers/member-segmentation-engine";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -533,6 +537,10 @@ export const appRouter = router({
   adminDashboard: adminDashboardRouter,
   emailCampaignAutomation: emailCampaignAutomationRouter,
   emailCampaignDashboard: emailCampaignDashboardRouter,
+  smsNotificationSystem: smsNotificationSystemRouter,
+  mobileApp: mobileAppRouter,
+  roleBasedAccessControl: roleBasedAccessControlRouter,
+  memberSegmentationEngine: memberSegmentationEngineRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
