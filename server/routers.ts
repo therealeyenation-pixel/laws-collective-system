@@ -256,6 +256,9 @@ import { apiDocumentationPortalRouter } from "./routers/api-documentation-portal
 import { dataExportReportingEngineRouter } from "./routers/data-export-reporting-engine";
 import { developerPortalApiManagementRouter } from "./routers/developer-portal-api-management";
 import { complianceAuditDashboardRouter } from "./routers/compliance-audit-dashboard";
+import { memberCommunicationHubRouter } from "./routers/member-communication-hub";
+import { advancedSegmentationRulesEngineRouter } from "./routers/advanced-segmentation-rules-engine";
+import { financialReconciliationModuleRouter } from "./routers/financial-reconciliation-module";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -553,6 +556,9 @@ export const appRouter = router({
   dataExportReportingEngine: dataExportReportingEngineRouter,
   developerPortalApiManagement: developerPortalApiManagementRouter,
   complianceAuditDashboard: complianceAuditDashboardRouter,
+  memberCommunicationHub: memberCommunicationHubRouter,
+  advancedSegmentationRulesEngine: advancedSegmentationRulesEngineRouter,
+  financialReconciliationModule: financialReconciliationModuleRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
