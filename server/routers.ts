@@ -269,6 +269,10 @@ import { advancedForecastingEngineRouter } from "./routers/advanced-forecasting-
 import { interactiveDashboardBuilderRouter } from "./routers/interactive-dashboard-builder";
 import { aiInsightsAssistantRouter } from "./routers/ai-insights-assistant";
 import { multiTenantAdminRouter } from "./routers/multi-tenant-admin";
+import { realtimeDashboardSyncRouter } from "./routers/realtime-dashboard-sync";
+import { customReportSchedulingRouter } from "./routers/custom-report-scheduling";
+import { teamCollaborationFeaturesRouter } from "./routers/team-collaboration-features";
+import { advancedFeaturesOptimizationRouter } from "./routers/advanced-features-optimization";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -579,6 +583,10 @@ export const appRouter = router({
   interactiveDashboardBuilder: interactiveDashboardBuilderRouter,
   aiInsightsAssistant: aiInsightsAssistantRouter,
   multiTenantAdmin: multiTenantAdminRouter,
+  realtimeDashboardSync: realtimeDashboardSyncRouter,
+  customReportScheduling: customReportSchedulingRouter,
+  teamCollaborationFeatures: teamCollaborationFeaturesRouter,
+  advancedFeaturesOptimization: advancedFeaturesOptimizationRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
