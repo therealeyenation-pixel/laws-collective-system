@@ -261,6 +261,8 @@ import { advancedSegmentationRulesEngineRouter } from "./routers/advanced-segmen
 import { financialReconciliationModuleRouter } from "./routers/financial-reconciliation-module";
 import { realTimeNotificationsRouter } from "./routers/real-time-notifications";
 import { exportSchedulingEngineRouter } from "./routers/export-scheduling-engine";
+import { broadcastRadioModule } from "./routers/broadcast-radio-module";
+import { investmentManagementModule } from "./routers/investment-management-module";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -563,6 +565,8 @@ export const appRouter = router({
   financialReconciliationModule: financialReconciliationModuleRouter,
   realTimeNotifications: realTimeNotificationsRouter,
   exportScheduling: exportSchedulingEngineRouter,
+  broadcastRadio: broadcastRadioModule,
+  investmentManagement: investmentManagementModule,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
