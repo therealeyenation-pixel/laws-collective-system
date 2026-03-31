@@ -266,6 +266,9 @@ import { investmentManagementModule } from "./routers/investment-management-modu
 import { realtimeDashboardUpdatesRouter } from "./routers/realtime-dashboard-updates";
 import { mobileNativeFeaturesRouter } from "./routers/mobile-native-features";
 import { advancedForecastingEngineRouter } from "./routers/advanced-forecasting-engine";
+import { interactiveDashboardBuilderRouter } from "./routers/interactive-dashboard-builder";
+import { aiInsightsAssistantRouter } from "./routers/ai-insights-assistant";
+import { multiTenantAdminRouter } from "./routers/multi-tenant-admin";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -573,6 +576,9 @@ export const appRouter = router({
   realtimeDashboardUpdates: realtimeDashboardUpdatesRouter,
   mobileNativeFeatures: mobileNativeFeaturesRouter,
   advancedForecasting: advancedForecastingEngineRouter,
+  interactiveDashboardBuilder: interactiveDashboardBuilderRouter,
+  aiInsightsAssistant: aiInsightsAssistantRouter,
+  multiTenantAdmin: multiTenantAdminRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
