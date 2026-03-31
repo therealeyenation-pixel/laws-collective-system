@@ -292,7 +292,7 @@ export const onboardingAdminNotificationsRouter = router({
     .input(
       z.object({
         stepId: z.number(),
-        data: z.record(z.any()).optional(),
+        data: z.record(z.string(), z.any()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -586,7 +586,7 @@ export const onboardingAdminNotificationsRouter = router({
   updateNotificationPreferences: protectedProcedure
     .input(
       z.object({
-        preferences: z.record(z.object({ email: z.boolean(), inApp: z.boolean() })),
+        preferences: z.record(z.string(), z.object({ email: z.boolean(), inApp: z.boolean() })),
         frequency: z.enum(["immediate", "daily", "weekly"]).optional(),
       })
     )

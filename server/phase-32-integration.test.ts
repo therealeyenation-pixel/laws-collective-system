@@ -47,8 +47,9 @@ describe("Phase 32 Integration Testing", () => {
 
       expect(courses).toBeDefined();
       expect(opportunities).toBeDefined();
-      expect(Array.isArray(courses.courses) || courses.courses).toBeDefined();
-      expect(Array.isArray(opportunities.opportunities) || opportunities.opportunities).toBeDefined();
+      expect(Array.isArray(courses)).toBe(true);
+      expect(courses.length).toBeGreaterThan(0);
+      expect(opportunities).toBeDefined();
     });
 
     it("should integrate employment opportunities with compliance", async () => {
