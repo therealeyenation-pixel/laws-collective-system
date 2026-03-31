@@ -580,7 +580,7 @@ describe("Phase 37: Frontend, WebSocket & Notifications Integration", () => {
       ];
 
       expect(notifications).toHaveLength(3);
-      expect(notifications[2].timestamp).toBeGreaterThan(notifications[0].timestamp);
+      expect(notifications[2].timestamp.getTime()).toBeGreaterThan(notifications[0].timestamp.getTime());
     });
 
     it("should handle offline mode gracefully", () => {

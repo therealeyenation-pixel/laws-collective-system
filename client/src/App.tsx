@@ -336,6 +336,9 @@ import DocumentationGenerator from "@/pages/DocumentationGenerator";
 import SystemHealth from "@/pages/SystemHealth";
 import BackupSettings from "@/pages/BackupSettings";
 import OfflineSettings from "@/pages/OfflineSettings";
+import RealtimeDashboardSync from "@/pages/RealtimeDashboardSync";
+import CustomReportScheduling from "@/pages/CustomReportScheduling";
+import TeamCollaboration from "@/pages/TeamCollaboration";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -854,6 +857,9 @@ function Router() {
       <Route path="/communication-hub">{() => <ProtectedRoute component={MemberCommunicationHub} />}</Route>
       <Route path="/segmentation-engine">{() => <ProtectedRoute component={AdvancedSegmentationUI} />}</Route>
       <Route path="/financial-reconciliation">{() => <ProtectedRoute component={FinancialReconciliationUI} />}</Route>
+      <Route path="/realtime-dashboard-sync">{() => <ProtectedRoute component={RealtimeDashboardSync} />}</Route>
+      <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
+      <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
 
       {/* Public routes */}
       <Route path="/" component={Landing} />

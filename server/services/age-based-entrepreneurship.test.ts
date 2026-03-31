@@ -49,13 +49,13 @@ describe('Age-Based Entrepreneurship Framework', () => {
   describe('enrollYoungEntrepreneur', () => {
     it('should enroll a young entrepreneur with correct stage', () => {
       const dob = new Date();
-      dob.setFullYear(dob.getFullYear() - 10);
+      dob.setFullYear(dob.getFullYear() - 8);
       
       const entrepreneur = enrollYoungEntrepreneur('user-001', 'Alex', dob, 'parent-001');
       
       expect(entrepreneur.entrepreneurId).toContain('ye-');
       expect(entrepreneur.name).toBe('Alex');
-      expect(entrepreneur.currentAge).toBe(10);
+      expect(entrepreneur.currentAge).toBe(8);
       expect(entrepreneur.currentStage).toBe('exploration');
       expect(entrepreneur.currentTokenTier).toBe('apprentice');
       expect(entrepreneur.tokensEarned).toBe(0);

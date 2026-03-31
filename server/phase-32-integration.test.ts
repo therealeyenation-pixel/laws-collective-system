@@ -234,10 +234,11 @@ describe("Phase 32 Integration Testing", () => {
     it("should validate quiz answers correctly", async () => {
       const result = await investmentCaller.submitQuizAnswers({
         lessonId: 1,
+        courseId: 1,
         answers: [
-          { questionId: 1, selectedAnswer: "A" },
-          { questionId: 2, selectedAnswer: "B" },
-          { questionId: 3, selectedAnswer: "C" },
+          { questionId: 1, selectedAnswer: 0 },
+          { questionId: 2, selectedAnswer: 1 },
+          { questionId: 3, selectedAnswer: 2 },
         ],
       });
 

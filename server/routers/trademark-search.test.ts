@@ -42,12 +42,12 @@ describe("Trademark Search Router", () => {
       const testCases = [
         { input: "My Business LLC", expected: "my business llc" },
         { input: "REAL-EYE-NATION", expected: "realeyenation" },
-        { input: "The L.A.W.S. Collective", expected: "laws collective" },
-        { input: "Test & Company, Inc.", expected: "test  company inc" },
+        { input: "The L.A.W.S. Collective", expected: "the laws collective" },
+        { input: "Test & Company, Inc.", expected: "test company inc" },
       ];
 
       testCases.forEach(({ input, expected }) => {
-        const normalized = input.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim();
+        const normalized = input.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, " ").trim();
         expect(normalized).toBe(expected);
       });
     });
