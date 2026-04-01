@@ -235,6 +235,7 @@ import { translationContributionsRouter } from "./routers/translation-contributi
 import { sharedWorkflowTemplatesRouter } from "./routers/shared-workflow-templates";
 import { adminUsersRouter } from "./routers/admin-users";
 import { courseCheckoutRouter } from "./routers/course-checkout";
+import { broadcastRadioRouter } from "./routers/broadcast-radio";
 import { landingAnalyticsRouter } from "./routers/landing-analytics";
 import { waitlistRouter } from "./routers/waitlist";
 import { onboardingAdminNotificationsRouter } from "./routers/onboarding-admin-notifications";
@@ -546,6 +547,7 @@ export const appRouter = router({
   sharedWorkflowTemplates: sharedWorkflowTemplatesRouter,
   adminUsers: adminUsersRouter,
   courseCheckout: courseCheckoutRouter,
+  broadcastRadio: broadcastRadioRouter,
    landingAnalytics: landingAnalyticsRouter,
   waitlist: waitlistRouter,
   investmentEducation: investmentEducationRouter,
