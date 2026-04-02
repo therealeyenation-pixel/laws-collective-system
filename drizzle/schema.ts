@@ -19057,3 +19057,78 @@ export const iptvPlaylistItems = mysqlTable("iptv_playlist_items", {
 
 export type IPTVPlaylistItem = typeof iptvPlaylistItems.$inferSelect;
 export type InsertIPTVPlaylistItem = typeof iptvPlaylistItems.$inferInsert;
+
+
+// ============================================================================
+// Broadcast/Radio Channel System
+// ============================================================================
+
+export const broadcastRadioChannels = mysqlTable("broadcast_radio_channels", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  type: mysqlEnum("type", ["radio", "podcast", "audiobook", "stream"]).notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  subcategory: varchar("subcategory", { length: 100 }),
+  logoUrl: text("logoUrl"),
+  bannerUrl: text("bannerUrl"),
+  streamUrl: text("streamUrl").notNull(),
+  country: varchar("country", { length: 100 }),
+  language: varchar("language", { length: 50 }),
+  contentRating: mysqlEnum("contentRating", ["G", "PG", "PG-13", "R", "NC-17", "X", "UNRATED"]).default("G").notNull(),
+  isAdultContent: boolean("isAdultContent").default(false),
+  accessLevel: mysqlEnum("accessLevel", ["public", "members", "verified_18", "verified_21", "premium"]).default("public").notNull(),
+  isActive: boolean("isActive").default(true),
+  isLive: boolean("isLive").default(false),
+  currentListeners: int("currentListeners").default(0),
+  totalListeners: int("totalListeners").default(0),
+  importBatchId: varchar("importBatchId", { length: 100 }),
+  externalId: varchar("externalId", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type BroadcastRadioChannel = typeof broadcastRadioChannels.$inferSelect;
+export type InsertBroadcastRadioChannel = typeof broadcastRadioChannels.$inferInsert;
+
+export const broadcastPlaybackHistory = mysqlTable("broadcast_playback_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  channelId: int("channelId").notNull(),
+  startTime: timestamp("startTime").defaultNow(),
+  endTime: timestamp("endTime"),
+  duration: int("duration"), // in seconds
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+export type BroadcastPlaybackHistory = typeof broadcastPlaybackHistory.$inferSelect;
+export type InsertBroadcastPlaybackHistory = typeof broadcastPlaybackHistory.$inferInsert;
+
+export const broadcastChannelFollows = mysqlTable("broadcast_channel_follows", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  channelId: int("channelId").notNull(),
+  followedAt: timestamp("followedAt").defaultNow(),
+});
+
+export type BroadcastChannelFollow = typeof broadcastChannelFollows.$inferSelect;
+export type InsertBroadcastChannelFollow = typeof broadcastChannelFollows.$inferInsert;
+
+export const podcastEpisodes = mysqlTable("podcast_episodes", {
+  id: int("id").autoincrement().primaryKey(),
+  channelId: int("channelId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  episodeNumber: int("episodeNumber"),
+  seasonNumber: int("seasonNumber"),
+  audioUrl: text("audioUrl").notNull(),
+  duration: int("duration"), // in seconds
+  releaseDate: timestamp("releaseDate"),
+  isPublished: boolean("isPublished").default(false),
+  playCount: int("playCount").default(0),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type PodcastEpisode = typeof podcastEpisodes.$inferSelect;
+export type InsertPodcastEpisode = typeof podcastEpisodes.$inferInsert;

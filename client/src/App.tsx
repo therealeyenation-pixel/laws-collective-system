@@ -340,6 +340,8 @@ import RealtimeDashboardSync from "@/pages/RealtimeDashboardSync";
 import CustomReportScheduling from "@/pages/CustomReportScheduling";
 import TeamCollaboration from "@/pages/TeamCollaboration";
 import TheaterLive from "@/pages/TheaterLive";
+import TheaterLiveEnhanced from "@/pages/TheaterLiveEnhanced";
+import IPTVAdminPanel from "@/pages/IPTVAdminPanel";
 import TheaterVOD from "@/pages/TheaterVOD";
 import BroadcastChannels from "@/pages/BroadcastChannels";
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
@@ -866,7 +868,9 @@ function Router() {
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
       <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLive} />}</Route>
+      <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveEnhanced} />}</Route>
       <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
+      <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
       <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastChannels} />}</Route>
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>

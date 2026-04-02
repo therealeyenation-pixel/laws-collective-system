@@ -21,6 +21,32 @@ import { eq, and, desc, gte, lte, like } from "drizzle-orm";
  * 18 procedures for podcast/radio streaming, scheduling, and analytics
  */
 
+/**
+ * Get all public broadcast channels for browsing
+ */
+export const getAllPublicChannels = publicProcedure
+  .input(
+    z.object({
+      type: z.enum(['radio', 'podcast', 'audiobook', 'stream']).optional(),
+      category: z.string().optional(),
+      country: z.string().optional(),
+      limit: z.number().default(100),
+      offset: z.number().default(0),
+    })
+  )
+  .query(async ({ input, ctx }) => {
+    try {
+      const channels = await db.query.broadcastRadioChannels.findMany({
+        limit: input.limit,
+        offset: input.offset,
+      });
+      return channels || [];
+    } catch (error) {
+      console.error('Error fetching broadcast channels:', error);
+      return [];
+    }
+  });
+
 export const broadcastRadioRouter = router({
   // ============================================================================
   // CHANNEL MANAGEMENT (4 procedures)
