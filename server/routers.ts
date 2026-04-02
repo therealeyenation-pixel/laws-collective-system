@@ -265,6 +265,8 @@ import { financialReconciliationModuleRouter } from "./routers/financial-reconci
 import { realTimeNotificationsRouter } from "./routers/real-time-notifications";
 import { exportSchedulingEngineRouter } from "./routers/export-scheduling-engine";
 import { broadcastRadioModule } from "./routers/broadcast-radio-module";
+import { vodRouter } from "./routers/vod";
+import { adminSeedRouter } from "./routers/admin-seed";
 import { investmentManagementModule } from "./routers/investment-management-module";
 import { investmentManagementRouter } from "./routers/investment-management";
 import { realtimeDashboardUpdatesRouter } from "./routers/realtime-dashboard-updates";
@@ -331,6 +333,8 @@ export const appRouter = router({
   lifecycleManager: lifecycleManagerRouter,
   aiRecommendations: aiRecommendationsRouter,
   iptvTheater: iptvTheaterRouter,
+  vod: vodRouter,
+  adminSeed: adminSeedRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,

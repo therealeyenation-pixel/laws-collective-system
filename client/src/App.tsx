@@ -346,6 +346,7 @@ import TheaterVOD from "@/pages/TheaterVOD";
 import BroadcastChannels from "@/pages/BroadcastChannels";
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
+import AdminSeeding from "@/pages/AdminSeeding";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -874,6 +875,7 @@ function Router() {
       <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastChannels} />}</Route>
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
+      <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
       {/* 404 */}
       <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />
