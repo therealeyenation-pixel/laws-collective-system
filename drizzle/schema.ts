@@ -18864,3 +18864,168 @@ export const dividendIncome = mysqlTable("dividend_income", {
 
 export type DividendIncome = typeof dividendIncome.$inferSelect;
 export type InsertDividendIncome = typeof dividendIncome.$inferInsert;
+
+
+// ============================================================================
+// IPTV Theater Channel System
+// ============================================================================
+
+export const iptvChannels = mysqlTable("iptv_channels", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }).notNull(),
+  logoUrl: text("logoUrl"),
+  bannerUrl: text("bannerUrl"),
+  isActive: boolean("isActive").default(true),
+  isLive: boolean("isLive").default(false),
+  currentViewers: int("currentViewers").default(0),
+  totalViewers: int("totalViewers").default(0),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVChannel = typeof iptvChannels.$inferSelect;
+export type InsertIPTVChannel = typeof iptvChannels.$inferInsert;
+
+export const iptvStreams = mysqlTable("iptv_streams", {
+  id: int("id").autoincrement().primaryKey(),
+  channelId: int("channelId").notNull(),
+  streamUrl: text("streamUrl").notNull(),
+  streamKey: varchar("streamKey", { length: 255 }).notNull().unique(),
+  bitrate: int("bitrate"),
+  resolution: varchar("resolution", { length: 50 }),
+  codec: varchar("codec", { length: 50 }),
+  isActive: boolean("isActive").default(false),
+  startTime: timestamp("startTime"),
+  endTime: timestamp("endTime"),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVStream = typeof iptvStreams.$inferSelect;
+export type InsertIPTVStream = typeof iptvStreams.$inferInsert;
+
+export const iptvVODContent = mysqlTable("iptv_vod_content", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }).notNull(),
+  thumbnailUrl: text("thumbnailUrl"),
+  videoUrl: text("videoUrl").notNull(),
+  duration: int("duration"),
+  releaseDate: date("releaseDate"),
+  rating: decimal("rating", { precision: 3, scale: 1 }),
+  viewCount: int("viewCount").default(0),
+  isPublished: boolean("isPublished").default(false),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVVODContent = typeof iptvVODContent.$inferSelect;
+export type InsertIPTVVODContent = typeof iptvVODContent.$inferInsert;
+
+export const iptvEPGSchedule = mysqlTable("iptv_epg_schedule", {
+  id: int("id").autoincrement().primaryKey(),
+  channelId: int("channelId").notNull(),
+  programTitle: varchar("programTitle", { length: 255 }).notNull(),
+  description: text("description"),
+  startTime: timestamp("startTime").notNull(),
+  endTime: timestamp("endTime").notNull(),
+  duration: int("duration"),
+  genre: varchar("genre", { length: 100 }),
+  rating: varchar("rating", { length: 10 }),
+  isLive: boolean("isLive").default(false),
+  recordingEnabled: boolean("recordingEnabled").default(false),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVEPGSchedule = typeof iptvEPGSchedule.$inferSelect;
+export type InsertIPTVEPGSchedule = typeof iptvEPGSchedule.$inferInsert;
+
+export const iptvPlaybackHistory = mysqlTable("iptv_playback_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  contentId: int("contentId"),
+  channelId: int("channelId"),
+  playbackPosition: int("playbackPosition").default(0),
+  duration: int("duration"),
+  watchedAt: timestamp("watchedAt").defaultNow(),
+  completionPercentage: decimal("completionPercentage", { precision: 5, scale: 2 }).default(0),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVPlaybackHistory = typeof iptvPlaybackHistory.$inferSelect;
+export type InsertIPTVPlaybackHistory = typeof iptvPlaybackHistory.$inferInsert;
+
+export const iptvChannelFollows = mysqlTable("iptv_channel_follows", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  channelId: int("channelId").notNull(),
+  followDate: timestamp("followDate").defaultNow(),
+  notifications: boolean("notifications").default(true),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVChannelFollow = typeof iptvChannelFollows.$inferSelect;
+export type InsertIPTVChannelFollow = typeof iptvChannelFollows.$inferInsert;
+
+export const iptvStreamQualityProfiles = mysqlTable("iptv_stream_quality_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  resolution: varchar("resolution", { length: 50 }).notNull(),
+  bitrate: int("bitrate").notNull(),
+  fps: int("fps").default(30),
+  codec: varchar("codec", { length: 50 }).notNull(),
+  isDefault: boolean("isDefault").default(false),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVStreamQualityProfile = typeof iptvStreamQualityProfiles.$inferSelect;
+export type InsertIPTVStreamQualityProfile = typeof iptvStreamQualityProfiles.$inferInsert;
+
+export const iptvRecordings = mysqlTable("iptv_recordings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  epgScheduleId: int("epgScheduleId").notNull(),
+  recordingUrl: text("recordingUrl"),
+  fileSize: bigint("fileSize", { mode: "number" }),
+  status: varchar("status", { length: 50 }).default("scheduled"),
+  startTime: timestamp("startTime"),
+  endTime: timestamp("endTime"),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVRecording = typeof iptvRecordings.$inferSelect;
+export type InsertIPTVRecording = typeof iptvRecordings.$inferInsert;
+
+export const iptvPlaylists = mysqlTable("iptv_playlists", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  isPublic: boolean("isPublic").default(false),
+  itemCount: int("itemCount").default(0),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type IPTVPlaylist = typeof iptvPlaylists.$inferSelect;
+export type InsertIPTVPlaylist = typeof iptvPlaylists.$inferInsert;
+
+export const iptvPlaylistItems = mysqlTable("iptv_playlist_items", {
+  id: int("id").autoincrement().primaryKey(),
+  playlistId: int("playlistId").notNull(),
+  contentId: int("contentId"),
+  channelId: int("channelId"),
+  position: int("position").notNull(),
+  addedAt: timestamp("addedAt").defaultNow(),
+});
+
+export type IPTVPlaylistItem = typeof iptvPlaylistItems.$inferSelect;
+export type InsertIPTVPlaylistItem = typeof iptvPlaylistItems.$inferInsert;

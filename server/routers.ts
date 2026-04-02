@@ -49,6 +49,7 @@ import { restorationRouter } from "./routers/restoration";
 import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import aiRecommendationsRouter from "./routers/ai-recommendations";
+import iptvTheaterRouter from "./routers/iptv-theater";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { portfolioIncomeRouter } from "./routers/portfolio-income";
@@ -329,6 +330,7 @@ export const appRouter = router({
   documents: documentGenerationRouter,
   lifecycleManager: lifecycleManagerRouter,
   aiRecommendations: aiRecommendationsRouter,
+  iptvTheater: iptvTheaterRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,
