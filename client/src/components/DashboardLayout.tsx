@@ -563,6 +563,34 @@ const menuCategories: MenuCategory[] = [
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
     ]
   },
+
+  {
+    icon: Play,
+    label: "Theater & Broadcast",
+    minRole: "user",
+    defaultOpen: false,
+    subCategories: [
+      {
+        icon: Play,
+        label: "Live Theater",
+        minRole: "user",
+        items: [
+          { icon: Play, label: "Live Channels", path: "/theater-live", minRole: "user" },
+          { icon: Video, label: "VOD Library", path: "/theater-vod", minRole: "user" },
+        ]
+      },
+      {
+        icon: Music,
+        label: "Broadcast",
+        minRole: "user",
+        items: [
+          { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
+          { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
+          { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
+        ]
+      },
+    ]
+  },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

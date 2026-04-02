@@ -339,6 +339,11 @@ import OfflineSettings from "@/pages/OfflineSettings";
 import RealtimeDashboardSync from "@/pages/RealtimeDashboardSync";
 import CustomReportScheduling from "@/pages/CustomReportScheduling";
 import TeamCollaboration from "@/pages/TeamCollaboration";
+import TheaterLive from "@/pages/TheaterLive";
+import TheaterVOD from "@/pages/TheaterVOD";
+import BroadcastChannels from "@/pages/BroadcastChannels";
+import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
+import LiveBroadcasts from "@/pages/LiveBroadcasts";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -860,8 +865,12 @@ function Router() {
       <Route path="/realtime-dashboard-sync">{() => <ProtectedRoute component={RealtimeDashboardSync} />}</Route>
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
-
-      {/* Public routes */}
+      <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLive} />}</Route>
+      <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
+      <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastChannels} />}</Route>
+      <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
+      <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
+      {/* 404 */}
       <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />
       
