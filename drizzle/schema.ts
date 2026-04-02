@@ -18875,18 +18875,46 @@ export const iptvChannels = mysqlTable("iptv_channels", {
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   category: varchar("category", { length: 100 }).notNull(),
+  subcategory: varchar("subcategory", { length: 100 }),
   logoUrl: text("logoUrl"),
   bannerUrl: text("bannerUrl"),
+  streamUrl: text("streamUrl"),
+  country: varchar("country", { length: 100 }),
+  language: varchar("language", { length: 50 }),
+  contentRating: mysqlEnum("contentRating", ["G", "PG", "PG-13", "R", "NC-17", "X", "UNRATED"]).default("G").notNull(),
+  requiresAgeVerification: boolean("requiresAgeVerification").default(false),
+  isAdultContent: boolean("isAdultContent").default(false),
+  accessLevel: mysqlEnum("accessLevel", ["public", "members", "verified_18", "verified_21", "premium"]).default("public").notNull(),
   isActive: boolean("isActive").default(true),
   isLive: boolean("isLive").default(false),
   currentViewers: int("currentViewers").default(0),
   totalViewers: int("totalViewers").default(0),
+  importBatchId: varchar("importBatchId", { length: 100 }),
+  externalId: varchar("externalId", { length: 255 }),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
 });
 
 export type IPTVChannel = typeof iptvChannels.$inferSelect;
 export type InsertIPTVChannel = typeof iptvChannels.$inferInsert;
+
+/**
+ * User Content Access Permissions - Track which users have access to restricted content
+ */
+export const userContentAccess = mysqlTable("user_content_access", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  accessLevel: mysqlEnum("accessLevel", ["verified_18", "verified_21", "premium"]).notNull(),
+  verificationMethod: varchar("verificationMethod", { length: 100 }),
+  verificationDate: timestamp("verificationDate"),
+  expiresAt: timestamp("expiresAt"),
+  isActive: boolean("isActive").default(true),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type UserContentAccess = typeof userContentAccess.$inferSelect;
+export type InsertUserContentAccess = typeof userContentAccess.$inferInsert;
 
 export const iptvStreams = mysqlTable("iptv_streams", {
   id: int("id").autoincrement().primaryKey(),
