@@ -48,6 +48,7 @@ import { taxPrepRouter } from "./routers/tax-prep";
 import { restorationRouter } from "./routers/restoration";
 import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
+import aiRecommendationsRouter from "./routers/ai-recommendations";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { portfolioIncomeRouter } from "./routers/portfolio-income";
@@ -327,6 +328,7 @@ export const appRouter = router({
   restoration: restorationRouter,
   documents: documentGenerationRouter,
   lifecycleManager: lifecycleManagerRouter,
+  aiRecommendations: aiRecommendationsRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,
