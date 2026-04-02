@@ -268,6 +268,9 @@ import { investmentManagementRouter } from "./routers/investment-management";
 import { realtimeDashboardUpdatesRouter } from "./routers/realtime-dashboard-updates";
 import { mobileNativeFeaturesRouter } from "./routers/mobile-native-features";
 import { advancedForecastingEngineRouter } from "./routers/advanced-forecasting-engine";
+import { portfolioRebalancingRouter } from "./routers/portfolio-rebalancing";
+import { watchlistAlertsRouter } from "./routers/watchlist-alerts";
+import { taxOptimizationRouter } from "./routers/tax-optimization";
 import { interactiveDashboardBuilderRouter } from "./routers/interactive-dashboard-builder";
 import { aiInsightsAssistantRouter } from "./routers/ai-insights-assistant";
 import { multiTenantAdminRouter } from "./routers/multi-tenant-admin";
@@ -591,6 +594,9 @@ export const appRouter = router({
   customReportScheduling: customReportSchedulingRouter,
   teamCollaborationFeatures: teamCollaborationFeaturesRouter,
   advancedFeaturesOptimization: advancedFeaturesOptimizationRouter,
+  portfolioRebalancing: portfolioRebalancingRouter,
+  watchlistAlerts: watchlistAlertsRouter,
+  taxOptimization: taxOptimizationRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
