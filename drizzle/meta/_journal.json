@@ -36,6 +36,13 @@
       "when": 1775163721892,
       "tag": "0004_sticky_warbound",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1775163897208,
+      "tag": "0005_silly_squadron_sinister",
+      "breakpoints": true
     }
   ]
 }

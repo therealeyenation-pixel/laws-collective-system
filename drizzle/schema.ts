@@ -19132,3 +19132,135 @@ export const podcastEpisodes = mysqlTable("podcast_episodes", {
 
 export type PodcastEpisode = typeof podcastEpisodes.$inferSelect;
 export type InsertPodcastEpisode = typeof podcastEpisodes.$inferInsert;
+
+
+// ============================================================================
+// VOD (Video-on-Demand) System - Movies and Series
+// ============================================================================
+
+export const vodMovies = mysqlTable("vod_movies", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  genre: varchar("genre", { length: 100 }).notNull(),
+  subgenre: varchar("subgenre", { length: 100 }),
+  director: varchar("director", { length: 255 }),
+  cast: text("cast"), // JSON array of actors
+  releaseYear: int("releaseYear"),
+  duration: int("duration"), // in minutes
+  contentRating: mysqlEnum("contentRating", ["G", "PG", "PG-13", "R", "NC-17", "X", "UNRATED"]).default("G").notNull(),
+  isAdultContent: boolean("isAdultContent").default(false),
+  accessLevel: mysqlEnum("accessLevel", ["public", "members", "verified_18", "verified_21", "premium"]).default("public").notNull(),
+  posterUrl: text("posterUrl"),
+  bannerUrl: text("bannerUrl"),
+  trailerUrl: text("trailerUrl"),
+  videoUrl: text("videoUrl").notNull(),
+  imdbId: varchar("imdbId", { length: 50 }),
+  imdbRating: decimal("imdbRating", { precision: 3, scale: 1 }),
+  viewCount: int("viewCount").default(0),
+  favoriteCount: int("favoriteCount").default(0),
+  isPublished: boolean("isPublished").default(true),
+  isAvailable: boolean("isAvailable").default(true),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type VODMovie = typeof vodMovies.$inferSelect;
+export type InsertVODMovie = typeof vodMovies.$inferInsert;
+
+export const vodSeries = mysqlTable("vod_series", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  genre: varchar("genre", { length: 100 }).notNull(),
+  subgenre: varchar("subgenre", { length: 100 }),
+  creator: varchar("creator", { length: 255 }),
+  cast: text("cast"), // JSON array of actors
+  releaseYear: int("releaseYear"),
+  totalSeasons: int("totalSeasons").default(1),
+  totalEpisodes: int("totalEpisodes").default(0),
+  contentRating: mysqlEnum("contentRating", ["G", "PG", "PG-13", "R", "NC-17", "X", "UNRATED"]).default("G").notNull(),
+  isAdultContent: boolean("isAdultContent").default(false),
+  accessLevel: mysqlEnum("accessLevel", ["public", "members", "verified_18", "verified_21", "premium"]).default("public").notNull(),
+  posterUrl: text("posterUrl"),
+  bannerUrl: text("bannerUrl"),
+  trailerUrl: text("trailerUrl"),
+  imdbId: varchar("imdbId", { length: 50 }),
+  imdbRating: decimal("imdbRating", { precision: 3, scale: 1 }),
+  viewCount: int("viewCount").default(0),
+  favoriteCount: int("favoriteCount").default(0),
+  isPublished: boolean("isPublished").default(true),
+  isAvailable: boolean("isAvailable").default(true),
+  status: mysqlEnum("status", ["ongoing", "completed", "cancelled"]).default("ongoing"),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type VODSeries = typeof vodSeries.$inferSelect;
+export type InsertVODSeries = typeof vodSeries.$inferInsert;
+
+export const vodEpisodes = mysqlTable("vod_episodes", {
+  id: int("id").autoincrement().primaryKey(),
+  seriesId: int("seriesId").notNull(),
+  seasonNumber: int("seasonNumber").notNull(),
+  episodeNumber: int("episodeNumber").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  duration: int("duration"), // in minutes
+  releaseDate: date("releaseDate"),
+  videoUrl: text("videoUrl").notNull(),
+  thumbnailUrl: text("thumbnailUrl"),
+  viewCount: int("viewCount").default(0),
+  isPublished: boolean("isPublished").default(true),
+  isAvailable: boolean("isAvailable").default(true),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type VODEpisode = typeof vodEpisodes.$inferSelect;
+export type InsertVODEpisode = typeof vodEpisodes.$inferInsert;
+
+export const vodWatchlist = mysqlTable("vod_watchlist", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  movieId: int("movieId"),
+  seriesId: int("seriesId"),
+  addedAt: timestamp("addedAt").defaultNow(),
+  priority: int("priority").default(0), // 0=normal, 1=high priority
+});
+
+export type VODWatchlist = typeof vodWatchlist.$inferSelect;
+export type InsertVODWatchlist = typeof vodWatchlist.$inferInsert;
+
+export const vodViewingHistory = mysqlTable("vod_viewing_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  movieId: int("movieId"),
+  episodeId: int("episodeId"),
+  startTime: timestamp("startTime").defaultNow(),
+  endTime: timestamp("endTime"),
+  duration: int("duration"), // in seconds
+  progress: int("progress").default(0), // percentage watched
+  isCompleted: boolean("isCompleted").default(false),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type VODViewingHistory = typeof vodViewingHistory.$inferSelect;
+export type InsertVODViewingHistory = typeof vodViewingHistory.$inferInsert;
+
+export const vodReviews = mysqlTable("vod_reviews", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  movieId: int("movieId"),
+  seriesId: int("seriesId"),
+  rating: int("rating").notNull(), // 1-5
+  reviewText: text("reviewText"),
+  isVerifiedPurchase: boolean("isVerifiedPurchase").default(false),
+  helpfulCount: int("helpfulCount").default(0),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+});
+
+export type VODReview = typeof vodReviews.$inferSelect;
+export type InsertVODReview = typeof vodReviews.$inferInsert;

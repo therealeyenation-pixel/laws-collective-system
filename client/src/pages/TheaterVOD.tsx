@@ -17,27 +17,45 @@ export default function TheaterVOD() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  const { data: vodLibrary, isLoading } = trpc.iptvTheater.getVODLibrary.useQuery({
-    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+  // Fetch movies and series
+  const { data: movies = [], isLoading: moviesLoading } = trpc.vod.getMovies.useQuery({
+    genre: selectedCategory !== 'all' ? selectedCategory : undefined,
     limit: 100,
   });
 
-  const startPlaybackMutation = trpc.iptvTheater.startPlayback.useMutation();
+  const { data: series = [], isLoading: seriesLoading } = trpc.vod.getSeries.useQuery({
+    genre: selectedCategory !== 'all' ? selectedCategory : undefined,
+    limit: 100,
+  });
+
+  const isLoading = moviesLoading || seriesLoading;
+
+  const startPlaybackMutation = trpc.vod.startWatching.useMutation();
 
   const handlePlayContent = async (contentId: number) => {
     try {
-      await startPlaybackMutation.mutateAsync({ contentId });
-      setSelectedContent(contentId);
+      const content = allContent.find(c => c.id === contentId);
+      if (content) {
+        if ('duration' in content && 'videoUrl' in content) {
+          // It's a movie
+          await startPlaybackMutation.mutateAsync({ movieId: contentId });
+        } else if ('totalSeasons' in content) {
+          // It's a series
+          await startPlaybackMutation.mutateAsync({ seriesId: contentId });
+        }
+        setSelectedContent(contentId);
+      }
     } catch (error) {
       console.error('Failed to start playback:', error);
     }
   };
 
-  const filteredContent = vodLibrary?.filter((content) =>
+  const allContent = [...movies, ...series];
+  const filteredContent = allContent.filter((content) =>
     content.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const categories = ['all', 'educational', 'entertainment', 'news', 'sports'];
+  const categories = ['all', 'Action', 'Drama', 'Comedy', 'Thriller', 'Sci-Fi', 'Horror', 'Animation', 'Family'];
 
   if (isLoading) {
     return (
@@ -61,10 +79,7 @@ export default function TheaterVOD() {
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="bg-black/70 rounded px-3 py-2">
                       <p className="text-white text-sm font-semibold">
-                        {
-                          filteredContent.find((c) => c.id === selectedContent)
-                            ?.title
-                        }
+                        {filteredContent.find((c) => c.id === selectedContent)?.title}
                       </p>
                     </div>
                   </div>
@@ -99,10 +114,7 @@ export default function TheaterVOD() {
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">Duration:</span>
                       <span className="font-semibold">
-                        {Math.floor(
-                          (filteredContent.find((c) => c.id === selectedContent)?.duration || 0) / 60
-                        )}{' '}
-                        min
+                        {filteredContent.find((c) => c.id === selectedContent)?.duration || 'N/A'} min
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
