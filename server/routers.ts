@@ -264,6 +264,7 @@ import { realTimeNotificationsRouter } from "./routers/real-time-notifications";
 import { exportSchedulingEngineRouter } from "./routers/export-scheduling-engine";
 import { broadcastRadioModule } from "./routers/broadcast-radio-module";
 import { investmentManagementModule } from "./routers/investment-management-module";
+import { investmentManagementRouter } from "./routers/investment-management";
 import { realtimeDashboardUpdatesRouter } from "./routers/realtime-dashboard-updates";
 import { mobileNativeFeaturesRouter } from "./routers/mobile-native-features";
 import { advancedForecastingEngineRouter } from "./routers/advanced-forecasting-engine";
@@ -579,6 +580,7 @@ export const appRouter = router({
   exportScheduling: exportSchedulingEngineRouter,
   broadcastRadio: broadcastRadioModule,
   investmentManagement: investmentManagementModule,
+  investmentMgmt: investmentManagementRouter,
   realtimeDashboardUpdates: realtimeDashboardUpdatesRouter,
   mobileNativeFeatures: mobileNativeFeaturesRouter,
   advancedForecasting: advancedForecastingEngineRouter,

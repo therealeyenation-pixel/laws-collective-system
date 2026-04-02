@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, boolean, bigint, date } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, boolean, bigint, date, index } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -18537,3 +18537,330 @@ export const broadcastNotifications = mysqlTable("broadcast_notifications", {
 
 export type BroadcastNotification = typeof broadcastNotifications.$inferSelect;
 export type InsertBroadcastNotification = typeof broadcastNotifications.$inferInsert;
+
+
+// ============================================================================
+// PHASE 63: INVESTMENT MANAGEMENT MODULE
+// ============================================================================
+
+/**
+ * Investment Portfolios - User investment portfolios
+ */
+export const investmentPortfolios = mysqlTable("investment_portfolios", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  portfolioType: mysqlEnum("portfolioType", [
+    "personal",
+    "retirement",
+    "education",
+    "trading",
+    "long_term",
+    "other"
+  ]).default("personal"),
+  totalValue: decimal("totalValue", { precision: 15, scale: 2 }).default("0"),
+  investedAmount: decimal("investedAmount", { precision: 15, scale: 2 }).default("0"),
+  gainLoss: decimal("gainLoss", { precision: 15, scale: 2 }).default("0"),
+  gainLossPercent: decimal("gainLossPercent", { precision: 8, scale: 2 }).default("0"),
+  currency: varchar("currency", { length: 3 }).default("USD"),
+  isActive: boolean("isActive").default(true),
+  riskProfile: mysqlEnum("riskProfile", ["conservative", "moderate", "aggressive"]).default("moderate"),
+  targetAllocation: json("targetAllocation"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userIdIdx: index("investment_portfolios_userId_idx").on(table.userId),
+}));
+
+export type InvestmentPortfolio = typeof investmentPortfolios.$inferSelect;
+export type InsertInvestmentPortfolio = typeof investmentPortfolios.$inferInsert;
+
+/**
+ * Holdings - Individual investments in portfolios
+ */
+export const holdings = mysqlTable("holdings", {
+  id: int("id").autoincrement().primaryKey(),
+  portfolioId: int("portfolioId").notNull(),
+  symbol: varchar("symbol", { length: 20 }).notNull(),
+  assetType: mysqlEnum("assetType", [
+    "stock",
+    "bond",
+    "etf",
+    "mutual_fund",
+    "cryptocurrency",
+    "real_estate",
+    "commodity",
+    "option",
+    "other"
+  ]).notNull(),
+  quantity: decimal("quantity", { precision: 15, scale: 8 }).notNull(),
+  purchasePrice: decimal("purchasePrice", { precision: 15, scale: 2 }).notNull(),
+  purchaseDate: timestamp("purchaseDate").notNull(),
+  currentPrice: decimal("currentPrice", { precision: 15, scale: 2 }),
+  currentValue: decimal("currentValue", { precision: 15, scale: 2 }),
+  gainLoss: decimal("gainLoss", { precision: 15, scale: 2 }),
+  gainLossPercent: decimal("gainLossPercent", { precision: 8, scale: 2 }),
+  dividendYield: decimal("dividendYield", { precision: 8, scale: 2 }),
+  sector: varchar("sector", { length: 100 }),
+  notes: text("notes"),
+  isActive: boolean("isActive").default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  portfolioIdIdx: index("holdings_portfolioId_idx").on(table.portfolioId),
+  symbolIdx: index("holdings_symbol_idx").on(table.symbol),
+}));
+
+export type Holding = typeof holdings.$inferSelect;
+export type InsertHolding = typeof holdings.$inferInsert;
+
+/**
+ * Market Data - Real-time market prices and data
+ */
+export const marketData = mysqlTable("market_data", {
+  id: int("id").autoincrement().primaryKey(),
+  symbol: varchar("symbol", { length: 20 }).notNull().unique(),
+  assetType: mysqlEnum("assetType", [
+    "stock",
+    "bond",
+    "etf",
+    "mutual_fund",
+    "cryptocurrency",
+    "commodity",
+    "index",
+    "other"
+  ]).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  currentPrice: decimal("currentPrice", { precision: 15, scale: 2 }).notNull(),
+  previousClose: decimal("previousClose", { precision: 15, scale: 2 }),
+  dayChange: decimal("dayChange", { precision: 15, scale: 2 }),
+  dayChangePercent: decimal("dayChangePercent", { precision: 8, scale: 2 }),
+  yearHigh: decimal("yearHigh", { precision: 15, scale: 2 }),
+  yearLow: decimal("yearLow", { precision: 15, scale: 2 }),
+  marketCap: decimal("marketCap", { precision: 20, scale: 2 }),
+  peRatio: decimal("peRatio", { precision: 8, scale: 2 }),
+  dividendYield: decimal("dividendYield", { precision: 8, scale: 2 }),
+  volume: bigint("volume"),
+  averageVolume: bigint("averageVolume"),
+  exchange: varchar("exchange", { length: 50 }),
+  currency: varchar("currency", { length: 3 }).default("USD"),
+  lastUpdated: timestamp("lastUpdated").defaultNow().notNull(),
+}, (table) => ({
+  symbolIdx: index("market_data_symbol_idx").on(table.symbol),
+  assetTypeIdx: index("market_data_assetType_idx").on(table.assetType),
+}));
+
+export type MarketData = typeof marketData.$inferSelect;
+export type InsertMarketData = typeof marketData.$inferInsert;
+
+/**
+ * Price History - Historical price data for charting
+ */
+export const priceHistory = mysqlTable("price_history", {
+  id: int("id").autoincrement().primaryKey(),
+  symbol: varchar("symbol", { length: 20 }).notNull(),
+  date: timestamp("date").notNull(),
+  openPrice: decimal("openPrice", { precision: 15, scale: 2 }),
+  highPrice: decimal("highPrice", { precision: 15, scale: 2 }),
+  lowPrice: decimal("lowPrice", { precision: 15, scale: 2 }),
+  closePrice: decimal("closePrice", { precision: 15, scale: 2 }).notNull(),
+  volume: bigint("volume"),
+  adjustedClose: decimal("adjustedClose", { precision: 15, scale: 2 }),
+}, (table) => ({
+  symbolDateIdx: index("price_history_symbol_date_idx").on(table.symbol, table.date),
+}));
+
+export type PriceHistory = typeof priceHistory.$inferSelect;
+export type InsertPriceHistory = typeof priceHistory.$inferInsert;
+
+/**
+ * Transactions - Buy/sell/dividend transactions
+ */
+export const investmentTransactions = mysqlTable("investment_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  portfolioId: int("portfolioId").notNull(),
+  holdingId: int("holdingId"),
+  transactionType: mysqlEnum("transactionType", [
+    "buy",
+    "sell",
+    "dividend",
+    "split",
+    "spin_off",
+    "deposit",
+    "withdrawal",
+    "fee"
+  ]).notNull(),
+  symbol: varchar("symbol", { length: 20 }).notNull(),
+  quantity: decimal("quantity", { precision: 15, scale: 8 }),
+  price: decimal("price", { precision: 15, scale: 2 }),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  commission: decimal("commission", { precision: 15, scale: 2 }).default("0"),
+  notes: text("notes"),
+  transactionDate: timestamp("transactionDate").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  portfolioIdIdx: index("investment_transactions_portfolioId_idx").on(table.portfolioId),
+  transactionDateIdx: index("investment_transactions_transactionDate_idx").on(table.transactionDate),
+}));
+
+export type InvestmentTransaction = typeof investmentTransactions.$inferSelect;
+export type InsertInvestmentTransaction = typeof investmentTransactions.$inferInsert;
+
+/**
+ * Performance Reports - Portfolio performance snapshots
+ */
+export const performanceReports = mysqlTable("performance_reports", {
+  id: int("id").autoincrement().primaryKey(),
+  portfolioId: int("portfolioId").notNull(),
+  reportDate: timestamp("reportDate").notNull(),
+  totalValue: decimal("totalValue", { precision: 15, scale: 2 }).notNull(),
+  investedAmount: decimal("investedAmount", { precision: 15, scale: 2 }).notNull(),
+  gainLoss: decimal("gainLoss", { precision: 15, scale: 2 }).notNull(),
+  gainLossPercent: decimal("gainLossPercent", { precision: 8, scale: 2 }).notNull(),
+  returnYTD: decimal("returnYTD", { precision: 8, scale: 2 }),
+  return1Year: decimal("return1Year", { precision: 8, scale: 2 }),
+  return3Year: decimal("return3Year", { precision: 8, scale: 2 }),
+  return5Year: decimal("return5Year", { precision: 8, scale: 2 }),
+  volatility: decimal("volatility", { precision: 8, scale: 2 }),
+  sharpeRatio: decimal("sharpeRatio", { precision: 8, scale: 2 }),
+  maxDrawdown: decimal("maxDrawdown", { precision: 8, scale: 2 }),
+  allocationBreakdown: json("allocationBreakdown"),
+  topHoldings: json("topHoldings"),
+}, (table) => ({
+  portfolioIdIdx: index("performance_reports_portfolioId_idx").on(table.portfolioId),
+  reportDateIdx: index("performance_reports_reportDate_idx").on(table.reportDate),
+}));
+
+export type PerformanceReport = typeof performanceReports.$inferSelect;
+export type InsertPerformanceReport = typeof performanceReports.$inferInsert;
+
+/**
+ * Watchlists - User watchlist items
+ */
+export const watchlistItems = mysqlTable("watchlist_items", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  symbol: varchar("symbol", { length: 20 }).notNull(),
+  assetType: mysqlEnum("assetType", [
+    "stock",
+    "etf",
+    "cryptocurrency",
+    "commodity",
+    "other"
+  ]).notNull(),
+  targetPrice: decimal("targetPrice", { precision: 15, scale: 2 }),
+  notes: text("notes"),
+  addedAt: timestamp("addedAt").defaultNow().notNull(),
+}, (table) => ({
+  userIdIdx: index("watchlist_items_userId_idx").on(table.userId),
+  symbolIdx: index("watchlist_items_symbol_idx").on(table.symbol),
+}));
+
+export type WatchlistItem = typeof watchlistItems.$inferSelect;
+export type InsertWatchlistItem = typeof watchlistItems.$inferInsert;
+
+/**
+ * Alerts - Price and performance alerts
+ */
+export const investmentAlerts = mysqlTable("investment_alerts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  portfolioId: int("portfolioId"),
+  symbol: varchar("symbol", { length: 20 }),
+  alertType: mysqlEnum("alertType", [
+    "price_above",
+    "price_below",
+    "percent_gain",
+    "percent_loss",
+    "dividend",
+    "earnings",
+    "portfolio_milestone",
+    "rebalance_needed"
+  ]).notNull(),
+  threshold: decimal("threshold", { precision: 15, scale: 2 }),
+  isActive: boolean("isActive").default(true),
+  triggered: boolean("triggered").default(false),
+  triggeredAt: timestamp("triggeredAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  userIdIdx: index("investment_alerts_userId_idx").on(table.userId),
+  portfolioIdIdx: index("investment_alerts_portfolioId_idx").on(table.portfolioId),
+}));
+
+export type InvestmentAlert = typeof investmentAlerts.$inferSelect;
+export type InsertInvestmentAlert = typeof investmentAlerts.$inferInsert;
+
+/**
+ * Goals - Investment goals and targets
+ */
+export const investmentGoals = mysqlTable("investment_goals", {
+  id: int("id").autoincrement().primaryKey(),
+  portfolioId: int("portfolioId").notNull(),
+  goalName: varchar("goalName", { length: 255 }).notNull(),
+  goalType: mysqlEnum("goalType", [
+    "retirement",
+    "education",
+    "home",
+    "vacation",
+    "emergency_fund",
+    "wealth_building",
+    "other"
+  ]).notNull(),
+  targetAmount: decimal("targetAmount", { precision: 15, scale: 2 }).notNull(),
+  currentAmount: decimal("currentAmount", { precision: 15, scale: 2 }).default("0"),
+  targetDate: timestamp("targetDate"),
+  priority: mysqlEnum("priority", ["low", "medium", "high"]).default("medium"),
+  status: mysqlEnum("status", ["not_started", "in_progress", "on_track", "at_risk", "completed"]).default("not_started"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  portfolioIdIdx: index("investment_goals_portfolioId_idx").on(table.portfolioId),
+}));
+
+export type InvestmentGoal = typeof investmentGoals.$inferSelect;
+export type InsertInvestmentGoal = typeof investmentGoals.$inferInsert;
+
+/**
+ * Allocations - Asset allocation rules and tracking
+ */
+export const assetAllocations = mysqlTable("asset_allocations", {
+  id: int("id").autoincrement().primaryKey(),
+  portfolioId: int("portfolioId").notNull(),
+  assetClass: varchar("assetClass", { length: 100 }).notNull(),
+  targetPercent: decimal("targetPercent", { precision: 5, scale: 2 }).notNull(),
+  currentPercent: decimal("currentPercent", { precision: 5, scale: 2 }).default("0"),
+  currentValue: decimal("currentValue", { precision: 15, scale: 2 }).default("0"),
+  minPercent: decimal("minPercent", { precision: 5, scale: 2 }),
+  maxPercent: decimal("maxPercent", { precision: 5, scale: 2 }),
+  rebalanceThreshold: decimal("rebalanceThreshold", { precision: 5, scale: 2 }).default("5"),
+  lastRebalanced: timestamp("lastRebalanced"),
+}, (table) => ({
+  portfolioIdIdx: index("asset_allocations_portfolioId_idx").on(table.portfolioId),
+}));
+
+export type AssetAllocation = typeof assetAllocations.$inferSelect;
+export type InsertAssetAllocation = typeof assetAllocations.$inferInsert;
+
+/**
+ * Dividends - Dividend income tracking
+ */
+export const dividendIncome = mysqlTable("dividend_income", {
+  id: int("id").autoincrement().primaryKey(),
+  portfolioId: int("portfolioId").notNull(),
+  symbol: varchar("symbol", { length: 20 }).notNull(),
+  dividendDate: timestamp("dividendDate").notNull(),
+  exDividendDate: timestamp("exDividendDate"),
+  paymentDate: timestamp("paymentDate"),
+  dividendPerShare: decimal("dividendPerShare", { precision: 15, scale: 4 }).notNull(),
+  quantity: decimal("quantity", { precision: 15, scale: 8 }).notNull(),
+  totalDividend: decimal("totalDividend", { precision: 15, scale: 2 }).notNull(),
+  dividendType: mysqlEnum("dividendType", ["ordinary", "special", "return_of_capital"]).default("ordinary"),
+  notes: text("notes"),
+}, (table) => ({
+  portfolioIdIdx: index("dividend_income_portfolioId_idx").on(table.portfolioId),
+  symbolIdx: index("dividend_income_symbol_idx").on(table.symbol),
+}));
+
+export type DividendIncome = typeof dividendIncome.$inferSelect;
+export type InsertDividendIncome = typeof dividendIncome.$inferInsert;
