@@ -54,6 +54,7 @@ import { publicSeedRouter } from "./routers/public-seed";
 import { streamingSeedRouter } from "./routers/streaming-seed";
 import { iptvLiveRouter } from "./routers/iptv-live";
 import { m3uBulkImportRouter } from "./routers/m3u-bulk-import";
+import { updateStreamsDirectRouter } from "./routers/update-streams-direct";
 
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
@@ -343,6 +344,7 @@ export const appRouter = router({
   publicSeed: publicSeedRouter,
   streamingSeed: streamingSeedRouter,
   m3uBulkImport: m3uBulkImportRouter,
+  updateStreams: updateStreamsDirectRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,
