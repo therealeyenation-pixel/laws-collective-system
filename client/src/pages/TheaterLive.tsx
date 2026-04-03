@@ -200,12 +200,12 @@ export default function TheaterLive() {
 
           <TabsContent value="categories" className="mt-6">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {['live', 'sports', 'entertainment', 'educational', 'news'].map((cat) => (
+              {['News', 'Sports', 'Entertainment', 'Music', 'Adult', 'Kids', 'Documentary'].map((cat) => (
                 <Card key={cat} className="p-4 cursor-pointer hover:bg-accent transition-colors">
                   <div className="text-center">
                     <p className="font-semibold text-foreground capitalize">{cat}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {channels?.filter((c) => c.category === cat).length || 0} channels
+                      {channels?.filter((c) => c.category?.toLowerCase() === cat.toLowerCase()).length || 0} channels
                     </p>
                   </div>
                 </Card>
