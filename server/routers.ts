@@ -51,6 +51,7 @@ import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import aiRecommendationsRouter from "./routers/ai-recommendations";
 import iptvTheaterRouter from "./routers/iptv-theater";
 import { publicSeedRouter } from "./routers/public-seed";
+import { streamingSeedRouter } from "./routers/streaming-seed";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { portfolioIncomeRouter } from "./routers/portfolio-income";
@@ -336,6 +337,7 @@ export const appRouter = router({
   iptvTheater: iptvTheaterRouter,
   vod: vodRouter,
   publicSeed: publicSeedRouter,
+  streamingSeed: streamingSeedRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,
