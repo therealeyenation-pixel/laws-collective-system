@@ -1,8 +1,7 @@
 import { publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
-import { db } from "../db";
 
-export const m3uImportRouter = router({
+export const m3uBulkImportRouter = router({
   parseM3U: publicProcedure
     .input(z.object({ m3uContent: z.string() }))
     .mutation(async ({ input }) => {
@@ -14,25 +13,21 @@ export const m3uImportRouter = router({
         const trimmed = line.trim();
 
         if (trimmed.startsWith("#EXTINF:")) {
-          // Parse channel metadata
           const match = trimmed.match(/#EXTINF:.*,(.+)/);
           if (match) {
             currentChannel.name = match[1].trim();
           }
 
-          // Extract group-title (category)
           const groupMatch = trimmed.match(/group-title="([^"]+)"/);
           if (groupMatch) {
             currentChannel.category = groupMatch[1];
           }
 
-          // Extract tvg-logo
           const logoMatch = trimmed.match(/tvg-logo="([^"]+)"/);
           if (logoMatch) {
             currentChannel.bannerUrl = logoMatch[1];
           }
         } else if (trimmed && !trimmed.startsWith("#")) {
-          // This is the stream URL
           currentChannel.streamUrl = trimmed;
           if (currentChannel.name && currentChannel.streamUrl) {
             channels.push({
@@ -72,36 +67,39 @@ export const m3uImportRouter = router({
         ),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
-        const connection = await db.getConnection();
         let insertedCount = 0;
 
         for (const channel of input.channels) {
           try {
-            await connection.execute(
-              `INSERT INTO iptv_channels 
+            // Insert into database using raw SQL through context
+            const query = `INSERT INTO iptv_channels 
                (name, category, stream_url, banner_url, description, is_live, current_viewers, content_rating, access_level, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
-              [
-                channel.name,
-                channel.category,
-                channel.streamUrl,
-                channel.bannerUrl || null,
-                channel.description || channel.name,
-                channel.isLive ? 1 : 0,
-                channel.currentViewers || 0,
-                channel.contentRating || "G",
-                channel.accessLevel || "public",
-              ]
-            );
-            insertedCount++;
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`;
+
+            const params = [
+              channel.name,
+              channel.category,
+              channel.streamUrl,
+              channel.bannerUrl || null,
+              channel.description || channel.name,
+              channel.isLive ? 1 : 0,
+              channel.currentViewers || 0,
+              channel.contentRating || "G",
+              channel.accessLevel || "public",
+            ];
+
+            // Execute query using database connection from context
+            if ((ctx as any).db && typeof (ctx as any).db.execute === "function") {
+              await (ctx as any).db.execute(query, params);
+              insertedCount++;
+            }
           } catch (err) {
             console.error(`Failed to insert channel ${channel.name}:`, err);
           }
         }
 
-        connection.release();
         return {
           success: true,
           insertedCount,
@@ -118,17 +116,4 @@ export const m3uImportRouter = router({
         };
       }
     }),
-
-  getImportStatus: publicProcedure.query(async () => {
-    try {
-      const connection = await db.getConnection();
-      const [rows]: any = await connection.execute(
-        "SELECT COUNT(*) as total FROM iptv_channels"
-      );
-      connection.release();
-      return { totalChannels: rows[0].total };
-    } catch (error) {
-      return { totalChannels: 0 };
-    }
-  }),
 });

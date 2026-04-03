@@ -348,6 +348,8 @@ import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
 import AdminSeeding from "@/pages/AdminSeeding";
 import SubscriptionManagement from "@/pages/SubscriptionManagement";
+import M3UImportManager from "@/pages/M3UImportManager";
+import TheaterLiveWithPlayer from "@/pages/TheaterLiveWithPlayer";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -878,6 +880,8 @@ function Router() {
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
       <Route path="/subscription-management">{() => <ProtectedRoute component={SubscriptionManagement} />}</Route>
+      <Route path="/m3u-import">{() => <ProtectedRoute component={M3UImportManager} />}</Route>
+      <Route path="/theater-player">{() => <ProtectedRoute component={TheaterLiveWithPlayer} />}</Route>
       {/* 404 */}
       <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />
