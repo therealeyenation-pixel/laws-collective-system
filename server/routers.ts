@@ -52,6 +52,7 @@ import aiRecommendationsRouter from "./routers/ai-recommendations";
 import iptvTheaterRouter from "./routers/iptv-theater";
 import { publicSeedRouter } from "./routers/public-seed";
 import { streamingSeedRouter } from "./routers/streaming-seed";
+import { iptvLiveRouter } from "./routers/iptv-live";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { portfolioIncomeRouter } from "./routers/portfolio-income";
@@ -334,7 +335,7 @@ export const appRouter = router({
   documents: documentGenerationRouter,
   lifecycleManager: lifecycleManagerRouter,
   aiRecommendations: aiRecommendationsRouter,
-  iptvTheater: iptvTheaterRouter,
+  iptvTheater: iptvLiveRouter,
   vod: vodRouter,
   publicSeed: publicSeedRouter,
   streamingSeed: streamingSeedRouter,
