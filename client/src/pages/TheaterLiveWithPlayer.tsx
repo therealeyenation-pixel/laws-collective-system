@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-import { HLSVideoPlayer } from "@/components/HLSVideoPlayer";
+
 import { Play, Grid, List } from "lucide-react";
 
 export default function TheaterLiveWithPlayer() {
@@ -36,11 +36,14 @@ export default function TheaterLiveWithPlayer() {
       {selectedChannel && (
         <div className="bg-black p-6">
           <div className="max-w-6xl mx-auto">
-            <HLSVideoPlayer
-              streamUrl={selectedChannel.streamUrl}
-              title={selectedChannel.name}
+            <video
+              controls
+              className="w-full rounded-lg bg-gray-900"
               poster={selectedChannel.bannerUrl}
-            />
+            >
+              <source src={selectedChannel.streamUrl} type="application/x-mpegURL" />
+              Your browser does not support the video tag.
+            </video>
             <div className="mt-4">
               <h2 className="text-2xl font-bold text-white mb-2">
                 {selectedChannel.name}
