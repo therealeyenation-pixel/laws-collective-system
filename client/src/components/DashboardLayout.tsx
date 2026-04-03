@@ -565,6 +565,19 @@ const menuCategories: MenuCategory[] = [
   },
 
   {
+    icon: TrendingUp,
+    label: "Investments",
+    minRole: "admin",
+    defaultOpen: false,
+    items: [
+      { icon: PieChart, label: "Portfolio Dashboard", path: "/investments", minRole: "admin" },
+      { icon: BarChart3, label: "Analytics", path: "/investment-analytics", minRole: "admin" },
+      { icon: Gavel, label: "Governance", path: "/investment-governance", minRole: "admin" },
+      { icon: FileText, label: "Reports", path: "/investment-reports", minRole: "admin" },
+    ]
+  },
+
+  {
     icon: Play,
     label: "Theater & Broadcast",
     minRole: "user",
