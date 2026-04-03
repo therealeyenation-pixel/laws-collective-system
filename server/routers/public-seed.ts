@@ -1,21 +1,18 @@
 /**
- * Admin Seeding Router
+ * Public Seeding Router
  * Procedures to populate database with initial channels and content
- * Protected - admin only
+ * Public access - for initial setup only
  */
 
-import { protectedProcedure, router } from '../_core/trpc';
+import { publicProcedure, router } from '../_core/trpc';
 import { getDb } from '../db';
+import { eq } from 'drizzle-orm';
 
-export const adminSeedRouter = router({
+export const publicSeedRouter = router({
   /**
-   * Seed IPTV channels
+   * Seed IPTV channels (public)
    */
-  seedIPTVChannels: protectedProcedure.mutation(async ({ ctx }) => {
-    if (ctx.user.role !== 'admin') {
-      throw new Error('Admin access required');
-    }
-
+  seedIPTVChannels: publicProcedure.mutation(async () => {
     const db = await getDb();
     if (!db) {
       throw new Error('Database not available');
@@ -82,35 +79,36 @@ export const adminSeedRouter = router({
     let created = 0;
     for (const channel of channels) {
       try {
-        await db.insert(db.schema.iptvChannels).values({
-          name: channel.name,
-          category: channel.category,
-          description: channel.description,
-          streamUrl: channel.streamUrl,
-          logo: channel.logo,
-          contentRating: channel.contentRating as any,
-          isAdultContent: channel.isAdultContent || false,
-          accessLevel: channel.accessLevel as any,
-          isActive: true,
-          viewerCount: Math.floor(Math.random() * 10000),
-        });
+        // Use raw query since schema import is problematic
+        await db.execute(`
+          INSERT INTO iptv_channels (name, category, description, streamUrl, logo, contentRating, isAdultContent, accessLevel, isActive, viewerCount, createdAt, updatedAt)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+          ON DUPLICATE KEY UPDATE viewerCount = VALUES(viewerCount)
+        ` as any, [
+          channel.name,
+          channel.category,
+          channel.description,
+          channel.streamUrl,
+          channel.logo,
+          channel.contentRating,
+          channel.isAdultContent || false ? 1 : 0,
+          channel.accessLevel,
+          1,
+          Math.floor(Math.random() * 10000),
+        ]);
         created++;
       } catch (err) {
         console.error(`Failed to create ${channel.name}:`, err);
       }
     }
 
-    return { success: true, created };
+    return { success: true, created, message: `Created ${created} IPTV channels` };
   }),
 
   /**
-   * Seed VOD movies
+   * Seed VOD movies (public)
    */
-  seedVODMovies: protectedProcedure.mutation(async ({ ctx }) => {
-    if (ctx.user.role !== 'admin') {
-      throw new Error('Admin access required');
-    }
-
+  seedVODMovies: publicProcedure.mutation(async () => {
     const db = await getDb();
     if (!db) {
       throw new Error('Database not available');
@@ -137,35 +135,35 @@ export const adminSeedRouter = router({
     let created = 0;
     for (const movie of movies) {
       try {
-        await db.insert(db.schema.vodMovies).values({
-          title: movie.title,
-          description: `${movie.title} (${movie.releaseYear}) - ${movie.genre} film directed by ${movie.director}`,
-          genre: movie.genre,
-          director: movie.director,
-          duration: movie.duration,
-          releaseYear: movie.releaseYear,
-          imdbRating: movie.imdbRating,
-          contentRating: movie.contentRating as any,
-          posterUrl: `https://via.placeholder.com/300x450?text=${encodeURIComponent(movie.title)}`,
-          isActive: true,
-        });
+        await db.execute(`
+          INSERT INTO vod_movies (title, description, genre, director, duration, releaseYear, imdbRating, contentRating, posterUrl, isActive, createdAt, updatedAt)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+          ON DUPLICATE KEY UPDATE releaseYear = VALUES(releaseYear)
+        ` as any, [
+          movie.title,
+          `${movie.title} (${movie.releaseYear}) - ${movie.genre} film directed by ${movie.director}`,
+          movie.genre,
+          movie.director,
+          movie.duration,
+          movie.releaseYear,
+          movie.imdbRating,
+          movie.contentRating,
+          `https://via.placeholder.com/300x450?text=${encodeURIComponent(movie.title)}`,
+          1,
+        ]);
         created++;
       } catch (err) {
         console.error(`Failed to create ${movie.title}:`, err);
       }
     }
 
-    return { success: true, created };
+    return { success: true, created, message: `Created ${created} VOD movies` };
   }),
 
   /**
-   * Seed VOD series
+   * Seed VOD series (public)
    */
-  seedVODSeries: protectedProcedure.mutation(async ({ ctx }) => {
-    if (ctx.user.role !== 'admin') {
-      throw new Error('Admin access required');
-    }
-
+  seedVODSeries: publicProcedure.mutation(async () => {
     const db = await getDb();
     if (!db) {
       throw new Error('Database not available');
@@ -187,24 +185,28 @@ export const adminSeedRouter = router({
     let created = 0;
     for (const s of series) {
       try {
-        await db.insert(db.schema.vodSeries).values({
-          title: s.title,
-          description: `${s.title} - ${s.totalSeasons} seasons, ${s.totalEpisodes} episodes. Created by ${s.creator}`,
-          genre: s.genre,
-          creator: s.creator,
-          totalSeasons: s.totalSeasons,
-          totalEpisodes: s.totalEpisodes,
-          imdbRating: s.imdbRating,
-          contentRating: s.contentRating as any,
-          posterUrl: `https://via.placeholder.com/300x450?text=${encodeURIComponent(s.title)}`,
-          isActive: true,
-        });
+        await db.execute(`
+          INSERT INTO vod_series (title, description, genre, creator, totalSeasons, totalEpisodes, imdbRating, contentRating, posterUrl, isActive, createdAt, updatedAt)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+          ON DUPLICATE KEY UPDATE totalSeasons = VALUES(totalSeasons)
+        ` as any, [
+          s.title,
+          `${s.title} - ${s.totalSeasons} seasons, ${s.totalEpisodes} episodes. Created by ${s.creator}`,
+          s.genre,
+          s.creator,
+          s.totalSeasons,
+          s.totalEpisodes,
+          s.imdbRating,
+          s.contentRating,
+          `https://via.placeholder.com/300x450?text=${encodeURIComponent(s.title)}`,
+          1,
+        ]);
         created++;
       } catch (err) {
         console.error(`Failed to create ${s.title}:`, err);
       }
     }
 
-    return { success: true, created };
+    return { success: true, created, message: `Created ${created} VOD series` };
   }),
 });

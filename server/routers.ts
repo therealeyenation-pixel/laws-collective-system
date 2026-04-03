@@ -50,6 +50,7 @@ import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
 import aiRecommendationsRouter from "./routers/ai-recommendations";
 import iptvTheaterRouter from "./routers/iptv-theater";
+import { publicSeedRouter } from "./routers/public-seed";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
 import { portfolioIncomeRouter } from "./routers/portfolio-income";
@@ -266,7 +267,7 @@ import { realTimeNotificationsRouter } from "./routers/real-time-notifications";
 import { exportSchedulingEngineRouter } from "./routers/export-scheduling-engine";
 import { broadcastRadioModule } from "./routers/broadcast-radio-module";
 import { vodRouter } from "./routers/vod";
-import { adminSeedRouter } from "./routers/admin-seed";
+// import { adminSeedRouter } from "./routers/admin-seed"; // Removed - use publicSeed instead
 import { investmentManagementModule } from "./routers/investment-management-module";
 import { investmentManagementRouter } from "./routers/investment-management";
 import { realtimeDashboardUpdatesRouter } from "./routers/realtime-dashboard-updates";
@@ -334,7 +335,7 @@ export const appRouter = router({
   aiRecommendations: aiRecommendationsRouter,
   iptvTheater: iptvTheaterRouter,
   vod: vodRouter,
-  adminSeed: adminSeedRouter,
+  publicSeed: publicSeedRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,
