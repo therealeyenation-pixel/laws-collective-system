@@ -347,6 +347,7 @@ import BroadcastChannels from "@/pages/BroadcastChannels";
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
 import AdminSeeding from "@/pages/AdminSeeding";
+import SubscriptionManagement from "@/pages/SubscriptionManagement";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -876,6 +877,7 @@ function Router() {
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
+      <Route path="/subscription-management">{() => <ProtectedRoute component={SubscriptionManagement} />}</Route>
       {/* 404 */}
       <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />
