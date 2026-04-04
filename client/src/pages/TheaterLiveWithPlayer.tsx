@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-
-import { Play, Grid, List } from "lucide-react";
+import { ChannelGuideMenu } from "@/components/ChannelGuideMenu";
+import { Play, Grid, List, Menu } from "lucide-react";
 
 export default function TheaterLiveWithPlayer() {
   const [selectedChannel, setSelectedChannel] = useState<any>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [guideOpen, setGuideOpen] = useState(false);
 
   const { data: channels, isLoading } = trpc.iptvTheater.getChannels.useQuery();
 
@@ -84,6 +85,13 @@ export default function TheaterLiveWithPlayer() {
                 onClick={() => setViewMode("list")}
               >
                 <List className="w-4 h-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setGuideOpen(true)}
+              >
+                <Menu className="w-4 h-4" />
               </Button>
             </div>
           </div>
@@ -198,6 +206,18 @@ export default function TheaterLiveWithPlayer() {
           )}
         </div>
       </div>
+
+      {/* Channel Guide Menu */}
+      <ChannelGuideMenu
+        channels={channels || []}
+        isOpen={guideOpen}
+        onClose={() => setGuideOpen(false)}
+        onSelectChannel={(channel) => {
+          setSelectedChannel(channel);
+          setGuideOpen(false);
+        }}
+        selectedCategory={selectedCategory}
+      />
     </div>
   );
 }
