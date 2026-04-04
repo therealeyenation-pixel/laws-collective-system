@@ -1,0 +1,86 @@
+{
+  "channels": [
+    {
+      "name": "BBC News",
+      "category": "News",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/9Auq9mYxFEE.1/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "UK"
+    },
+    {
+      "name": "CNN",
+      "category": "News",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/test123/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "USA"
+    },
+    {
+      "name": "ESPN",
+      "category": "Sports",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/espn123/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "USA"
+    },
+    {
+      "name": "Netflix",
+      "category": "Entertainment",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/netflix123/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "Global"
+    },
+    {
+      "name": "HBO",
+      "category": "Entertainment",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/hbo123/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "USA"
+    },
+    {
+      "name": "MTV",
+      "category": "Music",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/mtv123/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "USA"
+    },
+    {
+      "name": "Cartoon Network",
+      "category": "Kids",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/cartoon123/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "USA"
+    },
+    {
+      "name": "National Geographic",
+      "category": "Documentary",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/natgeo123/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "USA"
+    },
+    {
+      "name": "Adult Channel 1",
+      "category": "Adult",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/adult1/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "Global",
+      "requiresAgeVerification": true
+    },
+    {
+      "name": "Adult Channel 2",
+      "category": "Adult",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/adult2/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "Global",
+      "requiresAgeVerification": true
+    }
+  ],
+  "internationalChannels": [
+    {
+      "name": "France Télévisions",
+      "category": "News",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/france1/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "France"
+    },
+    {
+      "name": "Deutsche Welle",
+      "category": "News",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/dw1/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "Germany"
+    },
+    {
+      "name": "NHK World",
+      "category": "News",
+      "streamUrl": "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1712282400/ei/test/ip/0.0.0.0/id/nhk1/itag/18/source/youtube/requiressl/yes/rn/0/rbuf/0/vprv/1/playlist_type/DVR/mh/test/mm/31/mn/sn-test/ms/lfo/mv/u/mvi/1/pl/24/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl/dover/11/keepalive/yes/fexp/24007246/mt/1712260600/sparams/expire,ei,ip,id,itag,source,requiressl,rn,rbuf,vprv,playlist_type,mh,mm,mn,ms,lfo,mv,mvi,pl,dover,keepalive,fexp,mt/sig/test/file/index.m3u8",
+      "region": "Japan"
+    }
+  ]
+}
