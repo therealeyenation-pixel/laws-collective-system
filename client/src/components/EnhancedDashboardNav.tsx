@@ -8,7 +8,7 @@ interface NavItem {
   label: string;
   href: string;
   icon: React.ReactNode;
-  category: 'core' | 'analytics' | 'operations' | 'settings';
+  category: 'core' | 'analytics' | 'finance' | 'operations' | 'settings';
   badge?: string;
 }
 
@@ -17,15 +17,20 @@ const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: <BarChart3 className="w-4 h-4" />, category: 'core' },
   { label: 'Email Campaigns', href: '/email-campaigns', icon: <MessageSquare className="w-4 h-4" />, category: 'core' },
   { label: 'Communication Hub', href: '/communication-hub', icon: <MessageSquare className="w-4 h-4" />, category: 'core', badge: 'New' },
+  { label: 'Theater & Broadcast', href: '/theater-player', icon: <BarChart3 className="w-4 h-4" />, category: 'core' },
   
   // Analytics
   { label: 'Campaign Analytics', href: '/email-campaign-analytics', icon: <BarChart3 className="w-4 h-4" />, category: 'analytics' },
   { label: 'Advanced Analytics', href: '/advanced-analytics', icon: <BarChart3 className="w-4 h-4" />, category: 'analytics', badge: 'New' },
   { label: 'Segmentation Engine', href: '/segmentation-engine', icon: <Zap className="w-4 h-4" />, category: 'analytics', badge: 'New' },
   
+  // Finance & Investments
+  { label: 'Investment Dashboard', href: '/investments', icon: <DollarSign className="w-4 h-4" />, category: 'finance' },
+  { label: 'Portfolio Management', href: '/portfolio', icon: <BarChart3 className="w-4 h-4" />, category: 'finance' },
+  { label: 'Financial Reconciliation', href: '/financial-reconciliation', icon: <DollarSign className="w-4 h-4" />, category: 'finance', badge: 'New' },
+  { label: 'Payment Processing', href: '/payment-processing', icon: <DollarSign className="w-4 h-4" />, category: 'finance' },
+  
   // Operations
-  { label: 'Financial Reconciliation', href: '/financial-reconciliation', icon: <DollarSign className="w-4 h-4" />, category: 'operations', badge: 'New' },
-  { label: 'Payment Processing', href: '/payment-processing', icon: <DollarSign className="w-4 h-4" />, category: 'operations' },
   { label: 'Data Export', href: '/data-export', icon: <BarChart3 className="w-4 h-4" />, category: 'operations' },
   
   // Settings
@@ -41,6 +46,7 @@ export function EnhancedDashboardNav() {
   const categories = {
     core: 'Core Features',
     analytics: 'Analytics & Insights',
+    finance: 'Finance & Investments',
     operations: 'Operations',
     settings: 'Settings',
   };

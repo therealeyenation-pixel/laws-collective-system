@@ -282,6 +282,7 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: DollarSign, label: "Finance Dashboard", path: "/dept/finance", minRole: "staff" },
           { icon: DollarSign, label: "Financial Automation", path: "/financial-automation", minRole: "staff" },
+          { icon: TrendingUp, label: "Investments", path: "/investments", minRole: "staff" },
           { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff" },
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },
           { icon: CreditCard, label: "Pricing", path: "/pricing", minRole: "admin" },
