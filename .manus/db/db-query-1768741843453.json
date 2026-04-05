@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO position_requisitions (positionId, positionTitle, department, entity, tier, requestedBy, requestedByName, justification, budgetApproved, salaryRange, urgency, status, createdAt, updatedAt)\nVALUES \n('re-coordinator-1', 'Real Estate Coordinator 1', 'Real Estate', 'L.A.W.S. Collective', 'tier4_coordinator', 1, 'LaShanna Russell', \n'Real Estate Coordinator for lead generation, client intake, market research, and administrative support. No real estate license required. This position supports the Real Estate Managers by sourcing opportunities and qualifying leads across all jurisdictions.',\n'pending', '$52,000 - $72,000', 'medium', 'draft',\nNOW(), NOW())",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO position_requisitions (positionId, positionTitle, department, entity, tier, requestedBy, requestedByName, justification, budgetApproved, salaryRange, urgency, status, createdAt, updatedAt)\nVALUES \n('re-coordinator-1', 'Real Estate Coordinator 1', 'Real Estate', 'L.A.W.S. Collective', 'tier4_coordinator', 1, 'LaShanna Russell', \n'Real Estate Coordinator for lead generation, client intake, market research, and administrative support. No real estate license required. This position supports the Real Estate Managers by sourcing opportunities and qualifying leads across all jurisdictions.',\n'pending', '$52,000 - $72,000', 'medium', 'draft',\nNOW(), NOW())",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 62
-}

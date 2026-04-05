@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS `agents` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `name` varchar(100) NOT NULL,\n  `type` enum('operations','support','education','analytics','guardian','finance','media','outreach','seo','engagement','custom') NOT NULL,\n  `description` text,\n  `avatar` varchar(500),\n  `systemPrompt` text NOT NULL,\n  `capabilities` json,\n  `entityId` int,\n  `isActive` boolean DEFAULT true,\n  `isPublic` boolean DEFAULT false,\n  `createdBy` int,\n  `createdAt` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  `updatedAt` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `agents` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `name` varchar(100) NOT NULL,\n  `type` enum('operations','support','education','analytics','guardian','finance','media','outreach','seo','engagement','custom') NOT NULL,\n  `description` text,\n  `avatar` varchar(500),\n  `systemPrompt` text NOT NULL,\n  `capabilities` json,\n  `entityId` int,\n  `isActive` boolean DEFAULT true,\n  `isPublic` boolean DEFAULT false,\n  `createdBy` int,\n  `createdAt` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  `updatedAt` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 175
-}

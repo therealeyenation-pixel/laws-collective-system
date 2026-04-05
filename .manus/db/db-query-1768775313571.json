@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO entity_bank_accounts (entityId, bankName, accountHolderName, accountType, routingNumber, accountNumber, accountNumberLast4, status, isPrimary, openedAt, notes)\nVALUES (\n  3,\n  'Novo',\n  'La Shanna Keeyon Russell',\n  'checking',\n  '211370150',\n  '100374058',\n  '4058',\n  'active',\n  TRUE,\n  NOW(),\n  'Primary business checking account for Real-Eye-Nation, LLC. Features: Cards, Reserves, Invoices, Novo Funding available.'\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO entity_bank_accounts (entityId, bankName, accountHolderName, accountType, routingNumber, accountNumber, accountNumberLast4, status, isPrimary, openedAt, notes)\nVALUES (\n  3,\n  'Novo',\n  'La Shanna Keeyon Russell',\n  'checking',\n  '211370150',\n  '100374058',\n  '4058',\n  'active',\n  TRUE,\n  NOW(),\n  'Primary business checking account for Real-Eye-Nation, LLC. Features: Cards, Reserves, Invoices, Novo Funding available.'\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 61
-}

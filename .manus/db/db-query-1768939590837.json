@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS chat_participants (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  chatId INT NOT NULL,\n  userId INT NOT NULL,\n  role ENUM('owner', 'admin', 'member') DEFAULT 'member' NOT NULL,\n  isMuted BOOLEAN DEFAULT FALSE,\n  isPinned BOOLEAN DEFAULT FALSE,\n  lastReadAt TIMESTAMP NULL,\n  lastReadMessageId INT,\n  unreadCount INT DEFAULT 0,\n  notificationLevel ENUM('all', 'mentions', 'none') DEFAULT 'all',\n  joinedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  leftAt TIMESTAMP NULL\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS chat_participants (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  chatId INT NOT NULL,\n  userId INT NOT NULL,\n  role ENUM('owner', 'admin', 'member') DEFAULT 'member' NOT NULL,\n  isMuted BOOLEAN DEFAULT FALSE,\n  isPinned BOOLEAN DEFAULT FALSE,\n  lastReadAt TIMESTAMP NULL,\n  lastReadMessageId INT,\n  unreadCount INT DEFAULT 0,\n  notificationLevel ENUM('all', 'mentions', 'none') DEFAULT 'all',\n  joinedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  leftAt TIMESTAMP NULL\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 181
-}

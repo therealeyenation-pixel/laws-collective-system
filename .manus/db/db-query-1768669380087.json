@@ -1,9 +1,0 @@
-{
-  "query": "ALTER TABLE business_entities \nADD COLUMN IF NOT EXISTS ein VARCHAR(20),\nADD COLUMN IF NOT EXISTS stateOfFormation VARCHAR(50),\nADD COLUMN IF NOT EXISTS stateEntityId VARCHAR(50),\nADD COLUMN IF NOT EXISTS formationDate TIMESTAMP,\nADD COLUMN IF NOT EXISTS registeredAddress TEXT,\nADD COLUMN IF NOT EXISTS physicalAddress TEXT;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE business_entities \nADD COLUMN IF NOT EXISTS ein VARCHAR(20),\nADD COLUMN IF NOT EXISTS stateOfFormation VARCHAR(50),\nADD COLUMN IF NOT EXISTS stateEntityId VARCHAR(50),\nADD COLUMN IF NOT EXISTS formationDate TIMESTAMP,\nADD COLUMN IF NOT EXISTS registeredAddress TEXT,\nADD COLUMN IF NOT EXISTS physicalAddress TEXT;",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1734
-}

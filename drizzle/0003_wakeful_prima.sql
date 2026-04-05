@@ -1,1 +1,0 @@
-ALTER TABLE `simulator_sessions` MODIFY COLUMN `simulatorType` enum('business_setup','financial_management','entity_operations','grant_creation') NOT NULL;

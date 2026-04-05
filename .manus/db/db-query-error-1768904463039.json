@@ -1,8 +1,0 @@
-{
-  "query": "SELECT id, title, category, content IS NULL as content_is_null, LENGTH(content) as content_length FROM secure_documents ORDER BY id LIMIT 20;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, title, category, content IS NULL as content_is_null, LENGTH(content) as content_length FROM secure_documents ORDER BY id LIMIT 20;",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'category' in 'field list'"
-  ]
-}

@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO business_entities (userId, name, entityType, status, trustLevel, description, parentEntityId, allocationPercentage) VALUES (1, 'LuvOnPurpose Autonomous Wealth System, LLC', 'llc', 'active', 3, 'Commercial engine for products and IP monetization', 1, 40.00);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO business_entities (userId, name, entityType, status, trustLevel, description, parentEntityId, allocationPercentage) VALUES (1, 'LuvOnPurpose Autonomous Wealth System, LLC', 'llc', 'active', 3, 'Commercial engine for products and IP monetization', 1, 40.00);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 353
-}

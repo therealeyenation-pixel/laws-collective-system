@@ -1,47 +1,19 @@
 {
-  "version": "5",
+  "version": "7",
   "dialect": "mysql",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1773007617193,
-      "tag": "0000_thick_leopardon",
+      "when": 1768354560087,
+      "tag": "0000_glossy_stranger",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1775088432280,
-      "tag": "0001_chemical_sabra",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1775089827263,
-      "tag": "0002_careful_falcon",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1775163340855,
-      "tag": "0003_talented_archangel",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1775163721892,
-      "tag": "0004_sticky_warbound",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1775163897208,
-      "tag": "0005_silly_squadron_sinister",
+      "when": 1768354696016,
+      "tag": "0001_hot_omega_flight",
       "breakpoints": true
     }
   ]

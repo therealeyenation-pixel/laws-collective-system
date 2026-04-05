@@ -1,9 +1,0 @@
-{
-  "query": "INSERT INTO trust_status (trust_name, trust_number, jurisdiction, status)\nVALUES ('The Calea Freeman Trust', '98', 'Jamaica', 'exists_by_number');",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO trust_status (trust_name, trust_number, jurisdiction, status)\nVALUES ('The Calea Freeman Trust', '98', 'Jamaica', 'exists_by_number');",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 92
-}

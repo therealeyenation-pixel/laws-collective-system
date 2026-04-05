@@ -1,8 +1,0 @@
-{
-  "query": "UPDATE position_requisitions SET title = 'Real Estate Manager (Georgia)', requirements = 'Georgia Real Estate Commission license required. Must be licensed broker or agent in good standing.' WHERE title = 'Real Estate Manager (State A)';\n\nUPDATE position_requisitions SET title = 'Real Estate Manager (North Carolina)', requirements = 'North Carolina Real Estate Commission license required. Must be licensed broker or agent in good standing.' WHERE title = 'Real Estate Manager (State B)';",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE position_requisitions SET title = 'Real Estate Manager (Georgia)', requirements = 'Georgia Real Estate Commission license required. Must be licensed broker or agent in good standing.' WHERE title = 'Real Estate Manager (State A)';\n\nUPDATE position_requisitions SET title = 'Real Estate Manager (North Carolina)', requirements = 'North Carolina Real Estate Commission license required. Must be licensed broker or agent in good standing.' WHERE title = 'Real Estate Manager (State B)';",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1054 (42S22) at line 1: Unknown column 'title' in 'where clause'"
-  ]
-}

@@ -51,11 +51,10 @@ describe("auth.logout", () => {
     expect(result).toEqual({ success: true });
     expect(clearedCookies).toHaveLength(1);
     expect(clearedCookies[0]?.name).toBe(COOKIE_NAME);
-    // For localhost, sameSite is 'lax' and secure depends on protocol
     expect(clearedCookies[0]?.options).toMatchObject({
       maxAge: -1,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
       httpOnly: true,
       path: "/",
     });

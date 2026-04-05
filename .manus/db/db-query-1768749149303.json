@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS grant_opportunities (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  funder_name VARCHAR(255) NOT NULL,\n  grant_name VARCHAR(255) NOT NULL,\n  description TEXT,\n  funding_amount_min DECIMAL(12,2),\n  funding_amount_max DECIMAL(12,2),\n  deadline DATE,\n  application_url VARCHAR(500),\n  eligibility_requirements TEXT,\n  focus_areas TEXT,\n  grant_type ENUM('federal', 'state', 'local', 'foundation', 'corporate', 'other') DEFAULT 'foundation',\n  status ENUM('researching', 'eligible', 'not_eligible', 'applied', 'archived') DEFAULT 'researching',\n  priority ENUM('low', 'medium', 'high', 'critical') DEFAULT 'medium',\n  notes TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS grant_opportunities (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  funder_name VARCHAR(255) NOT NULL,\n  grant_name VARCHAR(255) NOT NULL,\n  description TEXT,\n  funding_amount_min DECIMAL(12,2),\n  funding_amount_max DECIMAL(12,2),\n  deadline DATE,\n  application_url VARCHAR(500),\n  eligibility_requirements TEXT,\n  focus_areas TEXT,\n  grant_type ENUM('federal', 'state', 'local', 'foundation', 'corporate', 'other') DEFAULT 'foundation',\n  status ENUM('researching', 'eligible', 'not_eligible', 'applied', 'archived') DEFAULT 'researching',\n  priority ENUM('low', 'medium', 'high', 'critical') DEFAULT 'medium',\n  notes TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 240
-}

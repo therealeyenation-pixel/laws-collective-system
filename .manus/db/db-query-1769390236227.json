@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS compliance_alerts (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  alert_type ENUM('below_target', 'approaching_deadline', 'overdue_spike', 'target_achieved') NOT NULL,\n  severity ENUM('info', 'warning', 'critical') NOT NULL DEFAULT 'warning',\n  department VARCHAR(255) NOT NULL,\n  title VARCHAR(500) NOT NULL,\n  message TEXT NOT NULL,\n  current_value DECIMAL(5,2),\n  threshold_value DECIMAL(5,2),\n  metadata JSON,\n  acknowledged_at TIMESTAMP NULL,\n  acknowledged_by INT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  expires_at TIMESTAMP NULL,\n  INDEX idx_department (department),\n  INDEX idx_alert_type (alert_type),\n  INDEX idx_severity (severity),\n  INDEX idx_acknowledged (acknowledged_at),\n  INDEX idx_created (created_at)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS compliance_alerts (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  alert_type ENUM('below_target', 'approaching_deadline', 'overdue_spike', 'target_achieved') NOT NULL,\n  severity ENUM('info', 'warning', 'critical') NOT NULL DEFAULT 'warning',\n  department VARCHAR(255) NOT NULL,\n  title VARCHAR(500) NOT NULL,\n  message TEXT NOT NULL,\n  current_value DECIMAL(5,2),\n  threshold_value DECIMAL(5,2),\n  metadata JSON,\n  acknowledged_at TIMESTAMP NULL,\n  acknowledged_by INT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  expires_at TIMESTAMP NULL,\n  INDEX idx_department (department),\n  INDEX idx_alert_type (alert_type),\n  INDEX idx_severity (severity),\n  INDEX idx_acknowledged (acknowledged_at),\n  INDEX idx_created (created_at)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 273
-}

@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS course_documents (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  user_id INT NOT NULL,\n  course_type VARCHAR(50) NOT NULL,\n  module_id INT NOT NULL,\n  document_title VARCHAR(255) NOT NULL,\n  document_data JSON,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  UNIQUE KEY unique_user_course_module (user_id, course_type, module_id)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS course_documents (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  user_id INT NOT NULL,\n  course_type VARCHAR(50) NOT NULL,\n  module_id INT NOT NULL,\n  document_title VARCHAR(255) NOT NULL,\n  document_data JSON,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  UNIQUE KEY unique_user_course_module (user_id, course_type, module_id)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 345
-}

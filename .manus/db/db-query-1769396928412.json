@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS mirror_tokens (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  house_id INT NOT NULL,\n  holder_id INT NOT NULL,\n  amount INT NOT NULL DEFAULT 1,\n  locked_until DATETIME NOT NULL,\n  is_locked BOOLEAN DEFAULT TRUE,\n  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  transferred_from INT,\n  INDEX idx_house (house_id),\n  INDEX idx_holder (holder_id)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS mirror_tokens (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  house_id INT NOT NULL,\n  holder_id INT NOT NULL,\n  amount INT NOT NULL DEFAULT 1,\n  locked_until DATETIME NOT NULL,\n  is_locked BOOLEAN DEFAULT TRUE,\n  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  transferred_from INT,\n  INDEX idx_house (house_id),\n  INDEX idx_holder (holder_id)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 212
-}

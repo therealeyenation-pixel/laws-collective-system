@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS game_scores (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  gameType VARCHAR(50) NOT NULL,\n  score INT NOT NULL,\n  difficulty VARCHAR(20) NOT NULL,\n  correctAnswers INT NOT NULL,\n  totalQuestions INT NOT NULL,\n  maxStreak INT NOT NULL DEFAULT 0,\n  tokensEarned INT NOT NULL DEFAULT 0,\n  completedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS game_scores (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  gameType VARCHAR(50) NOT NULL,\n  score INT NOT NULL,\n  difficulty VARCHAR(20) NOT NULL,\n  correctAnswers INT NOT NULL,\n  totalQuestions INT NOT NULL,\n  maxStreak INT NOT NULL DEFAULT 0,\n  tokensEarned INT NOT NULL DEFAULT 0,\n  completedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 366
-}

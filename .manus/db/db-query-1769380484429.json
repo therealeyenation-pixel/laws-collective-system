@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS house_ledgers (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  house_id INT NOT NULL,\n  ledger_name VARCHAR(255) NOT NULL,\n  ledger_type ENUM('house', 'root', 'bloodline', 'mirrored', 'adaptive') DEFAULT 'house',\n  balance DECIMAL(15,2) DEFAULT 0,\n  total_income DECIMAL(15,2) DEFAULT 0,\n  total_distributions DECIMAL(15,2) DEFAULT 0,\n  total_treasury_contributions DECIMAL(15,2) DEFAULT 0,\n  currency VARCHAR(10) DEFAULT 'USD',\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS house_ledgers (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  house_id INT NOT NULL,\n  ledger_name VARCHAR(255) NOT NULL,\n  ledger_type ENUM('house', 'root', 'bloodline', 'mirrored', 'adaptive') DEFAULT 'house',\n  balance DECIMAL(15,2) DEFAULT 0,\n  total_income DECIMAL(15,2) DEFAULT 0,\n  total_distributions DECIMAL(15,2) DEFAULT 0,\n  total_treasury_contributions DECIMAL(15,2) DEFAULT 0,\n  currency VARCHAR(10) DEFAULT 'USD',\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 61
-}

@@ -1,8 +1,0 @@
-{
-  "query": "UPDATE business_plans SET \n  entityName = 'The L.A.W.S. Collective, LLC',\n  entityType = 'LLC'\nWHERE entityName = 'L.A.W.S. Collective';\n\nUPDATE business_plans SET \n  entityName = 'LuvOnPurpose Autonomous Wealth System LLC',\n  entityType = 'LLC'\nWHERE entityName = 'LuvOnPurpose LLC';",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE business_plans SET \n  entityName = 'The L.A.W.S. Collective, LLC',\n  entityType = 'LLC'\nWHERE entityName = 'L.A.W.S. Collective';\n\nUPDATE business_plans SET \n  entityName = 'LuvOnPurpose Autonomous Wealth System LLC',\n  entityType = 'LLC'\nWHERE entityName = 'LuvOnPurpose LLC';",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1265 (01000) at line 1: Data truncated for column '%s' at row %d"
-  ]
-}

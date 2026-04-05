@@ -1,9 +1,0 @@
-{
-  "query": "\nCREATE TABLE IF NOT EXISTS trial_feedback (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  trialUserId INT NOT NULL,\n  trialSessionId INT,\n  feedbackType ENUM('overall_rating', 'feature_rating', 'bug_report', 'suggestion', 'exit_survey', 'inline_comment') NOT NULL,\n  rating INT,\n  featureName VARCHAR(100),\n  pagePath VARCHAR(500),\n  comment TEXT,\n  wantsResponse BOOLEAN DEFAULT FALSE NOT NULL,\n  responseStatus ENUM('pending', 'responded', 'closed') DEFAULT 'pending',\n  respondedAt TIMESTAMP NULL,\n  respondedBy INT,\n  responseNote TEXT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  INDEX idx_feedback_user (trialUserId),\n  FOREIGN KEY (trialUserId) REFERENCES trial_users(id) ON DELETE CASCADE\n);\n",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute \nCREATE TABLE IF NOT EXISTS trial_feedback (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  trialUserId INT NOT NULL,\n  trialSessionId INT,\n  feedbackType ENUM('overall_rating', 'feature_rating', 'bug_report', 'suggestion', 'exit_survey', 'inline_comment') NOT NULL,\n  rating INT,\n  featureName VARCHAR(100),\n  pagePath VARCHAR(500),\n  comment TEXT,\n  wantsResponse BOOLEAN DEFAULT FALSE NOT NULL,\n  responseStatus ENUM('pending', 'responded', 'closed') DEFAULT 'pending',\n  respondedAt TIMESTAMP NULL,\n  respondedBy INT,\n  responseNote TEXT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  INDEX idx_feedback_user (trialUserId),\n  FOREIGN KEY (trialUserId) REFERENCES trial_users(id) ON DELETE CASCADE\n);\n",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 1092
-}

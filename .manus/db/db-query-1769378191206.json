@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS game_save_states (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  playerId INT NOT NULL,\n  gameId INT NOT NULL,\n  matchId INT,\n  saveName VARCHAR(100),\n  saveType ENUM('manual', 'auto', 'checkpoint') DEFAULT 'auto' NOT NULL,\n  gameState JSON NOT NULL,\n  score INT DEFAULT 0,\n  progress INT DEFAULT 0,\n  playTime INT DEFAULT 0,\n  difficulty ENUM('easy', 'medium', 'hard') DEFAULT 'medium',\n  isActive BOOLEAN DEFAULT TRUE NOT NULL,\n  savedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  expiresAt TIMESTAMP NULL,\n  INDEX idx_player_game (playerId, gameId),\n  INDEX idx_active (isActive)\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS game_save_states (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  playerId INT NOT NULL,\n  gameId INT NOT NULL,\n  matchId INT,\n  saveName VARCHAR(100),\n  saveType ENUM('manual', 'auto', 'checkpoint') DEFAULT 'auto' NOT NULL,\n  gameState JSON NOT NULL,\n  score INT DEFAULT 0,\n  progress INT DEFAULT 0,\n  playTime INT DEFAULT 0,\n  difficulty ENUM('easy', 'medium', 'hard') DEFAULT 'medium',\n  isActive BOOLEAN DEFAULT TRUE NOT NULL,\n  savedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  expiresAt TIMESTAMP NULL,\n  INDEX idx_player_game (playerId, gameId),\n  INDEX idx_active (isActive)\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 190
-}

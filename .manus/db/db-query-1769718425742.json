@@ -1,9 +1,0 @@
-{
-  "query": "CREATE TABLE IF NOT EXISTS course_purchases (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  customerEmail VARCHAR(255) NOT NULL,\n  customerName VARCHAR(255),\n  userId INT,\n  productId VARCHAR(255) NOT NULL,\n  productName VARCHAR(255) NOT NULL,\n  productType ENUM('course', 'bundle') DEFAULT 'course' NOT NULL,\n  amount DECIMAL(10,2) NOT NULL,\n  currency VARCHAR(10) DEFAULT 'USD' NOT NULL,\n  stripeSessionId VARCHAR(255),\n  stripePaymentIntentId VARCHAR(255),\n  paymentStatus ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending' NOT NULL,\n  accessGranted BOOLEAN DEFAULT FALSE NOT NULL,\n  accessExpiresAt TIMESTAMP NULL,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  completedAt TIMESTAMP NULL\n);",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS course_purchases (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  customerEmail VARCHAR(255) NOT NULL,\n  customerName VARCHAR(255),\n  userId INT,\n  productId VARCHAR(255) NOT NULL,\n  productName VARCHAR(255) NOT NULL,\n  productType ENUM('course', 'bundle') DEFAULT 'course' NOT NULL,\n  amount DECIMAL(10,2) NOT NULL,\n  currency VARCHAR(10) DEFAULT 'USD' NOT NULL,\n  stripeSessionId VARCHAR(255),\n  stripePaymentIntentId VARCHAR(255),\n  paymentStatus ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending' NOT NULL,\n  accessGranted BOOLEAN DEFAULT FALSE NOT NULL,\n  accessExpiresAt TIMESTAMP NULL,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  completedAt TIMESTAMP NULL\n);",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 199
-}
