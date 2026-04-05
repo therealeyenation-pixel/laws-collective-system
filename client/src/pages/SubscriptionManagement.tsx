@@ -47,9 +47,9 @@ export default function SubscriptionManagement() {
 
     // Map plan ID to Stripe price ID (you'll need to set these in your Stripe dashboard)
     const priceMap: Record<string, string> = {
-      verified_18: import.meta.env.VITE_STRIPE_PRICE_18 || "price_18",
-      verified_21: import.meta.env.VITE_STRIPE_PRICE_21 || "price_21",
-      premium: import.meta.env.VITE_STRIPE_PRICE_PREMIUM || "price_premium",
+      verified_18: process.env.VITE_STRIPE_PRICE_18 || "price_18",
+      verified_21: process.env.VITE_STRIPE_PRICE_21 || "price_21",
+      premium: process.env.VITE_STRIPE_PRICE_PREMIUM || "price_premium",
     };
 
     createCheckoutMutation.mutate({

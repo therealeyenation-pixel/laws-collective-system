@@ -11477,19 +11477,3 @@ All 10 base IPTV channels now have real HLS stream URLs and are ready for video 
 4. Test M3U import workflow for bulk channel import
 5. Expand to 11,000+ channels via bulk import
 
-
-
-## Phase 73: Fix Page Link and Video Player Issues
-
-### Issues Reported
-- [ ] Page link broken - theater-player route not loading properly
-- [ ] Video player not working - HLS stream not playing
-
-### Investigation Tasks
-- [ ] Check ProtectedRoute wrapper implementation
-- [ ] Verify HLS.js or video.js integration for M3U8 playback
-- [ ] Test stream URL format and accessibility
-- [ ] Check browser console for JavaScript errors
-- [ ] Verify CORS headers for stream URLs
-
-### Status: IN PROGRESS

@@ -57,9 +57,6 @@ import { m3uBulkImportRouter } from './routers/m3u-bulk-import';
 import { updateStreamsDirectRouter } from './routers/update-streams-direct';
 import { internationalChannelsSeedRouter } from "./routers/international-channels-seed";
 import { populateStreamUrlsRouter } from "./routers/populate-stream-urls";
-import { verifyStreamUrlsRouter } from "./routers/verify-stream-urls";
-import { stripeIntegrationRouter } from "./routers/stripe-integration";
-import { m3uImportEnhancedRouter } from "./routers/m3u-import-enhanced";
 import { epgGuideRouter } from './routers/epg-guide';
 
 import { brainAutomationRouter } from "./routers/brain-automation";
@@ -353,9 +350,6 @@ export const appRouter = router({
   updateStreams: updateStreamsDirectRouter,
   internationalSeed: internationalChannelsSeedRouter,
   populateStreamUrls: populateStreamUrlsRouter,
-  verifyStreamUrls: verifyStreamUrlsRouter,
-  stripeIntegration: stripeIntegrationRouter,
-  m3uImportEnhanced: m3uImportEnhancedRouter,
   epg: epgGuideRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
