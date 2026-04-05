@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE `landing_page_analytics` MODIFY COLUMN `eventType` enum('page_view','qr_scan','intro_slideshow_start','intro_slideshow_complete','name_input_start','name_input_submit','results_slideshow_start','results_slideshow_complete','waitlist_signup','sign_in_click','get_started_click') NOT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE `landing_page_analytics` MODIFY COLUMN `eventType` enum('page_view','qr_scan','intro_slideshow_start','intro_slideshow_complete','name_input_start','name_input_submit','results_slideshow_start','results_slideshow_complete','waitlist_signup','sign_in_click','get_started_click') NOT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1038
+}

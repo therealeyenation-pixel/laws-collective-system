@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS board_meetings (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  entityId INT NOT NULL,\n  meetingType ENUM('regular', 'special', 'annual', 'emergency') NOT NULL DEFAULT 'regular',\n  title VARCHAR(255) NOT NULL,\n  scheduledDate TIMESTAMP NOT NULL,\n  location VARCHAR(255),\n  isVirtual BOOLEAN DEFAULT TRUE,\n  virtualLink TEXT,\n  status ENUM('scheduled', 'in_progress', 'completed', 'cancelled', 'postponed') NOT NULL DEFAULT 'scheduled',\n  quorumRequired INT DEFAULT 3,\n  quorumMet BOOLEAN DEFAULT FALSE,\n  agenda TEXT,\n  minutes TEXT,\n  attendees JSON,\n  createdBy INT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS board_meetings (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  entityId INT NOT NULL,\n  meetingType ENUM('regular', 'special', 'annual', 'emergency') NOT NULL DEFAULT 'regular',\n  title VARCHAR(255) NOT NULL,\n  scheduledDate TIMESTAMP NOT NULL,\n  location VARCHAR(255),\n  isVirtual BOOLEAN DEFAULT TRUE,\n  virtualLink TEXT,\n  status ENUM('scheduled', 'in_progress', 'completed', 'cancelled', 'postponed') NOT NULL DEFAULT 'scheduled',\n  quorumRequired INT DEFAULT 3,\n  quorumMet BOOLEAN DEFAULT FALSE,\n  agenda TEXT,\n  minutes TEXT,\n  attendees JSON,\n  createdBy INT,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 178
+}

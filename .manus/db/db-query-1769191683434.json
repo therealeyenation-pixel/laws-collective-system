@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `investor_partners` (\n  `id` INT AUTO_INCREMENT PRIMARY KEY,\n  `name` VARCHAR(255) NOT NULL,\n  `entityType` ENUM('individual', 'company', 'fund', 'family_office', 'strategic_partner') NOT NULL,\n  `tier` ENUM('strategic_partner', 'limited_partner', 'equity_investor') NOT NULL,\n  `contactName` VARCHAR(255),\n  `contactEmail` VARCHAR(255),\n  `contactPhone` VARCHAR(50),\n  `address` TEXT,\n  `taxId` VARCHAR(100),\n  `accreditedInvestor` BOOLEAN NOT NULL DEFAULT FALSE,\n  `status` ENUM('prospect', 'active', 'inactive', 'exited') NOT NULL DEFAULT 'prospect',\n  `relationshipStartDate` TIMESTAMP,\n  `notes` TEXT,\n  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `investor_partners` (\n  `id` INT AUTO_INCREMENT PRIMARY KEY,\n  `name` VARCHAR(255) NOT NULL,\n  `entityType` ENUM('individual', 'company', 'fund', 'family_office', 'strategic_partner') NOT NULL,\n  `tier` ENUM('strategic_partner', 'limited_partner', 'equity_investor') NOT NULL,\n  `contactName` VARCHAR(255),\n  `contactEmail` VARCHAR(255),\n  `contactPhone` VARCHAR(50),\n  `address` TEXT,\n  `taxId` VARCHAR(100),\n  `accreditedInvestor` BOOLEAN NOT NULL DEFAULT FALSE,\n  `status` ENUM('prospect', 'active', 'inactive', 'exited') NOT NULL DEFAULT 'prospect',\n  `relationshipStartDate` TIMESTAMP,\n  `notes` TEXT,\n  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 271
+}

@@ -1,0 +1,297 @@
+{
+  "query": "SELECT id, openId, name, email, role FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, openId, name, email, role FROM users;",
+  "rows": [
+    {
+      "id": "1",
+      "openId": "Ls3zKcDhAdCKDwudn4kGB6",
+      "name": "LaShanna Russell",
+      "email": "therealeyenation@gmail.com",
+      "role": "admin"
+    },
+    {
+      "id": "150031",
+      "openId": "test-user-1768448710116",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "630001",
+      "openId": "test-user-1768571714323",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "630002",
+      "openId": "test-user-1768571899277",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "630003",
+      "openId": "test-user-1768571935136",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "630004",
+      "openId": "test-user-1768571954894",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "660001",
+      "openId": "test-user-1768573338461",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "720001",
+      "openId": "test-user-1768578389491",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "750001",
+      "openId": "test-user-1768579463613",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "750004",
+      "openId": "test-user-1768579570560",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "780006",
+      "openId": "test-user-1768582093867",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "780007",
+      "openId": "test-user-1768582146971",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "810009",
+      "openId": "test-user-1768583390208",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "900007",
+      "openId": "test-user-1768587903438",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "900014",
+      "openId": "test-user-1768588538693",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "900016",
+      "openId": "test-user-1768589285699",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "900023",
+      "openId": "test-user-1768590479024",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "900026",
+      "openId": "test-user-1768590570829",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "930001",
+      "openId": "test-user-1768591544748",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "930010",
+      "openId": "test-user-1768591690270",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "930013",
+      "openId": "test-user-1768591747817",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "930015",
+      "openId": "test-user-1768592359812",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "930016",
+      "openId": "test-user-1768592385352",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960001",
+      "openId": "test-user-1768595014149",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960005",
+      "openId": "test-user-1768595984844",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960006",
+      "openId": "test-user-1768596024471",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960007",
+      "openId": "test-user-1768596274979",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960021",
+      "openId": "test-user-1768596758223",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960031",
+      "openId": "test-user-1768597261135",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960037",
+      "openId": "test-user-1768597797550",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "960069",
+      "openId": "test-user-1768598661406",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "1050001",
+      "openId": "test-user-1768602281921",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "1050015",
+      "openId": "test-user-1768602825773",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "1050030",
+      "openId": "test-user-1768603272004",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "1050031",
+      "openId": "test-user-1768603637577",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "admin"
+    },
+    {
+      "id": "1050102",
+      "openId": "test-user-1768605321717",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user"
+    },
+    {
+      "id": "1050103",
+      "openId": "test-user-1768605681786",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user"
+    },
+    {
+      "id": "1050145",
+      "openId": "test-user-1768606771971",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user"
+    },
+    {
+      "id": "1080001",
+      "openId": "test-user-1768607908807",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user"
+    },
+    {
+      "id": "1140003",
+      "openId": "test-user-1768611554053",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user"
+    },
+    {
+      "id": "1170003",
+      "openId": "test-user-1768613338527",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\temail\trole\n1\tLs3zKcDhAdCKDwudn4kGB6\tLaShanna Russell\ttherealeyenation@gmail.com\tadmin\n150031\ttest-user-1768448710116\tTest User\ttest@example.com\tadmin\n630001\ttest-user-1768571714323\tTest User\ttest@example.com\tadmin\n630002\ttest-user-1768571899277\tTest User\ttest@example.com\tadmin\n630003\ttest-user-1768571935136\tTest User\ttest@example.com\tadmin\n630004\ttest-user-1768571954894\tTest User\ttest@example.com\tadmin\n660001\ttest-user-1768573338461\tTest User\ttest@example.com\tadmin\n720001\ttest-user-1768578389491\tTest User\ttest@example.com\tadmin\n750001\ttest-user-1768579463613\tTest User\ttest@example.com\tadmin\n750004\ttest-user-1768579570560\tTest User\ttest@example.com\tadmin\n780006\ttest-user-1768582093867\tTest User\ttest@example.com\tadmin\n780007\ttest-user-1768582146971\tTest User\ttest@example.com\tadmin\n810009\ttest-user-1768583390208\tTest User\ttest@example.com\tadmin\n900007\ttest-user-1768587903438\tTest User\ttest@example.com\tadmin\n900014\ttest-user-1768588538693\tTest User\ttest@example.com\tadmin\n900016\ttest-user-1768589285699\tTest User\ttest@example.com\tadmin\n900023\ttest-user-1768590479024\tTest User\ttest@example.com\tadmin\n900026\ttest-user-1768590570829\tTest User\ttest@example.com\tadmin\n930001\ttest-user-1768591544748\tTest User\ttest@example.com\tadmin\n930010\ttest-user-1768591690270\tTest User\ttest@example.com\tadmin\n930013\ttest-user-1768591747817\tTest User\ttest@example.com\tadmin\n930015\ttest-user-1768592359812\tTest User\ttest@example.com\tadmin\n930016\ttest-user-1768592385352\tTest User\ttest@example.com\tadmin\n960001\ttest-user-1768595014149\tTest User\ttest@example.com\tadmin\n960005\ttest-user-1768595984844\tTest User\ttest@example.com\tadmin\n960006\ttest-user-1768596024471\tTest User\ttest@example.com\tadmin\n960007\ttest-user-1768596274979\tTest User\ttest@example.com\tadmin\n960021\ttest-user-1768596758223\tTest User\ttest@example.com\tadmin\n960031\ttest-user-1768597261135\tTest User\ttest@example.com\tadmin\n960037\ttest-user-1768597797550\tTest User\ttest@example.com\tadmin\n960069\ttest-user-1768598661406\tTest User\ttest@example.com\tadmin\n1050001\ttest-user-1768602281921\tTest User\ttest@example.com\tadmin\n1050015\ttest-user-1768602825773\tTest User\ttest@example.com\tadmin\n1050030\ttest-user-1768603272004\tTest User\ttest@example.com\tadmin\n1050031\ttest-user-1768603637577\tTest User\ttest@example.com\tadmin\n1050102\ttest-user-1768605321717\tTest User\ttest@example.com\tuser\n1050103\ttest-user-1768605681786\tTest User\ttest@example.com\tuser\n1050145\ttest-user-1768606771971\tTest User\ttest@example.com\tuser\n1080001\ttest-user-1768607908807\tTest User\ttest@example.com\tuser\n1140003\ttest-user-1768611554053\tTest User\ttest@example.com\tuser\n1170003\ttest-user-1768613338527\tTest User\ttest@example.com\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

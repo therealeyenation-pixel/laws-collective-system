@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE business_plans SET fundingPurpose = 'The Calea Freeman Family Trust requires funding to establish and manage family assets that support multi-generational wealth building and legacy preservation. As a holding entity for intellectual property, real estate, and investment assets, the Trust needs resources to properly structure asset protection strategies, establish scholarship endowments for family education, acquire income-producing properties, and create sustainable distributions that benefit current and future generations while maintaining tax efficiency and legal compliance.' WHERE entityName = 'Calea Freeman Family Trust';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE business_plans SET fundingPurpose = 'The Calea Freeman Family Trust requires funding to establish and manage family assets that support multi-generational wealth building and legacy preservation. As a holding entity for intellectual property, real estate, and investment assets, the Trust needs resources to properly structure asset protection strategies, establish scholarship endowments for family education, acquire income-producing properties, and create sustainable distributions that benefit current and future generations while maintaining tax efficiency and legal compliance.' WHERE entityName = 'Calea Freeman Family Trust';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 64
+}

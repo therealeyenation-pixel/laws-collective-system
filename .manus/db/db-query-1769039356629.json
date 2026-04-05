@@ -1,0 +1,22 @@
+{
+  "query": "SHOW TABLES LIKE 'grant%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SHOW TABLES LIKE 'grant%';",
+  "rows": [
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (grant%)": "grant_applications"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (grant%)": "grant_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (grant%)": "grant_opportunities"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (grant%)": "grant_reporting"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_SPWUc63a3tjYuzCxiuEomB (grant%)\ngrant_applications\ngrant_documents\ngrant_opportunities\ngrant_reporting\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}

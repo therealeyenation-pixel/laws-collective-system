@@ -1,0 +1,110 @@
+{
+  "query": "SELECT id, title, LEFT(fileUrl, 50) as url_preview FROM secure_documents ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, title, LEFT(fileUrl, 50) as url_preview FROM secure_documents ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "98 Trust - CALEA Freeman Family Trust Business Plan",
+      "url_preview": "NULL"
+    },
+    {
+      "id": "2",
+      "title": "LuvOnPurpose Autonomous Wealth System, LLC Business Plan",
+      "url_preview": "NULL"
+    },
+    {
+      "id": "3",
+      "title": "The L.A.W.S. Collective LLC Business Plan",
+      "url_preview": "NULL"
+    },
+    {
+      "id": "4",
+      "title": "Real-Eye-Nation Business Plan",
+      "url_preview": "NULL"
+    },
+    {
+      "id": "5",
+      "title": "508-LuvOnPurpose Academy and Outreach Business Plan",
+      "url_preview": "NULL"
+    },
+    {
+      "id": "6",
+      "title": "Grant Application Template - Community Education Program",
+      "url_preview": "NULL"
+    },
+    {
+      "id": "30001",
+      "title": "Test",
+      "url_preview": "NULL"
+    },
+    {
+      "id": "60001",
+      "title": "L.A.W.S. Collective LLC Operating Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60002",
+      "title": "LuvOnPurpose AWS LLC Operating Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60003",
+      "title": "Real-Eye-Nation LLC Operating Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60004",
+      "title": "508-LuvOnPurpose Academy Bylaws",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60005",
+      "title": "CALEA Freeman Family Trust Declaration",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60006",
+      "title": "CALEA Freeman Family Trust Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60007",
+      "title": "L.A.W.S. Collective LLC Operating Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60008",
+      "title": "LuvOnPurpose AWS LLC Operating Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60009",
+      "title": "Real-Eye-Nation LLC Operating Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60010",
+      "title": "508-LuvOnPurpose Academy Bylaws",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60011",
+      "title": "CALEA Freeman Family Trust Declaration",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60012",
+      "title": "CALEA Freeman Family Trust Agreement",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    },
+    {
+      "id": "60013",
+      "title": "Management Services Agreement Template",
+      "url_preview": "https://files.manuscdn.com/user_upload_by_module/s"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\turl_preview\n1\t98 Trust - CALEA Freeman Family Trust Business Plan\tNULL\n2\tLuvOnPurpose Autonomous Wealth System, LLC Business Plan\tNULL\n3\tThe L.A.W.S. Collective LLC Business Plan\tNULL\n4\tReal-Eye-Nation Business Plan\tNULL\n5\t508-LuvOnPurpose Academy and Outreach Business Plan\tNULL\n6\tGrant Application Template - Community Education Program\tNULL\n30001\tTest\tNULL\n60001\tL.A.W.S. Collective LLC Operating Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60002\tLuvOnPurpose AWS LLC Operating Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60003\tReal-Eye-Nation LLC Operating Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60004\t508-LuvOnPurpose Academy Bylaws\thttps://files.manuscdn.com/user_upload_by_module/s\n60005\tCALEA Freeman Family Trust Declaration\thttps://files.manuscdn.com/user_upload_by_module/s\n60006\tCALEA Freeman Family Trust Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60007\tL.A.W.S. Collective LLC Operating Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60008\tLuvOnPurpose AWS LLC Operating Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60009\tReal-Eye-Nation LLC Operating Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60010\t508-LuvOnPurpose Academy Bylaws\thttps://files.manuscdn.com/user_upload_by_module/s\n60011\tCALEA Freeman Family Trust Declaration\thttps://files.manuscdn.com/user_upload_by_module/s\n60012\tCALEA Freeman Family Trust Agreement\thttps://files.manuscdn.com/user_upload_by_module/s\n60013\tManagement Services Agreement Template\thttps://files.manuscdn.com/user_upload_by_module/s\n",
+  "stderr": "",
+  "execution_time_ms": 50
+}

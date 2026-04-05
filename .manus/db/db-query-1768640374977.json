@@ -1,0 +1,40 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'business_plans' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'business_plans' LIMIT 10;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "entityType"
+    },
+    {
+      "COLUMN_NAME": "entityName"
+    },
+    {
+      "COLUMN_NAME": "houseId"
+    },
+    {
+      "COLUMN_NAME": "createdByUserId"
+    },
+    {
+      "COLUMN_NAME": "missionStatement"
+    },
+    {
+      "COLUMN_NAME": "visionStatement"
+    },
+    {
+      "COLUMN_NAME": "organizationDescription"
+    },
+    {
+      "COLUMN_NAME": "yearFounded"
+    },
+    {
+      "COLUMN_NAME": "productsServices"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\nentityType\nentityName\nhouseId\ncreatedByUserId\nmissionStatement\nvisionStatement\norganizationDescription\nyearFounded\nproductsServices\n",
+  "stderr": "",
+  "execution_time_ms": 89
+}

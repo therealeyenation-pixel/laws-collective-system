@@ -1,0 +1,60 @@
+{
+  "query": "SELECT id, ownerId, title FROM secure_documents LIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, ownerId, title FROM secure_documents LIMIT 10",
+  "rows": [
+    {
+      "id": "1",
+      "ownerId": "1",
+      "title": "98 Trust - CALEA Freeman Family Trust Business Plan"
+    },
+    {
+      "id": "2",
+      "ownerId": "1",
+      "title": "LuvOnPurpose Autonomous Wealth System, LLC Business Plan"
+    },
+    {
+      "id": "3",
+      "ownerId": "1",
+      "title": "The L.A.W.S. Collective LLC Business Plan"
+    },
+    {
+      "id": "4",
+      "ownerId": "1",
+      "title": "Real-Eye-Nation Business Plan"
+    },
+    {
+      "id": "5",
+      "ownerId": "1",
+      "title": "508-LuvOnPurpose Academy and Outreach Business Plan"
+    },
+    {
+      "id": "6",
+      "ownerId": "1",
+      "title": "Grant Application Template - Community Education Program"
+    },
+    {
+      "id": "30001",
+      "ownerId": "1",
+      "title": "Test"
+    },
+    {
+      "id": "60001",
+      "ownerId": "1",
+      "title": "L.A.W.S. Collective LLC Operating Agreement"
+    },
+    {
+      "id": "60002",
+      "ownerId": "1",
+      "title": "LuvOnPurpose AWS LLC Operating Agreement"
+    },
+    {
+      "id": "60003",
+      "ownerId": "1",
+      "title": "Real-Eye-Nation LLC Operating Agreement"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\townerId\ttitle\n1\t1\t98 Trust - CALEA Freeman Family Trust Business Plan\n2\t1\tLuvOnPurpose Autonomous Wealth System, LLC Business Plan\n3\t1\tThe L.A.W.S. Collective LLC Business Plan\n4\t1\tReal-Eye-Nation Business Plan\n5\t1\t508-LuvOnPurpose Academy and Outreach Business Plan\n6\t1\tGrant Application Template - Community Education Program\n30001\t1\tTest\n60001\t1\tL.A.W.S. Collective LLC Operating Agreement\n60002\t1\tLuvOnPurpose AWS LLC Operating Agreement\n60003\t1\tReal-Eye-Nation LLC Operating Agreement\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

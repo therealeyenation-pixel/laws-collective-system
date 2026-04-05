@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS system_job_configurations (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  job_name VARCHAR(100) NOT NULL UNIQUE,\n  description TEXT NULL,\n  cron_schedule VARCHAR(50) NOT NULL,\n  timezone VARCHAR(50) DEFAULT 'America/Chicago' NOT NULL,\n  is_active BOOLEAN DEFAULT TRUE NOT NULL,\n  last_run_at TIMESTAMP NULL,\n  last_run_status ENUM('completed', 'failed') NULL,\n  next_scheduled_run TIMESTAMP NULL,\n  notify_on_success BOOLEAN DEFAULT FALSE NOT NULL,\n  notify_on_failure BOOLEAN DEFAULT TRUE NOT NULL,\n  notification_recipients JSON NULL,\n  max_retries INT DEFAULT 3 NOT NULL,\n  retry_delay_seconds INT DEFAULT 300 NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS system_job_configurations (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  job_name VARCHAR(100) NOT NULL UNIQUE,\n  description TEXT NULL,\n  cron_schedule VARCHAR(50) NOT NULL,\n  timezone VARCHAR(50) DEFAULT 'America/Chicago' NOT NULL,\n  is_active BOOLEAN DEFAULT TRUE NOT NULL,\n  last_run_at TIMESTAMP NULL,\n  last_run_status ENUM('completed', 'failed') NULL,\n  next_scheduled_run TIMESTAMP NULL,\n  notify_on_success BOOLEAN DEFAULT FALSE NOT NULL,\n  notify_on_failure BOOLEAN DEFAULT TRUE NOT NULL,\n  notification_recipients JSON NULL,\n  max_retries INT DEFAULT 3 NOT NULL,\n  retry_delay_seconds INT DEFAULT 300 NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 181
+}

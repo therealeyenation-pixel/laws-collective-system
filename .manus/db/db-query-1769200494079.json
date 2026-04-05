@@ -1,0 +1,100 @@
+{
+  "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'design_submissions' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'design_submissions' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id"
+    },
+    {
+      "COLUMN_NAME": "title"
+    },
+    {
+      "COLUMN_NAME": "description"
+    },
+    {
+      "COLUMN_NAME": "category"
+    },
+    {
+      "COLUMN_NAME": "product_type"
+    },
+    {
+      "COLUMN_NAME": "design_concept"
+    },
+    {
+      "COLUMN_NAME": "target_audience"
+    },
+    {
+      "COLUMN_NAME": "estimated_cost"
+    },
+    {
+      "COLUMN_NAME": "estimated_price"
+    },
+    {
+      "COLUMN_NAME": "submitted_by_id"
+    },
+    {
+      "COLUMN_NAME": "submitted_by_name"
+    },
+    {
+      "COLUMN_NAME": "department"
+    },
+    {
+      "COLUMN_NAME": "house_id"
+    },
+    {
+      "COLUMN_NAME": "status"
+    },
+    {
+      "COLUMN_NAME": "priority"
+    },
+    {
+      "COLUMN_NAME": "mockup_urls"
+    },
+    {
+      "COLUMN_NAME": "attachments"
+    },
+    {
+      "COLUMN_NAME": "notes"
+    },
+    {
+      "COLUMN_NAME": "created_at"
+    },
+    {
+      "COLUMN_NAME": "updated_at"
+    },
+    {
+      "COLUMN_NAME": "submitted_at"
+    },
+    {
+      "COLUMN_NAME": "approved_at"
+    },
+    {
+      "COLUMN_NAME": "approved_by_id"
+    },
+    {
+      "COLUMN_NAME": "approved_by_name"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approval"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approver_id"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approval_date"
+    },
+    {
+      "COLUMN_NAME": "founding_house_approval_notes"
+    },
+    {
+      "COLUMN_NAME": "is_original_design"
+    },
+    {
+      "COLUMN_NAME": "is_logo_design"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\nid\ntitle\ndescription\ncategory\nproduct_type\ndesign_concept\ntarget_audience\nestimated_cost\nestimated_price\nsubmitted_by_id\nsubmitted_by_name\ndepartment\nhouse_id\nstatus\npriority\nmockup_urls\nattachments\nnotes\ncreated_at\nupdated_at\nsubmitted_at\napproved_at\napproved_by_id\napproved_by_name\nfounding_house_approval\nfounding_house_approver_id\nfounding_house_approval_date\nfounding_house_approval_notes\nis_original_design\nis_logo_design\n",
+  "stderr": "",
+  "execution_time_ms": 66
+}

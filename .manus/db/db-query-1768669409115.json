@@ -1,0 +1,82 @@
+{
+  "query": "SELECT id, name, entityType, status, ein, stateOfFormation FROM business_entities ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, entityType, status, ein, stateOfFormation FROM business_entities ORDER BY id;",
+  "rows": [
+    {
+      "id": "6",
+      "name": "98 Trust - CALEA Freeman Family Trust",
+      "entityType": "trust",
+      "status": "active",
+      "ein": "NULL",
+      "stateOfFormation": "NULL"
+    },
+    {
+      "id": "7",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "status": "active",
+      "ein": "NULL",
+      "stateOfFormation": "NULL"
+    },
+    {
+      "id": "8",
+      "name": "The L.A.W.S. Collective LLC",
+      "entityType": "collective",
+      "status": "active",
+      "ein": "NULL",
+      "stateOfFormation": "NULL"
+    },
+    {
+      "id": "9",
+      "name": "Real-Eye-Nation",
+      "entityType": "llc",
+      "status": "active",
+      "ein": "NULL",
+      "stateOfFormation": "NULL"
+    },
+    {
+      "id": "10",
+      "name": "508-LuvOnPurpose Academy and Outreach",
+      "entityType": "collective",
+      "status": "active",
+      "ein": "NULL",
+      "stateOfFormation": "NULL"
+    },
+    {
+      "id": "30001",
+      "name": "LuvOnPurpose Autonomous Wealth System LLC",
+      "entityType": "llc",
+      "status": "active",
+      "ein": "NULL",
+      "stateOfFormation": "Delaware"
+    },
+    {
+      "id": "30002",
+      "name": "The L.A.W.S. Collective, LLC",
+      "entityType": "collective",
+      "status": "active",
+      "ein": "39-3122993",
+      "stateOfFormation": "Delaware"
+    },
+    {
+      "id": "30003",
+      "name": "Real-Eye-Nation LLC",
+      "entityType": "llc",
+      "status": "active",
+      "ein": "84-4976416",
+      "stateOfFormation": "Georgia"
+    },
+    {
+      "id": "30004",
+      "name": "LuvOnPurpose Outreach Temple and Academy Society",
+      "entityType": "trust",
+      "status": "draft",
+      "ein": "NULL",
+      "stateOfFormation": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tentityType\tstatus\tein\tstateOfFormation\n6\t98 Trust - CALEA Freeman Family Trust\ttrust\tactive\tNULL\tNULL\n7\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\tactive\tNULL\tNULL\n8\tThe L.A.W.S. Collective LLC\tcollective\tactive\tNULL\tNULL\n9\tReal-Eye-Nation\tllc\tactive\tNULL\tNULL\n10\t508-LuvOnPurpose Academy and Outreach\tcollective\tactive\tNULL\tNULL\n30001\tLuvOnPurpose Autonomous Wealth System LLC\tllc\tactive\tNULL\tDelaware\n30002\tThe L.A.W.S. Collective, LLC\tcollective\tactive\t39-3122993\tDelaware\n30003\tReal-Eye-Nation LLC\tllc\tactive\t84-4976416\tGeorgia\n30004\tLuvOnPurpose Outreach Temple and Academy Society\ttrust\tdraft\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 63
+}

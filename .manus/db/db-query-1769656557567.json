@@ -1,0 +1,14 @@
+{
+  "query": "SELECT id, name FROM business_entities WHERE name LIKE '%LuvOnPurpose%Outreach%' OR name LIKE '%Trust%Georgia%' OR entityType = 'trust';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name FROM business_entities WHERE name LIKE '%LuvOnPurpose%Outreach%' OR name LIKE '%Trust%Georgia%' OR entityType = 'trust';",
+  "rows": [
+    {
+      "id": "30004",
+      "name": "CALEA Freeman Family Trust"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n30004\tCALEA Freeman Family Trust\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

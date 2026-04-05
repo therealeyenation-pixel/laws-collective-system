@@ -1,0 +1,1 @@
+ALTER TABLE `bots` MODIFY COLUMN `type` enum('operations','support','education','analytics','guardian','finance','media','outreach','seo','engagement','custom') NOT NULL;

@@ -1,0 +1,40 @@
+{
+  "query": "SELECT * FROM position_requisitions LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT * FROM position_requisitions LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "positionId": "re-manager-state-a",
+      "positionTitle": "Real Estate Manager (State A)",
+      "department": "Real Estate",
+      "entity": "L.A.W.S. Collective",
+      "tier": "tier2_candidate_identified",
+      "requestedBy": "1",
+      "requestedByName": "LaShanna Russell",
+      "justification": "Licensed real estate broker/agent needed to close transactions in State A jurisdiction. This position is critical for property acquisitions and real estate investment operations. Candidate has been identified pending funding.",
+      "budgetApproved": "pending",
+      "salaryRange": "$85,000 - $115,000",
+      "targetStartDate": "NULL",
+      "urgency": "high",
+      "status": "under_review",
+      "approvedBy": "NULL",
+      "approvedByName": "NULL",
+      "approvalDate": "NULL",
+      "approvalNotes": "NULL",
+      "candidateName": "Candidate Identified",
+      "candidateEmail": "NULL",
+      "filledDate": "NULL",
+      "createdAt": "2026-01-18 13:10:31",
+      "updatedAt": "2026-01-18 13:10:31",
+      "hiringPreference": "open",
+      "familyRelationship": "NULL",
+      "conflictOfInterestDisclosed": "0",
+      "disclosureDate": "NULL",
+      "disclosureNotes": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tpositionId\tpositionTitle\tdepartment\tentity\ttier\trequestedBy\trequestedByName\tjustification\tbudgetApproved\tsalaryRange\ttargetStartDate\turgency\tstatus\tapprovedBy\tapprovedByName\tapprovalDate\tapprovalNotes\tcandidateName\tcandidateEmail\tfilledDate\tcreatedAt\tupdatedAt\thiringPreference\tfamilyRelationship\tconflictOfInterestDisclosed\tdisclosureDate\tdisclosureNotes\n1\tre-manager-state-a\tReal Estate Manager (State A)\tReal Estate\tL.A.W.S. Collective\ttier2_candidate_identified\t1\tLaShanna Russell\tLicensed real estate broker/agent needed to close transactions in State A jurisdiction. This position is critical for property acquisitions and real estate investment operations. Candidate has been identified pending funding.\tpending\t$85,000 - $115,000\tNULL\thigh\tunder_review\tNULL\tNULL\tNULL\tNULL\tCandidate Identified\tNULL\tNULL\t2026-01-18 13:10:31\t2026-01-18 13:10:31\topen\tNULL\t0\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 180
+}

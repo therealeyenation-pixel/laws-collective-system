@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE protected_lineage \nADD COLUMN lineage_type ENUM('source_flame', 'descendant', 'adaptive', 'mentorship', 'nurture') NOT NULL DEFAULT 'descendant',\nADD COLUMN is_bloodline BOOLEAN DEFAULT TRUE,\nADD COLUMN special_role VARCHAR(255),\nADD COLUMN protection_level ENUM('eternal_flame', 'source_claim', 'standard') DEFAULT 'standard';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE protected_lineage \nADD COLUMN lineage_type ENUM('source_flame', 'descendant', 'adaptive', 'mentorship', 'nurture') NOT NULL DEFAULT 'descendant',\nADD COLUMN is_bloodline BOOLEAN DEFAULT TRUE,\nADD COLUMN special_role VARCHAR(255),\nADD COLUMN protection_level ENUM('eternal_flame', 'source_claim', 'standard') DEFAULT 'standard';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1838
+}

@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `agent_actions` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `agentId` int NOT NULL,\n  `actionType` varchar(100) NOT NULL,\n  `actionData` json,\n  `status` enum('pending','completed','failed') DEFAULT 'pending',\n  `result` json,\n  `createdAt` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  `completedAt` timestamp\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `agent_actions` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `agentId` int NOT NULL,\n  `actionType` varchar(100) NOT NULL,\n  `actionData` json,\n  `status` enum('pending','completed','failed') DEFAULT 'pending',\n  `result` json,\n  `createdAt` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  `completedAt` timestamp\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 177
+}

@@ -1,0 +1,166 @@
+{
+  "query": "SELECT id, firstName, lastName, entityId FROM employees;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, firstName, lastName, entityId FROM employees;",
+  "rows": [
+    {
+      "id": "1",
+      "firstName": "Shanna",
+      "lastName": "Russell",
+      "entityId": "1"
+    },
+    {
+      "id": "2",
+      "firstName": "Craig",
+      "lastName": "Russell",
+      "entityId": "5"
+    },
+    {
+      "id": "3",
+      "firstName": "Cornelius",
+      "lastName": "Christopher",
+      "entityId": "4"
+    },
+    {
+      "id": "4",
+      "firstName": "Maya",
+      "lastName": "Thompson",
+      "entityId": "5"
+    },
+    {
+      "id": "5",
+      "firstName": "Jordan",
+      "lastName": "Williams",
+      "entityId": "5"
+    },
+    {
+      "id": "6",
+      "firstName": "Marcus",
+      "lastName": "Chen",
+      "entityId": "3"
+    },
+    {
+      "id": "7",
+      "firstName": "Aisha",
+      "lastName": "Patel",
+      "entityId": "3"
+    },
+    {
+      "id": "8",
+      "firstName": "David",
+      "lastName": "Kim",
+      "entityId": "3"
+    },
+    {
+      "id": "9",
+      "firstName": "Sarah",
+      "lastName": "Martinez",
+      "entityId": "3"
+    },
+    {
+      "id": "10",
+      "firstName": "Dr. Angela",
+      "lastName": "Washington",
+      "entityId": "2"
+    },
+    {
+      "id": "11",
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "entityId": "2"
+    },
+    {
+      "id": "12",
+      "firstName": "Lisa",
+      "lastName": "Jackson",
+      "entityId": "2"
+    },
+    {
+      "id": "13",
+      "firstName": "Jasmine",
+      "lastName": "Taylor",
+      "entityId": "4"
+    },
+    {
+      "id": "14",
+      "firstName": "Tyler",
+      "lastName": "Robinson",
+      "entityId": "4"
+    },
+    {
+      "id": "15",
+      "firstName": "Kevin",
+      "lastName": "Davis",
+      "entityId": "4"
+    },
+    {
+      "id": "16",
+      "firstName": "Nicole",
+      "lastName": "Adams",
+      "entityId": "5"
+    },
+    {
+      "id": "17",
+      "firstName": "Brandon",
+      "lastName": "Lee",
+      "entityId": "5"
+    },
+    {
+      "id": "18",
+      "firstName": "Robert",
+      "lastName": "Garcia",
+      "entityId": "5"
+    },
+    {
+      "id": "19",
+      "firstName": "Patricia",
+      "lastName": "Moore",
+      "entityId": "5"
+    },
+    {
+      "id": "20",
+      "firstName": "Jennifer",
+      "lastName": "White",
+      "entityId": "5"
+    },
+    {
+      "id": "21",
+      "firstName": "Christopher",
+      "lastName": "Harris",
+      "entityId": "5"
+    },
+    {
+      "id": "22",
+      "firstName": "Amanda",
+      "lastName": "Clark",
+      "entityId": "5"
+    },
+    {
+      "id": "23",
+      "firstName": "Alex",
+      "lastName": "Rivera",
+      "entityId": "3"
+    },
+    {
+      "id": "30001",
+      "firstName": "Amber",
+      "lastName": "Russell",
+      "entityId": "5"
+    },
+    {
+      "id": "30002",
+      "firstName": "Amandes",
+      "lastName": "Russell",
+      "entityId": "3"
+    },
+    {
+      "id": "30003",
+      "firstName": "Essence",
+      "lastName": "Russell",
+      "entityId": "3"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tentityId\n1\tShanna\tRussell\t1\n2\tCraig\tRussell\t5\n3\tCornelius\tChristopher\t4\n4\tMaya\tThompson\t5\n5\tJordan\tWilliams\t5\n6\tMarcus\tChen\t3\n7\tAisha\tPatel\t3\n8\tDavid\tKim\t3\n9\tSarah\tMartinez\t3\n10\tDr. Angela\tWashington\t2\n11\tMichael\tBrown\t2\n12\tLisa\tJackson\t2\n13\tJasmine\tTaylor\t4\n14\tTyler\tRobinson\t4\n15\tKevin\tDavis\t4\n16\tNicole\tAdams\t5\n17\tBrandon\tLee\t5\n18\tRobert\tGarcia\t5\n19\tPatricia\tMoore\t5\n20\tJennifer\tWhite\t5\n21\tChristopher\tHarris\t5\n22\tAmanda\tClark\t5\n23\tAlex\tRivera\t3\n30001\tAmber\tRussell\t5\n30002\tAmandes\tRussell\t3\n30003\tEssence\tRussell\t3\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

@@ -1,0 +1,13 @@
+{
+  "query": "SELECT socialImpact FROM business_plans WHERE entityName = 'Real-Eye-Nation LLC';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT socialImpact FROM business_plans WHERE entityName = 'Real-Eye-Nation LLC';",
+  "rows": [
+    {
+      "socialImpact": "Cultural preservation of family histories, community empowerment through storytelling tools, educational access with culturally relevant content, truth documentation via blockchain verification, healing through narrative processes."
+    }
+  ],
+  "messages": [],
+  "stdout": "socialImpact\nCultural preservation of family histories, community empowerment through storytelling tools, educational access with culturally relevant content, truth documentation via blockchain verification, healing through narrative processes.\n",
+  "stderr": "",
+  "execution_time_ms": 60
+}

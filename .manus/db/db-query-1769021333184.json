@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `meeting_reminders` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `meetingId` int NOT NULL,\n  `reminderType` enum('15_min','1_hour','24_hour') NOT NULL,\n  `sentAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `recipientCount` int DEFAULT 0,\n  CONSTRAINT `meeting_reminders_id` PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `meeting_reminders` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `meetingId` int NOT NULL,\n  `reminderType` enum('15_min','1_hour','24_hour') NOT NULL,\n  `sentAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `recipientCount` int DEFAULT 0,\n  CONSTRAINT `meeting_reminders_id` PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 297
+}

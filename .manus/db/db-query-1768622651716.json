@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, entityName, entityType, missionStatement FROM business_plans LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, entityName, entityType, missionStatement FROM business_plans LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "entityName": "Real-Eye-Nation LLC",
+      "entityType": "llc",
+      "missionStatement": "To illuminate truth through authentic storytelling, empowering families and communities to document their histories, preserve their legacies, and share narratives that inspire generational transformation."
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tentityName\tentityType\tmissionStatement\n1\tReal-Eye-Nation LLC\tllc\tTo illuminate truth through authentic storytelling, empowering families and communities to document their histories, preserve their legacies, and share narratives that inspire generational transformation.\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

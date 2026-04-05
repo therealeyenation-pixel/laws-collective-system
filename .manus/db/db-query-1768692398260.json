@@ -1,0 +1,25 @@
+{
+  "query": "SELECT DISTINCT entityId FROM employees ORDER BY entityId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT DISTINCT entityId FROM employees ORDER BY entityId;",
+  "rows": [
+    {
+      "entityId": "1"
+    },
+    {
+      "entityId": "2"
+    },
+    {
+      "entityId": "3"
+    },
+    {
+      "entityId": "4"
+    },
+    {
+      "entityId": "5"
+    }
+  ],
+  "messages": [],
+  "stdout": "entityId\n1\n2\n3\n4\n5\n",
+  "stderr": "",
+  "execution_time_ms": 63
+}

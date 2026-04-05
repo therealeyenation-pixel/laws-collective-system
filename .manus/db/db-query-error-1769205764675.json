@@ -1,0 +1,10 @@
+{
+  "query": "CREATE TABLE founding_members (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  user_id INT NOT NULL,\n  member_number INT NOT NULL,\n  joined_date BIGINT NOT NULL,\n  status VARCHAR(50) DEFAULT 'active',\n  notes TEXT,\n  created_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000),\n  updated_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE founding_members (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  user_id INT NOT NULL,\n  member_number INT NOT NULL,\n  joined_date BIGINT NOT NULL,\n  status VARCHAR(50) DEFAULT 'active',\n  notes TEXT,\n  created_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000),\n  updated_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000)\n);",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 8 column 48 near \"* 1000),",
+    "  updated_at BIGINT DEFAULT (UNIX_TIMESTAMP() * 1000)",
+    ")\""
+  ]
+}

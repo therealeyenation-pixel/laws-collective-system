@@ -1,0 +1,9 @@
+{
+  "query": "\n-- Add indexes for better query performance\nCREATE INDEX idx_time_entries_worker ON time_entries(workerId);\nCREATE INDEX idx_time_entries_charge_code ON time_entries(chargeCodeId);\nCREATE INDEX idx_time_entries_date ON time_entries(entryDate);\nCREATE INDEX idx_time_entries_timesheet ON time_entries(timesheetId);\nCREATE INDEX idx_timesheets_worker ON timesheets(workerId);\nCREATE INDEX idx_timesheets_period ON timesheets(periodStart, periodEnd);\nCREATE INDEX idx_charge_codes_funding ON charge_codes(fundingSourceId);\nCREATE INDEX idx_worker_assignments_worker ON worker_charge_code_assignments(workerId);\nCREATE INDEX idx_worker_assignments_code ON worker_charge_code_assignments(chargeCodeId);\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute \n-- Add indexes for better query performance\nCREATE INDEX idx_time_entries_worker ON time_entries(workerId);\nCREATE INDEX idx_time_entries_charge_code ON time_entries(chargeCodeId);\nCREATE INDEX idx_time_entries_date ON time_entries(entryDate);\nCREATE INDEX idx_time_entries_timesheet ON time_entries(timesheetId);\nCREATE INDEX idx_timesheets_worker ON timesheets(workerId);\nCREATE INDEX idx_timesheets_period ON timesheets(periodStart, periodEnd);\nCREATE INDEX idx_charge_codes_funding ON charge_codes(fundingSourceId);\nCREATE INDEX idx_worker_assignments_worker ON worker_charge_code_assignments(workerId);\nCREATE INDEX idx_worker_assignments_code ON worker_charge_code_assignments(chargeCodeId);\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 4679
+}

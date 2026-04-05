@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `waitlist_signups` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `email` varchar(320) NOT NULL,\n  `businessName` varchar(255) DEFAULT NULL,\n  `source` varchar(100) DEFAULT 'landing_page',\n  `status` enum('pending','confirmed','unsubscribed') NOT NULL DEFAULT 'pending',\n  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  `confirmedAt` datetime DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `email_unique` (`email`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `waitlist_signups` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `email` varchar(320) NOT NULL,\n  `businessName` varchar(255) DEFAULT NULL,\n  `source` varchar(100) DEFAULT 'landing_page',\n  `status` enum('pending','confirmed','unsubscribed') NOT NULL DEFAULT 'pending',\n  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  `confirmedAt` datetime DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `email_unique` (`email`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 414
+}

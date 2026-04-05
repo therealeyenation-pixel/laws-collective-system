@@ -1,0 +1,255 @@
+{
+  "query": "SELECT id, name, email, role, openId FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, email, role, openId FROM users;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "LaShanna Russell",
+      "email": "therealeyenation@gmail.com",
+      "role": "admin",
+      "openId": "Ls3zKcDhAdCKDwudn4kGB6"
+    },
+    {
+      "id": "150031",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768448710116"
+    },
+    {
+      "id": "630001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768571714323"
+    },
+    {
+      "id": "630002",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768571899277"
+    },
+    {
+      "id": "630003",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768571935136"
+    },
+    {
+      "id": "630004",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768571954894"
+    },
+    {
+      "id": "660001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768573338461"
+    },
+    {
+      "id": "720001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768578389491"
+    },
+    {
+      "id": "750001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768579463613"
+    },
+    {
+      "id": "750004",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768579570560"
+    },
+    {
+      "id": "780006",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768582093867"
+    },
+    {
+      "id": "780007",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768582146971"
+    },
+    {
+      "id": "810009",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768583390208"
+    },
+    {
+      "id": "900007",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768587903438"
+    },
+    {
+      "id": "900014",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768588538693"
+    },
+    {
+      "id": "900016",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768589285699"
+    },
+    {
+      "id": "900023",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768590479024"
+    },
+    {
+      "id": "900026",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768590570829"
+    },
+    {
+      "id": "930001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768591544748"
+    },
+    {
+      "id": "930010",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768591690270"
+    },
+    {
+      "id": "930013",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768591747817"
+    },
+    {
+      "id": "930015",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768592359812"
+    },
+    {
+      "id": "930016",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768592385352"
+    },
+    {
+      "id": "960001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768595014149"
+    },
+    {
+      "id": "960005",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768595984844"
+    },
+    {
+      "id": "960006",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768596024471"
+    },
+    {
+      "id": "960007",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768596274979"
+    },
+    {
+      "id": "960021",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768596758223"
+    },
+    {
+      "id": "960031",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768597261135"
+    },
+    {
+      "id": "960037",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768597797550"
+    },
+    {
+      "id": "960069",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768598661406"
+    },
+    {
+      "id": "1050001",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768602281921"
+    },
+    {
+      "id": "1050015",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768602825773"
+    },
+    {
+      "id": "1050030",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768603272004"
+    },
+    {
+      "id": "1050031",
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "user",
+      "openId": "test-user-1768603637577"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\trole\topenId\n1\tLaShanna Russell\ttherealeyenation@gmail.com\tadmin\tLs3zKcDhAdCKDwudn4kGB6\n150031\tTest User\ttest@example.com\tuser\ttest-user-1768448710116\n630001\tTest User\ttest@example.com\tuser\ttest-user-1768571714323\n630002\tTest User\ttest@example.com\tuser\ttest-user-1768571899277\n630003\tTest User\ttest@example.com\tuser\ttest-user-1768571935136\n630004\tTest User\ttest@example.com\tuser\ttest-user-1768571954894\n660001\tTest User\ttest@example.com\tuser\ttest-user-1768573338461\n720001\tTest User\ttest@example.com\tuser\ttest-user-1768578389491\n750001\tTest User\ttest@example.com\tuser\ttest-user-1768579463613\n750004\tTest User\ttest@example.com\tuser\ttest-user-1768579570560\n780006\tTest User\ttest@example.com\tuser\ttest-user-1768582093867\n780007\tTest User\ttest@example.com\tuser\ttest-user-1768582146971\n810009\tTest User\ttest@example.com\tuser\ttest-user-1768583390208\n900007\tTest User\ttest@example.com\tuser\ttest-user-1768587903438\n900014\tTest User\ttest@example.com\tuser\ttest-user-1768588538693\n900016\tTest User\ttest@example.com\tuser\ttest-user-1768589285699\n900023\tTest User\ttest@example.com\tuser\ttest-user-1768590479024\n900026\tTest User\ttest@example.com\tuser\ttest-user-1768590570829\n930001\tTest User\ttest@example.com\tuser\ttest-user-1768591544748\n930010\tTest User\ttest@example.com\tuser\ttest-user-1768591690270\n930013\tTest User\ttest@example.com\tuser\ttest-user-1768591747817\n930015\tTest User\ttest@example.com\tuser\ttest-user-1768592359812\n930016\tTest User\ttest@example.com\tuser\ttest-user-1768592385352\n960001\tTest User\ttest@example.com\tuser\ttest-user-1768595014149\n960005\tTest User\ttest@example.com\tuser\ttest-user-1768595984844\n960006\tTest User\ttest@example.com\tuser\ttest-user-1768596024471\n960007\tTest User\ttest@example.com\tuser\ttest-user-1768596274979\n960021\tTest User\ttest@example.com\tuser\ttest-user-1768596758223\n960031\tTest User\ttest@example.com\tuser\ttest-user-1768597261135\n960037\tTest User\ttest@example.com\tuser\ttest-user-1768597797550\n960069\tTest User\ttest@example.com\tuser\ttest-user-1768598661406\n1050001\tTest User\ttest@example.com\tuser\ttest-user-1768602281921\n1050015\tTest User\ttest@example.com\tuser\ttest-user-1768602825773\n1050030\tTest User\ttest@example.com\tuser\ttest-user-1768603272004\n1050031\tTest User\ttest@example.com\tuser\ttest-user-1768603637577\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

@@ -1,0 +1,43 @@
+{
+  "query": "SHOW TABLES LIKE '%document%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SHOW TABLES LIKE '%document%';",
+  "rows": [
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "application_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "document_access"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "document_access_log"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "document_folders"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "document_versions"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "employment_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "grant_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "house_document_vaults"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "offer_package_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "secure_documents"
+    },
+    {
+      "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)": "vault_documents"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_SPWUc63a3tjYuzCxiuEomB (%document%)\napplication_documents\ndocument_access\ndocument_access_log\ndocument_folders\ndocument_versions\nemployment_documents\ngrant_documents\nhouse_document_vaults\noffer_package_documents\nsecure_documents\nvault_documents\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

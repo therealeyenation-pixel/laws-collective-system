@@ -1,0 +1,46 @@
+{
+  "query": "SELECT e.firstName, e.lastName, e.entityId, b.name as entityName \nFROM employees e \nLEFT JOIN business_entities b ON e.entityId = b.id \nWHERE e.lastName IN ('Russell', 'Christopher') \nORDER BY e.lastName, e.firstName;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT e.firstName, e.lastName, e.entityId, b.name as entityName \nFROM employees e \nLEFT JOIN business_entities b ON e.entityId = b.id \nWHERE e.lastName IN ('Russell', 'Christopher') \nORDER BY e.lastName, e.firstName;",
+  "rows": [
+    {
+      "firstName": "Cornelius",
+      "lastName": "Christopher",
+      "entityId": "4",
+      "entityName": "NULL"
+    },
+    {
+      "firstName": "Amandes",
+      "lastName": "Russell",
+      "entityId": "3",
+      "entityName": "NULL"
+    },
+    {
+      "firstName": "Amber",
+      "lastName": "Russell",
+      "entityId": "5",
+      "entityName": "NULL"
+    },
+    {
+      "firstName": "Craig",
+      "lastName": "Russell",
+      "entityId": "5",
+      "entityName": "NULL"
+    },
+    {
+      "firstName": "Essence",
+      "lastName": "Russell",
+      "entityId": "3",
+      "entityName": "NULL"
+    },
+    {
+      "firstName": "Shanna",
+      "lastName": "Russell",
+      "entityId": "1",
+      "entityName": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "firstName\tlastName\tentityId\tentityName\nCornelius\tChristopher\t4\tNULL\nAmandes\tRussell\t3\tNULL\nAmber\tRussell\t5\tNULL\nCraig\tRussell\t5\tNULL\nEssence\tRussell\t3\tNULL\nShanna\tRussell\t1\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 59
+}

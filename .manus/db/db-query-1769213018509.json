@@ -1,0 +1,9 @@
+{
+  "query": "\nINSERT INTO position_funding (position_id, funding_type, funding_percentage, budget_amount, notes) VALUES\n(1, 'grant_funded', 100.00, 45000, 'Funded by workforce development grant'),\n(2, 'mixed', 60.00, 55000, '60% grant funded, 40% revenue funded'),\n(3, 'grant_funded', 100.00, 42000, 'Funded by education grant'),\n(4, 'revenue_funded', 100.00, 65000, 'Funded by Academy tuition revenue'),\n(5, 'grant_funded', 100.00, 48000, 'Funded by community health grant'),\n(6, 'mixed', 50.00, 52000, '50% grant funded, 50% donation funded'),\n(7, 'revenue_funded', 100.00, 45000, 'Funded by business services revenue'),\n(8, 'grant_funded', 100.00, 60000, 'Funded by financial literacy grant');\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute \nINSERT INTO position_funding (position_id, funding_type, funding_percentage, budget_amount, notes) VALUES\n(1, 'grant_funded', 100.00, 45000, 'Funded by workforce development grant'),\n(2, 'mixed', 60.00, 55000, '60% grant funded, 40% revenue funded'),\n(3, 'grant_funded', 100.00, 42000, 'Funded by education grant'),\n(4, 'revenue_funded', 100.00, 65000, 'Funded by Academy tuition revenue'),\n(5, 'grant_funded', 100.00, 48000, 'Funded by community health grant'),\n(6, 'mixed', 50.00, 52000, '50% grant funded, 50% donation funded'),\n(7, 'revenue_funded', 100.00, 45000, 'Funded by business services revenue'),\n(8, 'grant_funded', 100.00, 60000, 'Funded by financial literacy grant');\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 110
+}

@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, name, entityType FROM business_entities WHERE name LIKE '%L.A.W.S%' OR name LIKE '%Real%' OR name LIKE '%Academy%' OR name LIKE '%508%' ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, entityType FROM business_entities WHERE name LIKE '%L.A.W.S%' OR name LIKE '%Real%' OR name LIKE '%Academy%' OR name LIKE '%508%' ORDER BY id;",
+  "rows": [
+    {
+      "id": "8",
+      "name": "The L.A.W.S. Collective LLC",
+      "entityType": "collective"
+    },
+    {
+      "id": "9",
+      "name": "Real-Eye-Nation",
+      "entityType": "llc"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tentityType\n8\tThe L.A.W.S. Collective LLC\tcollective\n9\tReal-Eye-Nation\tllc\n",
+  "stderr": "",
+  "execution_time_ms": 61
+}

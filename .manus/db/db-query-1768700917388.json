@@ -1,0 +1,58 @@
+{
+  "query": "SELECT id, firstName, lastName, jobTitle, positionLevel, entityId FROM employees WHERE firstName IN ('Shanna', 'LaShanna', 'Craig', 'Cornelius', 'Amber', 'Essence', 'Amandes');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, firstName, lastName, jobTitle, positionLevel, entityId FROM employees WHERE firstName IN ('Shanna', 'LaShanna', 'Craig', 'Cornelius', 'Amber', 'Essence', 'Amandes');",
+  "rows": [
+    {
+      "id": "1",
+      "firstName": "Shanna",
+      "lastName": "Russell",
+      "jobTitle": "Matriarch/CEO",
+      "positionLevel": "executive",
+      "entityId": "6"
+    },
+    {
+      "id": "2",
+      "firstName": "Craig",
+      "lastName": "Russell",
+      "jobTitle": "Finance Manager",
+      "positionLevel": "executive",
+      "entityId": "8"
+    },
+    {
+      "id": "3",
+      "firstName": "Cornelius",
+      "lastName": "Christopher",
+      "jobTitle": "Education Manager",
+      "positionLevel": "executive",
+      "entityId": "10"
+    },
+    {
+      "id": "30001",
+      "firstName": "Amber",
+      "lastName": "Hunter",
+      "jobTitle": "Health Manager",
+      "positionLevel": "manager",
+      "entityId": "8"
+    },
+    {
+      "id": "30002",
+      "firstName": "Amandes",
+      "lastName": "Pearsall IV",
+      "jobTitle": "Media Manager/Creative Director",
+      "positionLevel": "manager",
+      "entityId": "9"
+    },
+    {
+      "id": "30003",
+      "firstName": "Essence",
+      "lastName": "Hunter",
+      "jobTitle": "Design Manager/Design Lead",
+      "positionLevel": "manager",
+      "entityId": "9"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tjobTitle\tpositionLevel\tentityId\n1\tShanna\tRussell\tMatriarch/CEO\texecutive\t6\n2\tCraig\tRussell\tFinance Manager\texecutive\t8\n3\tCornelius\tChristopher\tEducation Manager\texecutive\t10\n30001\tAmber\tHunter\tHealth Manager\tmanager\t8\n30002\tAmandes\tPearsall IV\tMedia Manager/Creative Director\tmanager\t9\n30003\tEssence\tHunter\tDesign Manager/Design Lead\tmanager\t9\n",
+  "stderr": "",
+  "execution_time_ms": 55
+}

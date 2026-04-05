@@ -1,0 +1,40 @@
+{
+  "query": "SELECT id, name, entityType, status FROM business_entities LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, entityType, status FROM business_entities LIMIT 20;",
+  "rows": [
+    {
+      "id": "6",
+      "name": "98 Trust - CALEA Freeman Family Trust",
+      "entityType": "trust",
+      "status": "active"
+    },
+    {
+      "id": "7",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "status": "active"
+    },
+    {
+      "id": "8",
+      "name": "The L.A.W.S. Collective LLC",
+      "entityType": "collective",
+      "status": "active"
+    },
+    {
+      "id": "9",
+      "name": "Real-Eye-Nation",
+      "entityType": "llc",
+      "status": "active"
+    },
+    {
+      "id": "10",
+      "name": "508-LuvOnPurpose Academy and Outreach",
+      "entityType": "collective",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tentityType\tstatus\n6\t98 Trust - CALEA Freeman Family Trust\ttrust\tactive\n7\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\tactive\n8\tThe L.A.W.S. Collective LLC\tcollective\tactive\n9\tReal-Eye-Nation\tllc\tactive\n10\t508-LuvOnPurpose Academy and Outreach\tcollective\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 66
+}

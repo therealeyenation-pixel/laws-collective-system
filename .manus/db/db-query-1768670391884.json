@@ -1,0 +1,114 @@
+{
+  "query": "SELECT bp.id, bp.title, bp.department, bp.salaryAmount, bp.classificationType, be.name as entityName FROM business_positions bp JOIN business_entities be ON bp.businessEntityId = be.id ORDER BY bp.salaryAmount DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT bp.id, bp.title, bp.department, bp.salaryAmount, bp.classificationType, be.name as entityName FROM business_positions bp JOIN business_entities be ON bp.businessEntityId = be.id ORDER BY bp.salaryAmount DESC;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Executive Director",
+      "department": "Executive",
+      "salaryAmount": "137500.00",
+      "classificationType": "w2_officer",
+      "entityName": "98 Trust - CALEA Freeman Family Trust"
+    },
+    {
+      "id": "2",
+      "title": "Chief Financial Officer",
+      "department": "Finance",
+      "salaryAmount": "120000.00",
+      "classificationType": "w2_officer",
+      "entityName": "98 Trust - CALEA Freeman Family Trust"
+    },
+    {
+      "id": "9",
+      "title": "Academy Director",
+      "department": "Education",
+      "salaryAmount": "105000.00",
+      "classificationType": "w2_employee",
+      "entityName": "The L.A.W.S. Collective LLC"
+    },
+    {
+      "id": "10",
+      "title": "Education/Training Director",
+      "department": "Education",
+      "salaryAmount": "105000.00",
+      "classificationType": "w2_employee",
+      "entityName": "The L.A.W.S. Collective LLC"
+    },
+    {
+      "id": "5",
+      "title": "Technology Director",
+      "department": "Technology",
+      "salaryAmount": "97500.00",
+      "classificationType": "w2_employee",
+      "entityName": "98 Trust - CALEA Freeman Family Trust"
+    },
+    {
+      "id": "4",
+      "title": "Marketing Director",
+      "department": "Marketing",
+      "salaryAmount": "92500.00",
+      "classificationType": "w2_employee",
+      "entityName": "98 Trust - CALEA Freeman Family Trust"
+    },
+    {
+      "id": "14",
+      "title": "Creative Director",
+      "department": "Creative",
+      "salaryAmount": "92500.00",
+      "classificationType": "w2_employee",
+      "entityName": "LuvOnPurpose Autonomous Wealth System, LLC"
+    },
+    {
+      "id": "3",
+      "title": "Operations Manager",
+      "department": "Operations",
+      "salaryAmount": "80000.00",
+      "classificationType": "w2_employee",
+      "entityName": "98 Trust - CALEA Freeman Family Trust"
+    },
+    {
+      "id": "11",
+      "title": "Curriculum Developer",
+      "department": "Education",
+      "salaryAmount": "72500.00",
+      "classificationType": "w2_employee",
+      "entityName": "The L.A.W.S. Collective LLC"
+    },
+    {
+      "id": "12",
+      "title": "Program Manager - Youth",
+      "department": "Programs",
+      "salaryAmount": "72500.00",
+      "classificationType": "w2_employee",
+      "entityName": "The L.A.W.S. Collective LLC"
+    },
+    {
+      "id": "13",
+      "title": "Program Manager - Adult",
+      "department": "Programs",
+      "salaryAmount": "72500.00",
+      "classificationType": "w2_employee",
+      "entityName": "The L.A.W.S. Collective LLC"
+    },
+    {
+      "id": "15",
+      "title": "Content Producer",
+      "department": "Creative",
+      "salaryAmount": "65000.00",
+      "classificationType": "w2_employee",
+      "entityName": "LuvOnPurpose Autonomous Wealth System, LLC"
+    },
+    {
+      "id": "16",
+      "title": "Social Media Manager",
+      "department": "Marketing",
+      "salaryAmount": "55000.00",
+      "classificationType": "w2_employee",
+      "entityName": "LuvOnPurpose Autonomous Wealth System, LLC"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tdepartment\tsalaryAmount\tclassificationType\tentityName\n1\tExecutive Director\tExecutive\t137500.00\tw2_officer\t98 Trust - CALEA Freeman Family Trust\n2\tChief Financial Officer\tFinance\t120000.00\tw2_officer\t98 Trust - CALEA Freeman Family Trust\n9\tAcademy Director\tEducation\t105000.00\tw2_employee\tThe L.A.W.S. Collective LLC\n10\tEducation/Training Director\tEducation\t105000.00\tw2_employee\tThe L.A.W.S. Collective LLC\n5\tTechnology Director\tTechnology\t97500.00\tw2_employee\t98 Trust - CALEA Freeman Family Trust\n4\tMarketing Director\tMarketing\t92500.00\tw2_employee\t98 Trust - CALEA Freeman Family Trust\n14\tCreative Director\tCreative\t92500.00\tw2_employee\tLuvOnPurpose Autonomous Wealth System, LLC\n3\tOperations Manager\tOperations\t80000.00\tw2_employee\t98 Trust - CALEA Freeman Family Trust\n11\tCurriculum Developer\tEducation\t72500.00\tw2_employee\tThe L.A.W.S. Collective LLC\n12\tProgram Manager - Youth\tPrograms\t72500.00\tw2_employee\tThe L.A.W.S. Collective LLC\n13\tProgram Manager - Adult\tPrograms\t72500.00\tw2_employee\tThe L.A.W.S. Collective LLC\n15\tContent Producer\tCreative\t65000.00\tw2_employee\tLuvOnPurpose Autonomous Wealth System, LLC\n16\tSocial Media Manager\tMarketing\t55000.00\tw2_employee\tLuvOnPurpose Autonomous Wealth System, LLC\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

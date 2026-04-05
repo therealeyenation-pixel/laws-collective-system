@@ -1,0 +1,146 @@
+{
+  "query": "SELECT id, title, department, status, classificationType, salaryAmount FROM business_positions;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, title, department, status, classificationType, salaryAmount FROM business_positions;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Executive Director",
+      "department": "Executive",
+      "status": "open",
+      "classificationType": "w2_officer",
+      "salaryAmount": "137500.00"
+    },
+    {
+      "id": "2",
+      "title": "Chief Financial Officer",
+      "department": "Finance",
+      "status": "open",
+      "classificationType": "w2_officer",
+      "salaryAmount": "120000.00"
+    },
+    {
+      "id": "3",
+      "title": "Operations Manager",
+      "department": "Operations",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "80000.00"
+    },
+    {
+      "id": "4",
+      "title": "Marketing Director",
+      "department": "Marketing",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "92500.00"
+    },
+    {
+      "id": "5",
+      "title": "Technology Director",
+      "department": "Technology",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "97500.00"
+    },
+    {
+      "id": "6",
+      "title": "LLC Formation Director",
+      "department": "Legal",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "100000.00"
+    },
+    {
+      "id": "7",
+      "title": "Trust Systems Director",
+      "department": "Legal",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "100000.00"
+    },
+    {
+      "id": "8",
+      "title": "Automation Specialist",
+      "department": "Technology",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "85000.00"
+    },
+    {
+      "id": "9",
+      "title": "Academy Director",
+      "department": "Education",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "105000.00"
+    },
+    {
+      "id": "10",
+      "title": "Education/Training Director",
+      "department": "Education",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "105000.00"
+    },
+    {
+      "id": "11",
+      "title": "Curriculum Developer",
+      "department": "Education",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "72500.00"
+    },
+    {
+      "id": "12",
+      "title": "Program Manager - Youth",
+      "department": "Programs",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "72500.00"
+    },
+    {
+      "id": "13",
+      "title": "Program Manager - Adult",
+      "department": "Programs",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "72500.00"
+    },
+    {
+      "id": "14",
+      "title": "Creative Director",
+      "department": "Creative",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "92500.00"
+    },
+    {
+      "id": "15",
+      "title": "Content Producer",
+      "department": "Creative",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "65000.00"
+    },
+    {
+      "id": "16",
+      "title": "Social Media Manager",
+      "department": "Marketing",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "55000.00"
+    },
+    {
+      "id": "30001",
+      "title": "Health Manager",
+      "department": "Health",
+      "status": "open",
+      "classificationType": "w2_employee",
+      "salaryAmount": "76500.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tdepartment\tstatus\tclassificationType\tsalaryAmount\n1\tExecutive Director\tExecutive\topen\tw2_officer\t137500.00\n2\tChief Financial Officer\tFinance\topen\tw2_officer\t120000.00\n3\tOperations Manager\tOperations\topen\tw2_employee\t80000.00\n4\tMarketing Director\tMarketing\topen\tw2_employee\t92500.00\n5\tTechnology Director\tTechnology\topen\tw2_employee\t97500.00\n6\tLLC Formation Director\tLegal\topen\tw2_employee\t100000.00\n7\tTrust Systems Director\tLegal\topen\tw2_employee\t100000.00\n8\tAutomation Specialist\tTechnology\topen\tw2_employee\t85000.00\n9\tAcademy Director\tEducation\topen\tw2_employee\t105000.00\n10\tEducation/Training Director\tEducation\topen\tw2_employee\t105000.00\n11\tCurriculum Developer\tEducation\topen\tw2_employee\t72500.00\n12\tProgram Manager - Youth\tPrograms\topen\tw2_employee\t72500.00\n13\tProgram Manager - Adult\tPrograms\topen\tw2_employee\t72500.00\n14\tCreative Director\tCreative\topen\tw2_employee\t92500.00\n15\tContent Producer\tCreative\topen\tw2_employee\t65000.00\n16\tSocial Media Manager\tMarketing\topen\tw2_employee\t55000.00\n30001\tHealth Manager\tHealth\topen\tw2_employee\t76500.00\n",
+  "stderr": "",
+  "execution_time_ms": 73
+}

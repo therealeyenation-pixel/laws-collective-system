@@ -1,0 +1,82 @@
+{
+  "query": "SELECT id, fullName, parentHouseName, parentMemberName, relationship, projectedHouseName, projectedHouseType, distributionPercentage, status, notes FROM pending_house_heirs ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, fullName, parentHouseName, parentMemberName, relationship, projectedHouseName, projectedHouseType, distributionPercentage, status, notes FROM pending_house_heirs ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "fullName": "Kyle T. Christopher",
+      "parentHouseName": "House of Hunter",
+      "parentMemberName": "Amber S. Hunter",
+      "relationship": "grandchild",
+      "projectedHouseName": "House of Christopher",
+      "projectedHouseType": "bloodline",
+      "distributionPercentage": "60.00",
+      "status": "pending",
+      "notes": "Mirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Sept 2030. May issue 3 Gift Tokens."
+    },
+    {
+      "id": "2",
+      "fullName": "Tyler K. Christopher",
+      "parentHouseName": "House of Hunter",
+      "parentMemberName": "Amber S. Hunter",
+      "relationship": "grandchild",
+      "projectedHouseName": "House of Christopher",
+      "projectedHouseType": "bloodline",
+      "distributionPercentage": "60.00",
+      "status": "pending",
+      "notes": "Mirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Dec 2031. May issue 3 Gift Tokens."
+    },
+    {
+      "id": "3",
+      "fullName": "Cayde D. Christopher",
+      "parentHouseName": "House of Hunter",
+      "parentMemberName": "Amber S. Hunter",
+      "relationship": "grandchild",
+      "projectedHouseName": "House of Christopher",
+      "projectedHouseType": "bloodline",
+      "distributionPercentage": "60.00",
+      "status": "pending",
+      "notes": "Mirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: July 2039. May issue 3 Gift Tokens."
+    },
+    {
+      "id": "4",
+      "fullName": "Riyan S. Christopher",
+      "parentHouseName": "House of Hunter",
+      "parentMemberName": "Amber S. Hunter",
+      "relationship": "grandchild",
+      "projectedHouseName": "House of Christopher",
+      "projectedHouseType": "bloodline",
+      "distributionPercentage": "60.00",
+      "status": "pending",
+      "notes": "Mirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: May 2042. May issue 3 Gift Tokens."
+    },
+    {
+      "id": "5",
+      "fullName": "Alani Rain Maes",
+      "parentHouseName": "House of Hunter",
+      "parentMemberName": "Essence M. Hunter",
+      "relationship": "grandchild",
+      "projectedHouseName": "House of Maes",
+      "projectedHouseType": "bloodline",
+      "distributionPercentage": "60.00",
+      "status": "pending",
+      "notes": "Mirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Oct 2038. May issue 3 Gift Tokens."
+    },
+    {
+      "id": "6",
+      "fullName": "Carter A. Russell",
+      "parentHouseName": "House of Russell",
+      "parentMemberName": "Craig A. Russell",
+      "relationship": "other",
+      "projectedHouseName": "House of Russell (Carter Branch)",
+      "projectedHouseType": "adaptive",
+      "distributionPercentage": "80.00",
+      "status": "pending",
+      "notes": "Adapted House (Non-Bloodline) - 80% retained, 20% to Root. Not part of bloodline; no Mirror Token issuance rights."
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfullName\tparentHouseName\tparentMemberName\trelationship\tprojectedHouseName\tprojectedHouseType\tdistributionPercentage\tstatus\tnotes\n1\tKyle T. Christopher\tHouse of Hunter\tAmber S. Hunter\tgrandchild\tHouse of Christopher\tbloodline\t60.00\tpending\tMirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Sept 2030. May issue 3 Gift Tokens.\n2\tTyler K. Christopher\tHouse of Hunter\tAmber S. Hunter\tgrandchild\tHouse of Christopher\tbloodline\t60.00\tpending\tMirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Dec 2031. May issue 3 Gift Tokens.\n3\tCayde D. Christopher\tHouse of Hunter\tAmber S. Hunter\tgrandchild\tHouse of Christopher\tbloodline\t60.00\tpending\tMirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: July 2039. May issue 3 Gift Tokens.\n4\tRiyan S. Christopher\tHouse of Hunter\tAmber S. Hunter\tgrandchild\tHouse of Christopher\tbloodline\t60.00\tpending\tMirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: May 2042. May issue 3 Gift Tokens.\n5\tAlani Rain Maes\tHouse of Hunter\tEssence M. Hunter\tgrandchild\tHouse of Maes\tbloodline\t60.00\tpending\tMirror Token House - 60% retained, 12.5% to Parent (Hunter), 27.5% to Root. Activation: Oct 2038. May issue 3 Gift Tokens.\n6\tCarter A. Russell\tHouse of Russell\tCraig A. Russell\tother\tHouse of Russell (Carter Branch)\tadaptive\t80.00\tpending\tAdapted House (Non-Bloodline) - 80% retained, 20% to Root. Not part of bloodline; no Mirror Token issuance rights.\n",
+  "stderr": "",
+  "execution_time_ms": 163
+}

@@ -1,0 +1,64 @@
+{
+  "query": "SELECT id, name, entityType, parentEntityId, allocationPercentage, trustLevel, status FROM business_entities ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name, entityType, parentEntityId, allocationPercentage, trustLevel, status FROM business_entities ORDER BY id;",
+  "rows": [
+    {
+      "id": "6",
+      "name": "CALEA Freeman Family Trust",
+      "entityType": "trust",
+      "parentEntityId": "NULL",
+      "allocationPercentage": "NULL",
+      "trustLevel": "5",
+      "status": "active"
+    },
+    {
+      "id": "7",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "parentEntityId": "NULL",
+      "allocationPercentage": "NULL",
+      "trustLevel": "4",
+      "status": "active"
+    },
+    {
+      "id": "8",
+      "name": "The L.A.W.S. Collective LLC",
+      "entityType": "collective",
+      "parentEntityId": "1",
+      "allocationPercentage": "10.00",
+      "trustLevel": "4",
+      "status": "active"
+    },
+    {
+      "id": "9",
+      "name": "Real-Eye-Nation",
+      "entityType": "llc",
+      "parentEntityId": "1",
+      "allocationPercentage": "20.00",
+      "trustLevel": "4",
+      "status": "active"
+    },
+    {
+      "id": "30004",
+      "name": "CALEA Freeman Family Trust",
+      "entityType": "trust",
+      "parentEntityId": "NULL",
+      "allocationPercentage": "NULL",
+      "trustLevel": "5",
+      "status": "draft"
+    },
+    {
+      "id": "60001",
+      "name": "LuvOnPurpose Autonomous Wealth System, LLC",
+      "entityType": "llc",
+      "parentEntityId": "1",
+      "allocationPercentage": "40.00",
+      "trustLevel": "3",
+      "status": "active"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tentityType\tparentEntityId\tallocationPercentage\ttrustLevel\tstatus\n6\tCALEA Freeman Family Trust\ttrust\tNULL\tNULL\t5\tactive\n7\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\tNULL\tNULL\t4\tactive\n8\tThe L.A.W.S. Collective LLC\tcollective\t1\t10.00\t4\tactive\n9\tReal-Eye-Nation\tllc\t1\t20.00\t4\tactive\n30004\tCALEA Freeman Family Trust\ttrust\tNULL\tNULL\t5\tdraft\n60001\tLuvOnPurpose Autonomous Wealth System, LLC\tllc\t1\t40.00\t3\tactive\n",
+  "stderr": "",
+  "execution_time_ms": 353
+}

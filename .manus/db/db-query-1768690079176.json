@@ -1,0 +1,58 @@
+{
+  "query": "SELECT id, firstName, lastName, department, jobTitle, positionLevel FROM employees WHERE firstName IN ('Shanna', 'Craig', 'Cornelius', 'Amber', 'Amandes', 'Essence') ORDER BY positionLevel;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, firstName, lastName, department, jobTitle, positionLevel FROM employees WHERE firstName IN ('Shanna', 'Craig', 'Cornelius', 'Amber', 'Amandes', 'Essence') ORDER BY positionLevel;",
+  "rows": [
+    {
+      "id": "1",
+      "firstName": "Shanna",
+      "lastName": "Russell",
+      "department": "Executive",
+      "jobTitle": "Matriarch/CEO",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "2",
+      "firstName": "Craig",
+      "lastName": "Freeman",
+      "department": "Finance",
+      "jobTitle": "Chief Financial Officer",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "3",
+      "firstName": "Cornelius",
+      "lastName": "Johnson",
+      "department": "Education",
+      "jobTitle": "Chief Education Officer",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "30002",
+      "firstName": "Amandes",
+      "lastName": "Russell",
+      "department": "Media",
+      "jobTitle": "Media Manager/Creative Director",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "30001",
+      "firstName": "Amber",
+      "lastName": "Russell",
+      "department": "Health",
+      "jobTitle": "Health Manager",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "30003",
+      "firstName": "Essence",
+      "lastName": "Russell",
+      "department": "Design",
+      "jobTitle": "Design Manager/Design Lead",
+      "positionLevel": "manager"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tdepartment\tjobTitle\tpositionLevel\n1\tShanna\tRussell\tExecutive\tMatriarch/CEO\texecutive\n2\tCraig\tFreeman\tFinance\tChief Financial Officer\texecutive\n3\tCornelius\tJohnson\tEducation\tChief Education Officer\texecutive\n30002\tAmandes\tRussell\tMedia\tMedia Manager/Creative Director\texecutive\n30001\tAmber\tRussell\tHealth\tHealth Manager\tmanager\n30003\tEssence\tRussell\tDesign\tDesign Manager/Design Lead\tmanager\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

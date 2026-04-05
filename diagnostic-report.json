@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-01-17T23:53:28.513Z",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "Business Entities Count",
+      "expected": 5,
+      "actual": 9,
+      "status": "PASS"
+    },
+    {
+      "name": "Careers Page Position Tiers",
+      "tier1": 6,
+      "tier2": 5,
+      "tier3": 6,
+      "tier4": 15,
+      "status": "PASS"
+    }
+  ],
+  "warnings": [
+    "Missing entity: Real-Eye-Nation, LLC",
+    "Org structure check: Expected ',' or '}' after property value in JSON at position 29511 (line 617 column 6)",
+    "Missing table: onboarding_tasks"
+  ],
+  "errors": []
+}

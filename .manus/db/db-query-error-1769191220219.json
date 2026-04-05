@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE `meeting_agenda_items` ADD COLUMN `requiresVote` BOOLEAN NOT NULL DEFAULT FALSE;\nALTER TABLE `meeting_agenda_items` ADD COLUMN `voteProposalId` INT DEFAULT NULL;\nALTER TABLE `meeting_agenda_items` ADD COLUMN `voteStatus` ENUM('pending', 'converted', 'voted', 'deferred') DEFAULT 'pending';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE `meeting_agenda_items` ADD COLUMN `requiresVote` BOOLEAN NOT NULL DEFAULT FALSE;\nALTER TABLE `meeting_agenda_items` ADD COLUMN `voteProposalId` INT DEFAULT NULL;\nALTER TABLE `meeting_agenda_items` ADD COLUMN `voteStatus` ENUM('pending', 'converted', 'voted', 'deferred') DEFAULT 'pending';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'spwuc63a3tjyuzcxiueomb.meeting_agenda_items' doesn't exist"
+  ]
+}

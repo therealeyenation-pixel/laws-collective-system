@@ -1,0 +1,210 @@
+{
+  "query": "DESCRIBE business_positions;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute DESCRIBE business_positions;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "businessEntityId",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "houseId",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "title",
+      "Type": "varchar(255)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "department",
+      "Type": "varchar(100)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "description",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "responsibilities",
+      "Type": "json",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "classificationType",
+      "Type": "enum('w2_employee','w2_officer','1099_contractor','k1_member','volunteer','board_member')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "employmentType",
+      "Type": "enum('full_time','part_time','seasonal','temporary')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "exemptionStatus",
+      "Type": "enum('exempt','non_exempt')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "non_exempt",
+      "Extra": ""
+    },
+    {
+      "Field": "compensationType",
+      "Type": "enum('salary','hourly','commission','fee','guaranteed_payment','profit_share','stipend','unpaid')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "salaryAmount",
+      "Type": "decimal(12,2)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "hourlyRate",
+      "Type": "decimal(8,2)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "commissionRate",
+      "Type": "decimal(5,2)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "payFrequency",
+      "Type": "enum('weekly','biweekly','semimonthly','monthly','per_project')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "biweekly",
+      "Extra": ""
+    },
+    {
+      "Field": "benefitsEligible",
+      "Type": "tinyint(1)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "requiresBackgroundCheck",
+      "Type": "tinyint(1)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "requiresCourseCompletion",
+      "Type": "tinyint(1)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "requiredCourseId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "linkedSimulatorId",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "status",
+      "Type": "enum('open','filled','closed')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "open",
+      "Extra": ""
+    },
+    {
+      "Field": "maxHolders",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "1",
+      "Extra": ""
+    },
+    {
+      "Field": "currentHolders",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint(11)\tNO\tPRI\tNULL\tauto_increment\nbusinessEntityId\tint(11)\tNO\t\tNULL\t\nhouseId\tint(11)\tNO\t\tNULL\t\ntitle\tvarchar(255)\tNO\t\tNULL\t\ndepartment\tvarchar(100)\tYES\t\tNULL\t\ndescription\ttext\tYES\t\tNULL\t\nresponsibilities\tjson\tYES\t\tNULL\t\nclassificationType\tenum('w2_employee','w2_officer','1099_contractor','k1_member','volunteer','board_member')\tNO\t\tNULL\t\nemploymentType\tenum('full_time','part_time','seasonal','temporary')\tYES\t\tNULL\t\nexemptionStatus\tenum('exempt','non_exempt')\tYES\t\tnon_exempt\t\ncompensationType\tenum('salary','hourly','commission','fee','guaranteed_payment','profit_share','stipend','unpaid')\tNO\t\tNULL\t\nsalaryAmount\tdecimal(12,2)\tYES\t\tNULL\t\nhourlyRate\tdecimal(8,2)\tYES\t\tNULL\t\ncommissionRate\tdecimal(5,2)\tYES\t\tNULL\t\npayFrequency\tenum('weekly','biweekly','semimonthly','monthly','per_project')\tYES\t\tbiweekly\t\nbenefitsEligible\ttinyint(1)\tYES\t\t0\t\nrequiresBackgroundCheck\ttinyint(1)\tYES\t\t0\t\nrequiresCourseCompletion\ttinyint(1)\tYES\t\t0\t\nrequiredCourseId\tint(11)\tYES\t\tNULL\t\nlinkedSimulatorId\tint(11)\tYES\t\tNULL\t\nstatus\tenum('open','filled','closed')\tYES\t\topen\t\nmaxHolders\tint(11)\tYES\t\t1\t\ncurrentHolders\tint(11)\tYES\t\t0\t\ncreatedAt\ttimestamp\tYES\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tYES\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\n",
+  "stderr": "",
+  "execution_time_ms": 50
+}

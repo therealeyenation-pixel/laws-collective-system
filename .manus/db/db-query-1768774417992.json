@@ -1,0 +1,14 @@
+{
+  "query": "SELECT id, name FROM users WHERE name LIKE '%La Shanna%' OR name LIKE '%Russell%' OR name LIKE '%Shanna%' LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name FROM users WHERE name LIKE '%La Shanna%' OR name LIKE '%Russell%' OR name LIKE '%Shanna%' LIMIT 5",
+  "rows": [
+    {
+      "id": "1",
+      "name": "LaShanna Russell"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n1\tLaShanna Russell\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

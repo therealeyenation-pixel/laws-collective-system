@@ -1,0 +1,2 @@
+ALTER TABLE `distribution_events` MODIFY COLUMN `distributionType` enum('inter_house','intra_house','root_treasury','ancestral_treasury') NOT NULL;--> statement-breakpoint
+ALTER TABLE `distribution_events` MODIFY COLUMN `allocationCategory` enum('operations','inheritance','network','root_authority_reserve','circulation_pool','ancestral_treasury');

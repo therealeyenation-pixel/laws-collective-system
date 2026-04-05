@@ -1,0 +1,30 @@
+{
+  "query": "SELECT id, entityName FROM business_plans LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, entityName FROM business_plans LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "entityName": "Real-Eye-Nation LLC"
+    },
+    {
+      "id": "2",
+      "entityName": "Calea Freeman Family Trust"
+    },
+    {
+      "id": "3",
+      "entityName": "LuvOnPurpose LLC"
+    },
+    {
+      "id": "4",
+      "entityName": "The L.A.W.S. Collective, LLC"
+    },
+    {
+      "id": "5",
+      "entityName": "LuvOnPurpose Outreach Temple and Academy Society, Inc."
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tentityName\n1\tReal-Eye-Nation LLC\n2\tCalea Freeman Family Trust\n3\tLuvOnPurpose LLC\n4\tThe L.A.W.S. Collective, LLC\n5\tLuvOnPurpose Outreach Temple and Academy Society, Inc.\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

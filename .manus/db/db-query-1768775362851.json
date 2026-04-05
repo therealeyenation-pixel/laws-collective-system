@@ -1,0 +1,130 @@
+{
+  "query": "SELECT id, ownerId, title, documentType FROM secure_documents ORDER BY id DESC LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, ownerId, title, documentType FROM secure_documents ORDER BY id DESC LIMIT 20;",
+  "rows": [
+    {
+      "id": "60013",
+      "ownerId": "32",
+      "title": "Management Services Agreement Template",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60012",
+      "ownerId": "32",
+      "title": "CALEA Freeman Family Trust Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60011",
+      "ownerId": "32",
+      "title": "CALEA Freeman Family Trust Declaration",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60010",
+      "ownerId": "32",
+      "title": "508-LuvOnPurpose Academy Bylaws",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60009",
+      "ownerId": "32",
+      "title": "Real-Eye-Nation LLC Operating Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60008",
+      "ownerId": "32",
+      "title": "LuvOnPurpose AWS LLC Operating Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60007",
+      "ownerId": "32",
+      "title": "L.A.W.S. Collective LLC Operating Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60006",
+      "ownerId": "32",
+      "title": "CALEA Freeman Family Trust Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60005",
+      "ownerId": "32",
+      "title": "CALEA Freeman Family Trust Declaration",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60004",
+      "ownerId": "32",
+      "title": "508-LuvOnPurpose Academy Bylaws",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60003",
+      "ownerId": "32",
+      "title": "Real-Eye-Nation LLC Operating Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60002",
+      "ownerId": "32",
+      "title": "LuvOnPurpose AWS LLC Operating Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "60001",
+      "ownerId": "32",
+      "title": "L.A.W.S. Collective LLC Operating Agreement",
+      "documentType": "legal_document"
+    },
+    {
+      "id": "30001",
+      "ownerId": "32",
+      "title": "Test",
+      "documentType": "business_plan"
+    },
+    {
+      "id": "6",
+      "ownerId": "32",
+      "title": "Grant Application Template - Community Education Program",
+      "documentType": "grant_application"
+    },
+    {
+      "id": "5",
+      "ownerId": "32",
+      "title": "508-LuvOnPurpose Academy and Outreach Business Plan",
+      "documentType": "business_plan"
+    },
+    {
+      "id": "4",
+      "ownerId": "32",
+      "title": "Real-Eye-Nation Business Plan",
+      "documentType": "business_plan"
+    },
+    {
+      "id": "3",
+      "ownerId": "32",
+      "title": "The L.A.W.S. Collective LLC Business Plan",
+      "documentType": "business_plan"
+    },
+    {
+      "id": "2",
+      "ownerId": "32",
+      "title": "LuvOnPurpose Autonomous Wealth System, LLC Business Plan",
+      "documentType": "business_plan"
+    },
+    {
+      "id": "1",
+      "ownerId": "32",
+      "title": "98 Trust - CALEA Freeman Family Trust Business Plan",
+      "documentType": "business_plan"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\townerId\ttitle\tdocumentType\n60013\t32\tManagement Services Agreement Template\tlegal_document\n60012\t32\tCALEA Freeman Family Trust Agreement\tlegal_document\n60011\t32\tCALEA Freeman Family Trust Declaration\tlegal_document\n60010\t32\t508-LuvOnPurpose Academy Bylaws\tlegal_document\n60009\t32\tReal-Eye-Nation LLC Operating Agreement\tlegal_document\n60008\t32\tLuvOnPurpose AWS LLC Operating Agreement\tlegal_document\n60007\t32\tL.A.W.S. Collective LLC Operating Agreement\tlegal_document\n60006\t32\tCALEA Freeman Family Trust Agreement\tlegal_document\n60005\t32\tCALEA Freeman Family Trust Declaration\tlegal_document\n60004\t32\t508-LuvOnPurpose Academy Bylaws\tlegal_document\n60003\t32\tReal-Eye-Nation LLC Operating Agreement\tlegal_document\n60002\t32\tLuvOnPurpose AWS LLC Operating Agreement\tlegal_document\n60001\t32\tL.A.W.S. Collective LLC Operating Agreement\tlegal_document\n30001\t32\tTest\tbusiness_plan\n6\t32\tGrant Application Template - Community Education Program\tgrant_application\n5\t32\t508-LuvOnPurpose Academy and Outreach Business Plan\tbusiness_plan\n4\t32\tReal-Eye-Nation Business Plan\tbusiness_plan\n3\t32\tThe L.A.W.S. Collective LLC Business Plan\tbusiness_plan\n2\t32\tLuvOnPurpose Autonomous Wealth System, LLC Business Plan\tbusiness_plan\n1\t32\t98 Trust - CALEA Freeman Family Trust Business Plan\tbusiness_plan\n",
+  "stderr": "",
+  "execution_time_ms": 50
+}

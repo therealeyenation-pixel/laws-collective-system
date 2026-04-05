@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE houses \nADD COLUMN isGenesis BOOLEAN DEFAULT FALSE,\nADD COLUMN genesisRIN VARCHAR(50),\nADD COLUMN genesisHash VARCHAR(255),\nADD COLUMN statementOfPurpose TEXT,\nADD COLUMN flameLightingTimestamp TIMESTAMP,\nADD COLUMN genesisDeclarationDocId INT;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE houses \nADD COLUMN isGenesis BOOLEAN DEFAULT FALSE,\nADD COLUMN genesisRIN VARCHAR(50),\nADD COLUMN genesisHash VARCHAR(255),\nADD COLUMN statementOfPurpose TEXT,\nADD COLUMN flameLightingTimestamp TIMESTAMP,\nADD COLUMN genesisDeclarationDocId INT;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3221
+}

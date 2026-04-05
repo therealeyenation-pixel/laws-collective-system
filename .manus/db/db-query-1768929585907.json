@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE signature_audit_log ADD COLUMN action_by INT NULL; ALTER TABLE signature_audit_log ADD COLUMN action_details TEXT NULL; ALTER TABLE signature_audit_log ADD COLUMN ip_address VARCHAR(45) NULL; ALTER TABLE signature_audit_log ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute ALTER TABLE signature_audit_log ADD COLUMN action_by INT NULL; ALTER TABLE signature_audit_log ADD COLUMN action_details TEXT NULL; ALTER TABLE signature_audit_log ADD COLUMN ip_address VARCHAR(45) NULL; ALTER TABLE signature_audit_log ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1609
+}

@@ -1,0 +1,218 @@
+{
+  "query": "SELECT id, firstName, lastName, jobTitle, department, positionLevel FROM employees ORDER BY positionLevel, department;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, firstName, lastName, jobTitle, department, positionLevel FROM employees ORDER BY positionLevel, department;",
+  "rows": [
+    {
+      "id": "3",
+      "firstName": "Cornelius",
+      "lastName": "Johnson",
+      "jobTitle": "Chief Education Officer",
+      "department": "Education",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "1",
+      "firstName": "Shanna",
+      "lastName": "Russell",
+      "jobTitle": "Matriarch/CEO",
+      "department": "Executive",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "2",
+      "firstName": "Craig",
+      "lastName": "Freeman",
+      "jobTitle": "Chief Financial Officer",
+      "department": "Finance",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "30002",
+      "firstName": "Amandes",
+      "lastName": "Russell",
+      "jobTitle": "Media Manager/Creative Director",
+      "department": "Media",
+      "positionLevel": "executive"
+    },
+    {
+      "id": "16",
+      "firstName": "Nicole",
+      "lastName": "Adams",
+      "jobTitle": "Design Manager",
+      "department": "Design",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "30003",
+      "firstName": "Essence",
+      "lastName": "Russell",
+      "jobTitle": "Design Manager/Design Lead",
+      "department": "Design",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "10",
+      "firstName": "Dr. Angela",
+      "lastName": "Washington",
+      "jobTitle": "Academy Director",
+      "department": "Education",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "30001",
+      "firstName": "Amber",
+      "lastName": "Russell",
+      "jobTitle": "Health Manager",
+      "department": "Health",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "4",
+      "firstName": "Maya",
+      "lastName": "Thompson",
+      "jobTitle": "HR Manager",
+      "department": "Human Resources",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "20",
+      "firstName": "Jennifer",
+      "lastName": "White",
+      "jobTitle": "Contracts Manager",
+      "department": "Legal",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "13",
+      "firstName": "Jasmine",
+      "lastName": "Taylor",
+      "jobTitle": "Media Manager",
+      "department": "Media",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "6",
+      "firstName": "Marcus",
+      "lastName": "Chen",
+      "jobTitle": "Operations Manager",
+      "department": "Operations",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "22",
+      "firstName": "Amanda",
+      "lastName": "Clark",
+      "jobTitle": "QA/QC Manager",
+      "department": "Quality Assurance",
+      "positionLevel": "manager"
+    },
+    {
+      "id": "8",
+      "firstName": "David",
+      "lastName": "Kim",
+      "jobTitle": "Platform Administrator",
+      "department": "Technology",
+      "positionLevel": "lead"
+    },
+    {
+      "id": "17",
+      "firstName": "Brandon",
+      "lastName": "Lee",
+      "jobTitle": "Design Operations Coordinator",
+      "department": "Design",
+      "positionLevel": "coordinator"
+    },
+    {
+      "id": "11",
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "jobTitle": "Education Operations Coordinator",
+      "department": "Education",
+      "positionLevel": "coordinator"
+    },
+    {
+      "id": "5",
+      "firstName": "Jordan",
+      "lastName": "Williams",
+      "jobTitle": "HR Operations Coordinator",
+      "department": "Human Resources",
+      "positionLevel": "coordinator"
+    },
+    {
+      "id": "21",
+      "firstName": "Christopher",
+      "lastName": "Harris",
+      "jobTitle": "Contracts Operations Coordinator",
+      "department": "Legal",
+      "positionLevel": "coordinator"
+    },
+    {
+      "id": "14",
+      "firstName": "Tyler",
+      "lastName": "Robinson",
+      "jobTitle": "Media Operations Coordinator",
+      "department": "Media",
+      "positionLevel": "coordinator"
+    },
+    {
+      "id": "7",
+      "firstName": "Aisha",
+      "lastName": "Patel",
+      "jobTitle": "Operations Coordinator",
+      "department": "Operations",
+      "positionLevel": "coordinator"
+    },
+    {
+      "id": "12",
+      "firstName": "Lisa",
+      "lastName": "Jackson",
+      "jobTitle": "Curriculum Specialist",
+      "department": "Education",
+      "positionLevel": "specialist"
+    },
+    {
+      "id": "19",
+      "firstName": "Patricia",
+      "lastName": "Moore",
+      "jobTitle": "Bookkeeper",
+      "department": "Finance",
+      "positionLevel": "specialist"
+    },
+    {
+      "id": "18",
+      "firstName": "Robert",
+      "lastName": "Garcia",
+      "jobTitle": "Grant Writer",
+      "department": "Finance",
+      "positionLevel": "specialist"
+    },
+    {
+      "id": "15",
+      "firstName": "Kevin",
+      "lastName": "Davis",
+      "jobTitle": "Content Creator",
+      "department": "Media",
+      "positionLevel": "specialist"
+    },
+    {
+      "id": "9",
+      "firstName": "Sarah",
+      "lastName": "Martinez",
+      "jobTitle": "Software Developer",
+      "department": "Technology",
+      "positionLevel": "specialist"
+    },
+    {
+      "id": "23",
+      "firstName": "Alex",
+      "lastName": "Rivera",
+      "jobTitle": "Software Development Intern",
+      "department": "Technology",
+      "positionLevel": "intern"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tjobTitle\tdepartment\tpositionLevel\n3\tCornelius\tJohnson\tChief Education Officer\tEducation\texecutive\n1\tShanna\tRussell\tMatriarch/CEO\tExecutive\texecutive\n2\tCraig\tFreeman\tChief Financial Officer\tFinance\texecutive\n30002\tAmandes\tRussell\tMedia Manager/Creative Director\tMedia\texecutive\n16\tNicole\tAdams\tDesign Manager\tDesign\tmanager\n30003\tEssence\tRussell\tDesign Manager/Design Lead\tDesign\tmanager\n10\tDr. Angela\tWashington\tAcademy Director\tEducation\tmanager\n30001\tAmber\tRussell\tHealth Manager\tHealth\tmanager\n4\tMaya\tThompson\tHR Manager\tHuman Resources\tmanager\n20\tJennifer\tWhite\tContracts Manager\tLegal\tmanager\n13\tJasmine\tTaylor\tMedia Manager\tMedia\tmanager\n6\tMarcus\tChen\tOperations Manager\tOperations\tmanager\n22\tAmanda\tClark\tQA/QC Manager\tQuality Assurance\tmanager\n8\tDavid\tKim\tPlatform Administrator\tTechnology\tlead\n17\tBrandon\tLee\tDesign Operations Coordinator\tDesign\tcoordinator\n11\tMichael\tBrown\tEducation Operations Coordinator\tEducation\tcoordinator\n5\tJordan\tWilliams\tHR Operations Coordinator\tHuman Resources\tcoordinator\n21\tChristopher\tHarris\tContracts Operations Coordinator\tLegal\tcoordinator\n14\tTyler\tRobinson\tMedia Operations Coordinator\tMedia\tcoordinator\n7\tAisha\tPatel\tOperations Coordinator\tOperations\tcoordinator\n12\tLisa\tJackson\tCurriculum Specialist\tEducation\tspecialist\n19\tPatricia\tMoore\tBookkeeper\tFinance\tspecialist\n18\tRobert\tGarcia\tGrant Writer\tFinance\tspecialist\n15\tKevin\tDavis\tContent Creator\tMedia\tspecialist\n9\tSarah\tMartinez\tSoftware Developer\tTechnology\tspecialist\n23\tAlex\tRivera\tSoftware Development Intern\tTechnology\tintern\n",
+  "stderr": "",
+  "execution_time_ms": 55
+}

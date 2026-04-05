@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS vault_documents (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  vault_id INT NOT NULL,\n  folder_id INT,\n  document_name VARCHAR(500) NOT NULL,\n  document_type ENUM('legal', 'financial', 'tax', 'insurance', 'property', 'identity', 'contract', 'certificate', 'receipt', 'correspondence', 'other') NOT NULL,\n  file_name VARCHAR(500) NOT NULL,\n  file_size INT NOT NULL,\n  mime_type VARCHAR(100) NOT NULL,\n  file_hash VARCHAR(64) NOT NULL,\n  s3_key VARCHAR(500) NOT NULL,\n  s3_url VARCHAR(1000),\n  description TEXT,\n  tags JSON,\n  version INT DEFAULT 1,\n  previous_version_id INT,\n  expiration_date TIMESTAMP NULL,\n  uploaded_by_user_id INT NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS vault_documents (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  vault_id INT NOT NULL,\n  folder_id INT,\n  document_name VARCHAR(500) NOT NULL,\n  document_type ENUM('legal', 'financial', 'tax', 'insurance', 'property', 'identity', 'contract', 'certificate', 'receipt', 'correspondence', 'other') NOT NULL,\n  file_name VARCHAR(500) NOT NULL,\n  file_size INT NOT NULL,\n  mime_type VARCHAR(100) NOT NULL,\n  file_hash VARCHAR(64) NOT NULL,\n  s3_key VARCHAR(500) NOT NULL,\n  s3_url VARCHAR(1000),\n  description TEXT,\n  tags JSON,\n  version INT DEFAULT 1,\n  previous_version_id INT,\n  expiration_date TIMESTAMP NULL,\n  uploaded_by_user_id INT NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n)",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 175
+}

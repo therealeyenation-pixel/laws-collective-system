@@ -1,0 +1,62 @@
+{
+  "query": "SELECT id, slug FROM academy_houses; SELECT id, slug FROM divine_stem_modules;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, slug FROM academy_houses; SELECT id, slug FROM divine_stem_modules;",
+  "rows": [
+    {
+      "id": "2",
+      "slug": "house-of-form"
+    },
+    {
+      "id": "3",
+      "slug": "house-of-mastery"
+    },
+    {
+      "id": "1",
+      "slug": "house-of-wonder"
+    },
+    {
+      "id": "id",
+      "slug": "slug"
+    },
+    {
+      "id": "9",
+      "slug": "ceremonial-arts"
+    },
+    {
+      "id": "4",
+      "slug": "engineering-purpose"
+    },
+    {
+      "id": "7",
+      "slug": "entrepreneurial-flame"
+    },
+    {
+      "id": "8",
+      "slug": "house-many-tongues"
+    },
+    {
+      "id": "5",
+      "slug": "living-earth-farming"
+    },
+    {
+      "id": "2",
+      "slug": "mathematics-sacred-geometry"
+    },
+    {
+      "id": "1",
+      "slug": "science-origin-observation"
+    },
+    {
+      "id": "6",
+      "slug": "spirit-writing-chants"
+    },
+    {
+      "id": "3",
+      "slug": "technology-light-code"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tslug\n2\thouse-of-form\n3\thouse-of-mastery\n1\thouse-of-wonder\nid\tslug\n9\tceremonial-arts\n4\tengineering-purpose\n7\tentrepreneurial-flame\n8\thouse-many-tongues\n5\tliving-earth-farming\n2\tmathematics-sacred-geometry\n1\tscience-origin-observation\n6\tspirit-writing-chants\n3\ttechnology-light-code\n",
+  "stderr": "",
+  "execution_time_ms": 434
+}

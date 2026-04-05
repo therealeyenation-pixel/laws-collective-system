@@ -1,0 +1,35 @@
+{
+  "query": "SELECT id, entityName, entityType FROM business_plans;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, entityName, entityType FROM business_plans;",
+  "rows": [
+    {
+      "id": "1",
+      "entityName": "Real-Eye-Nation LLC",
+      "entityType": "llc"
+    },
+    {
+      "id": "2",
+      "entityName": "Calea Freeman Family Trust",
+      "entityType": "trust"
+    },
+    {
+      "id": "3",
+      "entityName": "LuvOnPurpose LLC",
+      "entityType": "llc"
+    },
+    {
+      "id": "4",
+      "entityName": "The L.A.W.S. Collective, LLC",
+      "entityType": "collective"
+    },
+    {
+      "id": "5",
+      "entityName": "508 Academy & Outreach",
+      "entityType": "nonprofit_508"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tentityName\tentityType\n1\tReal-Eye-Nation LLC\tllc\n2\tCalea Freeman Family Trust\ttrust\n3\tLuvOnPurpose LLC\tllc\n4\tThe L.A.W.S. Collective, LLC\tcollective\n5\t508 Academy & Outreach\tnonprofit_508\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

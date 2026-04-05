@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `landing_page_analytics` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `sessionId` varchar(100) NOT NULL,\n  `eventType` varchar(50) NOT NULL,\n  `businessName` varchar(255) DEFAULT NULL,\n  `metadata` text DEFAULT NULL,\n  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS `landing_page_analytics` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `sessionId` varchar(100) NOT NULL,\n  `eventType` varchar(50) NOT NULL,\n  `businessName` varchar(255) DEFAULT NULL,\n  `metadata` text DEFAULT NULL,\n  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 420
+}

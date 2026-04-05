@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS trust_reserve (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  trust_id INT,\n  source_type ENUM('service_revenue', 'donation', 'investment', 'other') NOT NULL,\n  source_reference VARCHAR(255),\n  amount DECIMAL(15,2) NOT NULL,\n  description TEXT,\n  status ENUM('pending', 'transferred', 'released') DEFAULT 'pending',\n  transfer_date DATETIME,\n  created_at DATETIME DEFAULT CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS trust_reserve (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  trust_id INT,\n  source_type ENUM('service_revenue', 'donation', 'investment', 'other') NOT NULL,\n  source_reference VARCHAR(255),\n  amount DECIMAL(15,2) NOT NULL,\n  description TEXT,\n  status ENUM('pending', 'transferred', 'released') DEFAULT 'pending',\n  transfer_date DATETIME,\n  created_at DATETIME DEFAULT CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 396
+}

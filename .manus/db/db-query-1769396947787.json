@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS amendments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  title VARCHAR(255) NOT NULL,\n  description TEXT NOT NULL,\n  proposed_by INT NOT NULL,\n  proposed_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  voting_ends_at DATETIME NOT NULL,\n  status ENUM('voting', 'passed', 'rejected', 'expired') DEFAULT 'voting',\n  required_majority INT DEFAULT 60,\n  INDEX idx_status (status)\n);\n\nCREATE TABLE IF NOT EXISTS amendment_votes (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  amendment_id INT NOT NULL,\n  voter_id INT NOT NULL,\n  voter_name VARCHAR(255),\n  vote ENUM('approve', 'reject', 'abstain') NOT NULL,\n  reason TEXT,\n  voted_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  INDEX idx_amendment (amendment_id),\n  UNIQUE KEY unique_vote (amendment_id, voter_id)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS amendments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  title VARCHAR(255) NOT NULL,\n  description TEXT NOT NULL,\n  proposed_by INT NOT NULL,\n  proposed_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  voting_ends_at DATETIME NOT NULL,\n  status ENUM('voting', 'passed', 'rejected', 'expired') DEFAULT 'voting',\n  required_majority INT DEFAULT 60,\n  INDEX idx_status (status)\n);\n\nCREATE TABLE IF NOT EXISTS amendment_votes (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  amendment_id INT NOT NULL,\n  voter_id INT NOT NULL,\n  voter_name VARCHAR(255),\n  vote ENUM('approve', 'reject', 'abstain') NOT NULL,\n  reason TEXT,\n  voted_at DATETIME DEFAULT CURRENT_TIMESTAMP,\n  INDEX idx_amendment (amendment_id),\n  UNIQUE KEY unique_vote (amendment_id, voter_id)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 302
+}

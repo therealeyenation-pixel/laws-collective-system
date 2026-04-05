@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, name FROM business_entities WHERE name LIKE '%L.A.W.S%' OR name LIKE '%LAWS%' OR name LIKE '%Collective%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, name FROM business_entities WHERE name LIKE '%L.A.W.S%' OR name LIKE '%LAWS%' OR name LIKE '%Collective%';",
+  "rows": [
+    {
+      "id": "8",
+      "name": "The L.A.W.S. Collective LLC"
+    },
+    {
+      "id": "30002",
+      "name": "The L.A.W.S. Collective, LLC"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n8\tThe L.A.W.S. Collective LLC\n30002\tThe L.A.W.S. Collective, LLC\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

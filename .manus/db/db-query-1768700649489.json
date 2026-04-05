@@ -1,0 +1,55 @@
+{
+  "query": "SELECT id, firstName, lastName, jobTitle, positionLevel, entityId, department FROM employees WHERE firstName IN ('Amber', 'Essence', 'Amandes', 'Shanna') OR lastName IN ('Hunter', 'Pearsall', 'Russell');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT id, firstName, lastName, jobTitle, positionLevel, entityId, department FROM employees WHERE firstName IN ('Amber', 'Essence', 'Amandes', 'Shanna') OR lastName IN ('Hunter', 'Pearsall', 'Russell');",
+  "rows": [
+    {
+      "id": "1",
+      "firstName": "Shanna",
+      "lastName": "Russell",
+      "jobTitle": "Matriarch/CEO",
+      "positionLevel": "executive",
+      "entityId": "6",
+      "department": "Executive"
+    },
+    {
+      "id": "2",
+      "firstName": "Craig",
+      "lastName": "Russell",
+      "jobTitle": "Finance Manager",
+      "positionLevel": "executive",
+      "entityId": "8",
+      "department": "Finance"
+    },
+    {
+      "id": "30001",
+      "firstName": "Amber",
+      "lastName": "Russell",
+      "jobTitle": "Health Manager",
+      "positionLevel": "manager",
+      "entityId": "8",
+      "department": "Health"
+    },
+    {
+      "id": "30002",
+      "firstName": "Amandes",
+      "lastName": "Russell",
+      "jobTitle": "Media Manager/Creative Director",
+      "positionLevel": "executive",
+      "entityId": "9",
+      "department": "Media"
+    },
+    {
+      "id": "30003",
+      "firstName": "Essence",
+      "lastName": "Russell",
+      "jobTitle": "Design Manager/Design Lead",
+      "positionLevel": "manager",
+      "entityId": "9",
+      "department": "Design"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\tjobTitle\tpositionLevel\tentityId\tdepartment\n1\tShanna\tRussell\tMatriarch/CEO\texecutive\t6\tExecutive\n2\tCraig\tRussell\tFinance Manager\texecutive\t8\tFinance\n30001\tAmber\tRussell\tHealth Manager\tmanager\t8\tHealth\n30002\tAmandes\tRussell\tMedia Manager/Creative Director\texecutive\t9\tMedia\n30003\tEssence\tRussell\tDesign Manager/Design Lead\tmanager\t9\tDesign\n",
+  "stderr": "",
+  "execution_time_ms": 92
+}

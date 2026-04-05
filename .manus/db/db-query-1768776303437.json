@@ -1,0 +1,15 @@
+{
+  "query": "SELECT COUNT(*) as total, \n  SUM(CASE WHEN fileUrl IS NOT NULL AND fileUrl != '' THEN 1 ELSE 0 END) as with_url,\n  SUM(CASE WHEN fileUrl IS NULL OR fileUrl = '' THEN 1 ELSE 0 END) as without_url\nFROM secure_documents;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute SELECT COUNT(*) as total, \n  SUM(CASE WHEN fileUrl IS NOT NULL AND fileUrl != '' THEN 1 ELSE 0 END) as with_url,\n  SUM(CASE WHEN fileUrl IS NULL OR fileUrl = '' THEN 1 ELSE 0 END) as without_url\nFROM secure_documents;",
+  "rows": [
+    {
+      "total": "20",
+      "with_url": "13",
+      "without_url": "7"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\twith_url\twithout_url\n20\t13\t7\n",
+  "stderr": "",
+  "execution_time_ms": 55
+}

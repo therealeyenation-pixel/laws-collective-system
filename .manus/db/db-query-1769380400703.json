@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO board_positions (entity_id, title, description, responsibilities, term_length_months, is_officer, voting_rights) VALUES\n(1, 'President/CEO', 'Chief Executive Officer and President of the Board', 'Overall leadership, strategic direction, representing the organization', 24, TRUE, TRUE),\n(1, 'Secretary', 'Corporate Secretary', 'Meeting minutes, corporate records, official correspondence', 24, TRUE, TRUE),\n(1, 'Treasurer', 'Chief Financial Officer', 'Financial oversight, budgets, financial reporting', 24, TRUE, TRUE),\n(1, 'Board Member', 'General Board Member', 'Governance, voting on resolutions, strategic guidance', 12, FALSE, TRUE),\n(1, 'Advisory Member', 'Non-voting Advisory Board Member', 'Provide expertise and guidance without voting rights', 12, FALSE, FALSE);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute INSERT INTO board_positions (entity_id, title, description, responsibilities, term_length_months, is_officer, voting_rights) VALUES\n(1, 'President/CEO', 'Chief Executive Officer and President of the Board', 'Overall leadership, strategic direction, representing the organization', 24, TRUE, TRUE),\n(1, 'Secretary', 'Corporate Secretary', 'Meeting minutes, corporate records, official correspondence', 24, TRUE, TRUE),\n(1, 'Treasurer', 'Chief Financial Officer', 'Financial oversight, budgets, financial reporting', 24, TRUE, TRUE),\n(1, 'Board Member', 'General Board Member', 'Governance, voting on resolutions, strategic guidance', 12, FALSE, TRUE),\n(1, 'Advisory Member', 'Non-voting Advisory Board Member', 'Provide expertise and guidance without voting rights', 12, FALSE, FALSE);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 64
+}

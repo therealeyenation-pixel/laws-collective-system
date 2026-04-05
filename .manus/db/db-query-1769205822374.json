@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE bonus_distributions (id INT AUTO_INCREMENT PRIMARY KEY, pool_id INT NOT NULL, distribution_date BIGINT NOT NULL, period_start BIGINT NOT NULL, period_end BIGINT NOT NULL, total_revenue_base DECIMAL(15,2) NOT NULL, pool_contribution DECIMAL(15,2) NOT NULL, total_distributed DECIMAL(15,2) NOT NULL, eligible_members INT NOT NULL, per_member_amount DECIMAL(15,2) NOT NULL, distribution_method VARCHAR(50) DEFAULT 'equal', status VARCHAR(50) DEFAULT 'pending', approved_by INT, approved_at BIGINT, blockchain_hash VARCHAR(64), notes TEXT, created_at BIGINT);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE bonus_distributions (id INT AUTO_INCREMENT PRIMARY KEY, pool_id INT NOT NULL, distribution_date BIGINT NOT NULL, period_start BIGINT NOT NULL, period_end BIGINT NOT NULL, total_revenue_base DECIMAL(15,2) NOT NULL, pool_contribution DECIMAL(15,2) NOT NULL, total_distributed DECIMAL(15,2) NOT NULL, eligible_members INT NOT NULL, per_member_amount DECIMAL(15,2) NOT NULL, distribution_method VARCHAR(50) DEFAULT 'equal', status VARCHAR(50) DEFAULT 'pending', approved_by INT, approved_at BIGINT, blockchain_hash VARCHAR(64), notes TEXT, created_at BIGINT);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 223
+}

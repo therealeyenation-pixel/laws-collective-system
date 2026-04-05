@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE position_requisitions SET positionTitle = 'Real Estate Manager (Georgia)' WHERE positionTitle LIKE '%Real Estate Manager%State A%';\n\nUPDATE position_requisitions SET positionTitle = 'Real Estate Manager (North Carolina)' WHERE positionTitle LIKE '%Real Estate Manager%State B%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute UPDATE position_requisitions SET positionTitle = 'Real Estate Manager (Georgia)' WHERE positionTitle LIKE '%Real Estate Manager%State A%';\n\nUPDATE position_requisitions SET positionTitle = 'Real Estate Manager (North Carolina)' WHERE positionTitle LIKE '%Real Estate Manager%State B%';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 74
+}

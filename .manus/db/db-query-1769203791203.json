@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS service_departments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  department_code VARCHAR(50) NOT NULL UNIQUE,\n  department_name VARCHAR(100) NOT NULL,\n  description TEXT,\n  service_type ENUM('central', 'licensable') NOT NULL DEFAULT 'central',\n  category ENUM('compliance', 'creative', 'operational', 'educational', 'health') NOT NULL,\n  requires_disclaimer BOOLEAN DEFAULT FALSE,\n  disclaimer_type VARCHAR(50),\n  licensing_fee_monthly DECIMAL(10,2) DEFAULT 0,\n  licensing_fee_annual DECIMAL(10,2) DEFAULT 0,\n  revenue_split_laws DECIMAL(5,2) DEFAULT 60.00,\n  revenue_split_house DECIMAL(5,2) DEFAULT 0,\n  revenue_split_trust DECIMAL(5,2) DEFAULT 40.00,\n  is_active BOOLEAN DEFAULT TRUE,\n  display_order INT DEFAULT 0,\n  created_at BIGINT NOT NULL,\n  updated_at BIGINT NOT NULL\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user nC6sHo9eqXDn4Lp.root --database SPWUc63a3tjYuzCxiuEomB --execute CREATE TABLE IF NOT EXISTS service_departments (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  department_code VARCHAR(50) NOT NULL UNIQUE,\n  department_name VARCHAR(100) NOT NULL,\n  description TEXT,\n  service_type ENUM('central', 'licensable') NOT NULL DEFAULT 'central',\n  category ENUM('compliance', 'creative', 'operational', 'educational', 'health') NOT NULL,\n  requires_disclaimer BOOLEAN DEFAULT FALSE,\n  disclaimer_type VARCHAR(50),\n  licensing_fee_monthly DECIMAL(10,2) DEFAULT 0,\n  licensing_fee_annual DECIMAL(10,2) DEFAULT 0,\n  revenue_split_laws DECIMAL(5,2) DEFAULT 60.00,\n  revenue_split_house DECIMAL(5,2) DEFAULT 0,\n  revenue_split_trust DECIMAL(5,2) DEFAULT 40.00,\n  is_active BOOLEAN DEFAULT TRUE,\n  display_order INT DEFAULT 0,\n  created_at BIGINT NOT NULL,\n  updated_at BIGINT NOT NULL\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1663
+}
