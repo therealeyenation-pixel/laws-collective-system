@@ -8,7 +8,7 @@ import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Play, Heart, Share2, Volume2, Maximize, MessageCircle } from 'lucide-react';
+import { Play, Heart, Share2, Volume2, Maximize, MessageCircle, Search, X } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import HLS from 'hls.js';
 
@@ -17,6 +17,9 @@ export default function TheaterLive() {
   const [selectedChannel, setSelectedChannel] = useState<number | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [viewerCount, setViewerCount] = useState(0);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<HLS | null>(null);
 
@@ -57,32 +60,42 @@ export default function TheaterLive() {
     if (!videoRef.current || !channelDetails?.channel?.streamUrl) return;
 
     const streamUrl = channelDetails.channel.streamUrl;
+    console.log('Loading stream:', streamUrl);
 
     if (HLS.isSupported()) {
       if (hlsRef.current) {
         hlsRef.current.destroy();
       }
 
-      const hls = new HLS();
+      const hls = new HLS({
+        debug: true,
+        enableWorker: true,
+        lowLatencyMode: true,
+      });
       hlsRef.current = hls;
 
       hls.loadSource(streamUrl);
       hls.attachMedia(videoRef.current);
 
       hls.on(HLS.Events.MANIFEST_PARSED, () => {
-        videoRef.current?.play().catch(() => {
-          // Autoplay might be blocked
+        console.log('Manifest parsed, starting playback');
+        videoRef.current?.play().catch((err) => {
+          console.log('Autoplay blocked:', err);
         });
       });
 
       hls.on(HLS.Events.ERROR, (event, data) => {
         console.error('HLS error:', data);
       });
+
+      hls.on(HLS.Events.LEVEL_SWITCHING, (event, data) => {
+        console.log('Quality switched to level:', data.level);
+      });
     } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
       // Fallback for Safari
       videoRef.current.src = streamUrl;
-      videoRef.current.play().catch(() => {
-        // Autoplay might be blocked
+      videoRef.current.play().catch((err) => {
+        console.log('Safari playback blocked:', err);
       });
     }
 
@@ -94,6 +107,16 @@ export default function TheaterLive() {
     };
   }, [channelDetails?.channel?.streamUrl]);
 
+  // Filter channels based on search and category
+  const filteredChannels = channels?.filter((channel) => {
+    const matchesSearch = channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         channel.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = !selectedCategory || channel.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const categories = ['News', 'Sports', 'Entertainment', 'Music', 'Kids', 'Documentary', 'Adult'];
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -104,6 +127,54 @@ export default function TheaterLive() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Search Window */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center pt-20">
+          <div className="bg-background rounded-lg shadow-lg w-full max-w-2xl mx-4">
+            <div className="p-6 border-b border-border flex items-center justify-between">
+              <h2 className="text-xl font-bold text-foreground">Search Channels</h2>
+              <button
+                onClick={() => {
+                  setSearchOpen(false);
+                  setSearchQuery('');
+                }}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <input
+                type="text"
+                placeholder="Search channels by name or category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                autoFocus
+              />
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+                {filteredChannels?.map((channel) => (
+                  <button
+                    key={channel.id}
+                    onClick={() => {
+                      handlePlayChannel(channel.id);
+                      setSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className="p-3 text-left bg-card hover:bg-accent/20 rounded-lg transition-colors"
+                  >
+                    <p className="font-semibold text-foreground text-sm truncate">
+                      {channel.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{channel.category}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Video Player */}
       {selectedChannel && channelDetails ? (
         <div className="w-full bg-black">
@@ -114,19 +185,6 @@ export default function TheaterLive() {
               controls
               controlsList="nodownload"
             />
-            {!channelDetails.channel?.streamUrl && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-                <div className="text-center">
-                  <Play className="w-16 h-16 text-white mx-auto mb-4" />
-                  <p className="text-white text-lg">
-                    {channelDetails.channel?.name || 'Live Stream'}
-                  </p>
-                  <p className="text-gray-400 text-sm mt-2">
-                    {channelDetails.channel?.currentViewers || 0} viewers watching
-                  </p>
-                </div>
-              </div>
-            )}
 
             {/* Player Controls */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 flex items-center justify-between">
@@ -191,16 +249,47 @@ export default function TheaterLive() {
 
       {/* Channels Grid */}
       <div className="container max-w-7xl mx-auto p-6">
+        {/* Search & Filter Bar */}
+        <div className="flex items-center gap-4 mb-6">
+          <Button
+            onClick={() => setSearchOpen(true)}
+            variant="outline"
+            className="gap-2"
+          >
+            <Search className="w-4 h-4" />
+            Search Channels
+          </Button>
+          <div className="flex-1 flex gap-2 overflow-x-auto pb-2">
+            <Button
+              onClick={() => setSelectedCategory(null)}
+              variant={selectedCategory === null ? 'default' : 'outline'}
+              size="sm"
+            >
+              All
+            </Button>
+            {categories.map((category) => (
+              <Button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                variant={selectedCategory === category ? 'default' : 'outline'}
+                size="sm"
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         <Tabs defaultValue="live" className="w-full">
           <TabsList>
-            <TabsTrigger value="live">Live Now</TabsTrigger>
+            <TabsTrigger value="live">Live Now ({filteredChannels?.length || 0})</TabsTrigger>
             <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
             <TabsTrigger value="categories">Categories</TabsTrigger>
           </TabsList>
 
           <TabsContent value="live" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {channels?.map((channel) => (
+              {filteredChannels?.map((channel) => (
                 <Card
                   key={channel.id}
                   className={`cursor-pointer overflow-hidden transition-all hover:shadow-lg ${
@@ -238,16 +327,21 @@ export default function TheaterLive() {
 
           <TabsContent value="categories" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {['News', 'Sports', 'Entertainment', 'Music', 'Kids', 'Documentary', 'Adult'].map(
-                (category) => (
-                  <Card key={category} className="p-6 cursor-pointer hover:shadow-lg transition-all">
-                    <h3 className="font-semibold text-foreground">{category}</h3>
+              {categories.map((category) => {
+                const categoryCount = channels?.filter((c) => c.category === category).length || 0;
+                return (
+                  <Card
+                    key={category}
+                    className="p-6 cursor-pointer hover:shadow-lg transition-all hover:bg-accent/10"
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    <h3 className="font-semibold text-foreground text-lg">{category}</h3>
                     <p className="text-sm text-muted-foreground mt-2">
-                      {channels?.filter((c) => c.category === category).length || 0} channels
+                      {categoryCount} channels
                     </p>
                   </Card>
-                )
-              )}
+                );
+              })}
             </div>
           </TabsContent>
         </Tabs>
