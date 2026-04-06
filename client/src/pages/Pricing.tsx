@@ -19,7 +19,7 @@ import {
   GraduationCap,
   Video,
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 interface PricingTier {
   name: string;
@@ -44,6 +44,7 @@ interface ServicePackage {
 }
 
 export default function Pricing() {
+  const [, setLocation] = useLocation();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
 
   const platformTiers: PricingTier[] = [
@@ -358,6 +359,10 @@ export default function Pricing() {
                   <Button
                     className="w-full mb-6"
                     variant={tier.highlighted ? "default" : "outline"}
+                    onClick={() => {
+                      const planId = tier.name.toLowerCase();
+                      setLocation(`/checkout?plan=${planId}`);
+                    }}
                   >
                     {tier.cta}
                   </Button>

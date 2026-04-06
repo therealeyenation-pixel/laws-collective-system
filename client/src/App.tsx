@@ -61,6 +61,7 @@ import BusinessPlanSimulator from "./pages/BusinessPlanSimulator";
 import BusinessPlanUpload from "./pages/BusinessPlanUpload";
 import TaxSimulator from "./pages/TaxSimulator";
 import Pricing from "./pages/Pricing";
+import Checkout from "./pages/Checkout";
 import ProposalSimulator from "./pages/ProposalSimulator";
 import RFPGenerator from "@/pages/RFPGenerator";
 import BusinessSetupWizard from "@/pages/BusinessSetupWizard";
@@ -723,7 +724,8 @@ function Router() {
       <Route path="/board-meetings">{() => <ProtectedRoute component={BoardMeetings} minRole="admin" />}</Route>
       <Route path="/international-business">{() => <ProtectedRoute component={InternationalBusiness} minRole="admin" />}</Route>
       <Route path="/international-operations">{() => <ProtectedRoute component={InternationalOperationsDashboard} minRole="admin" />}</Route>
-      <Route path="/pricing">{() => <ProtectedRoute component={Pricing} minRole="admin" />}</Route>
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/checkout">{() => <ProtectedRoute component={Checkout} minRole="user" />}</Route>
       <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} minRole="admin" />}</Route>
       
       {/* Owner routes - trust & governance */}

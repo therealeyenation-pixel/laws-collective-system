@@ -8,7 +8,7 @@ import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Play, Heart, Share2, Volume2, Maximize, MessageCircle } from 'lucide-react';
+import { Play, Heart, Share2, Volume2, Maximize, MessageCircle, ArrowLeft } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 
 export default function TheaterLive() {
@@ -59,6 +59,20 @@ export default function TheaterLive() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Back Button */}
+      <div className="border-b border-border bg-card p-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => window.history.back()}
+          className="gap-2 text-muted-foreground hover:text-foreground"
+          title="Go back to previous page"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Button>
+      </div>
+
       {/* Main Video Player */}
       {selectedChannel && channelDetails ? (
         <div className="w-full bg-black">
