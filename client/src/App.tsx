@@ -154,7 +154,6 @@ import Leaderboard from "./pages/Leaderboard";
 import ContractorInvoices from "@/pages/ContractorInvoices";
 import ContractManagement from "@/pages/ContractManagement";
 import Donations from "@/pages/Donations";
-import DonationCheckout from "@/pages/DonationCheckout";
 import GrantTracking from "@/pages/GrantTracking";
 import GrantDocuments from "@/pages/GrantDocuments";
 import DemographicGrantsPage from "@/pages/DemographicGrantsPage";
@@ -727,11 +726,8 @@ function Router() {
       <Route path="/board-meetings">{() => <ProtectedRoute component={BoardMeetings} minRole="admin" />}</Route>
       <Route path="/international-business">{() => <ProtectedRoute component={InternationalBusiness} minRole="admin" />}</Route>
       <Route path="/international-operations">{() => <ProtectedRoute component={InternationalOperationsDashboard} minRole="admin" />}</Route>
-      <Route path="/pricing" component={Pricing} />
+      <Route path="/pricing">{() => <ProtectedRoute component={Pricing} minRole="admin" />}</Route>
       <Route path="/system">{() => <ProtectedRoute component={SystemDashboard} minRole="admin" />}</Route>
-      
-      {/* Checkout route for payment processing */}
-      <Route path="/checkout">{() => <ProtectedRoute component={DonationCheckout} minRole="user" />}</Route>
       
       {/* Owner routes - trust & governance */}
       <Route path="/houses">{() => <ProtectedRoute component={HouseManagement} minRole="admin" />}</Route>
