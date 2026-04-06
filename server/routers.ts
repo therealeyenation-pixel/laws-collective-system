@@ -82,7 +82,7 @@ import { businessPlanParserRouter } from "./routers/business-plan-parser";
 import { trainingRouter } from "./routers/training";
 import { jobApplicationsRouter } from "./routers/job-applications";
 import { employeesRouter } from "./routers/employees";
-import { businessEntitiesRouter } from "./routers/businessEntities";
+import { broadcastRouter } from "./routers/broadcast";
 import { contactSubmissionsRouter } from "./routers/contactSubmissions";
 import { stripeCheckoutRouter } from "./routers/stripeCheckout";
 import { onboardingRouter } from "./routers/onboarding";
@@ -366,7 +366,7 @@ export const appRouter = router({
   training: trainingRouter,
   jobApplications: jobApplicationsRouter,
   employees: employeesRouter,
-  businessEntities: businessEntitiesRouter,
+  broadcast: broadcastRouter,
   contactSubmissions: contactSubmissionsRouter,
   stripeCheckout: stripeCheckoutRouter,
   onboarding: onboardingRouter,

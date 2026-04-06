@@ -11461,3 +11461,80 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - ✅ 100+ live channels displaying correctly
 - ✅ All navigation working without blank pages
 - ✅ Dev server stable and responsive
+
+
+## Phase 4: Email & Subscriptions (In Progress)
+- [ ] Create email service router with SendGrid integration
+- [ ] Build transactional email templates (order confirmation, subscription updates)
+- [ ] Implement email sending for contact form submissions
+- [ ] Add subscription management endpoints
+- [ ] Create email delivery tracking and logging
+- [ ] Build email notification preferences in user settings
+
+## Phase 5: 2FA & RBAC (Pending)
+- [ ] Create 2FA service with TOTP generation and verification
+- [ ] Build 2FA setup page with QR code generation
+- [ ] Add 2FA verification to login flow
+- [ ] Create backup codes for account recovery
+- [ ] Add 2FA management to user settings
+- [ ] Create granular permission system beyond basic roles
+- [ ] Build permission matrix UI for admins
+- [ ] Add entity/house-level permission overrides
+- [ ] Create custom permission sets
+- [ ] Implement permission inheritance hierarchy
+
+## Phase 6: Audit & Backup (Pending)
+- [ ] Add version history tracking for documents
+- [ ] Create diff comparison between versions
+- [ ] Implement version rollback capability
+- [ ] Add version comments and annotations
+- [ ] Build version timeline visualization
+- [ ] Create retention policy configuration
+- [ ] Implement automated archival based on age/status
+- [ ] Add legal hold functionality
+- [ ] Build retention compliance dashboard
+- [ ] Create data lifecycle management rules
+- [ ] Implement automated backup system
+- [ ] Create backup recovery procedures
+- [ ] Build backup status monitoring dashboard
+
+## Document Watermarking Feature (NEW - Optional IP Protection)
+- [ ] Create watermarking service for PDF/image documents
+- [ ] Build document upload interface for watermarking
+- [ ] Add watermark text customization (opacity, angle, position, size)
+- [ ] Implement batch watermarking for multiple documents
+- [ ] Create watermark preview before applying
+- [ ] Add watermark removal/modification options
+- [ ] Store watermarked documents in S3
+- [ ] Create watermark history/audit trail
+- [ ] Build watermarking dashboard to view processed documents
+- [ ] Add watermark templates for common use cases (Confidential, Draft, Approved, etc.)
+- [ ] Create watermark API endpoint for programmatic use
+- [ ] Add watermark verification capability
+
+## Phase 7: Testing, Validation & Documentation (Pending)
+- [ ] Test email delivery and template rendering
+- [ ] Test 2FA setup and verification flows
+- [ ] Test RBAC permission enforcement
+- [ ] Test audit trail logging and retrieval
+- [ ] Test backup and recovery procedures
+- [ ] Test watermarking functionality
+- [ ] Performance testing with all features
+- [ ] Security audit of new features
+- [ ] Create comprehensive documentation
+- [ ] Create user guides for 2FA and email settings
+- [ ] Create admin guides for RBAC and audit trails
+- [ ] Create watermarking user guide
+- [ ] Final checkpoint and deployment readiness
+
+
+## Radio Station Seeding
+
+- [ ] Create seed data for 20+ broadcast channels with metadata
+- [ ] Create seed data for 50+ broadcast episodes with audio URLs
+- [ ] Create seed data for 15+ live broadcasts with schedules
+- [ ] Wire seed data to BroadcastChannels page
+- [ ] Wire seed data to BroadcastEpisodes page
+- [ ] Wire seed data to LiveBroadcasts page
+- [ ] Test radio station display and playback
+- [ ] Add seed function to tRPC router

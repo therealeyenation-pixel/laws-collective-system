@@ -11,20 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Radio, Users, Clock, Eye } from "lucide-react";
+import { Loader2, Plus, Radio, Users, Clock, Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-
-interface LiveBroadcast {
-  id: number;
-  title: string;
-  description?: string;
-  status: string;
-  scheduledStartTime: Date;
-  currentViewers: number;
-  peakViewers: number;
-  totalViewers: number;
-  isRecorded: boolean;
-}
 
 export default function LiveBroadcasts() {
   const [channelId, setChannelId] = useState<number | null>(null);
@@ -36,12 +24,16 @@ export default function LiveBroadcasts() {
     isRecorded: true,
   });
 
-  const { data: broadcastsData, isLoading, refetch } = trpc.broadcastRadio.getLiveBroadcasts.useQuery(
-    { channelId: channelId || 1 },
+  // Fetch all channels
+  const { data: channels } = trpc.broadcast.channels.getAll.useQuery();
+
+  // Fetch live broadcasts
+  const { data: broadcasts, isLoading, refetch } = trpc.broadcast.liveBroadcasts.getAll.useQuery(
+    { channelId: channelId || undefined },
     { enabled: !!channelId }
   );
 
-  const scheduleBroadcastMutation = trpc.broadcastRadio.scheduleLiveBroadcast.useMutation({
+  const createBroadcastMutation = trpc.broadcast.liveBroadcasts.create.useMutation({
     onSuccess: () => {
       toast.success("Broadcast scheduled successfully");
       setFormData({
@@ -58,13 +50,23 @@ export default function LiveBroadcasts() {
     },
   });
 
-  const startBroadcastMutation = trpc.broadcastRadio.startLiveBroadcast.useMutation({
+  const updateBroadcastMutation = trpc.broadcast.liveBroadcasts.update.useMutation({
     onSuccess: () => {
-      toast.success("Broadcast started successfully");
+      toast.success("Broadcast updated successfully");
       refetch();
     },
     onError: (error) => {
-      toast.error(`Error starting broadcast: ${error.message}`);
+      toast.error(`Error updating broadcast: ${error.message}`);
+    },
+  });
+
+  const deleteBroadcastMutation = trpc.broadcast.liveBroadcasts.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Broadcast deleted successfully");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Error deleting broadcast: ${error.message}`);
     },
   });
 
@@ -81,31 +83,37 @@ export default function LiveBroadcasts() {
       return;
     }
 
-    await scheduleBroadcastMutation.mutateAsync({
+    await createBroadcastMutation.mutateAsync({
       channelId,
       title: formData.title,
-      description: formData.description,
+      description: formData.description || undefined,
       scheduledStartTime: new Date(formData.scheduledStartTime),
       isRecorded: formData.isRecorded,
     });
   };
 
+  const handleDeleteBroadcast = async (broadcastId: number) => {
+    const confirmed = window.confirm("Are you sure you want to delete this broadcast?");
+    if (!confirmed) return;
+    await deleteBroadcastMutation.mutateAsync({ id: broadcastId });
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "live":
-        return "bg-red-100 text-red-800 animate-pulse";
+        return "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 animate-pulse font-semibold";
       case "scheduled":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300";
       case "ended":
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300";
       case "cancelled":
-        return "bg-orange-100 text-orange-800";
+        return "bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300";
     }
   };
 
-  const formatDateTime = (date: Date) => {
+  const formatDateTime = (date: Date | string) => {
     return new Date(date).toLocaleString();
   };
 
@@ -115,30 +123,54 @@ export default function LiveBroadcasts() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Radio className="w-8 h-8 text-red-600 animate-pulse" />
-          <h1 className="text-3xl font-bold">Live Broadcasts</h1>
+          <div>
+            <h1 className="text-3xl font-bold">Live Broadcasts</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              {broadcasts?.length || 0} broadcasts in selected channel
+            </p>
+          </div>
         </div>
         <Button
           onClick={() => setIsScheduling(!isScheduling)}
           className="gap-2"
+          disabled={!channelId}
         >
           <Plus className="w-4 h-4" />
           Schedule Broadcast
         </Button>
       </div>
 
+      {/* Channel Selection */}
+      <Card className="p-4">
+        <label className="block text-sm font-medium mb-2">Select Channel</label>
+        <Select value={channelId?.toString() || ""} onValueChange={(val) => setChannelId(parseInt(val))}>
+          <SelectTrigger>
+            <SelectValue placeholder="Choose a channel to view broadcasts..." />
+          </SelectTrigger>
+          <SelectContent>
+            {channels?.map((channel) => (
+              <SelectItem key={channel.id} value={channel.id.toString()}>
+                {channel.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </Card>
+
       {/* Schedule Broadcast Form */}
-      {isScheduling && (
+      {isScheduling && channelId && (
         <Card className="p-6 bg-secondary/30">
           <h2 className="text-xl font-semibold mb-4">Schedule New Broadcast</h2>
           <form onSubmit={handleScheduleBroadcast} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Broadcast Title</label>
+              <label className="block text-sm font-medium mb-1">Broadcast Title *</label>
               <Input
                 placeholder="e.g., Live Q&A Session"
                 value={formData.title}
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
+                required
               />
             </div>
 
@@ -157,7 +189,7 @@ export default function LiveBroadcasts() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Scheduled Start Time
+                  Scheduled Start Time *
                 </label>
                 <Input
                   type="datetime-local"
@@ -168,6 +200,7 @@ export default function LiveBroadcasts() {
                       scheduledStartTime: e.target.value,
                     })
                   }
+                  required
                 />
               </div>
               <div>
@@ -195,9 +228,9 @@ export default function LiveBroadcasts() {
             <div className="flex gap-2">
               <Button
                 type="submit"
-                disabled={scheduleBroadcastMutation.isPending}
+                disabled={createBroadcastMutation.isPending}
               >
-                {scheduleBroadcastMutation.isPending ? (
+                {createBroadcastMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Scheduling...
@@ -219,19 +252,23 @@ export default function LiveBroadcasts() {
       )}
 
       {/* Broadcasts List */}
-      {isLoading ? (
+      {!channelId ? (
+        <Card className="p-8 text-center text-muted-foreground">
+          <p>Select a channel to view and manage live broadcasts</p>
+        </Card>
+      ) : isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-accent" />
         </div>
-      ) : broadcastsData && broadcastsData.length > 0 ? (
+      ) : broadcasts && broadcasts.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
-          {broadcastsData.map((broadcast: LiveBroadcast) => (
+          {broadcasts.map((broadcast) => (
             <Card key={broadcast.id} className="p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <h3 className="text-lg font-semibold">{broadcast.title}</h3>
-                    <span className={`text-xs px-2 py-1 rounded ${getStatusColor(broadcast.status)}`}>
+                    <span className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(broadcast.status)}`}>
                       {broadcast.status.toUpperCase()}
                     </span>
                   </div>
@@ -242,7 +279,7 @@ export default function LiveBroadcasts() {
                     </p>
                   )}
 
-                  <div className="flex gap-6 mt-4 text-sm text-muted-foreground">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
                       {formatDateTime(broadcast.scheduledStartTime)}
@@ -250,7 +287,7 @@ export default function LiveBroadcasts() {
 
                     {broadcast.status === "live" && (
                       <>
-                        <div className="flex items-center gap-1 text-red-600 font-semibold">
+                        <div className="flex items-center gap-1 text-red-600 dark:text-red-400 font-semibold">
                           <Users className="w-4 h-4" />
                           {broadcast.currentViewers} watching
                         </div>
@@ -269,8 +306,8 @@ export default function LiveBroadcasts() {
                     )}
 
                     {broadcast.isRecorded && (
-                      <span className="px-2 py-1 bg-accent/10 text-accent rounded text-xs">
-                        Recorded
+                      <span className="px-2 py-1 bg-accent/10 text-accent rounded text-xs font-medium">
+                        🎥 Recorded
                       </span>
                     )}
                   </div>
@@ -281,24 +318,28 @@ export default function LiveBroadcasts() {
                     <Button
                       size="sm"
                       onClick={() =>
-                        startBroadcastMutation.mutateAsync({
-                          broadcastId: broadcast.id,
-                          streamUrl: "https://stream.example.com/live",
-                          streamKey: "abc123xyz",
+                        updateBroadcastMutation.mutateAsync({
+                          id: broadcast.id,
+                          status: "live",
                         })
                       }
-                      disabled={startBroadcastMutation.isPending}
+                      disabled={updateBroadcastMutation.isPending}
                       className="bg-red-600 hover:bg-red-700"
                     >
-                      {startBroadcastMutation.isPending ? (
+                      {updateBroadcastMutation.isPending ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         "Start Live"
                       )}
                     </Button>
                   )}
-                  <Button size="sm" variant="outline">
-                    Details
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDeleteBroadcast(broadcast.id)}
+                    className="text-red-600"
+                  >
+                    <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
@@ -307,7 +348,7 @@ export default function LiveBroadcasts() {
         </div>
       ) : (
         <Card className="p-8 text-center text-muted-foreground">
-          <Radio className="w-12 h-12 mx-auto mb-3 opacity-50" />
+          <Radio className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p>No broadcasts scheduled. Schedule your first live broadcast!</p>
         </Card>
       )}

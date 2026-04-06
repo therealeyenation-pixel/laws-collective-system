@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Edit2, Trash2, Radio } from "lucide-react";
+import { Loader2, Plus, Edit2, Trash2, Radio, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 export default function BroadcastChannels() {
@@ -19,17 +19,14 @@ export default function BroadcastChannels() {
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
-    category: "education",
+    category: "education" as const,
     description: "",
-    broadcastFormat: "podcast",
+    broadcastFormat: "podcast" as const,
   });
 
-  const { data: channelsData, isLoading, refetch } = trpc.broadcastRadio.getChannels.useQuery({
-    limit: 20,
-    offset: 0,
-  });
+  const { data: channels, isLoading, refetch } = trpc.broadcast.channels.getAll.useQuery();
 
-  const createChannelMutation = trpc.broadcastRadio.createChannel.useMutation({
+  const createChannelMutation = trpc.broadcast.channels.create.useMutation({
     onSuccess: () => {
       toast.success("Channel created successfully");
       setFormData({
@@ -47,13 +44,35 @@ export default function BroadcastChannels() {
     },
   });
 
-  const updateChannelMutation = trpc.broadcastRadio.updateChannel.useMutation({
+  const seedMutation = trpc.broadcast.seed.useMutation({
+    onSuccess: (result) => {
+      toast.success(
+        `Seeded ${result.counts.channels} channels, ${result.counts.episodes} episodes, and ${result.counts.liveBroadcasts} live broadcasts!`
+      );
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Error seeding data: ${error.message}`);
+    },
+  });
+
+  const updateChannelMutation = trpc.broadcast.channels.update.useMutation({
     onSuccess: () => {
       toast.success("Channel updated successfully");
       refetch();
     },
     onError: (error) => {
       toast.error(`Error updating channel: ${error.message}`);
+    },
+  });
+
+  const deleteChannelMutation = trpc.broadcast.channels.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Channel deleted successfully");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Error deleting channel: ${error.message}`);
     },
   });
 
@@ -68,18 +87,26 @@ export default function BroadcastChannels() {
     await createChannelMutation.mutateAsync({
       name: formData.name,
       slug: formData.slug,
-      category: formData.category as any,
-      description: formData.description,
-      broadcastFormat: formData.broadcastFormat as any,
+      category: formData.category,
+      description: formData.description || undefined,
+      broadcastFormat: formData.broadcastFormat,
     });
   };
 
-  const handleToggleMonetization = async (channelId: number, isMonetized: boolean) => {
-    await updateChannelMutation.mutateAsync({
-      channelId,
-      isMonetized: !isMonetized,
-      monetizationTier: !isMonetized ? "basic" : "free",
-    });
+  const handleSeedData = async () => {
+    if (channels && channels.length > 0) {
+      const confirmed = window.confirm(
+        "This will add 10 channels, 10 episodes, and 5 live broadcasts. Continue?"
+      );
+      if (!confirmed) return;
+    }
+    await seedMutation.mutateAsync();
+  };
+
+  const handleDeleteChannel = async (channelId: number) => {
+    const confirmed = window.confirm("Are you sure you want to delete this channel?");
+    if (!confirmed) return;
+    await deleteChannelMutation.mutateAsync({ id: channelId });
   };
 
   if (isLoading) {
@@ -96,15 +123,31 @@ export default function BroadcastChannels() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Radio className="w-8 h-8 text-accent" />
-          <h1 className="text-3xl font-bold">Broadcast Channels</h1>
+          <div>
+            <h1 className="text-3xl font-bold">Broadcast Channels</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              {channels?.length || 0} channels available
+            </p>
+          </div>
         </div>
-        <Button
-          onClick={() => setIsCreating(!isCreating)}
-          className="gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          New Channel
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSeedData}
+            variant="outline"
+            disabled={seedMutation.isPending}
+            className="gap-2"
+          >
+            <RefreshCw className={`w-4 h-4 ${seedMutation.isPending ? "animate-spin" : ""}`} />
+            {seedMutation.isPending ? "Seeding..." : "Seed Data"}
+          </Button>
+          <Button
+            onClick={() => setIsCreating(!isCreating)}
+            className="gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            New Channel
+          </Button>
+        </div>
       </div>
 
       {/* Create Channel Form */}
@@ -114,23 +157,25 @@ export default function BroadcastChannels() {
           <form onSubmit={handleCreateChannel} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Channel Name</label>
+                <label className="block text-sm font-medium mb-1">Channel Name *</label>
                 <Input
                   placeholder="e.g., Tech Talk Daily"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
+                  required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Slug</label>
+                <label className="block text-sm font-medium mb-1">Slug *</label>
                 <Input
                   placeholder="e.g., tech-talk-daily"
                   value={formData.slug}
                   onChange={(e) =>
                     setFormData({ ...formData, slug: e.target.value })
                   }
+                  required
                 />
               </div>
             </div>
@@ -141,7 +186,10 @@ export default function BroadcastChannels() {
                 <Select
                   value={formData.category}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, category: value })
+                    setFormData({
+                      ...formData,
+                      category: value as "education" | "business" | "finance" | "health" | "entertainment" | "news" | "technology" | "culture" | "other",
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -156,6 +204,7 @@ export default function BroadcastChannels() {
                     <SelectItem value="news">News</SelectItem>
                     <SelectItem value="technology">Technology</SelectItem>
                     <SelectItem value="culture">Culture</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -164,7 +213,10 @@ export default function BroadcastChannels() {
                 <Select
                   value={formData.broadcastFormat}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, broadcastFormat: value })
+                    setFormData({
+                      ...formData,
+                      broadcastFormat: value as "podcast" | "live_radio" | "hybrid",
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -217,67 +269,86 @@ export default function BroadcastChannels() {
         </Card>
       )}
 
-      {/* Channels List */}
-      <div className="grid grid-cols-1 gap-4">
-        {channelsData?.channels && channelsData.channels.length > 0 ? (
-          channelsData.channels.map((channel) => (
-            <Card key={channel.id} className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{channel.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {channel.description}
-                  </p>
-                  <div className="flex gap-4 mt-3 text-sm">
-                    <span className="px-2 py-1 bg-accent/10 text-accent rounded">
-                      {channel.category}
-                    </span>
-                    <span className="px-2 py-1 bg-secondary/50 rounded">
-                      {channel.broadcastFormat}
-                    </span>
-                    <span className="text-muted-foreground">
-                      {channel.totalEpisodes} episodes
-                    </span>
-                    <span className="text-muted-foreground">
-                      {channel.totalListeners} listeners
-                    </span>
-                  </div>
+      {/* Channels Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {channels && channels.length > 0 ? (
+          channels.map((channel) => (
+            <Card key={channel.id} className="p-6 flex flex-col">
+              {channel.coverImageUrl && (
+                <img
+                  src={channel.coverImageUrl}
+                  alt={channel.name}
+                  className="w-full h-40 object-cover rounded mb-4"
+                />
+              )}
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold">{channel.name}</h3>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {channel.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <span className="px-2 py-1 bg-accent/10 text-accent rounded text-xs font-medium">
+                    {channel.category}
+                  </span>
+                  <span className="px-2 py-1 bg-secondary/50 rounded text-xs font-medium">
+                    {channel.broadcastFormat.replace("_", " ")}
+                  </span>
+                  <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-xs font-medium">
+                    {channel.status}
+                  </span>
                 </div>
+                <div className="grid grid-cols-2 gap-2 mt-4 text-xs text-muted-foreground">
+                  <div>Episodes: {channel.totalEpisodes}</div>
+                  <div>Listeners: {channel.totalListeners}</div>
+                  <div>Downloads: {channel.totalDownloads}</div>
+                  <div>{channel.isMonetized ? "💰 Monetized" : "Free"}</div>
+                </div>
+              </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() =>
-                      handleToggleMonetization(channel.id, channel.isMonetized)
-                    }
-                  >
-                    {channel.isMonetized ? "Monetized" : "Monetize"}
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    <Edit2 className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-red-600">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
+              <div className="flex gap-2 mt-4">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() =>
+                    updateChannelMutation.mutateAsync({
+                      id: channel.id,
+                      status: channel.status === "active" ? "paused" : "active",
+                    })
+                  }
+                >
+                  {channel.status === "active" ? "Pause" : "Activate"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleDeleteChannel(channel.id)}
+                  className="text-red-600"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               </div>
             </Card>
           ))
         ) : (
-          <Card className="p-8 text-center text-muted-foreground">
-            <Radio className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No channels yet. Create your first broadcast channel!</p>
-          </Card>
+          <div className="col-span-full">
+            <Card className="p-12 text-center text-muted-foreground">
+              <Radio className="w-16 h-16 mx-auto mb-4 opacity-30" />
+              <p className="text-lg mb-4">No channels yet</p>
+              <Button onClick={handleSeedData} disabled={seedMutation.isPending}>
+                {seedMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Seeding...
+                  </>
+                ) : (
+                  "Seed Sample Channels"
+                )}
+              </Button>
+            </Card>
+          </div>
         )}
       </div>
-
-      {/* Pagination Info */}
-      {channelsData && (
-        <div className="text-sm text-muted-foreground text-center">
-          Showing {channelsData.channels.length} of {channelsData.total} channels
-        </div>
-      )}
     </div>
   );
 }
