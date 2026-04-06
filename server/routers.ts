@@ -87,6 +87,7 @@ import { contactSubmissionsRouter } from "./routers/contactSubmissions";
 import { emergencyRouter } from "./routers/emergency";
 import { conferenceRouter } from "./routers/conference";
 import { mediaRouter } from "./routers/media";
+import { systemRouter as systemOfflineRouter } from "./routers/system";
 import { stripeCheckoutRouter } from "./routers/stripeCheckout";
 import { onboardingRouter } from "./routers/onboarding";
 import { proceduresRouter } from "./routers/procedures";
@@ -374,6 +375,7 @@ export const appRouter = router({
   emergency: emergencyRouter,
   conference: conferenceRouter,
   media: mediaRouter,
+  systemOffline: systemOfflineRouter,
   stripeCheckout: stripeCheckoutRouter,
   onboarding: onboardingRouter,
   procedures: proceduresRouter,
