@@ -519,8 +519,13 @@ function Router() {
       <Route path="/grant-export">{() => <ProtectedRoute component={GrantExport} minRole="user" />}</Route>
       <Route path="/grant-history">{() => <ProtectedRoute component={GrantHistory} minRole="user" />}</Route>
       <Route path="/need-statement-editor">{() => <ProtectedRoute component={NeedStatementEditor} minRole="admin" />}</Route>
-      <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} minRole="user" />}</Route>
-      <Route path="/health-simulator">{() => <ProtectedRoute component={HealthSimulator} minRole="staff" />}</Route>
+      {/* Dynamic simulator routes for /simulator/:type format */}
+      <Route path="/simulator/finance">{() => <ProtectedRoute component={FinanceSimulator} minRole="staff" />}</Route>
+      <Route path="/simulator/grant">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>
+      <Route path="/simulator/business">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>
+      <Route path="/simulator/tax">{() => <ProtectedRoute component={TaxSimulator} minRole="user" />}</Route>
+      <Route path="/simulator/proposal">{() => <ProtectedRoute component={ProposalSimulator} minRole="staff" />}</Route>
+      <Route path="/proposal-simulator">{() => <ProtectedRoute component={ProposalSimulator} minRole="staff" />}</Route>
       <Route path="/education-simulator">{() => <ProtectedRoute component={EducationSimulator} minRole="staff" />}</Route>
       <Route path="/design-simulator">{() => <ProtectedRoute component={DesignSimulator} minRole="staff" />}</Route>
       <Route path="/media-simulator">{() => <ProtectedRoute component={MediaSimulator} minRole="staff" />}</Route>

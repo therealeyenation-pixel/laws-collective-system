@@ -127,6 +127,8 @@ const menuCategories: MenuCategory[] = [
       { icon: GraduationCap, label: "Scholarships", path: "/scholarships", minRole: "staff" },
       { icon: Rocket, label: "Specialist Tracks", path: "/specialist-tracks", minRole: "staff" },
       { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
+      { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
+      { icon: Video, label: "VOD Library", path: "/theater-vod", minRole: "user" },
     ]
   },
 
@@ -565,30 +567,14 @@ const menuCategories: MenuCategory[] = [
   },
 
   {
-    icon: Play,
-    label: "Theater & Broadcast",
+    icon: Music,
+    label: "Broadcast Radio",
     minRole: "user",
     defaultOpen: false,
-    subCategories: [
-      {
-        icon: Play,
-        label: "Live Theater",
-        minRole: "user",
-        items: [
-          { icon: Play, label: "Live Channels", path: "/theater-live", minRole: "user" },
-          { icon: Video, label: "VOD Library", path: "/theater-vod", minRole: "user" },
-        ]
-      },
-      {
-        icon: Music,
-        label: "Broadcast",
-        minRole: "user",
-        items: [
-          { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
-          { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
-          { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
-        ]
-      },
+    items: [
+      { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
+      { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
+      { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
     ]
   },
 ];
