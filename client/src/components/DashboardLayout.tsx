@@ -127,7 +127,6 @@ const menuCategories: MenuCategory[] = [
       { icon: GraduationCap, label: "Scholarships", path: "/scholarships", minRole: "staff" },
       { icon: Rocket, label: "Specialist Tracks", path: "/specialist-tracks", minRole: "staff" },
       { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
-      { icon: Radio, label: "Communication Center", path: "/communication-center", minRole: "user" },
     ]
   },
 
@@ -283,7 +282,6 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: DollarSign, label: "Finance Dashboard", path: "/dept/finance", minRole: "staff" },
           { icon: DollarSign, label: "Financial Automation", path: "/financial-automation", minRole: "staff" },
-          { icon: TrendingUp, label: "Investments", path: "/investments", minRole: "staff" },
           { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff" },
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },
           { icon: CreditCard, label: "Pricing", path: "/pricing", minRole: "admin" },
@@ -567,6 +565,19 @@ const menuCategories: MenuCategory[] = [
   },
 
   {
+    icon: TrendingUp,
+    label: "Investments",
+    minRole: "admin",
+    defaultOpen: false,
+    items: [
+      { icon: PieChart, label: "Portfolio Dashboard", path: "/investments", minRole: "admin" },
+      { icon: BarChart3, label: "Analytics", path: "/investment-analytics", minRole: "admin" },
+      { icon: Gavel, label: "Governance", path: "/investment-governance", minRole: "admin" },
+      { icon: FileText, label: "Reports", path: "/investment-reports", minRole: "admin" },
+    ]
+  },
+
+  {
     icon: Play,
     label: "Theater & Broadcast",
     minRole: "user",
@@ -589,6 +600,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
           { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
           { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
+          { icon: Radio, label: "Radio & Podcasts", path: "/broadcasting", minRole: "user" },
         ]
       },
     ]

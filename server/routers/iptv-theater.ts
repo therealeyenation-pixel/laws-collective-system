@@ -52,20 +52,9 @@ const iptvTheaterRouter = {
       const channels = await ctx.db.query.iptvChannels.findMany({
         limit: input.limit,
         offset: input.offset,
-        with: {
-          streams: {
-            where: (streams, { eq }) => eq(streams.isActive, true),
-            limit: 1,
-          },
-        },
       });
 
-      return channels.map((channel) => ({
-        ...channel,
-        streamUrl: channel.streams?.[0]?.streamUrl || channel.streamUrl,
-        currentViewers: channel.currentViewers || 0,
-        totalViewers: channel.totalViewers || 0,
-      }));
+      return channels;
     }),
 
   /**
@@ -84,10 +73,7 @@ const iptvTheaterRouter = {
       });
 
       return {
-        channel: {
-          ...channel,
-          streamUrl: activeStream?.streamUrl || channel?.streamUrl,
-        },
+        channel,
         activeStream,
       };
     }),

@@ -339,17 +339,18 @@ import OfflineSettings from "@/pages/OfflineSettings";
 import RealtimeDashboardSync from "@/pages/RealtimeDashboardSync";
 import CustomReportScheduling from "@/pages/CustomReportScheduling";
 import TeamCollaboration from "@/pages/TeamCollaboration";
-import TheaterLiveWrapper from "@/pages/TheaterLiveWrapper";
+import TheaterLive from "@/pages/TheaterLive";
 import TheaterLiveEnhanced from "@/pages/TheaterLiveEnhanced";
-import CommunicationCenter from "@/pages/CommunicationCenter";
-import SatelliteRadio from "@/pages/SatelliteRadio";
-import VideoOnDemand from "@/pages/VideoOnDemand";
 import IPTVAdminPanel from "@/pages/IPTVAdminPanel";
 import TheaterVOD from "@/pages/TheaterVOD";
 import BroadcastChannels from "@/pages/BroadcastChannels";
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
 import AdminSeeding from "@/pages/AdminSeeding";
+import SubscriptionManagement from "@/pages/SubscriptionManagement";
+import M3UImportManager from "@/pages/M3UImportManager";
+import TheaterLiveWithPlayer from "@/pages/TheaterLiveWithPlayer";
+import BroadcastingLive from "@/pages/BroadcastingLive";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -488,7 +489,7 @@ function Router() {
       <Route path="/treasury/acquisition-fund">{() => <ProtectedRoute component={AcquisitionFundDashboard} minRole="admin" />}</Route>
       <Route path="/asset-management">{() => <ProtectedRoute component={AssetManagementDashboard} minRole="admin" />}</Route>
       <Route path="/workforce-transitions">{() => <ProtectedRoute component={WorkforceTransitionsDashboard} minRole="admin" />}</Route>
-      <Route path="/investments">{() => <ProtectedRoute component={InvestmentPortfolioDashboard} minRole="user" />}</Route>
+      <Route path="/investments">{() => <ProtectedRoute component={InvestmentPortfolioDashboard} minRole="admin" />}</Route>
       <Route path="/investment-governance">{() => <ProtectedRoute component={InvestmentGovernanceDashboard} minRole="admin" />}</Route>
       <Route path="/tiered-governance">{() => <ProtectedRoute component={TieredGovernanceDashboard} minRole="admin" />}</Route>
       <Route path="/investment-reports">{() => <ProtectedRoute component={InvestmentReportDashboard} minRole="admin" />}</Route>
@@ -871,17 +872,18 @@ function Router() {
       <Route path="/realtime-dashboard-sync">{() => <ProtectedRoute component={RealtimeDashboardSync} />}</Route>
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
-      <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLiveWrapper} />}</Route>
-      <Route path="/communication-center">{() => <ProtectedRoute component={CommunicationCenter} />}</Route>
-      {/* <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveEnhanced} />}</Route> */}
-      <Route path="/satellite-radio">{() => <ProtectedRoute component={SatelliteRadio} />}</Route>
-      <Route path="/video-on-demand">{() => <ProtectedRoute component={VideoOnDemand} />}</Route>
+      <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLive} />}</Route>
+      <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveEnhanced} />}</Route>
       <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
       <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastChannels} />}</Route>
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
+      <Route path="/subscription-management">{() => <ProtectedRoute component={SubscriptionManagement} />}</Route>
+      <Route path="/m3u-import">{() => <ProtectedRoute component={M3UImportManager} />}</Route>
+      <Route path="/theater-player">{() => <ProtectedRoute component={TheaterLiveWithPlayer} />}</Route>
+      <Route path="/broadcasting">{() => <ProtectedRoute component={BroadcastingLive} />}</Route>
       {/* 404 */}
       <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />

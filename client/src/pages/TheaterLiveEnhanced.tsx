@@ -6,10 +6,8 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AgeVerificationModal } from '@/components/AgeVerificationModal';
-import { Play, Heart, Share2, Search, Filter, Lock, Radio, Film, ArrowLeft } from 'lucide-react';
+import { Play, Heart, Share2, Search, Filter, Lock } from 'lucide-react';
 import { toast } from 'sonner';
-import { VODSection } from '@/components/VODSection';
-import { RadioSection } from '@/components/RadioSection';
 
 const CONTENT_RATINGS = {
   G: { label: 'General Audiences', minAge: 0 },
@@ -29,7 +27,6 @@ export default function TheaterLiveEnhanced() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [ageVerificationOpen, setAgeVerificationOpen] = useState(false);
   const [pendingRestrictedChannel, setPendingRestrictedChannel] = useState<any>(null);
-  const [mainTab, setMainTab] = useState('live');
 
   // Queries
   const { data: channels, isLoading } = trpc.iptvTheater.getChannels.useQuery({
@@ -116,70 +113,6 @@ export default function TheaterLiveEnhanced() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header with Back Button */}
-      <div className="border-b border-border sticky top-0 z-50 bg-background/95 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => window.history.back()}
-            className="gap-2"
-            title="Go back"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back
-          </Button>
-          <h1 className="text-lg font-semibold text-foreground">Theater Live</h1>
-          <div className="w-16" /> {/* Spacer for alignment */}
-        </div>
-      </div>
-
-      {/* Main Theater Tabs */}
-      <div className="border-b border-border sticky top-12 z-40 bg-background/95 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setMainTab('live')}
-              className={`py-4 px-2 font-medium transition-colors flex items-center gap-2 border-b-2 ${
-                mainTab === 'live'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Play className="w-4 h-4" />
-              Live Channels
-            </button>
-            <button
-              onClick={() => setMainTab('vod')}
-              className={`py-4 px-2 font-medium transition-colors flex items-center gap-2 border-b-2 ${
-                mainTab === 'vod'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Film className="w-4 h-4" />
-              Video on Demand
-            </button>
-            <button
-              onClick={() => setMainTab('radio')}
-              className={`py-4 px-2 font-medium transition-colors flex items-center gap-2 border-b-2 ${
-                mainTab === 'radio'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Radio className="w-4 h-4" />
-              Satellite Radio
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Tab Content */}
-      {mainTab === 'vod' && <VODSection />}
-      {mainTab === 'radio' && <RadioSection />}
-      {mainTab === 'live' && (
-        <>
       {/* Video Player Section */}
       {selectedChannel ? (
         <div className="bg-black">
@@ -396,8 +329,6 @@ export default function TheaterLiveEnhanced() {
         requiredAge={18}
         contentTitle={pendingRestrictedChannel?.name}
       />
-        </>
-      )}
     </div>
   );
 }
