@@ -82,6 +82,7 @@ import { businessPlanParserRouter } from "./routers/business-plan-parser";
 import { trainingRouter } from "./routers/training";
 import { jobApplicationsRouter } from "./routers/job-applications";
 import { employeesRouter } from "./routers/employees";
+import { businessEntitiesRouter } from "./routers/businessEntities";
 import { contactSubmissionsRouter } from "./routers/contactSubmissions";
 import { onboardingRouter } from "./routers/onboarding";
 import { proceduresRouter } from "./routers/procedures";
@@ -364,6 +365,7 @@ export const appRouter = router({
   training: trainingRouter,
   jobApplications: jobApplicationsRouter,
   employees: employeesRouter,
+  businessEntities: businessEntitiesRouter,
   contactSubmissions: contactSubmissionsRouter,
   onboarding: onboardingRouter,
   procedures: proceduresRouter,
