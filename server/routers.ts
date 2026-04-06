@@ -48,6 +48,7 @@ import { taxPrepRouter } from "./routers/tax-prep";
 import { restorationRouter } from "./routers/restoration";
 import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
+import { weatherApiRouter } from "./routers/weatherApi";
 import aiRecommendationsRouter from "./routers/ai-recommendations";
 import iptvTheaterRouter from "./routers/iptv-theater";
 import { publicSeedRouter } from "./routers/public-seed";
@@ -335,6 +336,7 @@ export const appRouter = router({
   restoration: restorationRouter,
   documents: documentGenerationRouter,
   lifecycleManager: lifecycleManagerRouter,
+  weatherApi: weatherApiRouter,
   aiRecommendations: aiRecommendationsRouter,
   iptvTheater: iptvLiveRouter,
   vod: vodRouter,

@@ -423,7 +423,20 @@ export default function OfferLetters() {
                     <p className="text-sm text-muted-foreground">All approved software by department</p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/master_software_catalog.json';
+                    link.download = 'master_software_catalog.json';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    toast.success('Master Software Catalog downloaded');
+                  }}
+                >
                   <Download className="h-4 w-4" />
                   Download
                 </Button>
@@ -436,7 +449,20 @@ export default function OfferLetters() {
                     <p className="text-sm text-muted-foreground">Executive software overview</p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/ceo_software_access.json';
+                    link.download = 'ceo_software_access.json';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    toast.success('CEO Software Access downloaded');
+                  }}
+                >
                   <Download className="h-4 w-4" />
                   Download
                 </Button>
