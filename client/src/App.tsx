@@ -339,8 +339,11 @@ import OfflineSettings from "@/pages/OfflineSettings";
 import RealtimeDashboardSync from "@/pages/RealtimeDashboardSync";
 import CustomReportScheduling from "@/pages/CustomReportScheduling";
 import TeamCollaboration from "@/pages/TeamCollaboration";
-import TheaterLive from "@/pages/TheaterLive";
+import TheaterLiveWrapper from "@/pages/TheaterLiveWrapper";
 import TheaterLiveEnhanced from "@/pages/TheaterLiveEnhanced";
+import CommunicationCenter from "@/pages/CommunicationCenter";
+import SatelliteRadio from "@/pages/SatelliteRadio";
+import VideoOnDemand from "@/pages/VideoOnDemand";
 import IPTVAdminPanel from "@/pages/IPTVAdminPanel";
 import TheaterVOD from "@/pages/TheaterVOD";
 import BroadcastChannels from "@/pages/BroadcastChannels";
@@ -868,8 +871,11 @@ function Router() {
       <Route path="/realtime-dashboard-sync">{() => <ProtectedRoute component={RealtimeDashboardSync} />}</Route>
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
-      <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLive} />}</Route>
-      <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveEnhanced} />}</Route>
+      <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLiveWrapper} />}</Route>
+      <Route path="/communication-center">{() => <ProtectedRoute component={CommunicationCenter} />}</Route>
+      {/* <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveEnhanced} />}</Route> */}
+      <Route path="/satellite-radio">{() => <ProtectedRoute component={SatelliteRadio} />}</Route>
+      <Route path="/video-on-demand">{() => <ProtectedRoute component={VideoOnDemand} />}</Route>
       <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
       <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastChannels} />}</Route>

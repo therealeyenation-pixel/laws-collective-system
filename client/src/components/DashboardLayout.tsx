@@ -127,6 +127,7 @@ const menuCategories: MenuCategory[] = [
       { icon: GraduationCap, label: "Scholarships", path: "/scholarships", minRole: "staff" },
       { icon: Rocket, label: "Specialist Tracks", path: "/specialist-tracks", minRole: "staff" },
       { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
+      { icon: Radio, label: "Communication Center", path: "/communication-center", minRole: "user" },
     ]
   },
 

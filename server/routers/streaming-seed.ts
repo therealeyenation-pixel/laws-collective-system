@@ -6,6 +6,7 @@
 import { publicProcedure, router } from '../_core/trpc';
 import mysql from 'mysql2/promise';
 import { ENV } from '../_core/env';
+import { z } from 'zod';
 
 async function getConnection() {
   try {
@@ -161,4 +162,57 @@ export const streamingSeedRouter = router({
       return { count: 0, error: String(err) };
     }
   }),
+});
+
+/**
+ * Stream proxy endpoint - fetches external streams and serves them through the backend
+ * This avoids CORS and external CDN restrictions
+ */
+export const streamProxyRouter = router({
+  /**
+   * Proxy a stream URL through the backend
+   * This allows the frontend to fetch streams without CORS issues
+   */
+  getProxiedStream: publicProcedure
+    .input(z.object({ streamUrl: z.string().url() }))
+    .query(async ({ input }) => {
+      try {
+        // Validate that the stream URL is one we support
+        const allowedDomains = [
+          'bitdash-a.akamaihd.net',
+          'dash.akamaized.net',
+          'demo.unified-streaming.com',
+          'cph-p2p-msl.akamaized.net',
+        ];
+        
+        const url = new URL(input.streamUrl);
+        if (!allowedDomains.some(domain => url.hostname.includes(domain))) {
+          throw new Error('Stream URL not allowed');
+        }
+        
+        // Fetch the stream manifest
+        const response = await fetch(input.streamUrl, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch stream: ${response.status}`);
+        }
+        
+        const content = await response.text();
+        return {
+          success: true,
+          content,
+          contentType: response.headers.get('content-type') || 'application/vnd.apple.mpegurl',
+        };
+      } catch (error) {
+        console.error('Stream proxy error:', error);
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        };
+      }
+    }),
 });
