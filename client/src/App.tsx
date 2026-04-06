@@ -384,6 +384,9 @@ const hasAccess = (userRole: AccessLevel | undefined, requiredRole: AccessLevel)
 
 function ProtectedRoute({ component: Component, minRole = "user" }: { component: React.ComponentType; minRole?: AccessLevel }) {
   const { isAuthenticated, loading, user } = useAuth();
+  
+  // DEMO MODE: Check for demo bypass via URL parameter
+  const isDemoMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
 
   // Show loading state while checking auth
   if (loading) {
@@ -398,7 +401,8 @@ function ProtectedRoute({ component: Component, minRole = "user" }: { component:
   }
 
   // If not authenticated after loading completes, show sign-in prompt
-  if (!isAuthenticated) {
+  // DEMO MODE: Skip auth check if demo=true parameter is set
+  if (!isAuthenticated && !isDemoMode) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center space-y-6 max-w-md">
@@ -425,7 +429,9 @@ function ProtectedRoute({ component: Component, minRole = "user" }: { component:
   }
 
   // Check role-based access
-  const userRole = (user?.role as AccessLevel) || "user";
+  // DEMO MODE: Use mock user if in demo mode
+  const effectiveUser = isDemoMode && !user ? { role: 'user', id: 'demo-user', name: 'Demo User' } : user;
+  const userRole = (effectiveUser?.role as AccessLevel) || "user";
   if (!hasAccess(userRole, minRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
