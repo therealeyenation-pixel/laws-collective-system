@@ -27,9 +27,9 @@ export const iptvLiveRouter = router({
         category: z.string().optional(),
         limit: z.number().default(50),
         offset: z.number().default(0),
-      }).optional()
+      })
     )
-    .query(async ({ input = {} }) => {
+    .query(async ({ input }) => {
       const conn = await getConnection();
       if (!conn) {
         console.error('No database connection');
@@ -37,55 +37,8 @@ export const iptvLiveRouter = router({
       }
 
       try {
-        const limit = input.limit || 50;
-        const offset = input.offset || 0;
-        
-        console.log('DEBUG: Executing getChannels with limit:', limit, 'offset:', offset);
-        const query = `SELECT * FROM iptv_channels ORDER BY id LIMIT ${limit} OFFSET ${offset}`;
+        const query = `SELECT * FROM iptv_channels LIMIT ${input.limit} OFFSET ${input.offset}`;
         const [rows] = await conn.execute(query);
-        console.log('DEBUG: Query returned', (rows as any[]).length, 'rows');
-        await conn.end();
-
-        return (rows as any[]).map(row => ({
-          id: row.id,
-          name: row.name,
-          category: row.category,
-          description: row.description,
-          streamUrl: row.streamUrl,
-          logo: row.logo,
-          logoUrl: row.logo,
-          bannerUrl: row.logo,
-          contentRating: row.contentRating,
-          isAdultContent: row.isAdultContent,
-          accessLevel: row.accessLevel,
-          isActive: row.isActive,
-          isLive: true,
-          currentViewers: Math.floor(Math.random() * 5000),
-          totalViewers: Math.floor(Math.random() * 50000),
-        }));
-      } catch (err) {
-        console.error('Query error:', err);
-        try {
-          await conn.end();
-        } catch (e) {}
-        return [];
-      }
-    }),
-
-  /**
-   * Get channels by category
-   */
-  getChannelsByCategory: publicProcedure
-    .input(z.object({ category: z.string() }))
-    .query(async ({ input }) => {
-      const conn = await getConnection();
-      if (!conn) return [];
-
-      try {
-        const [rows] = await conn.execute(
-          `SELECT * FROM iptv_channels WHERE LOWER(category) = LOWER(?) ORDER BY name`,
-          [input.category]
-        );
         await conn.end();
 
         return (rows as any[]).map(row => ({
@@ -124,32 +77,28 @@ export const iptvLiveRouter = router({
       if (!conn) return { channel: null, activeStream: null };
 
       try {
-        const [rows] = await conn.execute(
-          `SELECT * FROM iptv_channels WHERE id = ?`,
-          [input.channelId]
-        );
-        await conn.end();
+        const [rows] = await conn.execute(`SELECT * FROM iptv_channels WHERE id = ${input.channelId}`);
 
         const channel = (rows as any[])[0];
-        if (!channel) return { channel: null, activeStream: null };
+        await conn.end();
 
         return {
-          channel: {
-            id: channel.id,
-            name: channel.name,
-            category: channel.category,
-            description: channel.description,
-            streamUrl: channel.streamUrl,
-            logo: channel.logo,
-            contentRating: channel.contentRating,
-            isAdultContent: channel.isAdultContent,
-            accessLevel: channel.accessLevel,
-          },
+          channel: channel
+            ? {
+                id: channel.id,
+                name: channel.name,
+                description: channel.description,
+                streamUrl: channel.streamUrl,
+                logo: channel.logo,
+                logoUrl: channel.logo,
+                bannerUrl: channel.logo,
+                currentViewers: Math.floor(Math.random() * 5000),
+                totalViewers: Math.floor(Math.random() * 50000),
+              }
+            : null,
           activeStream: {
-            url: channel.streamUrl,
-            quality: '1080p',
-            bitrate: '5000k',
-            codec: 'h264',
+            url: channel?.streamUrl,
+            isActive: true,
           },
         };
       } catch (err) {
@@ -162,16 +111,96 @@ export const iptvLiveRouter = router({
     }),
 
   /**
-   * Get all categories
+   * Get VOD movies
+   */
+  getVODMovies: publicProcedure
+    .input(
+      z.object({
+        genre: z.string().optional(),
+        limit: z.number().default(20),
+        offset: z.number().default(0),
+      })
+    )
+    .query(async ({ input }) => {
+      const conn = await getConnection();
+      if (!conn) return [];
+
+      try {
+        const query = `SELECT * FROM vod_movies LIMIT ${input.limit} OFFSET ${input.offset}`;
+        const [rows] = await conn.execute(query);
+        await conn.end();
+
+        return (rows as any[]).map(row => ({
+          id: row.id,
+          title: row.title,
+          genre: row.genre,
+          director: row.director,
+          duration: row.duration,
+          releaseYear: row.releaseYear,
+          imdbRating: row.imdbRating,
+          contentRating: row.contentRating,
+          posterUrl: row.posterUrl,
+          description: row.description,
+        }));
+      } catch (err) {
+        console.error('Query error:', err);
+        try {
+          await conn.end();
+        } catch (e) {}
+        return [];
+      }
+    }),
+
+  /**
+   * Get VOD series
+   */
+  getVODSeries: publicProcedure
+    .input(
+      z.object({
+        genre: z.string().optional(),
+        limit: z.number().default(20),
+        offset: z.number().default(0),
+      })
+    )
+    .query(async ({ input }) => {
+      const conn = await getConnection();
+      if (!conn) return [];
+
+      try {
+        const query = `SELECT * FROM vod_series LIMIT ${input.limit} OFFSET ${input.offset}`;
+        const [rows] = await conn.execute(query);
+        await conn.end();
+
+        return (rows as any[]).map(row => ({
+          id: row.id,
+          title: row.title,
+          genre: row.genre,
+          creator: row.creator,
+          totalSeasons: row.totalSeasons,
+          totalEpisodes: row.totalEpisodes,
+          imdbRating: row.imdbRating,
+          contentRating: row.contentRating,
+          posterUrl: row.posterUrl,
+          description: row.description,
+        }));
+      } catch (err) {
+        console.error('Query error:', err);
+        try {
+          await conn.end();
+        } catch (e) {}
+        return [];
+      }
+    }),
+
+  /**
+   * Get channel categories
    */
   getCategories: publicProcedure.query(async () => {
     const conn = await getConnection();
     if (!conn) return [];
 
     try {
-      const [rows] = await conn.execute(
-        `SELECT DISTINCT category FROM iptv_channels WHERE category IS NOT NULL ORDER BY category`
-      );
+      const [rows] = await conn.execute('SELECT DISTINCT category FROM iptv_channels');
       await conn.end();
 
       return (rows as any[]).map(row => row.category);
@@ -185,43 +214,20 @@ export const iptvLiveRouter = router({
   }),
 
   /**
-   * Search channels
+   * Follow channel (stub)
    */
-  searchChannels: publicProcedure
-    .input(z.object({ query: z.string() }))
-    .query(async ({ input }) => {
-      const conn = await getConnection();
-      if (!conn) return [];
+  followChannel: publicProcedure
+    .input(z.object({ channelId: z.number() }))
+    .mutation(async ({ input }) => {
+      return { success: true, channelId: input.channelId };
+    }),
 
-      try {
-        const searchTerm = `%${input.query}%`;
-        const [rows] = await conn.execute(
-          `SELECT * FROM iptv_channels WHERE name LIKE ? OR description LIKE ? ORDER BY name`,
-          [searchTerm, searchTerm]
-        );
-        await conn.end();
-
-        return (rows as any[]).map(row => ({
-          id: row.id,
-          name: row.name,
-          category: row.category,
-          description: row.description,
-          streamUrl: row.streamUrl,
-          logo: row.logo,
-          logoUrl: row.logo,
-          contentRating: row.contentRating,
-          isAdultContent: row.isAdultContent,
-          accessLevel: row.accessLevel,
-          isLive: true,
-          currentViewers: Math.floor(Math.random() * 5000),
-          totalViewers: Math.floor(Math.random() * 50000),
-        }));
-      } catch (err) {
-        console.error('Query error:', err);
-        try {
-          await conn.end();
-        } catch (e) {}
-        return [];
-      }
+  /**
+   * Start playback (stub)
+   */
+  startPlayback: publicProcedure
+    .input(z.object({ channelId: z.number() }))
+    .mutation(async ({ input }) => {
+      return { success: true, channelId: input.channelId };
     }),
 });

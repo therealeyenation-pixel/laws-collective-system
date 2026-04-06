@@ -565,19 +565,6 @@ const menuCategories: MenuCategory[] = [
   },
 
   {
-    icon: TrendingUp,
-    label: "Investments",
-    minRole: "admin",
-    defaultOpen: false,
-    items: [
-      { icon: PieChart, label: "Portfolio Dashboard", path: "/investments", minRole: "admin" },
-      { icon: BarChart3, label: "Analytics", path: "/investment-analytics", minRole: "admin" },
-      { icon: Gavel, label: "Governance", path: "/investment-governance", minRole: "admin" },
-      { icon: FileText, label: "Reports", path: "/investment-reports", minRole: "admin" },
-    ]
-  },
-
-  {
     icon: Play,
     label: "Theater & Broadcast",
     minRole: "user",
@@ -600,7 +587,6 @@ const menuCategories: MenuCategory[] = [
           { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
           { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
           { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
-          { icon: Radio, label: "Radio & Podcasts", path: "/broadcasting", minRole: "user" },
         ]
       },
     ]
