@@ -19264,3 +19264,144 @@ export const vodReviews = mysqlTable("vod_reviews", {
 
 export type VODReview = typeof vodReviews.$inferSelect;
 export type InsertVODReview = typeof vodReviews.$inferInsert;
+
+
+// ============================================================================
+// EMERGENCY SOS SYSTEM TABLES
+// ============================================================================
+
+export const emergencyAlerts = mysqlTable("emergency_alerts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  type: mysqlEnum("type", ["medical", "security", "fire", "natural_disaster", "other"]).notNull(),
+  location: varchar("location", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  severity: mysqlEnum("severity", ["critical", "high", "medium", "low"]).notNull(),
+  status: mysqlEnum("status", ["active", "resolved", "cancelled"]).default("active").notNull(),
+  resolution: text("resolution"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmergencyAlert = typeof emergencyAlerts.$inferSelect;
+export type InsertEmergencyAlert = typeof emergencyAlerts.$inferInsert;
+
+export const emergencyContacts = mysqlTable("emergency_contacts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  relationship: varchar("relationship", { length: 100 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EmergencyContact = typeof emergencyContacts.$inferSelect;
+export type InsertEmergencyContact = typeof emergencyContacts.$inferInsert;
+
+export const emergencyResponses = mysqlTable("emergency_responses", {
+  id: int("id").autoincrement().primaryKey(),
+  alertId: int("alertId").notNull(),
+  contactId: int("contactId").notNull(),
+  status: mysqlEnum("status", ["notified", "acknowledged", "responded", "failed"]).notNull(),
+  notifiedAt: timestamp("notifiedAt"),
+  acknowledgedAt: timestamp("acknowledgedAt"),
+  respondedAt: timestamp("respondedAt"),
+});
+
+export type EmergencyResponse = typeof emergencyResponses.$inferSelect;
+export type InsertEmergencyResponse = typeof emergencyResponses.$inferInsert;
+
+// ============================================================================
+// CONFERENCE ROOM SCHEDULER TABLES
+// ============================================================================
+
+export const conferenceRooms = mysqlTable("conference_rooms", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  capacity: int("capacity").notNull(),
+  status: mysqlEnum("status", ["available", "in_use", "maintenance"]).default("available").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ConferenceRoom = typeof conferenceRooms.$inferSelect;
+export type InsertConferenceRoom = typeof conferenceRooms.$inferInsert;
+
+export const conferenceSessions = mysqlTable("conference_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  roomId: int("roomId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  topic: varchar("topic", { length: 255 }).notNull(),
+  startTime: timestamp("startTime").notNull(),
+  endTime: timestamp("endTime").notNull(),
+  status: mysqlEnum("status", ["scheduled", "active", "completed", "cancelled"]).default("scheduled").notNull(),
+  startedAt: timestamp("startedAt"),
+  endedAt: timestamp("endedAt"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ConferenceSession = typeof conferenceSessions.$inferSelect;
+export type InsertConferenceSession = typeof conferenceSessions.$inferInsert;
+
+export const conferenceParticipants = mysqlTable("conference_participants", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  role: mysqlEnum("role", ["host", "presenter", "attendee"]).notNull(),
+  status: mysqlEnum("status", ["invited", "joined", "left", "declined"]).default("invited").notNull(),
+  joinedAt: timestamp("joinedAt"),
+  leftAt: timestamp("leftAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ConferenceParticipant = typeof conferenceParticipants.$inferSelect;
+export type InsertConferenceParticipant = typeof conferenceParticipants.$inferInsert;
+
+// ============================================================================
+// MUSIC & PODCAST INTEGRATION TABLES
+// ============================================================================
+
+export const mediaPlaylists = mysqlTable("media_playlists", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  isPublic: boolean("isPublic").default(false).notNull(),
+  trackCount: int("trackCount").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MediaPlaylist = typeof mediaPlaylists.$inferSelect;
+export type InsertMediaPlaylist = typeof mediaPlaylists.$inferInsert;
+
+export const mediaTracks = mysqlTable("media_tracks", {
+  id: int("id").autoincrement().primaryKey(),
+  playlistId: int("playlistId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  artist: varchar("artist", { length: 255 }).notNull(),
+  duration: int("duration").notNull(), // in seconds
+  url: varchar("url", { length: 1024 }).notNull(),
+  type: mysqlEnum("type", ["music", "podcast", "audiobook"]).notNull(),
+  addedAt: timestamp("addedAt").defaultNow().notNull(),
+});
+
+export type MediaTrack = typeof mediaTracks.$inferSelect;
+export type InsertMediaTrack = typeof mediaTracks.$inferInsert;
+
+export const playbackHistory = mysqlTable("playback_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  trackId: int("trackId").notNull(),
+  duration: int("duration").notNull(), // total duration in seconds
+  position: int("position").notNull(), // position when stopped in seconds
+  playedAt: timestamp("playedAt").defaultNow().notNull(),
+});
+
+export type PlaybackHistory = typeof playbackHistory.$inferSelect;
+export type InsertPlaybackHistory = typeof playbackHistory.$inferInsert;

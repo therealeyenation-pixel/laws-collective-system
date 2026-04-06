@@ -84,6 +84,9 @@ import { jobApplicationsRouter } from "./routers/job-applications";
 import { employeesRouter } from "./routers/employees";
 import { broadcastRouter } from "./routers/broadcast";
 import { contactSubmissionsRouter } from "./routers/contactSubmissions";
+import { emergencyRouter } from "./routers/emergency";
+import { conferenceRouter } from "./routers/conference";
+import { mediaRouter } from "./routers/media";
 import { stripeCheckoutRouter } from "./routers/stripeCheckout";
 import { onboardingRouter } from "./routers/onboarding";
 import { proceduresRouter } from "./routers/procedures";
@@ -368,6 +371,9 @@ export const appRouter = router({
   employees: employeesRouter,
   broadcast: broadcastRouter,
   contactSubmissions: contactSubmissionsRouter,
+  emergency: emergencyRouter,
+  conference: conferenceRouter,
+  media: mediaRouter,
   stripeCheckout: stripeCheckoutRouter,
   onboarding: onboardingRouter,
   procedures: proceduresRouter,

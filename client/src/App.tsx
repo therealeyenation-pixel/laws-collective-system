@@ -347,6 +347,9 @@ import TheaterVOD from "@/pages/TheaterVOD";
 import BroadcastChannels from "@/pages/BroadcastChannels";
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
+import Emergency from "@/pages/Emergency";
+import Conference from "@/pages/Conference";
+import Music from "@/pages/Music";
 import AdminSeeding from "@/pages/AdminSeeding";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
@@ -882,6 +885,9 @@ function Router() {
       <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastChannels} />}</Route>
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
+      <Route path="/emergency">{() => <ProtectedRoute component={Emergency} />}</Route>
+      <Route path="/conference">{() => <ProtectedRoute component={Conference} />}</Route>
+      <Route path="/music">{() => <ProtectedRoute component={Music} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
       {/* 404 */}
       <Route path="/" component={Landing} />
