@@ -84,6 +84,7 @@ import { jobApplicationsRouter } from "./routers/job-applications";
 import { employeesRouter } from "./routers/employees";
 import { businessEntitiesRouter } from "./routers/businessEntities";
 import { contactSubmissionsRouter } from "./routers/contactSubmissions";
+import { stripeCheckoutRouter } from "./routers/stripeCheckout";
 import { onboardingRouter } from "./routers/onboarding";
 import { proceduresRouter } from "./routers/procedures";
 import { projectControlsRouter } from "./routers/projectControls";
@@ -367,6 +368,7 @@ export const appRouter = router({
   employees: employeesRouter,
   businessEntities: businessEntitiesRouter,
   contactSubmissions: contactSubmissionsRouter,
+  stripeCheckout: stripeCheckoutRouter,
   onboarding: onboardingRouter,
   procedures: proceduresRouter,
   projectControls: projectControlsRouter,
