@@ -418,7 +418,6 @@ export const employeesRouter = router({
       entityName: r.entity?.name || "Unknown Entity"
     }));
   }),
-});
 
   /**
    * Seed sample employees (admin only)
