@@ -419,3 +419,45 @@ export const employeesRouter = router({
     }));
   }),
 });
+
+  /**
+   * Seed sample employees (admin only)
+   */
+  seedSampleEmployees: protectedProcedure.mutation(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database unavailable");
+
+    const sampleEmployees = [
+      { firstName: "Shanna", lastName: "Russell", email: "shanna@luvonpurpose.com", phone: "(555) 100-0001", entityId: 1, department: "Executive", jobTitle: "Matriarch/CEO", positionLevel: "executive" as const, employmentType: "full_time" as const, workLocation: "hybrid" as const, startDate: "2024-01-01", bio: "Visionary leader and founder of the LuvOnPurpose Family Enterprise.", status: "active" as const },
+      { firstName: "Craig", lastName: "Freeman", email: "craig@luvonpurpose.com", phone: "(555) 100-0002", entityId: 5, department: "Finance", jobTitle: "Chief Financial Officer", positionLevel: "executive" as const, employmentType: "full_time" as const, workLocation: "hybrid" as const, startDate: "2024-01-01", bio: "Oversees financial strategy, budgeting, and grant compliance.", status: "active" as const },
+      { firstName: "Cornelius", lastName: "Johnson", email: "cornelius@luvonpurpose.com", phone: "(555) 100-0003", entityId: 5, department: "Education", jobTitle: "Chief Education Officer", positionLevel: "executive" as const, employmentType: "full_time" as const, workLocation: "remote" as const, startDate: "2024-02-01", bio: "Strategic oversight of all education and training programs.", status: "active" as const },
+      { firstName: "Maya", lastName: "Thompson", email: "maya.thompson@luvonpurpose.com", phone: "(555) 200-0001", entityId: 5, department: "Human Resources", jobTitle: "HR Manager", positionLevel: "manager" as const, employmentType: "full_time" as const, workLocation: "hybrid" as const, startDate: "2024-03-15", bio: "Leads talent acquisition and employee relations.", status: "active" as const },
+      { firstName: "Jordan", lastName: "Williams", email: "jordan.williams@luvonpurpose.com", phone: "(555) 200-0002", entityId: 5, department: "Human Resources", jobTitle: "HR Operations Coordinator", positionLevel: "coordinator" as const, employmentType: "full_time" as const, workLocation: "remote" as const, startDate: "2024-04-01", bio: "Handles interview scheduling and onboarding.", status: "active" as const },
+      { firstName: "David", lastName: "Martinez", email: "david.martinez@luvonpurpose.com", phone: "(555) 300-0001", entityId: 3, department: "Technology", jobTitle: "Technology Director", positionLevel: "manager" as const, employmentType: "full_time" as const, workLocation: "hybrid" as const, startDate: "2024-02-15", bio: "Leads technology strategy and infrastructure.", status: "active" as const },
+      { firstName: "Sarah", lastName: "Anderson", email: "sarah.anderson@luvonpurpose.com", phone: "(555) 300-0002", entityId: 3, department: "Technology", jobTitle: "Full Stack Developer", positionLevel: "specialist" as const, employmentType: "full_time" as const, workLocation: "remote" as const, startDate: "2024-03-01", bio: "Develops and maintains web applications.", status: "active" as const },
+      { firstName: "Marcus", lastName: "Brown", email: "marcus.brown@luvonpurpose.com", phone: "(555) 400-0001", entityId: 2, department: "Finance", jobTitle: "Finance Manager", positionLevel: "manager" as const, employmentType: "full_time" as const, workLocation: "hybrid" as const, startDate: "2024-01-15", bio: "Manages financial operations and reporting.", status: "active" as const },
+      { firstName: "Nicole", lastName: "Adams", email: "nicole.adams@luvonpurpose.com", phone: "(555) 700-0001", entityId: 5, department: "Design", jobTitle: "Design Manager", positionLevel: "manager" as const, employmentType: "full_time" as const, workLocation: "hybrid" as const, startDate: "2024-04-01", bio: "Leads visual design and brand identity.", status: "active" as const },
+      { firstName: "Jennifer", lastName: "White", email: "jennifer.white@luvonpurpose.com", phone: "(555) 900-0001", entityId: 5, department: "Legal", jobTitle: "Contracts Manager", positionLevel: "manager" as const, employmentType: "full_time" as const, workLocation: "hybrid" as const, startDate: "2024-04-15", bio: "Manages contract lifecycle and legal compliance.", status: "active" as const },
+    ];
+
+    let seeded = 0;
+    for (const emp of sampleEmployees) {
+      try {
+        await db.insert(employees).values({
+          ...emp,
+          startDate: new Date(emp.startDate),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        seeded++;
+      } catch (error) {
+        // Skip duplicates
+        if ((error as any).code !== 'ER_DUP_ENTRY') {
+          console.error('Seed error:', error);
+        }
+      }
+    }
+
+    return { success: true, message: `Seeded ${seeded} employees` };
+  }),
+});
