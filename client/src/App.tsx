@@ -455,6 +455,8 @@ function Router() {
   return (
     <div className="flex flex-col min-h-screen">
       <Switch>
+      {/* Root route - must be first */}
+      <Route path="/" component={Landing} />
       {/* Public routes - no authentication required */}
       <Route path="/qr-holding" component={QRHolding} />
       <Route path="/login" component={Login} />
@@ -882,12 +884,9 @@ function Router() {
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
-      {/* 404 */}
-      <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />
       
       <Route path="/404" component={NotFound} />
-      
       <Route component={NotFound} />
     </Switch>
       <footer className="mt-auto border-t border-border bg-background/50 py-4">
