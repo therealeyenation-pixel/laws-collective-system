@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import * as QRCodeLib from "qrcode.react";
+import QRCode from "qrcode.react";
 import { trpc } from "@/lib/trpc";
 import OnboardingPreview from "@/components/OnboardingPreview";
-const QRCode = QRCodeLib.QRCodeSVG || QRCodeLib.default || QRCodeLib;
 
 type Stage = "intro-slideshow" | "name-input" | "waitlist-signup";
 
