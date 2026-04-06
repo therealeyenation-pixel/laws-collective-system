@@ -139,3 +139,56 @@
 - [x] Ensure all navigation items accessible on mobile
 - [x] Test on various mobile screen sizes
 - [x] Add mobile-specific styling and layout
+
+
+## Phase 6: Production Build Separation & Seed Removal
+
+### Phase 6.1: Landing Page Separation Verification
+- [ ] Verify landing page is completely separate from authenticated build
+- [ ] Confirm Sign In button redirects to authenticated dashboard
+- [ ] Test that landing page shows no authenticated features
+- [ ] Verify no sidebar on landing page
+- [ ] Test QR code functionality on landing page
+
+### Phase 6.2: Remove All Sample Seeds
+- [x] Remove seed data from broadcast router
+- [x] Remove seed data from emergency router (already clean)
+- [x] Remove seed data from conference router (already clean)
+- [x] Remove seed data from media router (already clean)
+- [x] Update all routers to provide CRUD only
+- [x] Test that authenticated build starts with empty data
+- [x] Verify users can create their own data from scratch
+
+## Phase 7: Real IPTV, WebRTC & Push Notifications
+
+### Phase 6.1: IPTV Channel Integration
+- [ ] Integrate IPTV provider API (11,000+ channels)
+- [ ] Add channel search and filtering by category
+- [ ] Implement channel streaming in Theater
+- [ ] Add favorites and watch history
+- [ ] Cache popular channels for offline access
+- [ ] Add EPG (Electronic Program Guide) support
+
+### Phase 6.2: WebRTC Video Conferencing
+- [ ] Integrate WebRTC library (simple-peer or similar)
+- [ ] Add video/audio capture and streaming
+- [ ] Implement conference room creation and joining
+- [ ] Add screen sharing capability
+- [ ] Implement session recording
+- [ ] Add participant management (mute, remove, etc.)
+
+### Phase 6.3: Push Notifications
+- [ ] Set up Web Push API integration
+- [ ] Add notification service worker
+- [ ] Implement emergency alert notifications
+- [ ] Add broadcast/channel update notifications
+- [ ] Add conference invitation notifications
+- [ ] Implement notification preferences/settings
+
+### Phase 6.4: Production Testing & Deployment
+- [ ] Run comprehensive vitest suite
+- [ ] Test IPTV streaming on various networks
+- [ ] Test WebRTC on mobile and desktop
+- [ ] Test push notifications across browsers
+- [ ] Performance optimization
+- [ ] Final checkpoint and deployment
