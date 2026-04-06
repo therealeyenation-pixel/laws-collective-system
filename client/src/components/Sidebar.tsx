@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ import {
   LogOut,
   Bell,
   Search,
-  ChevronDown,
   BarChart3,
   Users,
   FileText,
@@ -24,7 +23,7 @@ import {
 } from "lucide-react";
 
 export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [location] = useLocation();
@@ -52,150 +51,166 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile Toggle */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-40">
+        <Link href="/" className="font-bold text-lg">
+          L.A.W.S.
+        </Link>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="p-2 hover:bg-gray-100 rounded-lg"
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
 
-      {/* Sidebar */}
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-30"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Desktop Fixed, Mobile Drawer */}
       <aside
-        className={`fixed left-0 top-0 h-screen bg-background border-r border-border transition-all duration-300 z-40 ${
-          isOpen ? "w-64" : "w-20"
-        } md:w-64 flex flex-col`}
+        className={`
+          fixed md:static top-0 left-0 h-screen md:h-auto
+          w-64 md:w-64 bg-white border-r border-gray-200
+          transition-transform duration-300 ease-in-out z-40
+          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          overflow-y-auto md:overflow-visible
+          flex flex-col
+          md:pt-0 pt-20
+        `}
       >
-        {/* Header */}
-        <div className="p-4 border-b border-border">
-          <div className="flex items-center justify-between">
-            {isOpen && (
-              <h1 className="text-xl font-bold text-foreground truncate">
-                L.A.W.S.
-              </h1>
-            )}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="hidden md:flex p-2 hover:bg-secondary rounded-lg transition-colors"
-            >
-              <Menu className="w-5 h-5 text-foreground" />
-            </button>
+        {/* Desktop Logo */}
+        <div className="hidden md:block p-4 border-b border-gray-200">
+          <Link href="/" className="font-bold text-xl flex items-center gap-2">
+            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
+              L
+            </div>
+            L.A.W.S.
+          </Link>
+        </div>
+
+        {/* Search */}
+        <div className="p-4 border-b border-gray-200">
+          <div className="relative">
+            <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+            <Input
+              placeholder="Search..."
+              className="pl-10 h-9"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
         </div>
 
-        {/* Search Bar */}
-        {isOpen && (
-          <div className="p-4 border-b border-border">
-            <div className="relative">
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-9 text-sm"
-              />
-            </div>
-          </div>
-        )}
-
         {/* Main Menu */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-          <div className="space-y-1">
-            {isOpen && (
-              <p className="text-xs font-semibold text-muted-foreground px-2 py-2">
-                MAIN
-              </p>
-            )}
-            {mainMenuItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link key={item.href} href={item.href}>
-                  <a
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                      isActive(item.href)
-                        ? "bg-primary text-primary-foreground"
-                        : "text-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5 flex-shrink-0" />
-                    {isOpen && <span className="text-sm font-medium">{item.label}</span>}
-                  </a>
-                </Link>
-              );
-            })}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4">
+            <div className="text-xs font-semibold text-gray-500 uppercase mb-3">
+              Main
+            </div>
+            <nav className="space-y-2">
+              {mainMenuItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <a
+                      onClick={() => setIsOpen(false)}
+                      className={`
+                        flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
+                        ${
+                          isActive(item.href)
+                            ? "bg-green-600 text-white"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }
+                      `}
+                    >
+                      <Icon size={20} />
+                      <span className="font-medium">{item.label}</span>
+                    </a>
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
 
-          {/* Secondary Menu */}
-          <div className="space-y-1 pt-4 border-t border-border">
-            {isOpen && (
-              <p className="text-xs font-semibold text-muted-foreground px-2 py-2">
-                TOOLS
-              </p>
-            )}
-            {secondaryMenuItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link key={item.href} href={item.href}>
-                  <a
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                      isActive(item.href)
-                        ? "bg-primary text-primary-foreground"
-                        : "text-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5 flex-shrink-0" />
-                    {isOpen && <span className="text-sm font-medium">{item.label}</span>}
-                  </a>
-                </Link>
-              );
-            })}
+          {/* Tools Menu */}
+          <div className="p-4 border-t border-gray-200">
+            <div className="text-xs font-semibold text-gray-500 uppercase mb-3">
+              Tools
+            </div>
+            <nav className="space-y-2">
+              {secondaryMenuItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <a
+                      onClick={() => setIsOpen(false)}
+                      className={`
+                        flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
+                        ${
+                          isActive(item.href)
+                            ? "bg-green-600 text-white"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }
+                      `}
+                    >
+                      <Icon size={20} />
+                      <span className="font-medium">{item.label}</span>
+                    </a>
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
-        </nav>
+        </div>
 
-        {/* Footer */}
-        <div className="border-t border-border p-4 space-y-2">
+        {/* User Profile & Actions */}
+        <div className="p-4 border-t border-gray-200 space-y-3">
           {/* Notifications */}
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors">
-            <Bell className="w-5 h-5 flex-shrink-0" />
-            {isOpen && <span className="text-sm font-medium">Notifications</span>}
+          <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <Bell size={20} />
+            <span className="font-medium">Notifications</span>
           </button>
 
           {/* Settings */}
           <Link href="/settings">
-            <a className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors">
-              <Settings className="w-5 h-5 flex-shrink-0" />
-              {isOpen && <span className="text-sm font-medium">Settings</span>}
+            <a
+              onClick={() => setIsOpen(false)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Settings size={20} />
+              <span className="font-medium">Settings</span>
             </a>
           </Link>
 
           {/* User Profile */}
-          {isOpen && (
-            <div className="px-3 py-2 bg-secondary rounded-lg">
-              <p className="text-xs font-semibold text-muted-foreground">Logged in as</p>
-              <p className="text-sm font-medium text-foreground truncate">
-                {user?.email || "User"}
-              </p>
+          <div className="px-3 py-3 bg-green-50 rounded-lg">
+            <div className="text-sm font-semibold text-gray-900 truncate">
+              {user?.email || "User"}
             </div>
-          )}
+            <div className="text-xs text-gray-600 mt-1">
+              {user?.role || "Member"}
+            </div>
+          </div>
 
           {/* Logout */}
-          <Button
-            onClick={() => logout()}
-            variant="outline"
-            size="sm"
-            className="w-full"
+          <button
+            onClick={() => {
+              logout();
+              setIsOpen(false);
+            }}
+            className="w-full flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
           >
-            <LogOut className="w-4 h-4 mr-2" />
-            {isOpen && "Logout"}
-          </Button>
+            <LogOut size={20} />
+            <span>Logout</span>
+          </button>
         </div>
       </aside>
-
-      {/* Main Content Offset */}
-      <div className={`transition-all duration-300 ${isOpen ? "md:ml-64" : "md:ml-20"}`}>
-        {/* Content goes here */}
-      </div>
     </>
   );
 }

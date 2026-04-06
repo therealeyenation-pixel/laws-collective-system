@@ -923,7 +923,7 @@ function App() {
           <Toaster />
           <div className="flex">
             <Sidebar />
-            <div className="flex-1">
+            <div className="flex-1 md:pt-0 pt-16">
               <Router />
             </div>
           </div>
