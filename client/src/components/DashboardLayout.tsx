@@ -623,12 +623,16 @@ const menuCategories: MenuCategory[] = [
   },
 
   {
-    icon: Music,
-    label: "Music & Podcast",
+    icon: Disc3,
+    label: "Streaming Hub",
     minRole: "user",
     defaultOpen: false,
     items: [
-      { icon: Music, label: "Music Player", path: "/music", minRole: "user" },
+      { icon: Disc3, label: "All Streams", path: "/streaming", minRole: "user" },
+      { icon: Play, label: "Theater", path: "/theater-live-enhanced", minRole: "user" },
+      { icon: Music, label: "Radio", path: "/broadcast-channels", minRole: "user" },
+      { icon: Music, label: "Music", path: "/music", minRole: "user" },
+      { icon: AlertTriangle, label: "Emergency Alerts", path: "/emergency", minRole: "user" },
     ]
   },
 

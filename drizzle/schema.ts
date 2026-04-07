@@ -19405,3 +19405,321 @@ export const playbackHistory = mysqlTable("playback_history", {
 
 export type PlaybackHistory = typeof playbackHistory.$inferSelect;
 export type InsertPlaybackHistory = typeof playbackHistory.$inferInsert;
+
+
+/**
+ * ==========================================
+ * STREAMING CONTENT SYSTEM - UNIFIED SCHEMA
+ * ==========================================
+ * Unified tables for Theater (TV), Radio, Music, and Emergency Broadcasts
+ * Supports real data sources with user preferences and history
+ */
+
+/**
+ * Streaming Content - Unified table for all content types (TV channels, radio stations, music tracks, emergency broadcasts)
+ */
+export const streamingContent = mysqlTable("streaming_content", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Content identification
+  contentType: mysqlEnum("contentType", ["tv_channel", "radio_station", "music_track", "podcast", "emergency_broadcast"]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Media information
+  category: varchar("category", { length: 100 }).notNull(), // e.g., "News", "Sports", "Music", "Emergency"
+  subcategory: varchar("subcategory", { length: 100 }), // e.g., "Jazz", "Talk Radio", "Breaking News"
+  genre: varchar("genre", { length: 100 }), // Music/podcast genre
+  
+  // Streaming URLs and metadata
+  streamUrl: text("streamUrl"), // HLS/RTMP stream URL
+  thumbnailUrl: text("thumbnailUrl"),
+  logoUrl: text("logoUrl"),
+  
+  // Content-specific fields
+  artist: varchar("artist", { length: 255 }), // For music tracks
+  album: varchar("album", { length: 255 }), // For music tracks
+  duration: int("duration"), // Duration in seconds
+  bitrate: int("bitrate"), // Audio bitrate in kbps
+  language: varchar("language", { length: 50 }).default("en"),
+  
+  // Live/scheduled content
+  isLive: boolean("isLive").default(false),
+  scheduledStartTime: timestamp("scheduledStartTime"),
+  scheduledEndTime: timestamp("scheduledEndTime"),
+  
+  // Engagement metrics
+  currentViewers: int("currentViewers").default(0),
+  totalViews: int("totalViews").default(0),
+  rating: decimal("rating", { precision: 3, scale: 2 }).default("0"),
+  
+  // Emergency broadcast specific
+  emergencyLevel: mysqlEnum("emergencyLevel", ["info", "warning", "critical", "none"]).default("none"),
+  emergencyCategory: varchar("emergencyCategory", { length: 100 }), // e.g., "Weather", "Health", "Security"
+  
+  // Data source tracking
+  dataSource: varchar("dataSource", { length: 100 }), // e.g., "tuneIn", "youtube", "local", "emergency_api"
+  externalId: varchar("externalId", { length: 255 }), // ID from external API
+  
+  // Status and metadata
+  status: mysqlEnum("status", ["active", "archived", "offline", "maintenance"]).default("active").notNull(),
+  isVerified: boolean("isVerified").default(false),
+  metadata: json("metadata"), // Additional data (country, region, etc.)
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StreamingContent = typeof streamingContent.$inferSelect;
+export type InsertStreamingContent = typeof streamingContent.$inferInsert;
+
+/**
+ * User Streaming Preferences - User's favorite channels, stations, tracks
+ */
+export const userStreamingPreferences = mysqlTable("user_streaming_preferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Preference types
+  isFavorite: boolean("isFavorite").default(false),
+  isBlocked: boolean("isBlocked").default(false),
+  customLabel: varchar("customLabel", { length: 100 }), // User's custom name/label
+  
+  // Engagement tracking
+  lastPlayedAt: timestamp("lastPlayedAt"),
+  playCount: int("playCount").default(0),
+  totalMinutesWatched: int("totalMinutesWatched").default(0),
+  
+  // Personalization
+  notificationsEnabled: boolean("notificationsEnabled").default(true),
+  autoPlayNext: boolean("autoPlayNext").default(false),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserStreamingPreference = typeof userStreamingPreferences.$inferSelect;
+export type InsertUserStreamingPreference = typeof userStreamingPreferences.$inferInsert;
+
+/**
+ * Streaming History - User's watch/listen history
+ */
+export const streamingHistory = mysqlTable("streaming_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Session information
+  sessionId: varchar("sessionId", { length: 100 }).notNull(),
+  startTime: timestamp("startTime").notNull(),
+  endTime: timestamp("endTime"),
+  durationSeconds: int("durationSeconds").default(0),
+  
+  // Playback state
+  playbackPosition: int("playbackPosition").default(0), // Position in seconds
+  completionPercentage: int("completionPercentage").default(0),
+  wasCompleted: boolean("wasCompleted").default(false),
+  
+  // Device and quality info
+  deviceType: varchar("deviceType", { length: 50 }), // "mobile", "desktop", "tablet"
+  streamQuality: varchar("streamQuality", { length: 50 }), // "360p", "720p", "1080p", "audio"
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type StreamingHistory = typeof streamingHistory.$inferSelect;
+export type InsertStreamingHistory = typeof streamingHistory.$inferInsert;
+
+/**
+ * Streaming Playlists - User-created playlists of content
+ */
+export const streamingPlaylists = mysqlTable("streaming_playlists", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  playlistType: mysqlEnum("playlistType", ["custom", "system", "shared"]).default("custom").notNull(),
+  
+  // Playlist metadata
+  coverImageUrl: text("coverImageUrl"),
+  isPublic: boolean("isPublic").default(false),
+  totalDuration: int("totalDuration").default(0), // Total duration in seconds
+  itemCount: int("itemCount").default(0),
+  
+  // Sharing
+  shareToken: varchar("shareToken", { length: 100 }).unique(), // For shareable links
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type StreamingPlaylist = typeof streamingPlaylists.$inferSelect;
+export type InsertStreamingPlaylist = typeof streamingPlaylists.$inferInsert;
+
+/**
+ * Playlist Items - Content in playlists
+ */
+export const playlistItems = mysqlTable("playlist_items", {
+  id: int("id").autoincrement().primaryKey(),
+  playlistId: int("playlistId").notNull().references(() => streamingPlaylists.id, { onDelete: "cascade" }),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Item order
+  position: int("position").notNull(),
+  
+  // Item-specific metadata
+  addedAt: timestamp("addedAt").defaultNow().notNull(),
+  addedBy: int("addedBy").references(() => users.id),
+});
+
+export type PlaylistItem = typeof playlistItems.$inferSelect;
+export type InsertPlaylistItem = typeof playlistItems.$inferInsert;
+
+/**
+ * Emergency Broadcasts - Structured emergency alert data
+ */
+export const emergencyBroadcasts = mysqlTable("emergency_broadcasts", {
+  id: int("id").autoincrement().primaryKey(),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Emergency details
+  alertType: mysqlEnum("alertType", ["weather", "health", "security", "infrastructure", "civil", "other"]).notNull(),
+  severity: mysqlEnum("severity", ["info", "warning", "critical"]).notNull(),
+  
+  // Geographic scope
+  affectedRegions: json("affectedRegions"), // Array of region codes
+  affectedCountries: json("affectedCountries"), // Array of country codes
+  
+  // Alert lifecycle
+  issuedAt: timestamp("issuedAt").notNull(),
+  expiresAt: timestamp("expiresAt"),
+  cancelledAt: timestamp("cancelledAt"),
+  
+  // Content
+  headline: varchar("headline", { length: 255 }).notNull(),
+  details: text("details"),
+  actionRequired: text("actionRequired"), // What people should do
+  
+  // Distribution
+  broadcastChannels: json("broadcastChannels"), // Which channels to broadcast on
+  notificationsSent: int("notificationsSent").default(0),
+  
+  // Source
+  source: varchar("source", { length: 100 }), // e.g., "NOAA", "CDC", "Local Authority"
+  sourceUrl: text("sourceUrl"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmergencyBroadcast = typeof emergencyBroadcasts.$inferSelect;
+export type InsertEmergencyBroadcast = typeof emergencyBroadcasts.$inferInsert;
+
+/**
+ * Emergency Alert Subscriptions - Users subscribe to emergency alerts by region/type
+ */
+export const emergencyAlertSubscriptions = mysqlTable("emergency_alert_subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Subscription scope
+  region: varchar("region", { length: 100 }), // User's region of interest
+  country: varchar("country", { length: 100 }),
+  
+  // Alert types to receive
+  alertTypes: json("alertTypes"), // Array of alert types user wants
+  
+  // Notification preferences
+  notificationMethod: mysqlEnum("notificationMethod", ["push", "email", "sms", "all"]).default("push").notNull(),
+  isActive: boolean("isActive").default(true),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmergencyAlertSubscription = typeof emergencyAlertSubscriptions.$inferSelect;
+export type InsertEmergencyAlertSubscription = typeof emergencyAlertSubscriptions.$inferInsert;
+
+/**
+ * Streaming Recommendations - AI-generated recommendations for users
+ */
+export const streamingRecommendations = mysqlTable("streaming_recommendations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Recommendation metadata
+  recommendationType: mysqlEnum("recommendationType", ["personalized", "trending", "similar", "new_release", "emergency"]).notNull(),
+  score: decimal("score", { precision: 5, scale: 2 }), // Recommendation confidence 0-100
+  reason: text("reason"), // Why this was recommended
+  
+  // Engagement
+  wasClicked: boolean("wasClicked").default(false),
+  clickedAt: timestamp("clickedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"), // Recommendation expires after time
+});
+
+export type StreamingRecommendation = typeof streamingRecommendations.$inferSelect;
+export type InsertStreamingRecommendation = typeof streamingRecommendations.$inferInsert;
+
+/**
+ * EPG (Electronic Program Guide) - TV schedule data
+ */
+export const epgSchedule = mysqlTable("epg_schedule", {
+  id: int("id").autoincrement().primaryKey(),
+  channelId: int("channelId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Program information
+  programTitle: varchar("programTitle", { length: 255 }).notNull(),
+  description: text("description"),
+  genre: varchar("genre", { length: 100 }),
+  
+  // Schedule
+  startTime: timestamp("startTime").notNull(),
+  endTime: timestamp("endTime").notNull(),
+  duration: int("duration"), // Duration in minutes
+  
+  // Program details
+  rating: varchar("rating", { length: 10 }), // e.g., "PG", "R", "TV-14"
+  isRepeat: boolean("isRepeat").default(false),
+  isClosed: boolean("isClosed").default(false), // Has closed captions
+  
+  // Metadata
+  externalProgramId: varchar("externalProgramId", { length: 255 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EpgSchedule = typeof epgSchedule.$inferSelect;
+export type InsertEpgSchedule = typeof epgSchedule.$inferInsert;
+
+/**
+ * Social Sharing - Track shared content and engagement
+ */
+export const streamingShares = mysqlTable("streaming_shares", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Share details
+  shareToken: varchar("shareToken", { length: 100 }).unique().notNull(),
+  shareType: mysqlEnum("shareType", ["link", "social_media", "email", "embed"]).notNull(),
+  platform: varchar("platform", { length: 50 }), // e.g., "twitter", "facebook", "whatsapp"
+  
+  // Engagement
+  viewCount: int("viewCount").default(0),
+  clickCount: int("clickCount").default(0),
+  
+  // Expiration
+  expiresAt: timestamp("expiresAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type StreamingShare = typeof streamingShares.$inferSelect;
+export type InsertStreamingShare = typeof streamingShares.$inferInsert;

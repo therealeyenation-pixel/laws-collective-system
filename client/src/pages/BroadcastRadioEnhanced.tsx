@@ -6,12 +6,14 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Play, Share2, Radio, Users, Sparkles, Volume2 } from "lucide-react";
 import { toast } from "sonner";
+import { AudioPlayer } from "@/components/AudioPlayer";
 
 export default function BroadcastRadioEnhanced() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStation, setSelectedStation] = useState<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
 
   // Fetch stations
   const { data: stations = [] } = trpc.streamingContent.getStations.useQuery({
@@ -166,41 +168,14 @@ export default function BroadcastRadioEnhanced() {
           <TabsContent value="player" className="space-y-4">
             {selectedStation ? (
               <div className="space-y-6">
-                {/* Player Card */}
-                <Card className="p-8 bg-gradient-to-br from-accent/10 to-accent/5">
-                  <div className="text-center space-y-6">
-                    <div className="w-32 h-32 mx-auto bg-gradient-to-br from-accent to-accent/50 rounded-lg flex items-center justify-center">
-                      <Radio className="w-16 h-16 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-3xl font-bold text-foreground">{selectedStation.name}</h2>
-                      <p className="text-lg text-muted-foreground capitalize mt-2">{selectedStation.category}</p>
-                    </div>
-                    <div className="flex items-center justify-center gap-4">
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="gap-2"
-                      >
-                        {isPlaying ? "Pause" : "Play"}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        onClick={() => handleShare(selectedStation)}
-                        className="gap-2"
-                      >
-                        <Share2 className="w-5 h-5" />
-                        Share
-                      </Button>
-                    </div>
-                    <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                      <Volume2 className="w-5 h-5" />
-                      <input type="range" min="0" max="100" defaultValue="70" className="w-32" />
-                    </div>
-                  </div>
-                </Card>
+                {/* Audio Player */}
+                <AudioPlayer
+                  title={selectedStation.name}
+                  artist={selectedStation.description}
+                  streamUrl={selectedStation.streamUrl}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                />
 
                 {/* Station Info */}
                 <Card className="p-6">
