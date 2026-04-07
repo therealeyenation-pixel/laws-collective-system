@@ -292,6 +292,8 @@ import { realtimeDashboardSyncRouter } from "./routers/realtime-dashboard-sync";
 import { customReportSchedulingRouter } from "./routers/custom-report-scheduling";
 import { teamCollaborationFeaturesRouter } from "./routers/team-collaboration-features";
 import { advancedFeaturesOptimizationRouter } from "./routers/advanced-features-optimization";
+import { systemHealthRouter } from "./routers/system-health";
+import { pushNotificationsRouter } from "./routers/push-notifications";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -623,6 +625,8 @@ export const appRouter = router({
   portfolioRebalancing: portfolioRebalancingRouter,
   watchlistAlerts: watchlistAlertsRouter,
   taxOptimization: taxOptimizationRouter,
+  systemHealth: systemHealthRouter,
+  pushNotifications: pushNotificationsRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
