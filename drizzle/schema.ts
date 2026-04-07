@@ -19723,3 +19723,83 @@ export const streamingShares = mysqlTable("streaming_shares", {
 
 export type StreamingShare = typeof streamingShares.$inferSelect;
 export type InsertStreamingShare = typeof streamingShares.$inferInsert;
+
+
+/**
+ * User Favorites - Track user's favorite channels, stations, and tracks
+ */
+export const userFavorites = mysqlTable("user_favorites", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Content type for quick filtering
+  contentType: mysqlEnum("contentType", ["channel", "station", "track"]).notNull(),
+  
+  // Metadata
+  isFavorite: boolean("isFavorite").default(true).notNull(),
+  addedAt: timestamp("addedAt").defaultNow().notNull(),
+  
+  // Unique constraint: user can only favorite once per content
+}, (table) => ({
+  userContentUnique: unique("user_content_unique").on(table.userId, table.contentId),
+}));
+
+export type UserFavorite = typeof userFavorites.$inferSelect;
+export type InsertUserFavorite = typeof userFavorites.$inferInsert;
+
+/**
+ * User Playback History - Track what users have played and when
+ */
+export const userPlaybackHistory = mysqlTable("user_playback_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  contentId: int("contentId").notNull().references(() => streamingContent.id, { onDelete: "cascade" }),
+  
+  // Content type
+  contentType: mysqlEnum("contentType", ["channel", "station", "track"]).notNull(),
+  
+  // Playback details
+  lastPlayedAt: timestamp("lastPlayedAt").defaultNow().notNull(),
+  playDurationSeconds: int("playDurationSeconds"), // How long they played
+  totalPlayCount: int("totalPlayCount").default(1).notNull(), // Times played
+  
+  // Progress tracking
+  progressSeconds: int("progressSeconds"), // Where they stopped
+  totalDurationSeconds: int("totalDurationSeconds"), // Total duration
+  progressPercentage: decimal("progressPercentage", { precision: 5, scale: 2 }), // 0-100
+  
+  // Engagement
+  isCompleted: boolean("isCompleted").default(false), // Fully watched/listened
+  rating: int("rating"), // 1-5 star rating if provided
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserPlaybackHistory = typeof userPlaybackHistory.$inferSelect;
+export type InsertUserPlaybackHistory = typeof userPlaybackHistory.$inferInsert;
+
+/**
+ * User Playlists - Custom playlists created by users
+ */
+export const userPlaylists = mysqlTable("user_playlists", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Playlist info
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Metadata
+  isPublic: boolean("isPublic").default(false),
+  itemCount: int("itemCount").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserPlaylist = typeof userPlaylists.$inferSelect;
+export type InsertUserPlaylist = typeof userPlaylists.$inferInsert;
+
+

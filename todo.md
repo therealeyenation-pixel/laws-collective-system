@@ -11990,3 +11990,46 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [ ] Performance baseline establishment
 - [ ] User acceptance testing
 - [ ] Final checkpoint and deployment
+
+
+## Phase 30: Streaming System Enhancement
+
+### Phase 30.1: Video Playback for Theater Channels
+- [ ] Add Video.js or HLS.js library for video streaming
+- [ ] Create VideoPlayer component for Theater channels
+- [ ] Integrate HLS/DASH stream URLs for TV channels
+- [ ] Add adaptive bitrate streaming
+- [ ] Implement fullscreen and picture-in-picture modes
+- [ ] Add video quality selector
+- [ ] Test video playback on Theater Enhanced page
+
+### Phase 30.2: User Favorites Persistence
+- [ ] Create userFavorites table in database (userId, contentId, contentType, addedAt)
+- [ ] Create userHistory table (userId, contentId, contentType, lastPlayed, duration)
+- [ ] Add tRPC procedures for addFavorite, removeFavorite, getFavorites
+- [ ] Add tRPC procedures for updateHistory, getHistory
+- [ ] Update AudioPlayer component to show favorite button
+- [ ] Update VideoPlayer component to show favorite button
+- [ ] Persist favorites across sessions
+- [ ] Display user's favorite stations/channels/tracks on dashboard
+- [ ] Add favorites sync to offline-first architecture
+
+### Phase 30.3: Real-Time EPG Updates
+- [ ] Create epgSchedule table (channelId, programId, title, description, startTime, endTime, genre)
+- [ ] Create epgUpdate router with real-time data fetching
+- [ ] Implement EPG caching with 24-hour refresh
+- [ ] Add EPG display component for Theater channels
+- [ ] Add upcoming programs widget to Theater page
+- [ ] Implement program notifications (30 min before start)
+- [ ] Add EPG search functionality
+- [ ] Create EPG schedule view (grid/list)
+- [ ] Integrate EPG with user favorites for personalized recommendations
+
+### Phase 30.4: Testing & Deployment
+- [ ] Test video playback across browsers
+- [ ] Test favorites persistence and sync
+- [ ] Test EPG updates and caching
+- [ ] Performance test with large EPG datasets
+- [ ] Test offline functionality with cached EPG
+- [ ] User acceptance testing
+- [ ] Deploy to production
