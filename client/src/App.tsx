@@ -890,16 +890,16 @@ function Router() {
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
       <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLiveReal} />}</Route>
-      <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterEnhanced} />}</Route>
-      <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
+      <Route path="/theater-live-enhanced" component={TheaterEnhanced} />
+      <Route path="/theater-vod" component={TheaterVOD} />
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
-      <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastRadioReal} />}</Route>
-      <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
-      <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
-      <Route path="/emergency">{() => <ProtectedRoute component={Emergency} />}</Route>
-      <Route path="/conference">{() => <ProtectedRoute component={Conference} />}</Route>
+      <Route path="/broadcast-channels" component={BroadcastRadioReal} />
+      <Route path="/broadcast-episodes" component={BroadcastEpisodes} />
+      <Route path="/live-broadcasts" component={LiveBroadcasts} />
+      <Route path="/emergency" component={Emergency} />
+      <Route path="/conference" component={Conference} />
 
-      <Route path="/music">{() => <ProtectedRoute component={Music} />}</Route>
+      <Route path="/music" component={Music} />
       <Route path="/realtime-dashboards">{() => <ProtectedRoute component={RealtimeDashboards} />}</Route>
       <Route path="/compliance-export">{() => <ProtectedRoute component={ComplianceExport} />}</Route>
       <Route path="/alert-rules">{() => <ProtectedRoute component={AlertRules} />}</Route>
