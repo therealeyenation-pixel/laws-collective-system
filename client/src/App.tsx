@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Navigate } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
@@ -906,8 +906,12 @@ function Router() {
       <Route path="/mobile-integration">{() => <ProtectedRoute component={MobileIntegration} />}</Route>
       <Route path="/ai-insights">{() => <ProtectedRoute component={AIInsights} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
-      {/* 404 */}
-      <Route path="/" component={Landing} />
+      {/* Root - redirect authenticated users to dashboard */}
+      <Route path="/">{() => {
+        const { user, loading } = useAuth();
+        if (loading) return <div className="flex items-center justify-center min-h-screen"><p>Loading...</p></div>;
+        return user ? <Navigate to="/theater-live" /> : <Landing />;
+      }}</Route>
       <Route path="/demo" component={ShellDemo} />
       
       <Route path="/404" component={NotFound} />
