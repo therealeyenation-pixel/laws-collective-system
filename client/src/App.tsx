@@ -348,12 +348,14 @@ import IPTVAdminPanel from "@/pages/IPTVAdminPanel";
 import TheaterVOD from "@/pages/TheaterVOD";
 import BroadcastChannels from "@/pages/BroadcastChannels";
 import BroadcastRadioReal from "@/pages/BroadcastRadioReal";
+import BroadcastRadioEnhanced from "@/pages/BroadcastRadioEnhanced";
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
 import Emergency from "@/pages/Emergency";
 import Conference from "@/pages/Conference";
 import Music from "@/pages/Music";
 import MusicPlayerReal from "@/pages/MusicPlayerReal";
+import MusicPlayerEnhanced from "@/pages/MusicPlayerEnhanced";
 import AdminSeeding from "@/pages/AdminSeeding";
 import RealtimeDashboards from "@/pages/RealtimeDashboards";
 import ComplianceExport from "@/pages/ComplianceExport";
@@ -891,12 +893,12 @@ function Router() {
       <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterEnhanced} />}</Route>
       <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
-      <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastRadioReal} />}</Route>
+      <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastRadioEnhanced} />}</Route>
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
       <Route path="/emergency">{() => <ProtectedRoute component={Emergency} />}</Route>
       <Route path="/conference">{() => <ProtectedRoute component={Conference} />}</Route>
-      <Route path="/music">{() => <ProtectedRoute component={MusicPlayerReal} />}</Route>
+      <Route path="/music">{() => <ProtectedRoute component={MusicPlayerEnhanced} />}</Route>
       <Route path="/realtime-dashboards">{() => <ProtectedRoute component={RealtimeDashboards} />}</Route>
       <Route path="/compliance-export">{() => <ProtectedRoute component={ComplianceExport} />}</Route>
       <Route path="/alert-rules">{() => <ProtectedRoute component={AlertRules} />}</Route>
