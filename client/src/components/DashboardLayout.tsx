@@ -129,6 +129,10 @@ const menuCategories: MenuCategory[] = [
       { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
       { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
       { icon: Video, label: "VOD Library", path: "/theater-vod", minRole: "user" },
+      { icon: Music, label: "Broadcast Radio", path: "/broadcast-channels", minRole: "user" },
+      { icon: Play, label: "Music Player", path: "/music", minRole: "user" },
+      { icon: FolderOpen, label: "Playlists", path: "/playlists", minRole: "user" },
+      { icon: History, label: "Listening History", path: "/listening-history", minRole: "user" },
     ]
   },
 
@@ -270,11 +274,6 @@ const menuCategories: MenuCategory[] = [
         minRole: "staff",
         items: [
           { icon: Music, label: "Media Dashboard", path: "/dept/media", minRole: "staff" },
-          { icon: Disc3, label: "Theater & IPTV", path: "/theater-live", minRole: "staff" },
-          { icon: Music, label: "Broadcast Radio", path: "/broadcast-channels", minRole: "staff" },
-          { icon: Play, label: "Music Player", path: "/music", minRole: "staff" },
-          { icon: FolderOpen, label: "Playlists", path: "/playlists", minRole: "staff" },
-          { icon: History, label: "Listening History", path: "/listening-history", minRole: "staff" },
           { icon: Share2, label: "Content Calendar", path: "/content-calendar", minRole: "staff" },
           { icon: Play, label: "Media Simulator", path: "/media-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/media-team", minRole: "staff" },
