@@ -294,6 +294,11 @@ import { teamCollaborationFeaturesRouter } from "./routers/team-collaboration-fe
 import { advancedFeaturesOptimizationRouter } from "./routers/advanced-features-optimization";
 import { systemHealthRouter } from "./routers/system-health";
 import { pushNotificationsRouter } from "./routers/push-notifications";
+import { alertRulesRouter } from "./routers/alert-rules";
+import { stripeEnhancementsRouter } from "./routers/stripe-enhancements";
+import { advancedAnalyticsRouter } from "./routers/advanced-analytics";
+import { automationRouter } from "./routers/automation";
+import { monitoringIntegrationsRouter } from "./routers/monitoring-integrations";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -627,6 +632,11 @@ export const appRouter = router({
   taxOptimization: taxOptimizationRouter,
   systemHealth: systemHealthRouter,
   pushNotifications: pushNotificationsRouter,
+  alertRules: alertRulesRouter,
+  stripeEnhancements: stripeEnhancementsRouter,
+  advancedAnalytics: advancedAnalyticsRouter,
+  automation: automationRouter,
+  monitoringIntegrations: monitoringIntegrationsRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
