@@ -341,10 +341,12 @@ import RealtimeDashboardSync from "@/pages/RealtimeDashboardSync";
 import CustomReportScheduling from "@/pages/CustomReportScheduling";
 import TeamCollaboration from "@/pages/TeamCollaboration";
 import TheaterLive from "@/pages/TheaterLive";
+import TheaterLiveReal from "@/pages/TheaterLiveReal";
 import TheaterLiveEnhanced from "@/pages/TheaterLiveEnhanced";
 import IPTVAdminPanel from "@/pages/IPTVAdminPanel";
 import TheaterVOD from "@/pages/TheaterVOD";
 import BroadcastChannels from "@/pages/BroadcastChannels";
+import BroadcastRadioReal from "@/pages/BroadcastRadioReal";
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
 import Emergency from "@/pages/Emergency";
@@ -883,11 +885,11 @@ function Router() {
       <Route path="/realtime-dashboard-sync">{() => <ProtectedRoute component={RealtimeDashboardSync} />}</Route>
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
-      <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLive} />}</Route>
+      <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLiveReal} />}</Route>
       <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveEnhanced} />}</Route>
       <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
-      <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastChannels} />}</Route>
+      <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastRadioReal} />}</Route>
       <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastEpisodes} />}</Route>
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
       <Route path="/emergency">{() => <ProtectedRoute component={Emergency} />}</Route>

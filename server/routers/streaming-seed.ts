@@ -144,6 +144,71 @@ export const streamingSeedRouter = router({
   }),
 
   /**
+   * Create Radio Stations table and seed data
+   */
+  seedRadio: publicProcedure.mutation(async () => {
+    const conn = await getConnection();
+    if (!conn) return { success: false, created: 0, error: 'Database unavailable' };
+
+    try {
+      // Create table if not exists
+      await conn.execute(`
+        CREATE TABLE IF NOT EXISTS radio_stations (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255) NOT NULL UNIQUE,
+          category VARCHAR(100),
+          description TEXT,
+          streamUrl VARCHAR(500) NOT NULL,
+          logo VARCHAR(500),
+          country VARCHAR(100),
+          language VARCHAR(50),
+          contentRating VARCHAR(20) DEFAULT 'G',
+          isAdultContent BOOLEAN DEFAULT FALSE,
+          accessLevel ENUM('public', 'members', 'verified_18', 'verified_21', 'premium') DEFAULT 'public',
+          isActive BOOLEAN DEFAULT TRUE,
+          currentListeners INT DEFAULT 0,
+          createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+      `);
+
+      const stations = [
+        ['BBC Radio 1', 'Music', 'BBC Radio 1 - Music and Entertainment', 'https://stream.bbc.co.uk/radio1', 'https://via.placeholder.com/100?text=BBC1', 'UK', 'en', 'G', 0, 'public'],
+        ['BBC Radio 2', 'Music', 'BBC Radio 2 - Popular Music', 'https://stream.bbc.co.uk/radio2', 'https://via.placeholder.com/100?text=BBC2', 'UK', 'en', 'G', 0, 'public'],
+        ['NPR News', 'News', 'National Public Radio News', 'https://stream.npr.org/news', 'https://via.placeholder.com/100?text=NPR', 'USA', 'en', 'G', 0, 'public'],
+        ['Spotify Radio', 'Music', 'Spotify Music Streaming', 'https://stream.spotify.com/radio', 'https://via.placeholder.com/100?text=Spotify', 'Global', 'en', 'G', 0, 'members'],
+        ['Apple Music', 'Music', 'Apple Music Streaming', 'https://stream.apple.com/music', 'https://via.placeholder.com/100?text=Apple', 'Global', 'en', 'G', 0, 'members'],
+        ['SiriusXM', 'Music', 'SiriusXM Satellite Radio', 'https://stream.siriusxm.com/live', 'https://via.placeholder.com/100?text=SiriusXM', 'USA', 'en', 'PG', 0, 'members'],
+        ['iHeartRadio', 'Music', 'iHeartRadio Music', 'https://stream.iheartradio.com/live', 'https://via.placeholder.com/100?text=iHeart', 'USA', 'en', 'G', 0, 'public'],
+        ['Jazz FM', 'Music', 'Jazz Music Station', 'https://stream.jazzfm.com/live', 'https://via.placeholder.com/100?text=Jazz', 'UK', 'en', 'G', 0, 'public'],
+        ['Classical Radio', 'Music', 'Classical Music Station', 'https://stream.classicalradio.com/live', 'https://via.placeholder.com/100?text=Classical', 'Global', 'en', 'G', 0, 'public'],
+        ['Talk Radio', 'News', 'Talk Radio News and Discussion', 'https://stream.talkradio.com/live', 'https://via.placeholder.com/100?text=Talk', 'USA', 'en', 'PG', 0, 'public'],
+      ];
+
+      let created = 0;
+      for (const station of stations) {
+        try {
+          await conn.execute(
+            `INSERT IGNORE INTO radio_stations (name, category, description, streamUrl, logo, country, language, contentRating, isAdultContent, accessLevel) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            station
+          );
+          created++;
+        } catch (err) {
+          console.error(`Failed to insert ${station[0]}:`, err);
+        }
+      }
+
+      await conn.end();
+      return { success: true, created, message: `Created ${created} radio stations` };
+    } catch (err) {
+      console.error('Seeding error:', err);
+      await conn.end();
+      return { success: false, created: 0, error: String(err) };
+    }
+  }),
+
+  /**
    * Get IPTV channels count
    */
   getChannelCount: publicProcedure.query(async () => {

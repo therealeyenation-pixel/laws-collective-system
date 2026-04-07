@@ -53,6 +53,8 @@ import aiRecommendationsRouter from "./routers/ai-recommendations";
 import iptvTheaterRouter from "./routers/iptv-theater";
 import { publicSeedRouter } from "./routers/public-seed";
 import { streamingSeedRouter } from "./routers/streaming-seed";
+import streamingDataSeedRouter from "./routers/streaming-data-seed";
+import { streamingContentRouter } from "./routers/streaming-content";
 import { iptvLiveRouter } from "./routers/iptv-live";
 import { brainAutomationRouter } from "./routers/brain-automation";
 import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
@@ -362,6 +364,8 @@ export const appRouter = router({
   vod: vodRouter,
   publicSeed: publicSeedRouter,
   streamingSeed: streamingSeedRouter,
+  streamingDataSeed: streamingDataSeedRouter,
+  streamingContent: streamingContentRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,
