@@ -351,6 +351,11 @@ import Emergency from "@/pages/Emergency";
 import Conference from "@/pages/Conference";
 import Music from "@/pages/Music";
 import AdminSeeding from "@/pages/AdminSeeding";
+import RealtimeDashboards from "@/pages/RealtimeDashboards";
+import ComplianceExport from "@/pages/ComplianceExport";
+import AlertRules from "@/pages/AlertRules";
+import MobileIntegration from "@/pages/MobileIntegration";
+import AIInsights from "@/pages/AIInsights";
 import {
   BusinessDocuments, HealthDocuments, EducationDocuments, DesignDocuments, MediaDocuments,
   FinanceDocuments, HRDocuments, OperationsDocuments, ProcurementDocuments, ContractsDocuments,
@@ -888,6 +893,11 @@ function Router() {
       <Route path="/emergency">{() => <ProtectedRoute component={Emergency} />}</Route>
       <Route path="/conference">{() => <ProtectedRoute component={Conference} />}</Route>
       <Route path="/music">{() => <ProtectedRoute component={Music} />}</Route>
+      <Route path="/realtime-dashboards">{() => <ProtectedRoute component={RealtimeDashboards} />}</Route>
+      <Route path="/compliance-export">{() => <ProtectedRoute component={ComplianceExport} />}</Route>
+      <Route path="/alert-rules">{() => <ProtectedRoute component={AlertRules} />}</Route>
+      <Route path="/mobile-integration">{() => <ProtectedRoute component={MobileIntegration} />}</Route>
+      <Route path="/ai-insights">{() => <ProtectedRoute component={AIInsights} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
       {/* 404 */}
       <Route path="/" component={Landing} />

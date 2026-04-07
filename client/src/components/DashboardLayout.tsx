@@ -41,7 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint
+  Fingerprint, Smartphone
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -575,6 +575,38 @@ const menuCategories: MenuCategory[] = [
       { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
       { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
       { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
+    ]
+  },
+
+  {
+    icon: BarChart3,
+    label: "Analytics & Insights",
+    minRole: "staff",
+    defaultOpen: false,
+    items: [
+      { icon: BarChart3, label: "Real-time Dashboards", path: "/realtime-dashboards", minRole: "staff" },
+      { icon: TrendingUp, label: "AI Insights", path: "/ai-insights", minRole: "staff" },
+      { icon: BarChart3, label: "Alert Rules", path: "/alert-rules", minRole: "staff" },
+    ]
+  },
+
+  {
+    icon: FileCheck,
+    label: "Compliance & Export",
+    minRole: "staff",
+    defaultOpen: false,
+    items: [
+      { icon: FileCheck, label: "Compliance Export", path: "/compliance-export", minRole: "staff" },
+    ]
+  },
+
+  {
+    icon: Smartphone,
+    label: "Mobile & Devices",
+    minRole: "user",
+    defaultOpen: false,
+    items: [
+      { icon: Smartphone, label: "Mobile Integration", path: "/mobile-integration", minRole: "user" },
     ]
   },
 ];
