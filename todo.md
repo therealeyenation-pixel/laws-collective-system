@@ -12058,8 +12058,8 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [ ] Add playback statistics dashboard
 
 ### Phase 20.3: Theater/IPTV Video Playback
-- [ ] Install HLS.js library for M3U8 stream support
-- [ ] Create video player component with HLS.js integration
+- [x] Install HLS.js library for M3U8 stream support
+- [x] Create video player component with HLS.js integration
 - [ ] Implement play/pause controls for video
 - [ ] Add volume control for video playback
 - [ ] Add fullscreen support

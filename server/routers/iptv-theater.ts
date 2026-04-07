@@ -3,7 +3,7 @@
  * Manages live streaming, VOD, channel management, and EPG scheduling
  */
 
-import { protectedProcedure } from '../_core/trpc';
+import { protectedProcedure, publicProcedure } from '../_core/trpc';
 import { z } from 'zod';
 
 const iptvTheaterRouter = {
@@ -39,7 +39,7 @@ const iptvTheaterRouter = {
   /**
    * Get all IPTV channels
    */
-  getChannels: protectedProcedure
+  getChannels: publicProcedure
     .input(
       z.object({
         category: z.string().optional(),

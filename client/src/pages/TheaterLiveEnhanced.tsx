@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AgeVerificationModal } from '@/components/AgeVerificationModal';
+import { HLSVideoPlayer } from '@/components/HLSVideoPlayer';
 import { Play, Heart, Share2, Search, Filter, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -116,42 +117,18 @@ export default function TheaterLiveEnhanced() {
       {/* Video Player Section */}
       {selectedChannel ? (
         <div className="bg-black">
-          <div className="aspect-video bg-black flex items-center justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-              <Play className="w-16 h-16 text-white opacity-50" />
-            </div>
+          <HLSVideoPlayer
+            streamUrl={selectedChannel.streamUrl || selectedChannel.url}
+            title={selectedChannel.name}
+            poster={selectedChannel.logo}
+            autoplay={true}
+            onError={(error) => {
+              console.error('Video playback error:', error);
+              toast.error('Failed to load video stream');
+            }}
+          />
 
-            {/* Overlay Controls */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-between p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-3xl font-bold text-white">{selectedChannel.name}</h1>
-                  {selectedChannel.isAdultContent && (
-                    <span className="inline-block mt-2 bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold">
-                      18+ CONTENT
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                    <Heart className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                    <Share2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <p className="text-white text-sm">{selectedChannel.description}</p>
-                <div className="flex items-center gap-4 text-white text-sm">
-                  <span>🔴 LIVE • {selectedChannel.currentViewers || 0} watching</span>
-                  <span>📺 {selectedChannel.totalViewers || 0} total viewers</span>
-                  <span className="bg-secondary/30 px-2 py-1 rounded">{selectedChannel.category}</span>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Channel Info */}
           <div className="bg-card border-b border-border p-6">
