@@ -367,7 +367,6 @@ import {
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
-import Sidebar from "@/components/Sidebar";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -921,12 +920,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <div className="flex">
-            <Sidebar />
-            <div className="flex-1 md:pt-0 pt-16">
-              <Router />
-            </div>
-          </div>
+          <Router />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
