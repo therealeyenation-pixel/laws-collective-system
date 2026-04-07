@@ -299,6 +299,8 @@ import { stripeEnhancementsRouter } from "./routers/stripe-enhancements";
 import { advancedAnalyticsRouter } from "./routers/advanced-analytics";
 import { automationRouter } from "./routers/automation";
 import { monitoringIntegrationsRouter } from "./routers/monitoring-integrations";
+import { realtimeCollaborationRouter } from "./routers/realtime-collaboration";
+import { mobilePushRouter } from "./routers/mobile-push";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -637,6 +639,8 @@ export const appRouter = router({
   advancedAnalytics: advancedAnalyticsRouter,
   automation: automationRouter,
   monitoringIntegrations: monitoringIntegrationsRouter,
+  realtimeCollaboration: realtimeCollaborationRouter,
+  mobilePush: mobilePushRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>

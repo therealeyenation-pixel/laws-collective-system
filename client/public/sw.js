@@ -265,3 +265,25 @@ async function syncPendingData() {
     console.error('[SW] Sync failed:', err);
   }
 }
+
+// Sync alerts with server
+async function syncAlerts() {
+  try {
+    const response = await fetch('/api/trpc/systemHealth.getHealth');
+    if (!response.ok) {
+      throw new Error('Sync failed');
+    }
+
+    // Notify clients of sync completion
+    const clients = await self.clients.matchAll();
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'SYNC_COMPLETE',
+        timestamp: new Date().toISOString(),
+      });
+    });
+  } catch (error) {
+    console.error('[SW] Background sync failed:', error);
+    throw error;
+  }
+}
