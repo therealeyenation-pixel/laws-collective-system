@@ -129,10 +129,6 @@ const menuCategories: MenuCategory[] = [
       { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
       { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
       { icon: Video, label: "VOD Library", path: "/theater-vod", minRole: "user" },
-      { icon: Music, label: "Broadcast Radio", path: "/broadcast-channels", minRole: "user" },
-      { icon: Play, label: "Music Player", path: "/music", minRole: "user" },
-      { icon: FolderOpen, label: "Playlists", path: "/playlists", minRole: "user" },
-      { icon: History, label: "Listening History", path: "/listening-history", minRole: "user" },
     ]
   },
 

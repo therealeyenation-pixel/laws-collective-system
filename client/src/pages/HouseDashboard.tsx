@@ -41,7 +41,6 @@ import {
   ArrowRight,
   RefreshCw,
   Loader2,
-  Music,
 } from "lucide-react";
 
 // Token icons mapping
@@ -185,14 +184,13 @@ export default function HouseDashboard() {
 
         {/* Main Dashboard Tabs */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="financial">Financial</TabsTrigger>
             <TabsTrigger value="heirs">Bloodline</TabsTrigger>
             <TabsTrigger value="funds">Community</TabsTrigger>
             <TabsTrigger value="assets">Assets</TabsTrigger>
             <TabsTrigger value="tokens">Tokens</TabsTrigger>
-            <TabsTrigger value="media">Media</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -763,67 +761,6 @@ export default function HouseDashboard() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Media Tab */}
-          <TabsContent value="media" className="space-y-6">
-            <div className="grid grid-cols-1 gap-6">
-              {/* Theater/IPTV Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Palette className="w-5 h-5 text-primary" />
-                    Theater & IPTV
-                  </CardTitle>
-                  <CardDescription>Watch live TV channels and on-demand content</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button asChild className="w-full">
-                    <a href="/theater-live">Open Theater</a>
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Broadcast Radio Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Briefcase className="w-5 h-5 text-primary" />
-                    Broadcast Radio
-                  </CardTitle>
-                  <CardDescription>Listen to live radio stations and podcasts</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button asChild className="w-full">
-                    <a href="/broadcast-channels">Open Radio</a>
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Music Player Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Music className="w-5 h-5 text-primary" />
-                    Music Player
-                  </CardTitle>
-                  <CardDescription>Play music and manage your playlists</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <Button asChild className="w-full">
-                      <a href="/music">Open Music Player</a>
-                    </Button>
-                    <Button asChild variant="outline" className="w-full">
-                      <a href="/playlists">Manage Playlists</a>
-                    </Button>
-                    <Button asChild variant="outline" className="w-full">
-                      <a href="/listening-history">Listening History</a>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
         </Tabs>
       </div>
