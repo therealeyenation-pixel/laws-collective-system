@@ -41,7 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone
+  Fingerprint, Smartphone, Disc3
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -567,6 +567,18 @@ const menuCategories: MenuCategory[] = [
   },
 
   {
+    icon: Play,
+    label: "Theater & IPTV",
+    minRole: "user",
+    defaultOpen: false,
+    items: [
+      { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
+      { icon: Video, label: "Enhanced EPG", path: "/theater-live-enhanced", minRole: "user" },
+      { icon: Disc3, label: "VOD Library", path: "/theater-vod", minRole: "user" },
+    ]
+  },
+
+  {
     icon: Music,
     label: "Broadcast Radio",
     minRole: "user",
@@ -607,6 +619,27 @@ const menuCategories: MenuCategory[] = [
     defaultOpen: false,
     items: [
       { icon: Smartphone, label: "Mobile Integration", path: "/mobile-integration", minRole: "user" },
+    ]
+  },
+
+  {
+    icon: Music,
+    label: "Music & Podcast",
+    minRole: "user",
+    defaultOpen: false,
+    items: [
+      { icon: Music, label: "Music Player", path: "/music", minRole: "user" },
+    ]
+  },
+
+  {
+    icon: AlertTriangle,
+    label: "Emergency & Response",
+    minRole: "user",
+    defaultOpen: false,
+    items: [
+      { icon: AlertTriangle, label: "SOS System", path: "/emergency", minRole: "user" },
+      { icon: Video, label: "Conference Rooms", path: "/conference", minRole: "user" },
     ]
   },
 ];
