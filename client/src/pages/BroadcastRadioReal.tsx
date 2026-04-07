@@ -18,13 +18,26 @@ export default function BroadcastRadioReal() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
 
   // Fetch radio stations from streaming content API
   const { data: stations = [], isLoading } = trpc.streamingContent.getStations.useQuery({
     category: activeCategory,
     limit: 50,
   });
+
+  // Favorite mutations
+  const addFavoriteMutation = trpc.streamingFavorites.addFavorite.useMutation();
+  const removeFavoriteMutation = trpc.streamingFavorites.removeFavorite.useMutation();
+  const isFavoritedQuery = trpc.streamingFavorites.isFavorited.useQuery(
+    { contentId: selectedStation || 0 },
+    { enabled: !!selectedStation && !!user }
+  );
+
+  // Update favorited state when query returns
+  if (isFavoritedQuery.data !== undefined && isFavoritedQuery.data !== isFavorited) {
+    setIsFavorited(isFavoritedQuery.data);
+  }
 
   // Fetch selected station details
   const selectedStationData = stations.find((s) => s.id === selectedStation);
@@ -47,8 +60,23 @@ export default function BroadcastRadioReal() {
     setIsPlaying(!isPlaying);
   };
 
-  const handleFollowStation = () => {
-    setIsFollowing(!isFollowing);
+  const handleToggleFavorite = async () => {
+    if (!selectedStation || !user) return;
+    
+    try {
+      if (isFavorited) {
+        await removeFavoriteMutation.mutateAsync({ contentId: selectedStation });
+      } else {
+        await addFavoriteMutation.mutateAsync({
+          contentId: selectedStation,
+          contentType: 'radio',
+          metadata: { stationName: selectedStationData?.name },
+        });
+      }
+      setIsFavorited(!isFavorited);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
   };
 
   const categories = ['music', 'news', 'talk', 'sports', 'educational'];
@@ -141,11 +169,11 @@ export default function BroadcastRadioReal() {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={handleFollowStation}
+                onClick={handleToggleFavorite}
                 className="gap-2"
               >
-                <Heart className={`w-4 h-4 ${isFollowing ? 'fill-red-500 text-red-500' : ''}`} />
-                {isFollowing ? 'Following' : 'Follow'}
+                <Heart className={`w-4 h-4 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+                {isFavorited ? 'Favorited' : 'Add to Favorites'}
               </Button>
               <Button size="sm" variant="outline" className="gap-2">
                 <Share2 className="w-4 h-4" />

@@ -12033,3 +12033,60 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [ ] Test offline functionality with cached EPG
 - [ ] User acceptance testing
 - [ ] Deploy to production
+
+
+## Phase 20: Streaming System Expansion
+
+### Phase 20.1: Expand Soma FM Stations
+- [x] Add 30+ additional Soma FM stations (R&B, Country, Pop, Jazz, Rock, Electronic)
+- [x] Implement station filtering by genre and country
+- [x] Add station search functionality
+- [x] Create station recommendations based on listening history
+- [x] Add station metadata (bitrate, codec, language)
+
+### Phase 20.2: User Favorites & Playback History
+- [x] Create favorites table in database (user_id, station_id, created_at)
+- [x] Create playback_history table (user_id, station_id, started_at, duration, ended_at)
+- [x] Implement addToFavorites tRPC procedure
+- [x] Implement removeFromFavorites tRPC procedure
+- [x] Implement getFavorites tRPC procedure
+- [x] Implement recordPlayback tRPC procedure
+- [x] Implement getPlaybackHistory tRPC procedure
+- [x] Add favorite button to station cards UI
+- [ ] Add favorites page/section showing all saved stations
+- [ ] Add resume playback feature (auto-play last listened station)
+- [ ] Add playback statistics dashboard
+
+### Phase 20.3: Theater/IPTV Video Playback
+- [ ] Install HLS.js library for M3U8 stream support
+- [ ] Create video player component with HLS.js integration
+- [ ] Implement play/pause controls for video
+- [ ] Add volume control for video playback
+- [ ] Add fullscreen support
+- [ ] Implement error handling for failed streams
+- [ ] Add loading indicators for video buffering
+- [ ] Create Theater page with video player
+- [ ] Test video playback with real IPTV streams
+- [ ] Add channel switching functionality
+
+### Phase 20.4: Emergency Broadcast System
+- [ ] Create emergency_broadcasts table in database
+- [ ] Implement emergency broadcast router with tRPC procedures
+- [ ] Create priority levels (critical, high, medium, low)
+- [ ] Implement broadcast interruption logic (pause current playback)
+- [ ] Add auto-resume functionality after broadcast ends
+- [ ] Create emergency alert UI component
+- [ ] Add push notifications for emergency broadcasts
+- [ ] Implement broadcast history tracking
+- [ ] Add admin interface for creating emergency broadcasts
+- [ ] Test emergency broadcast interruption on all pages
+
+### Phase 20.5: Testing & Final Checkpoint
+- [ ] Test all 50+ Soma FM stations load correctly
+- [ ] Test favorites save and load properly
+- [ ] Test playback history records correctly
+- [ ] Test video playback with HLS streams
+- [ ] Test emergency broadcast interruption
+- [ ] Test mobile responsiveness for all features
+- [ ] Test cross-browser compatibility
+- [ ] Create final checkpoint with all features
