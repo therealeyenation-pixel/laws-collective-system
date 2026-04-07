@@ -342,6 +342,7 @@ import CustomReportScheduling from "@/pages/CustomReportScheduling";
 import TeamCollaboration from "@/pages/TeamCollaboration";
 import TheaterLive from "@/pages/TheaterLive";
 import TheaterLiveReal from "@/pages/TheaterLiveReal";
+import TheaterEnhanced from "@/pages/TheaterEnhanced";
 import TheaterLiveEnhanced from "@/pages/TheaterLiveEnhanced";
 import IPTVAdminPanel from "@/pages/IPTVAdminPanel";
 import TheaterVOD from "@/pages/TheaterVOD";
@@ -887,7 +888,7 @@ function Router() {
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
       <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLiveReal} />}</Route>
-      <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveEnhanced} />}</Route>
+      <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterEnhanced} />}</Route>
       <Route path="/theater-vod">{() => <ProtectedRoute component={TheaterVOD} />}</Route>
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
       <Route path="/broadcast-channels">{() => <ProtectedRoute component={BroadcastRadioReal} />}</Route>

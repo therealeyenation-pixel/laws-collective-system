@@ -48,6 +48,9 @@ import { taxPrepRouter } from "./routers/tax-prep";
 import { restorationRouter } from "./routers/restoration";
 import { documentGenerationRouter } from "./routers/document-generation";
 import { lifecycleManagerRouter } from "./routers/lifecycle-manager";
+import { streamingEpgRouter } from "./routers/streaming-epg";
+import { streamingRecommendationsRouter } from "./routers/streaming-recommendations";
+import { streamingSharingRouter } from "./routers/streaming-sharing";
 import { weatherApiRouter } from "./routers/weatherApi";
 import aiRecommendationsRouter from "./routers/ai-recommendations";
 import iptvTheaterRouter from "./routers/iptv-theater";
@@ -366,6 +369,9 @@ export const appRouter = router({
   streamingSeed: streamingSeedRouter,
   streamingDataSeed: streamingDataSeedRouter,
   streamingContent: streamingContentRouter,
+  streamingEpg: streamingEpgRouter,
+  streamingRecommendations: streamingRecommendationsRouter,
+  streamingSharing: streamingSharingRouter,
   communityFunds: communityFundsRouter,
   heirDistribution: heirDistributionRouter,
   weatherApi: weatherApiRouter,
