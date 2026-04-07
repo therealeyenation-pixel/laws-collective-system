@@ -352,6 +352,7 @@ import LiveBroadcasts from "@/pages/LiveBroadcasts";
 import Emergency from "@/pages/Emergency";
 import Conference from "@/pages/Conference";
 import Music from "@/pages/Music";
+import MusicPlayerReal from "@/pages/MusicPlayerReal";
 import AdminSeeding from "@/pages/AdminSeeding";
 import RealtimeDashboards from "@/pages/RealtimeDashboards";
 import ComplianceExport from "@/pages/ComplianceExport";
@@ -894,7 +895,7 @@ function Router() {
       <Route path="/live-broadcasts">{() => <ProtectedRoute component={LiveBroadcasts} />}</Route>
       <Route path="/emergency">{() => <ProtectedRoute component={Emergency} />}</Route>
       <Route path="/conference">{() => <ProtectedRoute component={Conference} />}</Route>
-      <Route path="/music">{() => <ProtectedRoute component={Music} />}</Route>
+      <Route path="/music">{() => <ProtectedRoute component={MusicPlayerReal} />}</Route>
       <Route path="/realtime-dashboards">{() => <ProtectedRoute component={RealtimeDashboards} />}</Route>
       <Route path="/compliance-export">{() => <ProtectedRoute component={ComplianceExport} />}</Route>
       <Route path="/alert-rules">{() => <ProtectedRoute component={AlertRules} />}</Route>
