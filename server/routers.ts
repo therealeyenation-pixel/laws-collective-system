@@ -58,6 +58,7 @@ import { publicSeedRouter } from "./routers/public-seed";
 import { streamingSeedRouter } from "./routers/streaming-seed";
 import streamingDataSeedRouter from "./routers/streaming-data-seed";
 import { streamingContentRouter } from "./routers/streaming-content";
+import { streamingFavoritesRouter } from "./routers/streaming-favorites";
 
 import { iptvLiveRouter } from "./routers/iptv-live";
 import { brainAutomationRouter } from "./routers/brain-automation";
@@ -370,7 +371,7 @@ export const appRouter = router({
   streamingSeed: streamingSeedRouter,
   streamingDataSeed: streamingDataSeedRouter,
   streamingContent: streamingContentRouter,
-
+  streamingFavorites: streamingFavoritesRouter,
   streamingEpg: streamingEpgRouter,
   streamingRecommendations: streamingRecommendationsRouter,
   streamingSharing: streamingSharingRouter,
