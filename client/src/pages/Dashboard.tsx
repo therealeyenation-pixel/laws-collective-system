@@ -44,6 +44,8 @@ import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { LuvLedgerWidget } from "@/components/LuvLedgerWidget";
 import { QuickActionsWidget } from "@/components/QuickActionsWidget";
+import { NotificationDashboardWidget } from "@/components/NotificationDashboardWidget";
+import { HealthStatusWidget } from "@/components/HealthStatusWidget";
 
 type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
@@ -444,6 +446,21 @@ export default function Dashboard() {
     courseProgress.dba.completed,
   ].filter(Boolean).length;
 
+  // Add notification and health widgets to dashboard
+  const renderNotificationPanel = () => (
+    <Card className="p-6">
+      <h2 className="text-lg font-semibold mb-4">Real-time Notifications & Alerts</h2>
+      <NotificationDashboardWidget />
+    </Card>
+  );
+
+  const renderHealthPanel = () => (
+    <Card className="p-6">
+      <h2 className="text-lg font-semibold mb-4">System Health Status</h2>
+      <HealthStatusWidget />
+    </Card>
+  );
+
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -685,7 +702,17 @@ export default function Dashboard() {
         </Card>
 
         {/* Main Tabs */}
-        <Tabs defaultValue="courses" className="w-full">
+       {/* Notification and Health Widgets */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2">
+          {renderNotificationPanel()}
+        </div>
+        <div>
+          {renderHealthPanel()}
+        </div>
+      </div>
+
+      <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="courses">Business Courses</TabsTrigger>
             <TabsTrigger value="entities">Business Entities</TabsTrigger>

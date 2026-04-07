@@ -248,6 +248,8 @@ import { sharedWorkflowTemplatesRouter } from "./routers/shared-workflow-templat
 import { adminUsersRouter } from "./routers/admin-users";
 import { courseCheckoutRouter } from "./routers/course-checkout";
 import { broadcastRadioRouter } from "./routers/broadcast-radio";
+import { socketioRouter } from "./routers/socketio";
+import { workflowExecutionRouter } from "./routers/workflow-execution";
 import { landingAnalyticsRouter } from "./routers/landing-analytics";
 import { waitlistRouter } from "./routers/waitlist";
 import { onboardingAdminNotificationsRouter } from "./routers/onboarding-admin-notifications";
@@ -305,6 +307,8 @@ import { workflowExecutionRouter } from "./routers/workflow-execution";
 import { websocketSyncRouter } from "./routers/websocket-sync";
 
 export const appRouter = router({
+  socketio: socketioRouter,
+  workflowExecution: workflowExecutionRouter,
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   luv: luvSystemRouter,

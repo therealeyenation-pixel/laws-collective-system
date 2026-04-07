@@ -26,7 +26,7 @@ interface HealthMetrics {
   };
 }
 
-export default function HealthStatusWidget() {
+export function HealthStatusWidget() {
   const [metrics, setMetrics] = useState<HealthMetrics | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(true);
