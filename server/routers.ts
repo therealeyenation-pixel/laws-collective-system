@@ -301,6 +301,8 @@ import { automationRouter } from "./routers/automation";
 import { monitoringIntegrationsRouter } from "./routers/monitoring-integrations";
 import { realtimeCollaborationRouter } from "./routers/realtime-collaboration";
 import { mobilePushRouter } from "./routers/mobile-push";
+import { workflowExecutionRouter } from "./routers/workflow-execution";
+import { websocketSyncRouter } from "./routers/websocket-sync";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -641,6 +643,8 @@ export const appRouter = router({
   monitoringIntegrations: monitoringIntegrationsRouter,
   realtimeCollaboration: realtimeCollaborationRouter,
   mobilePush: mobilePushRouter,
+  workflowExecution: workflowExecutionRouter,
+  websocketSync: websocketSyncRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>
