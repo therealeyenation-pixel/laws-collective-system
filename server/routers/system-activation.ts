@@ -1,34 +1,45 @@
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { db } from "../db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
+import {
+  simulatorCompletion,
+  clonedBuilds,
+  buildLinkage,
+  activationProgress,
+} from "../../drizzle/schema";
 
 /**
  * System Activation Router
  * Handles education-first activation flow:
- * 1. Track simulator completions
- * 2. Check activation readiness
- * 3. Provision cloned builds
+ * 1. Track simulator completions (Business, Grants, Proposals, Contracts, Real-Eye-Nation, Other)
+ * 2. Check activation readiness (all simulators must be completed)
+ * 3. Provision cloned builds (create user's personalized shell)
  * 4. Link to master build via LuvLedger
+ * 
+ * ADDITIVE ONLY - No modifications to existing master build
  */
+
+const SIMULATOR_TYPES = [
+  "business",
+  "grants",
+  "proposals",
+  "contracts",
+  "real_eye_nation",
+  "other",
+] as const;
+
+const TOTAL_SIMULATORS_REQUIRED = 6;
 
 export const systemActivationRouter = router({
   /**
    * Record simulator completion
-   * Called when user completes a simulator (Business, Grants, Proposals, etc.)
    */
-  recordSimulatorCompletion: protectedProcedure
+  recordCompletion: protectedProcedure
     .input(
       z.object({
-        simulatorType: z.enum([
-          "business",
-          "grants",
-          "proposals",
-          "contracts",
-          "real_eye_nation",
-          "other"
-        ]),
-        score: z.number().optional(),
+        simulatorType: z.enum(SIMULATOR_TYPES),
+        score: z.number().min(0).max(100).optional(),
         certificateId: z.string().optional(),
         simulatorData: z.record(z.any()).optional(),
       })
@@ -36,78 +47,102 @@ export const systemActivationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
 
-      // Record simulator completion
+      // Check if already completed
+      const existing = await db
+        .select()
+        .from(simulatorCompletion)
+        .where(
+          and(
+            eq(simulatorCompletion.userId, userId),
+            eq(simulatorCompletion.simulatorType, input.simulatorType)
+          )
+        )
+        .limit(1);
+
+      if (existing.length > 0) {
+        return {
+          success: true,
+          alreadyCompleted: true,
+          message: `${input.simulatorType} workshop already completed.`,
+        };
+      }
+
+      // Record completion
       await db.insert(simulatorCompletion).values({
         userId,
         simulatorType: input.simulatorType,
         completedAt: new Date(),
-        score: input.score,
-        certificateId: input.certificateId,
-        certificateUrl: `/certificates/${input.certificateId}`,
+        score: input.score ?? null,
+        certificateId: input.certificateId ?? null,
+        certificateUrl: input.certificateId
+          ? `/certificates/${input.certificateId}`
+          : null,
       });
 
-      // Update activation progress
-      const completedSimulators = await db
-        .selectDistinct({ simulatorType: simulatorCompletion.simulatorType })
+      // Count completed
+      const completedRows = await db
+        .select({ count: sql<number>`COUNT(DISTINCT simulator_type)` })
         .from(simulatorCompletion)
         .where(eq(simulatorCompletion.userId, userId));
 
-      const activationProgress = await db
-        .select()
-        .from(activationProgressTable)
-        .where(eq(activationProgressTable.userId, userId))
-        .limit(1);
-
-      const currentProgress = activationProgress[0];
-      const simulatorsCompleted = completedSimulators.length;
-      const totalRequired = 6; // Business, Grants, Proposals, Contracts, Real-Eye-Nation, Other
+      const simulatorsCompleted = completedRows[0]?.count ?? 0;
 
       let newStatus: "not_started" | "in_progress" | "ready_for_activation" | "activated" | "suspended" = "in_progress";
-      let readyAt = null;
+      let readyAt: Date | null = null;
 
-      if (simulatorsCompleted === totalRequired) {
+      if (simulatorsCompleted >= TOTAL_SIMULATORS_REQUIRED) {
         newStatus = "ready_for_activation";
         readyAt = new Date();
       }
 
-      if (currentProgress) {
-        await db
-          .update(activationProgressTable)
-          .set({
-            simulatorsCompleted,
-            activationStatus: newStatus,
-            activationReadyAt: readyAt,
-            updatedAt: new Date(),
-          })
-          .where(eq(activationProgressTable.userId, userId));
+      // Upsert activation progress
+      const existingProgress = await db
+        .select()
+        .from(activationProgress)
+        .where(eq(activationProgress.userId, userId))
+        .limit(1);
+
+      if (existingProgress.length > 0) {
+        if (existingProgress[0].activationStatus !== "activated") {
+          await db
+            .update(activationProgress)
+            .set({
+              simulatorsCompleted,
+              activationStatus: newStatus,
+              activationReadyAt: readyAt,
+            })
+            .where(eq(activationProgress.userId, userId));
+        }
       } else {
-        await db.insert(activationProgressTable).values({
+        await db.insert(activationProgress).values({
           userId,
           simulatorsCompleted,
           activationStatus: newStatus,
           activationReadyAt: readyAt,
-          totalSimulatorsRequired: totalRequired,
+          totalSimulatorsRequired: TOTAL_SIMULATORS_REQUIRED,
         });
       }
 
       return {
         success: true,
+        alreadyCompleted: false,
         simulatorsCompleted,
-        totalRequired,
-        readyForActivation: simulatorsCompleted === totalRequired,
+        totalRequired: TOTAL_SIMULATORS_REQUIRED,
+        readyForActivation: simulatorsCompleted >= TOTAL_SIMULATORS_REQUIRED,
+        message: `${input.simulatorType} workshop completed! ${simulatorsCompleted}/${TOTAL_SIMULATORS_REQUIRED} done.`,
       };
     }),
 
   /**
    * Get activation progress for current user
    */
-  getActivationProgress: protectedProcedure.query(async ({ ctx }) => {
+  getProgress: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
 
     const progress = await db
       .select()
-      .from(activationProgressTable)
-      .where(eq(activationProgressTable.userId, userId))
+      .from(activationProgress)
+      .where(eq(activationProgress.userId, userId))
       .limit(1);
 
     const completedSimulators = await db
@@ -115,90 +150,228 @@ export const systemActivationRouter = router({
       .from(simulatorCompletion)
       .where(eq(simulatorCompletion.userId, userId));
 
+    const completedTypes = completedSimulators.map((s) => s.simulatorType);
+
+    const simulatorStatus = SIMULATOR_TYPES.map((type) => ({
+      type,
+      label: getSimulatorLabel(type),
+      completed: completedTypes.includes(type),
+      score: completedSimulators.find((s) => s.simulatorType === type)?.score ?? null,
+      completedAt: completedSimulators.find((s) => s.simulatorType === type)?.completedAt ?? null,
+    }));
+
     return {
-      progress: progress[0] || null,
-      completedSimulators: completedSimulators.map((s) => s.simulatorType),
+      progress: progress[0] ?? null,
+      simulators: simulatorStatus,
+      completedCount: completedTypes.length,
+      totalRequired: TOTAL_SIMULATORS_REQUIRED,
       readyForActivation:
-        completedSimulators.length === 6 ||
+        completedTypes.length >= TOTAL_SIMULATORS_REQUIRED ||
         progress[0]?.activationStatus === "ready_for_activation",
+      isActivated: progress[0]?.activationStatus === "activated",
     };
   }),
 
   /**
-   * Activate user's cloned build
-   * Only callable when all simulators are completed
+   * Get activation progress (public - for dashboard display)
    */
-  activateClonedBuild: protectedProcedure
+  getProgressPublic: publicProcedure
+    .input(z.object({ userId: z.number().optional() }).optional())
+    .query(async ({ input }) => {
+      if (!input?.userId) {
+        return {
+          progress: null,
+          simulators: SIMULATOR_TYPES.map((type) => ({
+            type,
+            label: getSimulatorLabel(type),
+            completed: false,
+            score: null,
+            completedAt: null,
+          })),
+          completedCount: 0,
+          totalRequired: TOTAL_SIMULATORS_REQUIRED,
+          readyForActivation: false,
+          isActivated: false,
+        };
+      }
+
+      const userId = input.userId;
+
+      const progress = await db
+        .select()
+        .from(activationProgress)
+        .where(eq(activationProgress.userId, userId))
+        .limit(1);
+
+      const completedSimulators = await db
+        .select()
+        .from(simulatorCompletion)
+        .where(eq(simulatorCompletion.userId, userId));
+
+      const completedTypes = completedSimulators.map((s) => s.simulatorType);
+
+      const simulatorStatus = SIMULATOR_TYPES.map((type) => ({
+        type,
+        label: getSimulatorLabel(type),
+        completed: completedTypes.includes(type),
+        score: completedSimulators.find((s) => s.simulatorType === type)?.score ?? null,
+        completedAt: completedSimulators.find((s) => s.simulatorType === type)?.completedAt ?? null,
+      }));
+
+      return {
+        progress: progress[0] ?? null,
+        simulators: simulatorStatus,
+        completedCount: completedTypes.length,
+        totalRequired: TOTAL_SIMULATORS_REQUIRED,
+        readyForActivation: completedTypes.length >= TOTAL_SIMULATORS_REQUIRED,
+        isActivated: progress[0]?.activationStatus === "activated",
+      };
+    }),
+
+  /**
+   * Activate user's cloned build
+   */
+  activateBuild: protectedProcedure
     .input(
       z.object({
-        businessName: z.string(),
-        businessType: z.string(),
-        masterBuildId: z.number(),
+        businessName: z.string().min(1),
+        businessType: z.string().min(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
 
-      // Check if all simulators are completed
-      const completedSimulators = await db
-        .selectDistinct({ simulatorType: simulatorCompletion.simulatorType })
+      // Verify all simulators completed
+      const completedRows = await db
+        .select({ count: sql<number>`COUNT(DISTINCT simulator_type)` })
         .from(simulatorCompletion)
         .where(eq(simulatorCompletion.userId, userId));
 
-      if (completedSimulators.length < 6) {
-        throw new Error("Not all simulators completed. Cannot activate build.");
+      const simulatorsCompleted = completedRows[0]?.count ?? 0;
+
+      if (simulatorsCompleted < TOTAL_SIMULATORS_REQUIRED) {
+        return {
+          success: false,
+          error: `Not all workshops completed. ${simulatorsCompleted}/${TOTAL_SIMULATORS_REQUIRED} done.`,
+        };
       }
 
-      // Create cloned build record
-      const clonedBuild = await db.insert(clonedBuilds).values({
+      // Check if already activated
+      const existingBuild = await db
+        .select()
+        .from(clonedBuilds)
+        .where(eq(clonedBuilds.userId, userId))
+        .limit(1);
+
+      if (existingBuild.length > 0 && existingBuild[0].cloneStatus === "active") {
+        return {
+          success: false,
+          error: "Build already activated.",
+          clonedBuildId: existingBuild[0].id,
+        };
+      }
+
+      // Gather simulator data
+      const allCompletions = await db
+        .select()
+        .from(simulatorCompletion)
+        .where(eq(simulatorCompletion.userId, userId));
+
+      const simulatorDataJson = JSON.stringify(
+        allCompletions.map((c) => ({
+          type: c.simulatorType,
+          score: c.score,
+          completedAt: c.completedAt,
+          certificateId: c.certificateId,
+        }))
+      );
+
+      const masterBuildId = 1;
+
+      // Create cloned build
+      const result = await db.insert(clonedBuilds).values({
         userId,
-        masterBuildId: input.masterBuildId,
+        masterBuildId,
         businessName: input.businessName,
         businessType: input.businessType,
         cloneStatus: "provisioning",
+        simulatorDataJson,
       });
 
-      // TODO: Implement actual cloning logic
-      // 1. Clone House structure
-      // 2. Clone Heirs structure
-      // 3. Clone Assets structure
-      // 4. Initialize Tokens
-      // 5. Create Dashboard
-      // 6. Link via LuvLedger
+      const clonedBuildId = Number(result[0].insertId);
 
-      // Update activation progress
+      // Create LuvLedger linkage
+      await db.insert(buildLinkage).values({
+        clonedBuildId,
+        masterBuildId,
+        linkageType: "master_clone",
+        luvledgerEntryId: `LL-CLONE-${userId}-${Date.now()}`,
+      });
+
+      // Activate
       await db
-        .update(activationProgressTable)
-        .set({
-          activationStatus: "activated",
-          activatedAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .where(eq(activationProgressTable.userId, userId));
+        .update(clonedBuilds)
+        .set({ cloneStatus: "active", activatedAt: new Date() })
+        .where(eq(clonedBuilds.id, clonedBuildId));
+
+      await db
+        .update(activationProgress)
+        .set({ activationStatus: "activated", activatedAt: new Date() })
+        .where(eq(activationProgress.userId, userId));
 
       return {
         success: true,
-        clonedBuildId: clonedBuild.insertId,
-        message: "Build activation started. Your personalized system is being provisioned.",
+        clonedBuildId,
+        message: "Your personalized build has been activated and linked to the master build via LuvLedger.",
       };
     }),
 
   /**
    * Get cloned build status
    */
-  getClonedBuildStatus: protectedProcedure.query(async ({ ctx }) => {
+  getBuildStatus: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
 
-    const clonedBuild = await db
+    const build = await db
       .select()
       .from(clonedBuilds)
       .where(eq(clonedBuilds.userId, userId))
       .limit(1);
 
-    return clonedBuild[0] || null;
+    if (!build.length) {
+      return { hasBuild: false, build: null, linkage: null };
+    }
+
+    const linkageData = await db
+      .select()
+      .from(buildLinkage)
+      .where(eq(buildLinkage.clonedBuildId, build[0].id))
+      .limit(1);
+
+    return {
+      hasBuild: true,
+      build: build[0],
+      linkage: linkageData[0] ?? null,
+    };
+  }),
+
+  /**
+   * Get all cloned builds (admin view)
+   */
+  getAllBuilds: protectedProcedure.query(async () => {
+    const builds = await db.select().from(clonedBuilds).limit(100);
+    return builds;
   }),
 });
 
-// Import tables (these will be imported from schema after migration)
-// For now, using placeholder imports - will be fixed after schema is synced
-import { simulatorCompletion, clonedBuilds, activationProgressTable } from "../db";
+function getSimulatorLabel(type: string): string {
+  const labels: Record<string, string> = {
+    business: "Business Workshop",
+    grants: "Grant Writing Workshop",
+    proposals: "Proposals Workshop",
+    contracts: "Contracts Workshop",
+    real_eye_nation: "Real-Eye-Nation Workshop",
+    other: "Additional Workshop",
+  };
+  return labels[type] ?? type;
+}

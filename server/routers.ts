@@ -312,6 +312,7 @@ import { realtimeCollaborationRouter } from "./routers/realtime-collaboration";
 import { mobilePushRouter } from "./routers/mobile-push";
 import { workflowExecutionRouter } from "./routers/workflow-execution";
 import { websocketSyncRouter } from "./routers/websocket-sync";
+import { systemActivationRouter } from "./routers/system-activation";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -662,6 +663,7 @@ export const appRouter = router({
   mobilePush: mobilePushRouter,
   workflowExecution: workflowExecutionRouter,
   websocketSync: websocketSyncRouter,
+  systemActivation: systemActivationRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>

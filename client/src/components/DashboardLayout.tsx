@@ -118,6 +118,7 @@ const menuCategories: MenuCategory[] = [
     defaultOpen: false,
     items: [
       { icon: GraduationCap, label: "Academy Dashboard", path: "/academy", minRole: "user" },
+      { icon: Rocket, label: "System Activation", path: "/activation-progress", minRole: "user" },
       { icon: Gamepad2, label: "Game Center", path: "/game-center", minRole: "user" },
       { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user" },
       { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator", minRole: "user" },
