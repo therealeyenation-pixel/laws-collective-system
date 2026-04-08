@@ -12215,3 +12215,12 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Build auto-skip feature — if stream fails, auto-advance to next channel
 - [x] Add region filter tabs (All, US, International) to theater UI
 - [x] Test and save checkpoint
+
+## Phase: Persistent Theater Playback (PiP + Mini-Player)
+- [x] Create global MediaPlayerContext to persist video state across pages
+- [x] Build persistent MiniPlayer bar (bottom of screen, like Spotify)
+- [x] Add Picture-in-Picture (PiP) button for watching outside browser
+- [x] Integrate into App.tsx so video survives route changes
+- [x] Fix SPA navigation (setLocation instead of window.history.back)
+- [x] Test persistence across navigation — video keeps playing on dashboard
+- [ ] Save checkpoint

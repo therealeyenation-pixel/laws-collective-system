@@ -1,4 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
+import { MediaPlayerProvider } from "./contexts/MediaPlayerContext";
+import MiniPlayer from "./components/MiniPlayer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
@@ -942,8 +944,11 @@ function App() {
         // switchable
       >
         <TooltipProvider>
-          <Toaster />
-          <Router />
+          <MediaPlayerProvider>
+            <Toaster />
+            <Router />
+            <MiniPlayer />
+          </MediaPlayerProvider>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

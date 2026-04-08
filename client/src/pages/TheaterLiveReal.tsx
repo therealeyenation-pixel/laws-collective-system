@@ -1,16 +1,20 @@
 /**
  * Theater Live - IPTV Live Streaming Interface
- * Real streaming channels with actual video playback using HLSVideoPlayer
+ * Uses global MediaPlayerContext so streams persist across page navigation.
+ * Includes Picture-in-Picture and auto-skip on stream failure.
+ *
+ * The video element is NOT moved in the DOM. Instead, the MiniPlayer
+ * uses CSS fixed positioning to overlay the video on #theater-video-target.
  */
 
 import { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'wouter';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
   Play,
   Heart,
-  Share2,
   ArrowLeft,
   Search,
   Tv,
@@ -20,26 +24,41 @@ import {
   Maximize,
   Minimize,
   AlertCircle,
+  PictureInPicture2,
+  SkipForward,
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { useMediaPlayer, type MediaChannel } from '@/contexts/MediaPlayerContext';
 
 export default function TheaterLiveReal() {
+  const [, setLocation] = useLocation();
   const { user } = useAuth();
-  const [selectedChannel, setSelectedChannel] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
-  const [activeRegion, setActiveRegion] = useState<string>('all'); // 'all' | 'us' | 'international'
+  const [activeRegion, setActiveRegion] = useState<string>('all');
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [volume, setVolume] = useState(80);
-  const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Global media player context
+  const {
+    currentChannel,
+    isPlaying,
+    isLoading,
+    hasError,
+    volume,
+    isMuted,
+    isPiP,
+    playChannel,
+    togglePlayPause,
+    setVolume,
+    toggleMute,
+    togglePiP,
+    getVideoElement,
+    setTheaterMode,
+  } = useMediaPlayer();
 
   // Fetch channels from streaming content API
   const { data: channels = [], isLoading: channelsLoading } =
@@ -48,7 +67,16 @@ export default function TheaterLiveReal() {
       limit: 50,
     });
 
-  const selectedChannelData = channels.find((c: any) => c.id === selectedChannel);
+  const selectedChannel = currentChannel?.id ?? null;
+  const selectedChannelData = currentChannel;
+
+  // Enable theater mode when this page mounts, disable when it unmounts
+  useEffect(() => {
+    setTheaterMode(true);
+    return () => {
+      setTheaterMode(false);
+    };
+  }, [setTheaterMode]);
 
   // Filter channels by region and search
   const regionFiltered = activeRegion === 'all'
@@ -63,26 +91,8 @@ export default function TheaterLiveReal() {
       )
     : regionFiltered;
 
-  // Get unique categories from region-filtered channels so tabs update with region
+  // Get unique categories from region-filtered channels
   const categories = Array.from(new Set(regionFiltered.map((c: any) => c.category))).sort();
-
-  // Volume control
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.volume = isMuted ? 0 : volume / 100;
-      videoRef.current.muted = isMuted;
-    }
-  }, [volume, isMuted]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current.src = '';
-      }
-    };
-  }, []);
 
   // Handle fullscreen change events
   useEffect(() => {
@@ -102,118 +112,21 @@ export default function TheaterLiveReal() {
 
   // Auto-skip on error with retry limit
   const autoSkipRef = useRef(0);
-  const MAX_AUTO_SKIP = 3;
 
-  const handleStreamError = (channelId: number) => {
-    if (autoSkipRef.current < MAX_AUTO_SKIP) {
-      const nextId = getNextChannelId(channelId);
-      if (nextId) {
-        autoSkipRef.current += 1;
-        toast.info(`Stream unavailable, trying next channel... (${autoSkipRef.current}/${MAX_AUTO_SKIP})`);
-        setTimeout(() => handlePlayChannel(nextId), 500);
-        return;
-      }
-    }
-    // If we've exhausted auto-skip attempts or no next channel, show error
-    setHasError(true);
-    setIsLoading(false);
+  const handlePlayChannel = async (channel: any) => {
     autoSkipRef.current = 0;
-  };
-
-  const handlePlayChannel = async (channelId: number) => {
-    const channel = channels.find((c: any) => c.id === channelId);
-    if (!channel) return;
-
-    setSelectedChannel(channelId);
-    setHasError(false);
-    setIsLoading(true);
-
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.src = '';
-
-      const streamUrl = (channel as any).streamUrl;
-
-      // Check if it's an HLS stream
-      if (streamUrl.includes('.m3u8')) {
-        // Try native HLS first (Safari), then fallback to hls.js
-        if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-          videoRef.current.src = streamUrl;
-          try {
-            await videoRef.current.play();
-            setIsPlaying(true);
-            autoSkipRef.current = 0; // Reset skip counter on success
-          } catch (err) {
-            console.error('Native HLS play error:', err);
-            handleStreamError(channelId);
-          }
-        } else {
-          // Load hls.js dynamically
-          try {
-            const Hls = (await import('hls.js')).default;
-            if (Hls.isSupported()) {
-              const hls = new Hls({
-                enableWorker: true,
-                lowLatencyMode: true,
-              });
-              hls.loadSource(streamUrl);
-              hls.attachMedia(videoRef.current);
-              hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoRef.current?.play().catch((err) => {
-                  console.error('HLS play error:', err);
-                  handleStreamError(channelId);
-                });
-                setIsPlaying(true);
-                autoSkipRef.current = 0; // Reset skip counter on success
-              });
-              hls.on(Hls.Events.ERROR, (_event, data) => {
-                if (data.fatal) {
-                  console.error('HLS fatal error:', data);
-                  hls.destroy();
-                  handleStreamError(channelId);
-                }
-              });
-            } else {
-              handleStreamError(channelId);
-              toast.error('HLS playback is not supported in this browser.');
-            }
-          } catch (err) {
-            console.error('Failed to load hls.js:', err);
-            // Try direct playback as fallback
-            videoRef.current.src = streamUrl;
-            try {
-              await videoRef.current.play();
-              setIsPlaying(true);
-              autoSkipRef.current = 0;
-            } catch (playErr) {
-              handleStreamError(channelId);
-            }
-          }
-        }
-      } else {
-        // Direct stream URL (MP4, etc.)
-        videoRef.current.src = streamUrl;
-        try {
-          await videoRef.current.play();
-          setIsPlaying(true);
-          autoSkipRef.current = 0;
-        } catch (err) {
-          console.error('Direct play error:', err);
-          handleStreamError(channelId);
-        }
-      }
-    }
-  };
-
-  const handleTogglePlayPause = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play().catch(console.error);
-      setIsPlaying(true);
-    }
+    const mediaChannel: MediaChannel = {
+      id: channel.id,
+      name: channel.name,
+      description: channel.description,
+      category: channel.category,
+      region: channel.region,
+      logo: channel.logo,
+      streamUrl: channel.streamUrl,
+      isLive: channel.isLive,
+      viewers: channel.viewers,
+    };
+    playChannel(mediaChannel);
   };
 
   const handleFullscreen = () => {
@@ -228,6 +141,15 @@ export default function TheaterLiveReal() {
   const handleFollowChannel = () => {
     setIsFollowing(!isFollowing);
     toast.success(isFollowing ? 'Unfollowed channel' : 'Following channel');
+  };
+
+  const handleNextChannel = () => {
+    if (!selectedChannel) return;
+    const nextId = getNextChannelId(selectedChannel);
+    if (nextId) {
+      const nextChannel = channels.find((c: any) => c.id === nextId);
+      if (nextChannel) handlePlayChannel(nextChannel);
+    }
   };
 
   if (channelsLoading) {
@@ -248,7 +170,7 @@ export default function TheaterLiveReal() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => window.history.back()}
+          onClick={() => { setLocation('/dashboard'); }}
           className="gap-2 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -256,30 +178,16 @@ export default function TheaterLiveReal() {
         </Button>
       </div>
 
-      {/* Video Player */}
+      {/* Video Player Area */}
       {selectedChannelData ? (
         <div className="w-full bg-black" ref={containerRef}>
           <div className="relative group" style={{ aspectRatio: '16/9', maxHeight: '60vh' }}>
-            <video
-              ref={videoRef}
-              className="w-full h-full bg-black"
-              onPlay={() => {
-                setIsPlaying(true);
-                setIsLoading(false);
-              }}
-              onPause={() => setIsPlaying(false)}
-              onLoadStart={() => setIsLoading(true)}
-              onCanPlay={() => setIsLoading(false)}
-              onError={() => {
-                setHasError(true);
-                setIsLoading(false);
-              }}
-              playsInline
-            />
+            {/* This is the CSS target — the MiniPlayer positions the video over this div */}
+            <div id="theater-video-target" className="w-full h-full bg-black" />
 
             {/* Loading Overlay */}
             {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 pointer-events-none z-40">
                 <div className="text-center">
                   <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                   <p className="text-white text-sm">Loading stream...</p>
@@ -289,33 +197,29 @@ export default function TheaterLiveReal() {
 
             {/* Error Overlay */}
             {hasError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-40">
                 <div className="text-center">
                   <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
                   <p className="text-white text-lg font-semibold mb-2">Stream Unavailable</p>
                   <p className="text-gray-400 text-sm mb-4">
-                    This channel may be temporarily offline or geo-restricted.
+                    This channel may be temporarily offline.
                   </p>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 justify-center">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        autoSkipRef.current = 0;
-                        handlePlayChannel(selectedChannel!);
+                        if (selectedChannelData) handlePlayChannel(selectedChannelData);
                       }}
                       className="text-white border-white hover:bg-white/20"
                     >
                       Retry
                     </Button>
-                    {getNextChannelId(selectedChannel!) && (
+                    {selectedChannel && getNextChannelId(selectedChannel) && (
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => {
-                          autoSkipRef.current = 0;
-                          handlePlayChannel(getNextChannelId(selectedChannel!)!);
-                        }}
+                        onClick={handleNextChannel}
                         className="text-white border-white hover:bg-white/20"
                       >
                         Next Channel
@@ -326,13 +230,15 @@ export default function TheaterLiveReal() {
               </div>
             )}
 
-            {/* Idle state (before play) */}
+            {/* Idle state */}
             {!isPlaying && !isLoading && !hasError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-40">
                 <Button
                   size="lg"
                   variant="ghost"
-                  onClick={() => handlePlayChannel(selectedChannel!)}
+                  onClick={() => {
+                    if (selectedChannelData) handlePlayChannel(selectedChannelData);
+                  }}
                   className="text-white hover:bg-white/20 rounded-full w-20 h-20"
                 >
                   <Play className="w-10 h-10" />
@@ -341,13 +247,13 @@ export default function TheaterLiveReal() {
             )}
 
             {/* Controls Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity z-40">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={handleTogglePlayPause}
+                    onClick={togglePlayPause}
                     className="text-white hover:bg-white/20"
                   >
                     {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
@@ -355,7 +261,16 @@ export default function TheaterLiveReal() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => setIsMuted(!isMuted)}
+                    onClick={handleNextChannel}
+                    className="text-white hover:bg-white/20"
+                    title="Next Channel"
+                  >
+                    <SkipForward className="w-5 h-5" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={toggleMute}
                     className="text-white hover:bg-white/20"
                   >
                     {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
@@ -365,10 +280,7 @@ export default function TheaterLiveReal() {
                     min="0"
                     max="100"
                     value={isMuted ? 0 : volume}
-                    onChange={(e) => {
-                      setVolume(Number(e.target.value));
-                      if (isMuted) setIsMuted(false);
-                    }}
+                    onChange={(e) => setVolume(Number(e.target.value))}
                     className="w-24 h-1 bg-white/30 rounded cursor-pointer accent-white"
                   />
                   {isPlaying && (
@@ -392,6 +304,15 @@ export default function TheaterLiveReal() {
                   <Button
                     size="sm"
                     variant="ghost"
+                    onClick={togglePiP}
+                    className={`text-white hover:bg-white/20 ${isPiP ? 'text-primary' : ''}`}
+                    title="Picture-in-Picture"
+                  >
+                    <PictureInPicture2 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={handleFullscreen}
                     className="text-white hover:bg-white/20"
                   >
@@ -406,12 +327,12 @@ export default function TheaterLiveReal() {
             </div>
 
             {/* Channel Name Overlay */}
-            <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity z-40">
               <h2 className="text-white font-semibold text-lg">
-                {(selectedChannelData as any).name}
+                {selectedChannelData.name}
               </h2>
               <p className="text-gray-300 text-sm">
-                {(selectedChannelData as any).description}
+                {selectedChannelData.description}
               </p>
             </div>
           </div>
@@ -479,7 +400,7 @@ export default function TheaterLiveReal() {
       </div>
 
       {/* Channels Grid */}
-      <div className="container max-w-7xl mx-auto px-4 py-6">
+      <div className="container max-w-7xl mx-auto px-4 py-6 pb-24">
         <h2 className="text-xl font-bold text-foreground mb-4">
           {activeCategory
             ? `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1).replace(/_/g, ' ')} Channels`
@@ -502,7 +423,7 @@ export default function TheaterLiveReal() {
                 className={`overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
                   selectedChannel === channel.id ? 'ring-2 ring-primary shadow-lg' : ''
                 }`}
-                onClick={() => handlePlayChannel(channel.id)}
+                onClick={() => handlePlayChannel(channel)}
               >
                 <div className="relative aspect-video bg-muted overflow-hidden">
                   <img
@@ -532,7 +453,6 @@ export default function TheaterLiveReal() {
                   <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Play className="w-8 h-8 text-white" />
                   </div>
-                  {/* Now playing indicator */}
                   {selectedChannel === channel.id && isPlaying && (
                     <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
                       <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
