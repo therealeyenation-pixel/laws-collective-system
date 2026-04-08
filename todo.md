@@ -12170,3 +12170,14 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Test end-to-end activation flow
 - [x] Write vitest tests for completion hooks (8 tests passing)
 - [x] Save checkpoint
+
+## Phase: Department-Simulator-Certificate Linkage System (Pro Mode)
+- [x] Audit existing department dashboards, Manager mappings, and LuvLedger schema
+- [x] Create Department Registry — central mapping of departments to Managers, simulators, certificate types
+- [x] Create department-certificate-bridge service (server/services/department-certificate-bridge.ts)
+- [x] Wire certificates to LuvLedger blockchain entries on simulator completion
+- [x] Create department-dashboard tRPC router (server/routers/department-dashboard.ts)
+- [x] Connect department dashboards to their simulators (completions, certificates, training status)
+- [x] Add AI Content Builder page for Managers (client/src/pages/ContentBuilder.tsx)
+- [x] Write tests and verify end-to-end linkage (34 tests passing)
+- [x] Save checkpoint

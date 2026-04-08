@@ -313,6 +313,7 @@ import { mobilePushRouter } from "./routers/mobile-push";
 import { workflowExecutionRouter } from "./routers/workflow-execution";
 import { websocketSyncRouter } from "./routers/websocket-sync";
 import { systemActivationRouter } from "./routers/system-activation";
+import { departmentDashboardRouter } from "./routers/department-dashboard";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -664,6 +665,7 @@ export const appRouter = router({
   workflowExecution: workflowExecutionRouter,
   websocketSync: websocketSyncRouter,
   systemActivation: systemActivationRouter,
+  departmentDashboard: departmentDashboardRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>

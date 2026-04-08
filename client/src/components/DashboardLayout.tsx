@@ -41,7 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone, Disc3
+  Fingerprint, Smartphone, Disc3, Sparkles
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -119,6 +119,7 @@ const menuCategories: MenuCategory[] = [
     items: [
       { icon: GraduationCap, label: "Academy Dashboard", path: "/academy", minRole: "user" },
       { icon: Rocket, label: "System Activation", path: "/activation-progress", minRole: "user" },
+      { icon: Sparkles, label: "Content Builder", path: "/content-builder", minRole: "user" },
       { icon: Gamepad2, label: "Game Center", path: "/game-center", minRole: "user" },
       { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user" },
       { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator", minRole: "user" },

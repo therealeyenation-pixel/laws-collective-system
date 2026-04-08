@@ -8,6 +8,7 @@ import {
   buildLinkage,
   activationProgress,
 } from "../../drizzle/schema";
+import { issueDepartmentCertificate } from "../services/department-certificate-bridge";
 
 /**
  * System Activation Router
@@ -123,6 +124,25 @@ export const systemActivationRouter = router({
         });
       }
 
+      // Issue certificate and record on LuvLedger blockchain
+      let certificateResult = null;
+      try {
+        certificateResult = await issueDepartmentCertificate({
+          userId,
+          userName: ctx.user.name || ctx.user.email || `User ${userId}`,
+          simulatorType: input.simulatorType,
+          score: input.score ?? 0,
+          completedAt: new Date(),
+        });
+        if (certificateResult.success) {
+          console.log(
+            `[Activation] Certificate issued for ${input.simulatorType}: hash=${certificateResult.blockchainHash?.substring(0, 12)}...`
+          );
+        }
+      } catch (err) {
+        console.error("[Activation] Certificate issuance failed (non-blocking):", err);
+      }
+
       return {
         success: true,
         alreadyCompleted: false,
@@ -130,6 +150,13 @@ export const systemActivationRouter = router({
         totalRequired: TOTAL_SIMULATORS_REQUIRED,
         readyForActivation: simulatorsCompleted >= TOTAL_SIMULATORS_REQUIRED,
         message: `${input.simulatorType} workshop completed! ${simulatorsCompleted}/${TOTAL_SIMULATORS_REQUIRED} done.`,
+        certificate: certificateResult?.success
+          ? {
+              certificateId: certificateResult.certificateId,
+              blockchainHash: certificateResult.blockchainHash,
+              luvLedgerEntryId: certificateResult.luvLedgerEntryId,
+            }
+          : null,
       };
     }),
 
