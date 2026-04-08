@@ -380,6 +380,7 @@ import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
 import ActivationProgress from "@/pages/ActivationProgress";
 import ContentBuilder from "@/pages/ContentBuilder";
+import AdminActivations from "@/pages/AdminActivations";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -531,6 +532,7 @@ function Router() {
       <Route path="/guardian-dashboard">{() => <ProtectedRoute component={GuardianDashboard} minRole="user" />}</Route>
       <Route path="/activation-progress">{() => <ProtectedRoute component={ActivationProgress} minRole="user" />}</Route>
       <Route path="/content-builder">{() => <ProtectedRoute component={ContentBuilder} minRole="user" />}</Route>
+      <Route path="/admin/activations">{() => <ProtectedRoute component={AdminActivations} minRole="admin" />}</Route>
       <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} minRole="user" />}</Route>
       <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>

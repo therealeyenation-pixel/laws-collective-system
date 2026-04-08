@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 import {
   Rocket,
   User,
@@ -31,6 +32,13 @@ import {
   FileText,
   Upload,
   Loader2,
+  DollarSign,
+  Handshake,
+  Eye,
+  BookOpen,
+  Circle,
+  ChevronRight,
+  Award,
 } from "lucide-react";
 
 interface PersonalProfile {
@@ -103,6 +111,15 @@ const DEPARTMENT_OPTIONS = [
   { id: "hr", name: "Human Resources", icon: Users },
   { id: "qaqc", name: "Quality Assurance", icon: CheckCircle2 },
   { id: "purchasing", name: "Purchasing", icon: Briefcase },
+];
+
+const WORKSHOP_SEQUENCE = [
+  { type: "business", label: "Business Workshop", icon: Building2, route: "/business-simulator", color: "text-blue-500", bgColor: "bg-blue-500/10" },
+  { type: "grants", label: "Grant Writing", icon: DollarSign, route: "/grant-simulator", color: "text-green-500", bgColor: "bg-green-500/10" },
+  { type: "proposals", label: "Proposals", icon: FileText, route: "/proposal-simulator", color: "text-purple-500", bgColor: "bg-purple-500/10" },
+  { type: "contracts", label: "Contracts", icon: Handshake, route: "/contracts-simulator", color: "text-orange-500", bgColor: "bg-orange-500/10" },
+  { type: "real_eye_nation", label: "Real-Eye-Nation", icon: Eye, route: "/media-simulator", color: "text-rose-500", bgColor: "bg-rose-500/10" },
+  { type: "other", label: "L.A.W.S. Foundation", icon: BookOpen, route: "/course-dashboard", color: "text-teal-500", bgColor: "bg-teal-500/10" },
 ];
 
 const PRIMARY_GOALS = [
@@ -197,6 +214,20 @@ export default function GettingStarted() {
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
 
+  // Workshop progress query — fires when user is authenticated (must be before any early returns)
+  const progressQuery = trpc.systemActivation.getProgress.useQuery(undefined, {
+    enabled: !!user,
+  });
+
+  const workshopProgress = progressQuery.data;
+  const completedTypes = new Set(
+    workshopProgress?.simulators?.filter((s) => s.completed).map((s) => s.type) ?? []
+  );
+  const nextWorkshop = WORKSHOP_SEQUENCE.find((w) => !completedTypes.has(w.type));
+  const completedCount = workshopProgress?.completedCount ?? 0;
+  const totalRequired = workshopProgress?.totalRequired ?? 6;
+  const workshopPercent = totalRequired > 0 ? (completedCount / totalRequired) * 100 : 0;
+
   if (authLoading) {
     return (
       <DashboardLayout>
@@ -207,14 +238,14 @@ export default function GettingStarted() {
     );
   }
 
-  // Profile Complete - Show Recommended Path
+  // Profile Complete - Show Recommended Path + Workshop Progress
   if (profileComplete) {
     const selectedGoal = PRIMARY_GOALS.find((g) => g.id === profile.primaryGoal);
     
     return (
       <DashboardLayout>
-        <div className="container max-w-4xl py-8">
-          <div className="text-center mb-8">
+        <div className="container max-w-4xl py-8 space-y-6">
+          <div className="text-center mb-4">
             <div className="relative inline-block">
               <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
               <CheckCircle2 className="w-24 h-24 text-emerald-500 relative" />
@@ -260,6 +291,102 @@ export default function GettingStarted() {
                     </Button>
                   ))}
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* ── Workshop Progress Banner ── */}
+          <Card className="border-primary/20">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Award className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Education Workshops</CardTitle>
+                    <CardDescription>
+                      Complete all 6 workshops to activate your personalized build
+                    </CardDescription>
+                  </div>
+                </div>
+                <Badge variant={completedCount >= totalRequired ? "default" : "secondary"}
+                  className={completedCount >= totalRequired ? "bg-green-600" : ""}>
+                  {completedCount}/{totalRequired}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                  <span>{completedCount} completed</span>
+                  <span>{Math.round(workshopPercent)}%</span>
+                </div>
+                <Progress value={workshopPercent} className="h-2" />
+              </div>
+
+              {/* Workshop Sequence */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {WORKSHOP_SEQUENCE.map((ws) => {
+                  const done = completedTypes.has(ws.type);
+                  const isNext = nextWorkshop?.type === ws.type;
+                  const Icon = ws.icon;
+                  return (
+                    <div
+                      key={ws.type}
+                      className={`flex items-center gap-2 p-3 rounded-lg border transition-all ${
+                        done
+                          ? "border-green-500/30 bg-green-500/5"
+                          : isNext
+                          ? "border-primary/40 bg-primary/5 ring-1 ring-primary/20"
+                          : "border-border bg-muted/30"
+                      }`}
+                    >
+                      <div className={`p-1.5 rounded-md ${done ? "bg-green-500/10" : ws.bgColor}`}>
+                        {done ? (
+                          <CheckCircle2 className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Icon className={`w-4 h-4 ${ws.color}`} />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-xs font-medium truncate ${
+                          done ? "text-green-700 dark:text-green-400" : "text-foreground"
+                        }`}>
+                          {ws.label}
+                        </p>
+                        {isNext && (
+                          <p className="text-[10px] text-primary font-medium">Up Next</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Next Workshop CTA */}
+              {nextWorkshop && (
+                <Button asChild className="w-full gap-2">
+                  <Link href={nextWorkshop.route}>
+                    Start {nextWorkshop.label}
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              )}
+
+              {completedCount >= totalRequired && (
+                <Button asChild className="w-full gap-2 bg-green-600 hover:bg-green-700">
+                  <Link href="/activation-progress">
+                    <Rocket className="w-4 h-4" />
+                    Activate Your Build
+                  </Link>
+                </Button>
+              )}
+
+              <div className="text-center">
+                <Button variant="link" asChild className="text-xs">
+                  <Link href="/activation-progress">View Full Activation Progress →</Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

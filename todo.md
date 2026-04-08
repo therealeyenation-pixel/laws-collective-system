@@ -12181,3 +12181,13 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add AI Content Builder page for Managers (client/src/pages/ContentBuilder.tsx)
 - [x] Write tests and verify end-to-end linkage (34 tests passing)
 - [x] Save checkpoint
+
+## Phase: Getting Started Progress Banner & Admin Activations Dashboard
+- [x] Add workshop progress banner to Getting Started page
+- [x] Show completion status for each simulator in sequence
+- [x] Guide members to next uncompleted workshop
+- [x] Build Admin Activations Dashboard at /admin/activations
+- [x] Show all member activation statuses and cloned builds
+- [x] Display certificate issuance stats by department
+- [x] Write tests for new features (34 tests passing)
+- [x] Save checkpoint
