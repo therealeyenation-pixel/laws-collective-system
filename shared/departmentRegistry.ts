@@ -338,6 +338,64 @@ export function getCertificateContext(simulatorType: string) {
   };
 }
 
+// ─── Agent Type → Department Mapping ──────────────────────────────────────────
+/**
+ * Maps AI agent types to their corresponding department IDs.
+ * Used to wire agents to department workshops for interactive training.
+ * 
+ * Agent types: operations→business, finance→finance, education→education,
+ * hr→hr, media→media, design→design, health→health, outreach→outreach,
+ * guardian→legal, analytics→finance, support→education, seo→outreach,
+ * engagement→outreach, qaqc→business, purchasing→finance
+ */
+export const AGENT_TO_DEPARTMENT: Record<string, string> = {
+  operations: "business",
+  finance: "finance",
+  analytics: "finance",
+  education: "education",
+  support: "education",
+  guardian: "legal",
+  hr: "hr",
+  media: "media",
+  design: "design",
+  health: "health",
+  outreach: "outreach",
+  seo: "outreach",
+  engagement: "outreach",
+  qaqc: "business",
+  purchasing: "finance",
+  custom: "business",
+};
+
+/**
+ * Get the department linked to an agent type
+ */
+export function getDepartmentForAgent(agentType: string): DepartmentEntry | undefined {
+  const deptId = AGENT_TO_DEPARTMENT[agentType];
+  if (!deptId) return undefined;
+  return getDepartment(deptId);
+}
+
+/**
+ * Get workshop content context for an agent — used to pre-load
+ * department training Q&A into agent conversations (Workshop Mode)
+ */
+export function getWorkshopContext(agentType: string) {
+  const dept = getDepartmentForAgent(agentType);
+  if (!dept) return null;
+  return {
+    departmentId: dept.id,
+    departmentName: dept.name,
+    entity: dept.entity,
+    manager: dept.manager,
+    simulators: dept.simulators,
+    certificateTypes: dept.certificateTypes,
+    dashboardRoute: dept.dashboardRoute,
+    color: dept.color,
+    icon: dept.icon,
+  };
+}
+
 /**
  * Get department statistics summary
  */

@@ -12231,3 +12231,12 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Stop theater stream when radio station starts playing (mutual exclusion)
 - [x] Stop radio when theater stream starts playing (mutual exclusion)
 - [x] Test and save checkpoint
+
+## Phase: Agent-Workshop Wiring, Contractor Transition, Coordinator Role
+- [x] Wire Agents to department workshops — connect each Agent to its department's training content
+- [x] Enable Managers to pre-load questions and answers for interactive simulator sessions
+- [x] Build employee-to-contractor transition tracker connected to activation system
+- [x] Completing all workshops + certification triggers contractor eligibility
+- [x] Add Coordinator role and open positions integration
+- [x] Link HR open positions to department registry for Coordinator hiring with training paths
+- [ ] Test all three features and save checkpoint

@@ -20,6 +20,7 @@ import {
 } from "../../drizzle/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { invokeLLM } from "../_core/llm";
+import { getDepartmentForAgent, getWorkshopContext, AGENT_TO_DEPARTMENT, DEPARTMENT_REGISTRY } from "../../shared/departmentRegistry";
 
 // Agent system prompts for different types
 const AGENT_SYSTEM_PROMPTS: Record<string, string> = {
@@ -1459,4 +1460,154 @@ export const agentsRouter = router({
         currentQuestion,
       };
     }),
+
+  // ============================================
+  // WORKSHOP MODE — Agent ↔ Department Wiring
+  // ============================================
+
+  /**
+   * Get workshop context for an agent — returns the linked department,
+   * its simulators, training content, and Q&A material
+   */
+  getWorkshopContext: protectedProcedure
+    .input(z.object({ agentType: z.string() }))
+    .query(async ({ input }) => {
+      const context = getWorkshopContext(input.agentType);
+      if (!context) return null;
+
+      const db = await getDb();
+      if (!db) return context;
+
+      // Fetch training modules for this department
+      const modules = await db.select()
+        .from(trainingModules)
+        .where(and(
+          eq(trainingModules.agentType, input.agentType),
+          eq(trainingModules.isActive, true)
+        ));
+
+      // Fetch training content for this department
+      let trainingContent: any[] = [];
+      try {
+        const result = await db.execute(
+          sql`SELECT id, title, contentType, content, status FROM training_content WHERE department = ${context.departmentId} AND status = 'published' ORDER BY updatedAt DESC LIMIT 20`
+        );
+        trainingContent = (result as any)?.[0] ?? [];
+      } catch {
+        // Table may not exist yet
+      }
+
+      return {
+        ...context,
+        modules,
+        trainingContent,
+      };
+    }),
+
+  /**
+   * Start a Workshop Mode conversation — creates a new conversation
+   * with the agent pre-loaded with department training context
+   */
+  startWorkshopSession: protectedProcedure
+    .input(z.object({
+      agentId: z.number(),
+      agentType: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const dept = getDepartmentForAgent(input.agentType);
+      if (!dept) throw new Error("No department linked to this agent type");
+
+      // Get training content for this department
+      let contentSummary = "";
+      try {
+        const content = await db.execute(
+          sql`SELECT title, contentType, content FROM training_content WHERE department = ${dept.id} AND status = 'published' ORDER BY updatedAt DESC LIMIT 10`
+        );
+        const rows = (content as any)?.[0] ?? [];
+        if (Array.isArray(rows) && rows.length > 0) {
+          contentSummary = "\n\nDepartment Training Content:\n" + 
+            rows.map((r: any) => `- [${r.contentType}] ${r.title}: ${(r.content || "").substring(0, 200)}`).join("\n");
+        }
+      } catch {
+        // Table may not exist
+      }
+
+      // Get training modules for context
+      const modules = await db.select()
+        .from(trainingModules)
+        .where(and(
+          eq(trainingModules.agentType, input.agentType),
+          eq(trainingModules.isActive, true)
+        ));
+
+      const modulesSummary = modules.length > 0
+        ? "\n\nAvailable Training Modules:\n" + modules.map(m => `- ${m.title}: ${m.description}`).join("\n")
+        : "";
+
+      // Create conversation with workshop title
+      const [result] = await db.insert(agentConversations).values({
+        userId: ctx.user.id,
+        agentId: input.agentId,
+        title: `Workshop: ${dept.name} Department`,
+      });
+      const conversationId = (result as any).insertId;
+
+      // Insert system context message
+      const workshopSystemMessage = `You are now in WORKSHOP MODE for the ${dept.name} Department (${dept.entity}).\n\nDepartment Manager: ${dept.manager.name} (${dept.manager.title})\n\nYour role in Workshop Mode:\n- Guide the user through interactive training exercises for this department\n- Ask questions based on the department's training content and simulators\n- Provide feedback on answers and explain concepts\n- Track progress through topics\n- Suggest next steps and related workshops\n\nAvailable Simulators: ${dept.simulators.map(s => s.label).join(", ") || "None yet"}\nCertificate Types: ${dept.certificateTypes.join(", ") || "None yet"}${modulesSummary}${contentSummary}\n\nStart by welcoming the user to the ${dept.name} Workshop and asking what topic they'd like to explore or practice.`;
+
+      await db.insert(agentMessages).values({
+        conversationId,
+        role: "system",
+        content: workshopSystemMessage,
+      });
+
+      // Generate initial welcome message from the agent
+      const agent = await db.select().from(agents).where(eq(agents.id, input.agentId)).limit(1);
+      const systemPrompt = agent[0]?.systemPrompt || "";
+
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: systemPrompt + "\n\n" + workshopSystemMessage },
+          { role: "user", content: "Start the workshop session. Welcome me and tell me what we'll cover." },
+        ],
+      });
+
+      const welcomeMessage = typeof response.choices[0]?.message?.content === "string"
+        ? response.choices[0].message.content
+        : `Welcome to the ${dept.name} Department Workshop! Let's get started.`;
+
+      await db.insert(agentMessages).values({
+        conversationId,
+        role: "assistant",
+        content: welcomeMessage,
+      });
+
+      return {
+        conversationId,
+        departmentId: dept.id,
+        departmentName: dept.name,
+        welcomeMessage,
+      };
+    }),
+
+  /**
+   * Get the agent-to-department mapping for the UI
+   */
+  getAgentDepartmentMap: protectedProcedure.query(() => {
+    return DEPARTMENT_REGISTRY.map(dept => ({
+      departmentId: dept.id,
+      departmentName: dept.name,
+      entity: dept.entity,
+      manager: dept.manager.name,
+      color: dept.color,
+      icon: dept.icon,
+      simulatorCount: dept.simulators.length,
+      agentTypes: Object.entries(AGENT_TO_DEPARTMENT)
+        .filter(([_, deptId]) => deptId === dept.id)
+        .map(([agentType]) => agentType),
+    }));
+  }),
 });

@@ -37,9 +37,12 @@ import {
   Heart,
   Palette,
   Video,
+  GraduationCap,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
+import { AGENT_TO_DEPARTMENT } from "../../../shared/departmentRegistry";
+import { Badge } from "@/components/ui/badge";
 
 const agentIcons: Record<string, React.ReactNode> = {
   operations: <Settings className="w-5 h-5" />,
@@ -95,6 +98,7 @@ export default function Agents() {
   const [isListening, setIsListening] = useState(false);
   const [showScheduledTasks, setShowScheduledTasks] = useState(false);
   const [mobileView, setMobileView] = useState<"list" | "chat">("list");
+  const [workshopLoading, setWorkshopLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
@@ -160,6 +164,41 @@ export default function Agents() {
       toast.error(error.message);
     },
   });
+
+  // Workshop Mode mutation
+  const startWorkshop = trpc.agents.startWorkshopSession.useMutation({
+    onSuccess: (data) => {
+      setConversationId(data.conversationId);
+      setMessages([{
+        id: Date.now(),
+        role: "assistant",
+        content: data.welcomeMessage,
+        createdAt: new Date(),
+      }]);
+      setMobileView("chat");
+      setWorkshopLoading(false);
+      refetchConversations();
+      toast.success(`Workshop started: ${data.departmentName} Department`);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setWorkshopLoading(false);
+    },
+  });
+
+  const handleStartWorkshop = () => {
+    if (!selectedAgent || !selectedAgentData) return;
+    const deptId = AGENT_TO_DEPARTMENT[selectedAgentData.type];
+    if (!deptId) {
+      toast.error("No department workshop linked to this agent");
+      return;
+    }
+    setWorkshopLoading(true);
+    startWorkshop.mutate({
+      agentId: selectedAgent,
+      agentType: selectedAgentData.type,
+    });
+  };
 
   const { data: scheduledTasks, refetch: refetchTasks } = trpc.agents.getScheduledTasks.useQuery(undefined, {
     retry: false,
@@ -630,8 +669,28 @@ export default function Agents() {
                 </div>
               )}
 
-              {/* Start Button */}
-              <div className="text-center pt-4">
+              {/* Workshop Mode + Start Button */}
+              <div className="text-center pt-4 space-y-3">
+                {selectedAgentData && AGENT_TO_DEPARTMENT[selectedAgentData.type] && (
+                  <div>
+                    <Button
+                      onClick={handleStartWorkshop}
+                      disabled={workshopLoading}
+                      size="lg"
+                      className="gap-2 min-h-[48px] bg-emerald-600 hover:bg-emerald-700 w-full max-w-xs"
+                    >
+                      {workshopLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <GraduationCap className="w-4 h-4" />
+                      )}
+                      Start Workshop Mode
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Interactive training Q&A for the {AGENT_TO_DEPARTMENT[selectedAgentData.type]} department
+                    </p>
+                  </div>
+                )}
                 <Button
                   onClick={handleStartNewConversation}
                   disabled={startConversation.isPending}
@@ -959,16 +1018,34 @@ export default function Agents() {
                         </p>
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleStartNewConversation}
-                      disabled={startConversation.isPending}
-                      className="gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      New Chat
-                    </Button>
+                    <div className="flex gap-2">
+                      {selectedAgentData && AGENT_TO_DEPARTMENT[selectedAgentData.type] && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={handleStartWorkshop}
+                          disabled={workshopLoading}
+                          className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+                        >
+                          {workshopLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <GraduationCap className="w-4 h-4" />
+                          )}
+                          Workshop Mode
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleStartNewConversation}
+                        disabled={startConversation.isPending}
+                        className="gap-2"
+                      >
+                        <Plus className="w-4 h-4" />
+                        New Chat
+                      </Button>
+                    </div>
                   </div>
                 </Card>
 

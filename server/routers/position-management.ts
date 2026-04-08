@@ -733,6 +733,144 @@ export const positionManagementRouter = router({
   /**
    * Get employment dashboard overview
    */
+  // ============================================
+  // COORDINATOR ROLE + DEPARTMENT INTEGRATION
+  // ============================================
+
+  /**
+   * Get open coordinator positions linked to departments from the registry.
+   * Maps each open position to its department training path.
+   */
+  getCoordinatorPositions: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+    // Get all open positions that are coordinator-level
+    const positions = await db.select().from(businessPositions)
+      .where(sql`${businessPositions.status} = 'open' AND ${businessPositions.classificationType} IN ('w2_employee', 'w2_officer')`);
+
+    // Import department registry to map positions to departments
+    const { DEPARTMENT_REGISTRY, getDepartment } = await import("../../shared/departmentRegistry");
+
+    const coordinatorPositions = positions.map((pos) => {
+      // Match position department to registry
+      const deptId = pos.department?.toLowerCase().replace(/[\s&]+/g, '_') || '';
+      const dept = getDepartment(deptId) || DEPARTMENT_REGISTRY.find(
+        (d) => d.name.toLowerCase() === (pos.department || '').toLowerCase()
+      );
+
+      return {
+        ...pos,
+        departmentMatch: dept ? {
+          departmentId: dept.id,
+          departmentName: dept.name,
+          entity: dept.entity,
+          manager: dept.manager,
+          trainingPath: dept.simulators.map(s => ({
+            simulatorType: s.type,
+            label: s.label,
+            route: s.route,
+            certificateType: s.certificateType,
+          })),
+          dashboardRoute: dept.dashboardRoute,
+          color: dept.color,
+          icon: dept.icon,
+        } : null,
+        isCoordinator: (pos.title || '').toLowerCase().includes('coordinator'),
+      };
+    });
+
+    return coordinatorPositions;
+  }),
+
+  /**
+   * Hire a coordinator into a specific department.
+   * Creates the position holder and links them to the department training path.
+   */
+  hireCoordinator: protectedProcedure
+    .input(z.object({
+      positionId: z.number(),
+      fullName: z.string().min(1),
+      email: z.string().email(),
+      phone: z.string().optional(),
+      departmentId: z.string(), // from department registry
+      startDate: z.string(), // ISO date string
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      // Verify position exists and is open
+      const [position] = await db.select().from(businessPositions)
+        .where(eq(businessPositions.id, input.positionId)).limit(1);
+      if (!position) throw new TRPCError({ code: "NOT_FOUND", message: "Position not found" });
+      if (position.status !== 'open') throw new TRPCError({ code: "BAD_REQUEST", message: "Position is not open" });
+
+      // Get department info
+      const { getDepartment } = await import("../../shared/departmentRegistry");
+      const dept = getDepartment(input.departmentId);
+      if (!dept) throw new TRPCError({ code: "NOT_FOUND", message: "Department not found in registry" });
+
+      // Create position holder
+      const [holder] = await db.insert(positionHolders).values({
+        positionId: input.positionId,
+        fullName: input.fullName,
+        email: input.email,
+        phone: input.phone || null,
+        relationshipType: 'employee',
+        startDate: new Date(input.startDate),
+        status: 'active',
+      });
+
+      // Update position status to filled
+      await db.update(businessPositions)
+        .set({
+          status: 'filled',
+          currentHolders: 1,
+          department: dept.name,
+        })
+        .where(eq(businessPositions.id, input.positionId));
+
+      return {
+        success: true,
+        holderId: holder.insertId,
+        message: `${input.fullName} hired as Coordinator in ${dept.name} department. Training path: ${dept.simulators.map(s => s.label).join(', ') || 'No simulators assigned yet'}.`,
+        trainingPath: dept.simulators.map(s => ({
+          type: s.type,
+          label: s.label,
+          route: s.route,
+        })),
+        reportsTo: dept.manager.name,
+      };
+    }),
+
+  /**
+   * Get department training requirements for a coordinator position.
+   * Returns the training modules the coordinator must complete.
+   */
+  getCoordinatorTrainingPath: protectedProcedure
+    .input(z.object({ departmentId: z.string() }))
+    .query(async ({ input }) => {
+      const { getDepartment } = await import("../../shared/departmentRegistry");
+      const dept = getDepartment(input.departmentId);
+      if (!dept) throw new TRPCError({ code: "NOT_FOUND", message: "Department not found" });
+
+      return {
+        departmentId: dept.id,
+        departmentName: dept.name,
+        entity: dept.entity,
+        manager: dept.manager,
+        requiredTraining: dept.simulators.map(s => ({
+          type: s.type,
+          label: s.label,
+          route: s.route,
+          certificateType: s.certificateType,
+        })),
+        certificateTypes: dept.certificateTypes,
+        dashboardRoute: dept.dashboardRoute,
+      };
+    }),
+
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });

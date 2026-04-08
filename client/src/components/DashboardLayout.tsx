@@ -315,6 +315,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Award, label: "Resume Builder", path: "/resume-builder", minRole: "staff" },
           { icon: FileSignature, label: "Offer Letters", path: "/offer-letters", minRole: "staff" },
           { icon: Play, label: "HR Simulator", path: "/hr-simulator", minRole: "staff" },
+          { icon: ArrowLeftRight, label: "Contractor Transition", path: "/contractor-transition", minRole: "staff" },
           { icon: Users, label: "Team", path: "/hr-team", minRole: "staff" },
           { icon: FolderOpen, label: "Documents", path: "/hr-documents", minRole: "staff" },
         ]

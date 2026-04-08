@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { 
   UserCog, 
@@ -26,201 +28,167 @@ import {
   DollarSign,
   FileCheck,
   Users,
-  Loader2
+  Loader2,
+  Lock,
+  Unlock,
+  TrendingUp,
+  BookOpen,
+  ArrowUpRight,
+  XCircle,
+  RefreshCw
 } from "lucide-react";
 import { Link } from "wouter";
 
-interface TransitionStep {
-  id: number;
-  name: string;
-  description: string;
-  status: "completed" | "in_progress" | "pending" | "blocked";
-  requirements?: string[];
-  linkedModule?: string;
-  linkedUrl?: string;
-}
+// Phase label map for display
+const PHASE_LABELS: Record<string, { label: string; color: string; icon: any }> = {
+  initiated: { label: "Initiated", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", icon: Play },
+  training_assigned: { label: "Training Assigned", color: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300", icon: BookOpen },
+  training_in_progress: { label: "Training In Progress", color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", icon: GraduationCap },
+  training_completed: { label: "Training Completed", color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300", icon: CheckCircle2 },
+  entity_formation: { label: "Entity Formation", color: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", icon: Building2 },
+  entity_verified: { label: "Entity Verified", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", icon: Shield },
+  contract_pending: { label: "Contract Pending", color: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300", icon: FileText },
+  contract_signed: { label: "Contract Signed", color: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300", icon: FileCheck },
+  completed: { label: "Completed", color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300", icon: CheckCircle2 },
+  cancelled: { label: "Cancelled", color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", icon: XCircle },
+};
 
-interface EmployeeTransition {
-  employeeId: number;
-  employeeName: string;
-  currentRole: string;
-  department: string;
-  entityName: string;
-  initiatedDate: string;
-  currentStep: number;
-  steps: TransitionStep[];
-  estimatedCompletion: string;
-}
-
-const TRANSITION_STEPS: TransitionStep[] = [
-  {
-    id: 1,
-    name: "Transition Initiation",
-    description: "HR initiates transition request, employee notified and consents",
-    status: "pending",
-    requirements: ["Manager approval", "HR review", "Employee consent"]
-  },
-  {
-    id: 2,
-    name: "Business Entity Formation",
-    description: "Complete Business Setup Simulator to form LLC/entity",
-    status: "pending",
-    requirements: ["Business Setup Simulator completion", "Entity registration", "EIN obtained"],
-    linkedModule: "Business Setup Simulator",
-    linkedUrl: "/simulators"
-  },
-  {
-    id: 3,
-    name: "Contractor Training Module",
-    description: "Complete training on 1099 responsibilities and contractor operations",
-    status: "pending",
-    requirements: ["Complete all training modules", "Pass assessment (80%+)", "Acknowledge terms"],
-    linkedModule: "Contractor Readiness Training",
-    linkedUrl: "/simulators"
-  },
-  {
-    id: 4,
-    name: "Contract Generation",
-    description: "Review and sign contractor agreement and related documents",
-    status: "pending",
-    requirements: ["Independent Contractor Agreement", "Non-Disclosure Agreement", "Scope of Work", "W-9 Form"]
-  },
-  {
-    id: 5,
-    name: "Compliance Verification",
-    description: "Final compliance checks before status change",
-    status: "pending",
-    requirements: ["Business entity verified", "Training completed", "Contract signed", "W-9 on file", "Insurance verified"]
-  },
-  {
-    id: 6,
-    name: "Status Transition",
-    description: "Worker type officially changes from employee to contractor",
-    status: "pending",
-    requirements: ["All previous steps completed", "Final HR approval", "System update"]
-  }
+const PHASE_ORDER = [
+  "initiated",
+  "training_assigned",
+  "training_in_progress",
+  "training_completed",
+  "entity_formation",
+  "entity_verified",
+  "contract_pending",
+  "contract_signed",
+  "completed",
 ];
 
 const TRAINING_MODULES = [
-  {
-    id: 1,
-    title: "1099 Tax Responsibilities",
-    description: "Understanding quarterly taxes, deductions, and self-employment tax",
-    duration: "45 min",
-    status: "not_started" as const
-  },
-  {
-    id: 2,
-    title: "Invoice Submission Process",
-    description: "How to create, submit, and track invoices for payment",
-    duration: "30 min",
-    status: "not_started" as const
-  },
-  {
-    id: 3,
-    title: "Contract Terms & Deliverables",
-    description: "Understanding your contractor agreement and scope of work",
-    duration: "40 min",
-    status: "not_started" as const
-  },
-  {
-    id: 4,
-    title: "Employee vs Contractor Distinctions",
-    description: "Legal differences and why classification matters",
-    duration: "35 min",
-    status: "not_started" as const
-  },
-  {
-    id: 5,
-    title: "Business Insurance Requirements",
-    description: "Liability coverage and professional insurance options",
-    duration: "25 min",
-    status: "not_started" as const
-  },
-  {
-    id: 6,
-    title: "Record Keeping & Compliance",
-    description: "Documentation requirements and audit preparation",
-    duration: "30 min",
-    status: "not_started" as const
-  }
+  { id: 1, title: "1099 Tax Responsibilities", description: "Understanding quarterly taxes, deductions, and self-employment tax", duration: "45 min" },
+  { id: 2, title: "Invoice Submission Process", description: "How to create, submit, and track invoices for payment", duration: "30 min" },
+  { id: 3, title: "Contract Terms & Deliverables", description: "Understanding your contractor agreement and scope of work", duration: "40 min" },
+  { id: 4, title: "Employee vs Contractor Distinctions", description: "Legal differences and why classification matters", duration: "35 min" },
+  { id: 5, title: "Business Insurance Requirements", description: "Liability coverage and professional insurance options", duration: "25 min" },
+  { id: 6, title: "Record Keeping & Compliance", description: "Documentation requirements and audit preparation", duration: "30 min" },
 ];
 
 export default function ContractorTransition() {
   const [activeTab, setActiveTab] = useState("overview");
   const [showInitiateDialog, setShowInitiateDialog] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
-  const [activeTransitions, setActiveTransitions] = useState<EmployeeTransition[]>([]);
-  const [trainingModules, setTrainingModules] = useState(TRAINING_MODULES);
+  const [transitionReason, setTransitionReason] = useState("");
+  const [showTrainingCheckDialog, setShowTrainingCheckDialog] = useState(false);
+  const [selectedTransitionId, setSelectedTransitionId] = useState<number | null>(null);
+  const [selectedEmployeeIdForCheck, setSelectedEmployeeIdForCheck] = useState<number | null>(null);
 
-  // Get employees who are eligible for transition (active employees)
-  const { data: employees, isLoading: loadingEmployees } = trpc.employees.getAll.useQuery({
-    status: "active"
+  // ============================================
+  // Backend data queries
+  // ============================================
+  
+  // Get employees eligible for transition
+  const { data: employeesData, isLoading: loadingEmployees } = trpc.employees.getAll.useQuery({ status: "active" });
+  const eligibleEmployees = useMemo(() => {
+    if (!employeesData) return [];
+    return employeesData.filter((emp: any) => {
+      const e = emp.employee || emp;
+      return !e.workerType || e.workerType === "employee";
+    });
+  }, [employeesData]);
+
+  // Get dashboard metrics from backend
+  const { data: dashboard, isLoading: loadingDashboard, refetch: refetchDashboard } = trpc.contractorTransition.getDashboard.useQuery();
+
+  // Get phase info
+  const { data: phaseInfo } = trpc.contractorTransition.getPhaseInfo.useQuery();
+
+  // Get training stats
+  const { data: trainingStats } = trpc.trainingTransition.getTrainingStats.useQuery();
+
+  // Training eligibility check for selected employee
+  const { data: eligibilityCheck, refetch: refetchEligibility } = trpc.trainingTransition.checkTransitionEligibility.useQuery(
+    { employeeId: selectedEmployeeIdForCheck! },
+    { enabled: !!selectedEmployeeIdForCheck }
+  );
+
+  // ============================================
+  // Mutations
+  // ============================================
+
+  const initiateTransition = trpc.contractorTransition.initiateTransition.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setShowInitiateDialog(false);
+      setSelectedEmployee("");
+      setTransitionReason("");
+      refetchDashboard();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
-  // Filter to only show employees (not already contractors)
-  const eligibleEmployees = employees?.filter(emp => 
-    !emp.workerType || emp.workerType === "employee"
-  ) || [];
+  const completeTraining = trpc.contractorTransition.completeTraining.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setShowTrainingCheckDialog(false);
+      refetchDashboard();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const cancelTransition = trpc.contractorTransition.cancelTransition.useMutation({
+    onSuccess: () => {
+      toast.success("Transition cancelled");
+      refetchDashboard();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // ============================================
+  // Handlers
+  // ============================================
 
   const handleInitiateTransition = () => {
     if (!selectedEmployee) {
       toast.error("Please select an employee");
       return;
     }
-    
-    const employee = eligibleEmployees.find(e => e.id.toString() === selectedEmployee);
-    if (!employee) return;
-
-    const newTransition: EmployeeTransition = {
-      employeeId: employee.id,
-      employeeName: `${employee.firstName} ${employee.lastName}`,
-      currentRole: employee.jobTitle,
-      department: employee.department,
-      entityName: "The L.A.W.S. Collective, LLC",
-      initiatedDate: new Date().toISOString().split('T')[0],
-      currentStep: 1,
-      steps: TRANSITION_STEPS.map((step, idx) => ({
-        ...step,
-        status: idx === 0 ? "in_progress" : "pending"
-      })),
-      estimatedCompletion: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    };
-
-    setActiveTransitions([...activeTransitions, newTransition]);
-    setShowInitiateDialog(false);
-    setSelectedEmployee("");
-    toast.success(`Transition initiated for ${employee.firstName} ${employee.lastName}`);
-  };
-
-  const getStepIcon = (step: TransitionStep) => {
-    switch (step.id) {
-      case 1: return <UserCog className="w-5 h-5" />;
-      case 2: return <Building2 className="w-5 h-5" />;
-      case 3: return <GraduationCap className="w-5 h-5" />;
-      case 4: return <FileText className="w-5 h-5" />;
-      case 5: return <Shield className="w-5 h-5" />;
-      case 6: return <CheckCircle2 className="w-5 h-5" />;
-      default: return <Clock className="w-5 h-5" />;
+    if (transitionReason.length < 10) {
+      toast.error("Please provide a reason (at least 10 characters)");
+      return;
     }
+    initiateTransition.mutate({
+      employeeId: parseInt(selectedEmployee),
+      reason: transitionReason,
+    });
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completed":
-        return <Badge className="bg-green-500 text-white">Completed</Badge>;
-      case "in_progress":
-        return <Badge className="bg-blue-500 text-white">In Progress</Badge>;
-      case "blocked":
-        return <Badge className="bg-red-500 text-white">Blocked</Badge>;
-      default:
-        return <Badge variant="outline">Pending</Badge>;
-    }
+  const handleCheckEligibility = (transitionId: number, employeeId: number) => {
+    setSelectedTransitionId(transitionId);
+    setSelectedEmployeeIdForCheck(employeeId);
+    setShowTrainingCheckDialog(true);
+    refetchEligibility();
   };
 
-  const calculateProgress = (transition: EmployeeTransition) => {
-    const completed = transition.steps.filter(s => s.status === "completed").length;
-    return Math.round((completed / transition.steps.length) * 100);
+  const handleCompleteTraining = () => {
+    if (!selectedTransitionId) return;
+    // Use the average score from eligibility check or default 85
+    completeTraining.mutate({
+      transitionId: selectedTransitionId,
+      finalScore: 85,
+    });
+  };
+
+  const getPhaseProgress = (phase: string) => {
+    const idx = PHASE_ORDER.indexOf(phase);
+    if (idx === -1) return 0;
+    return Math.round(((idx + 1) / PHASE_ORDER.length) * 100);
   };
 
   return (
@@ -234,13 +202,19 @@ export default function ContractorTransition() {
               Legally compliant pathway for converting employees to independent contractors
             </p>
           </div>
-          <Button onClick={() => setShowInitiateDialog(true)} className="gap-2">
-            <Play className="w-4 h-4" />
-            Initiate Transition
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => refetchDashboard()} className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </Button>
+            <Button onClick={() => setShowInitiateDialog(true)} className="gap-2">
+              <Play className="w-4 h-4" />
+              Initiate Transition
+            </Button>
+          </div>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Connected to Backend */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="pt-6">
@@ -249,7 +223,7 @@ export default function ContractorTransition() {
                   <Users className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{activeTransitions.length}</p>
+                  <p className="text-2xl font-bold">{dashboard?.summary?.activeTransitions ?? 0}</p>
                   <p className="text-sm text-muted-foreground">Active Transitions</p>
                 </div>
               </div>
@@ -262,8 +236,8 @@ export default function ContractorTransition() {
                   <CheckCircle2 className="w-6 h-6 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">0</p>
-                  <p className="text-sm text-muted-foreground">Completed This Month</p>
+                  <p className="text-2xl font-bold">{dashboard?.summary?.completedTransitions ?? 0}</p>
+                  <p className="text-sm text-muted-foreground">Completed</p>
                 </div>
               </div>
             </CardContent>
@@ -272,11 +246,11 @@ export default function ContractorTransition() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                  <Clock className="w-6 h-6 text-amber-600" />
+                  <TrendingUp className="w-6 h-6 text-amber-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">21</p>
-                  <p className="text-sm text-muted-foreground">Avg. Days to Complete</p>
+                  <p className="text-2xl font-bold">{dashboard?.summary?.conversionRate ?? 0}%</p>
+                  <p className="text-sm text-muted-foreground">Conversion Rate</p>
                 </div>
               </div>
             </CardContent>
@@ -288,8 +262,8 @@ export default function ContractorTransition() {
                   <Briefcase className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{eligibleEmployees.length}</p>
-                  <p className="text-sm text-muted-foreground">Eligible Employees</p>
+                  <p className="text-2xl font-bold">{dashboard?.summary?.activeContractorBusinesses ?? 0}</p>
+                  <p className="text-sm text-muted-foreground">Active Businesses</p>
                 </div>
               </div>
             </CardContent>
@@ -300,57 +274,83 @@ export default function ContractorTransition() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="active">Active Transitions</TabsTrigger>
-            <TabsTrigger value="training">Training Modules</TabsTrigger>
+            <TabsTrigger value="active">
+              Active Transitions
+              {(dashboard?.summary?.activeTransitions ?? 0) > 0 && (
+                <Badge variant="secondary" className="ml-2 text-xs">
+                  {dashboard?.summary?.activeTransitions}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="training">Training Tracker</TabsTrigger>
             <TabsTrigger value="completed">Completed</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6 mt-6">
+            {/* Transition Pipeline */}
             <Card>
               <CardHeader>
-                <CardTitle>Transition Process Overview</CardTitle>
+                <CardTitle>Transition Pipeline</CardTitle>
                 <CardDescription>
-                  6-step process ensuring legal compliance and contractor readiness
+                  Current distribution of active transitions across phases
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {TRANSITION_STEPS.map((step, idx) => (
-                    <div key={step.id} className="flex items-start gap-4 p-4 bg-secondary/30 rounded-lg">
-                      <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                        {getStepIcon(step)}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold">Step {step.id}: {step.name}</h4>
-                          {step.linkedModule && (
-                            <Badge variant="outline" className="text-xs">
-                              Links to {step.linkedModule}
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-1">{step.description}</p>
-                        {step.requirements && (
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {step.requirements.map((req, i) => (
-                              <span key={i} className="text-xs bg-background px-2 py-1 rounded">
-                                {req}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      {idx < TRANSITION_STEPS.length - 1 && (
-                        <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                      )}
-                    </div>
-                  ))}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-blue-600">{dashboard?.activeTransitionsByPhase?.initiated ?? 0}</p>
+                    <p className="text-sm text-muted-foreground mt-1">Initiated</p>
+                  </div>
+                  <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-amber-600">{dashboard?.activeTransitionsByPhase?.training ?? 0}</p>
+                    <p className="text-sm text-muted-foreground mt-1">In Training</p>
+                  </div>
+                  <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-purple-600">{dashboard?.activeTransitionsByPhase?.entityFormation ?? 0}</p>
+                    <p className="text-sm text-muted-foreground mt-1">Entity Formation</p>
+                  </div>
+                  <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-orange-600">{dashboard?.activeTransitionsByPhase?.contractPending ?? 0}</p>
+                    <p className="text-sm text-muted-foreground mt-1">Contract Pending</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Benefits Card */}
+            {/* Process Overview */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Transition Process</CardTitle>
+                <CardDescription>
+                  9-phase gated process ensuring legal compliance and contractor readiness
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {PHASE_ORDER.map((phase, idx) => {
+                    const info = PHASE_LABELS[phase];
+                    const Icon = info?.icon || Clock;
+                    return (
+                      <div key={phase} className="flex items-center gap-4 p-3 bg-secondary/30 rounded-lg">
+                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary text-sm font-bold">
+                          {idx + 1}
+                        </div>
+                        <Icon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{info?.label}</p>
+                        </div>
+                        {idx < PHASE_ORDER.length - 1 && (
+                          <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Benefits Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -358,22 +358,17 @@ export default function ContractorTransition() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Legal compliance with IRS contractor classification rules</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Reduced payroll tax burden and benefits costs</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Documented training creates audit protection</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Flexible workforce scaling</span>
-                    </li>
+                    {[
+                      "Legal compliance with IRS contractor classification rules",
+                      "Reduced payroll tax burden and benefits costs",
+                      "Documented training creates audit protection",
+                      "Flexible workforce scaling",
+                    ].map((benefit, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-sm">{benefit}</span>
+                      </li>
+                    ))}
                   </ul>
                 </CardContent>
               </Card>
@@ -383,31 +378,33 @@ export default function ContractorTransition() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Own business entity with growth potential</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Tax deductions for business expenses</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Freedom to work with multiple clients</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Access to management tools (optional license)</span>
-                    </li>
+                    {[
+                      "Own business entity with growth potential",
+                      "Tax deductions for business expenses",
+                      "Freedom to work with multiple clients",
+                      "Access to management tools (optional license)",
+                    ].map((benefit, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-sm">{benefit}</span>
+                      </li>
+                    ))}
                   </ul>
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
 
-          {/* Active Transitions Tab */}
+          {/* Active Transitions Tab - Connected to Backend */}
           <TabsContent value="active" className="space-y-4 mt-6">
-            {activeTransitions.length === 0 ? (
+            {loadingDashboard ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">Loading transitions...</p>
+                </CardContent>
+              </Card>
+            ) : !dashboard?.recentTransitions || dashboard.recentTransitions.length === 0 ? (
               <Card>
                 <CardContent className="py-12 text-center">
                   <UserCog className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
@@ -421,102 +418,258 @@ export default function ContractorTransition() {
                 </CardContent>
               </Card>
             ) : (
-              activeTransitions.map((transition) => (
-                <Card key={transition.employeeId}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="w-12 h-12">
-                          <AvatarFallback>
-                            {transition.employeeName.split(' ').map(n => n[0]).join('')}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <CardTitle>{transition.employeeName}</CardTitle>
-                          <CardDescription>
-                            {transition.currentRole} • {transition.department}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Progress</p>
-                        <p className="text-2xl font-bold">{calculateProgress(transition)}%</p>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <Progress value={calculateProgress(transition)} className="mb-6" />
-                    <div className="grid grid-cols-6 gap-2">
-                      {transition.steps.map((step) => (
-                        <div 
-                          key={step.id} 
-                          className={`p-3 rounded-lg text-center ${
-                            step.status === "completed" ? "bg-green-100 dark:bg-green-900/30" :
-                            step.status === "in_progress" ? "bg-blue-100 dark:bg-blue-900/30" :
-                            "bg-secondary/50"
-                          }`}
-                        >
-                          <div className="flex justify-center mb-2">
-                            {getStepIcon(step)}
+              dashboard.recentTransitions.map((transition: any) => {
+                const phaseIdx = PHASE_ORDER.indexOf(transition.phase);
+                const progress = getPhaseProgress(transition.phase);
+                const phaseLabel = PHASE_LABELS[transition.phase];
+                const PhaseIcon = phaseLabel?.icon || Clock;
+                const isTrainingPhase = ["training_assigned", "training_in_progress"].includes(transition.phase);
+                const isActive = transition.status === "active";
+
+                return (
+                  <Card key={transition.id} className={!isActive ? "opacity-60" : ""}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-12 h-12">
+                            <AvatarFallback>
+                              {transition.employeeName?.split(' ').map((n: string) => n[0]).join('') || '??'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <CardTitle className="text-lg">{transition.employeeName}</CardTitle>
+                            <CardDescription className="flex items-center gap-2 mt-1">
+                              <Badge className={phaseLabel?.color || "bg-gray-100"}>
+                                <PhaseIcon className="w-3 h-3 mr-1" />
+                                {phaseLabel?.label || transition.phase}
+                              </Badge>
+                              <span className="text-xs">
+                                Started {new Date(transition.createdAt).toLocaleDateString()}
+                              </span>
+                            </CardDescription>
                           </div>
-                          <p className="text-xs font-medium truncate">{step.name}</p>
-                          {getStatusBadge(step.status)}
                         </div>
-                      ))}
-                    </div>
-                    <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
-                      <span>Initiated: {transition.initiatedDate}</span>
-                      <span>Est. Completion: {transition.estimatedCompletion}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+                        <div className="text-right">
+                          <p className="text-sm text-muted-foreground">Progress</p>
+                          <p className="text-2xl font-bold">{progress}%</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <Progress value={progress} className="mb-4" />
+                      
+                      {/* Phase Progress Dots */}
+                      <div className="flex items-center gap-1 mb-4">
+                        {PHASE_ORDER.map((phase, idx) => (
+                          <div key={phase} className="flex items-center">
+                            <div
+                              className={`w-3 h-3 rounded-full ${
+                                idx < phaseIdx ? "bg-green-500" :
+                                idx === phaseIdx ? "bg-blue-500 ring-2 ring-blue-200" :
+                                "bg-gray-200 dark:bg-gray-700"
+                              }`}
+                              title={PHASE_LABELS[phase]?.label}
+                            />
+                            {idx < PHASE_ORDER.length - 1 && (
+                              <div className={`w-4 h-0.5 ${idx < phaseIdx ? "bg-green-500" : "bg-gray-200 dark:bg-gray-700"}`} />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Eligibility Gate Indicator */}
+                      {isTrainingPhase && isActive && (
+                        <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800 mb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Lock className="w-4 h-4 text-amber-600" />
+                              <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                                Training Gate: All workshops must be completed before entity formation
+                              </span>
+                            </div>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleCheckEligibility(transition.id, transition.employeeId || 0)}
+                              className="gap-1 text-amber-700 border-amber-300"
+                            >
+                              <GraduationCap className="w-3 h-3" />
+                              Check Eligibility
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {transition.phase === "training_completed" && isActive && (
+                        <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 mb-3">
+                          <div className="flex items-center gap-2">
+                            <Unlock className="w-4 h-4 text-green-600" />
+                            <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                              Training Gate Passed! Employee is eligible for entity formation.
+                            </span>
+                            <Link href="/simulators">
+                              <Button variant="outline" size="sm" className="ml-auto gap-1">
+                                <ArrowUpRight className="w-3 h-3" />
+                                Start Entity Formation
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      {isActive && transition.status !== "cancelled" && (
+                        <div className="flex justify-end gap-2 mt-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => {
+                              if (confirm("Are you sure you want to cancel this transition?")) {
+                                cancelTransition.mutate({
+                                  transitionId: transition.id,
+                                  reason: "Cancelled by administrator",
+                                });
+                              }
+                            }}
+                          >
+                            <XCircle className="w-4 h-4 mr-1" />
+                            Cancel
+                          </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })
             )}
           </TabsContent>
 
-          {/* Training Modules Tab */}
+          {/* Training Tracker Tab - Connected to Backend */}
           <TabsContent value="training" className="space-y-4 mt-6">
+            {/* Training Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+                      <Users className="w-6 h-6 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {trainingStats?.enrollment?.totalEmployeesEnrolled ?? 0}
+                      </p>
+                      <p className="text-sm text-muted-foreground">Employees Enrolled</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                      <CheckCircle2 className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {trainingStats?.enrollment?.completedEnrollments ?? 0}
+                      </p>
+                      <p className="text-sm text-muted-foreground">Courses Completed</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                      <Clock className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {trainingStats?.completion?.totalHoursCompleted 
+                          ? parseFloat(trainingStats.completion.totalHoursCompleted).toFixed(1) 
+                          : 0}
+                      </p>
+                      <p className="text-sm text-muted-foreground">Hours Completed</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Required Training Modules */}
             <Card>
               <CardHeader>
                 <CardTitle>Contractor Readiness Training</CardTitle>
                 <CardDescription>
-                  Required training modules for employee-to-contractor transition
+                  Required training modules for employee-to-contractor transition. 
+                  Total: {phaseInfo?.totalTrainingHours ?? 14.5} hours across {phaseInfo?.requiredTraining?.length ?? 8} modules.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {trainingModules.map((module) => (
-                    <div 
-                      key={module.id} 
-                      className="flex items-center justify-between p-4 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                          <GraduationCap className="w-5 h-5 text-primary" />
+                  {(phaseInfo?.requiredTraining || TRAINING_MODULES).map((module: any, idx: number) => {
+                    // Find course stats if available
+                    const courseStats = trainingStats?.courses?.find((c: any) => c.courseId === module.id);
+                    return (
+                      <div 
+                        key={module.id || idx} 
+                        className="flex items-center justify-between p-4 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                            <GraduationCap className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">{module.title}</h4>
+                            <p className="text-sm text-muted-foreground">{module.description}</p>
+                            {courseStats && (
+                              <div className="flex gap-3 mt-1">
+                                <span className="text-xs text-muted-foreground">
+                                  {courseStats.enrolledCount || 0} enrolled
+                                </span>
+                                <span className="text-xs text-green-600">
+                                  {courseStats.passedCount || 0} passed
+                                </span>
+                                {courseStats.averageScore && (
+                                  <span className="text-xs text-blue-600">
+                                    Avg: {parseFloat(courseStats.averageScore).toFixed(0)}%
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-medium">{module.title}</h4>
-                          <p className="text-sm text-muted-foreground">{module.description}</p>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <span className="text-sm text-muted-foreground">
+                              {module.estimatedHours ? `${module.estimatedHours}h` : module.duration}
+                            </span>
+                            {module.passingScore && (
+                              <p className="text-xs text-muted-foreground">
+                                Pass: {module.passingScore}%
+                              </p>
+                            )}
+                          </div>
+                          <Link href="/simulators">
+                            <Button variant="outline" size="sm">
+                              Start Module
+                            </Button>
+                          </Link>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <span className="text-sm text-muted-foreground">{module.duration}</span>
-                        <Link href="/simulators">
-                          <Button variant="outline" size="sm">
-                            Start Module
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
                 <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-medium text-amber-800 dark:text-amber-200">Assessment Required</h4>
+                      <h4 className="font-medium text-amber-800 dark:text-amber-200">Eligibility Gate</h4>
                       <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-                        After completing all modules, you must pass the assessment with a score of 80% or higher to proceed with the transition.
+                        All training modules must be completed with passing scores before the employee becomes eligible for the contractor pathway. 
+                        This gate is enforced by the system — entity formation cannot begin until training is certified.
                       </p>
                     </div>
                   </div>
@@ -527,15 +680,44 @@ export default function ContractorTransition() {
 
           {/* Completed Tab */}
           <TabsContent value="completed" className="mt-6">
-            <Card>
-              <CardContent className="py-12 text-center">
-                <CheckCircle2 className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No Completed Transitions Yet</h3>
-                <p className="text-muted-foreground">
-                  Completed transitions will appear here with full documentation
-                </p>
-              </CardContent>
-            </Card>
+            {dashboard?.recentTransitions?.filter((t: any) => t.status === "completed").length ? (
+              <div className="space-y-4">
+                {dashboard.recentTransitions
+                  .filter((t: any) => t.status === "completed")
+                  .map((transition: any) => (
+                    <Card key={transition.id}>
+                      <CardContent className="pt-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <Avatar>
+                              <AvatarFallback>
+                                {transition.employeeName?.split(' ').map((n: string) => n[0]).join('') || '??'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-semibold">{transition.employeeName}</p>
+                              <p className="text-sm text-muted-foreground">
+                                Completed {transition.completedDate ? new Date(transition.completedDate).toLocaleDateString() : 'N/A'}
+                              </p>
+                            </div>
+                          </div>
+                          <Badge className="bg-green-500 text-white">Completed</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            ) : (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <CheckCircle2 className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No Completed Transitions Yet</h3>
+                  <p className="text-muted-foreground">
+                    Completed transitions will appear here with full documentation
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>
@@ -562,23 +744,39 @@ export default function ContractorTransition() {
                       <Loader2 className="w-4 h-4 animate-spin mx-auto" />
                     </div>
                   ) : (
-                    eligibleEmployees.map((emp) => (
-                      <SelectItem key={emp.id} value={emp.id.toString()}>
-                        {emp.firstName} {emp.lastName} - {emp.jobTitle}
-                      </SelectItem>
-                    ))
+                    eligibleEmployees.map((emp: any) => {
+                      const e = emp.employee || emp;
+                      return (
+                        <SelectItem key={e.id} value={e.id.toString()}>
+                          {e.firstName} {e.lastName} - {e.jobTitle}
+                        </SelectItem>
+                      );
+                    })
                   )}
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Reason for Transition</label>
+              <Textarea
+                value={transitionReason}
+                onChange={(e) => setTransitionReason(e.target.value)}
+                placeholder="Explain why this employee is being transitioned to contractor status..."
+                rows={3}
+              />
+            </div>
             <div className="p-4 bg-secondary/30 rounded-lg">
               <h4 className="font-medium mb-2">Transition Requirements</h4>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Employee must consent to transition</li>
-                <li>• Manager approval required</li>
-                <li>• Business entity must be formed</li>
-                <li>• Training modules must be completed</li>
-                <li>• All contracts must be signed</li>
+                <li className="flex items-center gap-2">
+                  <Lock className="w-3 h-3" /> All training modules must be completed (Gate 1)
+                </li>
+                <li className="flex items-center gap-2">
+                  <Lock className="w-3 h-3" /> Business entity must be formed and verified (Gate 2)
+                </li>
+                <li className="flex items-center gap-2">
+                  <Lock className="w-3 h-3" /> Contractor agreement must be signed (Gate 3)
+                </li>
               </ul>
             </div>
           </div>
@@ -586,9 +784,107 @@ export default function ContractorTransition() {
             <Button variant="outline" onClick={() => setShowInitiateDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handleInitiateTransition}>
+            <Button 
+              onClick={handleInitiateTransition}
+              disabled={initiateTransition.isPending}
+            >
+              {initiateTransition.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : null}
               Initiate Transition
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Training Eligibility Check Dialog */}
+      <Dialog open={showTrainingCheckDialog} onOpenChange={setShowTrainingCheckDialog}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GraduationCap className="w-5 h-5" />
+              Training Eligibility Check
+            </DialogTitle>
+            <DialogDescription>
+              Checking if all required training modules have been completed
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {eligibilityCheck ? (
+              <>
+                <div className={`p-4 rounded-lg border ${
+                  eligibilityCheck.eligible 
+                    ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"
+                    : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800"
+                }`}>
+                  <div className="flex items-center gap-3">
+                    {eligibilityCheck.eligible ? (
+                      <Unlock className="w-6 h-6 text-green-600" />
+                    ) : (
+                      <Lock className="w-6 h-6 text-red-600" />
+                    )}
+                    <div>
+                      <p className="font-semibold">
+                        {eligibilityCheck.eligible 
+                          ? "Eligible for Contractor Pathway!" 
+                          : "Not Yet Eligible"}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {eligibilityCheck.completedCount} of {eligibilityCheck.totalRequired} required courses completed
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <Progress 
+                  value={eligibilityCheck.totalRequired > 0 
+                    ? (eligibilityCheck.completedCount / eligibilityCheck.totalRequired) * 100 
+                    : 0
+                  } 
+                />
+
+                {eligibilityCheck.incompleteCourses && eligibilityCheck.incompleteCourses.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Remaining Courses:</p>
+                    <div className="space-y-2">
+                      {eligibilityCheck.incompleteCourses.map((course: any, idx: number) => (
+                        <div key={idx} className="flex items-center justify-between p-2 bg-secondary/30 rounded">
+                          <div className="flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 text-amber-500" />
+                            <span className="text-sm">{course.courseName}</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">{course.durationHours}h</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" />
+                <p className="text-sm text-muted-foreground mt-2">Checking eligibility...</p>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowTrainingCheckDialog(false)}>
+              Close
+            </Button>
+            {eligibilityCheck?.eligible && (
+              <Button 
+                onClick={handleCompleteTraining}
+                disabled={completeTraining.isPending}
+                className="gap-2"
+              >
+                {completeTraining.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4" />
+                )}
+                Certify & Advance to Entity Formation
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
