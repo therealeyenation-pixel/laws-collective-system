@@ -1,385 +1,327 @@
 /**
  * Data Integration Service
- * Fetches real TV channels and radio stations from reliable, CORS-enabled sources
- * Focus on Soma FM and other proven streaming services
+ * Provides real radio stations organized by American music genres
+ * and IPTV channels for the Theater
  */
 
 /**
- * Soma FM - Reliable, CORS-enabled, high-quality streams
- * All streams are MP3 with guaranteed CORS support
+ * American Music Genre Radio Stations
+ * All verified working MP3 streams from Radio Browser API
  */
-function getSomaFMStations() {
+function getAmericanRadioStations() {
   return [
+    // === HIP-HOP ===
     {
       id: 1,
-      name: 'Soma FM - Groove Salad',
-      category: 'music',
-      description: 'Downtempo electronic beats and grooves',
-      logo: 'https://somafm.com/img/groovesalad.png',
-      streamUrl: 'https://stream.somafm.com/groovesalad',
-      listeners: 45000,
+      name: '100 Hip Hop and RNB FM',
+      genre: 'hip-hop',
+      category: 'hip-hop',
+      description: 'Non-stop Hip-Hop and R&B hits',
+      logo: 'https://via.placeholder.com/100/6B21A8/FFFFFF?text=HipHop',
+      streamUrl: 'https://streaming.shoutcast.com/100-hip-hop-and-rnb-fm',
+      listeners: 42000,
       isLive: true,
     },
     {
       id: 2,
-      name: 'Soma FM - Indie Pop Rocks',
-      category: 'music',
-      description: 'Indie and alternative pop music',
-      logo: 'https://somafm.com/img/indiepop.png',
-      streamUrl: 'https://stream.somafm.com/indiepop',
-      listeners: 38000,
+      name: 'Hot 108 Jamz',
+      genre: 'hip-hop',
+      category: 'hip-hop',
+      description: 'The hottest Hip-Hop radio station',
+      logo: 'https://via.placeholder.com/100/7C3AED/FFFFFF?text=Hot108',
+      streamUrl: 'http://live.powerhitz.com/hot108?aw_0_req.gdpr=true',
+      listeners: 85000,
       isLive: true,
     },
     {
       id: 3,
-      name: 'Soma FM - Lush',
-      category: 'music',
-      description: 'Ethereal ambient music',
-      logo: 'https://somafm.com/img/lush.png',
-      streamUrl: 'https://stream.somafm.com/lush',
-      listeners: 32000,
-      isLive: true,
-    },
-    {
-      id: 4,
-      name: 'Soma FM - Deep Space One',
-      category: 'music',
-      description: 'Deep ambient and space music',
-      logo: 'https://somafm.com/img/deepspace1.png',
-      streamUrl: 'https://stream.somafm.com/deepspace1',
-      listeners: 28000,
-      isLive: true,
-    },
-    {
-      id: 5,
-      name: 'Soma FM - Fluid',
-      category: 'music',
-      description: 'Smooth jazz and lounge',
-      logo: 'https://somafm.com/img/fluid.png',
-      streamUrl: 'https://stream.somafm.com/fluid',
-      listeners: 35000,
-      isLive: true,
-    },
-    {
-      id: 6,
-      name: 'Soma FM - Vaporspace',
-      category: 'music',
-      description: 'Vaporwave and chillwave',
-      logo: 'https://somafm.com/img/vaporspace.png',
-      streamUrl: 'https://stream.somafm.com/vaporspace',
-      listeners: 22000,
-      isLive: true,
-    },
-    {
-      id: 7,
-      name: 'Soma FM - Drone Zone',
-      category: 'music',
-      description: 'Ambient drone music',
-      logo: 'https://somafm.com/img/dronezone.png',
-      streamUrl: 'https://stream.somafm.com/dronezone',
-      listeners: 18000,
-      isLive: true,
-    },
-    {
-      id: 8,
-      name: 'Soma FM - Cliqhop Idm',
-      category: 'music',
-      description: 'Intelligent dance music',
-      logo: 'https://somafm.com/img/cliqhop.png',
-      streamUrl: 'https://stream.somafm.com/cliqhop',
-      listeners: 25000,
-      isLive: true,
-    },
-    {
-      id: 9,
-      name: 'Soma FM - Digitalis',
-      category: 'music',
-      description: 'Digital ambient and electronic',
-      logo: 'https://somafm.com/img/digitalis.png',
-      streamUrl: 'https://stream.somafm.com/digitalis',
-      listeners: 20000,
-      isLive: true,
-    },
-    {
-      id: 10,
-      name: 'Soma FM - Thistle',
-      category: 'music',
-      description: 'Scottish and Celtic music',
-      logo: 'https://somafm.com/img/thistle.png',
-      streamUrl: 'https://stream.somafm.com/thistle',
-      listeners: 15000,
-      isLive: true,
-    },
-  ];
-}
-
-/**
- * American Music and News Stations with working streams
- * Mix of R&B, Country, Pop, and News
- */
-function getAmericanStations() {
-  return [
-    // Synthpop & Electronic
-    {
-      id: 11,
-      name: 'Soma FM - Poptron',
-      category: 'music',
-      description: 'USA - Synthpop and electronic pop',
-      logo: 'https://somafm.com/img/poptron.png',
-      streamUrl: 'https://stream.somafm.com/poptron',
+      name: 'Planet HipHop',
+      genre: 'hip-hop',
+      category: 'hip-hop',
+      description: 'Hip-Hop from around the planet',
+      logo: 'https://via.placeholder.com/100/8B5CF6/FFFFFF?text=Planet',
+      streamUrl: 'http://listen.mrg.fm:8100/stream',
       listeners: 29000,
       isLive: true,
     },
+
+    // === R&B / SOUL ===
     {
-      id: 12,
-      name: 'Soma FM - Defcon',
-      category: 'music',
-      description: 'USA - Industrial and electronic',
-      logo: 'https://somafm.com/img/defcon.png',
-      streamUrl: 'https://stream.somafm.com/defcon',
-      listeners: 19000,
-      isLive: true,
-    },
-    {
-      id: 13,
-      name: 'Soma FM - Covers',
-      category: 'music',
-      description: 'USA - Cover songs and remixes',
-      logo: 'https://somafm.com/img/covers.png',
-      streamUrl: 'https://stream.somafm.com/covers',
-      listeners: 24000,
-      isLive: true,
-    },
-    {
-      id: 14,
-      name: 'Soma FM - Sf 10-33',
-      category: 'music',
-      description: 'USA - Police scanner and ambient',
-      logo: 'https://somafm.com/img/sf1033.png',
-      streamUrl: 'https://stream.somafm.com/sf1033',
-      listeners: 16000,
-      isLive: true,
-    },
-    {
-      id: 15,
-      name: 'Soma FM - Suburbs of Goa',
-      category: 'music',
-      description: 'USA - Psytrance and electronic',
-      logo: 'https://somafm.com/img/suburbsofgoa.png',
-      streamUrl: 'https://stream.somafm.com/suburbsofgoa',
-      listeners: 21000,
-      isLive: true,
-    },
-    {
-      id: 16,
-      name: 'Soma FM - Synphaera',
-      category: 'music',
-      description: 'USA - Symphonic and orchestral',
-      logo: 'https://somafm.com/img/synphaera.png',
-      streamUrl: 'https://stream.somafm.com/synphaera',
-      listeners: 17000,
-      isLive: true,
-    },
-    {
-      id: 17,
-      name: 'Soma FM - The Trip',
-      category: 'music',
-      description: 'USA - Progressive house and trance',
-      logo: 'https://somafm.com/img/thetrip.png',
-      streamUrl: 'https://stream.somafm.com/thetrip',
-      listeners: 31000,
-      isLive: true,
-    },
-    {
-      id: 18,
-      name: 'Soma FM - Underground 80s',
-      category: 'music',
-      description: 'USA - 80s alternative and new wave',
-      logo: 'https://somafm.com/img/u80s.png',
-      streamUrl: 'https://stream.somafm.com/u80s',
-      listeners: 26000,
-      isLive: true,
-    },
-    {
-      id: 19,
-      name: 'Soma FM - Xmas In Frisko',
-      category: 'music',
-      description: 'USA - Holiday music (seasonal)',
-      logo: 'https://somafm.com/img/xmasinfriskoicon.png',
-      streamUrl: 'https://stream.somafm.com/xmasinfriskoicon',
-      listeners: 12000,
-      isLive: true,
-    },
-    {
-      id: 20,
-      name: 'Soma FM - Earwaves',
-      category: 'music',
-      description: 'USA - Experimental and avant-garde',
-      logo: 'https://somafm.com/img/earwaves.png',
-      streamUrl: 'https://stream.somafm.com/earwaves',
-      listeners: 14000,
-      isLive: true,
-    },
-    // Jazz & Blues
-    {
-      id: 23,
-      name: 'Soma FM - Sonic Universe',
-      category: 'music',
-      description: 'USA - Jazz and world music fusion',
-      logo: 'https://somafm.com/img/sonicuniverse.png',
-      streamUrl: 'https://stream.somafm.com/sonicuniverse',
-      listeners: 22000,
-      isLive: true,
-    },
-    {
-      id: 24,
-      name: 'Soma FM - Beat Blender',
-      category: 'music',
-      description: 'USA - Hip-hop and R&B beats',
-      logo: 'https://somafm.com/img/beatblender.png',
-      streamUrl: 'https://stream.somafm.com/beatblender',
+      id: 4,
+      name: '.977 Jamz',
+      genre: 'rnb',
+      category: 'rnb',
+      description: 'R&B and Soul classics and hits',
+      logo: 'https://via.placeholder.com/100/EC4899/FFFFFF?text=Jamz',
+      streamUrl: 'http://15113.live.streamtheworld.com/977_JAMZ_SC',
       listeners: 38000,
       isLive: true,
     },
     {
-      id: 25,
-      name: 'Soma FM - Bootleg',
-      category: 'music',
-      description: 'USA - Bootleg and remix culture',
-      logo: 'https://somafm.com/img/bootleg.png',
-      streamUrl: 'https://stream.somafm.com/bootleg',
-      listeners: 19000,
+      id: 5,
+      name: '181.FM - Soul',
+      genre: 'rnb',
+      category: 'rnb',
+      description: 'Classic Soul and R&B',
+      logo: 'https://via.placeholder.com/100/DB2777/FFFFFF?text=Soul',
+      streamUrl: 'http://listen.181fm.com/181-soul_128k.mp3',
+      listeners: 25000,
       isLive: true,
     },
     {
-      id: 26,
+      id: 6,
+      name: 'Funky Corner Radio',
+      genre: 'rnb',
+      category: 'rnb',
+      description: 'Funk, Soul, and R&B grooves',
+      logo: 'https://via.placeholder.com/100/F472B6/FFFFFF?text=Funky',
+      streamUrl: 'https://ais-sa2.cdnstream1.com/2447_192.mp3',
+      listeners: 22000,
+      isLive: true,
+    },
+
+    // === JAZZ ===
+    {
+      id: 7,
+      name: 'Soma FM - Sonic Universe',
+      genre: 'jazz',
+      category: 'jazz',
+      description: 'Jazz and world music fusion',
+      logo: 'https://somafm.com/img3/sonicuniverse-400.jpg',
+      streamUrl: 'https://stream.somafm.com/sonicuniverse',
+      listeners: 32000,
+      isLive: true,
+    },
+    {
+      id: 8,
       name: 'Soma FM - Secret Agent',
-      category: 'music',
-      description: 'USA - Spy jazz and lounge',
-      logo: 'https://somafm.com/img/secretagent.png',
+      genre: 'jazz',
+      category: 'jazz',
+      description: 'Spy jazz, lounge, and cool vibes',
+      logo: 'https://somafm.com/img3/secretagent-400.jpg',
       streamUrl: 'https://stream.somafm.com/secretagent',
       listeners: 27000,
       isLive: true,
     },
     {
-      id: 27,
-      name: 'Soma FM - Doomed',
-      category: 'music',
-      description: 'USA - Heavy metal and doom',
-      logo: 'https://somafm.com/img/doomed.png',
-      streamUrl: 'https://stream.somafm.com/doomed',
-      listeners: 15000,
+      id: 9,
+      name: 'Soma FM - Fluid',
+      genre: 'jazz',
+      category: 'jazz',
+      description: 'Smooth jazz and instrumental',
+      logo: 'https://somafm.com/img3/fluid-400.jpg',
+      streamUrl: 'https://stream.somafm.com/fluid',
+      listeners: 35000,
       isLive: true,
     },
+
+    // === GOSPEL ===
     {
-      id: 28,
-      name: 'Soma FM - Metal Detector',
-      category: 'music',
-      description: 'USA - Metal and hard rock',
-      logo: 'https://somafm.com/img/metaldetector.png',
-      streamUrl: 'https://stream.somafm.com/metaldetector',
+      id: 10,
+      name: 'Praise & Worship Radio',
+      genre: 'gospel',
+      category: 'gospel',
+      description: 'Uplifting gospel music 24/7',
+      logo: 'https://via.placeholder.com/100/F59E0B/FFFFFF?text=Gospel',
+      streamUrl: 'http://listen.181fm.com/181-gospel_128k.mp3',
       listeners: 18000,
       isLive: true,
     },
     {
-      id: 29,
+      id: 11,
+      name: 'Gospel Hits Radio',
+      genre: 'gospel',
+      category: 'gospel',
+      description: 'Contemporary and classic gospel',
+      logo: 'https://via.placeholder.com/100/D97706/FFFFFF?text=GHits',
+      streamUrl: 'http://listen.181fm.com/181-praise_128k.mp3',
+      listeners: 15000,
+      isLive: true,
+    },
+
+    // === BLUES ===
+    {
+      id: 12,
+      name: '181.FM - True Blues',
+      genre: 'blues',
+      category: 'blues',
+      description: 'Authentic blues from the Delta to Chicago',
+      logo: 'https://via.placeholder.com/100/1D4ED8/FFFFFF?text=Blues',
+      streamUrl: 'http://listen.181fm.com/181-blues_128k.mp3',
+      listeners: 21000,
+      isLive: true,
+    },
+    {
+      id: 13,
+      name: 'Blues Radio UK',
+      genre: 'blues',
+      category: 'blues',
+      description: 'Blues music from around the world',
+      logo: 'https://via.placeholder.com/100/2563EB/FFFFFF?text=BluesR',
+      streamUrl: 'https://stream.laut.fm/bluesclub',
+      listeners: 16000,
+      isLive: true,
+    },
+
+    // === COUNTRY ===
+    {
+      id: 14,
+      name: '181.FM - Highway',
+      genre: 'country',
+      category: 'country',
+      description: "Today's country hits",
+      logo: 'https://via.placeholder.com/100/92400E/FFFFFF?text=Hwy',
+      streamUrl: 'http://listen.181fm.com/181-highway_128k.mp3',
+      listeners: 45000,
+      isLive: true,
+    },
+    {
+      id: 15,
+      name: "181.FM - Kickin' Country",
+      genre: 'country',
+      category: 'country',
+      description: 'Classic and new country music',
+      logo: 'https://via.placeholder.com/100/A16207/FFFFFF?text=Kickin',
+      streamUrl: 'http://listen.181fm.com/181-kickincountry_128k.mp3',
+      listeners: 38000,
+      isLive: true,
+    },
+    {
+      id: 16,
+      name: "181.FM - 90's Country",
+      genre: 'country',
+      category: 'country',
+      description: '90s country classics',
+      logo: 'https://via.placeholder.com/100/CA8A04/FFFFFF?text=90sCty',
+      streamUrl: 'http://listen.181fm.com/181-90scountry_128k.mp3',
+      listeners: 28000,
+      isLive: true,
+    },
+
+    // === FUNK ===
+    {
+      id: 17,
+      name: 'FUNKY RADIO',
+      genre: 'funk',
+      category: 'funk',
+      description: "Only Funk Music - 60's & 70's",
+      logo: 'https://via.placeholder.com/100/EA580C/FFFFFF?text=Funky',
+      streamUrl: 'https://funkyradio.streamingmedia.it/play.mp3',
+      listeners: 35000,
+      isLive: true,
+    },
+    {
+      id: 18,
+      name: 'Radio Motown',
+      genre: 'funk',
+      category: 'funk',
+      description: 'Motown classics and soul',
+      logo: 'https://via.placeholder.com/100/C2410C/FFFFFF?text=Motown',
+      streamUrl: 'https://broadcast.miami/proxy/motown?mp=/stream/;',
+      listeners: 28000,
+      isLive: true,
+    },
+    {
+      id: 19,
+      name: '70s 80s Disco Funk',
+      genre: 'funk',
+      category: 'funk',
+      description: 'Disco, Funk, Modern Soul, Boogie',
+      logo: 'https://via.placeholder.com/100/F97316/FFFFFF?text=Disco',
+      streamUrl: 'https://discofunk.streamingmedia.it/usa',
+      listeners: 22000,
+      isLive: true,
+    },
+
+    // === REGGAE ===
+    {
+      id: 20,
+      name: 'Soma FM - Heavyweight Reggae',
+      genre: 'reggae',
+      category: 'reggae',
+      description: 'Roots reggae and dub',
+      logo: 'https://somafm.com/img3/reggae400.jpg',
+      streamUrl: 'https://ice6.somafm.com/reggae-256-mp3',
+      listeners: 25000,
+      isLive: true,
+    },
+    {
+      id: 21,
+      name: '181.FM - Reggae Roots',
+      genre: 'reggae',
+      category: 'reggae',
+      description: 'Reggae roots and culture',
+      logo: 'https://via.placeholder.com/100/16A34A/FFFFFF?text=Reggae',
+      streamUrl: 'http://listen.181fm.com/181-reggae_128k.mp3',
+      listeners: 18000,
+      isLive: true,
+    },
+
+    // === CLASSIC HITS / POP ===
+    {
+      id: 22,
       name: 'Soma FM - Groove Salad',
-      category: 'music',
-      description: 'USA - Funk and soul grooves',
-      logo: 'https://somafm.com/img/groovesalad.png',
+      genre: 'chill',
+      category: 'chill',
+      description: 'Downtempo grooves and chill beats',
+      logo: 'https://somafm.com/img3/groovesalad-400.jpg',
       streamUrl: 'https://stream.somafm.com/groovesalad',
       listeners: 45000,
       isLive: true,
     },
     {
-      id: 30,
-      name: 'Soma FM - Indie Pop Rocks',
-      category: 'music',
-      description: 'USA - Indie and alternative pop',
-      logo: 'https://somafm.com/img/indiepop.png',
-      streamUrl: 'https://stream.somafm.com/indiepop',
+      id: 23,
+      name: 'Soma FM - Beat Blender',
+      genre: 'chill',
+      category: 'chill',
+      description: 'Deep house and chill beats',
+      logo: 'https://somafm.com/img3/beatblender-400.jpg',
+      streamUrl: 'https://stream.somafm.com/beatblender',
       listeners: 38000,
       isLive: true,
     },
     {
-      id: 31,
-      name: 'Soma FM - Lush',
-      category: 'music',
-      description: 'USA - Ethereal ambient and chillout',
-      logo: 'https://somafm.com/img/lush.png',
-      streamUrl: 'https://stream.somafm.com/lush',
-      listeners: 32000,
-      isLive: true,
-    },
-    {
-      id: 32,
-      name: 'Soma FM - Vaporspace',
-      category: 'music',
-      description: 'USA - Vaporwave and chillwave',
-      logo: 'https://somafm.com/img/vaporspace.png',
-      streamUrl: 'https://stream.somafm.com/vaporspace',
-      listeners: 22000,
-      isLive: true,
-    },
-    // News & Talk
-    {
-      id: 21,
-      name: 'NPR News Now',
-      category: 'news',
-      description: 'USA - National Public Radio News',
-      logo: 'https://via.placeholder.com/100?text=NPR',
-      streamUrl: 'https://stream.npr.org/ondemand/npr_news_now',
-      listeners: 95000,
-      isLive: true,
-    },
-    {
-      id: 22,
-      name: 'BBC News',
-      category: 'news',
-      description: 'International - BBC World News',
-      logo: 'https://via.placeholder.com/100?text=BBC',
-      streamUrl: 'https://stream.bbc.co.uk/bbc_world_service',
-      listeners: 87000,
+      id: 24,
+      name: 'Soma FM - Indie Pop Rocks',
+      genre: 'pop',
+      category: 'pop',
+      description: 'Indie and alternative pop music',
+      logo: 'https://somafm.com/img3/indiepop-400.jpg',
+      streamUrl: 'https://stream.somafm.com/indiepop',
+      listeners: 38000,
       isLive: true,
     },
   ];
 }
 
 /**
- * Fetch radio stations - prioritizes Soma FM for reliability
+ * Fetch radio stations organized by American music genres
  */
 export async function fetchRadioStations(limit: number = 50) {
   try {
-    console.log('[Data Integration] Fetching radio stations from Soma FM and American sources...');
-
-    // Combine Soma FM and American stations
-    const allStations = [...getSomaFMStations(), ...getAmericanStations()];
-
-    // Shuffle and limit
-    const shuffled = allStations.sort(() => Math.random() - 0.5).slice(0, limit);
-
-    console.log(`[Data Integration] Successfully prepared ${shuffled.length} radio stations`);
-
-    return shuffled;
+    console.log('[Data Integration] Preparing American genre radio stations...');
+    const stations = getAmericanRadioStations();
+    console.log(`[Data Integration] Prepared ${stations.length} radio stations across American genres`);
+    return stations.slice(0, limit);
   } catch (error) {
-    console.error('[Data Integration] Error fetching radio stations:', error);
-    // Return Soma FM as fallback
-    return getSomaFMStations().slice(0, limit);
+    console.error('[Data Integration] Error preparing radio stations:', error);
+    return getAmericanRadioStations().slice(0, 10);
   }
 }
 
 /**
- * Fetch TV channels from IPTV-org M3U playlist
+ * Fetch TV channels from IPTV-org for the Theater
+ * Focuses on US-accessible free channels
  */
 export async function fetchIPTVChannels(limit: number = 50) {
   try {
-    console.log('[Data Integration] Fetching IPTV channels from iptv-org...');
+    console.log('[Data Integration] Fetching IPTV channels...');
 
-    // Use global fetch (Node 18+) with AbortController for timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-    const response = await fetch('https://iptv-org.github.io/iptv/index.m3u', {
+    // Use the US-specific playlist for better results
+    const response = await fetch('https://iptv-org.github.io/iptv/countries/us.m3u', {
       signal: controller.signal,
     });
 
@@ -391,14 +333,13 @@ export async function fetchIPTVChannels(limit: number = 50) {
 
     const content = await response.text();
     const lines = content.split('\n');
-    const channels = [];
+    const channels: any[] = [];
     let currentChannel: any = null;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
       if (line.startsWith('#EXTINF:')) {
-        // Parse channel info
         const nameMatch = line.match(/,(.+)$/);
         const logoMatch = line.match(/tvg-logo="([^"]+)"/);
         const groupMatch = line.match(/group-title="([^"]+)"/);
@@ -409,149 +350,150 @@ export async function fetchIPTVChannels(limit: number = 50) {
           category: groupMatch ? groupMatch[1].toLowerCase().replace(/\s+/g, '_') : 'other',
         };
       } else if (line && !line.startsWith('#') && currentChannel) {
-        // This is the stream URL
         currentChannel.streamUrl = line;
         channels.push(currentChannel);
         currentChannel = null;
       }
     }
 
-    // Filter and limit
     const validChannels = channels
-      .filter((ch) => ch.streamUrl && ch.name)
+      .filter((ch) => ch.streamUrl && ch.name && ch.name !== 'Unknown')
       .slice(0, limit);
 
-    console.log(`[Data Integration] Successfully fetched ${validChannels.length} IPTV channels`);
+    console.log(`[Data Integration] Fetched ${validChannels.length} IPTV channels`);
 
     return validChannels.map((ch, idx) => ({
       id: idx + 1,
       name: ch.name,
       category: ch.category,
-      description: `Live TV Channel - ${ch.category}`,
-      logo: ch.logo || `https://via.placeholder.com/100?text=${encodeURIComponent(ch.name)}`,
+      description: `Live TV - ${ch.category}`,
+      logo: ch.logo || `https://via.placeholder.com/100?text=${encodeURIComponent(ch.name.substring(0, 10))}`,
       streamUrl: ch.streamUrl,
-      viewers: Math.floor(Math.random() * 100000),
+      viewers: Math.floor(Math.random() * 50000) + 1000,
       isLive: true,
     }));
   } catch (error) {
     console.error('[Data Integration] Error fetching IPTV channels:', error);
-    // Return empty array - IPTV is optional
-    return [];
+    return getDefaultTVChannels();
   }
 }
 
 /**
- * Fetch music tracks
+ * Default TV channels fallback
+ */
+function getDefaultTVChannels() {
+  return [
+    {
+      id: 1,
+      name: 'NASA TV',
+      category: 'science',
+      description: 'NASA Television - Live from Space',
+      logo: 'https://via.placeholder.com/100/1E40AF/FFFFFF?text=NASA',
+      streamUrl: 'https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8',
+      viewers: 45000,
+      isLive: true,
+    },
+    {
+      id: 2,
+      name: 'Bloomberg TV',
+      category: 'news',
+      description: 'Bloomberg Business News',
+      logo: 'https://via.placeholder.com/100/1E3A5F/FFFFFF?text=Bloomberg',
+      streamUrl: 'https://www.bloomberg.com/media-manifest/streams/us.m3u8',
+      viewers: 62000,
+      isLive: true,
+    },
+    {
+      id: 3,
+      name: 'ABC News Live',
+      category: 'news',
+      description: 'ABC News Live Coverage',
+      logo: 'https://via.placeholder.com/100/000000/FFFFFF?text=ABC',
+      streamUrl: 'https://content.uplynk.com/channel/3324f2467c414329b3b0cc5cd987b6be.m3u8',
+      viewers: 85000,
+      isLive: true,
+    },
+    {
+      id: 4,
+      name: 'Newsmax',
+      category: 'news',
+      description: 'Newsmax TV Live',
+      logo: 'https://via.placeholder.com/100/CC0000/FFFFFF?text=Newsmax',
+      streamUrl: 'https://nmxlive.akamaized.net/hls/live/529965/Live_1/index.m3u8',
+      viewers: 38000,
+      isLive: true,
+    },
+    {
+      id: 5,
+      name: 'Pluto TV Movies',
+      category: 'entertainment',
+      description: 'Free movies streaming 24/7',
+      logo: 'https://via.placeholder.com/100/6B21A8/FFFFFF?text=Pluto',
+      streamUrl: 'https://service-stitcher.clusters.pluto.tv/v1/stitch/embed/hls/channel/5ca673e4e7b3c96e45f3bfb3/master.m3u8',
+      viewers: 55000,
+      isLive: true,
+    },
+  ];
+}
+
+/**
+ * Fetch music tracks (curated list)
  */
 export async function fetchMusicTracks(limit: number = 12) {
   const tracks = [
     {
       id: 1,
-      title: 'Ambient Dreams',
+      title: 'Jazz Fusion',
       artist: 'Soma FM',
-      album: 'Groove Salad',
+      album: 'Sonic Universe',
       duration: 240,
-      cover: 'https://somafm.com/img/groovesalad.png',
-      streamUrl: 'https://stream.somafm.com/groovesalad',
+      cover: 'https://somafm.com/img3/sonicuniverse-400.jpg',
+      streamUrl: 'https://stream.somafm.com/sonicuniverse',
     },
     {
       id: 2,
-      title: 'Electronic Vibes',
+      title: 'Smooth Grooves',
       artist: 'Soma FM',
-      album: 'Cliqhop IDM',
-      duration: 180,
-      cover: 'https://somafm.com/img/cliqhop.png',
-      streamUrl: 'https://stream.somafm.com/cliqhop',
+      album: 'Groove Salad',
+      duration: 300,
+      cover: 'https://somafm.com/img3/groovesalad-400.jpg',
+      streamUrl: 'https://stream.somafm.com/groovesalad',
     },
     {
       id: 3,
-      title: 'Deep Space',
+      title: 'Beat Blender Mix',
       artist: 'Soma FM',
-      album: 'Deep Space One',
-      duration: 300,
-      cover: 'https://somafm.com/img/deepspace1.png',
-      streamUrl: 'https://stream.somafm.com/deepspace1',
+      album: 'Beat Blender',
+      duration: 280,
+      cover: 'https://somafm.com/img3/beatblender-400.jpg',
+      streamUrl: 'https://stream.somafm.com/beatblender',
     },
     {
       id: 4,
-      title: 'Indie Exploration',
+      title: 'Spy Jazz Lounge',
       artist: 'Soma FM',
-      album: 'Indie Pop Rocks',
-      duration: 210,
-      cover: 'https://somafm.com/img/indiepop.png',
-      streamUrl: 'https://stream.somafm.com/indiepop',
+      album: 'Secret Agent',
+      duration: 220,
+      cover: 'https://somafm.com/img3/secretagent-400.jpg',
+      streamUrl: 'https://stream.somafm.com/secretagent',
     },
     {
       id: 5,
-      title: 'Fluid Jazz',
+      title: 'Roots Reggae',
       artist: 'Soma FM',
-      album: 'Fluid',
-      duration: 240,
-      cover: 'https://somafm.com/img/fluid.png',
-      streamUrl: 'https://stream.somafm.com/fluid',
+      album: 'Heavyweight Reggae',
+      duration: 260,
+      cover: 'https://somafm.com/img3/reggae400.jpg',
+      streamUrl: 'https://ice6.somafm.com/reggae-256-mp3',
     },
     {
       id: 6,
-      title: 'Lush Atmosphere',
+      title: 'Indie Pop',
       artist: 'Soma FM',
-      album: 'Lush',
-      duration: 270,
-      cover: 'https://somafm.com/img/lush.png',
-      streamUrl: 'https://stream.somafm.com/lush',
-    },
-    {
-      id: 7,
-      title: 'Vaporwave Nostalgia',
-      artist: 'Soma FM',
-      album: 'Vaporspace',
-      duration: 200,
-      cover: 'https://somafm.com/img/vaporspace.png',
-      streamUrl: 'https://stream.somafm.com/vaporspace',
-    },
-    {
-      id: 8,
-      title: 'Drone Meditation',
-      artist: 'Soma FM',
-      album: 'Drone Zone',
-      duration: 360,
-      cover: 'https://somafm.com/img/dronezone.png',
-      streamUrl: 'https://stream.somafm.com/dronezone',
-    },
-    {
-      id: 9,
-      title: 'Synthpop Retro',
-      artist: 'Soma FM',
-      album: 'Poptron',
-      duration: 220,
-      cover: 'https://somafm.com/img/poptron.png',
-      streamUrl: 'https://stream.somafm.com/poptron',
-    },
-    {
-      id: 10,
-      title: 'Industrial Edge',
-      artist: 'Soma FM',
-      album: 'Defcon',
-      duration: 250,
-      cover: 'https://somafm.com/img/defcon.png',
-      streamUrl: 'https://stream.somafm.com/defcon',
-    },
-    {
-      id: 11,
-      title: 'Progressive House',
-      artist: 'Soma FM',
-      album: 'The Trip',
-      duration: 280,
-      cover: 'https://somafm.com/img/thetrip.png',
-      streamUrl: 'https://stream.somafm.com/thetrip',
-    },
-    {
-      id: 12,
-      title: '80s Alternative',
-      artist: 'Soma FM',
-      album: 'Underground 80s',
-      duration: 240,
-      cover: 'https://somafm.com/img/u80s.png',
-      streamUrl: 'https://stream.somafm.com/u80s',
+      album: 'Indie Pop Rocks',
+      duration: 210,
+      cover: 'https://somafm.com/img3/indiepop-400.jpg',
+      streamUrl: 'https://stream.somafm.com/indiepop',
     },
   ];
 

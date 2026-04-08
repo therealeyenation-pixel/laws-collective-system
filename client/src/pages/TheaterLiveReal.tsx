@@ -1,16 +1,29 @@
 /**
  * Theater Live - IPTV Live Streaming Interface
- * Real streaming channels with live playback
+ * Real streaming channels with actual video playback using HLSVideoPlayer
  */
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Play, Heart, Share2, Volume2, Maximize, MessageCircle, ArrowLeft, Search } from 'lucide-react';
+import {
+  Play,
+  Heart,
+  Share2,
+  ArrowLeft,
+  Search,
+  Tv,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize,
+  Minimize,
+  AlertCircle,
+} from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 export default function TheaterLiveReal() {
   const { user } = useAuth();
@@ -18,39 +31,182 @@ export default function TheaterLiveReal() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [volume, setVolume] = useState(80);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Fetch channels from streaming content API
-  const { data: channels = [], isLoading } = trpc.streamingContent.getChannels.useQuery({
-    category: activeCategory,
-    limit: 50,
-  });
+  const { data: channels = [], isLoading: channelsLoading } =
+    trpc.streamingContent.getChannels.useQuery({
+      category: activeCategory,
+      limit: 50,
+    });
 
-  // Fetch selected channel details
-  const selectedChannelData = channels.find((c) => c.id === selectedChannel);
+  const selectedChannelData = channels.find((c: any) => c.id === selectedChannel);
 
   // Filter channels by search
   const filteredChannels = searchQuery
     ? channels.filter(
-        (c) =>
+        (c: any) =>
           c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           c.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : channels;
 
-  const handlePlayChannel = (channelId: number) => {
+  // Get unique categories from channels
+  const categories = Array.from(new Set(channels.map((c: any) => c.category))).sort();
+
+  // Volume control
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.volume = isMuted ? 0 : volume / 100;
+      videoRef.current.muted = isMuted;
+    }
+  }, [volume, isMuted]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.src = '';
+      }
+    };
+  }, []);
+
+  // Handle fullscreen change events
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const handlePlayChannel = async (channelId: number) => {
+    const channel = channels.find((c: any) => c.id === channelId);
+    if (!channel) return;
+
     setSelectedChannel(channelId);
+    setHasError(false);
+    setIsLoading(true);
+
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.src = '';
+
+      const streamUrl = (channel as any).streamUrl;
+
+      // Check if it's an HLS stream
+      if (streamUrl.includes('.m3u8')) {
+        // Try native HLS first (Safari), then fallback to hls.js
+        if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+          videoRef.current.src = streamUrl;
+          try {
+            await videoRef.current.play();
+            setIsPlaying(true);
+          } catch (err) {
+            console.error('Native HLS play error:', err);
+            setHasError(true);
+            setIsLoading(false);
+          }
+        } else {
+          // Load hls.js dynamically
+          try {
+            const Hls = (await import('hls.js')).default;
+            if (Hls.isSupported()) {
+              const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: true,
+              });
+              hls.loadSource(streamUrl);
+              hls.attachMedia(videoRef.current);
+              hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                videoRef.current?.play().catch((err) => {
+                  console.error('HLS play error:', err);
+                  setHasError(true);
+                  setIsLoading(false);
+                });
+                setIsPlaying(true);
+              });
+              hls.on(Hls.Events.ERROR, (_event, data) => {
+                if (data.fatal) {
+                  console.error('HLS fatal error:', data);
+                  setHasError(true);
+                  setIsLoading(false);
+                  hls.destroy();
+                }
+              });
+            } else {
+              setHasError(true);
+              setIsLoading(false);
+              toast.error('HLS playback is not supported in this browser.');
+            }
+          } catch (err) {
+            console.error('Failed to load hls.js:', err);
+            // Try direct playback as fallback
+            videoRef.current.src = streamUrl;
+            try {
+              await videoRef.current.play();
+              setIsPlaying(true);
+            } catch (playErr) {
+              setHasError(true);
+              setIsLoading(false);
+            }
+          }
+        }
+      } else {
+        // Direct stream URL (MP4, etc.)
+        videoRef.current.src = streamUrl;
+        try {
+          await videoRef.current.play();
+          setIsPlaying(true);
+        } catch (err) {
+          console.error('Direct play error:', err);
+          setHasError(true);
+          setIsLoading(false);
+        }
+      }
+    }
+  };
+
+  const handleTogglePlayPause = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current.play().catch(console.error);
+      setIsPlaying(true);
+    }
+  };
+
+  const handleFullscreen = () => {
+    if (!containerRef.current) return;
+    if (!isFullscreen) {
+      containerRef.current.requestFullscreen().catch(console.error);
+    } else {
+      document.exitFullscreen().catch(console.error);
+    }
   };
 
   const handleFollowChannel = () => {
     setIsFollowing(!isFollowing);
+    toast.success(isFollowing ? 'Unfollowed channel' : 'Following channel');
   };
 
-  const categories = ['news', 'sports', 'entertainment', 'music', 'kids', 'documentary'];
-
-  if (isLoading) {
+  if (channelsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-foreground">Loading live channels...</p>
+        <div className="text-center space-y-4">
+          <Tv className="w-12 h-12 animate-pulse mx-auto text-primary" />
+          <p className="text-foreground">Loading live channels...</p>
+        </div>
       </div>
     );
   }
@@ -70,132 +226,215 @@ export default function TheaterLiveReal() {
         </Button>
       </div>
 
-      {/* Main Video Player */}
+      {/* Video Player */}
       {selectedChannelData ? (
-        <div className="w-full bg-black">
-          <div className="aspect-video bg-black relative flex items-center justify-center">
-            <div className="text-center">
-              <Play className="w-16 h-16 text-white mx-auto mb-4" />
-              <p className="text-white text-lg font-semibold">{selectedChannelData.name}</p>
-              <p className="text-gray-400 text-sm mt-2">
-                {selectedChannelData.viewers.toLocaleString()} viewers watching
-              </p>
-              <p className="text-gray-500 text-xs mt-4">{selectedChannelData.streamUrl}</p>
-            </div>
+        <div className="w-full bg-black" ref={containerRef}>
+          <div className="relative group" style={{ aspectRatio: '16/9', maxHeight: '60vh' }}>
+            <video
+              ref={videoRef}
+              className="w-full h-full bg-black"
+              onPlay={() => {
+                setIsPlaying(true);
+                setIsLoading(false);
+              }}
+              onPause={() => setIsPlaying(false)}
+              onLoadStart={() => setIsLoading(true)}
+              onCanPlay={() => setIsLoading(false)}
+              onError={() => {
+                setHasError(true);
+                setIsLoading(false);
+              }}
+              playsInline
+            />
 
-            {/* Player Controls */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                  <Volume2 className="w-4 h-4" />
-                </Button>
+            {/* Loading Overlay */}
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                <div className="text-center">
+                  <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-white text-sm">Loading stream...</p>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
+            )}
+
+            {/* Error Overlay */}
+            {hasError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+                <div className="text-center">
+                  <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                  <p className="text-white text-lg font-semibold mb-2">Stream Unavailable</p>
+                  <p className="text-gray-400 text-sm mb-4">
+                    This channel may be temporarily offline or geo-restricted.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePlayChannel(selectedChannel!)}
+                    className="text-white border-white hover:bg-white/20"
+                  >
+                    Retry
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Idle state (before play) */}
+            {!isPlaying && !isLoading && !hasError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                 <Button
-                  size="sm"
+                  size="lg"
                   variant="ghost"
-                  className="text-white hover:bg-white/20"
-                  onClick={handleFollowChannel}
+                  onClick={() => handlePlayChannel(selectedChannel!)}
+                  className="text-white hover:bg-white/20 rounded-full w-20 h-20"
                 >
-                  <Heart className={`w-4 h-4 ${isFollowing ? 'fill-red-500 text-red-500' : ''}`} />
-                </Button>
-                <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                  <Share2 className="w-4 h-4" />
-                </Button>
-                <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                  <MessageCircle className="w-4 h-4" />
-                </Button>
-                <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                  <Maximize className="w-4 h-4" />
+                  <Play className="w-10 h-10" />
                 </Button>
               </div>
-            </div>
-          </div>
+            )}
 
-          {/* Channel Info */}
-          <div className="bg-card p-6 border-b border-border">
-            <div className="flex items-start gap-4">
-              <img
-                src={selectedChannelData.logo}
-                alt={selectedChannelData.name}
-                className="w-20 h-20 rounded-lg object-cover"
-              />
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold text-foreground">{selectedChannelData.name}</h1>
-                <p className="text-muted-foreground mt-2">{selectedChannelData.description}</p>
-                <div className="flex items-center gap-4 mt-4">
-                  <span className="text-sm text-muted-foreground">
-                    Category: <span className="text-foreground font-semibold capitalize">{selectedChannelData.category}</span>
-                  </span>
-                  {selectedChannelData.isLive && (
-                    <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-500 rounded-full text-sm font-semibold">
-                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            {/* Controls Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleTogglePlayPause}
+                    className="text-white hover:bg-white/20"
+                  >
+                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsMuted(!isMuted)}
+                    className="text-white hover:bg-white/20"
+                  >
+                    {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                  </Button>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={isMuted ? 0 : volume}
+                    onChange={(e) => {
+                      setVolume(Number(e.target.value));
+                      if (isMuted) setIsMuted(false);
+                    }}
+                    className="w-24 h-1 bg-white/30 rounded cursor-pointer accent-white"
+                  />
+                  {isPlaying && (
+                    <span className="inline-flex items-center gap-1 text-xs text-red-500 font-semibold ml-2">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                       LIVE
                     </span>
                   )}
                 </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleFollowChannel}
+                    className="text-white hover:bg-white/20"
+                  >
+                    <Heart
+                      className={`w-4 h-4 ${isFollowing ? 'fill-red-500 text-red-500' : ''}`}
+                    />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleFullscreen}
+                    className="text-white hover:bg-white/20"
+                  >
+                    {isFullscreen ? (
+                      <Minimize className="w-4 h-4" />
+                    ) : (
+                      <Maximize className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
+            </div>
+
+            {/* Channel Name Overlay */}
+            <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <h2 className="text-white font-semibold text-lg">
+                {(selectedChannelData as any).name}
+              </h2>
+              <p className="text-gray-300 text-sm">
+                {(selectedChannelData as any).description}
+              </p>
             </div>
           </div>
         </div>
       ) : (
         <div className="bg-card p-12 text-center border-b border-border">
-          <p className="text-muted-foreground">Select a channel to start watching</p>
+          <Tv className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+          <p className="text-muted-foreground text-lg">Select a channel to start watching</p>
         </div>
       )}
 
       {/* Search and Filters */}
       <div className="bg-card border-b border-border p-4 space-y-4">
-        <div className="flex items-center gap-2">
-          <Search className="w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search channels..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1"
-          />
-        </div>
+        <div className="container max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 mb-4">
+            <Search className="w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search channels..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1"
+            />
+          </div>
 
-        {/* Category Tabs */}
-        <div className="flex gap-2 overflow-x-auto">
-          <Button
-            variant={activeCategory === undefined ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveCategory(undefined)}
-          >
-            All
-          </Button>
-          {categories.map((cat) => (
+          {/* Category Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-1">
             <Button
-              key={cat}
-              variant={activeCategory === cat ? 'default' : 'outline'}
+              variant={activeCategory === undefined ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setActiveCategory(cat)}
-              className="capitalize"
+              onClick={() => setActiveCategory(undefined)}
             >
-              {cat}
+              All
             </Button>
-          ))}
+            {categories.map((cat: string) => (
+              <Button
+                key={cat}
+                variant={activeCategory === cat ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setActiveCategory(cat)}
+                className="capitalize"
+              >
+                {cat.replace(/_/g, ' ')}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Channels Grid */}
-      <div className="p-6">
+      <div className="container max-w-7xl mx-auto px-4 py-6">
         <h2 className="text-xl font-bold text-foreground mb-4">
-          {activeCategory ? `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Channels` : 'All Channels'}
+          {activeCategory
+            ? `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1).replace(/_/g, ' ')} Channels`
+            : 'All Channels'}
+          <span className="text-sm font-normal text-muted-foreground ml-2">
+            ({filteredChannels.length} channels)
+          </span>
         </h2>
 
         {filteredChannels.length === 0 ? (
           <div className="text-center py-12">
+            <Tv className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground">No channels found</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {filteredChannels.map((channel) => (
+            {filteredChannels.map((channel: any) => (
               <Card
                 key={channel.id}
                 className={`overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
-                  selectedChannel === channel.id ? 'ring-2 ring-primary' : ''
+                  selectedChannel === channel.id ? 'ring-2 ring-primary shadow-lg' : ''
                 }`}
                 onClick={() => handlePlayChannel(channel.id)}
               >
@@ -204,19 +443,37 @@ export default function TheaterLiveReal() {
                     src={channel.logo}
                     alt={channel.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        `https://via.placeholder.com/200x112/333/FFF?text=${encodeURIComponent(channel.name.substring(0, 8))}`;
+                    }}
                   />
                   {channel.isLive && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
                       LIVE
                     </div>
                   )}
+                  <div className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-0.5 rounded text-xs capitalize">
+                    {channel.category.replace(/_/g, ' ')}
+                  </div>
                   <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Play className="w-8 h-8 text-white" />
                   </div>
+                  {/* Now playing indicator */}
+                  {selectedChannel === channel.id && isPlaying && (
+                    <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                      Playing
+                    </div>
+                  )}
                 </div>
                 <div className="p-3">
-                  <h3 className="font-semibold text-sm text-foreground truncate">{channel.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">{channel.description}</p>
+                  <h3 className="font-semibold text-sm text-foreground truncate">
+                    {channel.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1 truncate">
+                    {channel.description}
+                  </p>
                   <p className="text-xs text-muted-foreground mt-2">
                     {channel.viewers.toLocaleString()} viewers
                   </p>

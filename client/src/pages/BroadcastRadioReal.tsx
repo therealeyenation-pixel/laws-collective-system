@@ -1,30 +1,49 @@
 /**
  * Broadcast Radio - Live Radio Streaming Interface
- * Real radio stations with live playback
+ * Real radio stations with actual audio playback using AudioPlayer component
+ * Organized by American music genres
  */
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Play, Heart, Share2, Volume2, Maximize, MessageCircle, ArrowLeft, Search, Music, Radio, Pause } from 'lucide-react';
+import {
+  Play,
+  Heart,
+  Share2,
+  ArrowLeft,
+  Search,
+  Radio,
+  Pause,
+  Volume2,
+  VolumeX,
+} from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 export default function BroadcastRadioReal() {
   const { user } = useAuth();
   const [selectedStation, setSelectedStation] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
+  const [activeGenre, setActiveGenre] = useState<string | undefined>(undefined);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [volume, setVolume] = useState(80);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Fetch radio stations from streaming content API
-  const { data: stations = [], isLoading } = trpc.streamingContent.getStations.useQuery({
-    category: activeCategory,
-    limit: 50,
-  });
+  const { data: stations = [], isLoading: stationsLoading } =
+    trpc.streamingContent.getStations.useQuery({
+      category: activeGenre,
+      limit: 50,
+    });
+
+  // Fetch available genres
+  const { data: genres = [] } = trpc.streamingContent.getGenres.useQuery();
 
   // Favorite mutations
   const addFavoriteMutation = trpc.streamingFavorites.addFavorite.useMutation();
@@ -35,34 +54,114 @@ export default function BroadcastRadioReal() {
   );
 
   // Update favorited state when query returns
-  if (isFavoritedQuery.data !== undefined && isFavoritedQuery.data !== isFavorited) {
-    setIsFavorited(isFavoritedQuery.data);
-  }
+  useEffect(() => {
+    if (isFavoritedQuery.data !== undefined) {
+      setIsFavorited(isFavoritedQuery.data);
+    }
+  }, [isFavoritedQuery.data]);
 
-  // Fetch selected station details
-  const selectedStationData = stations.find((s) => s.id === selectedStation);
+  // Manage audio element
+  useEffect(() => {
+    // Create audio element once
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      audioRef.current.crossOrigin = 'anonymous';
+    }
+
+    const audio = audioRef.current;
+
+    const onCanPlay = () => setIsLoading(false);
+    const onLoadStart = () => setIsLoading(true);
+    const onError = () => {
+      setIsLoading(false);
+      setIsPlaying(false);
+      toast.error('Failed to load stream. The station may be temporarily unavailable.');
+    };
+    const onPlaying = () => {
+      setIsLoading(false);
+      setIsPlaying(true);
+    };
+
+    audio.addEventListener('canplay', onCanPlay);
+    audio.addEventListener('loadstart', onLoadStart);
+    audio.addEventListener('error', onError);
+    audio.addEventListener('playing', onPlaying);
+
+    return () => {
+      audio.removeEventListener('canplay', onCanPlay);
+      audio.removeEventListener('loadstart', onLoadStart);
+      audio.removeEventListener('error', onError);
+      audio.removeEventListener('playing', onPlaying);
+    };
+  }, []);
+
+  // Update volume
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : volume / 100;
+    }
+  }, [volume, isMuted]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+    };
+  }, []);
+
+  const selectedStationData = stations.find((s: any) => s.id === selectedStation);
 
   // Filter stations by search
   const filteredStations = searchQuery
     ? stations.filter(
-        (s) =>
+        (s: any) =>
           s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           s.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : stations;
 
   const handlePlayStation = (stationId: number) => {
+    const station = stations.find((s: any) => s.id === stationId);
+    if (!station || !audioRef.current) return;
+
+    // If clicking the same station that's playing, toggle play/pause
+    if (selectedStation === stationId && isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    // Play new station
     setSelectedStation(stationId);
-    setIsPlaying(true);
+    setIsLoading(true);
+    audioRef.current.src = (station as any).streamUrl;
+    audioRef.current.load();
+    audioRef.current.play().catch((err) => {
+      console.error('Error playing audio:', err);
+      setIsLoading(false);
+      toast.error('Could not play this station. Try another one.');
+    });
   };
 
   const handleTogglePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    if (!audioRef.current || !selectedStation) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch((err) => {
+        console.error('Error resuming audio:', err);
+      });
+    }
   };
 
   const handleToggleFavorite = async () => {
     if (!selectedStation || !user) return;
-    
+
     try {
       if (isFavorited) {
         await removeFavoriteMutation.mutateAsync({ contentId: selectedStation });
@@ -79,12 +178,26 @@ export default function BroadcastRadioReal() {
     }
   };
 
-  const categories = ['music', 'news', 'talk', 'sports', 'educational'];
+  const genreLabels: Record<string, string> = {
+    'hip-hop': 'Hip-Hop',
+    rnb: 'R&B / Soul',
+    jazz: 'Jazz',
+    gospel: 'Gospel',
+    blues: 'Blues',
+    country: 'Country',
+    funk: 'Funk',
+    reggae: 'Reggae',
+    chill: 'Chill',
+    pop: 'Pop',
+  };
 
-  if (isLoading) {
+  if (stationsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-foreground">Loading radio stations...</p>
+        <div className="text-center space-y-4">
+          <Radio className="w-12 h-12 animate-pulse mx-auto text-primary" />
+          <p className="text-foreground">Loading radio stations...</p>
+        </div>
       </div>
     );
   }
@@ -104,142 +217,196 @@ export default function BroadcastRadioReal() {
         </Button>
       </div>
 
-      {/* Main Player */}
-      {selectedStationData ? (
-        <div className="w-full bg-gradient-to-b from-primary/10 to-background">
-          <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 relative flex items-center justify-center border-b border-border">
-            <div className="text-center">
-              <Radio className="w-16 h-16 text-primary mx-auto mb-4 animate-pulse" />
-              <p className="text-foreground text-2xl font-bold">{selectedStationData.name}</p>
-              <p className="text-muted-foreground text-sm mt-2">{selectedStationData.description}</p>
-              <p className="text-muted-foreground text-xs mt-4">{selectedStationData.streamUrl}</p>
-              {isPlaying && (
-                <div className="mt-6 flex justify-center gap-2">
-                  <div className="w-1 h-8 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-                  <div className="w-1 h-8 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-1 h-8 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  <div className="w-1 h-8 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
-                </div>
-              )}
-            </div>
-          </div>
+      {/* Now Playing Bar */}
+      {selectedStationData && (
+        <div className="bg-gradient-to-r from-primary/15 to-accent/10 border-b border-border">
+          <div className="container max-w-7xl mx-auto px-4 py-6">
+            <div className="flex items-center gap-6">
+              {/* Station Logo */}
+              <div className="w-20 h-20 rounded-xl overflow-hidden bg-muted flex-shrink-0">
+                <img
+                  src={(selectedStationData as any).logo}
+                  alt={(selectedStationData as any).name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      'https://via.placeholder.com/100/333/FFF?text=Radio';
+                  }}
+                />
+              </div>
 
-          {/* Station Info */}
-          <div className="bg-card p-6 border-b border-border">
-            <div className="flex items-start gap-4">
-              <img
-                src={selectedStationData.logo}
-                alt={selectedStationData.name}
-                className="w-20 h-20 rounded-lg object-cover"
-              />
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold text-foreground">{selectedStationData.name}</h1>
-                <p className="text-muted-foreground mt-2">{selectedStationData.description}</p>
-                <div className="flex items-center gap-4 mt-4">
-                  <span className="text-sm text-muted-foreground">
-                    Category: <span className="text-foreground font-semibold capitalize">{selectedStationData.category}</span>
+              {/* Station Info */}
+              <div className="flex-1 min-w-0">
+                <h2 className="text-xl font-bold text-foreground truncate">
+                  {(selectedStationData as any).name}
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {(selectedStationData as any).description}
+                </p>
+                <div className="flex items-center gap-3 mt-2">
+                  <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full capitalize font-medium">
+                    {genreLabels[(selectedStationData as any).category] ||
+                      (selectedStationData as any).category}
                   </span>
-                  {selectedStationData.isLive && (
-                    <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-500 rounded-full text-sm font-semibold">
-                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                  {(selectedStationData as any).isLive && (
+                    <span className="inline-flex items-center gap-1 text-xs text-red-500 font-semibold">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                       LIVE
                     </span>
                   )}
-                  <span className="text-sm text-muted-foreground">
-                    {selectedStationData.listeners.toLocaleString()} listeners
-                  </span>
+                  {isPlaying && !isLoading && (
+                    <span className="inline-flex items-center gap-1 text-xs text-green-500 font-semibold">
+                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      NOW PLAYING
+                    </span>
+                  )}
+                  {isLoading && (
+                    <span className="text-xs text-muted-foreground">Loading stream...</span>
+                  )}
                 </div>
+              </div>
+
+              {/* Controls */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {/* Volume */}
+                <div className="hidden md:flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsMuted(!isMuted)}
+                    className="p-2"
+                  >
+                    {isMuted || volume === 0 ? (
+                      <VolumeX className="w-4 h-4" />
+                    ) : (
+                      <Volume2 className="w-4 h-4" />
+                    )}
+                  </Button>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={isMuted ? 0 : volume}
+                    onChange={(e) => {
+                      setVolume(Number(e.target.value));
+                      if (isMuted) setIsMuted(false);
+                    }}
+                    className="w-20 h-1.5 bg-muted rounded-full cursor-pointer accent-primary"
+                  />
+                </div>
+
+                {/* Play/Pause */}
+                <Button
+                  size="lg"
+                  variant="default"
+                  onClick={handleTogglePlayPause}
+                  disabled={isLoading}
+                  className="rounded-full w-14 h-14 flex items-center justify-center"
+                >
+                  {isLoading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : isPlaying ? (
+                    <Pause className="w-6 h-6" />
+                  ) : (
+                    <Play className="w-6 h-6 ml-0.5" />
+                  )}
+                </Button>
+
+                {/* Favorite */}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleToggleFavorite}
+                  className="p-2"
+                >
+                  <Heart
+                    className={`w-5 h-5 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`}
+                  />
+                </Button>
               </div>
             </div>
 
-            {/* Player Controls */}
-            <div className="flex items-center justify-center gap-4 mt-6">
-              <Button
-                size="lg"
-                variant="default"
-                onClick={handleTogglePlayPause}
-                className="rounded-full w-16 h-16 flex items-center justify-center"
-              >
-                {isPlaying ? (
-                  <Pause className="w-6 h-6" />
-                ) : (
-                  <Play className="w-6 h-6" />
-                )}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleToggleFavorite}
-                className="gap-2"
-              >
-                <Heart className={`w-4 h-4 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
-                {isFavorited ? 'Favorited' : 'Add to Favorites'}
-              </Button>
-              <Button size="sm" variant="outline" className="gap-2">
-                <Share2 className="w-4 h-4" />
-                Share
-              </Button>
-            </div>
+            {/* Audio Visualizer */}
+            {isPlaying && !isLoading && (
+              <div className="flex justify-center gap-1 mt-4">
+                {Array.from({ length: 20 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1 bg-primary rounded-full"
+                    style={{
+                      height: `${Math.random() * 24 + 8}px`,
+                      animation: `pulse ${0.5 + Math.random() * 0.5}s ease-in-out infinite alternate`,
+                      animationDelay: `${i * 0.05}s`,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      ) : (
-        <div className="bg-card p-12 text-center border-b border-border">
-          <p className="text-muted-foreground">Select a station to start listening</p>
         </div>
       )}
 
-      {/* Search and Filters */}
+      {/* Search and Genre Filters */}
       <div className="bg-card border-b border-border p-4 space-y-4">
-        <div className="flex items-center gap-2">
-          <Search className="w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search stations..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1"
-          />
-        </div>
+        <div className="container max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 mb-4">
+            <Search className="w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search stations by name, genre, or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1"
+            />
+          </div>
 
-        {/* Category Tabs */}
-        <div className="flex gap-2 overflow-x-auto">
-          <Button
-            variant={activeCategory === undefined ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveCategory(undefined)}
-          >
-            All
-          </Button>
-          {categories.map((cat) => (
+          {/* Genre Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-1">
             <Button
-              key={cat}
-              variant={activeCategory === cat ? 'default' : 'outline'}
+              variant={activeGenre === undefined ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setActiveCategory(cat)}
-              className="capitalize"
+              onClick={() => setActiveGenre(undefined)}
             >
-              {cat}
+              All Genres
             </Button>
-          ))}
+            {genres.map((genre: string) => (
+              <Button
+                key={genre}
+                variant={activeGenre === genre ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setActiveGenre(genre)}
+              >
+                {genreLabels[genre] || genre}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Stations Grid */}
-      <div className="p-6">
+      <div className="container max-w-7xl mx-auto px-4 py-6">
         <h2 className="text-xl font-bold text-foreground mb-4">
-          {activeCategory ? `${activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Stations` : 'All Stations'}
+          {activeGenre
+            ? `${genreLabels[activeGenre] || activeGenre} Stations`
+            : 'All Stations'}
+          <span className="text-sm font-normal text-muted-foreground ml-2">
+            ({filteredStations.length} stations)
+          </span>
         </h2>
 
         {filteredStations.length === 0 ? (
           <div className="text-center py-12">
+            <Radio className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground">No stations found</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {filteredStations.map((station) => (
+            {filteredStations.map((station: any) => (
               <Card
                 key={station.id}
                 className={`overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
-                  selectedStation === station.id ? 'ring-2 ring-primary' : ''
+                  selectedStation === station.id
+                    ? 'ring-2 ring-primary shadow-lg'
+                    : ''
                 }`}
                 onClick={() => handlePlayStation(station.id)}
               >
@@ -248,21 +415,50 @@ export default function BroadcastRadioReal() {
                     src={station.logo}
                     alt={station.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
                   />
+                  {/* Play overlay */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                    {selectedStation === station.id && isPlaying ? (
+                      <Pause className="w-10 h-10 text-white" />
+                    ) : (
+                      <Play className="w-10 h-10 text-white" />
+                    )}
+                  </div>
+                  {/* Now playing indicator */}
+                  {selectedStation === station.id && isPlaying && (
+                    <div className="absolute bottom-2 left-2 right-2 flex justify-center gap-0.5">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <div
+                          key={i}
+                          className="w-1 bg-white rounded-full animate-bounce"
+                          style={{
+                            height: '12px',
+                            animationDelay: `${i * 0.1}s`,
+                            animationDuration: '0.6s',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {/* Genre badge */}
+                  <div className="absolute top-2 left-2 bg-black/60 text-white px-2 py-0.5 rounded text-xs font-medium capitalize">
+                    {genreLabels[station.category] || station.category}
+                  </div>
                   {station.isLive && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
                       LIVE
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Play className="w-8 h-8 text-white" />
-                  </div>
                 </div>
                 <div className="p-3">
-                  <h3 className="font-semibold text-sm text-foreground truncate">{station.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">{station.description}</p>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {station.listeners.toLocaleString()} listeners
+                  <h3 className="font-semibold text-sm text-foreground truncate">
+                    {station.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1 truncate">
+                    {station.description}
                   </p>
                 </div>
               </Card>

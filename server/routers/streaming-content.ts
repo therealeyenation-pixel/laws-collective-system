@@ -1,6 +1,6 @@
 /**
  * Streaming Content Router
- * Provides real TV channels, radio stations, and music data
+ * Provides real radio stations (American genres) and TV channels
  * Uses data integration service to fetch from real sources with caching
  */
 
@@ -33,15 +33,17 @@ const CACHE_EXPIRATION_MS = 60 * 60 * 1000;
  */
 async function initializeCache() {
   try {
-    console.log('[Streaming Content] Initializing cache with real data...');
-    const channels = await fetchIPTVChannels(50);
-    const stations = await fetchRadioStations(50);
-    const tracks = await fetchMusicTracks(20);
+    console.log('[Streaming Content] Initializing cache with American genre stations...');
+    const [channels, stations, tracks] = await Promise.all([
+      fetchIPTVChannels(50),
+      fetchRadioStations(50),
+      fetchMusicTracks(12),
+    ]);
 
     cachedData = {
-      channels: channels.length > 0 ? channels : getDefaultChannels(),
-      stations: stations.length > 0 ? stations : getDefaultStations(),
-      tracks: tracks.length > 0 ? tracks : getDefaultTracks(),
+      channels,
+      stations,
+      tracks,
       lastUpdated: Date.now(),
     };
 
@@ -51,11 +53,11 @@ async function initializeCache() {
     console.log(`  - Music Tracks: ${cachedData.tracks.length}`);
   } catch (error) {
     console.error('[Streaming Content] Error initializing cache:', error);
-    // Fall back to default data
+    // Fallback to just radio stations (always available, no network needed)
     cachedData = {
-      channels: getDefaultChannels(),
-      stations: getDefaultStations(),
-      tracks: getDefaultTracks(),
+      channels: [],
+      stations: await fetchRadioStations(24),
+      tracks: await fetchMusicTracks(6),
       lastUpdated: Date.now(),
     };
   }
@@ -70,275 +72,6 @@ async function refreshCacheIfNeeded() {
     console.log('[Streaming Content] Cache expired, refreshing...');
     await initializeCache();
   }
-}
-
-/**
- * Default TV Channel Data (fallback)
- */
-function getDefaultChannels() {
-  return [
-    {
-      id: 1,
-      name: 'BBC News',
-      category: 'news',
-      description: 'British Broadcasting Corporation News',
-      logo: 'https://via.placeholder.com/100?text=BBC+News',
-      streamUrl: 'https://stream.bbc.co.uk/news',
-      viewers: 12500,
-      isLive: true,
-    },
-    {
-      id: 2,
-      name: 'CNN',
-      category: 'news',
-      description: 'Cable News Network - Breaking News',
-      logo: 'https://via.placeholder.com/100?text=CNN',
-      streamUrl: 'https://stream.cnn.com/live',
-      viewers: 32000,
-      isLive: true,
-    },
-    {
-      id: 3,
-      name: 'ESPN',
-      category: 'sports',
-      description: 'Sports Entertainment Network',
-      logo: 'https://via.placeholder.com/100?text=ESPN',
-      streamUrl: 'https://stream.espn.com/live',
-      viewers: 85000,
-      isLive: true,
-    },
-    {
-      id: 4,
-      name: 'Netflix',
-      category: 'entertainment',
-      description: 'Netflix Entertainment Streaming',
-      logo: 'https://via.placeholder.com/100?text=Netflix',
-      streamUrl: 'https://stream.netflix.com/live',
-      viewers: 0,
-      isLive: false,
-    },
-    {
-      id: 5,
-      name: 'HBO',
-      category: 'entertainment',
-      description: 'HBO Premium Entertainment',
-      logo: 'https://via.placeholder.com/100?text=HBO',
-      streamUrl: 'https://stream.hbo.com/live',
-      viewers: 0,
-      isLive: false,
-    },
-    {
-      id: 6,
-      name: 'MTV',
-      category: 'music',
-      description: 'Music Television',
-      logo: 'https://via.placeholder.com/100?text=MTV',
-      streamUrl: 'https://stream.mtv.com/live',
-      viewers: 21000,
-      isLive: true,
-    },
-    {
-      id: 7,
-      name: 'Cartoon Network',
-      category: 'kids',
-      description: 'Kids Entertainment Channel',
-      logo: 'https://via.placeholder.com/100?text=Cartoon',
-      streamUrl: 'https://stream.cartoonnetwork.com/live',
-      viewers: 43000,
-      isLive: true,
-    },
-    {
-      id: 8,
-      name: 'National Geographic',
-      category: 'documentary',
-      description: 'Documentary and Nature Content',
-      logo: 'https://via.placeholder.com/100?text=NatGeo',
-      streamUrl: 'https://stream.natgeo.com/live',
-      viewers: 18000,
-      isLive: true,
-    },
-    {
-      id: 9,
-      name: 'Discovery Channel',
-      category: 'documentary',
-      description: 'Discovery and Exploration',
-      logo: 'https://via.placeholder.com/100?text=Discovery',
-      streamUrl: 'https://stream.discovery.com/live',
-      viewers: 9500,
-      isLive: true,
-    },
-    {
-      id: 10,
-      name: 'Animal Planet',
-      category: 'documentary',
-      description: 'Animal and Wildlife Content',
-      logo: 'https://via.placeholder.com/100?text=Animal',
-      streamUrl: 'https://stream.animalplanet.com/live',
-      viewers: 12000,
-      isLive: true,
-    },
-  ];
-}
-
-/**
- * Default Radio Station Data (fallback)
- */
-function getDefaultStations() {
-  return [
-    {
-      id: 1,
-      name: 'BBC Radio 1',
-      category: 'music',
-      description: 'BBC Radio 1 - Music and Entertainment',
-      logo: 'https://via.placeholder.com/100?text=BBC+Radio+1',
-      streamUrl: 'https://stream.bbc.co.uk/radio1',
-      listeners: 25000,
-      isLive: true,
-    },
-    {
-      id: 2,
-      name: 'BBC Radio 2',
-      category: 'music',
-      description: 'BBC Radio 2 - Popular Music',
-      logo: 'https://via.placeholder.com/100?text=BBC+Radio+2',
-      streamUrl: 'https://stream.bbc.co.uk/radio2',
-      listeners: 32000,
-      isLive: true,
-    },
-    {
-      id: 3,
-      name: 'NPR News',
-      category: 'news',
-      description: 'National Public Radio News',
-      logo: 'https://via.placeholder.com/100?text=NPR',
-      streamUrl: 'https://stream.npr.org/news',
-      listeners: 18000,
-      isLive: true,
-    },
-    {
-      id: 4,
-      name: 'Spotify Radio',
-      category: 'music',
-      description: 'Spotify Music Streaming',
-      logo: 'https://via.placeholder.com/100?text=Spotify',
-      streamUrl: 'https://stream.spotify.com/radio',
-      listeners: 0,
-      isLive: false,
-    },
-    {
-      id: 5,
-      name: 'Apple Music',
-      category: 'music',
-      description: 'Apple Music Streaming',
-      logo: 'https://via.placeholder.com/100?text=Apple',
-      streamUrl: 'https://stream.apple.com/music',
-      listeners: 0,
-      isLive: false,
-    },
-    {
-      id: 6,
-      name: 'SiriusXM',
-      category: 'music',
-      description: 'SiriusXM Satellite Radio',
-      logo: 'https://via.placeholder.com/100?text=SiriusXM',
-      streamUrl: 'https://stream.siriusxm.com/live',
-      listeners: 15000,
-      isLive: true,
-    },
-    {
-      id: 7,
-      name: 'iHeartRadio',
-      category: 'music',
-      description: 'iHeartRadio Music',
-      logo: 'https://via.placeholder.com/100?text=iHeart',
-      streamUrl: 'https://stream.iheartradio.com/live',
-      listeners: 42000,
-      isLive: true,
-    },
-    {
-      id: 8,
-      name: 'Jazz FM',
-      category: 'music',
-      description: 'Jazz Music Station',
-      logo: 'https://via.placeholder.com/100?text=Jazz+FM',
-      streamUrl: 'https://stream.jazzfm.com/live',
-      listeners: 8000,
-      isLive: true,
-    },
-    {
-      id: 9,
-      name: 'Classical Radio',
-      category: 'music',
-      description: 'Classical Music Station',
-      logo: 'https://via.placeholder.com/100?text=Classical',
-      streamUrl: 'https://stream.classicalradio.com/live',
-      listeners: 6500,
-      isLive: true,
-    },
-    {
-      id: 10,
-      name: 'Talk Radio',
-      category: 'news',
-      description: 'Talk Radio News and Discussion',
-      logo: 'https://via.placeholder.com/100?text=Talk',
-      streamUrl: 'https://stream.talkradio.com/live',
-      listeners: 12000,
-      isLive: true,
-    },
-  ];
-}
-
-/**
- * Default Music Tracks Data (fallback)
- */
-function getDefaultTracks() {
-  return [
-    {
-      id: 1,
-      title: 'Blinding Lights',
-      artist: 'The Weeknd',
-      album: 'After Hours',
-      duration: 200,
-      cover: 'https://via.placeholder.com/300x300?text=Blinding+Lights',
-      streamUrl: 'https://stream.music.com/track/1',
-    },
-    {
-      id: 2,
-      title: 'Shape of You',
-      artist: 'Ed Sheeran',
-      album: '÷',
-      duration: 234,
-      cover: 'https://via.placeholder.com/300x300?text=Shape+of+You',
-      streamUrl: 'https://stream.music.com/track/2',
-    },
-    {
-      id: 3,
-      title: 'Levitating',
-      artist: 'Dua Lipa',
-      album: 'Future Nostalgia',
-      duration: 203,
-      cover: 'https://via.placeholder.com/300x300?text=Levitating',
-      streamUrl: 'https://stream.music.com/track/3',
-    },
-    {
-      id: 4,
-      title: 'As It Was',
-      artist: 'Harry Styles',
-      album: "Harry's House",
-      duration: 172,
-      cover: 'https://via.placeholder.com/300x300?text=As+It+Was',
-      streamUrl: 'https://stream.music.com/track/4',
-    },
-    {
-      id: 5,
-      title: 'Anti-Hero',
-      artist: 'Taylor Swift',
-      album: 'Midnights',
-      duration: 200,
-      cover: 'https://via.placeholder.com/300x300?text=Anti-Hero',
-      streamUrl: 'https://stream.music.com/track/5',
-    },
-  ];
 }
 
 // Initialize cache on module load
@@ -390,7 +123,7 @@ export const streamingContentRouter = router({
       await refreshCacheIfNeeded();
       let stations = cachedData.stations;
       if (input.category) {
-        stations = stations.filter((s) => s.category === input.category);
+        stations = stations.filter((s: any) => s.category === input.category);
       }
       return stations.slice(0, input.limit);
     }),
@@ -404,6 +137,15 @@ export const streamingContentRouter = router({
       await refreshCacheIfNeeded();
       return cachedData.stations.find((s) => s.id === input.id) || null;
     }),
+
+  /**
+   * Get available genres
+   */
+  getGenres: publicProcedure.query(async () => {
+    await refreshCacheIfNeeded();
+    const genres = new Set(cachedData.stations.map((s: any) => s.category));
+    return Array.from(genres).sort();
+  }),
 
   /**
    * Get all music tracks
@@ -443,9 +185,10 @@ export const streamingContentRouter = router({
           c.description.toLowerCase().includes(q)
       );
       const stations = cachedData.stations.filter(
-        (s) =>
+        (s: any) =>
           s.name.toLowerCase().includes(q) ||
-          s.description.toLowerCase().includes(q)
+          s.description.toLowerCase().includes(q) ||
+          (s.genre && s.genre.toLowerCase().includes(q))
       );
       return { channels, stations };
     }),
@@ -463,8 +206,7 @@ export const streamingContentRouter = router({
   }),
 
   /**
-   * Refresh cache with latest data from APIs
-   * (Public for now, could be protected in production)
+   * Refresh cache
    */
   refreshCache: publicProcedure.mutation(async () => {
     try {
