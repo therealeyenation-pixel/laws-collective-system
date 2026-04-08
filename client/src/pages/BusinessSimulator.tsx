@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
 import CompletionCertificate from "@/components/CompletionCertificate";
 import TrademarkSearch from "@/components/TrademarkSearch";
 import { 
@@ -334,6 +335,10 @@ const STEPS = [
 
 export default function BusinessSimulator() {
   const { user } = useAuth();
+  const { recordCompletion: recordBusinessCompletion } = useSimulatorCompletion({
+    simulatorType: "business",
+    displayName: "Business Formation",
+  });
   const [currentStep, setCurrentStep] = useState(1);
   const [showCertificate, setShowCertificate] = useState(false);
   const [simulation, setSimulation] = useState<SimulationData>({
@@ -441,6 +446,8 @@ export default function BusinessSimulator() {
     localStorage.setItem("completed_simulations", JSON.stringify(savedSimulations));
 
     toast.success(`Entity "${simulation.entityName}" created successfully!`);
+    // Record completion for activation system
+    recordBusinessCompletion(100);
     setCurrentStep(7);
   };
 

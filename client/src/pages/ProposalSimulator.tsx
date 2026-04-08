@@ -34,6 +34,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
 
 interface ProposalData {
   // Basic Info
@@ -119,6 +120,10 @@ const steps = [
 ];
 
 export default function ProposalSimulator() {
+  const { recordCompletion: recordProposalCompletion } = useSimulatorCompletion({
+    simulatorType: "proposals",
+    displayName: "Proposal Writing",
+  });
   const [currentStep, setCurrentStep] = useState(1);
   const [proposalData, setProposalData] = useState<ProposalData>(initialProposalData);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -158,6 +163,8 @@ export default function ProposalSimulator() {
     setGeneratedProposal(proposal);
     setIsGenerating(false);
     toast.success("Proposal generated successfully!");
+    // Record completion for activation system
+    recordProposalCompletion(100);
   };
 
   const generateProposalContent = () => {

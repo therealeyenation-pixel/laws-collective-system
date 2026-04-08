@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
 
 // Entity-specific grant recommendations
 const entityGrantRecommendations: Record<string, string[]> = {
@@ -411,6 +412,10 @@ const initialData: ApplicationData = {
 };
 
 export default function GrantSimulator() {
+  const { recordCompletion: recordGrantCompletion } = useSimulatorCompletion({
+    simulatorType: "grants",
+    displayName: "Grant Application",
+  });
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState<ApplicationData>(initialData);
   const [autoPopulated, setAutoPopulated] = useState(false);
@@ -525,7 +530,15 @@ export default function GrantSimulator() {
     }
   };
 
-  const handleNext = () => currentStep < steps.length && setCurrentStep(currentStep + 1);
+  const handleNext = () => {
+    if (currentStep < steps.length) {
+      // When moving to the certificate step (last step), record completion
+      if (currentStep === steps.length - 1) {
+        recordGrantCompletion(100);
+      }
+      setCurrentStep(currentStep + 1);
+    }
+  };
   const handlePrevious = () => currentStep > 1 && setCurrentStep(currentStep - 1);
   const updateData = (field: keyof ApplicationData, value: any) => setData(prev => ({ ...prev, [field]: value }));
 

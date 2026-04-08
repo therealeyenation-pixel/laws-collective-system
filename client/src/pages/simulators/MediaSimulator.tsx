@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
 import {
   Video, Camera, Share2, ArrowRight, ArrowLeft,
   CheckCircle2, Circle, Award, Target, BookOpen, RotateCcw,
@@ -109,6 +110,10 @@ const CONTENT_TYPES = [
 ];
 
 export default function MediaSimulator() {
+  const { recordCompletion: recordMediaCompletion } = useSimulatorCompletion({
+    simulatorType: "real_eye_nation",
+    displayName: "Real-Eye-Nation Media",
+  });
   const [activeTab, setActiveTab] = useState("training");
   const [currentModule, setCurrentModule] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -156,6 +161,14 @@ export default function MediaSimulator() {
 
   const completedModules = Object.values(moduleProgress).filter(m => m.completed).length;
   const overallProgress = Math.round((completedModules / MEDIA_MODULES.length) * 100);
+
+  // Record activation completion when all modules are done
+  if (completedModules === MEDIA_MODULES.length) {
+    const avgScore = Math.round(
+      Object.values(moduleProgress).reduce((sum, m) => sum + m.score, 0) / MEDIA_MODULES.length
+    );
+    recordMediaCompletion(avgScore);
+  }
 
   return (
     <DashboardLayout>

@@ -19,6 +19,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
 
 const moduleIcons: Record<string, React.ReactNode> = {
   land: <Map className="w-5 h-5" />,
@@ -29,6 +30,10 @@ const moduleIcons: Record<string, React.ReactNode> = {
 
 export default function CourseDashboard() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { recordCompletion: recordCourseCompletion } = useSimulatorCompletion({
+    simulatorType: "other",
+    displayName: "L.A.W.S. Foundation Course",
+  });
   const [, setLocation] = useLocation();
   const [email, setEmail] = useState("");
   const [purchaseId, setPurchaseId] = useState<number | null>(null);
@@ -68,6 +73,8 @@ export default function CourseDashboard() {
       refetchProgress();
       if (data.courseComplete) {
         toast.success("Congratulations! You've completed the course!");
+        // Record completion for activation system
+        recordCourseCompletion(100);
       } else if (!data.alreadyCompleted) {
         toast.success("Lesson completed!");
       }

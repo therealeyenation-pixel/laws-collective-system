@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
 import {
   FileSignature, FileText, Clock, ArrowRight, ArrowLeft,
   CheckCircle2, Circle, Award, Target, BookOpen, RotateCcw,
@@ -101,6 +102,10 @@ const CONTRACT_LIFECYCLE_STAGES = [
 ];
 
 export default function ContractsSimulator() {
+  const { recordCompletion: recordContractsCompletion } = useSimulatorCompletion({
+    simulatorType: "contracts",
+    displayName: "Contracts",
+  });
   const [activeTab, setActiveTab] = useState("training");
   const [currentModule, setCurrentModule] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -148,6 +153,14 @@ export default function ContractsSimulator() {
 
   const completedModules = Object.values(moduleProgress).filter(m => m.completed).length;
   const overallProgress = Math.round((completedModules / CONTRACT_MODULES.length) * 100);
+
+  // Record activation completion when all modules are done
+  if (completedModules === CONTRACT_MODULES.length) {
+    const avgScore = Math.round(
+      Object.values(moduleProgress).reduce((sum, m) => sum + m.score, 0) / CONTRACT_MODULES.length
+    );
+    recordContractsCompletion(avgScore);
+  }
 
   return (
     <DashboardLayout>
