@@ -109,8 +109,8 @@ export default function HouseDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={() => window.location.href = "/academy"}>
-                Go to Academy
+              <Button onClick={() => window.location.href = "/house-activation"}>
+                Start the First House
               </Button>
             </CardContent>
           </Card>

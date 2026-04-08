@@ -19803,3 +19803,107 @@ export type UserPlaylist = typeof userPlaylists.$inferSelect;
 export type InsertUserPlaylist = typeof userPlaylists.$inferInsert;
 
 
+// ============================================
+// EDUCATION-FIRST SYSTEM ACTIVATION
+// ============================================
+
+/**
+ * Simulator Completion Tracking
+ * Tracks which simulators each user has completed for activation
+ */
+export const simulatorCompletion = mysqlTable("simulator_completion", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("user_id").notNull().references(() => users.id),
+  simulatorType: mysqlEnum("simulator_type", [
+    "business",
+    "grants",
+    "proposals",
+    "contracts",
+    "real_eye_nation",
+    "other"
+  ]).notNull(),
+  completedAt: timestamp("completed_at").notNull(),
+  certificateId: varchar("certificate_id", { length: 255 }),
+  score: int("score"),
+  certificateUrl: varchar("certificate_url", { length: 500 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SimulatorCompletion = typeof simulatorCompletion.$inferSelect;
+export type InsertSimulatorCompletion = typeof simulatorCompletion.$inferInsert;
+
+/**
+ * Cloned Builds
+ * Tracks cloned instances of the master build for each user
+ */
+export const clonedBuilds = mysqlTable("cloned_builds", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("user_id").notNull().references(() => users.id),
+  masterBuildId: int("master_build_id").notNull(), // Reference to master build (user who owns the template)
+  cloneStatus: mysqlEnum("clone_status", [
+    "pending",
+    "provisioning",
+    "active",
+    "suspended",
+    "archived"
+  ]).default("pending").notNull(),
+  houseId: int("house_id").references(() => houses.id),
+  businessType: varchar("business_type", { length: 100 }),
+  businessName: varchar("business_name", { length: 255 }),
+  simulatorDataJson: text("simulator_data_json"), // Stores simulator results as JSON
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  activatedAt: timestamp("activated_at"),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ClonedBuild = typeof clonedBuilds.$inferSelect;
+export type InsertClonedBuild = typeof clonedBuilds.$inferInsert;
+
+/**
+ * Build Linkage
+ * Links cloned builds to the master build through LuvLedger
+ */
+export const buildLinkage = mysqlTable("build_linkage", {
+  id: int("id").primaryKey().autoincrement(),
+  clonedBuildId: int("cloned_build_id").notNull().references(() => clonedBuilds.id),
+  masterBuildId: int("master_build_id").notNull(),
+  linkageType: mysqlEnum("linkage_type", [
+    "parent_child",
+    "template_instance",
+    "master_clone"
+  ]).default("parent_child").notNull(),
+  luvledgerEntryId: varchar("luvledger_entry_id", { length: 255 }),
+  linkedAt: timestamp("linked_at").defaultNow().notNull(),
+  verifiedAt: timestamp("verified_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BuildLinkage = typeof buildLinkage.$inferSelect;
+export type InsertBuildLinkage = typeof buildLinkage.$inferInsert;
+
+/**
+ * Activation Progress
+ * Tracks the activation progress for each user
+ */
+export const activationProgress = mysqlTable("activation_progress", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("user_id").notNull().references(() => users.id).unique(),
+  totalSimulatorsRequired: int("total_simulators_required").default(6).notNull(),
+  simulatorsCompleted: int("simulators_completed").default(0).notNull(),
+  activationStatus: mysqlEnum("activation_status", [
+    "not_started",
+    "in_progress",
+    "ready_for_activation",
+    "activated",
+    "suspended"
+  ]).default("not_started").notNull(),
+  activationReadyAt: timestamp("activation_ready_at"),
+  activatedAt: timestamp("activated_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ActivationProgress = typeof activationProgress.$inferSelect;
+export type InsertActivationProgress = typeof activationProgress.$inferInsert;

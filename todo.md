@@ -12090,3 +12090,61 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [ ] Test mobile responsiveness for all features
 - [ ] Test cross-browser compatibility
 - [ ] Create final checkpoint with all features
+
+
+## Phase 31: Education-First System Activation
+
+### Phase 31.1: Simulator Completion Tracking
+- [ ] Create `simulatorCompletion` table in database (userId, simulatorType, completedAt, certificateId)
+- [ ] Create `simulatorTypes` enum (business, grants, proposals, contracts, other)
+- [ ] Implement `recordSimulatorCompletion` tRPC procedure
+- [ ] Implement `getSimulatorCompletionStatus` tRPC procedure
+- [ ] Create `SimulatorProgressWidget` component showing completion status
+- [ ] Add completion tracking to each simulator (Business, Grants, Proposals, etc.)
+- [ ] Create certificate generation on simulator completion
+- [ ] Add progress bar showing % of simulators completed
+
+### Phase 31.2: Clone Provisioning Service
+- [ ] Create `clonedBuilds` table (id, userId, masterBuildId, cloneStatus, createdAt, activatedAt)
+- [ ] Create `buildLinkage` table (clonedBuildId, masterBuildId, linkageType, linkedAt)
+- [ ] Create `cloneProvisioning` service with cloning logic
+- [ ] Implement `cloneHouse` procedure (copies master House with user data)
+- [ ] Implement `cloneHeirs` procedure (creates empty Heirs structure for user)
+- [ ] Implement `cloneAssets` procedure (creates empty Assets structure for user)
+- [ ] Implement `cloneTokens` procedure (initializes token system for user)
+- [ ] Implement `cloneDashboard` procedure (creates user's dashboard)
+- [ ] Add simulator data import into cloned build
+- [ ] Create provisioning status tracking
+
+### Phase 31.3: LuvLedger Linking
+- [ ] Create `luvledgerLinkage` records linking master and cloned builds
+- [ ] Implement `linkBuildToMaster` procedure in LuvLedger
+- [ ] Create `getMasterBuildInfo` procedure to retrieve master build data
+- [ ] Implement `recordCloneActivation` in LuvLedger audit trail
+- [ ] Create LuvLedger entry for each cloned build creation
+- [ ] Add linkage verification procedures
+- [ ] Create linkage status dashboard showing all linked builds
+
+### Phase 31.4: Activation Flow UI
+- [ ] Create `/simulator-progress` page showing completion status
+- [ ] Create `SimulatorProgressCard` component for each simulator
+- [ ] Add "Complete all simulators to activate your build" message
+- [ ] Create activation readiness check
+- [ ] Implement "Activate My Build" button (appears when all simulators complete)
+- [ ] Create activation confirmation dialog
+- [ ] Add loading indicator during clone provisioning
+- [ ] Create success message after activation
+- [ ] Update House Dashboard to show activation status
+- [ ] Create `/activation-status` page showing build status
+
+### Phase 31.5: Testing & Checkpoint
+- [ ] Test simulator completion tracking
+- [ ] Test clone provisioning with all procedures
+- [ ] Test LuvLedger linking
+- [ ] Test activation flow end-to-end
+- [ ] Test that master build remains unchanged
+- [ ] Test cloned build has user's data
+- [ ] Test LuvLedger shows all linkages
+- [ ] Verify no data loss in master build
+- [ ] Performance test with multiple clones
+- [ ] Create final checkpoint
