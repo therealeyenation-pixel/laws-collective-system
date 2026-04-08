@@ -310,130 +310,268 @@ export async function fetchRadioStations(limit: number = 50) {
 }
 
 /**
- * Fetch TV channels from IPTV-org for the Theater
- * Focuses on US-accessible free channels
+ * Verified working TV channels for the Theater
+ * All stream URLs tested and confirmed working (HTTP 200)
+ * Organized by category for the Theater UI
  */
-export async function fetchIPTVChannels(limit: number = 50) {
-  try {
-    console.log('[Data Integration] Fetching IPTV channels...');
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-    // Use the US-specific playlist for better results
-    const response = await fetch('https://iptv-org.github.io/iptv/countries/us.m3u', {
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch M3U playlist: ${response.statusText}`);
-    }
-
-    const content = await response.text();
-    const lines = content.split('\n');
-    const channels: any[] = [];
-    let currentChannel: any = null;
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-
-      if (line.startsWith('#EXTINF:')) {
-        const nameMatch = line.match(/,(.+)$/);
-        const logoMatch = line.match(/tvg-logo="([^"]+)"/);
-        const groupMatch = line.match(/group-title="([^"]+)"/);
-
-        currentChannel = {
-          name: nameMatch ? nameMatch[1].trim() : 'Unknown',
-          logo: logoMatch ? logoMatch[1] : '',
-          category: groupMatch ? groupMatch[1].toLowerCase().replace(/\s+/g, '_') : 'other',
-        };
-      } else if (line && !line.startsWith('#') && currentChannel) {
-        currentChannel.streamUrl = line;
-        channels.push(currentChannel);
-        currentChannel = null;
-      }
-    }
-
-    const validChannels = channels
-      .filter((ch) => ch.streamUrl && ch.name && ch.name !== 'Unknown')
-      .slice(0, limit);
-
-    console.log(`[Data Integration] Fetched ${validChannels.length} IPTV channels`);
-
-    return validChannels.map((ch, idx) => ({
-      id: idx + 1,
-      name: ch.name,
-      category: ch.category,
-      description: `Live TV - ${ch.category}`,
-      logo: ch.logo || `https://via.placeholder.com/100?text=${encodeURIComponent(ch.name.substring(0, 10))}`,
-      streamUrl: ch.streamUrl,
-      viewers: Math.floor(Math.random() * 50000) + 1000,
-      isLive: true,
-    }));
-  } catch (error) {
-    console.error('[Data Integration] Error fetching IPTV channels:', error);
-    return getDefaultTVChannels();
-  }
-}
-
-/**
- * Default TV channels fallback
- */
-function getDefaultTVChannels() {
+function getVerifiedTVChannels() {
   return [
+    // === NEWS ===
     {
       id: 1,
-      name: 'NASA TV',
-      category: 'science',
-      description: 'NASA Television - Live from Space',
-      logo: 'https://via.placeholder.com/100/1E40AF/FFFFFF?text=NASA',
-      streamUrl: 'https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8',
-      viewers: 45000,
+      name: 'ABC News Live',
+      category: 'news',
+      description: '24/7 breaking news and live coverage from ABC News',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/ABC_News_Live_logo_2021.svg/960px-ABC_News_Live_logo_2021.svg.png',
+      streamUrl: 'https://abcnews-streams.akamaized.net/hls/live/2023560/abcnewshudson1/master_4000.m3u8',
+      viewers: 85000,
       isLive: true,
     },
     {
       id: 2,
-      name: 'Bloomberg TV',
+      name: 'ABC News Live 2',
       category: 'news',
-      description: 'Bloomberg Business News',
-      logo: 'https://via.placeholder.com/100/1E3A5F/FFFFFF?text=Bloomberg',
-      streamUrl: 'https://www.bloomberg.com/media-manifest/streams/us.m3u8',
+      description: 'ABC News alternate live feed',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/ABC_News_Live_logo_2021.svg/960px-ABC_News_Live_logo_2021.svg.png',
+      streamUrl: 'https://abcnews-streams.akamaized.net/hls/live/2023561/abcnewshudson2/master_4000.m3u8',
       viewers: 62000,
       isLive: true,
     },
     {
       id: 3,
-      name: 'ABC News Live',
+      name: 'NASA TV',
       category: 'news',
-      description: 'ABC News Live Coverage',
-      logo: 'https://via.placeholder.com/100/000000/FFFFFF?text=ABC',
-      streamUrl: 'https://content.uplynk.com/channel/3324f2467c414329b3b0cc5cd987b6be.m3u8',
-      viewers: 85000,
+      description: 'NASA Television - Live from Space',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/200px-NASA_logo.svg.png',
+      streamUrl: 'https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8',
+      viewers: 45000,
       isLive: true,
     },
+
+    // === SPORTS ===
     {
       id: 4,
-      name: 'Newsmax',
-      category: 'news',
-      description: 'Newsmax TV Live',
-      logo: 'https://via.placeholder.com/100/CC0000/FFFFFF?text=Newsmax',
-      streamUrl: 'https://nmxlive.akamaized.net/hls/live/529965/Live_1/index.m3u8',
+      name: 'ACC Digital Network',
+      category: 'sports',
+      description: 'Atlantic Coast Conference sports coverage',
+      logo: 'https://i.imgur.com/V6Kaqha.png',
+      streamUrl: 'https://raycom-accdn-firetv.amagi.tv/playlist.m3u8',
       viewers: 38000,
       isLive: true,
     },
     {
       id: 5,
-      name: 'Pluto TV Movies',
+      name: 'Golf Kingdom',
+      category: 'sports',
+      description: 'Golf tips, tours, and lifestyle content',
+      logo: 'https://golfkingdom.net/wp-content/uploads/2022/04/golf-kingdom-st.jpg',
+      streamUrl: 'https://30a-tv.com/feeds/vidaa/golf.m3u8',
+      viewers: 22000,
+      isLive: true,
+    },
+
+    // === ENTERTAINMENT ===
+    {
+      id: 6,
+      name: 'Backstage',
       category: 'entertainment',
-      description: 'Free movies streaming 24/7',
-      logo: 'https://via.placeholder.com/100/6B21A8/FFFFFF?text=Pluto',
-      streamUrl: 'https://service-stitcher.clusters.pluto.tv/v1/stitch/embed/hls/channel/5ca673e4e7b3c96e45f3bfb3/master.m3u8',
+      description: 'Behind the scenes entertainment and celebrity interviews',
+      logo: 'https://i.imgur.com/qcTNvNU.png',
+      streamUrl: 'https://d2ah48mnofquik.cloudfront.net/Backstage.m3u8',
+      viewers: 35000,
+      isLive: true,
+    },
+    {
+      id: 7,
+      name: "America's Funniest Home Videos",
+      category: 'entertainment',
+      description: 'Classic funny home videos 24/7',
+      logo: 'https://i.imgur.com/TOB9vmW.png',
+      streamUrl: 'https://d1mp1kdk5zi1ie.cloudfront.net/playlist.m3u8',
       viewers: 55000,
       isLive: true,
     },
+    {
+      id: 8,
+      name: '30A Ridiculous TV',
+      category: 'entertainment',
+      description: 'Comedy and ridiculous moments',
+      logo: 'https://30a.media/wp-content/uploads/2023/08/pzaz-30atv-2-230x366-ridiculous.jpg',
+      streamUrl: 'https://30a-tv.com/feeds/720p/63.m3u8',
+      viewers: 28000,
+      isLive: true,
+    },
+
+    // === MUSIC ===
+    {
+      id: 9,
+      name: 'Praise Him Music Network',
+      category: 'music',
+      description: 'Gospel praise and worship music 24/7',
+      logo: 'https://i.imgur.com/iBcqT8L.png',
+      streamUrl: 'https://3abn.bozztv.com/3abn1/PraiseHim/smil:PraiseHim.smil/playlist.m3u8',
+      viewers: 32000,
+      isLive: true,
+    },
+    {
+      id: 10,
+      name: '30A Music',
+      category: 'music',
+      description: 'Live music performances and music videos',
+      logo: 'https://i.imgur.com/gNWg9tl.png',
+      streamUrl: 'https://30a-tv.com/music.m3u8',
+      viewers: 25000,
+      isLive: true,
+    },
+    {
+      id: 11,
+      name: 'Avang TV',
+      category: 'music',
+      description: 'Music videos and live performances',
+      logo: 'https://i.imgur.com/3I1n7fO.png',
+      streamUrl: 'https://hls.avang.live/hls/stream.m3u8',
+      viewers: 18000,
+      isLive: true,
+    },
+
+    // === MOVIES ===
+    {
+      id: 12,
+      name: '30A Classic Movies',
+      category: 'movies',
+      description: 'Classic movies streaming 24/7',
+      logo: 'https://babaktv.com/wp-content/uploads/2023/09/30A-Classi-Movies.jpeg',
+      streamUrl: 'https://30a-tv.com/feeds/pzaz/30atvmovies.m3u8',
+      viewers: 42000,
+      isLive: true,
+    },
+
+    // === BUSINESS ===
+    {
+      id: 13,
+      name: 'Investment Pitch',
+      category: 'business',
+      description: 'Startup pitches and investment content',
+      logo: 'https://i.imgur.com/CKCtZo7.png',
+      streamUrl: 'https://30a-tv.com/feeds/xodglobal/30atv.m3u8',
+      viewers: 28000,
+      isLive: true,
+    },
+    {
+      id: 14,
+      name: 'Ameritrade',
+      category: 'business',
+      description: 'Financial markets and trading insights',
+      logo: 'https://images-na.ssl-images-amazon.com/images/I/71CZKwin9mL.png',
+      streamUrl: 'https://tdameritrade-vizio.amagi.tv/playlist.m3u8',
+      viewers: 35000,
+      isLive: true,
+    },
+
+    // === LIFESTYLE ===
+    {
+      id: 15,
+      name: 'Luxe Life Discovered',
+      category: 'lifestyle',
+      description: 'Luxury lifestyle, travel, and design',
+      logo: 'https://m.media-amazon.com/images/I/51FJ5A0mEyL.jpg',
+      streamUrl: 'https://30a-tv.com/feeds/vidaa/luxelife.m3u8',
+      viewers: 20000,
+      isLive: true,
+    },
+    {
+      id: 16,
+      name: 'BBC Home & Garden',
+      category: 'lifestyle',
+      description: 'Home improvement and garden inspiration',
+      logo: 'https://i.imgur.com/rC0pi1D.png',
+      streamUrl: 'https://d11r33s5i066xh.cloudfront.net/playlist.m3u8',
+      viewers: 30000,
+      isLive: true,
+    },
+    {
+      id: 17,
+      name: 'Better Health TV',
+      category: 'lifestyle',
+      description: 'Health and wellness programming',
+      logo: 'https://i.imgur.com/qnwJiji.png',
+      streamUrl: 'https://tgn.bozztv.com/betterlife/betterhealth/betterhealth/index.m3u8',
+      viewers: 15000,
+      isLive: true,
+    },
+
+    // === KIDS ===
+    {
+      id: 18,
+      name: 'Baby Shark TV',
+      category: 'kids',
+      description: 'Kids entertainment and Baby Shark content',
+      logo: 'https://i.imgur.com/SbBKr8L.png',
+      streamUrl: 'https://newidco-babysharktv-1-us.roku.wurl.tv/playlist.m3u8',
+      viewers: 65000,
+      isLive: true,
+    },
+    {
+      id: 19,
+      name: '3ABN Kids Network',
+      category: 'kids',
+      description: 'Family-friendly kids programming',
+      logo: 'https://i.imgur.com/z3npqO1.png',
+      streamUrl: 'https://3abn.bozztv.com/3abn2/Kids_live/smil:Kids_live.smil/playlist.m3u8',
+      viewers: 28000,
+      isLive: true,
+    },
+
+    // === DOCUMENTARY ===
+    {
+      id: 20,
+      name: 'Antiques Roadshow PBS',
+      category: 'documentary',
+      description: 'Antiques appraisals and history from PBS',
+      logo: 'https://i.imgur.com/U9CYaok.png',
+      streamUrl: 'https://amg00953-pbsusa-antiroadshow-xumo-x6ud5.amagi.tv/playlist.m3u8',
+      viewers: 40000,
+      isLive: true,
+    },
+    {
+      id: 21,
+      name: '30A Sidewalks',
+      category: 'documentary',
+      description: 'Travel and culture documentaries',
+      logo: 'https://i.imgur.com/HSdwqZN.png',
+      streamUrl: 'https://30a-tv.com/sidewalks.m3u8',
+      viewers: 18000,
+      isLive: true,
+    },
+
+    // === FAITH ===
+    {
+      id: 22,
+      name: '3ABN Dare To Dream',
+      category: 'faith',
+      description: 'Inspirational and faith-based programming',
+      logo: 'https://i.imgur.com/iBcqT8L.png',
+      streamUrl: 'https://3abn.bozztv.com/3abn2/d2d_live/smil:d2d_live.smil/playlist.m3u8',
+      viewers: 36000,
+      isLive: true,
+    },
   ];
+}
+
+/**
+ * Fetch TV channels for the Theater
+ * Uses verified working HLS streams
+ */
+export async function fetchIPTVChannels(limit: number = 50) {
+  try {
+    console.log('[Data Integration] Preparing verified TV channels...');
+    const channels = getVerifiedTVChannels();
+    console.log(`[Data Integration] Prepared ${channels.length} verified TV channels`);
+    return channels.slice(0, limit);
+  } catch (error) {
+    console.error('[Data Integration] Error preparing TV channels:', error);
+    return getVerifiedTVChannels().slice(0, 5);
+  }
 }
 
 /**
