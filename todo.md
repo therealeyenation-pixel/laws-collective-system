@@ -12251,3 +12251,15 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Created reusable components: SleepTimerButton, RecentlyPlayedBar
 - [x] Integrated all features into TheaterLiveReal and BroadcastRadioReal
 - [x] Test all features and save checkpoint
+
+## Phase: My Library Page + Playlist Support
+- [x] Build My Library page — centralized view of all favorites and recently played across Theater and Radio
+- [x] Build Playlist support — create/manage named playlists of channels and radio stations
+- [x] Add playlist quick-switch in Theater and Radio pages (AddToPlaylistButton component)
+- [x] Register routes and sidebar navigation for My Library
+- [x] Created playlists backend router (CRUD + add/remove items)
+- [x] Created PlaylistDetail page (create, view, edit, add content)
+- [x] Created AddToPlaylistButton reusable component
+- [x] Created streaming_playlists and playlist_items DB tables
+- [x] Investigate video conference testing approach and provide guidance
+- [x] Test all features and save checkpoint

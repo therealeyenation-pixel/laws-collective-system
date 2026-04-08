@@ -314,6 +314,7 @@ import { workflowExecutionRouter } from "./routers/workflow-execution";
 import { websocketSyncRouter } from "./routers/websocket-sync";
 import { systemActivationRouter } from "./routers/system-activation";
 import { departmentDashboardRouter } from "./routers/department-dashboard";
+import { playlistsRouter } from "./routers/playlists";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -666,6 +667,7 @@ export const appRouter = router({
   websocketSync: websocketSyncRouter,
   systemActivation: systemActivationRouter,
   departmentDashboard: departmentDashboardRouter,
+  playlists: playlistsRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>

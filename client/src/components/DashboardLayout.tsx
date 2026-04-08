@@ -41,7 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone, Disc3, Sparkles
+  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -592,6 +592,13 @@ const menuCategories: MenuCategory[] = [
       { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
       { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
     ]
+  },
+
+  {
+    icon: Star,
+    label: "My Library",
+    path: "/my-library",
+    minRole: "user",
   },
 
   {

@@ -28,6 +28,7 @@ import { trpc } from '@/lib/trpc';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useMediaPlayer, type MediaChannel } from '@/contexts/MediaPlayerContext';
+import { AddToPlaylistButton } from '@/components/AddToPlaylistButton';
 import { useFavorites, useSleepTimer, useRecentlyPlayed } from '@/hooks/useMediaFeatures';
 import SleepTimerButton from '@/components/SleepTimerButton';
 import RecentlyPlayedBar from '@/components/RecentlyPlayedBar';
@@ -509,18 +510,21 @@ export default function TheaterLiveReal() {
                         {channel.viewers.toLocaleString()} viewers
                       </p>
                     </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(channel.id);
-                      }}
-                      className="flex-shrink-0 p-1 hover:bg-accent rounded transition-colors"
-                      title={isFav ? 'Remove from favorites' : 'Add to favorites'}
-                    >
-                      <Heart
-                        className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
-                      />
-                    </button>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <AddToPlaylistButton contentId={channel.id} contentType="channel" />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(channel.id);
+                        }}
+                        className="p-1 hover:bg-accent rounded transition-colors"
+                        title={isFav ? 'Remove from favorites' : 'Add to favorites'}
+                      >
+                        <Heart
+                          className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
+                        />
+                      </button>
+                    </div>
                   </div>
                 </Card>
               );
