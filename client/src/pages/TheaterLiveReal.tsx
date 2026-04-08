@@ -30,6 +30,7 @@ export default function TheaterLiveReal() {
   const [selectedChannel, setSelectedChannel] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
+  const [activeRegion, setActiveRegion] = useState<string>('all'); // 'all' | 'us' | 'international'
   const [isFollowing, setIsFollowing] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,17 +50,21 @@ export default function TheaterLiveReal() {
 
   const selectedChannelData = channels.find((c: any) => c.id === selectedChannel);
 
-  // Filter channels by search
+  // Filter channels by region and search
+  const regionFiltered = activeRegion === 'all'
+    ? channels
+    : channels.filter((c: any) => c.region === activeRegion);
+
   const filteredChannels = searchQuery
-    ? channels.filter(
+    ? regionFiltered.filter(
         (c: any) =>
           c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           c.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : channels;
+    : regionFiltered;
 
-  // Get unique categories from channels
-  const categories = Array.from(new Set(channels.map((c: any) => c.category))).sort();
+  // Get unique categories from region-filtered channels so tabs update with region
+  const categories = Array.from(new Set(regionFiltered.map((c: any) => c.category))).sort();
 
   // Volume control
   useEffect(() => {
@@ -88,6 +93,33 @@ export default function TheaterLiveReal() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
+  // Auto-skip: find the next channel in the filtered list
+  const getNextChannelId = (currentId: number): number | null => {
+    const currentIndex = filteredChannels.findIndex((c: any) => c.id === currentId);
+    if (currentIndex === -1 || currentIndex >= filteredChannels.length - 1) return null;
+    return filteredChannels[currentIndex + 1]?.id ?? null;
+  };
+
+  // Auto-skip on error with retry limit
+  const autoSkipRef = useRef(0);
+  const MAX_AUTO_SKIP = 3;
+
+  const handleStreamError = (channelId: number) => {
+    if (autoSkipRef.current < MAX_AUTO_SKIP) {
+      const nextId = getNextChannelId(channelId);
+      if (nextId) {
+        autoSkipRef.current += 1;
+        toast.info(`Stream unavailable, trying next channel... (${autoSkipRef.current}/${MAX_AUTO_SKIP})`);
+        setTimeout(() => handlePlayChannel(nextId), 500);
+        return;
+      }
+    }
+    // If we've exhausted auto-skip attempts or no next channel, show error
+    setHasError(true);
+    setIsLoading(false);
+    autoSkipRef.current = 0;
+  };
+
   const handlePlayChannel = async (channelId: number) => {
     const channel = channels.find((c: any) => c.id === channelId);
     if (!channel) return;
@@ -110,10 +142,10 @@ export default function TheaterLiveReal() {
           try {
             await videoRef.current.play();
             setIsPlaying(true);
+            autoSkipRef.current = 0; // Reset skip counter on success
           } catch (err) {
             console.error('Native HLS play error:', err);
-            setHasError(true);
-            setIsLoading(false);
+            handleStreamError(channelId);
           }
         } else {
           // Load hls.js dynamically
@@ -129,22 +161,20 @@ export default function TheaterLiveReal() {
               hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 videoRef.current?.play().catch((err) => {
                   console.error('HLS play error:', err);
-                  setHasError(true);
-                  setIsLoading(false);
+                  handleStreamError(channelId);
                 });
                 setIsPlaying(true);
+                autoSkipRef.current = 0; // Reset skip counter on success
               });
               hls.on(Hls.Events.ERROR, (_event, data) => {
                 if (data.fatal) {
                   console.error('HLS fatal error:', data);
-                  setHasError(true);
-                  setIsLoading(false);
                   hls.destroy();
+                  handleStreamError(channelId);
                 }
               });
             } else {
-              setHasError(true);
-              setIsLoading(false);
+              handleStreamError(channelId);
               toast.error('HLS playback is not supported in this browser.');
             }
           } catch (err) {
@@ -154,9 +184,9 @@ export default function TheaterLiveReal() {
             try {
               await videoRef.current.play();
               setIsPlaying(true);
+              autoSkipRef.current = 0;
             } catch (playErr) {
-              setHasError(true);
-              setIsLoading(false);
+              handleStreamError(channelId);
             }
           }
         }
@@ -166,10 +196,10 @@ export default function TheaterLiveReal() {
         try {
           await videoRef.current.play();
           setIsPlaying(true);
+          autoSkipRef.current = 0;
         } catch (err) {
           console.error('Direct play error:', err);
-          setHasError(true);
-          setIsLoading(false);
+          handleStreamError(channelId);
         }
       }
     }
@@ -266,14 +296,32 @@ export default function TheaterLiveReal() {
                   <p className="text-gray-400 text-sm mb-4">
                     This channel may be temporarily offline or geo-restricted.
                   </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePlayChannel(selectedChannel!)}
-                    className="text-white border-white hover:bg-white/20"
-                  >
-                    Retry
-                  </Button>
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        autoSkipRef.current = 0;
+                        handlePlayChannel(selectedChannel!);
+                      }}
+                      className="text-white border-white hover:bg-white/20"
+                    >
+                      Retry
+                    </Button>
+                    {getNextChannelId(selectedChannel!) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          autoSkipRef.current = 0;
+                          handlePlayChannel(getNextChannelId(selectedChannel!)!);
+                        }}
+                        className="text-white border-white hover:bg-white/20"
+                      >
+                        Next Channel
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -388,6 +436,24 @@ export default function TheaterLiveReal() {
             />
           </div>
 
+          {/* Region Tabs */}
+          <div className="flex gap-2 mb-3">
+            {[
+              { key: 'all', label: 'All Channels' },
+              { key: 'us', label: '🇺🇸 US' },
+              { key: 'international', label: '🌍 International' },
+            ].map((r) => (
+              <Button
+                key={r.key}
+                variant={activeRegion === r.key ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setActiveRegion(r.key)}
+              >
+                {r.label}
+              </Button>
+            ))}
+          </div>
+
           {/* Category Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-1">
             <Button
@@ -453,8 +519,15 @@ export default function TheaterLiveReal() {
                       LIVE
                     </div>
                   )}
-                  <div className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-0.5 rounded text-xs capitalize">
-                    {channel.category.replace(/_/g, ' ')}
+                  <div className="absolute bottom-2 left-2 flex gap-1">
+                    <span className="bg-black/60 text-white px-2 py-0.5 rounded text-xs capitalize">
+                      {channel.category.replace(/_/g, ' ')}
+                    </span>
+                    {channel.region === 'international' && (
+                      <span className="bg-blue-600/80 text-white px-2 py-0.5 rounded text-xs">
+                        🌍
+                      </span>
+                    )}
                   </div>
                   <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Play className="w-8 h-8 text-white" />
