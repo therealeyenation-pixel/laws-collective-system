@@ -12224,3 +12224,10 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Fix SPA navigation (setLocation instead of window.history.back)
 - [x] Test persistence across navigation — video keeps playing on dashboard
 - [ ] Save checkpoint
+
+## Phase: Mini-Player Bug Fixes
+- [x] Fix close/stop button on mini-player not working
+- [x] Fix expand/maximize button on mini-player not working
+- [x] Stop theater stream when radio station starts playing (mutual exclusion)
+- [x] Stop radio when theater stream starts playing (mutual exclusion)
+- [x] Test and save checkpoint

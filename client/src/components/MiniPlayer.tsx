@@ -41,7 +41,7 @@ export default function MiniPlayer() {
   if (!miniPlayerVisible || !currentChannel || theaterMode) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-lg">
+    <div className="fixed bottom-10 left-0 right-0 z-[9999] bg-card border-t border-border shadow-lg rounded-b-none">
       <div className="max-w-full mx-auto px-3 py-2">
         <div className="flex items-center gap-3">
           {/* Channel logo thumbnail */}

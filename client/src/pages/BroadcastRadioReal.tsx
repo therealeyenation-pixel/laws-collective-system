@@ -123,6 +123,19 @@ export default function BroadcastRadioReal() {
       )
     : stations;
 
+  // Register global stop function so theater can stop radio
+  useEffect(() => {
+    (window as any).__stopRadioPlayback = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+      setIsPlaying(false);
+      setSelectedStation(null);
+    };
+    return () => { (window as any).__stopRadioPlayback = null; };
+  }, []);
+
   const handlePlayStation = (stationId: number) => {
     const station = stations.find((s: any) => s.id === stationId);
     if (!station || !audioRef.current) return;
@@ -132,6 +145,11 @@ export default function BroadcastRadioReal() {
       audioRef.current.pause();
       setIsPlaying(false);
       return;
+    }
+
+    // Stop theater stream if it's playing (mutual exclusion)
+    if (typeof (window as any).__stopTheaterPlayback === 'function') {
+      (window as any).__stopTheaterPlayback();
     }
 
     // Play new station

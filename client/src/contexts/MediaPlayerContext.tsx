@@ -101,8 +101,8 @@ export function MediaPlayerProvider({ children }: { children: React.ReactNode })
       rafRef.current = requestAnimationFrame(updatePosition);
       return () => cancelAnimationFrame(rafRef.current);
     } else if (miniPlayerVisible) {
-      // Small thumbnail in bottom-left
-      wrapper.style.cssText = 'position:fixed;bottom:80px;left:16px;width:160px;height:90px;z-index:9998;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4);pointer-events:none;';
+      // Small thumbnail in bottom-left — z-index 9998 so it's just BELOW the mini-player bar (z-9999)
+      wrapper.style.cssText = 'position:fixed;bottom:112px;left:16px;width:140px;height:80px;z-index:9998;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4);pointer-events:none;';
     } else {
       // Hidden off-screen
       wrapper.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;z-index:-1;overflow:hidden;pointer-events:none;';
@@ -135,6 +135,11 @@ export function MediaPlayerProvider({ children }: { children: React.ReactNode })
   const playChannel = useCallback(async (channel: MediaChannel) => {
     const video = videoRef.current;
     if (!video) return;
+
+    // Stop radio if it's playing (mutual exclusion)
+    if (typeof (window as any).__stopRadioPlayback === 'function') {
+      (window as any).__stopRadioPlayback();
+    }
 
     setCurrentChannel(channel);
     setHasError(false);
@@ -272,9 +277,17 @@ export function MediaPlayerProvider({ children }: { children: React.ReactNode })
   }, [stopPlayback]);
 
   const expandToTheater = useCallback(() => {
+    // Use wouter-compatible navigation: pushState + popstate
+    setTheaterMode(true);
     window.history.pushState({}, '', '/theater-live');
     window.dispatchEvent(new PopStateEvent('popstate'));
   }, []);
+
+  // Register global stop function so radio can stop theater
+  useEffect(() => {
+    (window as any).__stopTheaterPlayback = stopPlayback;
+    return () => { (window as any).__stopTheaterPlayback = null; };
+  }, [stopPlayback]);
 
   const value: MediaPlayerContextType = {
     currentChannel,
@@ -341,3 +354,7 @@ export function useMediaPlayer() {
   if (!ctx) throw new Error('useMediaPlayer must be used within MediaPlayerProvider');
   return ctx;
 }
+
+// Expose a global stop function so non-context code (like radio) can stop theater
+(window as any).__stopTheaterPlayback = null;
+
