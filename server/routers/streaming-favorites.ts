@@ -1,8 +1,23 @@
 import { router, protectedProcedure } from "../_core/trpc";
 import { z } from "zod";
 import { db } from "../db";
-import { userFavorites, userPlaybackHistory, users } from "../../drizzle/schema";
-import { eq, and } from "drizzle-orm";
+import { userFavorites, userPlaybackHistory } from "../../drizzle/schema";
+import { eq, and, desc, sql } from "drizzle-orm";
+
+// Map frontend content types to DB enum values
+const CONTENT_TYPE_MAP: Record<string, "channel" | "station" | "track"> = {
+  tv: "channel",
+  radio: "station",
+  music: "track",
+  podcast: "track",
+  channel: "channel",
+  station: "station",
+  track: "track",
+};
+
+function mapContentType(input: string): "channel" | "station" | "track" {
+  return CONTENT_TYPE_MAP[input] || "channel";
+}
 
 export const streamingFavoritesRouter = router({
   // Add to favorites
@@ -10,20 +25,20 @@ export const streamingFavoritesRouter = router({
     .input(
       z.object({
         contentId: z.number(),
-        contentType: z.enum(["tv", "radio", "music", "podcast"]),
+        contentType: z.string(),
         metadata: z.record(z.any()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const result = await db.insert(userFavorites).values({
-          userId: ctx.user.id,
-          contentId: input.contentId,
-          contentType: input.contentType,
-          metadata: input.metadata ? JSON.stringify(input.metadata) : null,
-          addedAt: new Date(),
-        });
-        return { success: true, id: result.insertId };
+        const dbType = mapContentType(input.contentType);
+        // Use INSERT ... ON DUPLICATE KEY UPDATE to handle re-favoriting
+        await db.execute(sql`
+          INSERT INTO user_favorites (userId, contentId, contentType, isFavorite, addedAt)
+          VALUES (${ctx.user.id}, ${input.contentId}, ${dbType}, true, NOW())
+          ON DUPLICATE KEY UPDATE isFavorite = true, addedAt = NOW()
+        `);
+        return { success: true };
       } catch (error) {
         console.error("Error adding favorite:", error);
         throw new Error("Failed to add favorite");
@@ -65,37 +80,41 @@ export const streamingFavoritesRouter = router({
             )
           )
           .limit(1);
-        return favorite.length > 0;
+        return favorite.length > 0 && favorite[0].isFavorite;
       } catch (error) {
         console.error("Error checking favorite:", error);
         return false;
       }
     }),
 
-  // Get user favorites
+  // Get user favorites (returns contentId list for client-side matching)
   getFavorites: protectedProcedure
     .input(
       z.object({
-        contentType: z.enum(["tv", "radio", "music", "podcast"]).optional(),
+        contentType: z.string().optional(),
         limit: z.number().default(50),
         offset: z.number().default(0),
       })
     )
     .query(async ({ ctx, input }) => {
       try {
-        let query = db
-          .select()
-          .from(userFavorites)
-          .where(eq(userFavorites.userId, ctx.user.id));
+        const conditions = [
+          eq(userFavorites.userId, ctx.user.id),
+          eq(userFavorites.isFavorite, true),
+        ];
 
         if (input.contentType) {
-          query = query.where(eq(userFavorites.contentType, input.contentType));
+          const dbType = mapContentType(input.contentType);
+          conditions.push(eq(userFavorites.contentType, dbType));
         }
 
-        const favorites = await query
+        const favorites = await db
+          .select()
+          .from(userFavorites)
+          .where(and(...conditions))
           .limit(input.limit)
           .offset(input.offset)
-          .orderBy((t) => t.addedAt);
+          .orderBy(desc(userFavorites.addedAt));
 
         return favorites;
       } catch (error) {
@@ -104,32 +123,134 @@ export const streamingFavoritesRouter = router({
       }
     }),
 
-  // Record playback
+  // Get favorite content IDs for a type (lightweight query for sorting)
+  getFavoriteIds: protectedProcedure
+    .input(z.object({ contentType: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const dbType = mapContentType(input.contentType);
+        const favorites = await db
+          .select({ contentId: userFavorites.contentId })
+          .from(userFavorites)
+          .where(
+            and(
+              eq(userFavorites.userId, ctx.user.id),
+              eq(userFavorites.contentType, dbType),
+              eq(userFavorites.isFavorite, true)
+            )
+          );
+        return favorites.map((f) => f.contentId);
+      } catch (error) {
+        console.error("Error getting favorite IDs:", error);
+        return [];
+      }
+    }),
+
+  // Toggle favorite (add or remove in one call)
+  toggleFavorite: protectedProcedure
+    .input(
+      z.object({
+        contentId: z.number(),
+        contentType: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const dbType = mapContentType(input.contentType);
+        // Check current state
+        const existing = await db
+          .select()
+          .from(userFavorites)
+          .where(
+            and(
+              eq(userFavorites.userId, ctx.user.id),
+              eq(userFavorites.contentId, input.contentId)
+            )
+          )
+          .limit(1);
+
+        if (existing.length > 0) {
+          // Remove
+          await db
+            .delete(userFavorites)
+            .where(
+              and(
+                eq(userFavorites.userId, ctx.user.id),
+                eq(userFavorites.contentId, input.contentId)
+              )
+            );
+          return { isFavorited: false };
+        } else {
+          // Add
+          await db.insert(userFavorites).values({
+            userId: ctx.user.id,
+            contentId: input.contentId,
+            contentType: dbType,
+            isFavorite: true,
+            addedAt: new Date(),
+          });
+          return { isFavorited: true };
+        }
+      } catch (error) {
+        console.error("Error toggling favorite:", error);
+        throw new Error("Failed to toggle favorite");
+      }
+    }),
+
+  // Record playback (upsert - update if same user+content exists)
   recordPlayback: protectedProcedure
     .input(
       z.object({
         contentId: z.number(),
-        contentType: z.enum(["tv", "radio", "music", "podcast"]),
-        duration: z.number(),
-        position: z.number(),
+        contentType: z.string(),
         metadata: z.record(z.any()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const result = await db.insert(userPlaybackHistory).values({
-          userId: ctx.user.id,
-          contentId: input.contentId,
-          contentType: input.contentType,
-          duration: input.duration,
-          position: input.position,
-          metadata: input.metadata ? JSON.stringify(input.metadata) : null,
-          playedAt: new Date(),
-        });
-        return { success: true, id: result.insertId };
+        const dbType = mapContentType(input.contentType);
+        // Upsert: if already exists, update lastPlayedAt and increment count
+        await db.execute(sql`
+          INSERT INTO user_playback_history (userId, contentId, contentType, lastPlayedAt, totalPlayCount)
+          VALUES (${ctx.user.id}, ${input.contentId}, ${dbType}, NOW(), 1)
+          ON DUPLICATE KEY UPDATE lastPlayedAt = NOW(), totalPlayCount = totalPlayCount + 1
+        `);
+        return { success: true };
       } catch (error) {
         console.error("Error recording playback:", error);
-        throw new Error("Failed to record playback");
+        // Don't throw - playback recording is non-critical
+        return { success: false };
+      }
+    }),
+
+  // Get recently played (last N unique items)
+  getRecentlyPlayed: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().default(10),
+        contentType: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const conditions = [eq(userPlaybackHistory.userId, ctx.user.id)];
+
+        if (input.contentType) {
+          const dbType = mapContentType(input.contentType);
+          conditions.push(eq(userPlaybackHistory.contentType, dbType));
+        }
+
+        const history = await db
+          .select()
+          .from(userPlaybackHistory)
+          .where(and(...conditions))
+          .limit(input.limit)
+          .orderBy(desc(userPlaybackHistory.lastPlayedAt));
+
+        return history;
+      } catch (error) {
+        console.error("Error getting recently played:", error);
+        return [];
       }
     }),
 
@@ -137,84 +258,32 @@ export const streamingFavoritesRouter = router({
   getHistory: protectedProcedure
     .input(
       z.object({
-        contentType: z.enum(["tv", "radio", "music", "podcast"]).optional(),
+        contentType: z.string().optional(),
         limit: z.number().default(50),
         offset: z.number().default(0),
       })
     )
     .query(async ({ ctx, input }) => {
       try {
-        let query = db
-          .select()
-          .from(userPlaybackHistory)
-          .where(eq(userPlaybackHistory.userId, ctx.user.id));
+        const conditions = [eq(userPlaybackHistory.userId, ctx.user.id)];
 
         if (input.contentType) {
-          query = query.where(eq(userPlaybackHistory.contentType, input.contentType));
+          const dbType = mapContentType(input.contentType);
+          conditions.push(eq(userPlaybackHistory.contentType, dbType));
         }
 
-        const history = await query
+        const history = await db
+          .select()
+          .from(userPlaybackHistory)
+          .where(and(...conditions))
           .limit(input.limit)
           .offset(input.offset)
-          .orderBy((t) => t.playedAt);
+          .orderBy(desc(userPlaybackHistory.lastPlayedAt));
 
         return history;
       } catch (error) {
         console.error("Error getting history:", error);
         return [];
-      }
-    }),
-
-  // Get recently played
-  getRecentlyPlayed: protectedProcedure
-    .input(z.object({ limit: z.number().default(10) }))
-    .query(async ({ ctx, input }) => {
-      try {
-        const recently = await db
-          .select()
-          .from(userPlaybackHistory)
-          .where(eq(userPlaybackHistory.userId, ctx.user.id))
-          .limit(input.limit)
-          .orderBy((t) => t.playedAt);
-
-        return recently;
-      } catch (error) {
-        console.error("Error getting recently played:", error);
-        return [];
-      }
-    }),
-
-  // Get personalized recommendations based on history
-  getRecommendations: protectedProcedure
-    .input(
-      z.object({
-        limit: z.number().default(20),
-        contentType: z.enum(["tv", "radio", "music", "podcast"]).optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      try {
-        // Get user's favorite categories from history
-        const userHistory = await db
-          .select()
-          .from(userPlaybackHistory)
-          .where(eq(userPlaybackHistory.userId, ctx.user.id))
-          .limit(100);
-
-        // Extract content types from history
-        const preferredTypes = userHistory
-          .map((h) => h.contentType)
-          .filter((v, i, a) => a.indexOf(v) === i);
-
-        // Return recommendations based on preferences
-        // In a real implementation, this would query a recommendations engine
-        return {
-          recommendations: [],
-          basedOn: preferredTypes,
-        };
-      } catch (error) {
-        console.error("Error getting recommendations:", error);
-        return { recommendations: [], basedOn: [] };
       }
     }),
 });

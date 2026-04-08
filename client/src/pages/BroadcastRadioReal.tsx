@@ -1,17 +1,17 @@
 /**
  * Broadcast Radio - Live Radio Streaming Interface
- * Real radio stations with actual audio playback using AudioPlayer component
+ * Real radio stations with actual audio playback
  * Organized by American music genres
+ * Includes favorites, sleep timer, and recently played
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
   Play,
   Heart,
-  Share2,
   ArrowLeft,
   Search,
   Radio,
@@ -22,6 +22,9 @@ import {
 import { trpc } from '@/lib/trpc';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { useFavorites, useSleepTimer, useRecentlyPlayed } from '@/hooks/useMediaFeatures';
+import SleepTimerButton from '@/components/SleepTimerButton';
+import RecentlyPlayedBar from '@/components/RecentlyPlayedBar';
 
 export default function BroadcastRadioReal() {
   const { user } = useAuth();
@@ -30,7 +33,6 @@ export default function BroadcastRadioReal() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeGenre, setActiveGenre] = useState<string | undefined>(undefined);
-  const [isFavorited, setIsFavorited] = useState(false);
   const [volume, setVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -45,24 +47,24 @@ export default function BroadcastRadioReal() {
   // Fetch available genres
   const { data: genres = [] } = trpc.streamingContent.getGenres.useQuery();
 
-  // Favorite mutations
-  const addFavoriteMutation = trpc.streamingFavorites.addFavorite.useMutation();
-  const removeFavoriteMutation = trpc.streamingFavorites.removeFavorite.useMutation();
-  const isFavoritedQuery = trpc.streamingFavorites.isFavorited.useQuery(
-    { contentId: selectedStation || 0 },
-    { enabled: !!selectedStation && !!user }
-  );
+  // ─── New hooks: favorites, sleep timer, recently played ───
+  const { isFavorited, toggleFavorite, sortWithFavorites } = useFavorites('radio');
+  const { recentItems, recordPlay } = useRecentlyPlayed('radio');
 
-  // Update favorited state when query returns
-  useEffect(() => {
-    if (isFavoritedQuery.data !== undefined) {
-      setIsFavorited(isFavoritedQuery.data);
+  // Stop playback callback for sleep timer
+  const stopPlayback = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
     }
-  }, [isFavoritedQuery.data]);
+    setIsPlaying(false);
+    setSelectedStation(null);
+  };
+
+  const sleepTimer = useSleepTimer(stopPlayback);
 
   // Manage audio element
   useEffect(() => {
-    // Create audio element once
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.crossOrigin = 'anonymous';
@@ -115,7 +117,7 @@ export default function BroadcastRadioReal() {
   const selectedStationData = stations.find((s: any) => s.id === selectedStation);
 
   // Filter stations by search
-  const filteredStations = searchQuery
+  const searchFiltered = searchQuery
     ? stations.filter(
         (s: any) =>
           s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -123,16 +125,15 @@ export default function BroadcastRadioReal() {
       )
     : stations;
 
+  // Sort with favorites at top
+  const filteredStations = useMemo(
+    () => sortWithFavorites(searchFiltered as any[]),
+    [searchFiltered, sortWithFavorites]
+  );
+
   // Register global stop function so theater can stop radio
   useEffect(() => {
-    (window as any).__stopRadioPlayback = () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
-      }
-      setIsPlaying(false);
-      setSelectedStation(null);
-    };
+    (window as any).__stopRadioPlayback = stopPlayback;
     return () => { (window as any).__stopRadioPlayback = null; };
   }, []);
 
@@ -162,6 +163,9 @@ export default function BroadcastRadioReal() {
       setIsLoading(false);
       toast.error('Could not play this station. Try another one.');
     });
+
+    // Record in recently played
+    recordPlay(stationId);
   };
 
   const handleTogglePlayPause = () => {
@@ -174,25 +178,6 @@ export default function BroadcastRadioReal() {
       audioRef.current.play().catch((err) => {
         console.error('Error resuming audio:', err);
       });
-    }
-  };
-
-  const handleToggleFavorite = async () => {
-    if (!selectedStation || !user) return;
-
-    try {
-      if (isFavorited) {
-        await removeFavoriteMutation.mutateAsync({ contentId: selectedStation });
-      } else {
-        await addFavoriteMutation.mutateAsync({
-          contentId: selectedStation,
-          contentType: 'radio',
-          metadata: { stationName: selectedStationData?.name },
-        });
-      }
-      setIsFavorited(!isFavorited);
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
     }
   };
 
@@ -222,8 +207,8 @@ export default function BroadcastRadioReal() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Back Button */}
-      <div className="border-b border-border bg-card p-4">
+      {/* Back Button + Sleep Timer */}
+      <div className="border-b border-border bg-card p-4 flex items-center justify-between">
         <Button
           variant="ghost"
           size="sm"
@@ -233,7 +218,22 @@ export default function BroadcastRadioReal() {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
+        <SleepTimerButton
+          isActive={sleepTimer.isActive}
+          remainingFormatted={sleepTimer.formatRemaining()}
+          onStart={sleepTimer.startTimer}
+          onCancel={sleepTimer.cancelTimer}
+        />
       </div>
+
+      {/* Recently Played Bar */}
+      <RecentlyPlayedBar
+        recentItems={recentItems}
+        contentItems={stations as any[]}
+        onPlay={(item: any) => handlePlayStation(item.id)}
+        currentlyPlayingId={selectedStation}
+        label="Recently Listened"
+      />
 
       {/* Now Playing Bar */}
       {selectedStationData && (
@@ -280,6 +280,11 @@ export default function BroadcastRadioReal() {
                   )}
                   {isLoading && (
                     <span className="text-xs text-muted-foreground">Loading stream...</span>
+                  )}
+                  {sleepTimer.isActive && (
+                    <span className="text-xs text-amber-500 font-mono tabular-nums">
+                      ⏱ {sleepTimer.formatRemaining()}
+                    </span>
                   )}
                 </div>
               </div>
@@ -334,13 +339,23 @@ export default function BroadcastRadioReal() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={handleToggleFavorite}
+                  onClick={() => selectedStation && toggleFavorite(selectedStation)}
                   className="p-2"
                 >
                   <Heart
-                    className={`w-5 h-5 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`}
+                    className={`w-5 h-5 ${selectedStation && isFavorited(selectedStation) ? 'fill-red-500 text-red-500' : ''}`}
                   />
                 </Button>
+
+                {/* Sleep Timer in controls */}
+                <SleepTimerButton
+                  isActive={sleepTimer.isActive}
+                  remainingFormatted={sleepTimer.formatRemaining()}
+                  onStart={sleepTimer.startTimer}
+                  onCancel={sleepTimer.cancelTimer}
+                  variant="ghost"
+                  size="sm"
+                />
               </div>
             </div>
 
@@ -418,69 +433,92 @@ export default function BroadcastRadioReal() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {filteredStations.map((station: any) => (
-              <Card
-                key={station.id}
-                className={`overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
-                  selectedStation === station.id
-                    ? 'ring-2 ring-primary shadow-lg'
-                    : ''
-                }`}
-                onClick={() => handlePlayStation(station.id)}
-              >
-                <div className="relative aspect-square bg-gradient-to-br from-primary/20 to-primary/5 overflow-hidden flex items-center justify-center">
-                  <img
-                    src={station.logo}
-                    alt={station.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                  {/* Play overlay */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                    {selectedStation === station.id && isPlaying ? (
-                      <Pause className="w-10 h-10 text-white" />
-                    ) : (
-                      <Play className="w-10 h-10 text-white" />
+            {filteredStations.map((station: any) => {
+              const isFav = isFavorited(station.id);
+              return (
+                <Card
+                  key={station.id}
+                  className={`overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
+                    selectedStation === station.id
+                      ? 'ring-2 ring-primary shadow-lg'
+                      : ''
+                  }`}
+                  onClick={() => handlePlayStation(station.id)}
+                >
+                  <div className="relative aspect-square bg-gradient-to-br from-primary/20 to-primary/5 overflow-hidden flex items-center justify-center">
+                    <img
+                      src={station.logo}
+                      alt={station.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                    {/* Favorite badge */}
+                    {isFav && (
+                      <div className="absolute top-2 right-10">
+                        <Heart className="w-4 h-4 fill-red-500 text-red-500 drop-shadow" />
+                      </div>
+                    )}
+                    {/* Play overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                      {selectedStation === station.id && isPlaying ? (
+                        <Pause className="w-10 h-10 text-white" />
+                      ) : (
+                        <Play className="w-10 h-10 text-white" />
+                      )}
+                    </div>
+                    {/* Now playing indicator */}
+                    {selectedStation === station.id && isPlaying && (
+                      <div className="absolute bottom-2 left-2 right-2 flex justify-center gap-0.5">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <div
+                            key={i}
+                            className="w-1 bg-white rounded-full animate-bounce"
+                            style={{
+                              height: '12px',
+                              animationDelay: `${i * 0.1}s`,
+                              animationDuration: '0.6s',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    {/* Genre badge */}
+                    <div className="absolute top-2 left-2 bg-black/60 text-white px-2 py-0.5 rounded text-xs font-medium capitalize">
+                      {genreLabels[station.category] || station.category}
+                    </div>
+                    {station.isLive && (
+                      <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
+                        LIVE
+                      </div>
                     )}
                   </div>
-                  {/* Now playing indicator */}
-                  {selectedStation === station.id && isPlaying && (
-                    <div className="absolute bottom-2 left-2 right-2 flex justify-center gap-0.5">
-                      {[0, 1, 2, 3, 4].map((i) => (
-                        <div
-                          key={i}
-                          className="w-1 bg-white rounded-full animate-bounce"
-                          style={{
-                            height: '12px',
-                            animationDelay: `${i * 0.1}s`,
-                            animationDuration: '0.6s',
-                          }}
-                        />
-                      ))}
+                  <div className="p-3 flex items-start justify-between">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-sm text-foreground truncate">
+                        {station.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1 truncate">
+                        {station.description}
+                      </p>
                     </div>
-                  )}
-                  {/* Genre badge */}
-                  <div className="absolute top-2 left-2 bg-black/60 text-white px-2 py-0.5 rounded text-xs font-medium capitalize">
-                    {genreLabels[station.category] || station.category}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(station.id);
+                      }}
+                      className="flex-shrink-0 p-1 hover:bg-accent rounded transition-colors"
+                      title={isFav ? 'Remove from favorites' : 'Add to favorites'}
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
+                      />
+                    </button>
                   </div>
-                  {station.isLive && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
-                      LIVE
-                    </div>
-                  )}
-                </div>
-                <div className="p-3">
-                  <h3 className="font-semibold text-sm text-foreground truncate">
-                    {station.name}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">
-                    {station.description}
-                  </p>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>

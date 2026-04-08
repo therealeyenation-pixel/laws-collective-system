@@ -1,13 +1,10 @@
 /**
  * Theater Live - IPTV Live Streaming Interface
  * Uses global MediaPlayerContext so streams persist across page navigation.
- * Includes Picture-in-Picture and auto-skip on stream failure.
- *
- * The video element is NOT moved in the DOM. Instead, the MiniPlayer
- * uses CSS fixed positioning to overlay the video on #theater-video-target.
+ * Includes Picture-in-Picture, auto-skip, favorites, sleep timer, and recently played.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -31,6 +28,9 @@ import { trpc } from '@/lib/trpc';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { useMediaPlayer, type MediaChannel } from '@/contexts/MediaPlayerContext';
+import { useFavorites, useSleepTimer, useRecentlyPlayed } from '@/hooks/useMediaFeatures';
+import SleepTimerButton from '@/components/SleepTimerButton';
+import RecentlyPlayedBar from '@/components/RecentlyPlayedBar';
 
 export default function TheaterLiveReal() {
   const [, setLocation] = useLocation();
@@ -38,7 +38,6 @@ export default function TheaterLiveReal() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
   const [activeRegion, setActiveRegion] = useState<string>('all');
-  const [isFollowing, setIsFollowing] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -52,13 +51,18 @@ export default function TheaterLiveReal() {
     isMuted,
     isPiP,
     playChannel,
+    stopPlayback,
     togglePlayPause,
     setVolume,
     toggleMute,
     togglePiP,
-    getVideoElement,
     setTheaterMode,
   } = useMediaPlayer();
+
+  // Favorites, sleep timer, and recently played
+  const { isFavorited, toggleFavorite, sortWithFavorites } = useFavorites('tv');
+  const sleepTimer = useSleepTimer(stopPlayback);
+  const { recentItems, recordPlay } = useRecentlyPlayed('tv');
 
   // Fetch channels from streaming content API
   const { data: channels = [], isLoading: channelsLoading } =
@@ -83,13 +87,19 @@ export default function TheaterLiveReal() {
     ? channels
     : channels.filter((c: any) => c.region === activeRegion);
 
-  const filteredChannels = searchQuery
+  const searchFiltered = searchQuery
     ? regionFiltered.filter(
         (c: any) =>
           c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           c.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : regionFiltered;
+
+  // Sort with favorites at top
+  const filteredChannels = useMemo(
+    () => sortWithFavorites(searchFiltered as any[]),
+    [searchFiltered, sortWithFavorites]
+  );
 
   // Get unique categories from region-filtered channels
   const categories = Array.from(new Set(regionFiltered.map((c: any) => c.category))).sort();
@@ -110,7 +120,6 @@ export default function TheaterLiveReal() {
     return filteredChannels[currentIndex + 1]?.id ?? null;
   };
 
-  // Auto-skip on error with retry limit
   const autoSkipRef = useRef(0);
 
   const handlePlayChannel = async (channel: any) => {
@@ -127,6 +136,8 @@ export default function TheaterLiveReal() {
       viewers: channel.viewers,
     };
     playChannel(mediaChannel);
+    // Record in recently played
+    recordPlay(channel.id);
   };
 
   const handleFullscreen = () => {
@@ -136,11 +147,6 @@ export default function TheaterLiveReal() {
     } else {
       document.exitFullscreen().catch(console.error);
     }
-  };
-
-  const handleFollowChannel = () => {
-    setIsFollowing(!isFollowing);
-    toast.success(isFollowing ? 'Unfollowed channel' : 'Following channel');
   };
 
   const handleNextChannel = () => {
@@ -165,8 +171,8 @@ export default function TheaterLiveReal() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Back Button */}
-      <div className="border-b border-border bg-card p-4">
+      {/* Back Button + Sleep Timer */}
+      <div className="border-b border-border bg-card p-4 flex items-center justify-between">
         <Button
           variant="ghost"
           size="sm"
@@ -176,13 +182,27 @@ export default function TheaterLiveReal() {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
+        <SleepTimerButton
+          isActive={sleepTimer.isActive}
+          remainingFormatted={sleepTimer.formatRemaining()}
+          onStart={sleepTimer.startTimer}
+          onCancel={sleepTimer.cancelTimer}
+        />
       </div>
+
+      {/* Recently Played Bar */}
+      <RecentlyPlayedBar
+        recentItems={recentItems}
+        contentItems={channels as any[]}
+        onPlay={handlePlayChannel}
+        currentlyPlayingId={selectedChannel}
+        label="Recently Watched"
+      />
 
       {/* Video Player Area */}
       {selectedChannelData ? (
         <div className="w-full bg-black" ref={containerRef}>
           <div className="relative group" style={{ aspectRatio: '16/9', maxHeight: '60vh' }}>
-            {/* This is the CSS target — the MiniPlayer positions the video over this div */}
             <div id="theater-video-target" className="w-full h-full bg-black" />
 
             {/* Loading Overlay */}
@@ -284,23 +304,32 @@ export default function TheaterLiveReal() {
                     className="w-24 h-1 bg-white/30 rounded cursor-pointer accent-white"
                   />
                   {isPlaying && (
-                    <span className="inline-flex items-center gap-1 text-xs text-red-500 font-semibold ml-2">
+                    <span className="inline-flex items-center gap-1 text-xs text-red-500 font-semibold">
                       <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                       LIVE
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
+                  {/* Favorite */}
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={handleFollowChannel}
+                    onClick={() => selectedChannel && toggleFavorite(selectedChannel)}
                     className="text-white hover:bg-white/20"
                   >
                     <Heart
-                      className={`w-4 h-4 ${isFollowing ? 'fill-red-500 text-red-500' : ''}`}
+                      className={`w-4 h-4 ${selectedChannel && isFavorited(selectedChannel) ? 'fill-red-500 text-red-500' : ''}`}
                     />
                   </Button>
+                  {/* Sleep Timer */}
+                  <SleepTimerButton
+                    isActive={sleepTimer.isActive}
+                    remainingFormatted={sleepTimer.formatRemaining()}
+                    onStart={sleepTimer.startTimer}
+                    onCancel={sleepTimer.cancelTimer}
+                    className="text-white hover:bg-white/20"
+                  />
                   <Button
                     size="sm"
                     variant="ghost"
@@ -417,62 +446,85 @@ export default function TheaterLiveReal() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {filteredChannels.map((channel: any) => (
-              <Card
-                key={channel.id}
-                className={`overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
-                  selectedChannel === channel.id ? 'ring-2 ring-primary shadow-lg' : ''
-                }`}
-                onClick={() => handlePlayChannel(channel)}
-              >
-                <div className="relative aspect-video bg-muted overflow-hidden">
-                  <img
-                    src={channel.logo}
-                    alt={channel.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        `https://via.placeholder.com/200x112/333/FFF?text=${encodeURIComponent(channel.name.substring(0, 8))}`;
-                    }}
-                  />
-                  {channel.isLive && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
-                      LIVE
-                    </div>
-                  )}
-                  <div className="absolute bottom-2 left-2 flex gap-1">
-                    <span className="bg-black/60 text-white px-2 py-0.5 rounded text-xs capitalize">
-                      {channel.category.replace(/_/g, ' ')}
-                    </span>
-                    {channel.region === 'international' && (
-                      <span className="bg-blue-600/80 text-white px-2 py-0.5 rounded text-xs">
-                        🌍
+            {filteredChannels.map((channel: any) => {
+              const isFav = isFavorited(channel.id);
+              return (
+                <Card
+                  key={channel.id}
+                  className={`overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
+                    selectedChannel === channel.id ? 'ring-2 ring-primary shadow-lg' : ''
+                  }`}
+                  onClick={() => handlePlayChannel(channel)}
+                >
+                  <div className="relative aspect-video bg-muted overflow-hidden">
+                    <img
+                      src={channel.logo}
+                      alt={channel.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          `https://via.placeholder.com/200x112/333/FFF?text=${encodeURIComponent(channel.name.substring(0, 8))}`;
+                      }}
+                    />
+                    {channel.isLive && (
+                      <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
+                        LIVE
+                      </div>
+                    )}
+                    {/* Favorite badge */}
+                    {isFav && (
+                      <div className="absolute top-2 left-2">
+                        <Heart className="w-4 h-4 fill-red-500 text-red-500 drop-shadow" />
+                      </div>
+                    )}
+                    <div className="absolute bottom-2 left-2 flex gap-1">
+                      <span className="bg-black/60 text-white px-2 py-0.5 rounded text-xs capitalize">
+                        {channel.category.replace(/_/g, ' ')}
                       </span>
+                      {channel.region === 'international' && (
+                        <span className="bg-blue-600/80 text-white px-2 py-0.5 rounded text-xs">
+                          🌍
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Play className="w-8 h-8 text-white" />
+                    </div>
+                    {selectedChannel === channel.id && isPlaying && (
+                      <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                        Playing
+                      </div>
                     )}
                   </div>
-                  <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Play className="w-8 h-8 text-white" />
-                  </div>
-                  {selectedChannel === channel.id && isPlaying && (
-                    <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                      Playing
+                  <div className="p-3 flex items-start justify-between">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-sm text-foreground truncate">
+                        {channel.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1 truncate">
+                        {channel.description}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {channel.viewers.toLocaleString()} viewers
+                      </p>
                     </div>
-                  )}
-                </div>
-                <div className="p-3">
-                  <h3 className="font-semibold text-sm text-foreground truncate">
-                    {channel.name}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">
-                    {channel.description}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {channel.viewers.toLocaleString()} viewers
-                  </p>
-                </div>
-              </Card>
-            ))}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(channel.id);
+                      }}
+                      className="flex-shrink-0 p-1 hover:bg-accent rounded transition-colors"
+                      title={isFav ? 'Remove from favorites' : 'Add to favorites'}
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
+                      />
+                    </button>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>

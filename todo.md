@@ -12239,4 +12239,15 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Completing all workshops + certification triggers contractor eligibility
 - [x] Add Coordinator role and open positions integration
 - [x] Link HR open positions to department registry for Coordinator hiring with training paths
-- [ ] Test all three features and save checkpoint
+- [x] Test all three features and save checkpoint
+
+## Phase: Theater/Radio Completion — Favorites, Sleep Timer, Recently Played
+- [x] Favorites system — heart/bookmark channels and radio stations, favorites appear at top of lists
+- [x] Sleep timer — auto-shutoff (15/30/60 min) for both radio and theater streams
+- [x] Recently played history — track last 10 channels/stations for quick resume
+- [x] Created DB tables: user_favorites, user_playback_history
+- [x] Fixed streaming-favorites router content type mapping (tv→channel, radio→station)
+- [x] Created shared hooks: useFavorites, useSleepTimer, useRecentlyPlayed
+- [x] Created reusable components: SleepTimerButton, RecentlyPlayedBar
+- [x] Integrated all features into TheaterLiveReal and BroadcastRadioReal
+- [x] Test all features and save checkpoint
