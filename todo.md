@@ -12269,3 +12269,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Fix radio/audio stopping on navigation — created RadioPlayerContext at App level with persistent audio element
 - [x] Removed unmount cleanup in BroadcastRadioReal that was killing the audio stream on navigation
 - [x] Test both fixes on mobile and desktop
+
+## Feature: Persistent Radio Mini-Bar
+- [x] Build RadioMiniBar component — compact bottom bar showing station info, play/pause, volume
+- [x] Integrate RadioMiniBar into DashboardLayout so it appears on every page when radio is playing
+- [x] Add "Now Playing" indicator in sidebar Broadcast Radio nav item (shows LIVE/PAUSED with pulsing dot)
+- [x] Added bottom padding to main content when radio is playing so content isn't hidden
+- [x] Test on mobile and desktop
+- [x] Save checkpoint

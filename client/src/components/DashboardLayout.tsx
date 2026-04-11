@@ -51,6 +51,8 @@ import { WhatsNewButton } from "./WhatsNew";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { OnboardingTour, useOnboarding } from "./OnboardingTour";
 import { OfflineStatusBar, OfflineIndicator } from "./OfflineStatusBar";
+import RadioMiniBar from "./RadioMiniBar";
+import { useRadioPlayer } from "@/contexts/RadioPlayerContext";
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -724,6 +726,9 @@ function DashboardLayoutContent({
   
   // Enable keyboard shortcuts for navigation
   useKeyboardShortcuts();
+
+  // Track radio state for sidebar indicator and mini-bar
+  const { currentStation: radioStation, isPlaying: radioIsPlaying } = useRadioPlayer();
   
   // Onboarding tour for new users
   const { showTour, completeTour, skipTour } = useOnboarding();
@@ -884,7 +889,14 @@ function DashboardLayoutContent({
                         >
                           <category.icon className={`h-4 w-4 ${hasActiveItem ? "text-primary" : ""}`} />
                           <span>{category.label}</span>
-                          <ChevronRight className={`ml-auto h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`} />
+                          {category.label === "Broadcast Radio" && radioStation ? (
+                            <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-green-500">
+                              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                              {radioIsPlaying ? "LIVE" : "PAUSED"}
+                            </span>
+                          ) : (
+                            <ChevronRight className={`ml-auto h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`} />
+                          )}
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
@@ -1069,8 +1081,11 @@ function DashboardLayoutContent({
           </div>
         </div>
         <OfflineStatusBar />
-        <main className="flex-1 p-4">{children}</main>
+        {/* Add bottom padding when radio mini-bar is visible so content isn't hidden behind it */}
+        <main className={`flex-1 p-4 ${radioStation ? 'pb-20' : ''}`}>{children}</main>
       </SidebarInset>
+      {/* Persistent radio mini-bar — renders on every page when a station is loaded */}
+      <RadioMiniBar />
     </>
   );
 }
