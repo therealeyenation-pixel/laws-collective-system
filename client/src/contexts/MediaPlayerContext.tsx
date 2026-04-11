@@ -101,8 +101,8 @@ export function MediaPlayerProvider({ children }: { children: React.ReactNode })
       rafRef.current = requestAnimationFrame(updatePosition);
       return () => cancelAnimationFrame(rafRef.current);
     } else if (miniPlayerVisible) {
-      // Small thumbnail in bottom-left — z-index 9998 so it's just BELOW the mini-player bar (z-9999)
-      wrapper.style.cssText = 'position:fixed;bottom:112px;left:16px;width:140px;height:80px;z-index:9998;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4);pointer-events:none;';
+      // Small thumbnail in bottom-right — z-index 9998 so it's just BELOW the mini-player bar (z-9999)
+      wrapper.style.cssText = 'position:fixed;bottom:112px;right:16px;width:140px;height:80px;z-index:9998;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4);pointer-events:none;';
     } else {
       // Hidden off-screen
       wrapper.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;z-index:-1;overflow:hidden;pointer-events:none;';

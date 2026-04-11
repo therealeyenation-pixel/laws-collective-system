@@ -3,9 +3,10 @@
  * Real radio stations with actual audio playback
  * Organized by American music genres
  * Includes favorites, sleep timer, and recently played
+ * Audio persists across navigation via RadioPlayerContext
  */
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -26,17 +27,26 @@ import { useFavorites, useSleepTimer, useRecentlyPlayed } from '@/hooks/useMedia
 import SleepTimerButton from '@/components/SleepTimerButton';
 import RecentlyPlayedBar from '@/components/RecentlyPlayedBar';
 import { AddToPlaylistButton } from '@/components/AddToPlaylistButton';
+import { useRadioPlayer } from '@/contexts/RadioPlayerContext';
 
 export default function BroadcastRadioReal() {
   const { user } = useAuth();
-  const [selectedStation, setSelectedStation] = useState<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeGenre, setActiveGenre] = useState<string | undefined>(undefined);
-  const [volume, setVolume] = useState(80);
-  const [isMuted, setIsMuted] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Global persistent radio player — survives navigation
+  const {
+    currentStation,
+    isPlaying,
+    isLoading,
+    volume,
+    isMuted,
+    playStation,
+    stopPlayback: stopRadio,
+    togglePlayPause,
+    setVolume,
+    toggleMute,
+  } = useRadioPlayer();
 
   // Fetch radio stations from streaming content API
   const { data: stations = [], isLoading: stationsLoading } =
@@ -53,68 +63,9 @@ export default function BroadcastRadioReal() {
   const { recentItems, recordPlay } = useRecentlyPlayed('radio');
 
   // Stop playback callback for sleep timer
-  const stopPlayback = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-    }
-    setIsPlaying(false);
-    setSelectedStation(null);
-  };
+  const sleepTimer = useSleepTimer(stopRadio);
 
-  const sleepTimer = useSleepTimer(stopPlayback);
-
-  // Manage audio element
-  useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.crossOrigin = 'anonymous';
-    }
-
-    const audio = audioRef.current;
-
-    const onCanPlay = () => setIsLoading(false);
-    const onLoadStart = () => setIsLoading(true);
-    const onError = () => {
-      setIsLoading(false);
-      setIsPlaying(false);
-      toast.error('Failed to load stream. The station may be temporarily unavailable.');
-    };
-    const onPlaying = () => {
-      setIsLoading(false);
-      setIsPlaying(true);
-    };
-
-    audio.addEventListener('canplay', onCanPlay);
-    audio.addEventListener('loadstart', onLoadStart);
-    audio.addEventListener('error', onError);
-    audio.addEventListener('playing', onPlaying);
-
-    return () => {
-      audio.removeEventListener('canplay', onCanPlay);
-      audio.removeEventListener('loadstart', onLoadStart);
-      audio.removeEventListener('error', onError);
-      audio.removeEventListener('playing', onPlaying);
-    };
-  }, []);
-
-  // Update volume
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume / 100;
-    }
-  }, [volume, isMuted]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
-      }
-    };
-  }, []);
-
+  const selectedStation = currentStation?.id ?? null;
   const selectedStationData = stations.find((s: any) => s.id === selectedStation);
 
   // Filter stations by search
@@ -132,54 +83,27 @@ export default function BroadcastRadioReal() {
     [searchFiltered, sortWithFavorites]
   );
 
-  // Register global stop function so theater can stop radio
-  useEffect(() => {
-    (window as any).__stopRadioPlayback = stopPlayback;
-    return () => { (window as any).__stopRadioPlayback = null; };
-  }, []);
-
   const handlePlayStation = (stationId: number) => {
     const station = stations.find((s: any) => s.id === stationId);
-    if (!station || !audioRef.current) return;
+    if (!station) return;
 
     // If clicking the same station that's playing, toggle play/pause
     if (selectedStation === stationId && isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
+      togglePlayPause();
       return;
     }
 
-    // Stop theater stream if it's playing (mutual exclusion)
-    if (typeof (window as any).__stopTheaterPlayback === 'function') {
-      (window as any).__stopTheaterPlayback();
-    }
-
-    // Play new station
-    setSelectedStation(stationId);
-    setIsLoading(true);
-    audioRef.current.src = (station as any).streamUrl;
-    audioRef.current.load();
-    audioRef.current.play().catch((err) => {
-      console.error('Error playing audio:', err);
-      setIsLoading(false);
-      toast.error('Could not play this station. Try another one.');
+    playStation({
+      id: (station as any).id,
+      name: (station as any).name,
+      description: (station as any).description,
+      category: (station as any).category,
+      streamUrl: (station as any).streamUrl,
+      logo: (station as any).logo,
     });
 
     // Record in recently played
     recordPlay(stationId);
-  };
-
-  const handleTogglePlayPause = () => {
-    if (!audioRef.current || !selectedStation) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play().catch((err) => {
-        console.error('Error resuming audio:', err);
-      });
-    }
   };
 
   const genreLabels: Record<string, string> = {
@@ -297,7 +221,7 @@ export default function BroadcastRadioReal() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => setIsMuted(!isMuted)}
+                    onClick={toggleMute}
                     className="p-2"
                   >
                     {isMuted || volume === 0 ? (
@@ -311,10 +235,7 @@ export default function BroadcastRadioReal() {
                     min="0"
                     max="100"
                     value={isMuted ? 0 : volume}
-                    onChange={(e) => {
-                      setVolume(Number(e.target.value));
-                      if (isMuted) setIsMuted(false);
-                    }}
+                    onChange={(e) => setVolume(Number(e.target.value))}
                     className="w-20 h-1.5 bg-muted rounded-full cursor-pointer accent-primary"
                   />
                 </div>
@@ -323,7 +244,7 @@ export default function BroadcastRadioReal() {
                 <Button
                   size="lg"
                   variant="default"
-                  onClick={handleTogglePlayPause}
+                  onClick={togglePlayPause}
                   disabled={isLoading}
                   className="rounded-full w-14 h-14 flex items-center justify-center"
                 >
@@ -479,45 +400,37 @@ export default function BroadcastRadioReal() {
                             style={{
                               height: '12px',
                               animationDelay: `${i * 0.1}s`,
-                              animationDuration: '0.6s',
                             }}
                           />
                         ))}
                       </div>
                     )}
-                    {/* Genre badge */}
-                    <div className="absolute top-2 left-2 bg-black/60 text-white px-2 py-0.5 rounded text-xs font-medium capitalize">
-                      {genreLabels[station.category] || station.category}
-                    </div>
-                    {station.isLive && (
-                      <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
-                        LIVE
-                      </div>
-                    )}
                   </div>
-                  <div className="p-3 flex items-start justify-between">
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-sm text-foreground truncate">
-                        {station.name}
-                      </h3>
-                      <p className="text-xs text-muted-foreground mt-1 truncate">
-                        {station.description}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
-                      <AddToPlaylistButton contentId={station.id} contentType="station" />
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(station.id);
-                        }}
-                        className="p-1 hover:bg-accent rounded transition-colors"
-                        title={isFav ? 'Remove from favorites' : 'Add to favorites'}
-                      >
-                        <Heart
-                          className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
-                        />
-                      </button>
+                  <div className="p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-semibold text-sm text-foreground truncate">
+                          {station.name}
+                        </h3>
+                        <p className="text-xs text-muted-foreground mt-1 truncate">
+                          {station.description}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <AddToPlaylistButton contentId={station.id} contentType="station" />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFavorite(station.id);
+                          }}
+                          className="p-1 hover:bg-accent rounded transition-colors"
+                          title={isFav ? 'Remove from favorites' : 'Add to favorites'}
+                        >
+                          <Heart
+                            className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
+                          />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </Card>

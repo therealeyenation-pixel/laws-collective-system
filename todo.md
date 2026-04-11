@@ -12263,3 +12263,9 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Created streaming_playlists and playlist_items DB tables
 - [x] Investigate video conference testing approach and provide guidance
 - [x] Test all features and save checkpoint
+
+## Bug Fixes: Theater PiP + Radio Persistence
+- [x] Fix PiP thumbnail in sidebar — moved from bottom-left to bottom-right (no longer blocks sidebar menu)
+- [x] Fix radio/audio stopping on navigation — created RadioPlayerContext at App level with persistent audio element
+- [x] Removed unmount cleanup in BroadcastRadioReal that was killing the audio stream on navigation
+- [x] Test both fixes on mobile and desktop
