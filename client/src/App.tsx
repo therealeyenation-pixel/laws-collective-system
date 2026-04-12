@@ -353,6 +353,7 @@ import BroadcastChannels from "@/pages/BroadcastChannels";
 import BroadcastRadioReal from "@/pages/BroadcastRadioReal";
 import MyLibrary from "@/pages/MyLibrary";
 import PlaylistDetail from "@/pages/PlaylistDetail";
+import NowPlaying from "@/pages/NowPlaying";
 
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
@@ -909,6 +910,7 @@ function Router() {
       <Route path="/live-broadcasts" component={LiveBroadcasts} />
       <Route path="/emergency" component={Emergency} />
       <Route path="/my-library">{() => <ProtectedRoute component={MyLibrary} />}</Route>
+      <Route path="/now-playing">{() => <ProtectedRoute component={NowPlaying} />}</Route>
       <Route path="/playlists/new">{() => <ProtectedRoute component={PlaylistDetail} />}</Route>
       <Route path="/playlists/:id">{() => <ProtectedRoute component={PlaylistDetail} />}</Route>
       <Route path="/conference" component={Conference} />

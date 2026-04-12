@@ -593,6 +593,7 @@ const menuCategories: MenuCategory[] = [
       { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
       { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
       { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
+      { icon: ListMusic, label: "Now Playing", path: "/now-playing", minRole: "user" },
     ]
   },
 

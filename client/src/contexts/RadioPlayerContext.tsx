@@ -50,6 +50,10 @@ interface RadioPlayerActions {
   playNext: () => void;
   playPrevious: () => void;
   setRepeatMode: (mode: RepeatMode) => void;
+  removeFromQueue: (index: number) => void;
+  reorderQueue: (fromIndex: number, toIndex: number) => void;
+  jumpToTrack: (index: number) => void;
+  clearQueue: () => void;
 }
 
 type RadioPlayerContextType = RadioPlayerState & RadioPlayerActions;
@@ -228,6 +232,48 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
     setRepeatModeState(mode);
   }, []);
 
+  const removeFromQueue = useCallback((index: number) => {
+    setCurrentQueueState(prev => {
+      const newQueue = prev.filter((_, i) => i !== index);
+      // Adjust current index if needed
+      if (index < currentQueueIndex) {
+        setCurrentQueueIndex(prev => Math.max(0, prev - 1));
+      } else if (index === currentQueueIndex && index >= newQueue.length) {
+        setCurrentQueueIndex(Math.max(0, newQueue.length - 1));
+      }
+      return newQueue;
+    });
+  }, [currentQueueIndex]);
+
+  const reorderQueue = useCallback((fromIndex: number, toIndex: number) => {
+    setCurrentQueueState(prev => {
+      const newQueue = [...prev];
+      const [item] = newQueue.splice(fromIndex, 1);
+      newQueue.splice(toIndex, 0, item);
+      // Update current index if the current item moved
+      if (fromIndex === currentQueueIndex) {
+        setCurrentQueueIndex(toIndex);
+      } else if (fromIndex < currentQueueIndex && toIndex >= currentQueueIndex) {
+        setCurrentQueueIndex(prev => prev - 1);
+      } else if (fromIndex > currentQueueIndex && toIndex <= currentQueueIndex) {
+        setCurrentQueueIndex(prev => prev + 1);
+      }
+      return newQueue;
+    });
+  }, [currentQueueIndex]);
+
+  const jumpToTrack = useCallback((index: number) => {
+    if (index >= 0 && index < currentQueue.length) {
+      setCurrentQueueIndex(index);
+    }
+  }, [currentQueue.length]);
+
+  const clearQueue = useCallback(() => {
+    setCurrentQueueState([]);
+    setCurrentQueueIndex(0);
+    stopPlayback();
+  }, [stopPlayback]);
+
   // Register global stop so theater can stop radio
   useEffect(() => {
     (window as any).__stopRadioPlayback = stopPlayback;
@@ -253,6 +299,10 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
     playNext,
     playPrevious,
     setRepeatMode,
+    removeFromQueue,
+    reorderQueue,
+    jumpToTrack,
+    clearQueue,
   };
 
   return (

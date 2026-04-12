@@ -12295,3 +12295,13 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Auto-advance to next item or loop based on repeat mode
 - [x] Test queue preview and repeat modes
 - [x] Save checkpoint
+
+
+## Feature: Dedicated Now-Playing Queue Page
+- [x] Add queue manipulation methods to RadioPlayerContext (removeFromQueue, reorderQueue, jumpToTrack)
+- [x] Build NowPlaying page with full queue list, drag-to-reorder, and quick controls
+- [x] Added remove item, jump to track, and clear queue buttons
+- [x] Registered NowPlaying route at /now-playing in App.tsx
+- [x] Added Now Playing link to Broadcast Radio sidebar menu
+- [x] Test drag-to-reorder and queue manipulation
+- [x] Save checkpoint
