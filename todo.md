@@ -12285,3 +12285,13 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Shuffle button randomizes item order before playback
 - [x] Test shuffle and sequential playback modes
 - [x] Save checkpoint
+
+
+## Feature: Queue Preview + Repeat Modes
+- [x] Add queue tracking to RadioPlayerContext (currentQueue, queueIndex, repeatMode)
+- [x] Build queue preview drawer in RadioMiniBar (shows next 5 items with station info)
+- [x] Add repeat mode toggle button (cycles off → repeat-one → repeat-all)
+- [x] Integrated repeat logic into audio onEnded event handler
+- [x] Auto-advance to next item or loop based on repeat mode
+- [x] Test queue preview and repeat modes
+- [x] Save checkpoint

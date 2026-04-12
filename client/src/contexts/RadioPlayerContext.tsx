@@ -1,5 +1,5 @@
 /**
- * RadioPlayerContext - Global persistent radio audio player
+ * RadioPlayerContext - Global persistent radio audio player with queue support
  *
  * The <audio> element is rendered inside this Provider's JSX (at App level).
  * Since RadioPlayerProvider wraps the entire app and never unmounts,
@@ -18,6 +18,16 @@ export interface RadioStation {
   logo?: string;
 }
 
+export interface QueueItem {
+  id: number;
+  name: string;
+  streamUrl: string;
+  type: 'channel' | 'station';
+  logo?: string;
+}
+
+export type RepeatMode = 'off' | 'one' | 'all';
+
 interface RadioPlayerState {
   currentStation: RadioStation | null;
   isPlaying: boolean;
@@ -25,6 +35,9 @@ interface RadioPlayerState {
   hasError: boolean;
   volume: number;
   isMuted: boolean;
+  currentQueue: QueueItem[];
+  currentQueueIndex: number;
+  repeatMode: RepeatMode;
 }
 
 interface RadioPlayerActions {
@@ -33,6 +46,10 @@ interface RadioPlayerActions {
   togglePlayPause: () => void;
   setVolume: (vol: number) => void;
   toggleMute: () => void;
+  setQueue: (items: QueueItem[], startIndex?: number) => void;
+  playNext: () => void;
+  playPrevious: () => void;
+  setRepeatMode: (mode: RepeatMode) => void;
 }
 
 type RadioPlayerContextType = RadioPlayerState & RadioPlayerActions;
@@ -48,6 +65,9 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
   const [hasError, setHasError] = useState(false);
   const [volume, setVolumeState] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
+  const [currentQueue, setCurrentQueueState] = useState<QueueItem[]>([]);
+  const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
+  const [repeatMode, setRepeatModeState] = useState<RepeatMode>('off');
 
   // Create the audio element once at mount — never destroy it
   useEffect(() => {
@@ -65,7 +85,25 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
       setIsPlaying(false);
       setHasError(true);
     };
-    const onEnded = () => setIsPlaying(false);
+    const onEnded = () => {
+      // Handle repeat modes and queue advancement
+      setCurrentQueueIndex(prev => {
+        const nextIndex = prev + 1;
+        if (nextIndex < currentQueue.length) {
+          // More items in queue — play next
+          return nextIndex;
+        } else if (repeatMode === 'all' && currentQueue.length > 0) {
+          // Repeat all — restart from beginning
+          return 0;
+        } else if (repeatMode === 'one') {
+          // Repeat one — restart current
+          return prev;
+        }
+        // No repeat — stop
+        setIsPlaying(false);
+        return prev;
+      });
+    };
 
     audio.addEventListener('canplay', onCanPlay);
     audio.addEventListener('loadstart', onLoadStart);
@@ -83,7 +121,7 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
       audio.removeEventListener('error', onError);
       audio.removeEventListener('ended', onEnded);
     };
-  }, []);
+  }, [currentQueue, repeatMode]);
 
   // Sync volume/mute changes to audio element
   useEffect(() => {
@@ -91,6 +129,22 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
       audioRef.current.volume = isMuted ? 0 : volume / 100;
     }
   }, [volume, isMuted]);
+
+  // Auto-play next item when queue index changes
+  useEffect(() => {
+    if (currentQueue.length > 0 && currentQueueIndex < currentQueue.length) {
+      const item = currentQueue[currentQueueIndex];
+      const station: RadioStation = {
+        id: item.id,
+        name: item.name,
+        description: '',
+        category: item.type,
+        streamUrl: item.streamUrl,
+        logo: item.logo,
+      };
+      playStation(station);
+    }
+  }, [currentQueueIndex, currentQueue]);
 
   const playStation = useCallback((station: RadioStation) => {
     const audio = audioRef.current;
@@ -124,6 +178,8 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
     setIsPlaying(false);
     setIsLoading(false);
     setHasError(false);
+    setCurrentQueueState([]);
+    setCurrentQueueIndex(0);
   }, []);
 
   const togglePlayPause = useCallback(() => {
@@ -152,6 +208,26 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
     });
   }, [volume]);
 
+  const setQueue = useCallback((items: QueueItem[], startIndex = 0) => {
+    setCurrentQueueState(items);
+    setCurrentQueueIndex(startIndex);
+  }, []);
+
+  const playNext = useCallback(() => {
+    setCurrentQueueIndex(prev => {
+      const nextIndex = prev + 1;
+      return nextIndex < currentQueue.length ? nextIndex : prev;
+    });
+  }, [currentQueue.length]);
+
+  const playPrevious = useCallback(() => {
+    setCurrentQueueIndex(prev => (prev > 0 ? prev - 1 : prev));
+  }, []);
+
+  const setRepeatMode = useCallback((mode: RepeatMode) => {
+    setRepeatModeState(mode);
+  }, []);
+
   // Register global stop so theater can stop radio
   useEffect(() => {
     (window as any).__stopRadioPlayback = stopPlayback;
@@ -165,11 +241,18 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
     hasError,
     volume,
     isMuted,
+    currentQueue,
+    currentQueueIndex,
+    repeatMode,
     playStation,
     stopPlayback,
     togglePlayPause,
     setVolume,
     toggleMute,
+    setQueue,
+    playNext,
+    playPrevious,
+    setRepeatMode,
   };
 
   return (
