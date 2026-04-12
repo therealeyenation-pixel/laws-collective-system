@@ -262,4 +262,41 @@ export const playlistsRouter = router({
 
       return { success: true };
     }),
+
+  // Get playlist items for autoplay (optionally shuffled)
+  playAll: protectedProcedure
+    .input(
+      z.object({
+        playlistId: z.number(),
+        shuffle: z.boolean().default(false),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const [playlist] = await db
+        .select()
+        .from(streamingPlaylists)
+        .where(
+          and(
+            eq(streamingPlaylists.id, input.playlistId),
+            eq(streamingPlaylists.userId, ctx.user.id)
+          )
+        )
+        .limit(1);
+
+      if (!playlist) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Playlist not found" });
+      }
+
+      let items = await db
+        .select()
+        .from(playlistItems)
+        .where(eq(playlistItems.playlistId, input.playlistId))
+        .orderBy(asc(playlistItems.position));
+
+      if (input.shuffle && items.length > 0) {
+        items = items.sort(() => Math.random() - 0.5);
+      }
+
+      return items;
+    }),
 });

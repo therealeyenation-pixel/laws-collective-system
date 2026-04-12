@@ -12277,3 +12277,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Added bottom padding to main content when radio is playing so content isn't hidden
 - [x] Test on mobile and desktop
 - [x] Save checkpoint
+
+## Feature: Playlist Shuffle/Autoplay
+- [x] Add playAll procedure to playlists router (returns items in order or shuffled)
+- [x] Build Play All and Shuffle buttons in PlaylistDetail header
+- [x] handlePlayAll function starts playback with first item from playlist
+- [x] Shuffle button randomizes item order before playback
+- [x] Test shuffle and sequential playback modes
+- [x] Save checkpoint

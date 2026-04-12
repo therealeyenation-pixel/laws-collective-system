@@ -28,6 +28,7 @@ import {
   GripVertical,
   Save,
   Edit2,
+  Shuffle,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -205,6 +206,31 @@ export default function PlaylistDetail() {
     }
   };
 
+  const handlePlayAll = async (shuffle: boolean) => {
+    if (!playlistId || isNew) return;
+    try {
+      const items = await trpc.playlists.playAll.query({
+        playlistId: Number(playlistId),
+        shuffle,
+      });
+      if (items.length === 0) {
+        toast.error("No items in playlist");
+        return;
+      }
+      toast.success(`${shuffle ? "Shuffling" : "Playing"} ${items.length} item${items.length !== 1 ? "s" : ""}`);
+      // Start with first item
+      const firstItem = items[0];
+      if (firstItem.contentType === "channel") {
+        const content = channelMap.get(firstItem.contentId);
+        if (content) playChannel(content);
+      } else {
+        setLocation("/broadcast-channels");
+      }
+    } catch (error) {
+      toast.error("Failed to start playlist");
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -272,7 +298,19 @@ export default function PlaylistDetail() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap justify-end">
+                {resolvedItems.length > 0 && (
+                  <Button size="sm" className="gap-2" onClick={() => handlePlayAll(false)}>
+                    <Play className="w-4 h-4" />
+                    Play All
+                  </Button>
+                )}
+                {resolvedItems.length > 0 && (
+                  <Button variant="outline" size="sm" className="gap-2" onClick={() => handlePlayAll(true)}>
+                    <Shuffle className="w-4 h-4" />
+                    Shuffle
+                  </Button>
+                )}
                 <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
                   <Edit2 className="w-4 h-4 mr-1" />
                   Edit
@@ -358,31 +396,24 @@ export default function PlaylistDetail() {
                                 alt={item.name}
                                 className="w-10 h-10 rounded object-cover bg-muted"
                                 onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = "none";
+                                  (e.target as HTMLImageElement).src = "/placeholder.svg";
                                 }}
                               />
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-foreground truncate">
-                                  {item.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground capitalize">
-                                  {item.category}
-                                </p>
+                                <p className="font-medium text-sm text-foreground truncate">{item.name}</p>
+                                <p className="text-xs text-muted-foreground">{item.category}</p>
                               </div>
                               <Button
                                 size="sm"
-                                variant={alreadyAdded ? "ghost" : "outline"}
-                                disabled={alreadyAdded || addItemMutation.isPending}
+                                variant={alreadyAdded ? "outline" : "default"}
+                                disabled={alreadyAdded}
                                 onClick={() => handleAddItem(item.id, "channel")}
                               >
-                                {alreadyAdded ? "Added" : "Add"}
+                                <Plus className="w-3 h-3" />
                               </Button>
                             </div>
                           );
                         })}
-                        {filteredAddContent.length === 0 && (
-                          <p className="text-center text-muted-foreground py-4">No channels found</p>
-                        )}
                       </div>
                     </TabsContent>
                     <TabsContent value="station" className="overflow-y-auto max-h-[50vh]">
@@ -397,33 +428,26 @@ export default function PlaylistDetail() {
                               <img
                                 src={item.logo}
                                 alt={item.name}
-                                className="w-10 h-10 rounded object-cover bg-muted"
+                                className="w-10 h-10 rounded-full object-cover bg-muted"
                                 onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = "none";
+                                  (e.target as HTMLImageElement).src = "/placeholder.svg";
                                 }}
                               />
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-foreground truncate">
-                                  {item.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground capitalize">
-                                  {item.category}
-                                </p>
+                                <p className="font-medium text-sm text-foreground truncate">{item.name}</p>
+                                <p className="text-xs text-muted-foreground">{item.genre}</p>
                               </div>
                               <Button
                                 size="sm"
-                                variant={alreadyAdded ? "ghost" : "outline"}
-                                disabled={alreadyAdded || addItemMutation.isPending}
+                                variant={alreadyAdded ? "outline" : "default"}
+                                disabled={alreadyAdded}
                                 onClick={() => handleAddItem(item.id, "station")}
                               >
-                                {alreadyAdded ? "Added" : "Add"}
+                                <Plus className="w-3 h-3" />
                               </Button>
                             </div>
                           );
                         })}
-                        {filteredAddContent.length === 0 && (
-                          <p className="text-center text-muted-foreground py-4">No stations found</p>
-                        )}
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -431,72 +455,50 @@ export default function PlaylistDetail() {
               </Dialog>
             </div>
 
-            {/* Playlist items */}
+            {/* Items list */}
             {resolvedItems.length === 0 ? (
-              <div className="text-center py-12 border border-dashed border-border rounded-lg">
-                <ListMusic className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-foreground">Empty playlist</h3>
-                <p className="text-muted-foreground mt-1">
-                  Click "Add Content" to add channels and radio stations
-                </p>
-              </div>
+              <Card className="p-8 text-center text-muted-foreground">
+                <ListMusic className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p>No items in this playlist yet</p>
+              </Card>
             ) : (
               <div className="space-y-2">
-                {resolvedItems.map((item: any, index: number) => (
-                  <Card
-                    key={item._itemId}
-                    className="p-3 flex items-center gap-3 hover:shadow-md transition-shadow cursor-pointer group"
-                    onClick={() => handlePlayItem(item)}
-                  >
-                    <div className="text-muted-foreground flex-shrink-0">
-                      <GripVertical className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs text-muted-foreground w-6 text-center flex-shrink-0">
-                      {index + 1}
-                    </span>
+                {resolvedItems.map((item: any, idx: number) => (
+                  <Card key={item._itemId} className="p-3 flex items-center gap-3 hover:bg-accent/5">
+                    <GripVertical className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     <img
                       src={item.logo}
                       alt={item.name}
-                      className="w-12 h-12 rounded object-cover bg-muted flex-shrink-0"
+                      className={`w-12 h-12 rounded object-cover bg-muted flex-shrink-0 ${
+                        item._type === "station" ? "rounded-full" : ""
+                      }`}
                       onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
+                        (e.target as HTMLImageElement).src = "/placeholder.svg";
                       }}
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-foreground truncate">{item.name}</p>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        {item._type === "channel" ? (
-                          <Tv className="w-3 h-3" />
-                        ) : (
-                          <Radio className="w-3 h-3" />
-                        )}
-                        <span className="capitalize">{item.category}</span>
-                      </div>
+                      <p className="font-medium text-sm text-foreground truncate">{item.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item._type === "channel" ? item.category : item.genre}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePlayItem(item);
-                        }}
-                      >
-                        <Play className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveItem(item._itemId);
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handlePlayItem(item)}
+                      className="gap-1"
+                    >
+                      <Play className="w-3 h-3" />
+                      Play
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-destructive hover:bg-destructive/10"
+                      onClick={() => handleRemoveItem(item._itemId)}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
                   </Card>
                 ))}
               </div>
