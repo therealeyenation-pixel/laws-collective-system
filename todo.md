@@ -12316,3 +12316,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add PlaybackHistory link to Broadcast Radio sidebar menu under "Playback History"
 - [x] Test keyboard shortcuts and history tracking
 - [x] Save checkpoint
+
+## Phase 80: Critical Fixes — Database Migration & Onboarding Flow
+- [x] Run pnpm db:push to sync all pending schema migrations (fixed migration hash mismatch)
+- [x] Diagnose and fix landing_page_analytics ECONNRESET error (transient — resolved after server restart)
+- [x] Test public landing page buttons and routing (all CTAs working)
+- [x] Test external onboarding flow end-to-end (/join → 4-realm assessment → all working)
+- [x] No critical issues found during onboarding flow testing
+- [x] Save checkpoint
