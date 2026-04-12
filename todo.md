@@ -12305,3 +12305,14 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Added Now Playing link to Broadcast Radio sidebar menu
 - [x] Test drag-to-reorder and queue manipulation
 - [x] Save checkpoint
+
+
+## Feature: Keyboard Shortcuts + Playback History
+- [x] Create useKeyboardShortcuts hook for queue control (Shift+N, Shift+P, Shift+R)
+- [x] Integrate keyboard shortcuts into App.tsx
+- [x] Add playback history tracking to RadioPlayerContext (last 50 items with timestamps)
+- [x] Build PlaybackHistory page with history list, timestamps, and re-play functionality
+- [x] Register PlaybackHistory route at /playback-history in App.tsx
+- [x] Add PlaybackHistory link to Broadcast Radio sidebar menu under "Playback History"
+- [x] Test keyboard shortcuts and history tracking
+- [x] Save checkpoint

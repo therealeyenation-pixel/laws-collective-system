@@ -28,6 +28,16 @@ export interface QueueItem {
 
 export type RepeatMode = 'off' | 'one' | 'all';
 
+export interface PlaybackHistoryItem {
+  id: string;
+  name: string;
+  streamUrl: string;
+  type: 'channel' | 'station';
+  logo?: string;
+  playedAt: number; // timestamp
+  duration: number; // seconds played
+}
+
 interface RadioPlayerState {
   currentStation: RadioStation | null;
   isPlaying: boolean;
@@ -38,6 +48,7 @@ interface RadioPlayerState {
   currentQueue: QueueItem[];
   currentQueueIndex: number;
   repeatMode: RepeatMode;
+  playbackHistory: PlaybackHistoryItem[];
 }
 
 interface RadioPlayerActions {
@@ -54,6 +65,8 @@ interface RadioPlayerActions {
   reorderQueue: (fromIndex: number, toIndex: number) => void;
   jumpToTrack: (index: number) => void;
   clearQueue: () => void;
+  addToHistory: (item: PlaybackHistoryItem) => void;
+  clearHistory: () => void;
 }
 
 type RadioPlayerContextType = RadioPlayerState & RadioPlayerActions;
@@ -72,6 +85,8 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
   const [currentQueue, setCurrentQueueState] = useState<QueueItem[]>([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
   const [repeatMode, setRepeatModeState] = useState<RepeatMode>('off');
+  const [playbackHistory, setPlaybackHistory] = useState<PlaybackHistoryItem[]>([]);
+  const playbackStartTimeRef = useRef<number>(0);
 
   // Create the audio element once at mount — never destroy it
   useEffect(() => {
@@ -274,6 +289,44 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
     stopPlayback();
   }, [stopPlayback]);
 
+  const addToHistory = useCallback((item: PlaybackHistoryItem) => {
+    setPlaybackHistory(prev => {
+      const updated = [item, ...prev];
+      // Keep only last 50 items
+      return updated.slice(0, 50);
+    });
+  }, []);
+
+  const clearHistory = useCallback(() => {
+    setPlaybackHistory([]);
+  }, []);
+
+  // Track playback start time when a station starts playing
+  useEffect(() => {
+    if (isPlaying && currentStation) {
+      playbackStartTimeRef.current = Date.now();
+    }
+  }, [isPlaying, currentStation]);
+
+  // Add to history when stopping playback
+  const stopPlaybackWithHistory = useCallback(() => {
+    if (currentStation && playbackStartTimeRef.current > 0) {
+      const duration = Math.floor((Date.now() - playbackStartTimeRef.current) / 1000);
+      if (duration > 5) { // Only track if played for more than 5 seconds
+        addToHistory({
+          id: `${currentStation.id}-${Date.now()}`,
+          name: currentStation.name,
+          streamUrl: currentStation.streamUrl,
+          type: currentStation.category as 'channel' | 'station',
+          logo: currentStation.logo,
+          playedAt: Date.now(),
+          duration,
+        });
+      }
+    }
+    stopPlayback();
+  }, [currentStation, stopPlayback, addToHistory]);
+
   // Register global stop so theater can stop radio
   useEffect(() => {
     (window as any).__stopRadioPlayback = stopPlayback;
@@ -303,6 +356,9 @@ export function RadioPlayerProvider({ children }: { children: React.ReactNode })
     reorderQueue,
     jumpToTrack,
     clearQueue,
+    playbackHistory,
+    addToHistory,
+    clearHistory,
   };
 
   return (

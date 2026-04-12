@@ -354,6 +354,7 @@ import BroadcastRadioReal from "@/pages/BroadcastRadioReal";
 import MyLibrary from "@/pages/MyLibrary";
 import PlaylistDetail from "@/pages/PlaylistDetail";
 import NowPlaying from "@/pages/NowPlaying";
+import PlaybackHistory from "@/pages/PlaybackHistory";
 
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
@@ -384,6 +385,7 @@ import {
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "./const";
 import { Shield } from "lucide-react";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import ActivationProgress from "@/pages/ActivationProgress";
 import ContentBuilder from "@/pages/ContentBuilder";
 import AdminActivations from "@/pages/AdminActivations";
@@ -471,6 +473,9 @@ function ProtectedRoute({ component: Component, minRole = "user" }: { component:
 }
 
 function Router() {
+  // Enable keyboard shortcuts for queue control
+  useKeyboardShortcuts();
+  
   // Public routes: Landing page, Academy, and Dashboard (for viewing courses)
   // Protected routes: Trust System, Document Vault, Agents, Social Media
   return (
@@ -911,6 +916,7 @@ function Router() {
       <Route path="/emergency" component={Emergency} />
       <Route path="/my-library">{() => <ProtectedRoute component={MyLibrary} />}</Route>
       <Route path="/now-playing">{() => <ProtectedRoute component={NowPlaying} />}</Route>
+      <Route path="/playback-history">{() => <ProtectedRoute component={PlaybackHistory} />}</Route>
       <Route path="/playlists/new">{() => <ProtectedRoute component={PlaylistDetail} />}</Route>
       <Route path="/playlists/:id">{() => <ProtectedRoute component={PlaylistDetail} />}</Route>
       <Route path="/conference" component={Conference} />
