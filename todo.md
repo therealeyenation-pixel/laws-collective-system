@@ -12324,3 +12324,19 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Test external onboarding flow end-to-end (/join → 4-realm assessment → all working)
 - [x] No critical issues found during onboarding flow testing
 - [x] Save checkpoint
+
+## Phase 82: Theater Feature Parity with Radio
+
+### Radio has, Theater missing:
+- [ ] Queue system for Theater (MediaPlayerContext has no queue/playlist support — Radio has full queue with add, remove, reorder, next/prev)
+- [ ] Shuffle mode for Theater video queue (Radio has shuffle toggle in RadioPlayerContext)
+- [ ] Repeat modes for Theater (off / repeat-one / repeat-all — Radio has all three in RadioPlayerContext)
+- [ ] Playback History page for Theater (Radio has PlaybackHistory.tsx tracking last 50 items with timestamps and re-play)
+- [ ] Playback history tracking in MediaPlayerContext (Radio tracks duration, timestamps, and stores in PlaybackHistoryItem[])
+- [ ] Keyboard shortcuts for Theater (Radio has useKeyboardShortcuts.ts: Shift+N next, Shift+P previous, Shift+R cycle repeat)
+- [ ] Now Playing page for Theater (Radio has /now-playing route in sidebar — Theater has no equivalent)
+- [ ] Channels page for Theater (Radio has BroadcastChannels.tsx at /broadcast-channels — Theater only has Live and VOD)
+- [ ] Episodes page for Theater (Radio has BroadcastEpisodes.tsx at /broadcast-episodes — Theater has no episode management)
+- [ ] Sidebar parity: Theater has 3 links (Live Theater, Enhanced EPG, VOD Library) vs Radio has 5 links (Channels, Episodes, Live Broadcasts, Now Playing, Playback History)
+- [ ] Persistent mini-player for Theater (Radio has persistent audio player in RadioPlayerProvider — Theater MediaPlayerContext lacks equivalent persistent video mini-player)
+- [ ] Playlist detail page for Theater (Radio has PlaylistDetail.tsx — Theater has no playlist/collection detail view)
