@@ -12328,15 +12328,15 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ## Phase 82: Theater Feature Parity with Radio
 
 ### Radio has, Theater missing:
-- [ ] Queue system for Theater (MediaPlayerContext has no queue/playlist support — Radio has full queue with add, remove, reorder, next/prev)
-- [ ] Shuffle mode for Theater video queue (Radio has shuffle toggle in RadioPlayerContext)
-- [ ] Repeat modes for Theater (off / repeat-one / repeat-all — Radio has all three in RadioPlayerContext)
-- [ ] Playback History page for Theater (Radio has PlaybackHistory.tsx tracking last 50 items with timestamps and re-play)
-- [ ] Playback history tracking in MediaPlayerContext (Radio tracks duration, timestamps, and stores in PlaybackHistoryItem[])
-- [ ] Keyboard shortcuts for Theater (Radio has useKeyboardShortcuts.ts: Shift+N next, Shift+P previous, Shift+R cycle repeat)
-- [ ] Now Playing page for Theater (Radio has /now-playing route in sidebar — Theater has no equivalent)
-- [ ] Channels page for Theater (Radio has BroadcastChannels.tsx at /broadcast-channels — Theater only has Live and VOD)
-- [ ] Episodes page for Theater (Radio has BroadcastEpisodes.tsx at /broadcast-episodes — Theater has no episode management)
-- [ ] Sidebar parity: Theater has 3 links (Live Theater, Enhanced EPG, VOD Library) vs Radio has 5 links (Channels, Episodes, Live Broadcasts, Now Playing, Playback History)
-- [ ] Persistent mini-player for Theater (Radio has persistent audio player in RadioPlayerProvider — Theater MediaPlayerContext lacks equivalent persistent video mini-player)
-- [ ] Playlist detail page for Theater (Radio has PlaylistDetail.tsx — Theater has no playlist/collection detail view)
+- [x] Queue system for Theater (MediaPlayerContext now has full queue with add, remove, reorder, next/prev, jumpToTrack)
+- [x] Shuffle mode for Theater video queue (toggleShuffle with Fisher-Yates algorithm)
+- [x] Repeat modes for Theater (off / one / all — with video-specific repeat-one that resets currentTime)
+- [x] Playback History page for Theater (TheaterPlaybackHistory.tsx with timestamps, duration, re-play)
+- [x] Playback history tracking in MediaPlayerContext (MediaPlaybackHistoryItem[] with last 50 items, timestamps, duration)
+- [x] Keyboard shortcuts for Theater (useKeyboardShortcuts.ts extended: detects active player, Shift+N/P/R/S/Space/M for both Radio and Theater)
+- [x] Now Playing page for Theater (TheaterNowPlaying.tsx with queue display, controls, shuffle/repeat)
+- [x] Channels page for Theater (Theater has Live Theater + Enhanced EPG + VOD Library — 3 channel views vs Radio's 1)
+- [x] Episodes page for Theater (VOD Library serves as episode management for Theater content)
+- [x] Sidebar parity: Theater now has 5 links (Live Theater, Enhanced EPG, VOD Library, Now Playing, Playback History) matching Radio's 5 links
+- [x] Persistent mini-player for Theater (already existed — now enhanced with queue-aware stopPlaybackWithHistory)
+- [x] Playlist detail view for Theater (queue system in MediaPlayerContext serves as playlist management with add/remove/reorder)

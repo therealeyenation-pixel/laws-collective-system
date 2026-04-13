@@ -355,6 +355,9 @@ import MyLibrary from "@/pages/MyLibrary";
 import PlaylistDetail from "@/pages/PlaylistDetail";
 import NowPlaying from "@/pages/NowPlaying";
 import PlaybackHistory from "@/pages/PlaybackHistory";
+import TheaterNowPlaying from "@/pages/TheaterNowPlaying";
+import TheaterPlaybackHistory from "@/pages/TheaterPlaybackHistory";
+import EmailCampaignDashboard from "@/pages/EmailCampaignDashboard";
 
 import BroadcastEpisodes from "@/pages/BroadcastEpisodes";
 import LiveBroadcasts from "@/pages/LiveBroadcasts";
@@ -909,6 +912,8 @@ function Router() {
       <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLiveReal} />}</Route>
       <Route path="/theater-live-enhanced" component={TheaterEnhanced} />
       <Route path="/theater-vod" component={TheaterVOD} />
+      <Route path="/theater-now-playing">{() => <ProtectedRoute component={TheaterNowPlaying} />}</Route>
+      <Route path="/theater-playback-history">{() => <ProtectedRoute component={TheaterPlaybackHistory} />}</Route>
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
       <Route path="/broadcast-channels" component={BroadcastRadioReal} />
       <Route path="/broadcast-episodes" component={BroadcastEpisodes} />
@@ -920,6 +925,7 @@ function Router() {
       <Route path="/playlists/new">{() => <ProtectedRoute component={PlaylistDetail} />}</Route>
       <Route path="/playlists/:id">{() => <ProtectedRoute component={PlaylistDetail} />}</Route>
       <Route path="/conference" component={Conference} />
+      <Route path="/email-campaigns">{() => <ProtectedRoute component={EmailCampaignDashboard} />}</Route>
 
       <Route path="/music" component={Music} />
       <Route path="/realtime-dashboards">{() => <ProtectedRoute component={RealtimeDashboards} />}</Route>

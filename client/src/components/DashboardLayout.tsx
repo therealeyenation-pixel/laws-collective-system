@@ -41,7 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic
+  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -265,6 +265,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Play, label: "Marketing Simulator", path: "/marketing-simulator", minRole: "staff" },
           { icon: Users, label: "Team", path: "/marketing-team", minRole: "staff" },
           { icon: FolderOpen, label: "Documents", path: "/marketing-documents", minRole: "staff" },
+          { icon: Mail, label: "Email Campaigns", path: "/email-campaigns", minRole: "staff" },
         ]
       },
       // Media Department (Amandes Pearsall IV)
@@ -581,6 +582,8 @@ const menuCategories: MenuCategory[] = [
       { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
       { icon: Video, label: "Enhanced EPG", path: "/theater-live-enhanced", minRole: "user" },
       { icon: Disc3, label: "VOD Library", path: "/theater-vod", minRole: "user" },
+      { icon: ListMusic, label: "Now Playing", path: "/theater-now-playing", minRole: "user" },
+      { icon: History, label: "Playback History", path: "/theater-playback-history", minRole: "user" },
     ]
   },
 
