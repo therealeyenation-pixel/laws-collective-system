@@ -24,6 +24,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const DocumentAdmin = lazy(() => import("./pages/DocumentAdmin"));
 const SystemDashboard = lazy(() => import("./pages/SystemDashboard"));
 const AcademyDashboard = lazy(() => import("./pages/AcademyDashboard"));
+const AcademyLanding = lazy(() => import("./pages/AcademyLanding"));
 const GuardianDashboard = lazy(() => import("./pages/GuardianDashboard"));
 const DocumentVault = lazy(() => import("./pages/DocumentVault"));
 const Agents = lazy(() => import("./pages/Agents"));
@@ -593,7 +594,8 @@ function Router() {
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} minRole="user" />}</Route>
       <Route path="/house-contracts">{() => <ProtectedRoute component={HouseContractManagement} minRole="user" />}</Route>
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
-      <Route path="/academy">{() => <ProtectedRoute component={AcademyDashboard} minRole="user" />}</Route>
+      <Route path="/academy">{() => <AcademyLanding />}</Route>
+      <Route path="/academy/dashboard">{() => <ProtectedRoute component={AcademyDashboard} minRole="user" />}</Route>
       <Route path="/guardian-dashboard">{() => <ProtectedRoute component={GuardianDashboard} minRole="user" />}</Route>
       <Route path="/activation-progress">{() => <ProtectedRoute component={ActivationProgress} minRole="user" />}</Route>
       <Route path="/content-builder">{() => <ProtectedRoute component={ContentBuilder} minRole="user" />}</Route>

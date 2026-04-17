@@ -65,6 +65,9 @@ export default function Landing() {
               <a href="#founder" className="text-muted-foreground hover:text-foreground transition-colors">
                 Founder
               </a>
+              <Link href="/academy" className="text-muted-foreground hover:text-foreground transition-colors">
+                Academy
+              </Link>
               <Link href="/careers" className="text-muted-foreground hover:text-foreground transition-colors">
                 Careers
               </Link>
@@ -84,7 +87,7 @@ export default function Landing() {
                       Sign In
                     </Button>
                   </Link>
-                  <Link href="/login">
+                  <Link href="/pricing">
                     <Button size="sm">Join the Collective</Button>
                   </Link>
                 </>
@@ -117,7 +120,7 @@ export default function Landing() {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/login">
+                <Link href="/pricing">
                   <Button size="lg" className="gap-2 w-full sm:w-auto">
                     Join the Collective
                     <ArrowRight className="w-4 h-4" />
@@ -489,7 +492,7 @@ export default function Landing() {
             <div className="space-y-3">
               <h4 className="font-semibold text-sm">Get Involved</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <Link href="/login" className="block hover:text-foreground transition-colors">
+                <Link href="/pricing" className="block hover:text-foreground transition-colors">
                   Join the Collective
                 </Link>
                 <Link href="/purple-heart" className="block hover:text-foreground transition-colors">
@@ -730,7 +733,7 @@ function DemoSimulatorSection({
               Ready to build this for real?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/login">
+              <Link href="/pricing">
                 <Button size="lg" className="gap-2 w-full sm:w-auto">
                   Join the Collective
                   <ArrowRight className="w-4 h-4" />

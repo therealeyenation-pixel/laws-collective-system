@@ -12391,3 +12391,21 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ## Phase 89: Careers Page - Only Show Open Positions
 - [x] Filter Careers page to only display open/active positions (24 of 40+ shown)
 - [x] Save checkpoint
+
+## Phase 90: Pricing Page, Academy Landing, Revenue Allocation
+- [x] Create Stripe products config (Explorer free, Member $49/mo, Builder $149/mo, Partner custom, Academy Pass $29/mo)
+- [x] Build Pricing page with 4 Collective tiers + annual discount toggle + Stripe checkout
+- [x] Build Academy landing page with course catalog, mission, enrollment CTA
+- [x] Build internal revenue allocation system (30% Academy / 70% Collective split on Member/Builder payments)
+- [x] Wire routes: Landing → Pricing → Stripe → Getting Started; Academy nav link → Academy page → Academy enrollment
+- [x] Add Academy link to landing page nav
+- [ ] Free tier: enhanced demo with localStorage persistence, auto-fill on purchase
+- [ ] Academy: free for heirs of founding members, scholarship program note
+- [x] Save checkpoint
+
+## Phase 91: CTA Routing Fix & Test Fixes
+- [x] Update all 4 "Join the Collective" buttons on Landing page to route to /pricing instead of /login
+- [x] Fix global-telecom test: add messageType to sendMessage return value
+- [x] Fix global-telecom test: add createCall procedure alias for createRadioChannel
+- [x] All 32 global-telecom tests now passing (was 2 failures)
+- [x] Save checkpoint

@@ -1,115 +1,178 @@
 import { useState } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
+import { getLoginUrl } from "@/const";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import {
   Check,
   Sparkles,
   Building2,
-  Rocket,
+  Users,
+  Crown,
+  ArrowRight,
+  GraduationCap,
+  Loader2,
   FileText,
   Gavel,
   DollarSign,
-  Users,
   Briefcase,
-  ArrowRight,
-  Star,
   BookOpen,
-  GraduationCap,
   Video,
 } from "lucide-react";
-import { Link, useLocation } from "wouter";
-
-interface PricingTier {
-  name: string;
-  price: string;
-  period: string;
-  description: string;
-  features: string[];
-  highlighted?: boolean;
-  icon: React.ReactNode;
-  cta: string;
-}
-
-interface ServicePackage {
-  name: string;
-  price: string;
-  description: string;
-  deliverables: string[];
-  turnaround: string;
-  icon: React.ReactNode;
-  entity: string;
-  entityType: "product" | "service" | "training";
-}
+import { Link } from "wouter";
 
 export default function Pricing() {
-  const [, setLocation] = useLocation();
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
+  const { isAuthenticated } = useAuth();
+  const [annual, setAnnual] = useState(false);
+  const [loadingTier, setLoadingTier] = useState<string | null>(null);
 
-  const platformTiers: PricingTier[] = [
+  const membershipCheckout = trpc.stripeCheckout.createMembershipCheckout.useMutation({
+    onSuccess: (data) => {
+      if (data.url) {
+        toast.info("Redirecting to checkout...");
+        window.open(data.url, "_blank");
+      }
+      setLoadingTier(null);
+    },
+    onError: (err) => {
+      toast.error(err.message);
+      setLoadingTier(null);
+    },
+  });
+
+  const academyCheckout = trpc.stripeCheckout.createAcademyCheckout.useMutation({
+    onSuccess: (data) => {
+      if (data.url) {
+        toast.info("Redirecting to checkout...");
+        window.open(data.url, "_blank");
+      }
+      setLoadingTier(null);
+    },
+    onError: (err) => {
+      toast.error(err.message);
+      setLoadingTier(null);
+    },
+  });
+
+  const handleSelectTier = (tierId: string) => {
+    if (tierId === "explorer") {
+      window.location.href = "/getting-started";
+      return;
+    }
+    if (tierId === "partner") {
+      toast.info("Collective Partner applications are reviewed individually. Contact us to apply.");
+      return;
+    }
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl();
+      return;
+    }
+    setLoadingTier(tierId);
+    membershipCheckout.mutate({
+      tier: tierId as "member" | "builder",
+      billingInterval: annual ? "annual" : "monthly",
+    });
+  };
+
+  const handleAcademyEnroll = () => {
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl();
+      return;
+    }
+    setLoadingTier("academy");
+    academyCheckout.mutate({
+      billingInterval: annual ? "annual" : "monthly",
+    });
+  };
+
+  const tierIcons: Record<string, React.ReactNode> = {
+    explorer: <Sparkles className="w-6 h-6" />,
+    member: <Users className="w-6 h-6" />,
+    builder: <Building2 className="w-6 h-6" />,
+    partner: <Crown className="w-6 h-6" />,
+  };
+
+  const tiers = [
     {
-      name: "Starter",
-      price: billingCycle === "annual" ? "$49" : "$59",
-      period: "/month",
-      description: "Perfect for individuals and small families starting their wealth journey",
-      icon: <Sparkles className="w-6 h-6" />,
-      cta: "Start Free Trial",
+      id: "explorer",
+      name: "Explorer",
+      description: "Experience the L.A.W.S. vision before committing",
+      monthlyPrice: 0,
+      annualPrice: 0,
       features: [
-        "1 Business Entity",
-        "Basic Financial Dashboard",
-        "Document Vault (5GB)",
-        "Grant Database Access",
-        "Email Support",
-        "Basic Reporting",
-        "Mobile App Access",
+        "Full interactive demo simulator (no save)",
+        "L.A.W.S. framework overview",
+        "Browse open career positions",
+        "Community newsletter",
       ],
+      cta: "Start Free",
+      highlighted: false,
+      isCustom: false,
     },
     {
-      name: "Professional",
-      price: billingCycle === "annual" ? "$149" : "$179",
-      period: "/month",
-      description: "For growing families and organizations building multiple revenue streams",
-      icon: <Building2 className="w-6 h-6" />,
+      id: "member",
+      name: "Member",
+      description: "Learn, validate, and build your business concept",
+      monthlyPrice: 49,
+      annualPrice: 399,
+      features: [
+        "All business simulators (full access + save)",
+        "Financial literacy & tax training",
+        "Business plan development tools",
+        "Academy courses included",
+        "Certificate of completion",
+        "Community access",
+      ],
+      cta: "Join as Member",
       highlighted: true,
-      cta: "Start Free Trial",
-      features: [
-        "Up to 5 Business Entities",
-        "Advanced Financial Automation",
-        "Document Vault (50GB)",
-        "Grant Simulator & Writer",
-        "Proposal Generator",
-        "Contract Management",
-        "Tax Preparation Tools",
-        "Priority Support",
-        "Custom Reporting",
-        "API Access",
-      ],
+      isCustom: false,
     },
     {
-      name: "Enterprise",
-      price: billingCycle === "annual" ? "$399" : "$479",
-      period: "/month",
-      description: "Complete solution for multi-generational wealth systems and organizations",
-      icon: <Rocket className="w-6 h-6" />,
-      cta: "Contact Sales",
+      id: "builder",
+      name: "Builder",
+      description: "Form your business and establish your House",
+      monthlyPrice: 149,
+      annualPrice: 1299,
       features: [
-        "Unlimited Business Entities",
-        "Full Financial Automation Suite",
-        "Unlimited Document Storage",
-        "All Simulators & Generators",
-        "White-label Options",
-        "Dedicated Account Manager",
-        "Custom Integrations",
-        "Advanced Analytics",
-        "Training & Onboarding",
-        "SLA Guarantee",
-        "Multi-user Access (25 seats)",
+        "Everything in Member",
+        "Business Formation wizard (entity + EIN + compliance)",
+        "House establishment (customized management structure)",
+        "Operational dashboard with all House tools",
+        "Document vault (unlimited)",
+        "Grant writing tools & funding resources",
+        "Mentorship access",
       ],
+      cta: "Join as Builder",
+      highlighted: false,
+      isCustom: false,
+    },
+    {
+      id: "partner",
+      name: "Collective Partner",
+      description: "Deep commitment to building the L.A.W.S. ecosystem",
+      monthlyPrice: null,
+      annualPrice: null,
+      features: [
+        "Everything in Builder",
+        "Contractor transition pathway (after 2 years)",
+        "Board Member eligibility (Founding Members)",
+        "Profit share participation",
+        "Full L.A.W.S. ecosystem integration",
+        "Dedicated success manager",
+        "Governance voting rights",
+      ],
+      cta: "Apply to Partner",
+      highlighted: false,
+      isCustom: true,
     },
   ];
 
-  const servicePackages: ServicePackage[] = [
+  const servicePackages = [
     {
       name: "Grant Writing Package",
       price: "$3,500 - $15,000",
@@ -117,7 +180,6 @@ export default function Pricing() {
       icon: <DollarSign className="w-6 h-6" />,
       turnaround: "2-4 weeks",
       entity: "LuvOnPurpose Autonomous Wealth System LLC",
-      entityType: "service",
       deliverables: [
         "Grant opportunity research & matching",
         "Complete proposal narrative",
@@ -135,7 +197,6 @@ export default function Pricing() {
       icon: <FileText className="w-6 h-6" />,
       turnaround: "1-3 weeks",
       entity: "LuvOnPurpose Autonomous Wealth System LLC",
-      entityType: "service",
       deliverables: [
         "RFP/RFQ analysis & compliance matrix",
         "Technical approach development",
@@ -150,20 +211,17 @@ export default function Pricing() {
     {
       name: "Contract Management",
       price: "$5,000 - $25,000",
-      description: "Professional contract creation, review, negotiation support, and ongoing management services",
+      description: "Professional contract creation, review, negotiation support, and ongoing management",
       icon: <Gavel className="w-6 h-6" />,
       turnaround: "5-14 days",
       entity: "LuvOnPurpose Autonomous Wealth System LLC",
-      entityType: "service",
       deliverables: [
         "Contract drafting or comprehensive review",
-        "Terms & conditions analysis with recommendations",
+        "Terms & conditions analysis",
         "Risk assessment & mitigation report",
         "Negotiation strategy & support",
         "Amendment & modification preparation",
         "Compliance tracking & monitoring setup",
-        "Renewal management & optimization",
-        "Legal coordination support",
       ],
     },
     {
@@ -173,34 +231,13 @@ export default function Pricing() {
       icon: <Briefcase className="w-6 h-6" />,
       turnaround: "2-3 weeks",
       entity: "LuvOnPurpose Autonomous Wealth System LLC",
-      entityType: "service",
       deliverables: [
         "Executive summary",
         "Market analysis & research",
         "Competitive landscape review",
-        "Products/services description",
-        "Marketing & sales strategy",
-        "Operations plan",
         "Financial projections (3-5 years)",
+        "Marketing & sales strategy",
         "Funding requirements & use of funds",
-      ],
-    },
-    {
-      name: "RFP Response Service",
-      price: "$7,500 - $35,000",
-      description: "End-to-end RFP response management for government and commercial opportunities",
-      icon: <Users className="w-6 h-6" />,
-      turnaround: "Based on deadline",
-      entity: "LuvOnPurpose Autonomous Wealth System LLC",
-      entityType: "service",
-      deliverables: [
-        "Bid/no-bid analysis",
-        "Teaming partner identification",
-        "Full proposal development",
-        "Oral presentation preparation",
-        "BAFO (Best and Final Offer) support",
-        "Debriefing analysis",
-        "Win/loss review",
       ],
     },
     {
@@ -210,7 +247,6 @@ export default function Pricing() {
       icon: <BookOpen className="w-6 h-6" />,
       turnaround: "Self-paced",
       entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
-      entityType: "training",
       deliverables: [
         "12-module video curriculum",
         "Workbooks & exercises",
@@ -227,14 +263,12 @@ export default function Pricing() {
       icon: <GraduationCap className="w-6 h-6" />,
       turnaround: "2-day intensive",
       entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
-      entityType: "training",
       deliverables: [
         "Entity selection guidance",
         "Formation document templates",
         "Tax structure optimization",
         "Compliance checklist",
         "30-day follow-up support",
-        "Resource library access",
       ],
     },
     {
@@ -244,187 +278,325 @@ export default function Pricing() {
       icon: <Video className="w-6 h-6" />,
       turnaround: "4-6 weeks",
       entity: "Real-Eye-Nation LLC",
-      entityType: "training",
       deliverables: [
         "Video production fundamentals",
         "Audio recording & editing",
         "Social media content strategy",
         "Equipment recommendations",
         "Portfolio project guidance",
-        "Industry networking intro",
       ],
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
-      {/* Header */}
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
+      {/* Nav */}
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/">
-              <span className="text-xl font-bold text-primary cursor-pointer">The L.A.W.S. Collective</span>
+        <div className="container max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-green-800 flex items-center justify-center">
+              <span className="text-white font-bold text-sm">L</span>
+            </div>
+            <span className="font-bold text-lg text-foreground">L.A.W.S. Collective</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/academy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Academy
             </Link>
-            <nav className="hidden md:flex items-center gap-6">
-              <Link href="/services">
-                <span className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">Services</span>
-              </Link>
-              <Link href="/pricing">
-                <span className="text-sm text-foreground font-medium cursor-pointer">Pricing</span>
-              </Link>
+            <Link href="/careers" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Careers
+            </Link>
+            {isAuthenticated ? (
               <Link href="/dashboard">
                 <Button size="sm">Dashboard</Button>
               </Link>
-            </nav>
+            ) : (
+              <a href={getLoginUrl()}>
+                <Button size="sm" variant="outline">Sign In</Button>
+              </a>
+            )}
           </div>
         </div>
       </header>
 
-      <main className="container max-w-7xl mx-auto px-4 py-12">
-        {/* Hero */}
+      <main className="container max-w-7xl mx-auto px-4 py-16">
+        {/* Header */}
         <div className="text-center mb-12">
-          <Badge variant="secondary" className="mb-4">
-            <Star className="w-3 h-3 mr-1" />
-            14-Day Free Trial on All Plans
-          </Badge>
+          <p className="text-sm font-semibold text-green-800 uppercase tracking-wider mb-3">
+            Membership Plans
+          </p>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Simple, Transparent Pricing
+            Choose Your Path
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Choose the plan that fits your needs. All plans include core features to help you build and manage generational wealth.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+            Whether you're exploring, learning, or building — there's a place for you
+            in the L.A.W.S. Collective.
           </p>
         </div>
 
-        <Tabs defaultValue="platform" className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-            <TabsTrigger value="platform">Platform Plans</TabsTrigger>
-            <TabsTrigger value="services">Individual Services</TabsTrigger>
+        <Tabs defaultValue="membership" className="w-full">
+          <TabsList className="grid w-full max-w-lg mx-auto grid-cols-3 mb-8">
+            <TabsTrigger value="membership">Membership</TabsTrigger>
+            <TabsTrigger value="academy">Academy</TabsTrigger>
+            <TabsTrigger value="services">Services</TabsTrigger>
           </TabsList>
 
-          {/* Platform Plans */}
-          <TabsContent value="platform">
-            {/* Billing Toggle */}
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <span className={`text-sm ${billingCycle === "monthly" ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+          {/* ─── Membership Tab ─── */}
+          <TabsContent value="membership">
+            {/* Billing toggle */}
+            <div className="flex items-center justify-center gap-3 mb-10">
+              <span className={`text-sm ${!annual ? "text-foreground font-semibold" : "text-muted-foreground"}`}>
                 Monthly
               </span>
-              <button
-                onClick={() => setBillingCycle(billingCycle === "monthly" ? "annual" : "monthly")}
-                className={`relative w-14 h-7 rounded-full transition-colors ${
-                  billingCycle === "annual" ? "bg-primary" : "bg-muted"
-                }`}
-              >
-                <span
-                  className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                    billingCycle === "annual" ? "translate-x-8" : "translate-x-1"
-                  }`}
-                />
-              </button>
-              <span className={`text-sm ${billingCycle === "annual" ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+              <Switch checked={annual} onCheckedChange={setAnnual} />
+              <span className={`text-sm ${annual ? "text-foreground font-semibold" : "text-muted-foreground"}`}>
                 Annual
-                <Badge variant="secondary" className="ml-2 text-xs">Save 20%</Badge>
               </span>
+              {annual && (
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">
+                  Save up to 32%
+                </span>
+              )}
             </div>
 
-            {/* Pricing Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              {platformTiers.map((tier, idx) => (
-                <Card
-                  key={idx}
-                  className={`p-6 relative ${
-                    tier.highlighted
-                      ? "border-primary border-2 shadow-lg scale-105"
-                      : "border-border"
-                  }`}
-                >
-                  {tier.highlighted && (
-                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">
-                      Most Popular
-                    </Badge>
-                  )}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                      {tier.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-foreground">{tier.name}</h3>
-                  </div>
-                  <div className="mb-4">
-                    <span className="text-4xl font-bold text-foreground">{tier.price}</span>
-                    <span className="text-muted-foreground">{tier.period}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">{tier.description}</p>
-                  <Badge variant="outline" className="text-xs border-primary/30 text-primary mb-4">
-                    Provided by: The L.A.W.S. Collective, LLC
-                  </Badge>
-                  <Button
-                    className="w-full mb-6"
-                    variant={tier.highlighted ? "default" : "outline"}
-                    onClick={() => {
-                      const planId = tier.name.toLowerCase();
-                      setLocation(`/checkout?plan=${planId}`);
-                    }}
+            {/* Tier Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {tiers.map((tier) => {
+                const price = tier.isCustom
+                  ? null
+                  : annual
+                  ? tier.annualPrice
+                  : tier.monthlyPrice;
+                const isLoading = loadingTier === tier.id;
+
+                return (
+                  <div
+                    key={tier.id}
+                    className={`relative flex flex-col rounded-xl border p-6 ${
+                      tier.highlighted
+                        ? "border-green-800 bg-green-800/[0.02] ring-1 ring-green-800/20"
+                        : "border-border bg-background"
+                    }`}
                   >
-                    {tier.cta}
-                  </Button>
-                  <ul className="space-y-3">
-                    {tier.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-              ))}
+                    {tier.highlighted && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-800 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                        Most Popular
+                      </div>
+                    )}
+
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-green-800">{tierIcons[tier.id]}</span>
+                        <h3 className="text-lg font-bold text-foreground">{tier.name}</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{tier.description}</p>
+                    </div>
+
+                    <div className="mb-6">
+                      {tier.isCustom ? (
+                        <div className="text-3xl font-bold text-foreground">Custom</div>
+                      ) : price === 0 ? (
+                        <div className="text-3xl font-bold text-foreground">Free</div>
+                      ) : (
+                        <div>
+                          <span className="text-3xl font-bold text-foreground">
+                            ${annual ? Math.round((price || 0) / 12) : price}
+                          </span>
+                          <span className="text-muted-foreground text-sm">/mo</span>
+                          {annual && price !== 0 && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              ${price}/year billed annually
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <ul className="space-y-2.5 mb-6 flex-1">
+                      {tier.features.map((feature, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm">
+                          <Check className="w-4 h-4 text-green-700 mt-0.5 flex-shrink-0" />
+                          <span className="text-muted-foreground">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Button
+                      onClick={() => handleSelectTier(tier.id)}
+                      disabled={isLoading}
+                      variant={tier.highlighted ? "default" : "outline"}
+                      className={`w-full ${
+                        tier.highlighted ? "bg-green-800 hover:bg-green-900 text-white" : ""
+                      }`}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          {tier.cta}
+                          <ArrowRight className="w-4 h-4 ml-1" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Enterprise CTA */}
-            <Card className="p-8 bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">
-                    Need a Custom Solution?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    We offer custom implementations for large organizations, franchises, and special requirements.
-                  </p>
-                </div>
-                <Button size="lg" className="gap-2">
-                  Contact Sales <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </Card>
+            {/* Revenue allocation note */}
+            <div className="max-w-2xl mx-auto text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-green-800">Transparent allocation:</span>{" "}
+                30% of every membership fee supports the LuvOnPurpose Academy & Outreach (508(c)(1)(a)) education programs.
+                70% supports L.A.W.S. Collective operations and member services.
+              </p>
+            </div>
           </TabsContent>
 
-          {/* Individual Services */}
+          {/* ─── Academy Tab ─── */}
+          <TabsContent value="academy">
+            <div className="max-w-3xl mx-auto">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <GraduationCap className="w-6 h-6 text-green-800" />
+                  <p className="text-sm font-semibold text-green-800 uppercase tracking-wider">
+                    LuvOnPurpose Academy & Outreach
+                  </p>
+                </div>
+                <h2 className="text-3xl font-bold text-foreground mb-3">
+                  Academy Pass
+                </h2>
+                <p className="text-muted-foreground">
+                  Standalone access to the full Academy curriculum. Already included with
+                  Collective Member and Builder plans.
+                </p>
+              </div>
+
+              {/* Billing toggle */}
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <span className={`text-sm ${!annual ? "text-foreground font-semibold" : "text-muted-foreground"}`}>
+                  Monthly
+                </span>
+                <Switch checked={annual} onCheckedChange={setAnnual} />
+                <span className={`text-sm ${annual ? "text-foreground font-semibold" : "text-muted-foreground"}`}>
+                  Annual
+                </span>
+                {annual && (
+                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">
+                    Save ~28%
+                  </span>
+                )}
+              </div>
+
+              <div className="max-w-lg mx-auto rounded-xl border border-border p-8 bg-background">
+                <div className="text-center mb-6">
+                  <span className="text-4xl font-bold text-foreground">
+                    ${annual ? Math.round(249 / 12) : 29}
+                  </span>
+                  <span className="text-muted-foreground">/mo</span>
+                  {annual && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      $249/year billed annually
+                    </p>
+                  )}
+                </div>
+
+                <ul className="space-y-2.5 mb-6">
+                  {[
+                    "Complete K-12 homeschool curriculum",
+                    "Financial literacy courses",
+                    "Business simulators",
+                    "Coding & AI technology modules",
+                    "Skilled labor certification programs",
+                    "Certificate of completion",
+                    "Self-paced, progress-based learning",
+                  ].map((f, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <Check className="w-4 h-4 text-green-700 mt-0.5 flex-shrink-0" />
+                      <span className="text-muted-foreground">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="space-y-2 mb-6 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                  <p className="text-xs font-semibold text-green-800">Special Programs:</p>
+                  <p className="text-xs text-muted-foreground">
+                    Free for heirs of Founding Members. Scholarship program available for community members.
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleAcademyEnroll}
+                  disabled={loadingTier === "academy"}
+                  className="w-full bg-green-800 hover:bg-green-900 text-white"
+                >
+                  {loadingTier === "academy" ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      Enroll Now
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-xs text-center text-muted-foreground mt-3">
+                  Already a Collective Member or Builder?{" "}
+                  <Link href="/dashboard" className="text-green-800 hover:underline">
+                    Academy access is included
+                  </Link>
+                </p>
+              </div>
+
+              {/* 100% to Academy note */}
+              <div className="max-w-lg mx-auto text-center mt-6 p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                <p className="text-xs text-muted-foreground">
+                  <span className="font-semibold text-green-800">100% Academy funded:</span>{" "}
+                  All Academy Pass revenue goes directly to LuvOnPurpose Outreach Temple and Academy Society, Inc.
+                  (508(c)(1)(a)) to support education programs.
+                </p>
+              </div>
+
+              <div className="text-center mt-8">
+                <Link href="/academy">
+                  <Button variant="outline" className="gap-2">
+                    Explore Academy Curriculum
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* ─── Services Tab ─── */}
           <TabsContent value="services">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-foreground mb-2">
                 Professional Services
               </h2>
               <p className="text-muted-foreground">
-                Expert services available individually or bundled with your platform subscription
+                Expert services available individually or bundled with your membership
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {servicePackages.map((service, idx) => (
-                <Card key={idx} className="p-6 hover:shadow-lg transition-shadow">
+                <Card key={idx} className="p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <div className="p-2 bg-green-800/10 rounded-lg text-green-800">
                       {service.icon}
                     </div>
                     <div>
                       <h3 className="font-bold text-foreground">{service.name}</h3>
-                      <p className="text-sm text-primary font-medium">{service.price}</p>
+                      <p className="text-sm text-green-800 font-medium">{service.price}</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">{service.description}</p>
                   <div className="mb-4 flex flex-wrap gap-2">
                     <Badge variant="secondary" className="text-xs">
-                      Turnaround: {service.turnaround}
+                      {service.turnaround}
                     </Badge>
-                    <Badge variant="outline" className="text-xs border-primary/30 text-primary">
+                    <Badge variant="outline" className="text-xs border-green-800/30 text-green-800">
                       {service.entity}
                     </Badge>
                   </div>
@@ -433,18 +605,18 @@ export default function Pricing() {
                     <ul className="space-y-1">
                       {service.deliverables.slice(0, 4).map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                          <Check className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
+                          <Check className="w-3 h-3 text-green-700 mt-0.5 flex-shrink-0" />
                           {item}
                         </li>
                       ))}
                       {service.deliverables.length > 4 && (
-                        <li className="text-xs text-primary">
+                        <li className="text-xs text-green-800">
                           +{service.deliverables.length - 4} more deliverables
                         </li>
                       )}
                     </ul>
                   </div>
-                  <Button variant="outline" className="w-full mt-4">
+                  <Button variant="outline" className="w-full mt-4" onClick={() => toast.info("Service request form coming soon.")}>
                     Request Quote
                   </Button>
                 </Card>
@@ -455,15 +627,15 @@ export default function Pricing() {
             <Card className="p-8 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                  <Badge className="mb-2 bg-green-600">Bundle & Save</Badge>
+                  <Badge className="mb-2 bg-green-800">Bundle & Save</Badge>
                   <h3 className="text-2xl font-bold text-foreground mb-2">
                     Service Bundle Discount
                   </h3>
                   <p className="text-muted-foreground">
-                    Combine any 3+ services and receive 15% off. Platform subscribers get an additional 10% discount on all services.
+                    Combine any 3+ services and receive 15% off. Collective members get an additional 10% discount on all services.
                   </p>
                 </div>
-                <Button size="lg" className="gap-2 bg-green-600 hover:bg-green-700">
+                <Button size="lg" className="gap-2 bg-green-800 hover:bg-green-900 text-white" onClick={() => toast.info("Bundle builder coming soon.")}>
                   Build Your Bundle <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -471,7 +643,7 @@ export default function Pricing() {
           </TabsContent>
         </Tabs>
 
-        {/* FAQ Section */}
+        {/* FAQ */}
         <section className="mt-16">
           <h2 className="text-2xl font-bold text-foreground text-center mb-8">
             Frequently Asked Questions
@@ -483,16 +655,24 @@ export default function Pricing() {
                 a: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle.",
               },
               {
-                q: "Is there a free trial?",
-                a: "Yes, all platform plans include a 14-day free trial with full access to features. No credit card required to start.",
+                q: "Is Academy access included with Collective membership?",
+                a: "Yes. Member and Builder plans include full Academy access. You only need a separate Academy Pass if you want education without the business tools.",
               },
               {
-                q: "Do services require a platform subscription?",
-                a: "No, our professional services are available to anyone. However, platform subscribers receive a 10% discount on all services.",
+                q: "How does the revenue allocation work?",
+                a: "30% of every Collective membership fee supports the LuvOnPurpose Academy (508(c)(1)(a)) education programs. 70% supports Collective operations. Academy Pass revenue goes 100% to the Academy entity.",
               },
               {
                 q: "What payment methods do you accept?",
-                a: "We accept all major credit cards, ACH bank transfers, and can arrange invoicing for Enterprise customers.",
+                a: "We accept all major credit cards through Stripe. ACH and invoicing available for Collective Partner tier.",
+              },
+              {
+                q: "Are heirs of Founding Members really free?",
+                a: "Yes. Heirs of Founding Members receive complimentary Academy Pass access as part of the multi-generational commitment.",
+              },
+              {
+                q: "What is the Collective Partner tier?",
+                a: "The Partner tier is application-based for those deeply committed to building the L.A.W.S. ecosystem. It includes contractor transition pathways, board eligibility, and profit sharing after 2 years.",
               },
             ].map((faq, idx) => (
               <Card key={idx} className="p-6">
@@ -502,12 +682,24 @@ export default function Pricing() {
             ))}
           </div>
         </section>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-16 pb-8">
+          <p className="text-muted-foreground mb-4">
+            Not sure which plan is right for you?
+          </p>
+          <Link href="/#demo-simulator">
+            <Button variant="outline" className="gap-2">
+              Try the Free Demo First
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-16 py-8">
+      <footer className="border-t border-border mt-8 py-8">
         <div className="container max-w-7xl mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2025 The L.A.W.S. Collective. All rights reserved.</p>
+          <p>&copy; 2025 The L.A.W.S. Collective. All rights reserved.</p>
         </div>
       </footer>
     </div>

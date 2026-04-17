@@ -245,48 +245,110 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return;
   }
 
-  // Handle membership subscriptions
-  if (type === "membership") {
-    const tier = session.metadata?.membership_tier;
-    console.log(`[Stripe] Membership subscription created: ${tier}`);
-  } else if (type === "merchandise") {
+  // Handle membership subscriptions with entity revenue splitting
+  if (type === "collective_membership" || type === "academy_pass") {
+    const tier = session.metadata?.tier;
+    const amount = (session.amount_total || 0) / 100;
+    console.log(`[Stripe] Membership/Academy payment: $${amount.toFixed(2)}, tier=${tier}, type=${type}`);
+
+    try {
+      // Entity account IDs in LuvLedger:
+      // 8 = Education Platform Account (Academy / 508 entity)
+      // 7 = Commercial Engine Account (L.A.W.S. Collective LLC)
+      const ACADEMY_ACCOUNT_ID = 8;
+      const COLLECTIVE_ACCOUNT_ID = 7;
+
+      if (type === "academy_pass") {
+        // Standalone Academy Pass: 100% to Academy entity
+        await recordEntityRevenue(db, ACADEMY_ACCOUNT_ID, amount, `Academy Pass enrollment`, session.id);
+        console.log(`[Stripe] Academy revenue: $${amount.toFixed(2)} → Academy entity (100%)`);
+      } else {
+        // Collective membership: split 30% Academy / 70% Collective
+        const academyShare = Math.round(amount * 30) / 100; // 30%
+        const collectiveShare = amount - academyShare; // 70%
+
+        await recordEntityRevenue(db, ACADEMY_ACCOUNT_ID, academyShare, `Membership allocation (30%): ${tier}`, session.id);
+        await recordEntityRevenue(db, COLLECTIVE_ACCOUNT_ID, collectiveShare, `Membership revenue (70%): ${tier}`, session.id);
+
+        // Record the allocation transaction between entities
+        await db.insert(luvLedgerTransactions).values({
+          fromAccountId: COLLECTIVE_ACCOUNT_ID,
+          toAccountId: ACADEMY_ACCOUNT_ID,
+          amount: academyShare.toFixed(8),
+          transactionType: "allocation",
+          description: `Internal allocation: 30% of ${tier} membership ($${amount.toFixed(2)}) to Academy entity`,
+          status: "confirmed",
+          confirmedAt: new Date(),
+        });
+
+        console.log(`[Stripe] Membership split: $${academyShare.toFixed(2)} → Academy (30%), $${collectiveShare.toFixed(2)} → Collective (70%)`);
+      }
+
+      // Audit trail
+      await db.insert(activityAuditTrail).values({
+        userId: session.metadata?.user_id ? parseInt(session.metadata.user_id) : null,
+        activityType: "membership_payment",
+        action: "purchase",
+        details: {
+          type,
+          tier,
+          amount,
+          academyShare: type === "academy_pass" ? amount : Math.round(amount * 30) / 100,
+          collectiveShare: type === "academy_pass" ? 0 : amount - Math.round(amount * 30) / 100,
+          stripeSessionId: session.id,
+        } as any,
+      });
+    } catch (error) {
+      console.error(`[Stripe] Error processing membership revenue split:`, error);
+    }
+    return;
+  }
+
+  // Handle merchandise
+  if (type === "merchandise") {
     const items = session.metadata?.items;
     console.log(`[Stripe] Merchandise order placed: ${items}`);
   }
 
-  // Record revenue transaction for 60/40 split tracking
+  // Record general revenue for other payment types
   if (session.amount_total && session.amount_total > 0) {
-    console.log(`[Stripe] Recording revenue: $${(session.amount_total / 100).toFixed(2)}`);
-    
+    const amount = session.amount_total / 100;
+    console.log(`[Stripe] Recording general revenue: $${amount.toFixed(2)}`);
     try {
-      // Record in main The L.A.W.S. Collective account
-      const collectiveAccount = await db
-        .select()
-        .from(luvLedgerAccounts)
-        .where(eq(luvLedgerAccounts.accountName, "Collective Revenue"))
-        .limit(1);
-
-      if (collectiveAccount.length > 0) {
-        const amount = session.amount_total / 100;
-        const newBalance = (parseFloat(collectiveAccount[0].balance || "0") + amount).toFixed(2);
-        await db
-          .update(luvLedgerAccounts)
-          .set({ balance: newBalance })
-          .where(eq(luvLedgerAccounts.id, collectiveAccount[0].id));
-
-        await db.insert(luvLedgerTransactions).values({
-          accountId: collectiveAccount[0].id,
-          transactionType: "credit",
-          amount: amount.toFixed(2),
-          description: `Revenue: ${type || "general"}`,
-          reference: session.id,
-          category: "revenue",
-        });
-      }
+      await recordEntityRevenue(db, 7, amount, `Revenue: ${type || "general"}`, session.id);
     } catch (error) {
       console.error(`[Stripe] Error recording revenue:`, error);
     }
   }
+}
+
+/** Helper: credit an entity account and record the income transaction */
+async function recordEntityRevenue(db: any, accountId: number, amount: number, description: string, reference: string) {
+  // Update account balance
+  const [account] = await db
+    .select()
+    .from(luvLedgerAccounts)
+    .where(eq(luvLedgerAccounts.id, accountId))
+    .limit(1);
+
+  if (account) {
+    const newBalance = (parseFloat(account.balance || "0") + amount).toFixed(8);
+    await db
+      .update(luvLedgerAccounts)
+      .set({ balance: newBalance })
+      .where(eq(luvLedgerAccounts.id, accountId));
+  }
+
+  // Record income transaction
+  await db.insert(luvLedgerTransactions).values({
+    fromAccountId: accountId,
+    toAccountId: accountId,
+    amount: amount.toFixed(8),
+    transactionType: "income",
+    description,
+    status: "confirmed",
+    confirmedAt: new Date(),
+  });
 }
 
 async function handleSubscriptionChange(subscription: Stripe.Subscription) {
