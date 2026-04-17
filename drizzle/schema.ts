@@ -16019,6 +16019,12 @@ export const onboardingJourneys = mysqlTable("onboarding_journeys", {
   
   // Credential issued upon completion
   credentialId: varchar("credentialId", { length: 50 }), // LAWS-XXXX-XXXX-XXXX format
+  
+  // Additional fields
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  valuesAgreed: boolean("valuesAgreed").default(false).notNull(),
+  houseId: int("houseId"),
 });
 
 export type OnboardingJourney = typeof onboardingJourneys.$inferSelect;

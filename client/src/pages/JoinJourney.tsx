@@ -3,7 +3,7 @@
  * The Direct Onboarding path for joining The L.A.W.S. Collective
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { getLoginUrl } from '@/const';
 import { cn } from '@/lib/utils';
+import { trpc } from '@/lib/trpc';
 import { 
   OnboardingStep, 
   OnboardingRealm, 
@@ -76,22 +77,63 @@ export default function JoinJourney() {
   const [, navigate] = useLocation();
   const [journeyState, setJourneyState] = useState<JourneyState>(initialState);
   const [isLoading, setIsLoading] = useState(true);
+  const dbSyncRef = useRef(false);
 
-  // Load journey state from localStorage
+  // tRPC mutations for DB persistence
+  const startJourneyMut = trpc.onboardingJourney.startJourney.useMutation();
+  const updateStepMut = trpc.onboardingJourney.updateStep.useMutation();
+  const submitAssessmentMut = trpc.onboardingJourney.submitAssessment.useMutation();
+  const setupHouseMut = trpc.onboardingJourney.setupHouse.useMutation();
+  const agreeToValuesMut = trpc.onboardingJourney.agreeToValues.useMutation();
+  const completeJourneyMut = trpc.onboardingJourney.completeJourney.useMutation();
+
+  // Load journey state: try DB first (if authenticated), fall back to localStorage
+  const { data: dbJourney } = trpc.onboardingJourney.getMyJourney.useQuery(undefined, {
+    enabled: !!user,
+    retry: false,
+  });
+
   useEffect(() => {
-    const saved = localStorage.getItem(JOURNEY_STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setJourneyState(parsed);
-      } catch (e) {
-        console.error('Failed to parse journey state:', e);
-      }
+    // If authenticated and DB has a journey, use it
+    if (user && dbJourney && !dbSyncRef.current) {
+      dbSyncRef.current = true;
+      setJourneyState({
+        currentStep: dbJourney.currentStep as OnboardingStep,
+        realmsCompleted: {
+          self: dbJourney.selfCompleted,
+          water: dbJourney.waterCompleted,
+          air: dbJourney.airCompleted,
+          land: dbJourney.landCompleted,
+        },
+        scores: {
+          self: dbJourney.selfScore,
+          water: dbJourney.waterScore,
+          air: dbJourney.airScore,
+          land: dbJourney.landScore,
+        },
+        houseSetup: null,
+        valuesAgreed: dbJourney.valuesAgreed,
+        startedAt: dbJourney.startedAt?.toString() || new Date().toISOString(),
+        lastActivityAt: dbJourney.lastActivityAt?.toString() || new Date().toISOString(),
+      });
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
-  }, []);
+    // Fall back to localStorage for unauthenticated users
+    if (!user || dbJourney === null) {
+      const saved = localStorage.getItem(JOURNEY_STORAGE_KEY);
+      if (saved) {
+        try {
+          setJourneyState(JSON.parse(saved));
+        } catch (e) {
+          console.error('Failed to parse journey state:', e);
+        }
+      }
+      setIsLoading(false);
+    }
+  }, [user, dbJourney]);
 
-  // Save journey state to localStorage
+  // Save journey state to localStorage as backup
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem(JOURNEY_STORAGE_KEY, JSON.stringify({
@@ -103,6 +145,10 @@ export default function JoinJourney() {
 
   const updateStep = (step: OnboardingStep) => {
     setJourneyState(prev => ({ ...prev, currentStep: step }));
+    // Persist to DB if authenticated
+    if (user) {
+      updateStepMut.mutate({ step }, { onError: (e) => console.error('DB step sync failed:', e) });
+    }
   };
 
   const completeRealm = (realm: OnboardingRealm, score: number) => {
@@ -111,6 +157,13 @@ export default function JoinJourney() {
       realmsCompleted: { ...prev.realmsCompleted, [realm]: true },
       scores: { ...prev.scores, [realm]: score }
     }));
+    // Persist assessment to DB if authenticated
+    if (user) {
+      submitAssessmentMut.mutate(
+        { realm, score, passed: true, totalQuestions: 5, correctAnswers: Math.round(score / 20), responses: [] },
+        { onError: (e) => console.error('DB assessment sync failed:', e) }
+      );
+    }
   };
 
   const progress = calculateProgress(journeyState.currentStep);
@@ -119,7 +172,13 @@ export default function JoinJourney() {
   const renderStep = () => {
     switch (journeyState.currentStep) {
       case 'welcome':
-        return <WelcomeStep onContinue={() => updateStep('self_intro')} />;
+        return <WelcomeStep onContinue={() => {
+          // Start journey in DB if authenticated and no journey exists
+          if (user && !dbJourney) {
+            startJourneyMut.mutate(undefined, { onError: (e) => console.error('DB start failed:', e) });
+          }
+          updateStep('self_intro');
+        }} />;
       
       case 'self_intro':
         return (
@@ -218,6 +277,12 @@ export default function JoinJourney() {
           <HouseSetupStep
             onComplete={(houseData) => {
               setJourneyState(prev => ({ ...prev, houseSetup: houseData }));
+              if (user && houseData) {
+                setupHouseMut.mutate(
+                  { houseName: houseData.houseName, houseType: houseData.houseType },
+                  { onError: (e) => console.error('DB house setup failed:', e) }
+                );
+              }
               updateStep('values_agreement');
             }}
             onBack={() => updateStep('land_assessment')}
@@ -229,6 +294,9 @@ export default function JoinJourney() {
           <ValuesAgreementStep
             onAgree={() => {
               setJourneyState(prev => ({ ...prev, valuesAgreed: true }));
+              if (user) {
+                agreeToValuesMut.mutate(undefined, { onError: (e) => console.error('DB values agree failed:', e) });
+              }
               updateStep('credential_issuance');
             }}
             onBack={() => updateStep('house_setup')}
@@ -241,8 +309,10 @@ export default function JoinJourney() {
             journeyState={journeyState}
             user={user}
             onComplete={() => {
+              if (user) {
+                completeJourneyMut.mutate(undefined, { onError: (e) => console.error('DB complete failed:', e) });
+              }
               updateStep('complete');
-              // Clear journey state after completion
               localStorage.removeItem(JOURNEY_STORAGE_KEY);
             }}
           />

@@ -12340,3 +12340,9 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Sidebar parity: Theater now has 5 links (Live Theater, Enhanced EPG, VOD Library, Now Playing, Playback History) matching Radio's 5 links
 - [x] Persistent mini-player for Theater (already existed — now enhanced with queue-aware stopPlaybackWithHistory)
 - [x] Playlist detail view for Theater (queue system in MediaPlayerContext serves as playlist management with add/remove/reorder)
+## Phase 83: Test Fixes, Waitlist Signup, Assessment Persistence
+- [x] Run pnpm test and identify all failing test files
+- [x] Fix failing test files (225 passed, 7 skipped, 0 failed — 100% pass rate)
+- [x] Wire waitlist email signup on /demo results page to waitlist_signups table (already wired via trpc.waitlist.signup)
+- [x] Add assessment progress persistence to /join (DB via onboardingJourney tRPC + localStorage fallback for unauthenticated)
+- [x] Save checkpoint

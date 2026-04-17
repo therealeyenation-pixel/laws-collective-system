@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { grantOpportunities, grantApplications, grantDocuments, grantReporting } from "./schema";
+import { grantOpportunities, grantApplications, grantDocuments, grantReporting, onboardingJourneys, onboardingAssessments } from "./schema";
 
 export const grantApplicationsRelations = relations(grantApplications, ({one, many}) => ({
 	grantOpportunity: one(grantOpportunities, {
@@ -25,5 +25,16 @@ export const grantReportingRelations = relations(grantReporting, ({one}) => ({
 	grantApplication: one(grantApplications, {
 		fields: [grantReporting.applicationId],
 		references: [grantApplications.id]
+	}),
+}));
+
+export const onboardingJourneysRelations = relations(onboardingJourneys, ({many}) => ({
+	assessments: many(onboardingAssessments),
+}));
+
+export const onboardingAssessmentsRelations = relations(onboardingAssessments, ({one}) => ({
+	journey: one(onboardingJourneys, {
+		fields: [onboardingAssessments.journeyId],
+		references: [onboardingJourneys.id],
 	}),
 }));

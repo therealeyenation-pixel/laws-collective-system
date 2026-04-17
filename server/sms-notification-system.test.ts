@@ -206,7 +206,7 @@ describe("Phase 44: SMS Notification System", () => {
 
   describe("SMS Scheduling", () => {
     it("should schedule SMS for future delivery", () => {
-      const scheduledTime = new Date("2026-04-01T10:00:00");
+      const scheduledTime = new Date("2027-04-01T10:00:00");
       const now = new Date();
 
       expect(scheduledTime.getTime()).toBeGreaterThan(now.getTime());

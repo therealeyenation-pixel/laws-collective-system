@@ -15,13 +15,20 @@ import {
 } from "../../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { generateCredentialId, generateVerificationCode, generateQRData } from "../credentials";
+
+// Helper to generate credential IDs
+function generateCredentialId(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const seg = () => Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  return `LAWS-${seg()}-${seg()}-${seg()}`;
+}
+
+function generateVerificationCode(): string {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
+}
 
 // Realm enum
 const RealmSchema = z.enum(['self', 'water', 'air', 'land']);
-
-// Journey status enum
-const JourneyStatusSchema = z.enum(['not_started', 'in_progress', 'completed', 'abandoned']);
 
 // Onboarding step enum
 const OnboardingStepSchema = z.enum([
@@ -73,8 +80,8 @@ export const onboardingJourneyRouter = router({
       return existingJourney;
     }
 
-    // Create new journey
-    const [journey] = await db.insert(onboardingJourneys).values({
+    // Create new journey (MySQL: no .returning(), use insertId)
+    const result = await db.insert(onboardingJourneys).values({
       userId: ctx.user.id,
       currentStep: 'welcome',
       status: 'in_progress',
@@ -83,11 +90,15 @@ export const onboardingJourneyRouter = router({
       airCompleted: false,
       landCompleted: false,
       valuesAgreed: false,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }).returning();
+    });
 
-    return journey;
+    const insertId = (result as any)[0]?.insertId ?? (result as any).insertId;
+
+    const journey = await db.query.onboardingJourneys.findFirst({
+      where: eq(onboardingJourneys.id, insertId)
+    });
+
+    return journey!;
   }),
 
   // Update journey step
@@ -110,15 +121,18 @@ export const onboardingJourneyRouter = router({
         });
       }
 
-      const [updated] = await db.update(onboardingJourneys)
+      await db.update(onboardingJourneys)
         .set({
           currentStep: input.step,
-          updatedAt: new Date()
+          lastActivityAt: new Date()
         })
-        .where(eq(onboardingJourneys.id, journey.id))
-        .returning();
+        .where(eq(onboardingJourneys.id, journey.id));
 
-      return updated;
+      const updated = await db.query.onboardingJourneys.findFirst({
+        where: eq(onboardingJourneys.id, journey.id)
+      });
+
+      return updated!;
     }),
 
   // Submit assessment result
@@ -127,6 +141,8 @@ export const onboardingJourneyRouter = router({
       realm: RealmSchema,
       score: z.number().min(0).max(100),
       passed: z.boolean(),
+      totalQuestions: z.number().default(5),
+      correctAnswers: z.number().default(0),
       responses: z.array(z.object({
         questionId: z.string(),
         selectedOptionIndex: z.number(),
@@ -148,17 +164,17 @@ export const onboardingJourneyRouter = router({
         });
       }
 
-      // Record assessment
-      const [assessment] = await db.insert(onboardingAssessments).values({
+      // Record assessment (MySQL: no .returning())
+      const assessmentResult = await db.insert(onboardingAssessments).values({
         journeyId: journey.id,
         realm: input.realm,
+        totalQuestions: input.totalQuestions,
+        correctAnswers: input.correctAnswers,
         score: input.score,
         passed: input.passed,
-        responses: JSON.stringify(input.responses),
-        attemptNumber: 1, // Could track attempts
+        attemptNumber: 1,
         completedAt: new Date(),
-        createdAt: new Date()
-      }).returning();
+      });
 
       // Update journey realm completion if passed
       if (input.passed) {
@@ -169,12 +185,12 @@ export const onboardingJourneyRouter = router({
           .set({
             [realmField]: true,
             [scoreField]: input.score,
-            updatedAt: new Date()
+            lastActivityAt: new Date()
           })
           .where(eq(onboardingJourneys.id, journey.id));
       }
 
-      return assessment;
+      return { success: true, passed: input.passed, score: input.score };
     }),
 
   // Setup House
@@ -200,18 +216,25 @@ export const onboardingJourneyRouter = router({
         });
       }
 
-      // Update journey with house setup data
+      // Create house
+      const houseResult = await db.insert(houses).values({
+        name: input.houseName,
+        type: input.houseType as any,
+        ownerUserId: ctx.user.id,
+        status: 'active' as any,
+      });
+
+      const houseId = (houseResult as any)[0]?.insertId ?? (houseResult as any).insertId;
+
+      // Link house to journey
       await db.update(onboardingJourneys)
         .set({
-          houseName: input.houseName,
-          houseType: input.houseType,
-          primaryBeneficiaryName: input.primaryBeneficiaryName,
-          primaryBeneficiaryRelation: input.primaryBeneficiaryRelation,
-          updatedAt: new Date()
+          houseId: houseId,
+          lastActivityAt: new Date()
         })
         .where(eq(onboardingJourneys.id, journey.id));
 
-      return { success: true };
+      return { success: true, houseId };
     }),
 
   // Agree to values
@@ -233,8 +256,7 @@ export const onboardingJourneyRouter = router({
     await db.update(onboardingJourneys)
       .set({
         valuesAgreed: true,
-        valuesAgreedAt: new Date(),
-        updatedAt: new Date()
+        lastActivityAt: new Date()
       })
       .where(eq(onboardingJourneys.id, journey.id));
 
@@ -266,23 +288,6 @@ export const onboardingJourneyRouter = router({
       });
     }
 
-    // Create House if it doesn't exist
-    let house = await db.query.houses.findFirst({
-      where: eq(houses.ownerUserId, ctx.user.id)
-    });
-
-    if (!house && journey.houseName) {
-      const [newHouse] = await db.insert(houses).values({
-        name: journey.houseName,
-        type: journey.houseType || 'individual',
-        ownerUserId: ctx.user.id,
-        status: 'active',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }).returning();
-      house = newHouse;
-    }
-
     // Generate credential
     const credentialId = generateCredentialId();
     const verificationCode = generateVerificationCode();
@@ -293,38 +298,30 @@ export const onboardingJourneyRouter = router({
        (journey.airScore || 0) + (journey.landScore || 0)) / 4
     );
 
-    // Create member credential
-    const [credential] = await db.insert(memberCredentials).values({
+    // Create member credential (MySQL: no .returning())
+    const credResult = await db.insert(memberCredentials).values({
       credentialId,
       verificationCode,
       userId: ctx.user.id,
-      houseId: house?.id,
-      entryPath: 'direct_onboarding',
-      accessLevel: 'member',
       status: 'active',
-      issuedAt: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }).returning();
+    });
+
+    const credDbId = (credResult as any)[0]?.insertId ?? (credResult as any).insertId;
 
     // Record achievements
     const achievements = [
-      { type: 'realm_completion', name: 'Self Realm Mastery', realm: 'self', score: journey.selfScore },
-      { type: 'realm_completion', name: 'Water Realm Mastery', realm: 'water', score: journey.waterScore },
-      { type: 'realm_completion', name: 'Air Realm Mastery', realm: 'air', score: journey.airScore },
-      { type: 'realm_completion', name: 'Land Realm Mastery', realm: 'land', score: journey.landScore },
-      { type: 'journey_completion', name: 'S.W.A.L. Journey Complete', realm: null, score: avgScore }
+      { type: 'realm_completion', name: 'Self Realm Mastery' },
+      { type: 'realm_completion', name: 'Water Realm Mastery' },
+      { type: 'realm_completion', name: 'Air Realm Mastery' },
+      { type: 'realm_completion', name: 'Land Realm Mastery' },
+      { type: 'journey_completion', name: 'S.W.A.L. Journey Complete' }
     ];
 
     for (const achievement of achievements) {
       await db.insert(credentialAchievements).values({
-        credentialId: credential.id,
+        credentialId: credDbId,
         achievementType: achievement.type,
         achievementName: achievement.name,
-        realm: achievement.realm,
-        score: achievement.score,
-        earnedAt: new Date(),
-        createdAt: new Date()
       });
     }
 
@@ -333,21 +330,20 @@ export const onboardingJourneyRouter = router({
       .set({
         status: 'completed',
         completedAt: new Date(),
-        credentialId: credential.id,
-        updatedAt: new Date()
+        credentialId: credentialId,
+        lastActivityAt: new Date()
       })
       .where(eq(onboardingJourneys.id, journey.id));
 
     return {
-      credential,
-      house,
+      credentialId,
+      verificationCode,
       averageScore: avgScore
     };
   }),
 
   // Get journey statistics (for admin)
   getJourneyStats: protectedProcedure.query(async ({ ctx }) => {
-    // This would be admin-only in production
     const allJourneys = await db.query.onboardingJourneys.findMany();
     
     const stats = {
