@@ -12382,4 +12382,8 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Wire Member Journey: Join → Getting Started → Business Simulator → Business Formation → House Dashboard
 - [x] Owner Backdoor: /system-map (owner-only, already in sidebar)
 - [x] Employment as separate track: /careers (public, linked from landing nav)
-- [ ] Save checkpoint
+- [x] Save checkpoint
+
+## Phase 88: Add Demo Simulator to Landing Page
+- [x] Add interactive demo simulator section to Landing page for public engagement
+- [x] Save checkpoint

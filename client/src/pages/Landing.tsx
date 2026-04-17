@@ -16,9 +16,18 @@ import {
   Droplets,
   Star,
   ChevronRight,
+  ChevronLeft,
   Mail,
   MapPin,
   Phone,
+  Play,
+  BarChart3,
+  Zap,
+  Home,
+  FileText,
+  TrendingUp,
+  Settings,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function Landing() {
@@ -306,6 +315,9 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Interactive Demo Simulator */}
+      <DemoSimulatorSection sessionId={sessionId} trackEvent={trackEvent} />
+
       {/* Meet Luv / Founder Section */}
       <section id="founder" className="bg-secondary/30 border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -510,5 +522,334 @@ export default function Landing() {
         </div>
       </footer>
     </div>
+  );
+}
+
+// ─── Interactive Demo Simulator ────────────────────────────────────────────
+type SimSlide = {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  type: "intro" | "choice" | "text";
+  options?: string[];
+};
+
+function DemoSimulatorSection({
+  sessionId,
+  trackEvent,
+}: {
+  sessionId: string;
+  trackEvent: { mutate: (data: { sessionId: string; eventType: string; metadata?: any }) => void };
+}) {
+  const [started, setStarted] = useState(false);
+  const [slide, setSlide] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [bizName, setBizName] = useState("");
+  const [done, setDone] = useState(false);
+
+  const slides: SimSlide[] = [
+    {
+      title: "Let's Build Your Business",
+      description:
+        "Answer a few quick questions and see how the L.A.W.S. system structures your business — no account needed.",
+      icon: <Play className="w-6 h-6" />,
+      type: "intro",
+    },
+    {
+      title: "What Type of Business?",
+      description: "Choose the structure that fits your vision.",
+      icon: <Briefcase className="w-6 h-6" />,
+      type: "choice",
+      options: ["LLC", "S-Corp", "C-Corp", "Partnership", "Sole Proprietorship"],
+    },
+    {
+      title: "Primary Goal",
+      description: "What are you building toward?",
+      icon: <TrendingUp className="w-6 h-6" />,
+      type: "choice",
+      options: [
+        "Revenue generation",
+        "Wealth building",
+        "Community impact",
+        "Growth & scaling",
+      ],
+    },
+    {
+      title: "Timeline",
+      description: "When are you looking to launch?",
+      icon: <Zap className="w-6 h-6" />,
+      type: "choice",
+      options: ["Starting now", "1-3 months", "3-6 months", "6-12 months"],
+    },
+    {
+      title: "Team Structure",
+      description: "How do you want to build your team?",
+      icon: <Users className="w-6 h-6" />,
+      type: "choice",
+      options: ["Solo", "Small team (2-5)", "Medium team (6-20)", "Large team (20+)"],
+    },
+    {
+      title: "Financial Management",
+      description: "How will you manage finances?",
+      icon: <BarChart3 className="w-6 h-6" />,
+      type: "choice",
+      options: ["Self-managed", "Professional accounting", "Full automation"],
+    },
+    {
+      title: "Name Your Business",
+      description: "What will your business be called?",
+      icon: <Home className="w-6 h-6" />,
+      type: "text",
+    },
+  ];
+
+  const dashboardCards = () => {
+    const cards = [
+      { title: "Business Overview", icon: BarChart3, reason: "Core dashboard for all businesses" },
+      { title: "Documents & Compliance", icon: FileText, reason: "Legal protection and compliance" },
+    ];
+    if (
+      answers[2]?.includes("Revenue") ||
+      answers[2]?.includes("Wealth")
+    )
+      cards.push({
+        title: "Financial Dashboard",
+        icon: Zap,
+        reason: "Essential for your financial goals",
+      });
+    if (answers[4] && answers[4] !== "Solo")
+      cards.push({
+        title: "Team Management",
+        icon: Users,
+        reason: "Manage your growing team",
+      });
+    if (answers[2]?.includes("Growth"))
+      cards.push({
+        title: "Growth Tracking",
+        icon: TrendingUp,
+        reason: "Monitor your scaling progress",
+      });
+    if (
+      answers[5]?.includes("Professional") ||
+      answers[5]?.includes("automation")
+    )
+      cards.push({
+        title: "Integration Hub",
+        icon: Settings,
+        reason: "Connect with your tools",
+      });
+    return cards;
+  };
+
+  const current = slides[slide];
+  const answered = answers[slide] !== undefined;
+
+  const next = () => {
+    if (slide < slides.length - 1) setSlide(slide + 1);
+    else {
+      setDone(true);
+      trackEvent.mutate({
+        sessionId,
+        eventType: "demo_completed",
+        metadata: { businessName: bizName, answers },
+      });
+    }
+  };
+  const prev = () => slide > 0 && setSlide(slide - 1);
+
+  if (!started) {
+    return (
+      <section
+        id="demo"
+        className="bg-gradient-to-br from-primary/5 via-background to-accent/5 border-y border-border"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center space-y-8">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full">
+            <Play className="w-4 h-4" />
+            Interactive Demo
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold">
+            Try the Business Simulator
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            See how the L.A.W.S. system works before you join. Answer a few
+            questions and we'll show you a personalized preview of your
+            business management dashboard — no sign-up required.
+          </p>
+          <Button
+            size="lg"
+            className="gap-2"
+            onClick={() => {
+              setStarted(true);
+              trackEvent.mutate({ sessionId, eventType: "demo_started" });
+            }}
+          >
+            <Play className="w-4 h-4" />
+            Launch Demo Simulator
+          </Button>
+        </div>
+      </section>
+    );
+  }
+
+  if (done) {
+    return (
+      <section
+        id="demo"
+        className="bg-gradient-to-br from-primary/5 via-background to-accent/5 border-y border-border"
+      >
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-10">
+          <div className="text-center space-y-4">
+            <CheckCircle2 className="w-12 h-12 text-primary mx-auto" />
+            <h2 className="text-3xl font-bold">
+              {bizName ? `${bizName}'s` : "Your"} Dashboard Preview
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Based on your answers, here are the tools your House would include.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {dashboardCards().map((c, i) => (
+              <Card key={i} className="bg-card border-border">
+                <CardContent className="p-6 flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <c.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">{c.title}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {c.reason}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center space-y-4">
+            <p className="text-muted-foreground">
+              Ready to build this for real?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/login">
+                <Button size="lg" className="gap-2 w-full sm:w-auto">
+                  Join the Collective
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => {
+                  setDone(false);
+                  setSlide(0);
+                  setAnswers({});
+                  setBizName("");
+                  setStarted(false);
+                }}
+              >
+                Try Again
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      id="demo"
+      className="bg-gradient-to-br from-primary/5 via-background to-accent/5 border-y border-border"
+    >
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-8">
+        {/* Progress */}
+        <div className="flex items-center gap-1">
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 flex-1 rounded-full transition-colors ${
+                i <= slide ? "bg-primary" : "bg-border"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Slide Content */}
+        <div className="text-center space-y-4">
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary">
+            {current.icon}
+          </div>
+          <h3 className="text-2xl font-bold">{current.title}</h3>
+          <p className="text-muted-foreground">{current.description}</p>
+        </div>
+
+        {/* Answer Area */}
+        {current.type === "choice" && current.options && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
+            {current.options.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => setAnswers({ ...answers, [slide]: opt })}
+                className={`px-4 py-3 rounded-lg border text-sm font-medium transition-colors text-left ${
+                  answers[slide] === opt
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card border-border text-foreground hover:border-primary/50"
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {current.type === "text" && (
+          <div className="max-w-md mx-auto">
+            <input
+              type="text"
+              placeholder="Enter your business name"
+              value={bizName}
+              onChange={(e) => {
+                setBizName(e.target.value);
+                setAnswers({ ...answers, [slide]: e.target.value });
+              }}
+              className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground text-center text-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              autoFocus
+            />
+          </div>
+        )}
+
+        {/* Navigation */}
+        <div className="flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={prev}
+            disabled={slide === 0}
+            className="gap-1"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            {slide + 1} / {slides.length}
+          </span>
+          <Button
+            size="sm"
+            onClick={next}
+            disabled={
+              current.type === "choice"
+                ? !answered
+                : current.type === "text"
+                ? !bizName.trim()
+                : false
+            }
+            className="gap-1"
+          >
+            {slide === slides.length - 1 ? "See Results" : "Next"}
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 }
