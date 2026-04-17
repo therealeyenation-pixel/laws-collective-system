@@ -1,0 +1,4 @@
+-- No-op: board_members table already has the correct columns in the database.
+-- Schema definition updated to match existing DB structure.
+-- Columns: employeeId, contractorBusinessId, userId, memberName, memberType, seatType,
+-- ownershipPercentage, votingRights, termStartDate, termEndDate, isActive, entityId, responsibilities

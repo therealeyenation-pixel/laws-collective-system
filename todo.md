@@ -12359,3 +12359,10 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add getEligibilityTimeline + getFoundingMemberTransitions procedures to router
 - [x] Add Eligibility Timeline tab to ContractorTransition UI (Founding Member vs Coordinator paths)
 - [x] Save checkpoint
+
+## Phase 85: Combined Contractor Transition Enhancements
+- [x] Auto-set transitionType on initiateTransition based on employee role (founding_member/coordinator/standard)
+- [x] Auto-trigger Board Member assignment + profit share when founding_member transition completes
+- [x] Seed test employees with staggered start dates for eligibility timeline testing
+- [x] Fix boardMembers schema/query mismatch (raw SQL for board_members table)
+- [x] Tests passing (4/4 in contractor-transition-eligibility.test.ts)

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
+import { sql } from "drizzle-orm";
 import {
   employees,
   contractorTransitions,
@@ -8,6 +9,7 @@ import {
   impactMetrics,
   foundingMembers,
   boardMembers,
+  boardPositions,
 } from "../../drizzle/schema";
 import { eq, and, desc, sql, gte, lte, isNull, isNotNull, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -205,7 +207,19 @@ export const contractorTransitionRouter = router({
         });
       }
 
-      // Create the transition record
+      // Auto-detect transition type based on employee role
+      const allFoundingMembers = await db.select().from(foundingMembers).where(eq(foundingMembers.status, "active"));
+      const fmNames = new Set(allFoundingMembers.map(fm => fm.fullName.toLowerCase()));
+      const isFoundingMember = fmNames.has(employeeFullName.toLowerCase()) || 
+        employee.positionLevel === "manager" || employee.positionLevel === "executive";
+      const isCoordinator = employee.positionLevel === "coordinator" || employee.positionLevel === "lead";
+      const transitionType = isFoundingMember ? "founding_member" as const : isCoordinator ? "coordinator" as const : "standard" as const;
+
+      // Calculate 2-year eligibility date
+      const startDate = employee.startDate ? new Date(employee.startDate) : new Date();
+      const twoYearDate = new Date(startDate.getTime() + 2 * 365.25 * 24 * 60 * 60 * 1000);
+
+      // Create the transition record with auto-detected type
       const [newTransition] = await db.insert(contractorTransitions).values({
         employeeId: input.employeeId,
         employeeName: employeeFullName,
@@ -213,13 +227,19 @@ export const contractorTransitionRouter = router({
         initiatedByName: ctx.user.name || "System",
         phase: "initiated",
         status: "active",
+        transitionType,
+        boardMemberEligible: isFoundingMember,
+        twoYearEligibilityDate: twoYearDate,
         notes: input.notes,
       }).$returningId();
+
+      const typeLabel = transitionType === 'founding_member' ? 'Founding Member → Contractor + Board Member' : transitionType === 'coordinator' ? 'Coordinator → Contractor (Manager backfill)' : 'Standard → Contractor';
 
       return {
         success: true,
         transitionId: newTransition.id,
-        message: `Transition initiated for ${employeeFullName}. Next step: Assign training modules.`,
+        transitionType,
+        message: `Transition initiated for ${employeeFullName} (${typeLabel}). Next step: Assign training modules.`,
         nextPhase: "training_assigned",
         requiredGates: ["Approve transition", "Assign training modules"],
       };
@@ -684,6 +704,21 @@ export const contractorTransitionRouter = router({
         dataSource: "L.A.W.S. Business OS",
       });
 
+      // AUTO-TRIGGER: If founding_member, assign Board Member seat + profit share
+      if (transition.transitionType === "founding_member") {
+        // Get employee info for the board member record
+        const [emp] = await db.select().from(employees)
+          .where(eq(employees.id, transition.employeeId)).limit(1);
+
+        // Create board member record using raw SQL (schema columns differ from DB)
+        await db.execute(sql`INSERT INTO board_members (employeeId, userId, memberName, memberType, seatType, votingRights, termStartDate, isActive, entityId) VALUES (${transition.employeeId}, ${emp?.userId || null}, ${transition.employeeName}, 'founding', 'board_member', 1, NOW(), 1, ${emp?.entityId || 1})`);
+
+        // Set profit share on the transition record
+        await db.update(contractorTransitions).set({
+          profitSharePercent: "5.00", // Default 5% profit share for founding members
+        }).where(eq(contractorTransitions.id, input.transitionId));
+      }
+
       return {
         success: true,
         message: `🎉 Transition Complete! ${transition.employeeName} is now an independent contractor operating as ${transition.entityName}.`,
@@ -893,8 +928,8 @@ export const contractorTransitionRouter = router({
       eq(foundingMembers.status, "active")
     );
 
-    // Get board members
-    const allBoardMembers = await db.select().from(boardMembers);
+    // Get board members using raw SQL (schema columns differ from DB)
+    const [allBoardMembers] = await db.execute(sql`SELECT id, employeeId, memberName, memberType, seatType, isActive, entityId FROM board_members`) as any;
 
     // Get transitions marked as founding_member type
     const fmTransitions = await db.select().from(contractorTransitions).where(
@@ -918,7 +953,7 @@ export const contractorTransitionRouter = router({
 
       // Find board membership
       const boardMembership = allBoardMembers.find(
-        bm => (bm as any).memberName?.toLowerCase() === fm.fullName.toLowerCase()
+        bm => bm.memberName?.toLowerCase() === fm.fullName.toLowerCase()
       );
 
       const startDate = matchingEmployee?.startDate ? new Date(matchingEmployee.startDate) : fm.foundingDate;
@@ -951,9 +986,10 @@ export const contractorTransitionRouter = router({
         } : null,
         // Board membership status
         boardMembership: boardMembership ? {
-          id: boardMembership.id,
-          positionId: boardMembership.positionId,
-          status: (boardMembership as any).status,
+          id: (boardMembership as any).id,
+          memberType: (boardMembership as any).memberType,
+          seatType: (boardMembership as any).seatType,
+          isActive: !!(boardMembership as any).isActive,
         } : null,
         // Dual path status
         contractorPathComplete: transition?.status === "completed",
