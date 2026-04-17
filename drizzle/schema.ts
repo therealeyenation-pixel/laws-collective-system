@@ -7881,6 +7881,12 @@ export const contractorTransitions = mysqlTable("contractor_transitions", {
     "cancelled"
   ]).default("initiated").notNull(),
   
+  // Transition type: founding_member gets Board seat + profit share; coordinator becomes contractor only
+  transitionType: mysqlEnum("transitionType", ["founding_member", "coordinator", "standard"]).default("standard").notNull(),
+  boardMemberEligible: boolean("boardMemberEligible").default(false).notNull(),
+  twoYearEligibilityDate: timestamp("twoYearEligibilityDate"),
+  profitSharePercent: decimal("profitSharePercent", { precision: 5, scale: 2 }),
+  
   // Training tracking
   trainingModuleId: int("trainingModuleId"),
   trainingStartDate: timestamp("trainingStartDate"),
@@ -9459,7 +9465,7 @@ export const foundingMembers = mysqlTable("founding_members", {
   verifiedAt: timestamp("verifiedAt"),
   
   // Status
-  status: mysqlEnum("foundingMemberStatus", [
+  status: mysqlEnum("status", [
     "active",
     "deceased",
     "inactive"

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { appRouter } from "./routers";
 
-describe.skip(/* router not wired into appRouter */ "Phase 69: Global Telecommunications & Emergency Resilience", () => {
+describe("Phase 69: Global Telecommunications & Emergency Resilience", () => {
   let caller: ReturnType<typeof appRouter.createCaller>;
   
   beforeAll(() => {

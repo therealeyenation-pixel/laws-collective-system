@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { appRouter } from './routers';
 
-describe.skip(/* router not wired into appRouter */ 'Sponsor Analytics Router', () => {
+describe('Sponsor Analytics Router', () => {
   const mockCreatorId = 'creator-123';
   let caller: ReturnType<typeof appRouter.createCaller>;
   

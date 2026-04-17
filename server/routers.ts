@@ -315,6 +315,8 @@ import { websocketSyncRouter } from "./routers/websocket-sync";
 import { systemActivationRouter } from "./routers/system-activation";
 import { departmentDashboardRouter } from "./routers/department-dashboard";
 import { playlistsRouter } from "./routers/playlists";
+import { globalTelecomRouter } from "./routers/global-telecom";
+import { sponsorAnalytics } from "./routers/sponsor-analytics";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -668,6 +670,8 @@ export const appRouter = router({
   systemActivation: systemActivationRouter,
   departmentDashboard: departmentDashboardRouter,
   playlists: playlistsRouter,
+  globalTelecom: globalTelecomRouter,
+  sponsorAnalytics: sponsorAnalytics,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>

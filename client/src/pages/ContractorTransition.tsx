@@ -35,7 +35,13 @@ import {
   BookOpen,
   ArrowUpRight,
   XCircle,
-  RefreshCw
+  RefreshCw,
+  Crown,
+  Star,
+  CalendarClock,
+  Timer,
+  Award,
+  UserCheck
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -105,6 +111,12 @@ export default function ContractorTransition() {
 
   // Get training stats
   const { data: trainingStats } = trpc.trainingTransition.getTrainingStats.useQuery();
+
+  // 2-Year Eligibility Timeline
+  const { data: eligibilityTimeline, isLoading: loadingTimeline } = trpc.contractorTransition.getEligibilityTimeline.useQuery();
+
+  // Founding Member dual-path tracking
+  const { data: foundingMemberData, isLoading: loadingFM } = trpc.contractorTransition.getFoundingMemberTransitions.useQuery();
 
   // Training eligibility check for selected employee
   const { data: eligibilityCheck, refetch: refetchEligibility } = trpc.trainingTransition.checkTransitionEligibility.useQuery(
@@ -282,6 +294,7 @@ export default function ContractorTransition() {
                 </Badge>
               )}
             </TabsTrigger>
+            <TabsTrigger value="eligibility">Eligibility Timeline</TabsTrigger>
             <TabsTrigger value="training">Training Tracker</TabsTrigger>
             <TabsTrigger value="completed">Completed</TabsTrigger>
           </TabsList>
@@ -674,6 +687,316 @@ export default function ContractorTransition() {
                     </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Eligibility Timeline Tab */}
+          <TabsContent value="eligibility" className="space-y-6 mt-6">
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                      <UserCheck className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{eligibilityTimeline?.summary?.eligibleNow ?? 0}</p>
+                      <p className="text-sm text-muted-foreground">Eligible Now</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                      <Timer className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{eligibilityTimeline?.summary?.approachingEligibility ?? 0}</p>
+                      <p className="text-sm text-muted-foreground">Approaching (6 mo)</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                      <Crown className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{eligibilityTimeline?.summary?.foundingMembers ?? 0}</p>
+                      <p className="text-sm text-muted-foreground">Founding Members</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                      <Users className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{eligibilityTimeline?.summary?.coordinators ?? 0}</p>
+                      <p className="text-sm text-muted-foreground">Coordinators</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Transition Paths Explanation */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="border-purple-200 dark:border-purple-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Crown className="w-5 h-5 text-purple-600" />
+                    Founding Member Path
+                  </CardTitle>
+                  <CardDescription>After 2-year employee period</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {[
+                      { icon: Briefcase, text: "Transition to Independent Contractor" },
+                      { icon: Crown, text: "Board Member seat assignment" },
+                      { icon: DollarSign, text: "Profit share percentage" },
+                      { icon: Shield, text: "Department staffing management" },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm">
+                        <item.icon className="w-4 h-4 text-purple-500 flex-shrink-0" />
+                        <span>{item.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="border-blue-200 dark:border-blue-800">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Star className="w-5 h-5 text-blue-600" />
+                    Coordinator Path
+                  </CardTitle>
+                  <CardDescription>After 2-year employee period</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {[
+                      { icon: Briefcase, text: "Transition to Independent Contractor" },
+                      { icon: TrendingUp, text: "Promotion to Manager role (backfill)" },
+                      { icon: GraduationCap, text: "Coordinator role backfilled by new hire" },
+                      { icon: Shield, text: "Department operational oversight" },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm">
+                        <item.icon className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                        <span>{item.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Founding Member Dual-Path Tracker */}
+            {foundingMemberData && foundingMemberData.foundingMembers.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Crown className="w-5 h-5 text-purple-600" />
+                    Founding Member Dual-Path Tracker
+                  </CardTitle>
+                  <CardDescription>
+                    Founding Members receive both Contractor status and Board Member seat with profit share
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {foundingMemberData.foundingMembers.map((fm: any) => (
+                      <div key={fm.id} className="p-4 bg-secondary/30 rounded-lg">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="w-10 h-10">
+                              <AvatarFallback className="bg-purple-100 text-purple-700">
+                                {fm.name?.split(' ').map((n: string) => n[0]).join('') || '??'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-semibold">{fm.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {fm.jobTitle || fm.foundingRole?.replace(/_/g, ' ')} &middot; {fm.department || fm.entityName}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            {fm.isEligible ? (
+                              <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                Eligible
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline">
+                                <CalendarClock className="w-3 h-3 mr-1" />
+                                {fm.daysUntilEligible > 0 ? `${fm.daysUntilEligible} days` : 'Eligible'}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        {/* Dual path indicators */}
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className={`p-3 rounded-lg text-center ${
+                            fm.contractorPathComplete 
+                              ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' 
+                              : fm.contractorTransition 
+                                ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800'
+                                : 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
+                          }`}>
+                            <Briefcase className={`w-5 h-5 mx-auto mb-1 ${
+                              fm.contractorPathComplete ? 'text-green-600' : fm.contractorTransition ? 'text-amber-600' : 'text-gray-400'
+                            }`} />
+                            <p className="text-xs font-medium">
+                              {fm.contractorPathComplete ? 'Contractor' : fm.contractorTransition ? `Phase: ${fm.contractorTransition.phase.replace(/_/g, ' ')}` : 'Not Started'}
+                            </p>
+                          </div>
+                          <div className={`p-3 rounded-lg text-center ${
+                            fm.boardSeatAssigned 
+                              ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
+                              : 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
+                          }`}>
+                            <Crown className={`w-5 h-5 mx-auto mb-1 ${
+                              fm.boardSeatAssigned ? 'text-green-600' : 'text-gray-400'
+                            }`} />
+                            <p className="text-xs font-medium">
+                              {fm.boardSeatAssigned ? 'Board Seat' : 'Pending'}
+                            </p>
+                          </div>
+                          <div className={`p-3 rounded-lg text-center ${
+                            fm.profitShareActive 
+                              ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
+                              : 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
+                          }`}>
+                            <DollarSign className={`w-5 h-5 mx-auto mb-1 ${
+                              fm.profitShareActive ? 'text-green-600' : 'text-gray-400'
+                            }`} />
+                            <p className="text-xs font-medium">
+                              {fm.profitShareActive ? `${fm.contractorTransition?.profitSharePercent}%` : 'Pending'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Full Employee Eligibility Timeline */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarClock className="w-5 h-5" />
+                  2-Year Eligibility Timeline
+                </CardTitle>
+                <CardDescription>
+                  All active employees sorted by eligibility date. Founding Members (Managers) transition to Contractor + Board Member. Coordinators transition to Contractor and backfill Manager roles.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingTimeline ? (
+                  <div className="py-8 text-center">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" />
+                  </div>
+                ) : !eligibilityTimeline?.timeline?.length ? (
+                  <div className="py-8 text-center text-muted-foreground">
+                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No active employees found</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {eligibilityTimeline.timeline.map((emp: any) => {
+                      const typeConfig = emp.transitionType === 'founding_member'
+                        ? { color: 'purple', icon: Crown, label: 'Founding Member' }
+                        : emp.transitionType === 'coordinator'
+                          ? { color: 'blue', icon: Star, label: 'Coordinator' }
+                          : { color: 'gray', icon: Users, label: 'Standard' };
+                      const TypeIcon = typeConfig.icon;
+
+                      return (
+                        <div
+                          key={emp.employeeId}
+                          className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
+                            emp.isEligible && !emp.alreadyTransitioning
+                              ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800'
+                              : emp.isApproaching && !emp.alreadyTransitioning
+                                ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800'
+                                : emp.alreadyTransitioning
+                                  ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800'
+                                  : 'bg-secondary/30 border-border'
+                          }`}
+                        >
+                          <div className="flex items-center gap-4">
+                            <Avatar className="w-10 h-10">
+                              <AvatarFallback>
+                                {emp.name?.split(' ').map((n: string) => n[0]).join('') || '??'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium">{emp.name}</p>
+                                <Badge variant="outline" className={`text-xs text-${typeConfig.color}-600 border-${typeConfig.color}-300`}>
+                                  <TypeIcon className="w-3 h-3 mr-1" />
+                                  {typeConfig.label}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                {emp.jobTitle} &middot; {emp.department}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <p className="text-sm font-medium">
+                                {emp.isEligible ? 'Eligible' : `${emp.daysUntilEligible} days`}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(emp.eligibilityDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                            {emp.alreadyTransitioning ? (
+                              <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                In Progress
+                              </Badge>
+                            ) : emp.isEligible ? (
+                              <Button
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedEmployee(emp.employeeId.toString());
+                                  setShowInitiateDialog(true);
+                                }}
+                              >
+                                <Play className="w-3 h-3 mr-1" />
+                                Start
+                              </Button>
+                            ) : emp.isApproaching ? (
+                              <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                                <Clock className="w-3 h-3 mr-1" />
+                                Approaching
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline" className="text-muted-foreground">
+                                <Lock className="w-3 h-3 mr-1" />
+                                Not Yet
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

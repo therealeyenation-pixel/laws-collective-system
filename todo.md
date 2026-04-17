@@ -12346,3 +12346,16 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Wire waitlist email signup on /demo results page to waitlist_signups table (already wired via trpc.waitlist.signup)
 - [x] Add assessment progress persistence to /join (DB via onboardingJourney tRPC + localStorage fallback for unauthenticated)
 - [x] Save checkpoint
+
+## Phase 84: Wire Unwired Routers + Contractor Transition Flow
+- [x] Wire globalTelecom router into appRouter
+- [x] Wire sponsorAnalytics router into appRouter
+- [x] Unskip globalTelecom and sponsorAnalytics tests
+- [x] Design contractor transition schema (already exists: contractor_transitions table)
+- [x] Create contractor-transition router (already exists: 14 procedures)
+- [x] Build ContractorTransition UI page with pipeline view (already exists: 2 pages)
+- [x] Register route and sidebar link (already registered)
+- [x] Add transitionType + boardMemberEligible + twoYearEligibilityDate columns to schema
+- [x] Add getEligibilityTimeline + getFoundingMemberTransitions procedures to router
+- [x] Add Eligibility Timeline tab to ContractorTransition UI (Founding Member vs Coordinator paths)
+- [x] Save checkpoint

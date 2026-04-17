@@ -1,0 +1,1 @@
+-- No-op: column was already named 'status' in the database

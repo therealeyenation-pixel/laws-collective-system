@@ -6,8 +6,10 @@ import {
   contractorTransitions,
   contractorBusinesses,
   impactMetrics,
+  foundingMembers,
+  boardMembers,
 } from "../../drizzle/schema";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, gte, lte, isNull, isNotNull, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 // ============================================
@@ -778,6 +780,200 @@ export const contractorTransitionRouter = router({
         message: "Transition cancelled",
       };
     }),
+
+  /**
+   * Get 2-year eligibility timeline for all active employees
+   * Shows who is approaching the 2-year mark and their transition type
+   * Founding Members → Contractor + Board Member + Profit Share
+   * Coordinators → Contractor only (backfill Manager role)
+   */
+  getEligibilityTimeline: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+    // Get all active employees
+    const allEmployees = await db.select().from(employees).where(
+      and(
+        eq(employees.status, "active"),
+        eq(employees.workerType, "employee")
+      )
+    );
+
+    // Get founding members for cross-reference
+    const allFoundingMembers = await db.select().from(foundingMembers).where(
+      eq(foundingMembers.status, "active")
+    );
+    const foundingMemberNames = new Set(allFoundingMembers.map(fm => fm.fullName.toLowerCase()));
+
+    // Get existing transitions to avoid duplicates
+    const existingTransitions = await db.select().from(contractorTransitions).where(
+      or(
+        eq(contractorTransitions.status, "active"),
+        eq(contractorTransitions.status, "completed")
+      )
+    );
+    const transitionedEmployeeIds = new Set(existingTransitions.map(t => t.employeeId));
+
+    const now = new Date();
+    const TWO_YEARS_MS = 2 * 365.25 * 24 * 60 * 60 * 1000;
+
+    const timeline = allEmployees.map(emp => {
+      const startDate = emp.startDate ? new Date(emp.startDate) : new Date();
+      const eligibilityDate = new Date(startDate.getTime() + TWO_YEARS_MS);
+      const msUntilEligible = eligibilityDate.getTime() - now.getTime();
+      const daysUntilEligible = Math.ceil(msUntilEligible / (24 * 60 * 60 * 1000));
+      const isEligible = daysUntilEligible <= 0;
+      const isApproaching = daysUntilEligible > 0 && daysUntilEligible <= 180; // within 6 months
+
+      // Determine transition type
+      const fullName = `${emp.firstName} ${emp.lastName}`.toLowerCase();
+      const isFoundingMember = foundingMemberNames.has(fullName) || 
+        emp.positionLevel === "manager" || 
+        emp.positionLevel === "executive";
+      const isCoordinator = emp.positionLevel === "coordinator" || emp.positionLevel === "lead";
+
+      const transitionType = isFoundingMember ? "founding_member" : isCoordinator ? "coordinator" : "standard";
+      const alreadyTransitioning = transitionedEmployeeIds.has(emp.id);
+
+      // Find matching transition if exists
+      const existingTransition = existingTransitions.find(t => t.employeeId === emp.id);
+
+      return {
+        employeeId: emp.id,
+        name: `${emp.firstName} ${emp.lastName}`,
+        jobTitle: emp.jobTitle,
+        department: emp.department,
+        positionLevel: emp.positionLevel,
+        startDate: emp.startDate,
+        eligibilityDate,
+        daysUntilEligible,
+        isEligible,
+        isApproaching,
+        transitionType,
+        boardMemberEligible: isFoundingMember,
+        profitShareEligible: isFoundingMember,
+        coordinatorPromotion: isCoordinator, // Coordinator → Manager backfill
+        alreadyTransitioning,
+        existingTransitionId: existingTransition?.id,
+        existingTransitionPhase: existingTransition?.phase,
+        existingTransitionStatus: existingTransition?.status,
+      };
+    }).sort((a, b) => a.daysUntilEligible - b.daysUntilEligible);
+
+    // Summary stats
+    const eligible = timeline.filter(t => t.isEligible && !t.alreadyTransitioning);
+    const approaching = timeline.filter(t => t.isApproaching && !t.alreadyTransitioning);
+    const foundingMemberCount = timeline.filter(t => t.transitionType === "founding_member").length;
+    const coordinatorCount = timeline.filter(t => t.transitionType === "coordinator").length;
+
+    return {
+      timeline,
+      summary: {
+        totalEmployees: allEmployees.length,
+        eligibleNow: eligible.length,
+        approachingEligibility: approaching.length,
+        foundingMembers: foundingMemberCount,
+        coordinators: coordinatorCount,
+        alreadyInTransition: existingTransitions.filter(t => t.status === "active").length,
+        completedTransitions: existingTransitions.filter(t => t.status === "completed").length,
+      },
+    };
+  }),
+
+  /**
+   * Get Founding Member transition details with Board Member tracking
+   * Shows the dual path: Contractor + Board Member + Profit Share
+   */
+  getFoundingMemberTransitions: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+    // Get founding members
+    const allFoundingMembers = await db.select().from(foundingMembers).where(
+      eq(foundingMembers.status, "active")
+    );
+
+    // Get board members
+    const allBoardMembers = await db.select().from(boardMembers);
+
+    // Get transitions marked as founding_member type
+    const fmTransitions = await db.select().from(contractorTransitions).where(
+      eq(contractorTransitions.transitionType, "founding_member")
+    );
+
+    // Get all active employees to cross-reference
+    const allEmployees = await db.select().from(employees);
+    const employeeMap = new Map(allEmployees.map(e => [e.id, e]));
+
+    const foundingMemberDetails = allFoundingMembers.map(fm => {
+      // Find matching employee
+      const matchingEmployee = allEmployees.find(
+        e => `${e.firstName} ${e.lastName}`.toLowerCase() === fm.fullName.toLowerCase()
+      );
+
+      // Find matching transition
+      const transition = matchingEmployee 
+        ? fmTransitions.find(t => t.employeeId === matchingEmployee.id)
+        : undefined;
+
+      // Find board membership
+      const boardMembership = allBoardMembers.find(
+        bm => (bm as any).memberName?.toLowerCase() === fm.fullName.toLowerCase()
+      );
+
+      const startDate = matchingEmployee?.startDate ? new Date(matchingEmployee.startDate) : fm.foundingDate;
+      const TWO_YEARS_MS = 2 * 365.25 * 24 * 60 * 60 * 1000;
+      const eligibilityDate = new Date(new Date(startDate).getTime() + TWO_YEARS_MS);
+      const now = new Date();
+      const isEligible = now >= eligibilityDate;
+
+      return {
+        id: fm.id,
+        name: fm.fullName,
+        foundingRole: fm.foundingRole,
+        foundingDate: fm.foundingDate,
+        entityName: fm.entityName,
+        employeeId: matchingEmployee?.id,
+        jobTitle: matchingEmployee?.jobTitle,
+        department: matchingEmployee?.department,
+        startDate,
+        eligibilityDate,
+        isEligible,
+        daysUntilEligible: Math.ceil((eligibilityDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)),
+        // Contractor transition status
+        contractorTransition: transition ? {
+          id: transition.id,
+          phase: transition.phase,
+          status: transition.status,
+          boardMemberEligible: transition.boardMemberEligible,
+          profitSharePercent: transition.profitSharePercent,
+          createdAt: transition.createdAt,
+        } : null,
+        // Board membership status
+        boardMembership: boardMembership ? {
+          id: boardMembership.id,
+          positionId: boardMembership.positionId,
+          status: (boardMembership as any).status,
+        } : null,
+        // Dual path status
+        contractorPathComplete: transition?.status === "completed",
+        boardSeatAssigned: !!boardMembership,
+        profitShareActive: !!transition?.profitSharePercent && parseFloat(transition.profitSharePercent) > 0,
+      };
+    });
+
+    return {
+      foundingMembers: foundingMemberDetails,
+      summary: {
+        total: foundingMemberDetails.length,
+        eligibleForTransition: foundingMemberDetails.filter(fm => fm.isEligible).length,
+        contractorPathStarted: foundingMemberDetails.filter(fm => fm.contractorTransition).length,
+        contractorPathComplete: foundingMemberDetails.filter(fm => fm.contractorPathComplete).length,
+        boardSeatsAssigned: foundingMemberDetails.filter(fm => fm.boardSeatAssigned).length,
+        profitShareActive: foundingMemberDetails.filter(fm => fm.profitShareActive).length,
+      },
+    };
+  }),
 });
 
 // Helper function to check if transition can advance
