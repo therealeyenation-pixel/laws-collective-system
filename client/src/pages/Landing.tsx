@@ -217,6 +217,7 @@ export default function Landing() {
                   <Briefcase className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold">Business Formation</h3>
+                <p className="text-xs text-primary/70 font-medium">L.A.W.S. Collective</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Guided simulators take you from concept to legally formed
                   business entity — S Corp, LLC, non-profit, and more. Training
@@ -230,6 +231,7 @@ export default function Landing() {
                   <Shield className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold">House Structure</h3>
+                <p className="text-xs text-primary/70 font-medium">LuvOnPurpose Autonomous Wealth System</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Once your business is established, your House provides a
                   customized management shell — financial tools, HR, compliance,
@@ -243,6 +245,7 @@ export default function Landing() {
                   <BookOpen className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold">Education &amp; Academy</h3>
+                <p className="text-xs text-primary/70 font-medium">LuvOnPurpose Academy and Outreach</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   LuvOnPurpose Academy and Outreach provides K-12 homeschool
                   programs, certification courses, coding &amp; AI simulators,
@@ -406,7 +409,7 @@ export default function Landing() {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Link href="/login">
+          <Link href="/pricing">
             <Button size="lg" className="gap-2">
               Start Your Journey
               <ChevronRight className="w-4 h-4" />
@@ -521,9 +524,20 @@ export default function Landing() {
               </div>
             </div>
           </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-xs text-muted-foreground">
-            L.A.W.S. Collective — Land, Air, Water, Self — Multi-Generational
-            Wealth Building System
+          <div className="border-t border-border mt-8 pt-8 space-y-2 text-center text-xs text-muted-foreground">
+            <p>
+              <span className="font-semibold">The L.A.W.S. Collective</span> (Employment &amp; Membership)
+              {" | "}
+              <span className="font-semibold">LuvOnPurpose Autonomous Wealth System</span> (House Structure &amp; Business Management)
+              {" | "}
+              <span className="font-semibold">LuvOnPurpose Academy and Outreach</span> (Education &amp; 508(c)(1)(a))
+            </p>
+            <p>
+              REAL-EYE-NATION (Performing Arts) — L.A.W.S. Collective, Design Department
+            </p>
+            <p>
+              LuvOnPurpose Academy and Outreach — Education, Certification &amp; Apprenticeship Programs
+            </p>
           </div>
         </div>
       </footer>
