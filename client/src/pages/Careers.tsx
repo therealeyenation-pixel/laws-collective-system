@@ -684,30 +684,34 @@ const POSITIONS = [
 ];
 
 // Add hiring status filter categories
+// Only show positions that are actually open for public applications
+const OPEN_POSITIONS = POSITIONS.filter(p => 
+  p.hiringStatus === "Open Position" ||
+  p.hiringStatus === "Open Position - Priority" ||
+  p.hiringStatus?.includes("Actively Recruiting") ||
+  p.hiringStatus?.includes("Ready to Hire")
+);
+
 const HIRING_STATUSES = [
-  { id: "all", label: "All Positions" },
+  { id: "all", label: "All Open Positions" },
   { id: "actively_recruiting", label: "Actively Recruiting", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Actively") || p.hiringStatus?.includes("Ready to Hire") },
-  { id: "open_position", label: "Open Position", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Open Position" },
-  { id: "future_hiring", label: "Future Hiring", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Future Hiring" },
-  { id: "pending_manager", label: "Pending Manager", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Pending Manager" },
-  { id: "filled_family", label: "Filled (Family)", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Filled") },
-  { id: "candidate_identified", label: "Candidate Identified", filter: (p: typeof POSITIONS[0]) => p.hiringStatus?.includes("Candidate Identified") },
+  { id: "open_position", label: "Open Position", filter: (p: typeof POSITIONS[0]) => p.hiringStatus === "Open Position" || p.hiringStatus === "Open Position - Priority" },
 ];
 
 const CATEGORIES = [
-  { id: "all", label: "All Positions", count: POSITIONS.length },
-  { id: "operations", label: "Operations", count: POSITIONS.filter(p => p.category === "operations").length },
-  { id: "finance", label: "Finance", count: POSITIONS.filter(p => p.category === "finance" || p.department === "Finance").length },
-  { id: "project_controls", label: "Project Controls", count: POSITIONS.filter(p => p.category === "project_controls").length },
-  { id: "contracts", label: "Contracts", count: POSITIONS.filter(p => p.category === "contracts").length },
-  { id: "community", label: "Community", count: POSITIONS.filter(p => p.category === "community").length },
-  { id: "education", label: "Education", count: POSITIONS.filter(p => p.category === "education").length },
-  { id: "health", label: "Health", count: POSITIONS.filter(p => p.category === "health").length },
-  { id: "design", label: "Design", count: POSITIONS.filter(p => p.category === "design").length },
-  { id: "media", label: "Media", count: POSITIONS.filter(p => p.category === "media").length },
-  { id: "technology", label: "Technology", count: POSITIONS.filter(p => p.category === "technology").length },
-  { id: "legal", label: "Legal", count: POSITIONS.filter(p => p.category === "legal").length },
-  { id: "real_estate", label: "Real Estate", count: POSITIONS.filter(p => p.category === "real_estate").length },
+  { id: "all", label: "All Open Positions", count: OPEN_POSITIONS.length },
+  { id: "operations", label: "Operations", count: OPEN_POSITIONS.filter(p => p.category === "operations").length },
+  { id: "finance", label: "Finance", count: OPEN_POSITIONS.filter(p => p.category === "finance" || p.department === "Finance").length },
+  { id: "project_controls", label: "Project Controls", count: OPEN_POSITIONS.filter(p => p.category === "project_controls").length },
+  { id: "contracts", label: "Contracts", count: OPEN_POSITIONS.filter(p => p.category === "contracts").length },
+  { id: "community", label: "Community", count: OPEN_POSITIONS.filter(p => p.category === "community").length },
+  { id: "education", label: "Education", count: OPEN_POSITIONS.filter(p => p.category === "education").length },
+  { id: "health", label: "Health", count: OPEN_POSITIONS.filter(p => p.category === "health").length },
+  { id: "design", label: "Design", count: OPEN_POSITIONS.filter(p => p.category === "design").length },
+  { id: "media", label: "Media", count: OPEN_POSITIONS.filter(p => p.category === "media").length },
+  { id: "technology", label: "Technology", count: OPEN_POSITIONS.filter(p => p.category === "technology").length },
+  { id: "legal", label: "Legal", count: OPEN_POSITIONS.filter(p => p.category === "legal").length },
+  { id: "real_estate", label: "Real Estate", count: OPEN_POSITIONS.filter(p => p.category === "real_estate").length },
 ];
 
 const BENEFITS = [
@@ -758,7 +762,7 @@ export default function Careers() {
     }
   });
 
-  const filteredPositions = POSITIONS.filter(p => {
+  const filteredPositions = OPEN_POSITIONS.filter(p => {
     const categoryMatch = selectedCategory === "all" || p.category === selectedCategory;
     const statusFilter = HIRING_STATUSES.find(s => s.id === selectedHiringStatus);
     const statusMatch = selectedHiringStatus === "all" || (statusFilter?.filter && statusFilter.filter(p));
@@ -988,7 +992,7 @@ export default function Careers() {
 
           {/* Results count */}
           <p className="text-center text-sm text-muted-foreground mb-8">
-            Showing {filteredPositions.length} of {POSITIONS.length} positions
+            Showing {filteredPositions.length} of {OPEN_POSITIONS.length} open positions
           </p>
 
           {/* Position Cards */}

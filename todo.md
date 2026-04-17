@@ -12387,3 +12387,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ## Phase 88: Add Demo Simulator to Landing Page
 - [x] Add interactive demo simulator section to Landing page for public engagement
 - [x] Save checkpoint
+
+## Phase 89: Careers Page - Only Show Open Positions
+- [x] Filter Careers page to only display open/active positions (24 of 40+ shown)
+- [x] Save checkpoint
