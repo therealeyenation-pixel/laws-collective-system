@@ -36,7 +36,7 @@ import {
   Gift, Calculator, RefreshCw, BarChart3, ClipboardList, Briefcase, 
   UserCircle, UserPlus, FolderKanban, Award, Music, Palette, Package, 
   Gamepad2, ChevronRight, ShoppingCart, FileSignature, FolderOpen,
-  CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye,
+  CreditCard, Heart, Landmark, FileCheck, Truck, Building, MapPin, Eye, Map,
   Crown, Scale, Layers, CheckCircle, AlertTriangle, Monitor, Search,
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
@@ -107,6 +107,7 @@ const menuCategories: MenuCategory[] = [
       { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "admin" },
       { icon: Shield, label: "Trademark Documents", path: "/trademark-documents", minRole: "admin" },
       { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
+      { icon: Map, label: "System Map", path: "/system-map", minRole: "owner" },
       { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner" },
       { icon: Building2, label: "House Management", path: "/houses", minRole: "admin" },
     ]

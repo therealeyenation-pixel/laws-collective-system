@@ -12366,3 +12366,12 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Seed test employees with staggered start dates for eligibility timeline testing
 - [x] Fix boardMembers schema/query mismatch (raw SQL for board_members table)
 - [x] Tests passing (4/4 in contractor-transition-eligibility.test.ts)
+
+## Phase 86: Fix Build OOM + System Map Page
+- [x] Fix QRCode import in Landing.tsx
+- [x] Lazy-load all 423 page components in App.tsx for code-splitting
+- [x] Verify production build completes without OOM (49s, 7102 modules)
+- [x] Build /system-map admin page with health dashboard, nav map, data overview
+- [x] Add getSystemStats procedure for DB table row counts
+- [x] Add sidebar link in DashboardLayout
+- [x] Save checkpoint
