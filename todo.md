@@ -12409,3 +12409,8 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Fix global-telecom test: add createCall procedure alias for createRadioChannel
 - [x] All 32 global-telecom tests now passing (was 2 failures)
 - [x] Save checkpoint
+
+## Phase 92: Landing Page Demo Repositioning
+- [x] Move demo simulator section higher on Landing page (now 4th section, right after About)
+- [x] Add Demo anchor link to nav bar for quick scroll access
+- [x] Save checkpoint

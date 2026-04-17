@@ -62,6 +62,9 @@ export default function Landing() {
               <a href="#framework" className="text-muted-foreground hover:text-foreground transition-colors">
                 Framework
               </a>
+              <a href="#demo" className="text-muted-foreground hover:text-foreground transition-colors">
+                Demo
+              </a>
               <a href="#founder" className="text-muted-foreground hover:text-foreground transition-colors">
                 Founder
               </a>
@@ -251,6 +254,9 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Interactive Demo Simulator */}
+      <DemoSimulatorSection sessionId={sessionId} trackEvent={trackEvent} />
+
       {/* L.A.W.S. Framework */}
       <section id="framework" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center space-y-4 mb-16">
@@ -317,9 +323,6 @@ export default function Landing() {
           ))}
         </div>
       </section>
-
-      {/* Interactive Demo Simulator */}
-      <DemoSimulatorSection sessionId={sessionId} trackEvent={trackEvent} />
 
       {/* Meet Luv / Founder Section */}
       <section id="founder" className="bg-secondary/30 border-y border-border">
