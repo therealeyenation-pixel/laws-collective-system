@@ -12375,3 +12375,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add getSystemStats procedure for DB table row counts
 - [x] Add sidebar link in DashboardLayout
 - [x] Save checkpoint
+
+## Phase 87: Website Restructure — 3 Distinct Paths
+- [x] Audit existing Landing, onboarding, simulator, business formation, and house pages
+- [x] Rebuild Landing Page: professional public face, explain L.A.W.S., Support/Donate CTA, "Join the Collective" CTA, Careers link
+- [x] Wire Member Journey: Join → Getting Started → Business Simulator → Business Formation → House Dashboard
+- [x] Owner Backdoor: /system-map (owner-only, already in sidebar)
+- [x] Employment as separate track: /careers (public, linked from landing nav)
+- [ ] Save checkpoint

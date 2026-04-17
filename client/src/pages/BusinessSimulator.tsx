@@ -911,13 +911,18 @@ export default function BusinessSimulator() {
               tokensEarned={selectedEntity?.tokensReward}
             />
 
-            <div className="flex gap-3 justify-center">
-              <Button variant="outline" onClick={() => window.location.href = "/business-formation"}>
-                View in Entity Management
+            <div className="flex flex-col gap-3 items-center">
+              <Button size="lg" onClick={() => window.location.href = "/business-formation"}>
+                Continue to Business Formation
               </Button>
-              <Button onClick={handleReset}>
-                Start New Training
-              </Button>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => window.location.href = "/house"}>
+                  View House Dashboard
+                </Button>
+                <Button variant="outline" onClick={handleReset}>
+                  Start New Training
+                </Button>
+              </div>
             </div>
           </div>
         );

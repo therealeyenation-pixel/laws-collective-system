@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { 
   Building2, CheckCircle2, Clock, AlertCircle, Plus, FileText, Shield, Loader2, 
   ChevronRight, MapPin, Calendar, Hash, Lock, Eye, EyeOff, CircleDot, 
-  FileCheck, Landmark, Users, Scale, Building, Briefcase
+  FileCheck, Landmark, Users, Scale, Building, Briefcase, ArrowRight, Home
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 
@@ -740,6 +740,29 @@ export default function BusinessFormation() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Next Step: Proceed to House Setup */}
+        <Card className="border-primary/30 bg-gradient-to-r from-primary/5 to-primary/10 mt-6">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-full bg-primary/10">
+                  <Home className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Ready for Your House?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Once your business entity is formed, your House management structure is customized to your business type with standard governance, finance, and operations tools.
+                  </p>
+                </div>
+              </div>
+              <Button size="lg" onClick={() => window.location.href = "/house"} className="gap-2 shrink-0">
+                Proceed to House Dashboard
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );

@@ -123,7 +123,7 @@ const WORKSHOP_SEQUENCE = [
 ];
 
 const PRIMARY_GOALS = [
-  { id: "start-business", label: "Start or grow a business", path: "/business-setup" },
+  { id: "start-business", label: "Start or grow a business", path: "/business-simulator" },
   { id: "employment", label: "Find employment or career opportunities", path: "/family-onboarding" },
   { id: "education", label: "Get training and certifications", path: "/academy" },
   { id: "community", label: "Join community programs", path: "/outreach" },
