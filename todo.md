@@ -12460,3 +12460,12 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Admin/staff/owner bypass all locks
 - [x] Write member-journey.test.ts (8 tests passing)
 - [x] Save checkpoint
+
+## Phase 99: Fix Deployment OOM Build Failure
+- [x] Diagnose why build uses too much memory (7086 modules, exit 137 = OOM killed)
+- [x] Optimize Vite build config with manual chunk splitting (vendor-react, vendor-radix, vendor-icons, vendor-charts, vendor-data, vendor-utils, vendor-ui, vendor-stripe, vendor-aws, vendor-markdown, vendor-pdf, vendor-other)
+- [x] Split app pages into granular chunks (games, simulators, hr-pages, grant-pages, house-pages, finance-pages, operations-pages, dashboard-pages)
+- [x] All page components already use lazy loading
+- [x] Test production build locally - succeeded in 3m 29s with 2.7GB peak memory
+- [x] Further split vendor-misc (12.8MB) into smaller chunks
+- [ ] Save checkpoint and verify publish works
