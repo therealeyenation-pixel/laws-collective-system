@@ -12522,3 +12522,10 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Remove "Find employment or career opportunities" from primary and secondary goal options in Getting Started
 - [x] Replace with collective-aligned option ("Establish a House & Trust structure")
 - [x] Check if waitlist feature exists in the system (YES - exists)
+
+## LuvOnPurpose Autonomous Wealth System Dashboard & Sidebar Restructure
+- [x] Create AutonomousWealthSystem.tsx dashboard page (overview of Houses, trust health, activation CTA)
+- [x] Add LAWS section to sidebar as parent grouping for House/Trust items
+- [x] Move Genesis House, Identity Vault, Succession Protocol, Trust Governance, House Dashboard under LAWS section
+- [x] Register /autonomous-wealth-system route in App.tsx
+- [x] Update Getting Started "Establish a House & Trust" goal to route to LAWS dashboard

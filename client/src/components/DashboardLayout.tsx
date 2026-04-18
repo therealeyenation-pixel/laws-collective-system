@@ -103,22 +103,55 @@ const hasAccess = (userRole: AccessLevel | undefined, requiredRole: AccessLevel)
 };
 
 const menuCategories: MenuCategory[] = [
-  // TRUST - Top Level Governance
+  // LUVONPURPOSE AUTONOMOUS WEALTH SYSTEM - Houses the House/Trust Architecture
   {
     icon: Crown,
-    label: "Trust",
-    minRole: "admin",
+    label: "Autonomous Wealth System",
+    minRole: "user",
     defaultOpen: false,
-    items: [
-      { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
-      { icon: CheckCircle, label: "Owner Action List", path: "/owner-actions", minRole: "owner" },
-      { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "admin" },
-      { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "admin" },
-      { icon: Shield, label: "Trademark Documents", path: "/trademark-documents", minRole: "admin" },
-      { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
-      { icon: Map, label: "System Map", path: "/system-map", minRole: "owner" },
-      { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner" },
-      { icon: Building2, label: "House Management", path: "/houses", minRole: "admin" },
+    subCategories: [
+      {
+        icon: Crown,
+        label: "Overview",
+        minRole: "user",
+        items: [
+          { icon: Crown, label: "LAWS Dashboard", path: "/autonomous-wealth-system", minRole: "user" },
+          { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
+          { icon: Map, label: "System Map", path: "/system-map", minRole: "owner" },
+        ]
+      },
+      {
+        icon: Rocket,
+        label: "House & Trust",
+        minRole: "user",
+        items: [
+          { icon: Rocket, label: "Start the First House", path: "/genesis", minRole: "admin" },
+          { icon: Home, label: "My House", path: "/house", minRole: "user" },
+          { icon: Building2, label: "House Management", path: "/houses", minRole: "admin" },
+          { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
+          { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "admin" },
+          { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "admin" },
+        ]
+      },
+      {
+        icon: Lock,
+        label: "Security & Succession",
+        minRole: "admin",
+        items: [
+          { icon: Lock, label: "Identity Vault", path: "/founder/identity-vault", minRole: "admin" },
+          { icon: ShieldAlert, label: "Succession Protocol", path: "/founder/succession-protocol", minRole: "admin" },
+          { icon: Shield, label: "Trademark Documents", path: "/trademark-documents", minRole: "admin" },
+        ]
+      },
+      {
+        icon: Settings,
+        label: "Administration",
+        minRole: "owner",
+        items: [
+          { icon: CheckCircle, label: "Owner Action List", path: "/owner-actions", minRole: "owner" },
+          { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner" },
+        ]
+      },
     ]
   },
 
@@ -225,9 +258,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Building2, label: "Business Listings", path: "/business-listings", minRole: "user" },
           { icon: FileText, label: "Operating Agreements", path: "/operating-agreements", minRole: "user" },
           { icon: BarChart3, label: "SWOT Analysis", path: "/swot-analysis", minRole: "user" },
-          { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin" },
-          { icon: Lock, label: "Identity Vault", path: "/founder/identity-vault", minRole: "admin" },
-          { icon: ShieldAlert, label: "Succession Protocol", path: "/founder/succession-protocol", minRole: "admin" },
+
           { icon: Building2, label: "Business Setup", path: "/business-setup", minRole: "admin" },
           { icon: FileText, label: "Upload Business Plan", path: "/business-plan-upload", minRole: "admin" },
           { icon: Gavel, label: "Board Meetings", path: "/board-meetings", minRole: "admin" },
@@ -580,7 +611,6 @@ const menuCategories: MenuCategory[] = [
       { icon: Layout, label: "Role Dashboards", path: "/role-dashboard", minRole: "admin" },
       { icon: Globe, label: "Language", path: "/language-settings", minRole: "user" },
       { icon: Settings, label: "User Preferences", path: "/user-preferences", minRole: "user" },
-      { icon: Home, label: "My House", path: "/house", minRole: "user" },
       { icon: Rocket, label: "Getting Started", path: "/getting-started", minRole: "user" },
     ]
   },

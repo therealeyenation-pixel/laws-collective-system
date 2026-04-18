@@ -32,6 +32,7 @@ const SocialMedia = lazy(() => import("./pages/SocialMedia"));
 const FoundationDashboard = lazy(() => import("./pages/FoundationDashboard"));
 const FinancialAutomation = lazy(() => import("./pages/FinancialAutomation"));
 const HouseDashboard = lazy(() => import("./pages/HouseDashboard"));
+const AutonomousWealthSystem = lazy(() => import("./pages/AutonomousWealthSystem"));
 const OwnerHouseSetup = lazy(() => import("./pages/OwnerHouseSetup"));
 const GenesisCeremony = lazy(() => import("./pages/GenesisCeremony"));
 const Landing = lazy(() => import("./pages/Landing"));
@@ -595,6 +596,7 @@ function Router() {
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
       <Route path="/settings/preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
       <Route path="/user-preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
+      <Route path="/autonomous-wealth-system">{() => <ProtectedRoute component={AutonomousWealthSystem} minRole="user" />}</Route>
       <Route path="/house">{() => <ProtectedRoute component={HouseDashboard} minRole="user" />}</Route>
       <Route path="/house-contracts">{() => <ProtectedRoute component={HouseContractManagement} minRole="user" />}</Route>
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>

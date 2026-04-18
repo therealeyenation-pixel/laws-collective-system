@@ -124,7 +124,7 @@ const WORKSHOP_SEQUENCE = [
 
 const PRIMARY_GOALS = [
   { id: "start-business", label: "Start or grow a business", path: "/business-simulator" },
-  { id: "establish-house", label: "Establish a House & Trust structure", path: "/genesis" },
+  { id: "establish-house", label: "Establish a House & Trust structure", path: "/autonomous-wealth-system" },
   { id: "education", label: "Get training and certifications", path: "/academy" },
   { id: "community", label: "Join community programs", path: "/outreach" },
   { id: "grants", label: "Apply for grants or funding", path: "/grants" },
