@@ -123,7 +123,6 @@ export const ACADEMY_PASS = {
     "Self-paced, progress-based learning",
   ],
   notes: [
-    "Free for heirs of Founding Members",
     "Scholarship program available for community members",
     "Included with L.A.W.S. Collective Member and Builder plans",
   ],

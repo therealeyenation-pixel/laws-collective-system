@@ -521,7 +521,7 @@ export default function Pricing() {
                 <div className="space-y-2 mb-6 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
                   <p className="text-xs font-semibold text-green-800">Special Programs:</p>
                   <p className="text-xs text-muted-foreground">
-                    Free for heirs of Founding Members. Scholarship program available for community members.
+                    Scholarship program available for community members.
                   </p>
                 </div>
 

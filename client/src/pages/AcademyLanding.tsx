@@ -189,7 +189,7 @@ export default function AcademyLanding() {
               </a>
             </div>
             <p className="text-xs text-muted-foreground mt-4">
-              Free for heirs of Founding Members. Included with Collective Member & Builder plans.
+              Included with Collective Member & Builder plans.
             </p>
           </div>
         </section>
@@ -337,7 +337,7 @@ export default function AcademyLanding() {
               <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg mb-6">
                 <p className="text-xs text-muted-foreground">
                   <span className="font-semibold text-green-800">Special programs:</span>{" "}
-                  Free for heirs of Founding Members. Scholarship program available.
+                  Scholarship program available.
                   Already included with Collective Member & Builder plans.
                 </p>
               </div>

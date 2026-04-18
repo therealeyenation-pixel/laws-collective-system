@@ -257,7 +257,7 @@ export default function Landing() {
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   LuvOnPurpose Academy and Outreach provides K-12 homeschool
                   programs, certification courses, coding &amp; AI simulators,
-                  and apprenticeship pathways. Free for heirs of founding members.
+                  and apprenticeship pathways.
                 </p>
               </CardContent>
             </Card>
