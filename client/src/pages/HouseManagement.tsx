@@ -589,7 +589,7 @@ export default function HouseManagement() {
         </Tabs>
       </div>
     
-      <PublicQAAgent agentType="house_qa" label="House Guide" />
+      <PublicQAAgent agentType="house_qa" label="House Guide" pageContext="User is on the House Management page configuring House settings, members, and linked entities." />
     </DashboardLayout>
   );
 }

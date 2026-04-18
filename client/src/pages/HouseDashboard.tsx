@@ -766,7 +766,7 @@ export default function HouseDashboard() {
         </Tabs>
       </div>
     
-      <PublicQAAgent agentType="house_qa" label="House Guide" />
+      <PublicQAAgent agentType="house_qa" label="House Guide" pageContext="User is viewing their House Dashboard with House metrics, linked businesses, and activation status overview." />
     </DashboardLayout>
   );
 }

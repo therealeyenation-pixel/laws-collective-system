@@ -290,7 +290,7 @@ export default function LearningHouses() {
         </Card>
       </div>
     
-      <PublicQAAgent agentType="house_qa" label="House Guide" />
+      <PublicQAAgent agentType="house_qa" label="House Guide" pageContext="User is viewing the Learning Houses page exploring the Three Houses of learning: Wonder, Form, and Mastery." />
     </DashboardLayout>
   );
 }

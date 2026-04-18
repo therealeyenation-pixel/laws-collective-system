@@ -79,6 +79,8 @@ interface PublicQAAgentProps {
   agentType: "academy_qa" | "house_qa" | "system_qa";
   /** Optional custom label override */
   label?: string;
+  /** Optional page context string describing what the user is currently viewing */
+  pageContext?: string;
 }
 
 /**
@@ -86,7 +88,7 @@ interface PublicQAAgentProps {
  * These agents can only answer questions — they cannot modify data or access internal systems.
  * Available to all authenticated users regardless of role.
  */
-export function PublicQAAgent({ agentType, label }: PublicQAAgentProps) {
+export function PublicQAAgent({ agentType, label, pageContext }: PublicQAAgentProps) {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -181,7 +183,7 @@ export function PublicQAAgent({ agentType, label }: PublicQAAgentProps) {
     };
     setMessages((prev) => [...prev, userMessage]);
     setIsSending(true);
-    sendMessage.mutate({ conversationId, message: inputMessage });
+    sendMessage.mutate({ conversationId, message: inputMessage, pageContext });
     setInputMessage("");
   };
 

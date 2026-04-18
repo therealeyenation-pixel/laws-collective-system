@@ -1407,7 +1407,7 @@ Example: 'Our community of 50,000 residents has only one workforce development c
         </div>
       </div>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is using the Grant Writing Simulator to draft and refine grant proposals." />
     </DashboardLayout>
   );
 }

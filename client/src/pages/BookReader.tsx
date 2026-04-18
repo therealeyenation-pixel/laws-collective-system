@@ -512,7 +512,7 @@ export default function BookReader() {
         )}
       </div>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is using the Virtual Library Book Reader with interactive reading and Q&A features." />
     </div>
   );
 }

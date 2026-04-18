@@ -766,7 +766,7 @@ export default function BusinessFormation() {
         </Card>
       </div>
     
-      <PublicQAAgent agentType="house_qa" label="House Guide" />
+      <PublicQAAgent agentType="house_qa" label="House Guide" pageContext="User is on the Business Formation page setting up or managing business entities linked to their House." />
     </DashboardLayout>
   );
 }

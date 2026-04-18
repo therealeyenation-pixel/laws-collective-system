@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { PageLoadingFallback } from "@/components/PageLoadingFallback";
 import { MediaPlayerProvider } from "./contexts/MediaPlayerContext";
 import { RadioPlayerProvider } from "./contexts/RadioPlayerContext";
 import MiniPlayer from "./components/MiniPlayer";
@@ -541,7 +542,7 @@ function Router() {
   // Protected routes: Trust System, Document Vault, Agents, Social Media
   return (
     <div className="flex flex-col min-h-screen">
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>
+      <Suspense fallback={<PageLoadingFallback />}>
       <Switch>
       {/* Public routes - no authentication required */}
       <Route path="/qr-holding" component={QRHolding} />

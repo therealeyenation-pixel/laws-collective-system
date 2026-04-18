@@ -1035,7 +1035,7 @@ export default function BusinessSimulator() {
         )}
       </div>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is using the Business Formation Simulator to configure and form a new business entity." />
     </DashboardLayout>
   );
 }

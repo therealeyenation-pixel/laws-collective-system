@@ -452,7 +452,7 @@ export default function ActivationProgress() {
         </Dialog>
       </div>
     
-      <PublicQAAgent agentType="system_qa" label="System Guide" />
+      <PublicQAAgent agentType="system_qa" label="System Guide" pageContext="User is viewing their Activation Progress tracker showing completion status across all 8 activation steps." />
     </DashboardLayout>
   );
 }

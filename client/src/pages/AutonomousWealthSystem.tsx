@@ -432,7 +432,7 @@ export default function AutonomousWealthSystem() {
         </Card>
       </div>
     
-      <PublicQAAgent agentType="system_qa" label="System Guide" />
+      <PublicQAAgent agentType="system_qa" label="System Guide" pageContext="User is viewing the Autonomous Wealth System overview page with system vision, features, and entity structure." />
     </DashboardLayout>
   );
 }

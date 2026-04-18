@@ -413,7 +413,7 @@ export default function AcademyLanding() {
         </div>
       </footer>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is viewing the Academy Landing page with program overview, curriculum highlights, and enrollment options." />
     </div>
   );
 }

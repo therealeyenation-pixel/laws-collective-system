@@ -550,7 +550,7 @@ export default function HouseContractManagement() {
         </Card>
       </div>
     
-      <PublicQAAgent agentType="house_qa" label="House Guide" />
+      <PublicQAAgent agentType="house_qa" label="House Guide" pageContext="User is managing House contracts including vendor agreements, service contracts, and compliance documents." />
     </DashboardLayout>
   );
 }

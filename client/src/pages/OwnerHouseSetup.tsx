@@ -748,7 +748,7 @@ export default function OwnerHouseSetup() {
         </Tabs>
       </div>
     
-      <PublicQAAgent agentType="house_qa" label="House Guide" />
+      <PublicQAAgent agentType="house_qa" label="House Guide" pageContext="User is on the Owner House Setup page configuring their House structure and initial settings." />
     </DashboardLayout>
   );
 }

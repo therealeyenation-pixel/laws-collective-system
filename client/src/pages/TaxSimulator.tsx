@@ -1168,7 +1168,7 @@ export default function TaxSimulator() {
         </Tabs>
       </div>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is using the Tax Strategy Simulator to model tax scenarios and optimize tax planning." />
     </DashboardLayout>
   );
 }

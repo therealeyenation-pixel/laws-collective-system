@@ -1048,7 +1048,7 @@ export default function ClosedLoopWealth() {
         </Tabs>
       </div>
     
-      <PublicQAAgent agentType="system_qa" label="System Guide" />
+      <PublicQAAgent agentType="system_qa" label="System Guide" pageContext="User is viewing the Closed-Loop Wealth system showing revenue flow, entity connections, and wealth cycle visualization." />
     </DashboardLayout>
   );
 }

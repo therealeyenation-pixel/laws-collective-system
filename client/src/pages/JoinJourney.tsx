@@ -807,7 +807,7 @@ function CompletionStep({ onViewCredential }: { onViewCredential: () => void }) 
         <ArrowRight className="w-4 h-4" />
       </Button>
     
-      <PublicQAAgent agentType="house_qa" label="House Guide" />
+      <PublicQAAgent agentType="house_qa" label="House Guide" pageContext="User is on the Join Journey page exploring the activation pathway and onboarding steps." />
     </div>
   );
 }

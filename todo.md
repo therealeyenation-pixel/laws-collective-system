@@ -12625,7 +12625,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Investigate and restore missing agent bots on Agents page (agents intact, all 15 types present)
 - [x] Hide CALEA Trust details from public-facing "About" section on Autonomous Wealth System page
 - [x] Swap steps 7 (Link Businesses) and 8 (Establish Trust Governance) in activation flow
-- [ ] Add loading/splash screen for heavy page transitions
+- [x] Add loading/splash screen for heavy page transitions
 - [ ] Save checkpoint
 
 ## Embed Agents into Department Pages (Remove Standalone Agents Page)
@@ -12660,3 +12660,15 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Verify public agents cannot access admin/internal data (sandboxed prompts)
 - [x] Production build succeeds (1m 16s)
 - [x] Save checkpoint
+
+## Enhance Public Q&A Agent Prompts + Loading Screen
+- [x] Enhance academy_qa prompt with course navigation, simulator guidance, certification info
+- [x] Enhance house_qa prompt with House status explanation, activation steps, financial data interpretation
+- [x] Enhance system_qa prompt with journey walkthrough, step explanations, next-action guidance
+- [x] Update PublicQAAgent component to accept pageContext prop for contextual awareness
+- [x] Add pageContext to all 19 PublicQAAgent embeddings with page-specific context strings
+- [x] Add pageContext parameter to chat tRPC mutation (server-side, injected into system prompt for public agents)
+- [x] Add branded PageLoadingFallback component for lazy-loaded heavy pages
+- [x] Wire PageLoadingFallback into App.tsx Suspense fallback
+- [x] Verify all changes compile and production build succeeds (1m 16s)
+- [ ] Save checkpoint

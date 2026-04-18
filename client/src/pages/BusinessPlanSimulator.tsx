@@ -1004,7 +1004,7 @@ export default function BusinessPlanSimulator() {
         </div>
       </div>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is using the Business Plan Simulator to create and refine a business plan." />
     </DashboardLayout>
   );
 }

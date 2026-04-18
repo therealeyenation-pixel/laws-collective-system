@@ -650,7 +650,7 @@ export default function TransitionSimulator() {
         </Tabs>
       </div>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is using the Transition Simulator to plan and model business or career transitions." />
     </DashboardLayout>
   );
 }

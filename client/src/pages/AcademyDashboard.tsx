@@ -787,7 +787,7 @@ export default function AcademyDashboard() {
         )}
       </div>
     
-      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is viewing the Academy Dashboard with course catalog, enrollment status, Divine STEM curriculum modules, Three Houses of learning, language programs, and simulator access." />
     </DashboardLayout>
   );
 }
