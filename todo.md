@@ -12838,3 +12838,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ### Landing Page QR Code
 - [x] Generate QR code pointing to finmap-spwuc63a.manus.space using qrcode.react
 - [x] Add QR code section to the landing page (before footer, with sharing message)
+
+## Phase 32: Pricing Redesign — Contribution-Based Model
+- [x] Redesign Pricing page: Year 1 = Annual Membership Contribution (full price)
+- [x] Add Year 2+ = Monthly Access Contribution OR discounted Annual Access Contribution
+- [x] Replace subscription/payment language with contribution throughout
+- [x] Add no-refund policy framed positively (contribution supports the collective mission)
+- [x] Maintain existing tier structure adapted to new model
+- [x] Update FAQ section with contribution model explanations
