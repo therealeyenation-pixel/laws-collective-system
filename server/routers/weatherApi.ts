@@ -1,4 +1,4 @@
-import { publicProcedure, router } from "@/server/_core/trpc";
+import { publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 
 // Map OpenWeatherMap condition codes to readable descriptions

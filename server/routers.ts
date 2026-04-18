@@ -68,7 +68,7 @@ import { portfolioManagementRouter } from "./routers/portfolio-management";
 import { collectiveInvestmentPoolsRouter } from "./routers/collective-investment-pools";
 import { communityFundsRouter } from "./routers/community-funds";
 import { heirDistributionRouter } from "./routers/heir-distribution";
-import { weatherApiRouter } from "./services/weather-api";
+// weatherApiRouter already imported from ./routers/weatherApi
 import { weatherAlertsRouter } from "./services/weather-alerts";
 import { emailDigestRouter } from "./services/email-digest";
 import { houseContractsRouter } from "./routers/house-contracts";
@@ -166,10 +166,7 @@ import { closedLoopWealthRouter } from "./routers/closed-loop-wealth";
 import { lawsEmploymentRouter } from "./routers/laws-employment";
 import { enhancedDonationsRouter } from "./routers/enhanced-donations";
 import { stripeDonationsRouter } from "./routers/stripe-donations";
-import { brainAutomationRouter } from "./routers/brain-automation";
-import { brainEmploymentAutomationRouter } from "./routers/brain-employment-automation";
-import { portfolioIncomeRouter } from "./routers/portfolio-income";
-import { portfolioManagementRouter } from "./routers/portfolio-management";
+// brainAutomationRouter, brainEmploymentAutomationRouter, portfolioIncomeRouter, portfolioManagementRouter already imported above
 import { donationAnalyticsRouter } from "./routers/donation-analytics";
 import { trialRouter } from "./routers/trial";
 import { contractsRouter } from "./routers/contracts";
@@ -311,7 +308,7 @@ import { automationRouter } from "./routers/automation";
 import { monitoringIntegrationsRouter } from "./routers/monitoring-integrations";
 import { realtimeCollaborationRouter } from "./routers/realtime-collaboration";
 import { mobilePushRouter } from "./routers/mobile-push";
-import { workflowExecutionRouter } from "./routers/workflow-execution";
+// workflowExecutionRouter already imported above
 import { websocketSyncRouter } from "./routers/websocket-sync";
 import { systemActivationRouter } from "./routers/system-activation";
 import { departmentDashboardRouter } from "./routers/department-dashboard";
