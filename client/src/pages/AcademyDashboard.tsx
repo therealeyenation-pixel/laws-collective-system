@@ -31,6 +31,7 @@ import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 type TabType = "overview" | "houses" | "modules" | "languages" | "courses" | "simulators" | "documents";
 
@@ -785,6 +786,8 @@ export default function AcademyDashboard() {
           </>
         )}
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </DashboardLayout>
   );
 }

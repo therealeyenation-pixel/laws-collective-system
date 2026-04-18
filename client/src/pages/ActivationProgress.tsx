@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import {
   CheckCircle2,
   Circle,
@@ -450,6 +451,8 @@ export default function ActivationProgress() {
           </DialogContent>
         </Dialog>
       </div>
+    
+      <PublicQAAgent agentType="system_qa" label="System Guide" />
     </DashboardLayout>
   );
 }

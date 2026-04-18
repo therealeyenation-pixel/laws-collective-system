@@ -49,6 +49,7 @@ import {
   BarChart3
 } from "lucide-react";
 import { toast } from "sonner";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 // Fund type icons and colors
 const FUND_CONFIG: Record<string, { icon: any; color: string; bgColor: string }> = {
@@ -1046,6 +1047,8 @@ export default function ClosedLoopWealth() {
           </TabsContent>
         </Tabs>
       </div>
+    
+      <PublicQAAgent agentType="system_qa" label="System Guide" />
     </DashboardLayout>
   );
 }

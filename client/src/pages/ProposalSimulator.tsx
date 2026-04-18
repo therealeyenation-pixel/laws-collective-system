@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 interface ProposalData {
   // Basic Info
@@ -817,6 +818,8 @@ ${isGov ? `
           </div>
         </Card>
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </DashboardLayout>
   );
 }

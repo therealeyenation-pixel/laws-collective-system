@@ -12648,3 +12648,15 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Verify steps 7/8 swap and About section privacy fix in browser
 - [x] Production build succeeds (1m 16s)
 - [x] Save checkpoint
+
+## Two-Tier Agent Architecture: Operational vs Public Q&A
+- [x] Add role check to DepartmentAgent component (only show for staff/admin/owner roles)
+- [x] Create PublicQAAgent component (read-only, sandboxed, no system access)
+- [x] Add public Q&A agent types to schema (academy_qa, house_qa, system_qa)
+- [x] Configure safe system prompts for public agents (no internal data exposure)
+- [x] Embed public Q&A agents in 19 member-facing pages
+- [x] Fix broken import patterns in 8 files from embed script
+- [x] Verify operational agents hidden from regular members (role check)
+- [x] Verify public agents cannot access admin/internal data (sandboxed prompts)
+- [x] Production build succeeds (1m 16s)
+- [x] Save checkpoint

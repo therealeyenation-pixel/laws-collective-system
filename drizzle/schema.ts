@@ -933,6 +933,9 @@ export const agents = mysqlTable("agents", {
     "project_controls", // Project controls and management
     "business",        // Business development and strategy
     "legal",           // Legal department
+    "academy_qa",      // Public Q&A for Academy members
+    "house_qa",        // Public Q&A for House/journey members
+    "system_qa",       // Public Q&A for general system questions
     "custom"           // User-defined agents
   ]).notNull(),
   description: text("description"),

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import {
   Briefcase,
   Building2,
@@ -648,6 +649,8 @@ export default function TransitionSimulator() {
           </TabsContent>
         </Tabs>
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </DashboardLayout>
   );
 }

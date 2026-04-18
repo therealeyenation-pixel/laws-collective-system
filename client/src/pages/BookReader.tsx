@@ -48,6 +48,7 @@ import {
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { LazyStreamdown } from "@/components/LazyStreamdown";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 const DISCUSSION_TYPES = {
   comprehension: { icon: HelpCircle, label: "Comprehension", description: "Basic understanding questions" },
@@ -510,6 +511,8 @@ export default function BookReader() {
           </aside>
         )}
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </div>
   );
 }

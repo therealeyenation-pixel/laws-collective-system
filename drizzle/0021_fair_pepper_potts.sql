@@ -1,0 +1,1 @@
+ALTER TABLE `agents` MODIFY COLUMN `type` enum('operations','support','education','analytics','guardian','finance','media','outreach','seo','engagement','hr','qaqc','purchasing','health','design','it','contracts','procurement','property','real_estate','project_controls','business','legal','academy_qa','house_qa','system_qa','custom') NOT NULL;

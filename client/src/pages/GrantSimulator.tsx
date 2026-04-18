@@ -42,6 +42,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 // Entity-specific grant recommendations
 const entityGrantRecommendations: Record<string, string[]> = {
@@ -1405,6 +1406,8 @@ Example: 'Our community of 50,000 residents has only one workforce development c
           )}
         </div>
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </DashboardLayout>
   );
 }

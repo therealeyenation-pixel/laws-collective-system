@@ -33,6 +33,7 @@ import {
 import { toast } from "sonner";
 import CompletionCertificate from "@/components/CompletionCertificate";
 import { trpc } from "@/lib/trpc";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 // Steps in the Business Plan Simulator
 const STEPS = [
@@ -1002,6 +1003,8 @@ export default function BusinessPlanSimulator() {
           )}
         </div>
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </DashboardLayout>
   );
 }

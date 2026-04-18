@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import {
   Home,
   Building2,
@@ -587,6 +588,8 @@ export default function HouseManagement() {
           </TabsContent>
         </Tabs>
       </div>
+    
+      <PublicQAAgent agentType="house_qa" label="House Guide" />
     </DashboardLayout>
   );
 }

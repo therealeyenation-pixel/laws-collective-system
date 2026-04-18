@@ -268,6 +268,73 @@ Be strategic, growth-oriented, and focused on sustainable business development.`
 Be thorough, risk-aware, and focused on legal protection and compliance.`,
 
   custom: `You are a custom automated house manager for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
+
+  // === PUBLIC Q&A AGENTS ===
+  // These agents are READ-ONLY and available to all authenticated members.
+  // They MUST NOT expose internal system architecture, admin processes, trust details,
+  // financial structures, or any operational information.
+
+  academy_qa: `You are the Academy Guide, a helpful Q&A assistant for students and members of the LuvOnPurpose Academy.
+
+Your role is strictly limited to:
+- Answering questions about available courses, curriculum, and learning paths
+- Explaining how simulators work (business, financial, grant, tax)
+- Guiding students on their progress and next steps
+- Explaining certificates and completion requirements
+- Providing general encouragement and study tips
+
+You MUST NOT:
+- Reveal any internal system architecture or admin processes
+- Discuss trust structures, financial allocations, or entity details
+- Provide information about staff operations or internal workflows
+- Share any details about the system build, code, or technical infrastructure
+- Make changes to any data or system settings
+
+If asked about topics outside your scope, politely redirect: "That's a great question! For detailed information about that topic, please reach out to your department coordinator or check the relevant section in your dashboard."
+
+Be friendly, encouraging, and focused on helping members learn and grow.`,
+
+  house_qa: `You are the House Guide, a helpful Q&A assistant for members navigating their House journey in the LuvOnPurpose system.
+
+Your role is strictly limited to:
+- Explaining what a "House" is and how it works at a high level
+- Guiding members through the activation steps
+- Answering questions about business formation basics
+- Explaining the general concept of linking businesses
+- Helping members understand their current progress and next steps
+
+You MUST NOT:
+- Reveal any internal system architecture, admin processes, or trust details
+- Discuss specific financial allocations, percentages, or trust governance
+- Provide information about the CALEA Trust or any trust-specific details
+- Share details about staff operations, internal workflows, or system build
+- Make changes to any data or system settings
+- Discuss token sequences, blockchain records, or internal ledger details
+
+If asked about sensitive topics, politely redirect: "For detailed information about trust structures or financial specifics, please connect with your assigned coordinator who can walk you through those details securely."
+
+Be supportive, clear, and focused on helping members progress through their journey.`,
+
+  system_qa: `You are the System Guide, a general Q&A assistant for members of the LuvOnPurpose Autonomous Wealth System.
+
+Your role is strictly limited to:
+- Explaining the general purpose and vision of the system
+- Answering basic navigation questions (where to find features)
+- Explaining the L.A.W.S. framework at a public level (Land, Air, Water, Self)
+- Helping members understand available features and services
+- Providing general guidance on getting started
+
+You MUST NOT:
+- Reveal any internal system architecture, admin processes, or trust details
+- Discuss specific financial structures, allocations, or entity hierarchies
+- Provide information about the CALEA Trust or any trust-specific details
+- Share details about staff operations, agent configurations, or system build
+- Make changes to any data or system settings
+- Discuss internal department operations or workflows
+
+If asked about internal operations or sensitive topics, politely redirect: "That's beyond what I can help with here. For detailed operational questions, please reach out to your department coordinator or visit the relevant section in your dashboard."
+
+Be welcoming, helpful, and focused on making the system accessible to all members.`,
 };
 
 // Preloaded topics for each agent type - interactive conversation starters
@@ -837,7 +904,7 @@ export const agentsRouter = router({
         avatar: "🤖",
         systemPrompt: AGENT_SYSTEM_PROMPTS.operations,
         capabilities: ["view_operations", "analyze_performance", "recommend_actions", "generate_reports"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Support Agent",
@@ -846,7 +913,7 @@ export const agentsRouter = router({
         avatar: "💬",
         systemPrompt: AGENT_SYSTEM_PROMPTS.support,
         capabilities: ["answer_questions", "provide_guidance", "explain_features", "troubleshoot"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Academy Tutor",
@@ -855,7 +922,7 @@ export const agentsRouter = router({
         avatar: "📚",
         systemPrompt: AGENT_SYSTEM_PROMPTS.education,
         capabilities: ["tutor_subjects", "track_progress", "recommend_lessons", "explain_concepts"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Analytics Agent",
@@ -864,7 +931,7 @@ export const agentsRouter = router({
         avatar: "📊",
         systemPrompt: AGENT_SYSTEM_PROMPTS.analytics,
         capabilities: ["analyze_data", "generate_reports", "identify_trends", "forecast_performance"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Trust Guardian",
@@ -873,7 +940,7 @@ export const agentsRouter = router({
         avatar: "🛡️",
         systemPrompt: AGENT_SYSTEM_PROMPTS.guardian,
         capabilities: ["monitor_governance", "verify_compliance", "protect_sovereignty", "audit_operations"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Finance Agent",
@@ -882,7 +949,7 @@ export const agentsRouter = router({
         avatar: "💰",
         systemPrompt: AGENT_SYSTEM_PROMPTS.finance,
         capabilities: ["track_tokens", "explain_transactions", "manage_allocations", "financial_insights"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Media Agent",
@@ -891,7 +958,7 @@ export const agentsRouter = router({
         avatar: "🎬",
         systemPrompt: AGENT_SYSTEM_PROMPTS.media,
         capabilities: ["generate_content", "create_narratives", "schedule_publications", "truth_mapping"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Outreach Agent",
@@ -900,7 +967,7 @@ export const agentsRouter = router({
         avatar: "📢",
         systemPrompt: AGENT_SYSTEM_PROMPTS.outreach,
         capabilities: ["social_media_posts", "email_campaigns", "press_releases", "content_calendar", "hashtag_strategy"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "SEO Agent",
@@ -909,7 +976,7 @@ export const agentsRouter = router({
         avatar: "🔍",
         systemPrompt: AGENT_SYSTEM_PROMPTS.seo,
         capabilities: ["keyword_research", "meta_optimization", "content_audit", "schema_markup", "competitor_analysis"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Engagement Agent",
@@ -918,7 +985,7 @@ export const agentsRouter = router({
         avatar: "📈",
         systemPrompt: AGENT_SYSTEM_PROMPTS.engagement,
         capabilities: ["analytics_tracking", "posting_optimization", "ab_testing", "audience_insights", "trend_identification"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "HR Agent",
@@ -927,7 +994,7 @@ export const agentsRouter = router({
         avatar: "👥",
         systemPrompt: AGENT_SYSTEM_PROMPTS.hr,
         capabilities: ["recruitment", "onboarding", "training", "policy_guidance", "employee_support"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "QA/QC Agent",
@@ -936,7 +1003,7 @@ export const agentsRouter = router({
         avatar: "✅",
         systemPrompt: AGENT_SYSTEM_PROMPTS.qaqc,
         capabilities: ["quality_audit", "compliance_check", "issue_tracking", "metrics_reporting", "improvement_planning"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Purchasing Agent",
@@ -945,7 +1012,7 @@ export const agentsRouter = router({
         avatar: "🛒",
         systemPrompt: AGENT_SYSTEM_PROMPTS.purchasing,
         capabilities: ["vendor_management", "purchase_orders", "spend_analysis", "budget_tracking", "procurement"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Health Agent",
@@ -954,7 +1021,7 @@ export const agentsRouter = router({
         avatar: "💚",
         systemPrompt: AGENT_SYSTEM_PROMPTS.health,
         capabilities: ["wellness_programs", "health_resources", "mental_health", "workshop_coordination", "community_health"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Design Agent",
@@ -963,7 +1030,7 @@ export const agentsRouter = router({
         avatar: "🎨",
         systemPrompt: AGENT_SYSTEM_PROMPTS.design,
         capabilities: ["brand_identity", "graphic_design", "ui_ux", "design_review", "style_guide"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "IT Agent",
@@ -972,7 +1039,7 @@ export const agentsRouter = router({
         avatar: "💻",
         systemPrompt: AGENT_SYSTEM_PROMPTS.it,
         capabilities: ["infrastructure", "cybersecurity", "system_admin", "troubleshooting", "data_backup"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Contracts Agent",
@@ -981,7 +1048,7 @@ export const agentsRouter = router({
         avatar: "📝",
         systemPrompt: AGENT_SYSTEM_PROMPTS.contracts,
         capabilities: ["contract_drafting", "negotiation", "compliance_tracking", "vendor_contracts", "deal_pipeline"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Procurement Agent",
@@ -990,7 +1057,7 @@ export const agentsRouter = router({
         avatar: "📦",
         systemPrompt: AGENT_SYSTEM_PROMPTS.procurement,
         capabilities: ["rfp_management", "vendor_evaluation", "strategic_sourcing", "procurement_workflow", "audit_trail"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Property Agent",
@@ -999,7 +1066,7 @@ export const agentsRouter = router({
         avatar: "🏢",
         systemPrompt: AGENT_SYSTEM_PROMPTS.property,
         capabilities: ["asset_tracking", "maintenance", "valuation", "insurance", "facility_management"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Real Estate Agent",
@@ -1008,7 +1075,7 @@ export const agentsRouter = router({
         avatar: "🏠",
         systemPrompt: AGENT_SYSTEM_PROMPTS.real_estate,
         capabilities: ["market_analysis", "lease_management", "portfolio_tracking", "due_diligence", "investment_analysis"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Project Controls Agent",
@@ -1017,7 +1084,7 @@ export const agentsRouter = router({
         avatar: "📋",
         systemPrompt: AGENT_SYSTEM_PROMPTS.project_controls,
         capabilities: ["schedule_tracking", "budget_management", "risk_monitoring", "resource_planning", "change_management"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Business Agent",
@@ -1026,7 +1093,7 @@ export const agentsRouter = router({
         avatar: "💼",
         systemPrompt: AGENT_SYSTEM_PROMPTS.business,
         capabilities: ["market_research", "business_planning", "partnership_development", "competitive_analysis", "revenue_modeling"],
-        isPublic: true,
+        isPublic: false,
       },
       {
         name: "Legal Agent",
@@ -1035,6 +1102,34 @@ export const agentsRouter = router({
         avatar: "⚖️",
         systemPrompt: AGENT_SYSTEM_PROMPTS.legal,
         capabilities: ["compliance", "document_review", "ip_protection", "governance", "risk_assessment"],
+        isPublic: false,
+      },
+      // === PUBLIC Q&A AGENTS (available to all authenticated members) ===
+      {
+        name: "Academy Guide",
+        type: "academy_qa" as const,
+        description: "Public Q&A assistant for Academy students. Answers questions about courses, simulators, certificates, and learning paths. Read-only — cannot access or modify system data.",
+        avatar: "🎓",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.academy_qa,
+        capabilities: ["course_info", "simulator_guidance", "certificate_info", "study_tips"],
+        isPublic: true,
+      },
+      {
+        name: "House Guide",
+        type: "house_qa" as const,
+        description: "Public Q&A assistant for members on their House journey. Answers questions about activation steps, business formation basics, and progress tracking. Read-only — cannot access or modify system data.",
+        avatar: "🏠",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.house_qa,
+        capabilities: ["journey_guidance", "activation_steps", "formation_basics", "progress_tracking"],
+        isPublic: true,
+      },
+      {
+        name: "System Guide",
+        type: "system_qa" as const,
+        description: "Public Q&A assistant for general system questions. Explains the L.A.W.S. framework, available features, and how to navigate the platform. Read-only — cannot access or modify system data.",
+        avatar: "🧭",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.system_qa,
+        capabilities: ["navigation_help", "feature_overview", "laws_framework", "getting_started"],
         isPublic: true,
       },
     ];

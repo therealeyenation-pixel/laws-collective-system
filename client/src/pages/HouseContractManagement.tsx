@@ -26,6 +26,7 @@ import {
   Loader2
 } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 const contractTypes = [
   { value: "vendor_agreement", label: "Vendor Agreement" },
@@ -548,6 +549,8 @@ export default function HouseContractManagement() {
           </CardContent>
         </Card>
       </div>
+    
+      <PublicQAAgent agentType="house_qa" label="House Guide" />
     </DashboardLayout>
   );
 }

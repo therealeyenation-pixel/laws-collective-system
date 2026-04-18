@@ -16,6 +16,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useSimulatorCompletion } from "@/hooks/useSimulatorCompletion";
 import CompletionCertificate from "@/components/CompletionCertificate";
 import TrademarkSearch from "@/components/TrademarkSearch";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import { 
   Building2, Shield, Landmark, Users, ChevronRight, ChevronLeft, Check, 
   DollarSign, Calendar, FileText, MapPin, Clock, AlertCircle, Sparkles,
@@ -1033,6 +1034,8 @@ export default function BusinessSimulator() {
           </div>
         )}
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </DashboardLayout>
   );
 }

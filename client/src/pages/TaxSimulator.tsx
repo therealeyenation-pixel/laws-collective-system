@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import {
   Calculator,
   FileText,
@@ -1166,6 +1167,8 @@ export default function TaxSimulator() {
           </TabsContent>
         </Tabs>
       </div>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </DashboardLayout>
   );
 }

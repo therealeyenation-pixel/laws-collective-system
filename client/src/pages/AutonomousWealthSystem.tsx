@@ -32,6 +32,7 @@ import {
   Layers,
 } from "lucide-react";
 import LAWSOnboardingGuide from "@/components/LAWSOnboardingGuide";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 interface HouseOverview {
   id: number;
@@ -430,6 +431,8 @@ export default function AutonomousWealthSystem() {
           </CardContent>
         </Card>
       </div>
+    
+      <PublicQAAgent agentType="system_qa" label="System Guide" />
     </DashboardLayout>
   );
 }

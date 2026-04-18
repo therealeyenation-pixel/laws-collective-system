@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import {
   Home,
   Users,
@@ -764,6 +765,8 @@ export default function HouseDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+    
+      <PublicQAAgent agentType="house_qa" label="House Guide" />
     </DashboardLayout>
   );
 }

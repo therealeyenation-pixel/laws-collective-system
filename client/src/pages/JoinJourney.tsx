@@ -23,6 +23,7 @@ import {
 } from '@/lib/onboarding/types';
 import { RealmIntro } from '@/components/onboarding/RealmIntro';
 import { RealmAssessment } from '@/components/onboarding/RealmAssessment';
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import { 
   ArrowRight, 
   CheckCircle2, 
@@ -805,6 +806,8 @@ function CompletionStep({ onViewCredential }: { onViewCredential: () => void }) 
         View My Credential
         <ArrowRight className="w-4 h-4" />
       </Button>
+    
+      <PublicQAAgent agentType="house_qa" label="House Guide" />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import {
   Sparkles,
   Shapes,
@@ -288,6 +289,8 @@ export default function LearningHouses() {
           </CardContent>
         </Card>
       </div>
+    
+      <PublicQAAgent agentType="house_qa" label="House Guide" />
     </DashboardLayout>
   );
 }

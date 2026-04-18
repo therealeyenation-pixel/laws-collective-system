@@ -19,6 +19,7 @@ import {
   FileCheck, Landmark, Users, Scale, Building, Briefcase, ArrowRight, Home
 } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 // Formation status levels
 type FormationStatus = "not_started" | "ein_obtained" | "formed" | "active";
@@ -764,6 +765,8 @@ export default function BusinessFormation() {
           </CardContent>
         </Card>
       </div>
+    
+      <PublicQAAgent agentType="house_qa" label="House Guide" />
     </DashboardLayout>
   );
 }

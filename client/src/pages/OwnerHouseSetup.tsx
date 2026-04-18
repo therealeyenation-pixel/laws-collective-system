@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 import {
   Building2,
   Home,
@@ -746,6 +747,8 @@ export default function OwnerHouseSetup() {
           </TabsContent>
         </Tabs>
       </div>
+    
+      <PublicQAAgent agentType="house_qa" label="House Guide" />
     </DashboardLayout>
   );
 }

@@ -29,6 +29,7 @@ import {
   Flame,
 } from "lucide-react";
 import { Link } from "wouter";
+import { PublicQAAgent } from "@/components/PublicQAAgent";
 
 const CURRICULUM_MODULES = [
   {
@@ -411,6 +412,8 @@ export default function AcademyLanding() {
           <p className="mt-1 text-xs">A 508(c)(1)(a) tax-exempt educational institution.</p>
         </div>
       </footer>
+    
+      <PublicQAAgent agentType="academy_qa" label="Academy Guide" />
     </div>
   );
 }
