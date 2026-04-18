@@ -12558,3 +12558,8 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ## Bug Fix: Authenticated users not redirected to dashboard from homepage
 - [x] Fix Home page to auto-redirect signed-in users to /autonomous-wealth-system dashboard
 - [ ] Save checkpoint
+
+## Owner/Admin CALEA Trust Access Control
+- [x] Update Landing redirect: owner goes to /trust-admin (CALEA Trust), others go to /autonomous-wealth-system
+- [x] Update CALEA Trust sidebar visibility: show to owner + admin role users (not just owner)
+- [ ] Save checkpoint

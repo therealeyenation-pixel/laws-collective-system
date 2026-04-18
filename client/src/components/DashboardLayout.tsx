@@ -105,20 +105,20 @@ const hasAccess = (userRole: AccessLevel | undefined, requiredRole: AccessLevel)
 
 const menuCategories: MenuCategory[] = [
   // 1. CALEA FREEMAN FAMILY TRUST (98 Trust) — Sovereign Foreign Trust, top of hierarchy
-  //    NOT public-facing. For international relations (UNDRIP/ADRIP). Owner-only.
+  //    NOT public-facing. For international relations (UNDRIP/ADRIP). Owner + selected admins.
   {
     icon: Landmark,
     label: "CALEA Freeman Family Trust",
-    minRole: "owner",
+    minRole: "admin",
     defaultOpen: false,
     items: [
-      { icon: Landmark, label: "98 Trust Administration", path: "/trust-admin", minRole: "owner" },
-      { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
-      { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "owner" },
-      { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "owner" },
-      { icon: Globe2, label: "UNDRIP/ADRIP Compliance", path: "/trust-admin?tab=compliance", minRole: "owner" },
-      { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
-      { icon: Map, label: "System Map", path: "/system-map", minRole: "owner" },
+      { icon: Landmark, label: "98 Trust Administration", path: "/trust-admin", minRole: "admin" },
+      { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "admin" },
+      { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "admin" },
+      { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "admin" },
+      { icon: Globe2, label: "UNDRIP/ADRIP Compliance", path: "/trust-admin?tab=compliance", minRole: "admin" },
+      { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "admin" },
+      { icon: Map, label: "System Map", path: "/system-map", minRole: "admin" },
     ]
   },
 

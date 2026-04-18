@@ -34,12 +34,16 @@ export default function Landing() {
   const { user, isAuthenticated, loading } = useAuth();
   const [, navigate] = useLocation();
 
-  // Auto-redirect authenticated users to dashboard
+  // Auto-redirect authenticated users to appropriate dashboard based on role
   useEffect(() => {
-    if (!loading && isAuthenticated) {
-      navigate("/autonomous-wealth-system");
+    if (!loading && isAuthenticated && user) {
+      if (user.role === "owner" || user.role === "admin") {
+        navigate("/trust-admin");
+      } else {
+        navigate("/autonomous-wealth-system");
+      }
     }
-  }, [loading, isAuthenticated, navigate]);
+  }, [loading, isAuthenticated, user, navigate]);
   const [sessionId] = useState(
     () =>
       `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
