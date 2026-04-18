@@ -70,12 +70,14 @@ export default function AdminSeeding() {
           </p>
         </Card>
       </div>
+      </DashboardLayout>
     );
   }
 
   const isSeeding = seedingChannels || seedingMovies || seedingSeries;
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background">
       <div className="container max-w-4xl mx-auto px-4 py-8">
         {/* Header */}

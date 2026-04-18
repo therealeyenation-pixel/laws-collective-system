@@ -98,6 +98,7 @@ export default function SystemOverview() {
           <p className="text-foreground">Loading LuvOnPurpose System...</p>
         </div>
       </div>
+      </DashboardLayout>
     );
   }
 

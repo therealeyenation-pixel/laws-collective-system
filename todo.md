@@ -12604,5 +12604,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add /broadcast-radio route (sidebar links updated from /broadcast-channels)
 - [x] Fix Music route reference error (Music → MusicPlayerReal)
 - [x] Verify dev server compiles and all pages load correctly
-- [ ] Verify production build succeeds
+- [x] Fix SystemOverview.tsx missing closing DashboardLayout tag in loading return
+- [x] Fix AdminSeeding.tsx missing DashboardLayout tags (opening + closing)
+- [x] Verify production build succeeds (built in 1m 20s)
 - [ ] Save checkpoint
