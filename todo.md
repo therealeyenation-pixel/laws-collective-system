@@ -12595,9 +12595,14 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [ ] Save checkpoint
 
 ## Deep Cleanup: Fix Build Errors + Remove Bloat
-- [ ] Fix syntax errors: SystemOverview.tsx (line 405), TrustAdminDashboard.tsx (line 805), TheaterLiveReal.tsx (line 541), PlaylistDetail.tsx (line 515), IPTVAdminPanel.tsx (line 376), NowPlaying.tsx (line 55), TheaterNowPlaying.tsx (line 239)
-- [ ] Audit all 335 pages for duplicates and unnecessary placeholders
-- [ ] Remove duplicate/dead pages and their routes from App.tsx
-- [ ] Consolidate overlapping functionality
+- [x] Fix syntax errors: SystemOverview.tsx (line 405), TrustAdminDashboard.tsx (line 805), TheaterLiveReal.tsx (line 541), PlaylistDetail.tsx (line 515), IPTVAdminPanel.tsx (line 376), NowPlaying.tsx (line 55), TheaterNowPlaying.tsx (line 239)
+- [x] Audit all 335 pages for duplicates and unnecessary placeholders
+- [x] Remove 14 orphaned page files + 9 duplicate page files
+- [x] Remove lazy imports from App.tsx for deleted pages
+- [x] Update routes in App.tsx to redirect duplicates to primary pages
+- [x] Update all sidebar links in DashboardLayout.tsx to point to primary pages
+- [x] Add /broadcast-radio route (sidebar links updated from /broadcast-channels)
+- [x] Fix Music route reference error (Music → MusicPlayerReal)
+- [x] Verify dev server compiles and all pages load correctly
 - [ ] Verify production build succeeds
 - [ ] Save checkpoint

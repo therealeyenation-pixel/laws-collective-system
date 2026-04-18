@@ -214,7 +214,7 @@ const menuCategories: MenuCategory[] = [
         minRole: "user",
         items: [
           { icon: Play, label: "Theater & IPTV", path: "/theater-live", minRole: "user" },
-          { icon: Music, label: "Broadcast Radio", path: "/broadcast-channels", minRole: "user" },
+          { icon: Music, label: "Broadcast Radio", path: "/broadcast-radio", minRole: "user" },
           { icon: Disc3, label: "Streaming Hub", path: "/streaming", minRole: "user" },
         ]
       },
@@ -248,10 +248,10 @@ const menuCategories: MenuCategory[] = [
         minRole: "user",
         items: [
           { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
-          { icon: Video, label: "Enhanced EPG", path: "/theater-live-enhanced", minRole: "user" },
+          { icon: Video, label: "Enhanced EPG", path: "/theater-live", minRole: "user" },
           { icon: Disc3, label: "VOD Library", path: "/theater-vod", minRole: "user" },
           { icon: ListMusic, label: "Now Playing", path: "/theater-now-playing", minRole: "user" },
-          { icon: History, label: "Playback History", path: "/theater-playback-history", minRole: "user" },
+          { icon: History, label: "Playback History", path: "/theater-now-playing", minRole: "user" },
         ]
       },
       // Broadcast Radio (primary home)
@@ -260,8 +260,8 @@ const menuCategories: MenuCategory[] = [
         label: "Broadcast Radio",
         minRole: "user",
         items: [
-          { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
-          { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
+          { icon: Music, label: "Channels", path: "/broadcast-radio", minRole: "user" },
+          { icon: FileText, label: "Episodes", path: "/broadcast-radio", minRole: "user" },
           { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
           { icon: ListMusic, label: "Now Playing", path: "/now-playing", minRole: "user" },
           { icon: History, label: "Playback History", path: "/playback-history", minRole: "user" },
@@ -274,8 +274,8 @@ const menuCategories: MenuCategory[] = [
         minRole: "user",
         items: [
           { icon: Disc3, label: "All Streams", path: "/streaming", minRole: "user" },
-          { icon: Play, label: "Theater", path: "/theater-live-enhanced", minRole: "user" },
-          { icon: Music, label: "Radio", path: "/broadcast-channels", minRole: "user" },
+          { icon: Play, label: "Theater", path: "/theater-live", minRole: "user" },
+          { icon: Music, label: "Radio", path: "/broadcast-radio", minRole: "user" },
           { icon: Music, label: "Music", path: "/music", minRole: "user" },
           { icon: AlertTriangle, label: "Emergency Alerts", path: "/emergency", minRole: "user" },
         ]

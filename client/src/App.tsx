@@ -157,7 +157,6 @@ const Contact = lazy(() => import("@/pages/Contact"));
 const Support = lazy(() => import("@/pages/Support"));
 const ContractorTransition = lazy(() => import("./pages/ContractorTransition"));
 const ContractorAgreement = lazy(() => import("./pages/ContractorAgreement"));
-const ContractorTransitions = lazy(() => import("./pages/ContractorTransitions"));
 const CareerPathPlanner = lazy(() => import("./pages/CareerPathPlanner"));
 const BenefitsComparison = lazy(() => import("./pages/BenefitsComparison"));
 const SignatureVerification = lazy(() => import("./pages/SignatureVerification"));
@@ -356,26 +355,19 @@ const OfflineSettings = lazy(() => import("@/pages/OfflineSettings"));
 const RealtimeDashboardSync = lazy(() => import("@/pages/RealtimeDashboardSync"));
 const CustomReportScheduling = lazy(() => import("@/pages/CustomReportScheduling"));
 const TeamCollaboration = lazy(() => import("@/pages/TeamCollaboration"));
-const TheaterLive = lazy(() => import("@/pages/TheaterLive"));
 const TheaterLiveReal = lazy(() => import("@/pages/TheaterLiveReal"));
-const TheaterEnhanced = lazy(() => import("@/pages/TheaterEnhanced"));
-const TheaterLiveEnhanced = lazy(() => import("@/pages/TheaterLiveEnhanced"));
 const IPTVAdminPanel = lazy(() => import("@/pages/IPTVAdminPanel"));
 const TheaterVOD = lazy(() => import("@/pages/TheaterVOD"));
-const BroadcastChannels = lazy(() => import("@/pages/BroadcastChannels"));
 const BroadcastRadioReal = lazy(() => import("@/pages/BroadcastRadioReal"));
 const MyLibrary = lazy(() => import("@/pages/MyLibrary"));
 const PlaylistDetail = lazy(() => import("@/pages/PlaylistDetail"));
 const NowPlaying = lazy(() => import("@/pages/NowPlaying"));
 const PlaybackHistory = lazy(() => import("@/pages/PlaybackHistory"));
 const TheaterNowPlaying = lazy(() => import("@/pages/TheaterNowPlaying"));
-const TheaterPlaybackHistory = lazy(() => import("@/pages/TheaterPlaybackHistory"));
 const EmailCampaignDashboard = lazy(() => import("@/pages/EmailCampaignDashboard"));
-const BroadcastEpisodes = lazy(() => import("@/pages/BroadcastEpisodes"));
 const LiveBroadcasts = lazy(() => import("@/pages/LiveBroadcasts"));
 const Emergency = lazy(() => import("@/pages/Emergency"));
 const Conference = lazy(() => import("@/pages/Conference"));
-const Music = lazy(() => import("@/pages/Music"));
 const MusicPlayerReal = lazy(() => import("@/pages/MusicPlayerReal"));
 const AdminSeeding = lazy(() => import("@/pages/AdminSeeding"));
 const RealtimeDashboards = lazy(() => import("@/pages/RealtimeDashboards"));
@@ -664,7 +656,6 @@ function Router() {
       <Route path="/hr-admin">{() => <ProtectedRoute component={HRAdmin} minRole="admin" />}</Route>
       <Route path="/performance-reviews">{() => <ProtectedRoute component={PerformanceReviews} minRole="staff" />}</Route>
       <Route path="/contractor-transition">{() => <ProtectedRoute component={ContractorTransition} minRole="staff" />}</Route>
-      <Route path="/contractor-transitions">{() => <ProtectedRoute component={ContractorTransitions} minRole="staff" />}</Route>
       <Route path="/career-path-planner">{() => <ProtectedRoute component={CareerPathPlanner} minRole="staff" />}</Route>
       <Route path="/worker-progression">{() => <ProtectedRoute component={WorkerProgression} minRole="staff" />}</Route>
       <Route path="/laws-employment">{() => <LAWSEmploymentPortal />}</Route>
@@ -985,13 +976,14 @@ function Router() {
       <Route path="/custom-report-scheduling">{() => <ProtectedRoute component={CustomReportScheduling} />}</Route>
       <Route path="/team-collaboration">{() => <ProtectedRoute component={TeamCollaboration} />}</Route>
       <Route path="/theater-live">{() => <ProtectedRoute component={TheaterLiveReal} />}</Route>
-      <Route path="/theater-live-enhanced" component={TheaterEnhanced} />
+      <Route path="/theater-live-enhanced">{() => <ProtectedRoute component={TheaterLiveReal} />}</Route>
       <Route path="/theater-vod" component={TheaterVOD} />
       <Route path="/theater-now-playing">{() => <ProtectedRoute component={TheaterNowPlaying} />}</Route>
-      <Route path="/theater-playback-history">{() => <ProtectedRoute component={TheaterPlaybackHistory} />}</Route>
+      <Route path="/theater-playback-history">{() => <ProtectedRoute component={TheaterNowPlaying} />}</Route>
       <Route path="/iptv-admin">{() => <ProtectedRoute component={IPTVAdminPanel} />}</Route>
+      <Route path="/broadcast-radio" component={BroadcastRadioReal} />
       <Route path="/broadcast-channels" component={BroadcastRadioReal} />
-      <Route path="/broadcast-episodes" component={BroadcastEpisodes} />
+      <Route path="/broadcast-episodes">{() => <ProtectedRoute component={BroadcastRadioReal} />}</Route>
       <Route path="/live-broadcasts" component={LiveBroadcasts} />
       <Route path="/emergency" component={Emergency} />
       <Route path="/my-library">{() => <ProtectedRoute component={MyLibrary} />}</Route>
@@ -1002,7 +994,7 @@ function Router() {
       <Route path="/conference" component={Conference} />
       <Route path="/email-campaigns">{() => <ProtectedRoute component={EmailCampaignDashboard} />}</Route>
 
-      <Route path="/music" component={Music} />
+      <Route path="/music" component={MusicPlayerReal} />
       <Route path="/realtime-dashboards">{() => <ProtectedRoute component={RealtimeDashboards} />}</Route>
       <Route path="/compliance-export">{() => <ProtectedRoute component={ComplianceExport} />}</Route>
       <Route path="/alert-rules">{() => <ProtectedRoute component={AlertRules} />}</Route>
