@@ -12501,3 +12501,9 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Build Identity Vault UI page with Display Layer / Encrypted Vault / Access Log tabs
 - [x] Add Identity Vault route and navigation
 - [x] Write and pass 13 unit tests for encryption, PIN, distribution, dual-layer model
+
+## Distribution Update: Include Cornelius at 5%
+- [x] Update GENESIS_FAMILY_DISTRIBUTION in genesis-house router (add Cornelius 5%, reduce Future from 51% to 46%)
+- [x] Update distribution test to include Cornelius and verify new totals
+- [x] Update test that previously asserted Cornelius exclusion
+- [x] Verify all tests pass

@@ -44,8 +44,8 @@ const GENESIS_FAMILY_DISTRIBUTION = {
   amber: { alias: "Amber", percentage: 13, relationship: "child" as const },
   essence: { alias: "Essence", percentage: 13, relationship: "child" as const },
   amandes: { alias: "Amandes", percentage: 13, relationship: "child" as const },
-  future: { alias: "Future Beneficiaries", percentage: 51, relationship: "other" as const },
-  // Cornelius explicitly excluded
+  cornelius: { alias: "Cornelius", percentage: 5, relationship: "child" as const },
+  future: { alias: "Future Beneficiaries", percentage: 46, relationship: "other" as const },
 };
 
 export const genesisHouseRouter = router({
@@ -864,7 +864,7 @@ export const genesisHouseRouter = router({
         (sum, d) => sum + d.percentage,
         0
       ),
-      note: "Craig 10%, Amber 13%, Essence 13%, Amandes 13%, remainder (51%) to Future Beneficiaries. Cornelius excluded.",
+      note: "Craig 10%, Amber 13%, Essence 13%, Amandes 13%, Cornelius 5% (flows to grandchildren), remainder (46%) to Future Beneficiaries.",
     };
   }),
 });

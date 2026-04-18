@@ -128,13 +128,14 @@ describe("Vault PIN", () => {
 });
 
 describe("Genesis House Distribution", () => {
-  it("should have correct distribution percentages", () => {
+  it("should have correct distribution percentages totaling 100%", () => {
     const distribution = {
       craig: 10,
       amber: 13,
       essence: 13,
       amandes: 13,
-      future: 51,
+      cornelius: 5,
+      future: 46,
     };
     
     const total = Object.values(distribution).reduce((sum, pct) => sum + pct, 0);
@@ -145,12 +146,18 @@ describe("Genesis House Distribution", () => {
     expect(distribution.amber).toBe(13);
     expect(distribution.essence).toBe(13);
     expect(distribution.amandes).toBe(13);
-    expect(distribution.future).toBe(51);
+    expect(distribution.cornelius).toBe(5);
+    expect(distribution.future).toBe(46);
   });
 
-  it("should exclude Cornelius from distribution", () => {
-    const beneficiaries = ["craig", "amber", "essence", "amandes", "future"];
-    expect(beneficiaries).not.toContain("cornelius");
+  it("should include Cornelius at 5% (flows to grandchildren)", () => {
+    const beneficiaries = ["craig", "amber", "essence", "amandes", "cornelius", "future"];
+    expect(beneficiaries).toContain("cornelius");
+    
+    const distribution: Record<string, number> = {
+      craig: 10, amber: 13, essence: 13, amandes: 13, cornelius: 5, future: 46,
+    };
+    expect(distribution.cornelius).toBe(5);
   });
 });
 
