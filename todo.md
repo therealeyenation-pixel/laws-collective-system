@@ -12507,3 +12507,13 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Update distribution test to include Cornelius and verify new totals
 - [x] Update test that previously asserted Cornelius exclusion
 - [x] Verify all tests pass
+
+## Succession Protocol (Vault Succession)
+- [x] Add emergencyVaultAccess, designatedSuccessors, houseVaultConfig tables to schema
+- [x] Push schema to database (tables already existed, marked migration as applied)
+- [x] Create vault-succession router with CRUD for vault config, successors, emergency requests
+- [x] Wire vault-succession router into server/routers.ts
+- [x] Build Succession Protocol UI page with 3 tabs (Vault Template, Successors, Emergency)
+- [x] Add Succession Protocol route and sidebar navigation
+- [x] Create LazyStreamdown wrapper for code-split Streamdown/shiki
+- [x] Replace direct Streamdown import in AIChatBox with LazyStreamdown

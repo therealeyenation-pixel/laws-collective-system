@@ -41,7 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail
+  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -227,6 +227,7 @@ const menuCategories: MenuCategory[] = [
           { icon: BarChart3, label: "SWOT Analysis", path: "/swot-analysis", minRole: "user" },
           { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin" },
           { icon: Lock, label: "Identity Vault", path: "/founder/identity-vault", minRole: "admin" },
+          { icon: ShieldAlert, label: "Succession Protocol", path: "/founder/succession-protocol", minRole: "admin" },
           { icon: Building2, label: "Business Setup", path: "/business-setup", minRole: "admin" },
           { icon: FileText, label: "Upload Business Plan", path: "/business-plan-upload", minRole: "admin" },
           { icon: Gavel, label: "Board Meetings", path: "/board-meetings", minRole: "admin" },

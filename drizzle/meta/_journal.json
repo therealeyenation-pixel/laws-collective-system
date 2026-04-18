@@ -127,6 +127,13 @@
       "when": 1776475339087,
       "tag": "0017_purple_blink",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1776485033447,
+      "tag": "0018_living_spitfire",
+      "breakpoints": true
     }
   ]
 }

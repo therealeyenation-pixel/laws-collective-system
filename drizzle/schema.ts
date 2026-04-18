@@ -20053,3 +20053,90 @@ export const systemConfig = mysqlTable("system_config", {
 
 export type SystemConfig = typeof systemConfig.$inferSelect;
 export type InsertSystemConfig = typeof systemConfig.$inferInsert;
+
+/**
+ * Emergency Vault Access - Time-locked emergency access requests
+ * Designated successors can request access; 72-hour delay before auto-approval
+ */
+export const emergencyVaultAccess = mysqlTable("emergency_vault_access", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  requestedByUserId: int("requested_by_user_id").notNull(),
+  requestedByName: varchar("requested_by_name", { length: 255 }).notNull(),
+  reason: mysqlEnum("reason", [
+    "owner_incapacitated",
+    "owner_deceased",
+    "legal_requirement",
+    "succession_transfer",
+    "emergency_medical",
+  ]).notNull(),
+  reasonDetails: text("reason_details"),
+  requestedAt: timestamp("requested_at").defaultNow().notNull(),
+  unlockAt: timestamp("unlock_at").notNull(),
+  status: mysqlEnum("access_status", [
+    "pending", "approved", "auto_approved", "cancelled", "denied", "expired", "used",
+  ]).default("pending").notNull(),
+  ownerNotifiedAt: timestamp("owner_notified_at"),
+  ownerResponseAt: timestamp("owner_response_at"),
+  ownerResponseNote: text("owner_response_note"),
+  accessGrantedAt: timestamp("access_granted_at"),
+  accessExpiresAt: timestamp("access_expires_at"),
+  fieldsAccessible: json("fields_accessible").$type<string[]>(),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmergencyVaultAccess = typeof emergencyVaultAccess.$inferSelect;
+export type InsertEmergencyVaultAccess = typeof emergencyVaultAccess.$inferInsert;
+
+/**
+ * Designated Successors - People authorized to request emergency vault access
+ * Only the house owner can designate successors
+ */
+export const designatedSuccessors = mysqlTable("designated_successors", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  userId: int("user_id"),
+  successorName: varchar("successor_name", { length: 255 }).notNull(),
+  successorEmail: varchar("successor_email", { length: 255 }),
+  successorPhone: varchar("successor_phone", { length: 50 }),
+  accessLevel: mysqlEnum("access_level", [
+    "full", "identity_only", "legal_only", "distribution_only",
+  ]).default("full").notNull(),
+  priority: int("priority").default(1).notNull(),
+  relationship: varchar("relationship", { length: 100 }),
+  status: mysqlEnum("successor_status", ["active", "revoked", "expired"]).default("active").notNull(),
+  designatedAt: timestamp("designated_at").defaultNow().notNull(),
+  revokedAt: timestamp("revoked_at"),
+  revokedReason: text("revoked_reason"),
+  designatedByUserId: int("designated_by_user_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DesignatedSuccessor = typeof designatedSuccessors.$inferSelect;
+export type InsertDesignatedSuccessor = typeof designatedSuccessors.$inferInsert;
+
+/**
+ * House Vault Config - Per-house vault configuration
+ * Inherits template from Genesis House on initialization
+ */
+export const houseVaultConfig = mysqlTable("house_vault_config", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  inheritedFromHouseId: int("inherited_from_house_id"),
+  vaultEnabled: boolean("vault_enabled").default(true).notNull(),
+  requirePinForAccess: boolean("require_pin_for_access").default(true).notNull(),
+  emergencyAccessEnabled: boolean("emergency_access_enabled").default(true).notNull(),
+  emergencyDelayHours: int("emergency_delay_hours").default(72).notNull(),
+  emergencyAccessWindow: int("emergency_access_window_hours").default(24).notNull(),
+  encryptionVersion: int("encryption_version").default(1).notNull(),
+  logAllAccess: boolean("log_all_access").default(true).notNull(),
+  notifyOwnerOnAccess: boolean("notify_owner_on_access").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HouseVaultConfig = typeof houseVaultConfig.$inferSelect;
+export type InsertHouseVaultConfig = typeof houseVaultConfig.$inferInsert;

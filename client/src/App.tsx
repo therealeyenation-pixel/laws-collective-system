@@ -444,6 +444,7 @@ const ActivationProgress = lazy(() => import("@/pages/ActivationProgress"));
 const ContentBuilder = lazy(() => import("@/pages/ContentBuilder"));
 const AdminActivations = lazy(() => import("@/pages/AdminActivations"));
 const IdentityVault = lazy(() => import("@/pages/IdentityVault"));
+const SuccessionProtocol = lazy(() => import("@/pages/SuccessionProtocol"));
 
 
 // Access levels: user (member), staff, admin, owner
@@ -811,6 +812,7 @@ function Router() {
       <Route path="/notification-history">{() => <ProtectedRoute component={NotificationHistory} minRole="staff" />}</Route>
       <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} minRole="admin" />}</Route>
       <Route path="/founder/identity-vault">{() => <ProtectedRoute component={IdentityVault} minRole="admin" />}</Route>
+      <Route path="/founder/succession-protocol">{() => <ProtectedRoute component={SuccessionProtocol} minRole="admin" />}</Route>
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} minRole="admin" />}</Route>
       <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} minRole="admin" />}</Route>
       <Route path="/business-formation">{() => <ProtectedRoute component={BusinessFormation} minRole="admin" />}</Route>
