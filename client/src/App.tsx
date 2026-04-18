@@ -133,6 +133,7 @@ const Achievements = lazy(() => import("@/pages/Achievements"));
 const OperationsDashboard = lazy(() => import("@/pages/OperationsDashboard"));
 const ExecutiveDashboard = lazy(() => import("@/pages/ExecutiveDashboard"));
 const Careers = lazy(() => import("@/pages/Careers"));
+const ComingSoon = lazy(() => import("@/pages/ComingSoon"));
 const EmployeeDirectory = lazy(() => import("@/pages/EmployeeDirectory"));
 const HouseContractManagement = lazy(() => import("@/pages/HouseContractManagement"));
 const MyProfile = lazy(() => import("@/pages/MyProfile"));
@@ -541,7 +542,8 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/demo" component={ShellDemo} />
       <Route path="/shell-demo" component={ShellDemo} />
-      <Route path="/careers" component={Careers} />
+      <Route path="/careers" component={ComingSoon} />
+      <Route path="/coming-soon" component={ComingSoon} />
       <Route path="/join" component={JoinJourney} />
       <Route path="/my-credential" component={MyCredential} />
       <Route path="/contact" component={Contact} />
@@ -997,11 +999,7 @@ function Router() {
       <Route component={NotFound} />
     </Switch>
       </Suspense>
-      <footer className="mt-auto border-t border-border bg-background/50 py-4">
-        <div className="container max-w-6xl mx-auto px-4 text-center text-xs text-muted-foreground opacity-60">
-          <p>REAL-EYE-NATION | LuvOnPurpose Academy and Outreach</p>
-        </div>
-      </footer>
+
     </div>
   );
 }

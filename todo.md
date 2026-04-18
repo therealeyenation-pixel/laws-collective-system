@@ -12423,3 +12423,12 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Fix Start Your Journey button (/login → /pricing)
 - [x] Test all buttons and links on Landing page — all working
 - [x] Save checkpoint
+
+## Phase 94b: Landing Page Footer Cleanup & Careers Coming Soon
+- [x] Remove duplicate entity text at bottom of footer (consolidated into one clean footnote block)
+- [x] Remove the extra "REAL-EYE-NATION | LuvOnPurpose Academy and Outreach" line that duplicated the footnote
+- [x] Create ComingSoon page component at /careers and /coming-soon
+- [x] Route all Careers/View Open Positions links to ComingSoon page
+- [x] Hidden admin-only dashboard link (·) in footer verified working
+- [x] All buttons tested and verified
+- [x] Save checkpoint

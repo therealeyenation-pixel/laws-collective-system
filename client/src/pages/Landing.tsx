@@ -524,20 +524,24 @@ export default function Landing() {
               </div>
             </div>
           </div>
-          <div className="border-t border-border mt-8 pt-8 space-y-2 text-center text-xs text-muted-foreground">
+          <div className="border-t border-border mt-8 pt-8 space-y-1 text-center text-xs text-muted-foreground">
             <p>
               <span className="font-semibold">The L.A.W.S. Collective</span> (Employment &amp; Membership)
               {" | "}
               <span className="font-semibold">LuvOnPurpose Autonomous Wealth System</span> (House Structure &amp; Business Management)
-              {" | "}
+            </p>
+            <p>
               <span className="font-semibold">LuvOnPurpose Academy and Outreach</span> (Education &amp; 508(c)(1)(a))
+              {" | "}
+              <span className="font-semibold">REAL-EYE-NATION</span> (Performing Arts — Design Dept.)
             </p>
-            <p>
-              REAL-EYE-NATION (Performing Arts) — L.A.W.S. Collective, Design Department
-            </p>
-            <p>
-              LuvOnPurpose Academy and Outreach — Education, Certification &amp; Apprenticeship Programs
-            </p>
+            {isAuthenticated && user?.role === "admin" && (
+              <p className="mt-2">
+                <Link href="/dashboard" className="text-muted-foreground/40 hover:text-primary transition-colors">
+                  ·
+                </Link>
+              </p>
+            )}
           </div>
         </div>
       </footer>
