@@ -150,6 +150,7 @@ const menuCategories: MenuCategory[] = [
         items: [
           { icon: CheckCircle, label: "Owner Action List", path: "/owner-actions", minRole: "owner" },
           { icon: Settings, label: "Owner Setup", path: "/owner-setup", minRole: "owner" },
+          { icon: Users, label: "Waitlist Management", path: "/founder/waitlist-admin", minRole: "admin" },
         ]
       },
     ]

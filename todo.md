@@ -12468,7 +12468,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] All page components already use lazy loading
 - [x] Test production build locally - succeeded in 3m 29s with 2.7GB peak memory
 - [x] Further split vendor-misc (12.8MB) into smaller chunks
-- [ ] Save checkpoint and verify publish works
+- [x] Save checkpoint and verify publish works
 
 ## Phase 100: Genesis House with Dual-Layer Identity Protection
 - [ ] Design database schema: houses table, house_members table, identity_vault table (encrypted)
@@ -12529,3 +12529,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Move Genesis House, Identity Vault, Succession Protocol, Trust Governance, House Dashboard under LAWS section
 - [x] Register /autonomous-wealth-system route in App.tsx
 - [x] Update Getting Started "Establish a House & Trust" goal to route to LAWS dashboard
+
+## Bundled Update: Waitlist Admin, Careers Nav, LAWS Stats, Onboarding Guidance
+- [x] Create WaitlistAdmin page for Founder dashboard (view/manage signups)
+- [x] Add WaitlistAdmin route and sidebar nav item
+- [x] Remove or rename "Careers" from top nav (align with collective model)
+- [x] Wire LAWS dashboard stats to real DB queries (house count, heirs, businesses)
+- [x] Build onboarding guidance flow for new members entering Autonomous Wealth System
+- [x] Save checkpoint

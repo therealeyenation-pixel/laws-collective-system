@@ -31,6 +31,7 @@ import {
   Heart,
   Layers,
 } from "lucide-react";
+import LAWSOnboardingGuide from "@/components/LAWSOnboardingGuide";
 
 interface HouseOverview {
   id: number;
@@ -403,6 +404,12 @@ export default function AutonomousWealthSystem() {
             </Link>
           </div>
         </div>
+
+        {/* Onboarding Guide */}
+        <LAWSOnboardingGuide
+          completedSteps={[]}
+          currentStep={hasHouse ? 5 : 1}
+        />
 
         {/* System Architecture Info */}
         <Card className="bg-muted/30">

@@ -446,6 +446,7 @@ const ContentBuilder = lazy(() => import("@/pages/ContentBuilder"));
 const AdminActivations = lazy(() => import("@/pages/AdminActivations"));
 const IdentityVault = lazy(() => import("@/pages/IdentityVault"));
 const SuccessionProtocol = lazy(() => import("@/pages/SuccessionProtocol"));
+const WaitlistAdmin = lazy(() => import("@/pages/WaitlistAdmin"));
 
 
 // Access levels: user (member), staff, admin, owner
@@ -815,6 +816,7 @@ function Router() {
       <Route path="/genesis">{() => <ProtectedRoute component={GenesisCeremony} minRole="admin" />}</Route>
       <Route path="/founder/identity-vault">{() => <ProtectedRoute component={IdentityVault} minRole="admin" />}</Route>
       <Route path="/founder/succession-protocol">{() => <ProtectedRoute component={SuccessionProtocol} minRole="admin" />}</Route>
+      <Route path="/founder/waitlist-admin">{() => <ProtectedRoute component={WaitlistAdmin} minRole="admin" />}</Route>
       <Route path="/foundation">{() => <ProtectedRoute component={FoundationDashboard} minRole="admin" />}</Route>
       <Route path="/business-plan-upload">{() => <ProtectedRoute component={BusinessPlanUpload} minRole="admin" />}</Route>
       <Route path="/business-formation">{() => <ProtectedRoute component={BusinessFormation} minRole="admin" />}</Route>

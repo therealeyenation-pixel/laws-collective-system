@@ -71,8 +71,8 @@ export default function Landing() {
               <Link href="/academy" className="text-muted-foreground hover:text-foreground transition-colors">
                 Academy
               </Link>
-              <Link href="/careers" className="text-muted-foreground hover:text-foreground transition-colors">
-                Careers
+              <Link href="/join-journey" className="text-muted-foreground hover:text-foreground transition-colors">
+                Join the Collective
               </Link>
               <Link href="/contact-us" className="text-muted-foreground hover:text-foreground transition-colors">
                 Contact
@@ -448,20 +448,20 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Careers Teaser */}
+      {/* Join the Collective CTA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-card border border-border rounded-xl p-8">
           <div className="space-y-2">
-            <h3 className="text-2xl font-bold">Work With Us</h3>
+            <h3 className="text-2xl font-bold">Join the Collective</h3>
             <p className="text-muted-foreground">
-              Explore career opportunities with the L.A.W.S. Collective. Join our
-              team and help build the future of generational wealth.
+              Start your journey with the L.A.W.S. Collective. Build a business,
+              establish your House, and create generational wealth through purpose.
             </p>
           </div>
-          <Link href="/careers">
+          <Link href="/join-journey">
             <Button variant="outline" size="lg" className="gap-2 flex-shrink-0">
-              <Briefcase className="w-4 h-4" />
-              View Open Positions
+              <Users className="w-4 h-4" />
+              Start Your Journey
             </Button>
           </Link>
         </div>
@@ -504,8 +504,8 @@ export default function Landing() {
                 <Link href="/purple-heart" className="block hover:text-foreground transition-colors">
                   Support / Donate
                 </Link>
-                <Link href="/careers" className="block hover:text-foreground transition-colors">
-                  Careers
+                <Link href="/join-journey" className="block hover:text-foreground transition-colors">
+                  Join the Collective
                 </Link>
               </div>
             </div>
