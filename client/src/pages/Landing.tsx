@@ -79,7 +79,7 @@ export default function Landing() {
               <Link href="/academy" className="text-muted-foreground hover:text-foreground transition-colors">
                 Academy
               </Link>
-              <Link href="/join-journey" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/join" className="text-muted-foreground hover:text-foreground transition-colors">
                 Join the Collective
               </Link>
               <Link href="/contact-us" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -466,7 +466,7 @@ export default function Landing() {
               establish your House, and create generational wealth through purpose.
             </p>
           </div>
-          <Link href="/join-journey">
+          <Link href="/join">
             <Button variant="outline" size="lg" className="gap-2 flex-shrink-0">
               <Users className="w-4 h-4" />
               Start Your Journey
@@ -512,7 +512,7 @@ export default function Landing() {
                 <Link href="/purple-heart" className="block hover:text-foreground transition-colors">
                   Support / Donate
                 </Link>
-                <Link href="/join-journey" className="block hover:text-foreground transition-colors">
+                <Link href="/join" className="block hover:text-foreground transition-colors">
                   Join the Collective
                 </Link>
               </div>

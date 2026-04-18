@@ -667,10 +667,6 @@ export default function Pricing() {
                 a: "We accept all major credit cards through Stripe. ACH and invoicing available for Collective Partner tier.",
               },
               {
-                q: "Are heirs of Founding Members really free?",
-                a: "Yes. Heirs of Founding Members receive complimentary Academy Pass access as part of the multi-generational commitment.",
-              },
-              {
                 q: "What is the Collective Partner tier?",
                 a: "The Partner tier is application-based for those deeply committed to building the L.A.W.S. ecosystem. It includes contractor transition pathways, board eligibility, and profit sharing after 2 years.",
               },

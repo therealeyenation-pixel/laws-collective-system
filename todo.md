@@ -10045,12 +10045,14 @@ The Health Department is formally connected to the Water Realm in the L.A.W.S. f
 - [x] Test landing page loads correctly
 - [x] Test QR code scans to landing page
 - [x] Test all buttons route correctly:
-  - [ ] Sign In → /house (private system)
-  - [ ] Get Started → /demo (shell demo)
-  - [ ] Start Business Demo → /demo (shell demo)
-  - [ ] Support the Collective → /donate (donation page)
-  - [ ] Explore the L.A.W.S. Structure → /demo (shell demo)
-  - [ ] Join the Collective → email capture form
+  - [x] Sign In → /login (redirects to OAuth)
+  - [x] Join the Collective → /pricing (membership tiers)
+  - [x] Support the Mission → /purple-heart (donation page)
+  - [x] Academy → /academy (academy landing)
+  - [x] Contact → /contact-us (contact page)
+  - [x] Fixed: /join-journey → /join (was broken link, now corrected)
+  - [x] Demo → /demo (shell demo, linked from #demo section)
+  - [x] Dashboard → /dashboard (shown when authenticated)
 - [x] Test slideshow transitions (8 seconds)
 - [x] Test business name input accepts text
 - [x] Test Luv's photo displays correctly
@@ -12553,32 +12555,32 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Update member journey locking to reference new CALEA Trust category name
 - [x] Add Autonomous Wealth System to always-active categories
 - [x] Fix duplicate Landmark import in DashboardLayout
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Bug Fix: Authenticated users not redirected to dashboard from homepage
 - [x] Fix Home page to auto-redirect signed-in users to /autonomous-wealth-system dashboard
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Owner/Admin CALEA Trust Access Control
 - [x] Update Landing redirect: owner goes to /trust-admin (CALEA Trust), others go to /autonomous-wealth-system
 - [x] Update CALEA Trust sidebar visibility: show to owner + admin role users (not just owner)
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Revert: Homepage redirect back to Autonomous Wealth System for all users
 - [x] Revert Landing.tsx redirect to /autonomous-wealth-system for all roles (owner/admin/user)
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## System Scan Critical Fixes (April 18, 2026)
 - [x] Fix 1: Create routes + pages for 12 broken sidebar links (design-projects, documentary-production, health-simulator, lead-tracking, marketing-campaigns, marketing-documents, marketing-simulator, marketing-strategy, marketing-team, podcast-network, streaming, tax-simulator)
 - [x] Fix 2: Add Staff/Admin Management page for owner to promote users to admin
 - [x] Fix 3: Add role indicator badge in sidebar user profile area
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Major Sidebar Restructure: Theater/Radio/Broadcast + Meetings + Back Buttons
 - [x] Move Theater & IPTV, Broadcast Radio, Streaming Hub under L.A.W.S. Academy section (accessible to all users)
 - [x] Make Meetings accessible from anywhere (global header button)
 - [x] Wrapped 30 protected pages with DashboardLayout for consistent sidebar + back button navigation
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Streamline Sidebar: Media under Real-Eye-Nation + Fix Build Errors
 - [x] Fix build error: DonorDashboard.tsx (line 176 syntax error)
@@ -12592,7 +12594,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Remove standalone Theater & IPTV, Broadcast Radio, Streaming Hub sections from sidebar
 - [x] Updated Real-Eye-Nation to minRole: user so all members can access media
 - [x] Updated useMemberJourney to make Real-Eye-Nation always accessible
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Deep Cleanup: Fix Build Errors + Remove Bloat
 - [x] Fix syntax errors: SystemOverview.tsx (line 405), TrustAdminDashboard.tsx (line 805), TheaterLiveReal.tsx (line 541), PlaylistDetail.tsx (line 515), IPTVAdminPanel.tsx (line 376), NowPlaying.tsx (line 55), TheaterNowPlaying.tsx (line 239)
@@ -12607,7 +12609,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Fix SystemOverview.tsx missing closing DashboardLayout tag in loading return
 - [x] Fix AdminSeeding.tsx missing DashboardLayout tags (opening + closing)
 - [x] Verify production build succeeds (built in 1m 20s)
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Bundle Size Optimization
 - [x] Analyze current bundle composition and identify largest chunks
@@ -12626,7 +12628,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Hide CALEA Trust details from public-facing "About" section on Autonomous Wealth System page
 - [x] Swap steps 7 (Link Businesses) and 8 (Establish Trust Governance) in activation flow
 - [x] Add loading/splash screen for heavy page transitions
-- [ ] Save checkpoint
+- [x] Save checkpoint (completed in prior session)
 
 ## Embed Agents into Department Pages (Remove Standalone Agents Page)
 - [x] Create reusable DepartmentAgent chat component (collapsible panel)
@@ -12715,3 +12717,23 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 
 ## Bug: Contract Management Page Crash (pre-existing)
 - [x] Fix ContractManagement.tsx - Added null safety to getContractTypeBadge and getStatusBadge (fallback to 'other'/'draft' when type/status is undefined)
+
+### Phase 26.4: Heir Benefit Privacy Verification (COMPLETE)
+- [x] Removed "Free for heirs of founding members" from Landing.tsx (done in prior session)
+- [x] Removed "Free for heirs of founding members" from AcademyLanding.tsx (done in prior session)
+- [x] Removed heir benefit text from server/stripe/products.ts (done in prior session)
+- [x] Removed heir FAQ from Pricing.tsx ("Are heirs of Founding Members really free?")
+- [x] Updated PurpleHeart.tsx — removed "free education for heirs" from impact areas
+- [x] Updated academy_qa agent system prompt — heir benefits now redirect to My Benefits dashboard instead of disclosing details
+- [x] Verified Scholarships page is staff-only (minRole: staff)
+- [x] Verified MyBenefits page requires authentication (minRole: user)
+- [x] Verified ContentBuilder page requires authentication (minRole: user)
+- [x] Confirmed no heir/founding member benefit language remains on any public page
+- [x] Production build succeeds after all changes
+
+### Phase 26.5: Weather API Fix (COMPLETE)
+- [x] Replaced OpenWeatherMap API (401 errors) with Open-Meteo (free, no API key) in server/routers/weatherApi.ts
+
+### Phase 26.6: Landing Page CTA Fix (COMPLETE)
+- [x] Fixed /join-journey → /join (3 occurrences in Landing.tsx)
+- [x] Verified all Landing page CTA links route correctly

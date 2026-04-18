@@ -118,7 +118,7 @@ export default function PurpleHeart() {
     {
       title: "Education & Academy",
       description:
-        "Supporting free education for heirs and community scholarship programs",
+        "Supporting education programs and community scholarship opportunities",
       icon: "🎓",
     },
     {

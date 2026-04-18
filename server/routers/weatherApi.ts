@@ -1,18 +1,22 @@
 import { publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 
-// Map OpenWeatherMap condition codes to readable descriptions
-const getWeatherDescription = (code: number, description: string): string => {
-  if (code >= 200 && code < 300) return "Thunderstorm";
-  if (code >= 300 && code < 400) return "Drizzle";
-  if (code >= 500 && code < 600) return "Rain";
-  if (code >= 600 && code < 700) return "Snow";
-  if (code >= 700 && code < 800) return "Mist";
-  if (code === 800) return "Clear";
-  if (code === 801) return "Partly Cloudy";
-  if (code === 802) return "Mostly Cloudy";
-  if (code === 803 || code === 804) return "Overcast";
-  return description;
+// Open-Meteo WMO Weather interpretation codes
+const getWeatherDescription = (code: number): string => {
+  if (code === 0) return "Clear";
+  if (code === 1) return "Mostly Clear";
+  if (code === 2) return "Partly Cloudy";
+  if (code === 3) return "Overcast";
+  if (code >= 45 && code <= 48) return "Fog";
+  if (code >= 51 && code <= 55) return "Drizzle";
+  if (code >= 56 && code <= 57) return "Freezing Drizzle";
+  if (code >= 61 && code <= 65) return "Rain";
+  if (code >= 66 && code <= 67) return "Freezing Rain";
+  if (code >= 71 && code <= 77) return "Snow";
+  if (code >= 80 && code <= 82) return "Rain Showers";
+  if (code >= 85 && code <= 86) return "Snow Showers";
+  if (code >= 95 && code <= 99) return "Thunderstorm";
+  return "Unknown";
 };
 
 const getWindDirection = (degrees: number): string => {
@@ -21,49 +25,74 @@ const getWindDirection = (degrees: number): string => {
   return directions[index];
 };
 
-// Fetch real weather data from OpenWeatherMap API
-const getRealWeatherData = async (city: string) => {
+// Geocode city name to lat/lon using Open-Meteo Geocoding API (free, no key)
+const geocodeCity = async (city: string): Promise<{ lat: number; lon: number; name: string; country: string } | null> => {
   try {
-    const apiKey = process.env.OPENWEATHER_API_KEY || "demo";
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=imperial&appid=${apiKey}`
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
     );
-    
+    if (!response.ok) return null;
+    const data = await response.json();
+    if (!data.results || data.results.length === 0) return null;
+    const result = data.results[0];
+    return {
+      lat: result.latitude,
+      lon: result.longitude,
+      name: result.name,
+      country: result.country_code || result.country || "",
+    };
+  } catch (error) {
+    console.error(`Geocoding error for ${city}:`, error);
+    return null;
+  }
+};
+
+// Fetch weather data from Open-Meteo API (free, no API key required)
+const getWeatherData = async (lat: number, lon: number, locationName: string) => {
+  try {
+    const response = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+      `&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m` +
+      `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
+      `&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto&forecast_days=6`
+    );
+
     if (!response.ok) {
-      console.warn(`Weather API error for ${city}: ${response.status}`);
+      console.warn(`Open-Meteo API error: ${response.status}`);
       return null;
     }
-    
+
     const data = await response.json();
-    const current = data.list[0];
-    const forecast = data.list.filter((_: any, i: number) => i % 8 === 0).slice(0, 5);
-    
+    const current = data.current;
+    const daily = data.daily;
+
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
     return {
-      location: `${data.city.name}, ${data.city.country}`,
-      temperature: Math.round(current.main.temp),
-      feelsLike: Math.round(current.main.feels_like),
-      condition: getWeatherDescription(current.weather[0].id, current.weather[0].main),
-      description: current.weather[0].description,
-      humidity: current.main.humidity,
-      windSpeed: Math.round(current.wind.speed),
-      windDirection: getWindDirection(current.wind.deg || 0),
+      location: locationName,
+      temperature: Math.round(current.temperature_2m),
+      feelsLike: Math.round(current.apparent_temperature),
+      condition: getWeatherDescription(current.weather_code),
+      description: getWeatherDescription(current.weather_code).toLowerCase(),
+      humidity: current.relative_humidity_2m,
+      windSpeed: Math.round(current.wind_speed_10m),
+      windDirection: getWindDirection(current.wind_direction_10m || 0),
       lastUpdated: new Date().toISOString(),
-      forecast: forecast.map((day: any) => {
-        const date = new Date(day.dt * 1000);
-        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      forecast: daily.time.slice(1, 6).map((date: string, i: number) => {
+        const d = new Date(date + "T12:00:00");
         return {
-          date: date.toISOString().split('T')[0],
-          dayOfWeek: days[date.getDay()],
-          high: Math.round(day.main.temp_max),
-          low: Math.round(day.main.temp_min),
-          condition: getWeatherDescription(day.weather[0].id, day.weather[0].main),
-          description: day.weather[0].description,
-          precipChance: Math.round((day.pop || 0) * 100),
+          date,
+          dayOfWeek: days[d.getDay()],
+          high: Math.round(daily.temperature_2m_max[i + 1]),
+          low: Math.round(daily.temperature_2m_min[i + 1]),
+          condition: getWeatherDescription(daily.weather_code[i + 1]),
+          description: getWeatherDescription(daily.weather_code[i + 1]).toLowerCase(),
+          precipChance: daily.precipitation_probability_max[i + 1] || 0,
         };
       }),
     };
   } catch (error) {
-    console.error(`Error fetching weather for ${city}:`, error);
+    console.error(`Error fetching weather:`, error);
     return null;
   }
 };
@@ -76,9 +105,9 @@ const getMockWeatherData = (city: string) => {
     { condition: "Cloudy", description: "Mostly cloudy", temp: 68, feelsLike: 66 },
     { condition: "Rain", description: "Light rain", temp: 65, feelsLike: 62 },
   ];
-  
+
   const randomWeather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
-  
+
   return {
     location: city,
     temperature: randomWeather.temp,
@@ -90,11 +119,11 @@ const getMockWeatherData = (city: string) => {
     windDirection: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][Math.floor(Math.random() * 8)],
     lastUpdated: new Date().toISOString(),
     forecast: [
-      { date: "2026-04-07", dayOfWeek: "Tuesday", high: 75, low: 62, condition: "Sunny", description: "Sunny", precipChance: 0 },
-      { date: "2026-04-08", dayOfWeek: "Wednesday", high: 72, low: 60, condition: "Partly Cloudy", description: "Partly cloudy", precipChance: 10 },
-      { date: "2026-04-09", dayOfWeek: "Thursday", high: 68, low: 58, condition: "Cloudy", description: "Cloudy", precipChance: 30 },
-      { date: "2026-04-10", dayOfWeek: "Friday", high: 70, low: 59, condition: "Rain", description: "Light rain", precipChance: 60 },
-      { date: "2026-04-11", dayOfWeek: "Saturday", high: 73, low: 61, condition: "Partly Cloudy", description: "Partly cloudy", precipChance: 20 },
+      { date: new Date(Date.now() + 86400000).toISOString().split('T')[0], dayOfWeek: "Tomorrow", high: 75, low: 62, condition: "Sunny", description: "Sunny", precipChance: 0 },
+      { date: new Date(Date.now() + 172800000).toISOString().split('T')[0], dayOfWeek: "Day 3", high: 72, low: 60, condition: "Partly Cloudy", description: "Partly cloudy", precipChance: 10 },
+      { date: new Date(Date.now() + 259200000).toISOString().split('T')[0], dayOfWeek: "Day 4", high: 68, low: 58, condition: "Cloudy", description: "Cloudy", precipChance: 30 },
+      { date: new Date(Date.now() + 345600000).toISOString().split('T')[0], dayOfWeek: "Day 5", high: 70, low: 59, condition: "Rain", description: "Light rain", precipChance: 60 },
+      { date: new Date(Date.now() + 432000000).toISOString().split('T')[0], dayOfWeek: "Day 6", high: 73, low: 61, condition: "Partly Cloudy", description: "Partly cloudy", precipChance: 20 },
     ],
   };
 };
@@ -104,18 +133,21 @@ export const weatherApiRouter = router({
     .input(z.object({ city: z.string().min(1).max(100) }))
     .query(async ({ input }) => {
       try {
-        // Try to fetch real weather data first
-        const realWeather = await getRealWeatherData(input.city);
-        if (realWeather) {
-          return realWeather;
+        // Geocode city name to coordinates
+        const geo = await geocodeCity(input.city);
+        if (!geo) {
+          console.warn(`Could not geocode city: ${input.city}, using mock data`);
+          return getMockWeatherData(input.city);
         }
-        
-        // Fall back to mock data if API fails
+
+        // Fetch real weather data from Open-Meteo (free, no API key)
+        const weather = await getWeatherData(geo.lat, geo.lon, `${geo.name}, ${geo.country}`);
+        if (weather) return weather;
+
         console.warn(`Falling back to mock weather data for ${input.city}`);
         return getMockWeatherData(input.city);
       } catch (error) {
         console.error("Error fetching weather data:", error);
-        // Always return mock data as last resort
         return getMockWeatherData(input.city);
       }
     }),
@@ -124,13 +156,13 @@ export const weatherApiRouter = router({
     .input(z.object({ lat: z.number(), lon: z.number() }))
     .query(async ({ input }) => {
       try {
-        // Use reverse geocoding or default city
-        // For now, use a default city name
-        const weatherData = getMockWeatherData(`Location (${input.lat}, ${input.lon})`);
-        return weatherData;
+        const weather = await getWeatherData(input.lat, input.lon, `Location (${input.lat.toFixed(2)}, ${input.lon.toFixed(2)})`);
+        if (weather) return weather;
+
+        return getMockWeatherData(`Location (${input.lat.toFixed(2)}, ${input.lon.toFixed(2)})`);
       } catch (error) {
         console.error("Error fetching weather data:", error);
-        return getMockWeatherData(`Location (${input.lat}, ${input.lon})`);
+        return getMockWeatherData(`Location (${input.lat.toFixed(2)}, ${input.lon.toFixed(2)})`);
       }
     }),
 });
