@@ -12432,3 +12432,8 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Hidden admin-only dashboard link (·) in footer verified working
 - [x] All buttons tested and verified
 - [x] Save checkpoint
+
+## Phase 95: Move Entity Subtitles to Footer
+- [x] Remove entity subtitles from About section cards (Business Formation, House Structure, Education & Academy)
+- [x] Add "Our Entities" titled section in footer with all 4 entities in lighter print (text-[11px] text-muted-foreground/40)
+- [x] Save checkpoint
