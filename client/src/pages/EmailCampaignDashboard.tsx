@@ -9,6 +9,7 @@ import {
   Download, RefreshCw
 } from "lucide-react";
 import { toast } from "sonner";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function EmailCampaignDashboard() {
   const [activeTab, setActiveTab] = useState("campaigns");
@@ -41,6 +42,7 @@ export default function EmailCampaignDashboard() {
   });
 
   return (
+    <DashboardLayout>
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -323,5 +325,6 @@ export default function EmailCampaignDashboard() {
         </TabsContent>
       </Tabs>
     </div>
+    </DashboardLayout>
   );
 }

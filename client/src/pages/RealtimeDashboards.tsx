@@ -5,6 +5,7 @@ import { BarChart3, TrendingUp, AlertCircle, RefreshCw, Download, Filter } from 
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface DashboardMetric {
   timestamp: number;
@@ -99,6 +100,7 @@ export default function RealtimeDashboards() {
   };
 
   const MetricCard = ({ label, value, unit, icon: Icon, trend }: any) => (
+    <DashboardLayout>
     <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5">
       <div className="flex items-start justify-between">
         <div>
@@ -341,5 +343,6 @@ export default function RealtimeDashboards() {
         </Card>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

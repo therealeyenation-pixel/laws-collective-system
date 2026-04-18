@@ -34,6 +34,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useMediaPlayer } from "@/contexts/MediaPlayerContext";
 import { useLocation, useRoute } from "wouter";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function PlaylistDetail() {
   const { user } = useAuth();
@@ -233,6 +234,7 @@ export default function PlaylistDetail() {
 
   if (!user) {
     return (
+      <DashboardLayout>
       <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-muted-foreground">Sign in to manage playlists</p>
       </div>
@@ -507,5 +509,6 @@ export default function PlaylistDetail() {
         )}
       </div>
     </div>
+    </DashboardLayout>
   );
 }

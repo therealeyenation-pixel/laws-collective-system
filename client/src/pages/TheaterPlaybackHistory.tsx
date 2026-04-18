@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Play, Clock, RotateCcw, Video, Tv } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function TheaterPlaybackHistory() {
   const { playbackHistory, clearHistory, playChannel } = useMediaPlayer();
@@ -54,6 +55,7 @@ export default function TheaterPlaybackHistory() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -141,5 +143,6 @@ export default function TheaterPlaybackHistory() {
         )}
       </div>
     </div>
+    </DashboardLayout>
   );
 }

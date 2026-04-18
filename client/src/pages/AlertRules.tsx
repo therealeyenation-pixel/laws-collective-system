@@ -5,6 +5,7 @@ import { AlertTriangle, Plus, Edit2, Trash2, CheckCircle, Save, X } from "lucide
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface AlertRule {
   id: string;
@@ -118,6 +119,7 @@ export default function AlertRules() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -314,5 +316,6 @@ export default function AlertRules() {
         </Card>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

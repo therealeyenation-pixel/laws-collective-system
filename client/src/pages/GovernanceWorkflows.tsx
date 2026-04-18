@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import {
+import DashboardLayout from "@/components/DashboardLayout";
   Shield,
   CheckCircle,
   XCircle,
@@ -333,6 +334,7 @@ export default function GovernanceWorkflows() {
   const escalatedCount = requests.filter(r => r.status === "escalated").length;
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
@@ -725,5 +727,6 @@ export default function GovernanceWorkflows() {
         </Tabs>
       </main>
     </div>
+    </DashboardLayout>
   );
 }

@@ -11,6 +11,7 @@ import { AlertCircle, CheckCircle, Loader2, Database } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import { useAuth } from '@/_core/hooks/useAuth';
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function AdminSeeding() {
   const { user } = useAuth();
@@ -57,6 +58,7 @@ export default function AdminSeeding() {
   // Check if user is admin
   if (user?.role !== 'admin') {
     return (
+      <DashboardLayout>
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="p-8 max-w-md">
           <div className="flex items-center gap-3 mb-4">
@@ -263,5 +265,6 @@ export default function AdminSeeding() {
         </Card>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

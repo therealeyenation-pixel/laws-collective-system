@@ -31,6 +31,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function TrustAdminDashboard() {
   const { user } = useAuth();
@@ -164,6 +165,7 @@ export default function TrustAdminDashboard() {
 
   if (!isAdmin) {
     return (
+      <DashboardLayout>
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="p-8 max-w-md text-center">
           <Lock className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
@@ -797,5 +799,6 @@ export default function TrustAdminDashboard() {
         </Tabs>
       </main>
     </div>
+    </DashboardLayout>
   );
 }

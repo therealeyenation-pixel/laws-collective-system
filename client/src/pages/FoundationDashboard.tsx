@@ -25,6 +25,7 @@ import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function FoundationDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -69,6 +70,7 @@ export default function FoundationDashboard() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/5 p-4 md:p-8">
       {/* Header */}
       <div className="mb-8">
@@ -559,5 +561,6 @@ export default function FoundationDashboard() {
         </TabsContent>
       </Tabs>
     </div>
+    </DashboardLayout>
   );
 }

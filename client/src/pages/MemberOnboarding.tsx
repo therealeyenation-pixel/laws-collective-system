@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import {
+import DashboardLayout from "@/components/DashboardLayout";
   ArrowRight,
   ArrowLeft,
   Check,
@@ -122,6 +123,7 @@ export default function MemberOnboarding() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-green-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-stone-200 sticky top-0 z-50">
@@ -494,5 +496,6 @@ export default function MemberOnboarding() {
         </Card>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

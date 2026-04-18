@@ -14,6 +14,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Loader2, ChevronRight, CheckCircle, Upload, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface OnboardingStep {
   id: string;
@@ -595,6 +596,7 @@ export default function LuvOnboarding() {
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
       {/* Header */}
       <div className="bg-white border-b border-border">
@@ -677,5 +679,6 @@ export default function LuvOnboarding() {
         </Card>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

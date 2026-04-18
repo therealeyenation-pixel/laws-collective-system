@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, CheckCircle, AlertCircle, User, Clock, Send } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function TeamCollaboration() {
   const [comments, setComments] = useState([
@@ -80,6 +81,7 @@ export default function TeamCollaboration() {
   };
 
   return (
+    <DashboardLayout>
     <div className="space-y-6">
       {/* Header */}
       <div>
@@ -220,5 +222,6 @@ export default function TeamCollaboration() {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

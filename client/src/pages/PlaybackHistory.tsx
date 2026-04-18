@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Play, Trash2, Clock, RotateCcw } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function PlaybackHistory() {
   const { playbackHistory, clearHistory, playStation } = useRadioPlayer();
@@ -52,6 +53,7 @@ export default function PlaybackHistory() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -131,5 +133,6 @@ export default function PlaybackHistory() {
         )}
       </div>
     </div>
+    </DashboardLayout>
   );
 }

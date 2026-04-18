@@ -11,6 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { toast } from "sonner";
 import { format } from "date-fns";
 import {
+import DashboardLayout from "@/components/DashboardLayout";
   History,
   Search,
   Filter,
@@ -300,6 +301,7 @@ export default function AuditTrailViewer() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
@@ -708,5 +710,6 @@ export default function AuditTrailViewer() {
         </Tabs>
       </main>
     </div>
+    </DashboardLayout>
   );
 }

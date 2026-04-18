@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Mail, FileText, Plus, Trash2 } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function CustomReportScheduling() {
   const [reports, setReports] = useState([
@@ -75,6 +76,7 @@ export default function CustomReportScheduling() {
   };
 
   return (
+    <DashboardLayout>
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -229,5 +231,6 @@ export default function CustomReportScheduling() {
         </div>
       </Card>
     </div>
+    </DashboardLayout>
   );
 }

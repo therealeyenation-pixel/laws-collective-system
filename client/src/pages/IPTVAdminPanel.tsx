@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Upload, Plus, Trash2, Search, Filter } from 'lucide-react';
 import { toast } from 'sonner';
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function IPTVAdminPanel() {
   const { user } = useAuth();
@@ -110,6 +111,7 @@ export default function IPTVAdminPanel() {
 
   if (!user?.role || !['admin', 'staff'].includes(user.role)) {
     return (
+      <DashboardLayout>
       <div className="min-h-screen flex items-center justify-center">
         <Card className="p-8 max-w-md">
           <p className="text-center text-muted-foreground">
@@ -368,5 +370,6 @@ Adult Channel,Adult Content,Adult,http://stream.url/adult.m3u8,X,true,verified_1
         </Tabs>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

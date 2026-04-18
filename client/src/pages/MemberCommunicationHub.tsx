@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+import DashboardLayout from "@/components/DashboardLayout";
   MessageCircle,
   Mail,
   MessageSquare,
@@ -112,6 +113,7 @@ export default function MemberCommunicationHub() {
   ];
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -457,5 +459,6 @@ export default function MemberCommunicationHub() {
         </Tabs>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

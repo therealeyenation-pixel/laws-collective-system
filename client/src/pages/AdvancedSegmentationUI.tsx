@@ -19,6 +19,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import {
+import DashboardLayout from "@/components/DashboardLayout";
   Plus,
   TrendingUp,
   Users,
@@ -91,6 +92,7 @@ export default function AdvancedSegmentationUI() {
   ];
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -363,5 +365,6 @@ export default function AdvancedSegmentationUI() {
         </Tabs>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

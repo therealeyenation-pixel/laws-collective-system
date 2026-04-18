@@ -28,6 +28,7 @@ import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import ForceRepairPanel from "@/components/ForceRepairPanel";
 import ScheduledDiagnosticsPanel from "@/components/ScheduledDiagnosticsPanel";
+import DashboardLayout from "@/components/DashboardLayout";
 
 type HealthStatus = "healthy" | "warning" | "critical" | "unknown";
 
@@ -98,6 +99,7 @@ export default function SystemHealthDashboard() {
   const overallStatus = diagnosticQuery.data?.overallStatus || quickStatusQuery.data?.status === "operational" ? "healthy" : "unknown";
 
   return (
+    <DashboardLayout>
     <div className="container max-w-6xl py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
@@ -276,5 +278,6 @@ export default function SystemHealthDashboard() {
         </p>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

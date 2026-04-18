@@ -12573,3 +12573,9 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Fix 2: Add Staff/Admin Management page for owner to promote users to admin
 - [x] Fix 3: Add role indicator badge in sidebar user profile area
 - [ ] Save checkpoint
+
+## Major Sidebar Restructure: Theater/Radio/Broadcast + Meetings + Back Buttons
+- [x] Move Theater & IPTV, Broadcast Radio, Streaming Hub under L.A.W.S. Academy section (accessible to all users)
+- [x] Make Meetings accessible from anywhere (global header button)
+- [x] Wrapped 30 protected pages with DashboardLayout for consistent sidebar + back button navigation
+- [ ] Save checkpoint

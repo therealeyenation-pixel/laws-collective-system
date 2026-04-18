@@ -5,6 +5,7 @@ import { AlertCircle, TrendingUp, Zap, Brain, Download, RefreshCw } from "lucide
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { LineChart, Line, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface Anomaly {
   id: string;
@@ -131,6 +132,7 @@ export default function AIInsights() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -329,5 +331,6 @@ export default function AIInsights() {
         </Card>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

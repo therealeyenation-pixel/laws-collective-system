@@ -172,26 +172,80 @@ const menuCategories: MenuCategory[] = [
   },
 
   // 3. L.A.W.S. ACADEMY - Education Entity (508 - LuvOnPurpose Academy and Outreach)
+  //    Includes Theater, Radio, and Streaming — accessible to all users
   {
     icon: GraduationCap,
     label: "L.A.W.S. Academy",
     minRole: "user",
     defaultOpen: false,
-    items: [
-      { icon: GraduationCap, label: "Academy Dashboard", path: "/academy", minRole: "user" },
-      { icon: Rocket, label: "System Activation", path: "/activation-progress", minRole: "user" },
-      { icon: Sparkles, label: "Content Builder", path: "/content-builder", minRole: "user" },
-      { icon: Gamepad2, label: "Game Center", path: "/game-center", minRole: "user" },
-      { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user" },
-      { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator", minRole: "user" },
-      { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator", minRole: "user" },
-      { icon: Calculator, label: "Tax Simulator", path: "/tax-simulator", minRole: "user" },
-      { icon: FileText, label: "Proposal Simulator", path: "/proposal-simulator", minRole: "staff" },
-      { icon: GraduationCap, label: "Scholarships", path: "/scholarships", minRole: "staff" },
-      { icon: Rocket, label: "Specialist Tracks", path: "/specialist-tracks", minRole: "staff" },
-      { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
-      { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
-      { icon: Video, label: "VOD Library", path: "/theater-vod", minRole: "user" },
+    subCategories: [
+      // Academy Core
+      {
+        icon: GraduationCap,
+        label: "Academy",
+        minRole: "user",
+        items: [
+          { icon: GraduationCap, label: "Academy Dashboard", path: "/academy", minRole: "user" },
+          { icon: Rocket, label: "System Activation", path: "/activation-progress", minRole: "user" },
+          { icon: Sparkles, label: "Content Builder", path: "/content-builder", minRole: "user" },
+          { icon: Gamepad2, label: "Game Center", path: "/game-center", minRole: "user" },
+          { icon: GraduationCap, label: "Scholarships", path: "/scholarships", minRole: "staff" },
+          { icon: Rocket, label: "Specialist Tracks", path: "/specialist-tracks", minRole: "staff" },
+          { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
+        ]
+      },
+      // Simulators
+      {
+        icon: Play,
+        label: "Simulators",
+        minRole: "user",
+        items: [
+          { icon: Play, label: "Business Simulator", path: "/business-simulator", minRole: "user" },
+          { icon: FileText, label: "Business Plan Simulator", path: "/business-plan-simulator", minRole: "user" },
+          { icon: BookOpen, label: "Grant Simulator", path: "/grant-simulator", minRole: "user" },
+          { icon: Calculator, label: "Tax Simulator", path: "/tax-simulator", minRole: "user" },
+          { icon: FileText, label: "Proposal Simulator", path: "/proposal-simulator", minRole: "staff" },
+        ]
+      },
+      // Theater & IPTV (moved from standalone)
+      {
+        icon: Play,
+        label: "Theater & IPTV",
+        minRole: "user",
+        items: [
+          { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
+          { icon: Video, label: "Enhanced EPG", path: "/theater-live-enhanced", minRole: "user" },
+          { icon: Disc3, label: "VOD Library", path: "/theater-vod", minRole: "user" },
+          { icon: ListMusic, label: "Now Playing", path: "/theater-now-playing", minRole: "user" },
+          { icon: History, label: "Playback History", path: "/theater-playback-history", minRole: "user" },
+        ]
+      },
+      // Broadcast Radio (moved from standalone)
+      {
+        icon: Music,
+        label: "Broadcast Radio",
+        minRole: "user",
+        items: [
+          { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
+          { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
+          { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
+          { icon: ListMusic, label: "Now Playing", path: "/now-playing", minRole: "user" },
+          { icon: History, label: "Playback History", path: "/playback-history", minRole: "user" },
+        ]
+      },
+      // Streaming Hub (moved from standalone)
+      {
+        icon: Disc3,
+        label: "Streaming Hub",
+        minRole: "user",
+        items: [
+          { icon: Disc3, label: "All Streams", path: "/streaming", minRole: "user" },
+          { icon: Play, label: "Theater", path: "/theater-live-enhanced", minRole: "user" },
+          { icon: Music, label: "Radio", path: "/broadcast-channels", minRole: "user" },
+          { icon: Music, label: "Music", path: "/music", minRole: "user" },
+          { icon: AlertTriangle, label: "Emergency Alerts", path: "/emergency", minRole: "user" },
+        ]
+      },
     ]
   },
 
@@ -631,33 +685,7 @@ const menuCategories: MenuCategory[] = [
     ]
   },
 
-  {
-    icon: Play,
-    label: "Theater & IPTV",
-    minRole: "user",
-    defaultOpen: false,
-    items: [
-      { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
-      { icon: Video, label: "Enhanced EPG", path: "/theater-live-enhanced", minRole: "user" },
-      { icon: Disc3, label: "VOD Library", path: "/theater-vod", minRole: "user" },
-      { icon: ListMusic, label: "Now Playing", path: "/theater-now-playing", minRole: "user" },
-      { icon: History, label: "Playback History", path: "/theater-playback-history", minRole: "user" },
-    ]
-  },
 
-  {
-    icon: Music,
-    label: "Broadcast Radio",
-    minRole: "user",
-    defaultOpen: false,
-    items: [
-      { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
-      { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
-      { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
-      { icon: ListMusic, label: "Now Playing", path: "/now-playing", minRole: "user" },
-      { icon: History, label: "Playback History", path: "/playback-history", minRole: "user" },
-    ]
-  },
 
   {
     icon: Star,
@@ -698,19 +726,7 @@ const menuCategories: MenuCategory[] = [
     ]
   },
 
-  {
-    icon: Disc3,
-    label: "Streaming Hub",
-    minRole: "user",
-    defaultOpen: false,
-    items: [
-      { icon: Disc3, label: "All Streams", path: "/streaming", minRole: "user" },
-      { icon: Play, label: "Theater", path: "/theater-live-enhanced", minRole: "user" },
-      { icon: Music, label: "Radio", path: "/broadcast-channels", minRole: "user" },
-      { icon: Music, label: "Music", path: "/music", minRole: "user" },
-      { icon: AlertTriangle, label: "Emergency Alerts", path: "/emergency", minRole: "user" },
-    ]
-  },
+
 
   {
     icon: AlertTriangle,
@@ -1186,6 +1202,16 @@ function DashboardLayoutContent({
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Global Meetings button - accessible from anywhere */}
+            <button
+              onClick={() => setLocation('/meetings')}
+              className="h-9 px-3 rounded-lg bg-secondary/50 flex items-center gap-1.5 hover:bg-accent transition-colors text-sm font-medium"
+              aria-label="Open Meetings"
+              title="Meetings"
+            >
+              <Video className="h-4 w-4" />
+              <span className="hidden sm:inline">Meetings</span>
+            </button>
             <OfflineIndicator />
             <WhatsNewButton />
             <NotificationCenter />

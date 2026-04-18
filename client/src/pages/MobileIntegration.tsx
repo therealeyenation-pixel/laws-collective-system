@@ -5,6 +5,7 @@ import { Smartphone, Apple, Download, Zap, CheckCircle, Trash2, Wifi, WifiOff, B
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface Device {
   id: string;
@@ -102,6 +103,7 @@ export default function MobileIntegration() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -284,5 +286,6 @@ export default function MobileIntegration() {
         </Card>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

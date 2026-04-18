@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Zap, Activity, RefreshCw, AlertCircle } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function RealtimeDashboardSync() {
   const [isConnected, setIsConnected] = useState(true);
@@ -39,6 +40,7 @@ export default function RealtimeDashboardSync() {
   }, []);
 
   return (
+    <DashboardLayout>
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -160,5 +162,6 @@ export default function RealtimeDashboardSync() {
         <Button className="mt-4">Save Configuration</Button>
       </Card>
     </div>
+    </DashboardLayout>
   );
 }

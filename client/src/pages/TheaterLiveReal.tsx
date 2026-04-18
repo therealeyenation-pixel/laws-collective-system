@@ -32,6 +32,7 @@ import { AddToPlaylistButton } from '@/components/AddToPlaylistButton';
 import { useFavorites, useSleepTimer, useRecentlyPlayed } from '@/hooks/useMediaFeatures';
 import SleepTimerButton from '@/components/SleepTimerButton';
 import RecentlyPlayedBar from '@/components/RecentlyPlayedBar';
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function TheaterLiveReal() {
   const [, setLocation] = useLocation();
@@ -161,6 +162,7 @@ export default function TheaterLiveReal() {
 
   if (channelsLoading) {
     return (
+      <DashboardLayout>
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-4">
           <Tv className="w-12 h-12 animate-pulse mx-auto text-primary" />
@@ -533,5 +535,6 @@ export default function TheaterLiveReal() {
         )}
       </div>
     </div>
+    </DashboardLayout>
   );
 }

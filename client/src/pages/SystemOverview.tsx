@@ -27,6 +27,7 @@ import {
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
 import { useState, useEffect } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface SystemData {
   system_name: string;
@@ -90,6 +91,7 @@ export default function SystemOverview() {
 
   if (isLoading) {
     return (
+      <DashboardLayout>
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-4">
           <Zap className="w-12 h-12 animate-pulse mx-auto text-accent" />
@@ -397,5 +399,6 @@ export default function SystemOverview() {
         </section>
       </main>
     </div>
+    </DashboardLayout>
   );
 }

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function ContactInbox() {
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
@@ -132,6 +133,7 @@ export default function ContactInbox() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -364,5 +366,6 @@ export default function ContactInbox() {
         </DialogContent>
       </Dialog>
     </div>
+    </DashboardLayout>
   );
 }

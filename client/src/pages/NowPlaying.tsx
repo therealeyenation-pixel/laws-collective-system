@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Radio, Trash2, X, Music, Play, Pause } from 'lucide-react';
 import { useState } from 'react';
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function NowPlaying() {
   const {
@@ -34,6 +35,7 @@ export default function NowPlaying() {
 
   if (!currentStation || currentQueue.length === 0) {
     return (
+      <DashboardLayout>
       <div className="min-h-screen bg-background p-4 md:p-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-foreground mb-8">Now Playing</h1>
@@ -237,5 +239,6 @@ export default function NowPlaying() {
         </p>
       </div>
     </div>
+    </DashboardLayout>
   );
 }

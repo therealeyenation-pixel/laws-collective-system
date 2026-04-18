@@ -7,6 +7,7 @@ import {
   Volume2, VolumeX, Tv, Video, ListMusic, Trash2, X
 } from 'lucide-react';
 import { toast } from 'sonner';
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function TheaterNowPlaying() {
   const {
@@ -49,6 +50,7 @@ export default function TheaterNowPlaying() {
 
   if (!currentChannel) {
     return (
+      <DashboardLayout>
       <div className="min-h-screen bg-background p-4 md:p-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-foreground mb-8">Now Playing</h1>
@@ -231,5 +233,6 @@ export default function TheaterNowPlaying() {
         )}
       </div>
     </div>
+    </DashboardLayout>
   );
 }

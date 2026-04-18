@@ -5,6 +5,7 @@ import { FileText, Download, Calendar, Filter, CheckCircle, Clock, AlertCircle }
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface ExportJob {
   id: string;
@@ -107,6 +108,7 @@ export default function ComplianceExport() {
   const selectedFormat = exportFormats.find(f => f.id === exportFormat);
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
@@ -271,5 +273,6 @@ export default function ComplianceExport() {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   );
 }
