@@ -138,6 +138,7 @@ const ComingSoon = lazy(() => import("@/pages/ComingSoon"));
 const EmployeeDirectory = lazy(() => import("@/pages/EmployeeDirectory"));
 const HouseContractManagement = lazy(() => import("@/pages/HouseContractManagement"));
 const MyProfile = lazy(() => import("@/pages/MyProfile"));
+const MyBenefits = lazy(() => import("@/pages/MyBenefits"));
 const UserPreferences = lazy(() => import("@/pages/UserPreferences"));
 const SignatureAuditReport = lazy(() => import("@/pages/SignatureAuditReport"));
 const BulkSignatureRequest = lazy(() => import("@/pages/BulkSignatureRequest"));
@@ -600,6 +601,7 @@ function Router() {
       
       {/* Member routes - any authenticated user */}
       <Route path="/my-profile">{() => <ProtectedRoute component={MyProfile} minRole="user" />}</Route>
+      <Route path="/my-benefits">{() => <ProtectedRoute component={MyBenefits} minRole="user" />}</Route>
       <Route path="/settings/preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
       <Route path="/user-preferences">{() => <ProtectedRoute component={UserPreferences} minRole="user" />}</Route>
       <Route path="/autonomous-wealth-system">{() => <ProtectedRoute component={AutonomousWealthSystem} minRole="user" />}</Route>

@@ -12697,3 +12697,21 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add /agent/:type route in App.tsx with user role protection
 - [x] Verify production build (client 1m 8s + server 177ms)
 - [x] Save checkpoint (22130a45)
+
+## Private My Benefits Section for Founding Member Heirs
+- [x] Audit existing founding_members and heir_education_benefits tables
+- [x] Build getMyBenefits + claimHeirBenefit tRPC procedures in scholarships router
+- [x] Create My Benefits page with founding member status, heir benefits, scholarship applications, and claim flow
+- [x] Add My Benefits link to sidebar under My Account (2nd item after My Profile)
+- [x] Add /my-benefits route in App.tsx with user role protection
+- [x] Verify production build (client 1m 16s + server 266ms)
+- [ ] Save checkpoint
+
+## Sidebar Agent Testing
+- [x] Test Procurement Agent page (/agent/procurement) - WORKING: shows name, description, suggested prompts, chat input
+- [x] Test Academy Guide page (/agent/academy_qa) - WORKING: shows name, department, suggested prompts
+- [x] Test Support & Agents sidebar section - WORKING: all 4 Q&A agents visible
+- [x] Verify department Bot Agent sub-items visible when expanded - WORKING: all 18 departments
+
+## Bug: Contract Management Page Crash (pre-existing)
+- [ ] Fix ContractManagement.tsx:202 - TypeError: Cannot read properties of undefined (reading 'toUpperCase') at getContractTypeBadge

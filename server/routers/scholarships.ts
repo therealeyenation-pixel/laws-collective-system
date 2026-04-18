@@ -668,6 +668,121 @@ export const scholarshipsRouter = router({
   // STATISTICS
   // ============================================
 
+  // Get benefits for the currently logged-in user
+  getMyBenefits: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return { foundingMember: null, heirBenefits: [], scholarshipApplications: [], isFoundingMember: false, hasHeirBenefits: false };
+
+    const userId = ctx.user.id;
+    const userName = ctx.user.name || "";
+
+    // Check if user is a founding member
+    const founderResults = await db
+      .select()
+      .from(foundingMembers)
+      .where(eq(foundingMembers.userId, userId))
+      .limit(1);
+    
+    const foundingMember = founderResults[0] || null;
+
+    // Check heir education benefits linked to this user
+    const heirBenefits = await db
+      .select()
+      .from(heirEducationBenefits)
+      .where(eq(heirEducationBenefits.heirUserId, userId));
+
+    // Also check by name match if no userId match
+    let heirBenefitsByName: typeof heirBenefits = [];
+    if (heirBenefits.length === 0 && userName) {
+      heirBenefitsByName = await db
+        .select()
+        .from(heirEducationBenefits)
+        .where(eq(heirEducationBenefits.heirFullName, userName));
+    }
+
+    const allHeirBenefits = [...heirBenefits, ...heirBenefitsByName];
+
+    // Get founding member details for heir benefits
+    const founderIds = [...new Set(allHeirBenefits.map(b => b.foundingMemberId))];
+    let founderDetails: any[] = [];
+    if (founderIds.length > 0) {
+      founderDetails = await db
+        .select()
+        .from(foundingMembers)
+        .where(sql`${foundingMembers.id} IN (${sql.join(founderIds.map(id => sql`${id}`), sql`,`)})`);
+    }
+
+    // Get scholarship applications by this user
+    const myApplications = await db
+      .select()
+      .from(scholarshipApplications)
+      .where(eq(scholarshipApplications.applicantUserId, userId))
+      .orderBy(desc(scholarshipApplications.createdAt));
+
+    // Get program details for applications
+    const programIds = [...new Set(myApplications.map(a => a.programId))];
+    let programDetails: any[] = [];
+    if (programIds.length > 0) {
+      programDetails = await db
+        .select()
+        .from(scholarshipPrograms)
+        .where(sql`${scholarshipPrograms.id} IN (${sql.join(programIds.map(id => sql`${id}`), sql`,`)})`);
+    }
+
+    return {
+      foundingMember,
+      heirBenefits: allHeirBenefits.map(b => ({
+        ...b,
+        founderName: founderDetails.find(f => f.id === b.foundingMemberId)?.fullName || "Unknown",
+        founderRole: founderDetails.find(f => f.id === b.foundingMemberId)?.foundingRole || "Unknown",
+      })),
+      scholarshipApplications: myApplications.map(a => ({
+        ...a,
+        programName: programDetails.find(p => p.id === a.programId)?.name || "Unknown Program",
+        programType: programDetails.find(p => p.id === a.programId)?.scholarshipType || "unknown",
+      })),
+      isFoundingMember: !!foundingMember,
+      hasHeirBenefits: allHeirBenefits.length > 0,
+    };
+  }),
+
+  // Claim heir benefit (link user account to existing heir benefit record)
+  claimHeirBenefit: protectedProcedure
+    .input(z.object({
+      benefitId: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify the benefit exists and is eligible
+      const benefits = await db
+        .select()
+        .from(heirEducationBenefits)
+        .where(eq(heirEducationBenefits.id, input.benefitId))
+        .limit(1);
+
+      const benefit = benefits[0];
+      if (!benefit) throw new Error("Benefit not found");
+      if (benefit.heirUserId && benefit.heirUserId !== ctx.user.id) {
+        throw new Error("This benefit has already been claimed by another user");
+      }
+      if (benefit.status === "revoked" || benefit.status === "expired") {
+        throw new Error("This benefit is no longer available");
+      }
+
+      // Link the benefit to this user
+      await db
+        .update(heirEducationBenefits)
+        .set({
+          heirUserId: ctx.user.id,
+          heirFullName: ctx.user.name || benefit.heirFullName,
+        })
+        .where(eq(heirEducationBenefits.id, input.benefitId));
+
+      return { success: true };
+    }),
+
   getStats: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) {

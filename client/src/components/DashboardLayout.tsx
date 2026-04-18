@@ -676,6 +676,7 @@ const menuCategories: MenuCategory[] = [
     defaultOpen: false,
     items: [
       { icon: UserCircle, label: "My Profile", path: "/my-profile", minRole: "user" },
+      { icon: Gift, label: "My Benefits", path: "/my-benefits", minRole: "user" },
       { icon: ClipboardList, label: "My Tasks", path: "/my-tasks", minRole: "user" },
       { icon: Users, label: "Team Tasks", path: "/team-tasks", minRole: "staff" },
       { icon: ArrowLeftRight, label: "Task Delegation", path: "/task-delegation", minRole: "user" },
