@@ -30,6 +30,7 @@ import { HouseParticipationToggle } from "@/components/HouseParticipationToggle"
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function BusinessDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -395,6 +396,7 @@ export default function BusinessDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="business" />
     </DashboardLayout>
   );
 }

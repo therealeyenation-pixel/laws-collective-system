@@ -23,6 +23,7 @@ import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { NewsBanner } from "@/components/NewsBanner";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function PropertyDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -321,6 +322,7 @@ export default function PropertyDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="property" />
     </DashboardLayout>
   );
 }

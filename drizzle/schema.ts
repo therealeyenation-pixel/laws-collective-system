@@ -925,6 +925,14 @@ export const agents = mysqlTable("agents", {
     "purchasing",      // Procurement and purchasing
     "health",          // Health and wellness programs
     "design",          // Design and creative services
+    "it",              // IT and technology services
+    "contracts",       // Contracts and legal agreements
+    "procurement",     // Procurement department
+    "property",        // Property and assets management
+    "real_estate",     // Real estate operations
+    "project_controls", // Project controls and management
+    "business",        // Business development and strategy
+    "legal",           // Legal department
     "custom"           // User-defined agents
   ]).notNull(),
   description: text("description"),

@@ -121,22 +121,9 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     category: "security",
   },
   {
-    id: "trust-governance",
+    id: "link-businesses",
     stepKey: "link_business",
     number: 7,
-    title: "Establish Trust Governance",
-    description: "Set distribution rules, beneficiary management, and trust policies",
-    details:
-      "Define how your trust operates — distribution schedules, beneficiary rights, voting rules, and policy oversight. This governance framework ensures your House operates according to your vision even when you're not directly managing it.",
-    icon: <Scale className="w-5 h-5" />,
-    actionLabel: "Configure Governance",
-    actionPath: "/trust-governance",
-    category: "growth",
-  },
-  {
-    id: "link-businesses",
-    stepKey: "review_governance",
-    number: 8,
     title: "Link Businesses to Your House",
     description: "Connect revenue-generating entities to your trust structure",
     details:
@@ -144,6 +131,19 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     icon: <Eye className="w-5 h-5" />,
     actionLabel: "Manage Entities",
     actionPath: "/entity-structure",
+    category: "growth",
+  },
+  {
+    id: "trust-governance",
+    stepKey: "review_governance",
+    number: 8,
+    title: "Establish Trust Governance",
+    description: "Set distribution rules, beneficiary management, and trust policies",
+    details:
+      "Define how your trust operates — distribution schedules, beneficiary rights, voting rules, and policy oversight. This governance framework ensures your House operates according to your vision even when you're not directly managing it.",
+    icon: <Scale className="w-5 h-5" />,
+    actionLabel: "Configure Governance",
+    actionPath: "/trust-governance",
     category: "growth",
   },
 ];

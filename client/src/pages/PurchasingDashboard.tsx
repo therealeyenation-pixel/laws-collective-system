@@ -23,6 +23,7 @@ import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { NewsBanner } from "@/components/NewsBanner";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function PurchasingDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -342,6 +343,7 @@ export default function PurchasingDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="purchasing" />
     </DashboardLayout>
   );
 }

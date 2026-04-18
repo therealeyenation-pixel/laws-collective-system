@@ -21,6 +21,7 @@ import { Link } from "wouter";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function RealEstateDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -318,6 +319,7 @@ export default function RealEstateDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="real_estate" />
     </DashboardLayout>
   );
 }

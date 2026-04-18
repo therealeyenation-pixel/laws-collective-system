@@ -34,6 +34,7 @@ import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function OperationsDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -572,6 +573,7 @@ export default function OperationsDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="operations" />
     </DashboardLayout>
   );
 }

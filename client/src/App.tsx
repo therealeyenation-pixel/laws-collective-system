@@ -27,7 +27,6 @@ const AcademyDashboard = lazy(() => import("./pages/AcademyDashboard"));
 const AcademyLanding = lazy(() => import("./pages/AcademyLanding"));
 const GuardianDashboard = lazy(() => import("./pages/GuardianDashboard"));
 const DocumentVault = lazy(() => import("./pages/DocumentVault"));
-const Agents = lazy(() => import("./pages/Agents"));
 const SocialMedia = lazy(() => import("./pages/SocialMedia"));
 const FoundationDashboard = lazy(() => import("./pages/FoundationDashboard"));
 const FinancialAutomation = lazy(() => import("./pages/FinancialAutomation"));
@@ -799,7 +798,7 @@ function Router() {
       <Route path="/dept/it">{() => <ProtectedRoute component={ITDashboard} minRole="staff" />}</Route>
       <Route path="/dept/grants">{() => <ProtectedRoute component={GrantsDashboard} minRole="staff" />}</Route>
       <Route path="/vault">{() => <ProtectedRoute component={DocumentVault} minRole="staff" />}</Route>
-      <Route path="/agents">{() => <ProtectedRoute component={Agents} minRole="staff" />}</Route>
+      {/* Agents are now embedded in each department dashboard */}
       <Route path="/social-media">{() => <ProtectedRoute component={SocialMedia} minRole="staff" />}</Route>
       <Route path="/meetings">{() => <ProtectedRoute component={MeetingsDashboard} minRole="user" />}</Route>
       <Route path="/downloads">{() => <ProtectedRoute component={Downloads} minRole="user" />}</Route>

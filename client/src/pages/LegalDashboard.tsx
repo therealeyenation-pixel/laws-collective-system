@@ -29,6 +29,7 @@ import { ResourceLinks } from "@/components/ResourceLinks";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function LegalDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -367,6 +368,7 @@ export default function LegalDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="legal" />
     </DashboardLayout>
   );
 }

@@ -19,6 +19,7 @@ import {
 import { Link } from "wouter";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function QAQCDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -320,6 +321,7 @@ export default function QAQCDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="qaqc" />
     </DashboardLayout>
   );
 }

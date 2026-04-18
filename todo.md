@@ -12620,3 +12620,31 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Verify production build succeeds (1m 16s)
 - [x] Verify all pages load correctly in browser
 - [x] Save checkpoint
+
+## Critical Fixes: Agents, Trust Privacy, Step Order
+- [x] Investigate and restore missing agent bots on Agents page (agents intact, all 15 types present)
+- [x] Hide CALEA Trust details from public-facing "About" section on Autonomous Wealth System page
+- [x] Swap steps 7 (Link Businesses) and 8 (Establish Trust Governance) in activation flow
+- [ ] Add loading/splash screen for heavy page transitions
+- [ ] Save checkpoint
+
+## Embed Agents into Department Pages (Remove Standalone Agents Page)
+- [x] Create reusable DepartmentAgent chat component (collapsible panel)
+- [x] Map each agent type to its department page
+- [x] Embed DepartmentAgent into all 18 department pages
+- [x] Remove standalone /agents route from App.tsx
+- [x] Remove Agents sidebar link from DashboardLayout
+- [x] Hide CALEA Trust details from public-facing About section
+- [x] Swap steps 7 (Link Businesses) and 8 (Trust Governance) in activation flow
+- [x] Verify Finance Agent button visible on Finance Dashboard
+- [x] Save checkpoint
+
+## Agent Type Expansion: 1:1 Department Matching
+- [x] Add new agent types to schema enum: it, contracts, procurement, property, real_estate, project_controls, business, legal
+- [x] Push DB migration
+- [x] Update agent initialization with new agent types and system prompts
+- [x] Update AGENT_TO_DEPARTMENT mapping in departmentRegistry.ts
+- [x] Fix DepartmentAgent embeddings in all 18 dashboards to use correct 1:1 types
+- [x] Verify steps 7/8 swap and About section privacy fix in browser
+- [x] Production build succeeds (1m 16s)
+- [x] Save checkpoint

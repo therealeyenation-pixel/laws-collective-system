@@ -23,6 +23,7 @@ import { DepartmentProcedures } from "@/components/DepartmentProcedures";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function ProcurementDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -327,6 +328,7 @@ export default function ProcurementDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="procurement" />
     </DashboardLayout>
   );
 }

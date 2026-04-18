@@ -22,6 +22,7 @@ import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { ElectronicSignature } from "@/components/ElectronicSignature";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function ContractsDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -315,6 +316,7 @@ export default function ContractsDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="contracts" />
     </DashboardLayout>
   );
 }

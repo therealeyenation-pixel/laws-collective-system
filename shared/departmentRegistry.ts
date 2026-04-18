@@ -364,6 +364,14 @@ export const AGENT_TO_DEPARTMENT: Record<string, string> = {
   engagement: "outreach",
   qaqc: "business",
   purchasing: "finance",
+  it: "design",
+  contracts: "legal",
+  procurement: "finance",
+  property: "property_assets",
+  real_estate: "property_assets",
+  project_controls: "business",
+  business: "business",
+  legal: "legal",
   custom: "business",
 };
 

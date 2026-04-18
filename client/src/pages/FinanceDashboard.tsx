@@ -31,6 +31,7 @@ import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { StockTickerWidget } from "@/components/StockTickerWidget";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function FinanceDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -414,6 +415,7 @@ export default function FinanceDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="finance" />
     </DashboardLayout>
   );
 }

@@ -643,15 +643,7 @@ const menuCategories: MenuCategory[] = [
           { icon: FileText, label: "Document Vault", path: "/vault", minRole: "staff" },
         ]
       },
-      // AI & Automation
-      {
-        icon: Bot,
-        label: "AI & Automation",
-        minRole: "staff",
-        items: [
-          { icon: Bot, label: "Agents", path: "/agents", minRole: "staff" },
-        ]
-      },
+      // AI Agents are now embedded directly in each department dashboard
 
     ]
   },

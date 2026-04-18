@@ -141,6 +141,13 @@
       "when": 1776512439878,
       "tag": "0019_loose_maestro",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1776525570736,
+      "tag": "0020_sudden_hercules",
+      "breakpoints": true
     }
   ]
 }

@@ -27,6 +27,7 @@ import { ResourceLinks } from "@/components/ResourceLinks";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function HealthDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -327,6 +328,7 @@ export default function HealthDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="health" />
     </DashboardLayout>
   );
 }

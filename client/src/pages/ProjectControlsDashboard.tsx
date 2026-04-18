@@ -20,6 +20,7 @@ import {
 import { Link } from "wouter";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 export default function ProjectControlsDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -344,6 +345,7 @@ export default function ProjectControlsDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="project_controls" />
     </DashboardLayout>
   );
 }

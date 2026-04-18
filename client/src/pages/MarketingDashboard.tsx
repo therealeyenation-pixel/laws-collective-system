@@ -30,6 +30,7 @@ import { Link } from "wouter";
 import { GovernmentActionsWidget } from "@/components/GovernmentActionsWidget";
 import { LiveTicker } from "@/components/LiveTicker";
 import { WeatherWidget } from "@/components/WeatherWidget";
+import { DepartmentAgent } from "@/components/DepartmentAgent";
 
 // Marketing metrics data
 const marketingMetrics = {
@@ -485,6 +486,7 @@ export default function MarketingDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+          <DepartmentAgent agentType="outreach" />
     </DashboardLayout>
   );
 }
