@@ -226,6 +226,7 @@ const menuCategories: MenuCategory[] = [
           { icon: FileText, label: "Operating Agreements", path: "/operating-agreements", minRole: "user" },
           { icon: BarChart3, label: "SWOT Analysis", path: "/swot-analysis", minRole: "user" },
           { icon: Building2, label: "Organization Setup", path: "/genesis", minRole: "admin" },
+          { icon: Lock, label: "Identity Vault", path: "/founder/identity-vault", minRole: "admin" },
           { icon: Building2, label: "Business Setup", path: "/business-setup", minRole: "admin" },
           { icon: FileText, label: "Upload Business Plan", path: "/business-plan-upload", minRole: "admin" },
           { icon: Gavel, label: "Board Meetings", path: "/board-meetings", minRole: "admin" },

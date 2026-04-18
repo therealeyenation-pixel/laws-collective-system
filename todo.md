@@ -12469,3 +12469,35 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Test production build locally - succeeded in 3m 29s with 2.7GB peak memory
 - [x] Further split vendor-misc (12.8MB) into smaller chunks
 - [ ] Save checkpoint and verify publish works
+
+## Phase 100: Genesis House with Dual-Layer Identity Protection
+- [ ] Design database schema: houses table, house_members table, identity_vault table (encrypted)
+- [ ] Identity vault: encrypted legal names, SSN/EIN, DOB, trust beneficiary designations
+- [ ] Display layer: aliases/titles only shown in UI, linked to vault via secure reference
+- [ ] Genesis House setup wizard: owner-only, hidden route (/founder/genesis)
+- [ ] Family member roles: Head of House, Co-Head, Heir, Member with alias + vault entry
+- [ ] Entity mapping: link House to L.A.W.S. Collective, Autonomous Wealth System, Academy
+- [ ] Genesis activation trigger: opens system for public registration
+- [ ] Dual-layer flows down to all member Houses (same schema, same protection)
+- [ ] Connect to Trust Governance, Document Vault, HR, entity filings
+- [ ] Financial distribution: Craig 10%, Amber 13%, Essence 13%, Amandes 13%, remainder to Future
+- [ ] Access control: vault only accessible by House owner with separate auth step
+- [ ] Test full flow and save checkpoint
+
+## Dual-Layer Identity Protection (Genesis House Vault)
+- [x] Add identity_vault table with AES-256-GCM encrypted fields
+- [x] Add vault_access_log table for immutable audit trail
+- [x] Add system_config table for Genesis activation flags
+- [x] Create vault-crypto.ts encryption/decryption utilities
+- [x] Create genesis-house router with dual-layer procedures
+- [x] Implement vault PIN management (set/verify)
+- [x] Implement addFamilyMember with display alias + encrypted vault
+- [x] Implement getVaultEntries with decryption and access logging
+- [x] Implement updateVaultEntry with re-encryption
+- [x] Implement vault access log query
+- [x] Implement Genesis activation (opens system for public registration)
+- [x] Implement display layer query (aliases only, no vault data)
+- [x] Implement distribution template (Craig 10%, Amber 13%, Essence 13%, Amandes 13%, Future 51%)
+- [x] Build Identity Vault UI page with Display Layer / Encrypted Vault / Access Log tabs
+- [x] Add Identity Vault route and navigation
+- [x] Write and pass 13 unit tests for encryption, PIN, distribution, dual-layer model

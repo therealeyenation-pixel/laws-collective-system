@@ -19930,3 +19930,126 @@ export const activationProgress = mysqlTable("activation_progress", {
 
 export type ActivationProgress = typeof activationProgress.$inferSelect;
 export type InsertActivationProgress = typeof activationProgress.$inferInsert;
+
+
+// ============================================
+// DUAL-LAYER IDENTITY PROTECTION SYSTEM
+// Layer 1: Display aliases (visible in UI)
+// Layer 2: Encrypted legal vault (owner-only access)
+// This system flows from Genesis House to ALL member Houses
+// ============================================
+
+/**
+ * Identity Vault - Encrypted legal identity storage
+ * Contains AES-256-GCM encrypted sensitive data (legal names, SSN, DOB, addresses)
+ * Only accessible by the House owner with a separate authentication step
+ * Staff, admin, and other members CANNOT access vault data
+ * 
+ * Each House member gets one vault entry. The display layer (houseMembers.publicAlias)
+ * is what everyone sees. The vault layer is what legal documents reference.
+ */
+export const identityVault = mysqlTable("identity_vault", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  houseMemberId: int("house_member_id"), // References houseMembers.id (nullable for non-system family)
+  heirId: int("heir_id"), // References houseHeirs.id (for heirs who aren't system users)
+  
+  // Display layer reference (what the system shows)
+  displayAlias: varchar("display_alias", { length: 255 }).notNull(), // The alias/title shown in UI
+  displayRole: varchar("display_role", { length: 100 }), // "Head of House", "Co-Head", "Heir", etc.
+  
+  // Encrypted legal identity (AES-256-GCM)
+  // All encrypted fields store: iv:authTag:ciphertext (base64 encoded)
+  encryptedLegalName: text("encrypted_legal_name"), // Full legal name
+  encryptedSsn: text("encrypted_ssn"), // Social Security Number or EIN
+  encryptedDob: text("encrypted_dob"), // Date of birth
+  encryptedAddress: text("encrypted_address"), // Legal/mailing address
+  encryptedPhone: text("encrypted_phone"), // Phone number
+  encryptedEmail: text("encrypted_email"), // Personal email
+  encryptedNotes: text("encrypted_notes"), // Additional sensitive notes
+  
+  // Trust/Inheritance designations (encrypted)
+  encryptedTrustBeneficiary: text("encrypted_trust_beneficiary"), // Beneficiary designation details
+  inheritancePercentage: decimal("inheritance_percentage", { precision: 5, scale: 2 }), // Not encrypted - needed for calculations
+  inheritanceOrder: int("inheritance_order"), // Birth order / priority for inheritance
+  
+  // Relationship to House head
+  relationship: mysqlEnum("relationship", [
+    "self", "spouse", "child", "grandchild", "sibling",
+    "niece_nephew", "cousin", "adopted", "guardian_ward", "other"
+  ]).notNull(),
+  
+  // Vault access tracking
+  lastAccessedAt: timestamp("last_accessed_at"),
+  lastAccessedBy: int("last_accessed_by"), // Should always be House owner
+  accessCount: int("access_count").default(0).notNull(),
+  
+  // Encryption metadata
+  encryptionVersion: int("encryption_version").default(1).notNull(), // For key rotation
+  encryptionKeyId: varchar("encryption_key_id", { length: 100 }), // Which key was used
+  
+  // Status
+  status: mysqlEnum("vault_status", ["active", "locked", "archived"]).default("active").notNull(),
+  
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type IdentityVaultEntry = typeof identityVault.$inferSelect;
+export type InsertIdentityVaultEntry = typeof identityVault.$inferInsert;
+
+/**
+ * Vault Access Log - Immutable audit trail of every vault access
+ * Every time someone views or modifies vault data, it's logged here
+ */
+export const vaultAccessLog = mysqlTable("vault_access_log", {
+  id: int("id").primaryKey().autoincrement(),
+  houseId: int("house_id").notNull(),
+  vaultEntryId: int("vault_entry_id").notNull(), // References identityVault.id
+  accessedByUserId: int("accessed_by_user_id").notNull(),
+  
+  // Access details
+  accessType: mysqlEnum("access_type", [
+    "view",           // Viewed decrypted data
+    "create",         // Created new vault entry
+    "update",         // Updated vault entry
+    "export",         // Exported for legal documents
+    "emergency"       // Emergency access (logged with extra detail)
+  ]).notNull(),
+  
+  fieldsAccessed: json("fields_accessed").$type<string[]>(), // Which fields were decrypted
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+  
+  // Verification
+  authMethod: mysqlEnum("auth_method", [
+    "vault_pin",      // Separate PIN for vault access
+    "password_reentry", // Re-entered password
+    "biometric",      // Future: biometric verification
+    "emergency_key"   // Emergency access key
+  ]).notNull(),
+  
+  accessedAt: timestamp("accessed_at").defaultNow().notNull(),
+});
+
+export type VaultAccessLogEntry = typeof vaultAccessLog.$inferSelect;
+export type InsertVaultAccessLogEntry = typeof vaultAccessLog.$inferInsert;
+
+/**
+ * System Configuration - Global system state flags
+ * Controls whether the system is open for public registration
+ * Genesis House activation triggers system_open = true
+ */
+export const systemConfig = mysqlTable("system_config", {
+  id: int("id").primaryKey().autoincrement(),
+  configKey: varchar("config_key", { length: 100 }).notNull().unique(),
+  configValue: text("config_value").notNull(),
+  configType: mysqlEnum("config_type", ["string", "boolean", "number", "json"]).default("string").notNull(),
+  description: text("description"),
+  updatedByUserId: int("updated_by_user_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SystemConfig = typeof systemConfig.$inferSelect;
+export type InsertSystemConfig = typeof systemConfig.$inferInsert;

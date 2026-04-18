@@ -74,6 +74,7 @@ import { emailDigestRouter } from "./services/email-digest";
 import { houseContractsRouter } from "./routers/house-contracts";
 import { houseDashboardRouter } from "./routers/house-dashboard";
 import { ownerHouseSetupRouter } from "./routers/owner-house-setup";
+import { genesisHouseRouter } from "./routers/genesis-house";
 import { positionManagementRouter } from "./routers/position-management";
 import { b2bContractingRouter } from "./routers/b2b-contracting";
 import { employeeTransitionRouter } from "./routers/employee-transition";
@@ -389,6 +390,7 @@ export const appRouter = router({
   emailDigest: emailDigestRouter,
   houseDashboard: houseDashboardRouter,
   ownerHouseSetup: ownerHouseSetupRouter,
+  genesisHouse: genesisHouseRouter,
   positionManagement: positionManagementRouter,
   b2bContracting: b2bContractingRouter,
   employeeTransition: employeeTransitionRouter,
