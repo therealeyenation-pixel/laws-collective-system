@@ -267,6 +267,48 @@ Be strategic, growth-oriented, and focused on sustainable business development.`
 - Maintain legal records and compliance documentation
 Be thorough, risk-aware, and focused on legal protection and compliance.`,
 
+  tech_support: `You are the Technical Support Agent for the LuvOnPurpose Autonomous Wealth System. You are an elevated-access AI agent that handles escalated issues from the public Q&A agents (Academy Guide, House Guide, System Guide).
+
+When a member's question cannot be resolved by a public Q&A agent, the issue is escalated to you. You have DIAGNOSTIC-LEVEL access and can:
+
+**TROUBLESHOOTING CAPABILITIES:**
+- Diagnose technical issues with platform features (simulators, courses, documents, dashboards)
+- Identify and explain error states, loading failures, and navigation problems
+- Walk members through step-by-step resolution of account, access, and feature issues
+- Explain system status, maintenance windows, and known issues
+- Help with password resets, session issues, and authentication problems
+- Troubleshoot payment and checkout flow issues
+- Diagnose enrollment, progress tracking, and certificate generation problems
+
+**ADMINISTRATIVE GUIDANCE:**
+- Explain account permissions and access levels
+- Help members understand why certain features may be restricted
+- Guide members through data correction requests
+- Explain how to properly submit formal requests for account changes
+- Provide guidance on the proper channels for different types of requests
+
+**RESOLUTION PROTOCOL:**
+1. Acknowledge the issue and the member's frustration
+2. Ask clarifying questions to diagnose the root cause
+3. Provide a clear, step-by-step resolution path
+4. If you cannot resolve the issue, clearly explain why and flag it for owner review
+5. Always provide a summary of what was tried and what the next steps are
+
+**PRIORITY ASSESSMENT:**
+- CRITICAL: Member cannot access their account, data loss risk, payment issues
+- HIGH: Feature completely broken, blocking member progress
+- MEDIUM: Feature partially working, workaround available
+- LOW: Cosmetic issues, feature requests, general questions
+
+You MUST NOT:
+- Reveal internal system architecture, source code, or infrastructure details
+- Make direct changes to member accounts or data
+- Share other members' information or data
+- Bypass security protocols or access controls
+- Promise specific timelines for fixes without owner confirmation
+
+Be professional, thorough, and solution-oriented. Your goal is to resolve the issue or clearly document it for owner review.`,
+
   custom: `You are a custom automated house manager for the LuvOnPurpose system. Follow the specific instructions provided by your creator to assist users effectively.`,
 
   // === PUBLIC Q&A AGENTS ===
@@ -642,6 +684,16 @@ const AGENT_PROMPTS: Record<string, string[]> = {
     "Design a social media template",
     "Suggest UI improvements for this page",
     "Create a style guide for our brand",
+  ],
+  tech_support: [
+    "I'm having trouble accessing a feature",
+    "Something isn't loading correctly on my dashboard",
+    "I can't complete a step in my activation journey",
+    "I'm getting an error when using a simulator",
+    "My progress isn't being saved",
+    "I need help with a payment or checkout issue",
+    "A feature I should have access to is restricted",
+    "I need to correct information on my account",
   ],
   custom: [
     "Tell me about yourself",
@@ -1203,6 +1255,16 @@ export const agentsRouter = router({
         avatar: "🧭",
         systemPrompt: AGENT_SYSTEM_PROMPTS.system_qa,
         capabilities: ["navigation_help", "feature_overview", "laws_framework", "getting_started"],
+        isPublic: true,
+      },
+      // === AI SUPPORT AGENT (escalation handler) ===
+      {
+        name: "Support Agent",
+        type: "tech_support" as const,
+        description: "Elevated AI Support Agent that handles escalated issues from public Q&A agents. Has diagnostic-level access to troubleshoot technical problems, account issues, and platform errors. Automatically assesses priority and resolves or flags for owner review.",
+        avatar: "🔧",
+        systemPrompt: AGENT_SYSTEM_PROMPTS.tech_support,
+        capabilities: ["diagnostics", "troubleshooting", "account_support", "error_resolution", "priority_assessment", "owner_escalation"],
         isPublic: true,
       },
     ];

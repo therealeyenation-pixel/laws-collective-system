@@ -607,6 +607,7 @@ const menuCategories: MenuCategory[] = [
           { icon: FileText, label: "Changelog", path: "/changelog", minRole: "admin" },
           { icon: MessageSquare, label: "Ticker Admin", path: "/ticker-admin", minRole: "admin" },
           { icon: Rocket, label: "System Activations", path: "/admin/activations", minRole: "admin" },
+          { icon: Wrench, label: "Support Log", path: "/admin/support-log", minRole: "admin" },
         ]
       },
       // Grants & Funding

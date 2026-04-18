@@ -318,6 +318,7 @@ import { sponsorAnalytics } from "./routers/sponsor-analytics";
 import { memberJourneyRouter } from "./routers/member-journey";
 import { vaultSuccessionRouter } from "./routers/vault-succession";
 import { lawsOnboardingRouter } from "./routers/laws-onboarding";
+import { supportTicketsRouter } from "./routers/supportTickets";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -677,6 +678,7 @@ export const appRouter = router({
   playlists: playlistsRouter,
   globalTelecom: globalTelecomRouter,
   sponsorAnalytics: sponsorAnalytics,
+  supportTickets: supportTicketsRouter,
   // TODO: add feature routers here, e.g.
   // todo: router({
   //   list: protectedProcedure.query(({ ctx }) =>

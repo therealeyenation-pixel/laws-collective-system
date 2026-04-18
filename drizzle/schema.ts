@@ -936,6 +936,7 @@ export const agents = mysqlTable("agents", {
     "academy_qa",      // Public Q&A for Academy members
     "house_qa",        // Public Q&A for House/journey members
     "system_qa",       // Public Q&A for general system questions
+    "tech_support",    // AI Support Agent for escalated issues (elevated access)
     "custom"           // User-defined agents
   ]).notNull(),
   description: text("description"),
@@ -20172,3 +20173,55 @@ export const lawsOnboardingProgress = mysqlTable("laws_onboarding_progress", {
 
 export type LawsOnboardingProgress = typeof lawsOnboardingProgress.$inferSelect;
 export type InsertLawsOnboardingProgress = typeof lawsOnboardingProgress.$inferInsert;
+
+
+/**
+ * Support Tickets - Escalated issues from public Q&A agents to AI Support Agent
+ * When a public Q&A agent can't resolve a member's question, the member can escalate
+ * to the AI Support Agent which has elevated diagnostic access.
+ */
+export const supportTickets = mysqlTable("support_tickets", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").notNull(),
+  /** The page/agent the user escalated from */
+  sourceAgentType: varchar("source_agent_type", { length: 64 }).notNull(),
+  sourcePage: varchar("source_page", { length: 255 }),
+  /** Ticket details */
+  subject: varchar("subject", { length: 255 }).notNull(),
+  /** Original Q&A conversation context (last few messages) that led to escalation */
+  originalContext: json("original_context"),
+  status: mysqlEnum("ticket_status", [
+    "open",           // Just created, AI Support Agent processing
+    "in_progress",    // AI Support Agent actively working on it
+    "resolved",       // AI Support Agent resolved the issue
+    "needs_review",   // AI couldn't resolve, flagged for owner review
+    "closed"          // Closed by user or admin
+  ]).default("open").notNull(),
+  /** AI Support Agent's resolution summary */
+  resolutionSummary: text("resolution_summary"),
+  /** Priority auto-assigned by AI based on issue analysis */
+  priority: mysqlEnum("ticket_priority", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  /** Category auto-assigned by AI */
+  category: varchar("category", { length: 100 }),
+  resolvedAt: timestamp("resolved_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SupportTicket = typeof supportTickets.$inferSelect;
+export type InsertSupportTicket = typeof supportTickets.$inferInsert;
+
+/**
+ * Ticket Messages - Conversation thread between user and AI Support Agent
+ */
+export const ticketMessages = mysqlTable("ticket_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  ticketId: int("ticket_id").notNull(),
+  role: mysqlEnum("ticket_msg_role", ["user", "assistant", "system"]).notNull(),
+  content: text("content").notNull(),
+  metadata: json("metadata"), // diagnostic info, tool calls, etc.
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type TicketMessage = typeof ticketMessages.$inferSelect;
+export type InsertTicketMessage = typeof ticketMessages.$inferInsert;

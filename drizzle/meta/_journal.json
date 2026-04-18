@@ -155,6 +155,13 @@
       "when": 1776526392231,
       "tag": "0021_fair_pepper_potts",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1776527856541,
+      "tag": "0022_woozy_wiccan",
+      "breakpoints": true
     }
   ]
 }
