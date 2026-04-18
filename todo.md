@@ -12563,3 +12563,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Update Landing redirect: owner goes to /trust-admin (CALEA Trust), others go to /autonomous-wealth-system
 - [x] Update CALEA Trust sidebar visibility: show to owner + admin role users (not just owner)
 - [ ] Save checkpoint
+
+## Revert: Homepage redirect back to Autonomous Wealth System for all users
+- [x] Revert Landing.tsx redirect to /autonomous-wealth-system for all roles (owner/admin/user)
+- [ ] Save checkpoint
