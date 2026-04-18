@@ -12554,3 +12554,7 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add Autonomous Wealth System to always-active categories
 - [x] Fix duplicate Landmark import in DashboardLayout
 - [ ] Save checkpoint
+
+## Bug Fix: Authenticated users not redirected to dashboard from homepage
+- [x] Fix Home page to auto-redirect signed-in users to /autonomous-wealth-system dashboard
+- [ ] Save checkpoint

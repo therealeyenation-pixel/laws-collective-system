@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import {
   ArrowRight,
   Heart,
@@ -31,7 +31,15 @@ import {
 } from "lucide-react";
 
 export default function Landing() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
+  const [, navigate] = useLocation();
+
+  // Auto-redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      navigate("/autonomous-wealth-system");
+    }
+  }, [loading, isAuthenticated, navigate]);
   const [sessionId] = useState(
     () =>
       `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
