@@ -12437,3 +12437,8 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Remove entity subtitles from About section cards (Business Formation, House Structure, Education & Academy)
 - [x] Add "Our Entities" titled section in footer with all 4 entities in lighter print (text-[11px] text-muted-foreground/40)
 - [x] Save checkpoint
+
+## Phase 96: Footer Title & About Card Entity Subtitles
+- [x] Rename footer entity section from "Our Entities" to "The Collective"
+- [x] Restore entity subtitles on About section cards (Business Formation → L.A.W.S. Collective, House Structure → LuvOnPurpose Autonomous Wealth System, Education & Academy → LuvOnPurpose Academy and Outreach)
+- [x] Save checkpoint

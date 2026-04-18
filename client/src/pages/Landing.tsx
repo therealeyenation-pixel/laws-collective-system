@@ -217,6 +217,7 @@ export default function Landing() {
                   <Briefcase className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold">Business Formation</h3>
+                <p className="text-xs text-primary/70 font-medium">L.A.W.S. Collective</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Guided simulators take you from concept to legally formed
                   business entity — S Corp, LLC, non-profit, and more. Training
@@ -230,6 +231,7 @@ export default function Landing() {
                   <Shield className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold">House Structure</h3>
+                <p className="text-xs text-primary/70 font-medium">LuvOnPurpose Autonomous Wealth System</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Once your business is established, your House provides a
                   customized management shell — financial tools, HR, compliance,
@@ -243,6 +245,7 @@ export default function Landing() {
                   <BookOpen className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold">Education &amp; Academy</h3>
+                <p className="text-xs text-primary/70 font-medium">LuvOnPurpose Academy and Outreach</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   LuvOnPurpose Academy and Outreach provides K-12 homeschool
                   programs, certification courses, coding &amp; AI simulators,
@@ -522,7 +525,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center">
-            <h5 className="text-[10px] uppercase tracking-widest text-muted-foreground/50 mb-3">Our Entities</h5>
+            <h5 className="text-[10px] uppercase tracking-widest text-muted-foreground/50 mb-3">The Collective</h5>
             <div className="space-y-0.5 text-[11px] text-muted-foreground/40">
               <p>The L.A.W.S. Collective — Employment &amp; Membership</p>
               <p>LuvOnPurpose Autonomous Wealth System — House Structure &amp; Business Management</p>
