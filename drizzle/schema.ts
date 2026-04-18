@@ -20140,3 +20140,24 @@ export const houseVaultConfig = mysqlTable("house_vault_config", {
 
 export type HouseVaultConfig = typeof houseVaultConfig.$inferSelect;
 export type InsertHouseVaultConfig = typeof houseVaultConfig.$inferInsert;
+
+
+/**
+ * LAWS Onboarding Progress - Tracks user progress through the Autonomous Wealth System journey
+ * Steps: join_collective, complete_profile, attend_orientation, activate_house, secure_vault, designate_heirs, link_business, review_governance
+ */
+export const lawsOnboardingProgress = mysqlTable("laws_onboarding_progress", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("user_id").notNull(),
+  stepKey: varchar("step_key", { length: 50 }).notNull(),
+  stepNumber: int("step_number").notNull(),
+  status: mysqlEnum("laws_onboarding_status", [
+    "not_started", "in_progress", "completed", "skipped"
+  ]).default("not_started").notNull(),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LawsOnboardingProgress = typeof lawsOnboardingProgress.$inferSelect;
+export type InsertLawsOnboardingProgress = typeof lawsOnboardingProgress.$inferInsert;

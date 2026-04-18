@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import {
   Crown,
   Building2,
@@ -23,10 +25,12 @@ import {
   Eye,
   FileText,
   ShieldAlert,
+  Loader2,
 } from "lucide-react";
 
 interface OnboardingStep {
   id: string;
+  stepKey: string;
   number: number;
   title: string;
   description: string;
@@ -40,6 +44,7 @@ interface OnboardingStep {
 const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: "join-collective",
+    stepKey: "join_collective",
     number: 1,
     title: "Join the L.A.W.S. Collective",
     description: "Complete your member profile and set your goals",
@@ -52,6 +57,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: "complete-workshops",
+    stepKey: "complete_profile",
     number: 2,
     title: "Complete Education Workshops",
     description: "Build foundational knowledge through 6 core workshops",
@@ -64,6 +70,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: "form-business",
+    stepKey: "attend_orientation",
     number: 3,
     title: "Form Your Business Entity",
     description: "Register and structure your business through the formation wizard",
@@ -76,6 +83,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: "genesis-activation",
+    stepKey: "activate_house",
     number: 4,
     title: "Genesis House Activation",
     description: "Establish your first House — the foundational trust structure",
@@ -88,6 +96,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: "secure-vault",
+    stepKey: "secure_vault",
     number: 5,
     title: "Secure the Identity Vault",
     description: "Encrypt and store family identity documents",
@@ -100,6 +109,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: "succession-protocol",
+    stepKey: "designate_heirs",
     number: 6,
     title: "Configure Succession Protocol",
     description: "Designate successors and set emergency access rules",
@@ -112,6 +122,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: "trust-governance",
+    stepKey: "link_business",
     number: 7,
     title: "Establish Trust Governance",
     description: "Set distribution rules, beneficiary management, and trust policies",
@@ -124,6 +135,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     id: "link-businesses",
+    stepKey: "review_governance",
     number: 8,
     title: "Link Businesses to Your House",
     description: "Connect revenue-generating entities to your trust structure",
@@ -143,29 +155,64 @@ const CATEGORY_LABELS: Record<string, { label: string; color: string; bgColor: s
 };
 
 interface LAWSOnboardingGuideProps {
-  completedSteps?: string[];
-  currentStep?: number;
   compact?: boolean;
 }
 
 export default function LAWSOnboardingGuide({
-  completedSteps = [],
-  currentStep = 1,
   compact = false,
 }: LAWSOnboardingGuideProps) {
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
 
-  const completedCount = completedSteps.length;
+  const { data: progress, isLoading } = trpc.lawsOnboarding.getProgress.useQuery();
+  const utils = trpc.useUtils();
+
+  const completeStep = trpc.lawsOnboarding.completeStep.useMutation({
+    onSuccess: () => {
+      utils.lawsOnboarding.getProgress.invalidate();
+      toast.success("Step marked as complete!");
+    },
+    onError: () => {
+      toast.error("Failed to update step");
+    },
+  });
+
+  const resetStep = trpc.lawsOnboarding.resetStep.useMutation({
+    onSuccess: () => {
+      utils.lawsOnboarding.getProgress.invalidate();
+      toast.success("Step reset");
+    },
+  });
+
+  // Derive completed step keys from DB
+  const completedStepKeys = new Set(
+    progress?.steps.filter((s) => s.status === "completed").map((s) => s.stepKey) ?? []
+  );
+
+  const completedCount = completedStepKeys.size;
   const totalSteps = ONBOARDING_STEPS.length;
   const progressPercent = (completedCount / totalSteps) * 100;
+
+  // Find the current step (first non-completed)
+  const currentStepNumber =
+    ONBOARDING_STEPS.find((s) => !completedStepKeys.has(s.stepKey))?.number ?? totalSteps + 1;
 
   const toggleExpand = (stepId: string) => {
     setExpandedStep((prev) => (prev === stepId ? null : stepId));
   };
 
+  if (isLoading) {
+    return (
+      <Card className="border-amber-500/20">
+        <CardContent className="pt-6 pb-6 flex items-center justify-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
+          <span className="text-sm text-muted-foreground">Loading your journey...</span>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (compact) {
-    // Compact version for sidebar or small cards
-    const nextStep = ONBOARDING_STEPS.find((s) => !completedSteps.includes(s.id));
+    const nextStep = ONBOARDING_STEPS.find((s) => !completedStepKeys.has(s.stepKey));
     return (
       <Card className="border-amber-500/20">
         <CardContent className="pt-4 pb-4">
@@ -244,8 +291,8 @@ export default function LAWSOnboardingGuide({
         {/* Steps */}
         <div className="space-y-1">
           {ONBOARDING_STEPS.map((step) => {
-            const isCompleted = completedSteps.includes(step.id);
-            const isCurrent = step.number === currentStep && !isCompleted;
+            const isCompleted = completedStepKeys.has(step.stepKey);
+            const isCurrent = step.number === currentStepNumber && !isCompleted;
             const isExpanded = expandedStep === step.id;
             const cat = CATEGORY_LABELS[step.category];
 
@@ -326,17 +373,49 @@ export default function LAWSOnboardingGuide({
                       {step.details}
                     </p>
                     {!isCompleted && (
-                      <Button asChild size="sm" className="gap-2">
-                        <Link href={step.actionPath}>
-                          {step.actionLabel}
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button asChild size="sm" className="gap-2">
+                          <Link href={step.actionPath}>
+                            {step.actionLabel}
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Link>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            completeStep.mutate({ stepKey: step.stepKey });
+                          }}
+                          disabled={completeStep.isPending}
+                        >
+                          {completeStep.isPending ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          )}
+                          Mark Complete
+                        </Button>
+                      </div>
                     )}
                     {isCompleted && (
-                      <div className="flex items-center gap-2 text-emerald-600">
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span className="text-sm font-medium">Completed</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-emerald-600">
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span className="text-sm font-medium">Completed</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-xs text-muted-foreground"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            resetStep.mutate({ stepKey: step.stepKey });
+                          }}
+                          disabled={resetStep.isPending}
+                        >
+                          Reset Step
+                        </Button>
                       </div>
                     )}
                   </div>

@@ -407,8 +407,6 @@ export default function AutonomousWealthSystem() {
 
         {/* Onboarding Guide */}
         <LAWSOnboardingGuide
-          completedSteps={[]}
-          currentStep={hasHouse ? 5 : 1}
         />
 
         {/* System Architecture Info */}

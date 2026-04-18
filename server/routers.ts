@@ -317,6 +317,7 @@ import { globalTelecomRouter } from "./routers/global-telecom";
 import { sponsorAnalytics } from "./routers/sponsor-analytics";
 import { memberJourneyRouter } from "./routers/member-journey";
 import { vaultSuccessionRouter } from "./routers/vault-succession";
+import { lawsOnboardingRouter } from "./routers/laws-onboarding";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -390,6 +391,7 @@ export const appRouter = router({
   ownerHouseSetup: ownerHouseSetupRouter,
   genesisHouse: genesisHouseRouter,
   vaultSuccession: vaultSuccessionRouter,
+  lawsOnboarding: lawsOnboardingRouter,
   positionManagement: positionManagementRouter,
   b2bContracting: b2bContractingRouter,
   employeeTransition: employeeTransitionRouter,

@@ -12537,3 +12537,9 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Wire LAWS dashboard stats to real DB queries (house count, heirs, businesses)
 - [x] Build onboarding guidance flow for new members entering Autonomous Wealth System
 - [x] Save checkpoint
+
+## Bundled: UNDRIP/ADRIP Compliance, Hierarchy Viz, Onboarding Persistence
+- [x] Add UNDRIP/ADRIP compliance section to 98 Trust Administration page
+- [x] Create entity hierarchy visualization on Trust Structure page (CALEA → LAWS LLC → Collective → sub-entities)
+- [x] Persist LAWS onboarding progress in DB (track completed steps per user)
+- [ ] Save checkpoint

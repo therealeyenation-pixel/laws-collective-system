@@ -235,10 +235,11 @@ export default function TrustAdminDashboard() {
         <GovernmentActionsWidget department="trust" showStats className="mb-6" />
 
         <Tabs defaultValue="assets" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="assets">Trust Assets</TabsTrigger>
             <TabsTrigger value="hierarchy">Entity Hierarchy</TabsTrigger>
             <TabsTrigger value="governance">Governance</TabsTrigger>
+            <TabsTrigger value="international">International</TabsTrigger>
             <TabsTrigger value="licensing">Licensing</TabsTrigger>
           </TabsList>
 
@@ -602,6 +603,193 @@ export default function TrustAdminDashboard() {
                       <p className="text-foreground">Annual Renewal</p>
                     </div>
                   </div>
+                </div>
+              </div>
+            </Card>
+          </TabsContent>
+          {/* International Relations & Compliance Tab */}
+          <TabsContent value="international" className="space-y-6">
+            {/* UNDRIP Section */}
+            <Card className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-blue-100 dark:bg-blue-950 rounded-lg">
+                  <Globe className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-foreground">UN Declaration on the Rights of Indigenous Peoples (UNDRIP)</h3>
+                  <p className="text-sm text-muted-foreground">Adopted by General Assembly Resolution 61/295 — September 13, 2007</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="p-4 bg-secondary/30 rounded-lg">
+                  <h4 className="font-semibold text-foreground mb-2">Relevance to CALEA Trust</h4>
+                  <p className="text-sm text-muted-foreground">
+                    UNDRIP establishes the minimum standards for the survival, dignity, and well-being of Indigenous peoples worldwide.
+                    The CALEA Freeman Family Trust operates under these protections to assert self-determination, cultural preservation,
+                    and economic sovereignty for its beneficiaries and the broader collective.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border border-border rounded-lg">
+                    <h5 className="font-medium text-foreground mb-2">Key Articles Applied</h5>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. 3</strong> — Right to self-determination and freely pursue economic, social, and cultural development</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. 4</strong> — Right to autonomy in internal and local affairs, including financing</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. 5</strong> — Right to maintain and strengthen distinct political, legal, economic, social, and cultural institutions</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. 26</strong> — Right to lands, territories, and resources traditionally owned or occupied</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. 31</strong> — Right to maintain, control, protect, and develop cultural heritage, traditional knowledge, and intellectual property</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border border-border rounded-lg">
+                    <h5 className="font-medium text-foreground mb-2">Compliance Status</h5>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Self-Determination Protocols</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Cultural Preservation Framework</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Economic Sovereignty Structure</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">IP Protection Mechanisms</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Land & Resource Documentation</span>
+                        <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">In Progress</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* ADRIP Section */}
+            <Card className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-purple-100 dark:bg-purple-950 rounded-lg">
+                  <Globe className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-foreground">American Declaration on the Rights of Indigenous Peoples (ADRIP)</h3>
+                  <p className="text-sm text-muted-foreground">Adopted by OAS General Assembly — June 15, 2016</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="p-4 bg-secondary/30 rounded-lg">
+                  <h4 className="font-semibold text-foreground mb-2">Relevance to CALEA Trust</h4>
+                  <p className="text-sm text-muted-foreground">
+                    ADRIP is the regional complement to UNDRIP, adopted by the Organization of American States.
+                    It provides additional protections specific to Indigenous peoples in the Americas, including rights
+                    to juridical personality, collective rights, and protections against forced assimilation. The CALEA Trust
+                    leverages these protections for its inter-American operations and collective governance structure.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border border-border rounded-lg">
+                    <h5 className="font-medium text-foreground mb-2">Key Articles Applied</h5>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. III</strong> — Right to self-determination, freely determining political status and economic development</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. VI</strong> — Collective rights indispensable for existence, well-being, and integral development</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. IX</strong> — Right to juridical personality and recognition of legal systems and customs</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. XXIX</strong> — Right to development and own economic systems, freely engaging in economic activities</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span><strong>Art. XXVIII</strong> — Right to maintain and develop intellectual property over cultural heritage and traditional knowledge</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border border-border rounded-lg">
+                    <h5 className="font-medium text-foreground mb-2">Compliance Status</h5>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Juridical Personality Recognition</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Collective Governance Framework</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Economic Self-Determination</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Anti-Assimilation Protections</span>
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Inter-American Coordination</span>
+                        <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">In Progress</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* How These Frameworks Protect the System */}
+            <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+              <h3 className="text-lg font-bold text-foreground mb-4">How UNDRIP & ADRIP Protect the System</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 bg-background rounded-lg">
+                  <Shield className="w-8 h-8 text-primary mb-3" />
+                  <h4 className="font-semibold text-foreground mb-2">Sovereign Asset Protection</h4>
+                  <p className="text-sm text-muted-foreground">
+                    The CALEA Trust's assets — IP, financial systems, and cultural property — are protected under
+                    international Indigenous rights frameworks, providing an additional layer of sovereignty beyond
+                    domestic trust law.
+                  </p>
+                </div>
+                <div className="p-4 bg-background rounded-lg">
+                  <Building2 className="w-8 h-8 text-primary mb-3" />
+                  <h4 className="font-semibold text-foreground mb-2">Self-Governing Authority</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Both declarations affirm the right to maintain distinct governance institutions. The Trust's
+                    multi-entity structure (LAWS LLC → Collective → Houses) operates as a self-governing economic
+                    system with international recognition.
+                  </p>
+                </div>
+                <div className="p-4 bg-background rounded-lg">
+                  <Users className="w-8 h-8 text-primary mb-3" />
+                  <h4 className="font-semibold text-foreground mb-2">Generational Continuity</h4>
+                  <p className="text-sm text-muted-foreground">
+                    UNDRIP Art. 31 and ADRIP Art. XXVIII protect the right to pass down traditional knowledge
+                    and cultural heritage — the legal foundation for the Trust's multi-generational wealth transfer
+                    and succession protocols.
+                  </p>
                 </div>
               </div>
             </Card>
