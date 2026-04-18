@@ -7,8 +7,10 @@ export type MemberStatus = "onboarding" | "academy_active" | "formation_in_progr
 const ALWAYS_ACTIVE_CATEGORIES = [
   "Autonomous Wealth System",
   "L.A.W.S. Academy",
+  "Real-Eye-Nation",
   "My Account",
   "Communication",
+  "Media Access",
   "Theater & IPTV",
   "Broadcast Radio",
   "My Library",
@@ -20,7 +22,6 @@ const ALWAYS_ACTIVE_CATEGORIES = [
 // Categories that require House activation
 const REQUIRES_HOUSE_ACTIVATION = [
   "CALEA Freeman Family Trust",
-  "Real-Eye-Nation",
   "The L.A.W.S. Collective",
   "Documents",
   "AI & Automation",

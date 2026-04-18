@@ -12579,3 +12579,17 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Make Meetings accessible from anywhere (global header button)
 - [x] Wrapped 30 protected pages with DashboardLayout for consistent sidebar + back button navigation
 - [ ] Save checkpoint
+
+## Streamline Sidebar: Media under Real-Eye-Nation + Fix Build Errors
+- [x] Fix build error: DonorDashboard.tsx (line 176 syntax error)
+- [x] Fix build error: MemberOnboarding.tsx (line 13 syntax error)
+- [x] Fix build error: MemberCommunicationHub.tsx (line 7 syntax error)
+- [x] Fix build error: AdvancedSegmentationUI.tsx (line 22 syntax error)
+- [x] Fix build error: FinancialReconciliationUI.tsx (line 19 syntax error)
+- [x] Fix build error: AuditTrailViewer.tsx and GovernanceWorkflows.tsx (same pattern)
+- [x] Move Theater & IPTV, Broadcast Radio, Streaming Hub under Real-Eye-Nation (primary home)
+- [x] Add quick-access "Media Access" links under L.A.W.S. Academy
+- [x] Remove standalone Theater & IPTV, Broadcast Radio, Streaming Hub sections from sidebar
+- [x] Updated Real-Eye-Nation to minRole: user so all members can access media
+- [x] Updated useMemberJourney to make Real-Eye-Nation always accessible
+- [ ] Save checkpoint

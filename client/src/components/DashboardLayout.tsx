@@ -207,53 +207,25 @@ const menuCategories: MenuCategory[] = [
           { icon: FileText, label: "Proposal Simulator", path: "/proposal-simulator", minRole: "staff" },
         ]
       },
-      // Theater & IPTV (moved from standalone)
+      // Quick Access: Media (primary home is Real-Eye-Nation)
       {
         icon: Play,
-        label: "Theater & IPTV",
+        label: "Media Access",
         minRole: "user",
         items: [
-          { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
-          { icon: Video, label: "Enhanced EPG", path: "/theater-live-enhanced", minRole: "user" },
-          { icon: Disc3, label: "VOD Library", path: "/theater-vod", minRole: "user" },
-          { icon: ListMusic, label: "Now Playing", path: "/theater-now-playing", minRole: "user" },
-          { icon: History, label: "Playback History", path: "/theater-playback-history", minRole: "user" },
-        ]
-      },
-      // Broadcast Radio (moved from standalone)
-      {
-        icon: Music,
-        label: "Broadcast Radio",
-        minRole: "user",
-        items: [
-          { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
-          { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
-          { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
-          { icon: ListMusic, label: "Now Playing", path: "/now-playing", minRole: "user" },
-          { icon: History, label: "Playback History", path: "/playback-history", minRole: "user" },
-        ]
-      },
-      // Streaming Hub (moved from standalone)
-      {
-        icon: Disc3,
-        label: "Streaming Hub",
-        minRole: "user",
-        items: [
-          { icon: Disc3, label: "All Streams", path: "/streaming", minRole: "user" },
-          { icon: Play, label: "Theater", path: "/theater-live-enhanced", minRole: "user" },
-          { icon: Music, label: "Radio", path: "/broadcast-channels", minRole: "user" },
-          { icon: Music, label: "Music", path: "/music", minRole: "user" },
-          { icon: AlertTriangle, label: "Emergency Alerts", path: "/emergency", minRole: "user" },
+          { icon: Play, label: "Theater & IPTV", path: "/theater-live", minRole: "user" },
+          { icon: Music, label: "Broadcast Radio", path: "/broadcast-channels", minRole: "user" },
+          { icon: Disc3, label: "Streaming Hub", path: "/streaming", minRole: "user" },
         ]
       },
     ]
   },
 
-  // 4. REAL-EYE-NATION LLC - Performing Arts / Media Entity (Design dept under L.A.W.S. Collective)
+  // 4. REAL-EYE-NATION LLC - Performing Arts / Media Entity (primary home for Theater, Radio, Streaming)
   {
     icon: Eye,
     label: "Real-Eye-Nation",
-    minRole: "staff",
+    minRole: "user",
     defaultOpen: false,
     subCategories: [
       // Real Eye Operations
@@ -267,6 +239,45 @@ const menuCategories: MenuCategory[] = [
           { icon: Video, label: "Documentary Production", path: "/documentary-production", minRole: "staff" },
           { icon: Music, label: "Podcast Network", path: "/podcast-network", minRole: "staff" },
           { icon: Share2, label: "Social Media", path: "/social-media", minRole: "staff" },
+        ]
+      },
+      // Theater & IPTV (primary home)
+      {
+        icon: Play,
+        label: "Theater & IPTV",
+        minRole: "user",
+        items: [
+          { icon: Play, label: "Live Theater", path: "/theater-live", minRole: "user" },
+          { icon: Video, label: "Enhanced EPG", path: "/theater-live-enhanced", minRole: "user" },
+          { icon: Disc3, label: "VOD Library", path: "/theater-vod", minRole: "user" },
+          { icon: ListMusic, label: "Now Playing", path: "/theater-now-playing", minRole: "user" },
+          { icon: History, label: "Playback History", path: "/theater-playback-history", minRole: "user" },
+        ]
+      },
+      // Broadcast Radio (primary home)
+      {
+        icon: Music,
+        label: "Broadcast Radio",
+        minRole: "user",
+        items: [
+          { icon: Music, label: "Channels", path: "/broadcast-channels", minRole: "user" },
+          { icon: FileText, label: "Episodes", path: "/broadcast-episodes", minRole: "user" },
+          { icon: Play, label: "Live Broadcasts", path: "/live-broadcasts", minRole: "user" },
+          { icon: ListMusic, label: "Now Playing", path: "/now-playing", minRole: "user" },
+          { icon: History, label: "Playback History", path: "/playback-history", minRole: "user" },
+        ]
+      },
+      // Streaming Hub (primary home)
+      {
+        icon: Disc3,
+        label: "Streaming Hub",
+        minRole: "user",
+        items: [
+          { icon: Disc3, label: "All Streams", path: "/streaming", minRole: "user" },
+          { icon: Play, label: "Theater", path: "/theater-live-enhanced", minRole: "user" },
+          { icon: Music, label: "Radio", path: "/broadcast-channels", minRole: "user" },
+          { icon: Music, label: "Music", path: "/music", minRole: "user" },
+          { icon: AlertTriangle, label: "Emergency Alerts", path: "/emergency", minRole: "user" },
         ]
       },
       // Design Department (serves Real Eye and external clients)
