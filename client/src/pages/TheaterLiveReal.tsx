@@ -169,10 +169,12 @@ export default function TheaterLiveReal() {
           <p className="text-foreground">Loading live channels...</p>
         </div>
       </div>
+      </DashboardLayout>
     );
   }
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background">
       {/* Back Button + Sleep Timer */}
       <div className="border-b border-border bg-card p-4 flex items-center justify-between">

@@ -48,6 +48,7 @@ export default function NowPlaying() {
           </Card>
         </div>
       </div>
+      </DashboardLayout>
     );
   }
 
@@ -64,9 +65,9 @@ export default function NowPlaying() {
       reorderQueue(draggedIndex, toIndex);
     }
     setDraggedIndex(null);
-  };
-
+   };
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}

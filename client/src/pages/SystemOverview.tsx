@@ -102,6 +102,7 @@ export default function SystemOverview() {
   }
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/5">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">

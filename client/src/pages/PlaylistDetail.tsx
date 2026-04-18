@@ -238,10 +238,12 @@ export default function PlaylistDetail() {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-muted-foreground">Sign in to manage playlists</p>
       </div>
+      </DashboardLayout>
     );
   }
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border bg-card">

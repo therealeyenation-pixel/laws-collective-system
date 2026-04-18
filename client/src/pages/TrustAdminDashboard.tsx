@@ -178,10 +178,12 @@ export default function TrustAdminDashboard() {
           </Link>
         </Card>
       </div>
+      </DashboardLayout>
     );
   }
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card border-b border-border">

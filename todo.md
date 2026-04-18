@@ -12593,3 +12593,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Updated Real-Eye-Nation to minRole: user so all members can access media
 - [x] Updated useMemberJourney to make Real-Eye-Nation always accessible
 - [ ] Save checkpoint
+
+## Deep Cleanup: Fix Build Errors + Remove Bloat
+- [ ] Fix syntax errors: SystemOverview.tsx (line 405), TrustAdminDashboard.tsx (line 805), TheaterLiveReal.tsx (line 541), PlaylistDetail.tsx (line 515), IPTVAdminPanel.tsx (line 376), NowPlaying.tsx (line 55), TheaterNowPlaying.tsx (line 239)
+- [ ] Audit all 335 pages for duplicates and unnecessary placeholders
+- [ ] Remove duplicate/dead pages and their routes from App.tsx
+- [ ] Consolidate overlapping functionality
+- [ ] Verify production build succeeds
+- [ ] Save checkpoint
