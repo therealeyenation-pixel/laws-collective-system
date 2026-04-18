@@ -12567,3 +12567,9 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ## Revert: Homepage redirect back to Autonomous Wealth System for all users
 - [x] Revert Landing.tsx redirect to /autonomous-wealth-system for all roles (owner/admin/user)
 - [ ] Save checkpoint
+
+## System Scan Critical Fixes (April 18, 2026)
+- [x] Fix 1: Create routes + pages for 12 broken sidebar links (design-projects, documentary-production, health-simulator, lead-tracking, marketing-campaigns, marketing-documents, marketing-simulator, marketing-strategy, marketing-team, podcast-network, streaming, tax-simulator)
+- [x] Fix 2: Add Staff/Admin Management page for owner to promote users to admin
+- [x] Fix 3: Add role indicator badge in sidebar user profile area
+- [ ] Save checkpoint

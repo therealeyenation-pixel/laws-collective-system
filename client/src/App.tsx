@@ -447,6 +447,17 @@ const AdminActivations = lazy(() => import("@/pages/AdminActivations"));
 const IdentityVault = lazy(() => import("@/pages/IdentityVault"));
 const SuccessionProtocol = lazy(() => import("@/pages/SuccessionProtocol"));
 const WaitlistAdmin = lazy(() => import("@/pages/WaitlistAdmin"));
+const DesignProjects = lazy(() => import("@/pages/DesignProjects"));
+const DocumentaryProduction = lazy(() => import("@/pages/DocumentaryProduction"));
+const LeadTracking = lazy(() => import("@/pages/LeadTracking"));
+const MarketingCampaigns = lazy(() => import("@/pages/MarketingCampaigns"));
+const MarketingDocuments = lazy(() => import("@/pages/MarketingDocuments"));
+const MarketingSimulator = lazy(() => import("@/pages/simulators/MarketingSimulator"));
+const MarketingStrategy = lazy(() => import("@/pages/MarketingStrategy"));
+const MarketingTeam = lazy(() => import("@/pages/MarketingTeam"));
+const PodcastNetwork = lazy(() => import("@/pages/PodcastNetwork"));
+const StreamingHub = lazy(() => import("@/pages/Streaming"));
+const StaffManagement = lazy(() => import("@/pages/StaffManagement"));
 
 
 // Access levels: user (member), staff, admin, owner
@@ -998,6 +1009,21 @@ function Router() {
       <Route path="/mobile-integration">{() => <ProtectedRoute component={MobileIntegration} />}</Route>
       <Route path="/ai-insights">{() => <ProtectedRoute component={AIInsights} />}</Route>
       <Route path="/admin/seeding">{() => <ProtectedRoute component={AdminSeeding} minRole="admin" />}</Route>
+      {/* Fixed broken sidebar links */}
+      <Route path="/design-projects">{() => <ProtectedRoute component={DesignProjects} minRole="staff" />}</Route>
+      <Route path="/documentary-production">{() => <ProtectedRoute component={DocumentaryProduction} minRole="staff" />}</Route>
+      <Route path="/health-simulator">{() => <ProtectedRoute component={HealthSimulator} minRole="staff" />}</Route>
+      <Route path="/lead-tracking">{() => <ProtectedRoute component={LeadTracking} minRole="staff" />}</Route>
+      <Route path="/marketing-campaigns">{() => <ProtectedRoute component={MarketingCampaigns} minRole="staff" />}</Route>
+      <Route path="/marketing-documents">{() => <ProtectedRoute component={MarketingDocuments} minRole="staff" />}</Route>
+      <Route path="/marketing-simulator">{() => <ProtectedRoute component={MarketingSimulator} minRole="staff" />}</Route>
+      <Route path="/marketing-strategy">{() => <ProtectedRoute component={MarketingStrategy} minRole="staff" />}</Route>
+      <Route path="/marketing-team">{() => <ProtectedRoute component={MarketingTeam} minRole="staff" />}</Route>
+      <Route path="/podcast-network">{() => <ProtectedRoute component={PodcastNetwork} minRole="staff" />}</Route>
+      <Route path="/streaming">{() => <ProtectedRoute component={StreamingHub} minRole="staff" />}</Route>
+      <Route path="/tax-simulator">{() => <ProtectedRoute component={TaxSimulator} minRole="staff" />}</Route>
+      <Route path="/staff-management">{() => <ProtectedRoute component={StaffManagement} minRole="owner" />}</Route>
+
       {/* 404 */}
       <Route path="/" component={Landing} />
       <Route path="/demo" component={ShellDemo} />

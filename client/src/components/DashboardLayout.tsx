@@ -41,7 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert
+  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert, UserCog
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -119,6 +119,7 @@ const menuCategories: MenuCategory[] = [
       { icon: Globe2, label: "UNDRIP/ADRIP Compliance", path: "/trust-admin?tab=compliance", minRole: "admin" },
       { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "admin" },
       { icon: Map, label: "System Map", path: "/system-map", minRole: "admin" },
+      { icon: UserCog, label: "Staff & Role Management", path: "/staff-management", minRole: "owner" },
     ]
   },
 
@@ -1084,9 +1085,19 @@ function DashboardLayoutContent({
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
-                      <p className="text-sm font-medium truncate leading-none">
-                        {user?.name || "-"}
-                      </p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-sm font-medium truncate leading-none">
+                          {user?.name || "-"}
+                        </p>
+                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold leading-none shrink-0 ${
+                          userRole === "owner" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400" :
+                          userRole === "admin" ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400" :
+                          userRole === "staff" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" :
+                          "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                        }`}>
+                          {userRole === "owner" ? "Owner" : userRole === "admin" ? "Admin" : userRole === "staff" ? "Staff" : "Member"}
+                        </span>
+                      </div>
                       <p className="text-xs text-muted-foreground truncate mt-1.5">
                         {user?.email || "-"}
                       </p>
