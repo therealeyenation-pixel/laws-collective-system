@@ -12517,3 +12517,8 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add Succession Protocol route and sidebar navigation
 - [x] Create LazyStreamdown wrapper for code-split Streamdown/shiki
 - [x] Replace direct Streamdown import in AIChatBox with LazyStreamdown
+
+## Remove Employment Option & Waitlist Check
+- [x] Remove "Find employment or career opportunities" from primary and secondary goal options in Getting Started
+- [x] Replace with collective-aligned option ("Establish a House & Trust structure")
+- [x] Check if waitlist feature exists in the system (YES - exists)
