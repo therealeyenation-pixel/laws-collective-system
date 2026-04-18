@@ -56,7 +56,7 @@ export default function AdminSeeding() {
     });
 
   // Check if user is admin
-  if (user?.role !== 'admin') {
+  if (user?.role !== 'admin' && user?.role !== 'owner') {
     return (
       <DashboardLayout>
       <div className="min-h-screen bg-background flex items-center justify-center">

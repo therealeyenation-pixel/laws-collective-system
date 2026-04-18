@@ -1014,11 +1014,9 @@ export const agentsRouter = router({
     const db = await getDb();
     if (!db) throw new Error("Database unavailable");
 
-    // Check if agents already exist
-    const existingAgents = await db.select().from(agents).limit(1);
-    if (existingAgents.length > 0) {
-      return { success: true, message: "Agents already initialized" };
-    }
+    // Get existing agent types so we only insert missing ones
+    const existingAgents = await db.select({ type: agents.type }).from(agents);
+    const existingTypes = new Set(existingAgents.map(a => a.type));
 
     // Create default system agents
     const defaultAgents = [
@@ -1269,7 +1267,14 @@ export const agentsRouter = router({
       },
     ];
 
-    for (const botData of defaultAgents) {
+    // Only insert agents whose type doesn't already exist
+    const newAgents = defaultAgents.filter(a => !existingTypes.has(a.type));
+
+    if (newAgents.length === 0) {
+      return { success: true, message: "All agents already initialized", agents: [] };
+    }
+
+    for (const botData of newAgents) {
       await db.insert(agents).values({
         ...botData,
         capabilities: botData.capabilities as any,
@@ -1282,15 +1287,15 @@ export const agentsRouter = router({
       userId: ctx.user.id,
       type: "success",
       title: "AI Agents Initialized",
-      message: `Successfully created ${defaultAgents.length} automated house managers: Operations, Support, Academy Tutor, Analytics, Trust Guardian, Finance, and Media agents.`,
+      message: `Successfully created ${newAgents.length} new agent(s): ${newAgents.map(a => a.name).join(', ')}. ${existingAgents.length} existing agents unchanged.`,
       actionUrl: "/agents",
       isPriority: true,
     });
 
     return { 
       success: true, 
-      message: `Created ${defaultAgents.length} system agents`,
-      agents: defaultAgents.map(b => b.name),
+      message: `Created ${newAgents.length} new agent(s), ${existingAgents.length} already existed`,
+      agents: newAgents.map(b => b.name),
     };
   }),
 
