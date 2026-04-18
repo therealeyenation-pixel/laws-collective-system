@@ -317,12 +317,14 @@ import { departmentDashboardRouter } from "./routers/department-dashboard";
 import { playlistsRouter } from "./routers/playlists";
 import { globalTelecomRouter } from "./routers/global-telecom";
 import { sponsorAnalytics } from "./routers/sponsor-analytics";
+import { memberJourneyRouter } from "./routers/member-journey";
 
 export const appRouter = router({
   socketio: socketioRouter,
   workflowExecution: workflowExecutionRouter,
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
+  memberJourney: memberJourneyRouter,
   luv: luvSystemRouter,
   organization: organizationRouter,
   academy: academyRouter,

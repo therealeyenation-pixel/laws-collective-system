@@ -18,6 +18,17 @@ export const users = mysqlTable("users", {
   passwordHash: varchar("passwordHash", { length: 255 }), // For standalone auth
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "staff", "admin", "owner"]).default("user").notNull(),
+  /** Member journey status: tracks progression through the system */
+  memberStatus: mysqlEnum("memberStatus", [
+    "onboarding",           // Just signed up, needs to start Academy
+    "academy_active",       // Actively using Academy (simulators, courses)
+    "formation_in_progress", // Working through business formation steps
+    "house_activated"        // Business formation complete, full House access
+  ]).default("onboarding").notNull(),
+  /** Current step in business formation process (0 = not started, 1-7 = steps) */
+  formationStep: int("formationStep").default(0).notNull(),
+  /** Timestamp when House was activated */
+  houseActivatedAt: timestamp("houseActivatedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),

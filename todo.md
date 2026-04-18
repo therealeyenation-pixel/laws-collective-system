@@ -12449,3 +12449,14 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Keep standalone login/register as fallback for dev/local
 - [x] Ensure Dashboard is accessible after Manus OAuth login on published site
 - [x] Save checkpoint and republish
+
+## Phase 98b: Phased Dashboard - Academy Active, House Locked Until Activation
+- [x] Add memberStatus and formationStep fields to users table schema
+- [x] Push schema migration (pnpm db:push)
+- [x] Create member-journey router with getStatus and advanceStep procedures
+- [x] Create useMemberJourney hook for frontend
+- [x] Add Member Journey progress banner to sidebar (shows for non-admin users without House activation)
+- [x] Add locked/unlocked states to sidebar categories (Academy always active, operational sections locked until House activation)
+- [x] Admin/staff/owner bypass all locks
+- [x] Write member-journey.test.ts (8 tests passing)
+- [x] Save checkpoint

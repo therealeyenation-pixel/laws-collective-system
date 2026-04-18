@@ -53,6 +53,15 @@ import { OnboardingTour, useOnboarding } from "./OnboardingTour";
 import { OfflineStatusBar, OfflineIndicator } from "./OfflineStatusBar";
 import RadioMiniBar from "./RadioMiniBar";
 import { useRadioPlayer } from "@/contexts/RadioPlayerContext";
+import { useMemberJourney } from "@/hooks/useMemberJourney";
+
+// Locked category indicator tag
+const LockedTag = () => (
+  <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-medium text-muted-foreground/60 bg-muted/40 px-1.5 py-0.5 rounded">
+    <Lock className="h-2.5 w-2.5" />
+    Locked
+  </span>
+);
 
 // Access levels: user (member), staff, admin, owner
 type AccessLevel = "user" | "staff" | "admin" | "owner";
@@ -733,6 +742,9 @@ function DashboardLayoutContent({
   // Enable keyboard shortcuts for navigation
   useKeyboardShortcuts();
 
+  // Member journey state - controls locked/unlocked sections
+  const memberJourney = useMemberJourney();
+
   // Track radio state for sidebar indicator and mini-bar
   const { currentStation: radioStation, isPlaying: radioIsPlaying } = useRadioPlayer();
   
@@ -875,27 +887,62 @@ function DashboardLayoutContent({
           </SidebarHeader>
 
           <SidebarContent className="gap-0">
+            {/* Member Journey Progress Banner */}
+            {!memberJourney.isLoading && !memberJourney.houseActivated && !memberJourney.isAdmin && !isCollapsed && (
+              <div className="mx-3 mt-2 mb-1 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-semibold text-foreground">Member Journey</span>
+                  <span className={`text-[10px] font-medium ${memberJourney.getStatusColor()}`}>
+                    {memberJourney.getStatusLabel()}
+                  </span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-1.5 mb-1.5">
+                  <div
+                    className="bg-primary h-1.5 rounded-full transition-all duration-500"
+                    style={{ width: `${memberJourney.progressPercent}%` }}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-muted-foreground">
+                    Step {memberJourney.formationStep}/{memberJourney.totalSteps}
+                  </span>
+                  <button
+                    onClick={() => setLocation('/getting-started')}
+                    className="text-[10px] text-primary hover:underline font-medium"
+                  >
+                    Continue Setup
+                  </button>
+                </div>
+              </div>
+            )}
+
             <SidebarMenu className="px-2 py-1">
               {filteredCategories.map(category => {
                 const isOpen = openCategories[category.label] ?? false;
                 const hasActiveItem = categoryHasActiveItem(category);
+                const isLocked = memberJourney.isCategoryLocked(category.label);
                 
                 return (
                   <Collapsible
                     key={category.label}
-                    open={isOpen}
-                    onOpenChange={() => toggleCategory(category.label)}
+                    open={isLocked ? false : isOpen}
+                    onOpenChange={() => {
+                      if (isLocked) return;
+                      toggleCategory(category.label);
+                    }}
                     className="group/collapsible"
                   >
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton
-                          tooltip={category.label}
-                          className={`h-10 transition-all font-semibold ${hasActiveItem ? "bg-accent" : ""}`}
+                          tooltip={isLocked ? `${category.label} (Complete business formation to unlock)` : category.label}
+                          className={`h-10 transition-all font-semibold ${hasActiveItem ? "bg-accent" : ""} ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
                         >
-                          <category.icon className={`h-4 w-4 ${hasActiveItem ? "text-primary" : ""}`} />
-                          <span>{category.label}</span>
-                          {category.label === "Broadcast Radio" && radioStation ? (
+                          <category.icon className={`h-4 w-4 ${hasActiveItem ? "text-primary" : ""} ${isLocked ? "text-muted-foreground/50" : ""}`} />
+                          <span className={isLocked ? "text-muted-foreground/60" : ""}>{category.label}</span>
+                          {isLocked ? (
+                            <LockedTag />
+                          ) : category.label === "Broadcast Radio" && radioStation ? (
                             <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-green-500">
                               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                               {radioIsPlaying ? "LIVE" : "PAUSED"}
