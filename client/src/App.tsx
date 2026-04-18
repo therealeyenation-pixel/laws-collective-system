@@ -440,6 +440,7 @@ const IdentityVault = lazy(() => import("@/pages/IdentityVault"));
 const SuccessionProtocol = lazy(() => import("@/pages/SuccessionProtocol"));
 const WaitlistAdmin = lazy(() => import("@/pages/WaitlistAdmin"));
 const AdminSupportLog = lazy(() => import("@/pages/AdminSupportLog"));
+const AgentChat = lazy(() => import("@/pages/AgentChat"));
 const DesignProjects = lazy(() => import("@/pages/DesignProjects"));
 const DocumentaryProduction = lazy(() => import("@/pages/DocumentaryProduction"));
 const LeadTracking = lazy(() => import("@/pages/LeadTracking"));
@@ -612,6 +613,7 @@ function Router() {
       <Route path="/content-builder">{() => <ProtectedRoute component={ContentBuilder} minRole="user" />}</Route>
       <Route path="/admin/activations">{() => <ProtectedRoute component={AdminActivations} minRole="admin" />}</Route>
       <Route path="/admin/support-log">{() => <ProtectedRoute component={AdminSupportLog} minRole="admin" />}</Route>
+      <Route path="/agent/:type">{() => <ProtectedRoute component={AgentChat} minRole="user" />}</Route>
       <Route path="/business-simulator">{() => <ProtectedRoute component={BusinessSimulator} minRole="user" />}</Route>
       <Route path="/business-plan-simulator">{() => <ProtectedRoute component={BusinessPlanSimulator} minRole="user" />}</Route>
       <Route path="/grant-simulator">{() => <ProtectedRoute component={GrantSimulator} minRole="user" />}</Route>

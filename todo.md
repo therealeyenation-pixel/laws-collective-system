@@ -12689,3 +12689,11 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add /admin/support-log route in App.tsx with admin role protection
 - [x] Notify owner when new ticket is escalated (already built into create + needs_review mutations)
 - [x] Verify production build and save checkpoint (client 1m 16s + server 208ms)
+
+## Sidebar Agent Integration
+- [x] Add department agent links under each department section in sidebar (18 departments: HR, Finance, Legal, IT, Business, Health, Education, Marketing, Media, Operations, Procurement, Contracts, Purchasing, Property, Real Estate, Project Controls, QA/QC, Design)
+- [x] Add dedicated "Support & Agents" section in sidebar for Q&A agents and tech support (Academy Guide, House Guide, System Guide, Technical Support)
+- [x] Create standalone AgentChat page for full-page agent interaction from sidebar
+- [x] Add /agent/:type route in App.tsx with user role protection
+- [x] Verify production build (client 1m 8s + server 177ms)
+- [ ] Save checkpoint
