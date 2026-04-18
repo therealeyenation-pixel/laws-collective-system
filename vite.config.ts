@@ -26,67 +26,19 @@ export default defineConfig({
     emptyOutDir: true,
     minify: "esbuild",
     sourcemap: false,
-    chunkSizeWarningLimit: 1500,
+    chunkSizeWarningLimit: 3000,
     modulePreload: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules")) {
-            // React core - needed on every page
-            if (id.includes("react") || id.includes("react-dom") || id.includes("scheduler")) {
-              return "vendor-react";
-            }
-            // Radix UI primitives
-            if (id.includes("@radix-ui")) {
-              return "vendor-radix";
-            }
-            // Data fetching - needed on every page
-            if (id.includes("@trpc") || id.includes("@tanstack")) {
-              return "vendor-data";
-            }
-            // Date/validation utilities
-            if (id.includes("date-fns") || id.includes("zod") || id.includes("superjson")) {
-              return "vendor-utils";
-            }
-            // ISOLATE heavy libs so they only load on-demand
-            if (id.includes("shiki") || id.includes("oniguruma")) {
-              return "vendor-shiki";
-            }
-            if (id.includes("mermaid") || id.includes("dagre") || id.includes("cytoscape") || id.includes("elkjs")) {
-              return "vendor-diagrams";
-            }
-            if (id.includes("hls.js")) {
-              return "vendor-media";
-            }
-            if (id.includes("katex")) {
-              return "vendor-katex";
-            }
-            // Let Rollup decide for everything else - no catch-all
-            return undefined;
-          }
-          // App code splitting - only group large feature areas
-          if (id.includes("/pages/games/")) {
-            return "games";
-          }
-          if (id.includes("Simulator") && id.includes("/pages/")) {
-            return "simulators";
-          }
-          if (id.includes("/pages/HR") || id.includes("/pages/Employee") || id.includes("/pages/Position") || id.includes("/pages/Career") || id.includes("/pages/Contractor") || id.includes("/pages/Performance")) {
-            return "hr-pages";
-          }
-          if (id.includes("/pages/") && id.includes("Grant")) {
-            return "grant-pages";
-          }
-          if (id.includes("/pages/") && (id.includes("House") || id.includes("Trust") || id.includes("Board") || id.includes("Governance"))) {
-            return "house-pages";
-          }
-          if (id.includes("/pages/") && (id.includes("Finance") || id.includes("Revenue") || id.includes("Banking") || id.includes("Tax"))) {
-            return "finance-pages";
-          }
-          if (id.includes("/pages/") && (id.includes("International") || id.includes("Compliance") || id.includes("Contract"))) {
-            return "operations-pages";
-          }
-          // NO dashboard-pages catch-all - let Rollup split naturally
+          if (!id.includes("node_modules")) return undefined;
+          // Only isolate heavy vendor libs that should never be in the initial load
+          if (id.includes("shiki") || id.includes("oniguruma")) return "vendor-shiki";
+          if (id.includes("mermaid") || id.includes("dagre") || id.includes("cytoscape") || id.includes("elkjs")) return "vendor-diagrams";
+          if (id.includes("hls.js")) return "vendor-media";
+          if (id.includes("katex")) return "vendor-katex";
+          // Let Rollup handle everything else naturally - no forced grouping
+          return undefined;
         },
       },
     },
