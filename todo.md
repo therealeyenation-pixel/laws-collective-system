@@ -12442,3 +12442,10 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Rename footer entity section from "Our Entities" to "The Collective"
 - [x] Restore entity subtitles on About section cards (Business Formation → L.A.W.S. Collective, House Structure → LuvOnPurpose Autonomous Wealth System, Education & Academy → LuvOnPurpose Academy and Outreach)
 - [x] Save checkpoint
+
+## Phase 97: Fix OAuth Callback for Published Site
+- [x] Restore proper Manus OAuth callback handler (code exchange + user info + session cookie)
+- [x] Add /manus-oauth/callback route for Manus hosting platform
+- [x] Keep standalone login/register as fallback for dev/local
+- [x] Ensure Dashboard is accessible after Manus OAuth login on published site
+- [x] Save checkpoint and republish
