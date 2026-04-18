@@ -299,6 +299,7 @@ const InvestmentPortfolioDashboard = lazy(() => import("@/pages/InvestmentPortfo
 const InvestmentGovernanceDashboard = lazy(() => import("@/pages/InvestmentGovernanceDashboard"));
 const TieredGovernanceDashboard = lazy(() => import("@/pages/TieredGovernanceDashboard"));
 const InvestmentReportDashboard = lazy(() => import("@/pages/InvestmentReportDashboard"));
+const CryptoWallet = lazy(() => import("@/pages/CryptoWallet"));
 const ConsolidatedFinancialDashboard = lazy(() => import("@/pages/ConsolidatedFinancialDashboard"));
 const TrademarkChecklist = lazy(() => import("@/pages/TrademarkChecklist"));
 const MemberCredentials = lazy(() => import("@/pages/MemberCredentials"));
@@ -458,6 +459,7 @@ const AcademyK12Unit = lazy(() => import("@/pages/AcademyK12Unit"));
 const AcademyK12MyLearning = lazy(() => import("@/pages/AcademyK12MyLearning"));
 const AcademyK12EducatorReview = lazy(() => import("@/pages/AcademyK12EducatorReview"));
 const AcademyK12Assessment = lazy(() => import("@/pages/AcademyK12Assessment"));
+const AcademyCodingSimulator = lazy(() => import("@/pages/AcademyCodingSimulator"));
 
 
 // Access levels: user (member), staff, admin, owner
@@ -590,6 +592,7 @@ function Router() {
       <Route path="/investment-governance">{() => <ProtectedRoute component={InvestmentGovernanceDashboard} minRole="admin" />}</Route>
       <Route path="/tiered-governance">{() => <ProtectedRoute component={TieredGovernanceDashboard} minRole="admin" />}</Route>
       <Route path="/investment-reports">{() => <ProtectedRoute component={InvestmentReportDashboard} minRole="admin" />}</Route>
+      <Route path="/crypto-wallet">{() => <ProtectedRoute component={CryptoWallet} minRole="staff" />}</Route>
       <Route path="/financial-dashboard">{() => <ProtectedRoute component={ConsolidatedFinancialDashboard} minRole="admin" />}</Route>
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
@@ -620,6 +623,7 @@ function Router() {
       <Route path="/academy/k12/my-learning">{() => <ProtectedRoute component={AcademyK12MyLearning} minRole="user" />}</Route>
       <Route path="/academy/k12/educator-review">{() => <ProtectedRoute component={AcademyK12EducatorReview} minRole="staff" />}</Route>
       <Route path="/academy/k12/assessment/:id">{() => <ProtectedRoute component={AcademyK12Assessment} minRole="user" />}</Route>
+      <Route path="/academy/coding-simulator">{() => <ProtectedRoute component={AcademyCodingSimulator} minRole="user" />}</Route>
       <Route path="/guardian-dashboard">{() => <ProtectedRoute component={GuardianDashboard} minRole="user" />}</Route>
       <Route path="/activation-progress">{() => <ProtectedRoute component={ActivationProgress} minRole="user" />}</Route>
       <Route path="/content-builder">{() => <ProtectedRoute component={ContentBuilder} minRole="user" />}</Route>

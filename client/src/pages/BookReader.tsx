@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
@@ -24,6 +24,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import {
   BookOpen,
   ChevronLeft,
   ChevronRight,
@@ -31,8 +39,6 @@ import {
   Volume2,
   VolumeX,
   Settings,
-  BookMarked,
-  Bookmark,
   Send,
   Loader2,
   Sun,
@@ -44,6 +50,10 @@ import {
   HelpCircle,
   Lightbulb,
   ArrowLeft,
+  Lock,
+  CheckCircle2,
+  AlertTriangle,
+  Star,
 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
@@ -65,6 +75,25 @@ const GRADE_LEVELS = {
   "9_12": "9-12 (Ages 14-18)",
 };
 
+// Chapter checkpoint intervals by grade level
+const CHECKPOINT_INTERVALS: Record<string, number> = {
+  k_2: 5,     // Every 5 pages
+  "3_5": 8,   // Every 8 pages
+  "6_8": 10,  // Every 10 pages
+  "9_12": 15, // Every 15 pages
+};
+
+// Minimum discussion messages required to pass checkpoint
+const MIN_MESSAGES_BY_GRADE: Record<string, number> = {
+  k_2: 2,     // 2 Q&A exchanges (simple)
+  "3_5": 3,   // 3 Q&A exchanges
+  "6_8": 4,   // 4 exchanges
+  "9_12": 5,  // 5 exchanges with complex discussion required
+};
+
+// Discussion types required for 9-12 (complex discussions)
+const COMPLEX_DISCUSSION_TYPES = ["analysis", "socratic"];
+
 export default function BookReader() {
   const { bookId } = useParams<{ bookId: string }>();
   const [, navigate] = useLocation();
@@ -83,6 +112,12 @@ export default function BookReader() {
   const [userMessage, setUserMessage] = useState("");
   const [discussionId, setDiscussionId] = useState<number | undefined>();
   const [messages, setMessages] = useState<Array<{ role: string; content: string; timestamp: string }>>([]);
+  
+  // Checkpoint state
+  const [checkpointGateActive, setCheckpointGateActive] = useState(false);
+  const [completedCheckpoints, setCompletedCheckpoints] = useState<Set<number>>(new Set());
+  const [checkpointMessages, setCheckpointMessages] = useState(0);
+  const [hasComplexDiscussion, setHasComplexDiscussion] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -110,6 +145,10 @@ export default function BookReader() {
       setDiscussionId(result.discussionId);
       setMessages(result.messages);
       setUserMessage("");
+      
+      // Count user messages for checkpoint tracking
+      const userMsgCount = result.messages.filter((m: any) => m.role === "user").length;
+      setCheckpointMessages(userMsgCount);
     },
     onError: (error) => {
       toast.error("Failed to get response: " + error.message);
@@ -147,9 +186,85 @@ export default function BookReader() {
       }
     };
 
-    const interval = setInterval(saveProgress, 60000); // Save every minute
+    const interval = setInterval(saveProgress, 60000);
     return () => clearInterval(interval);
   }, [currentPage, isAuthenticated, startReading.data?.id]);
+
+  // Track complex discussion types
+  useEffect(() => {
+    if (COMPLEX_DISCUSSION_TYPES.includes(discussionType) && messages.length > 0) {
+      setHasComplexDiscussion(true);
+    }
+  }, [discussionType, messages]);
+
+  // Calculate checkpoint pages
+  const checkpointInterval = CHECKPOINT_INTERVALS[gradeLevel] || 10;
+  const totalPages = book?.pageCount || 100;
+  
+  const nextCheckpointPage = useMemo(() => {
+    const interval = CHECKPOINT_INTERVALS[gradeLevel] || 10;
+    const currentCheckpoint = Math.ceil(currentPage / interval) * interval;
+    if (completedCheckpoints.has(currentCheckpoint)) {
+      return currentCheckpoint + interval;
+    }
+    return currentCheckpoint;
+  }, [currentPage, gradeLevel, completedCheckpoints]);
+
+  const isAtCheckpoint = useMemo(() => {
+    const interval = CHECKPOINT_INTERVALS[gradeLevel] || 10;
+    const checkpointPage = Math.ceil(currentPage / interval) * interval;
+    return currentPage >= checkpointPage && !completedCheckpoints.has(checkpointPage);
+  }, [currentPage, gradeLevel, completedCheckpoints]);
+
+  // Check if checkpoint requirements are met
+  const checkpointRequirementsMet = useMemo(() => {
+    const minMessages = MIN_MESSAGES_BY_GRADE[gradeLevel] || 3;
+    const hasEnoughMessages = checkpointMessages >= minMessages;
+    
+    // For 9-12, also require complex discussion
+    if (gradeLevel === "9_12") {
+      return hasEnoughMessages && hasComplexDiscussion;
+    }
+    
+    return hasEnoughMessages;
+  }, [checkpointMessages, gradeLevel, hasComplexDiscussion]);
+
+  const handleNextPage = () => {
+    const nextPage = Math.min(totalPages, currentPage + 1);
+    const interval = CHECKPOINT_INTERVALS[gradeLevel] || 10;
+    const checkpointPage = Math.ceil(currentPage / interval) * interval;
+    
+    // If trying to go past a checkpoint that hasn't been completed
+    if (currentPage >= checkpointPage - 1 && nextPage >= checkpointPage && !completedCheckpoints.has(checkpointPage)) {
+      setCheckpointGateActive(true);
+      if (!companionOpen) {
+        setCompanionOpen(true);
+      }
+      return;
+    }
+    
+    setCurrentPage(nextPage);
+  };
+
+  const handleCompleteCheckpoint = () => {
+    if (!checkpointRequirementsMet) {
+      toast.error("Please complete the required Q&A discussion first!");
+      return;
+    }
+    
+    const interval = CHECKPOINT_INTERVALS[gradeLevel] || 10;
+    const checkpointPage = Math.ceil(currentPage / interval) * interval;
+    
+    setCompletedCheckpoints(prev => new Set([...prev, checkpointPage]));
+    setCheckpointGateActive(false);
+    setCheckpointMessages(0);
+    setHasComplexDiscussion(false);
+    setMessages([]);
+    setDiscussionId(undefined);
+    
+    toast.success("Checkpoint complete! Keep reading!");
+    setCurrentPage(Math.min(totalPages, currentPage + 1));
+  };
 
   const handleSendMessage = () => {
     if (!userMessage.trim() || !bookId) return;
@@ -202,8 +317,8 @@ export default function BookReader() {
     );
   }
 
-  const totalPages = book.pageCount || 100;
   const progress = (currentPage / totalPages) * 100;
+  const minMessages = MIN_MESSAGES_BY_GRADE[gradeLevel] || 3;
 
   return (
     <div className={`min-h-screen ${themeStyles[theme]}`}>
@@ -225,6 +340,24 @@ export default function BookReader() {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Reading Level Badge */}
+              <Badge variant="outline" className="hidden md:flex gap-1">
+                <GraduationCap className="w-3 h-3" />
+                {GRADE_LEVELS[gradeLevel as keyof typeof GRADE_LEVELS] || gradeLevel}
+              </Badge>
+
+              {/* Checkpoint Progress */}
+              <Badge 
+                variant={isAtCheckpoint ? "destructive" : "secondary"}
+                className="hidden md:flex gap-1"
+              >
+                {isAtCheckpoint ? (
+                  <><Lock className="w-3 h-3" /> Q&A Required</>
+                ) : (
+                  <>Next checkpoint: p.{nextCheckpointPage}</>
+                )}
+              </Badge>
+
               {/* Read Aloud Toggle */}
               <Button
                 variant={readAloudEnabled ? "default" : "ghost"}
@@ -246,6 +379,29 @@ export default function BookReader() {
                     <SheetTitle>Reading Settings</SheetTitle>
                   </SheetHeader>
                   <div className="space-y-6 mt-6">
+                    {/* Grade Level */}
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">
+                        <GraduationCap className="w-4 h-4 inline mr-2" />
+                        Grade Level
+                      </label>
+                      <Select value={gradeLevel} onValueChange={setGradeLevel}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Grade Level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(GRADE_LEVELS).map(([key, label]) => (
+                            <SelectItem key={key} value={key}>{label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {gradeLevel === "9_12" 
+                          ? "Complex discussions (Analysis or Socratic) required at each checkpoint"
+                          : "Comprehension Q&A required at each checkpoint"}
+                      </p>
+                    </div>
+
                     {/* Font Size */}
                     <div>
                       <label className="text-sm font-medium mb-2 block">
@@ -291,6 +447,24 @@ export default function BookReader() {
                         </Button>
                       </div>
                     </div>
+
+                    {/* Q&A Requirements Info */}
+                    <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                      <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-600" />
+                        Reading Checkpoint Requirements
+                      </h4>
+                      <ul className="text-xs space-y-1 text-muted-foreground">
+                        <li>Checkpoints every {CHECKPOINT_INTERVALS[gradeLevel]} pages</li>
+                        <li>Minimum {MIN_MESSAGES_BY_GRADE[gradeLevel]} Q&A exchanges required</li>
+                        {gradeLevel === "9_12" && (
+                          <li className="font-medium text-amber-700 dark:text-amber-400">
+                            Must include Analysis or Socratic discussion
+                          </li>
+                        )}
+                        <li>Cannot advance to next section until checkpoint is complete</li>
+                      </ul>
+                    </div>
                   </div>
                 </SheetContent>
               </Sheet>
@@ -324,7 +498,48 @@ export default function BookReader() {
         {/* Book Content */}
         <main className={`flex-1 transition-all ${companionOpen ? "mr-96" : ""}`}>
           <div className="container max-w-3xl mx-auto px-4 py-8">
-            {/* Book Content Placeholder */}
+            {/* Checkpoint Alert Banner */}
+            {isAtCheckpoint && (
+              <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <Lock className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-amber-800 dark:text-amber-300">
+                      Reading Checkpoint — Q&A Required
+                    </h3>
+                    <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
+                      {gradeLevel === "9_12" 
+                        ? "Complete a complex discussion (Analysis or Socratic) with at least 5 exchanges to continue reading."
+                        : `Answer at least ${minMessages} comprehension questions with the AI Companion to unlock the next section.`}
+                    </p>
+                    <div className="flex items-center gap-4 mt-3">
+                      <div className="flex items-center gap-2 text-sm">
+                        <span className={checkpointMessages >= minMessages ? "text-green-600" : "text-amber-600"}>
+                          {checkpointMessages >= minMessages ? <CheckCircle2 className="w-4 h-4 inline" /> : null}
+                          {checkpointMessages}/{minMessages} exchanges
+                        </span>
+                      </div>
+                      {gradeLevel === "9_12" && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className={hasComplexDiscussion ? "text-green-600" : "text-amber-600"}>
+                            {hasComplexDiscussion ? <CheckCircle2 className="w-4 h-4 inline" /> : <Lock className="w-4 h-4 inline" />}
+                            {" "}Complex discussion
+                          </span>
+                        </div>
+                      )}
+                      {checkpointRequirementsMet && (
+                        <Button size="sm" onClick={handleCompleteCheckpoint} className="bg-green-600 hover:bg-green-700">
+                          <CheckCircle2 className="w-4 h-4 mr-1" />
+                          Complete Checkpoint
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Book Content */}
             <article 
               className="prose prose-lg max-w-none"
               style={{ fontSize: `${fontSize}px` }}
@@ -368,6 +583,13 @@ export default function BookReader() {
                   onChange={(e) => {
                     const page = parseInt(e.target.value);
                     if (page >= 1 && page <= totalPages) {
+                      // Don't allow jumping past uncompleted checkpoints
+                      const interval = CHECKPOINT_INTERVALS[gradeLevel] || 10;
+                      const nextCheckpoint = Math.ceil(currentPage / interval) * interval;
+                      if (page > nextCheckpoint && !completedCheckpoints.has(nextCheckpoint)) {
+                        toast.error("Complete the Q&A checkpoint first!");
+                        return;
+                      }
                       setCurrentPage(page);
                     }
                   }}
@@ -380,7 +602,7 @@ export default function BookReader() {
 
               <Button
                 variant="outline"
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                onClick={handleNextPage}
                 disabled={currentPage >= totalPages}
               >
                 Next
@@ -404,6 +626,29 @@ export default function BookReader() {
                 </Button>
               </div>
 
+              {/* Checkpoint Progress (in sidebar) */}
+              {isAtCheckpoint && (
+                <div className="mb-3 p-2 bg-amber-50 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-700">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-amber-700 dark:text-amber-400">
+                      Checkpoint Progress
+                    </span>
+                    <span className={checkpointRequirementsMet ? "text-green-600 font-bold" : "text-amber-600"}>
+                      {checkpointMessages}/{minMessages} exchanges
+                    </span>
+                  </div>
+                  <Progress 
+                    value={Math.min(100, (checkpointMessages / minMessages) * 100)} 
+                    className="h-1.5 mt-1" 
+                  />
+                  {gradeLevel === "9_12" && !hasComplexDiscussion && (
+                    <p className="text-xs text-amber-600 mt-1">
+                      Switch to Analysis or Socratic mode for complex discussion
+                    </p>
+                  )}
+                </div>
+              )}
+
               {/* Discussion Type Selector */}
               <div className="space-y-3">
                 <Select value={discussionType} onValueChange={setDiscussionType}>
@@ -416,7 +661,12 @@ export default function BookReader() {
                         <div className="flex items-center gap-2">
                           <Icon className="w-4 h-4" />
                           <div>
-                            <div className="font-medium">{label}</div>
+                            <div className="font-medium">
+                              {label}
+                              {gradeLevel === "9_12" && COMPLEX_DISCUSSION_TYPES.includes(key) && (
+                                <Star className="w-3 h-3 inline ml-1 text-amber-500" />
+                              )}
+                            </div>
                             <div className="text-xs text-muted-foreground">{description}</div>
                           </div>
                         </div>
@@ -445,7 +695,11 @@ export default function BookReader() {
                   <MessageCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p className="mb-2">Start a conversation about the book!</p>
                   <p className="text-sm">
-                    Ask questions, discuss themes, or explore vocabulary.
+                    {isAtCheckpoint 
+                      ? gradeLevel === "9_12"
+                        ? "Complete a complex discussion to pass this checkpoint. Try Analysis or Socratic mode!"
+                        : `Answer ${minMessages} comprehension questions to continue reading.`
+                      : "Ask questions, discuss themes, or explore vocabulary."}
                   </p>
                 </div>
               ) : (
@@ -482,11 +736,22 @@ export default function BookReader() {
 
             {/* Input Area */}
             <div className="p-4 border-t">
+              {/* Checkpoint completion button */}
+              {isAtCheckpoint && checkpointRequirementsMet && (
+                <Button 
+                  onClick={handleCompleteCheckpoint} 
+                  className="w-full mb-3 bg-green-600 hover:bg-green-700"
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Complete Checkpoint & Continue Reading
+                </Button>
+              )}
+              
               <div className="flex gap-2">
                 <Textarea
                   value={userMessage}
                   onChange={(e) => setUserMessage(e.target.value)}
-                  placeholder="Ask about the book..."
+                  placeholder={isAtCheckpoint ? "Discuss the book to complete checkpoint..." : "Ask about the book..."}
                   className="resize-none"
                   rows={2}
                   onKeyDown={(e) => {
@@ -511,6 +776,56 @@ export default function BookReader() {
           </aside>
         )}
       </div>
+
+      {/* Checkpoint Gate Dialog */}
+      <AlertDialog open={checkpointGateActive} onOpenChange={setCheckpointGateActive}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Lock className="w-5 h-5 text-amber-600" />
+              Reading Checkpoint
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3">
+              <p>
+                You've reached a reading checkpoint! To continue, you need to discuss what you've read with the AI Reading Companion.
+              </p>
+              <div className="p-3 bg-muted rounded-lg">
+                <p className="font-medium text-foreground mb-1">Requirements:</p>
+                <ul className="text-sm space-y-1">
+                  <li className="flex items-center gap-2">
+                    {checkpointMessages >= minMessages 
+                      ? <CheckCircle2 className="w-4 h-4 text-green-600" /> 
+                      : <Lock className="w-4 h-4 text-amber-600" />}
+                    Complete {minMessages} Q&A exchanges ({checkpointMessages}/{minMessages} done)
+                  </li>
+                  {gradeLevel === "9_12" && (
+                    <li className="flex items-center gap-2">
+                      {hasComplexDiscussion 
+                        ? <CheckCircle2 className="w-4 h-4 text-green-600" /> 
+                        : <Lock className="w-4 h-4 text-amber-600" />}
+                      Include Analysis or Socratic discussion
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button variant="outline" onClick={() => setCheckpointGateActive(false)}>
+              Go Back
+            </Button>
+            <Button 
+              onClick={() => {
+                setCheckpointGateActive(false);
+                setCompanionOpen(true);
+              }}
+            >
+              <Sparkles className="w-4 h-4 mr-1" />
+              Open AI Companion
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     
       <PublicQAAgent agentType="academy_qa" label="Academy Guide" pageContext="User is using the Virtual Library Book Reader with interactive reading and Q&A features." />
     </div>

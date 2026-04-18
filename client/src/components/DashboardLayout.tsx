@@ -42,7 +42,7 @@ import {
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
   Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert, UserCog,
-  HelpCircle, Headphones, LifeBuoy
+  HelpCircle, Headphones, LifeBuoy, Code2
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -204,6 +204,7 @@ const menuCategories: MenuCategory[] = [
           { icon: BookOpen, label: "Browse Subjects", path: "/academy/k12", minRole: "user" },
           { icon: GraduationCap, label: "My Learning", path: "/academy/k12/my-learning", minRole: "user" },
           { icon: FileText, label: "Educator Review", path: "/academy/k12/educator-review", minRole: "staff" },
+          { icon: Code2, label: "Coding & AI Simulator", path: "/academy/coding-simulator", minRole: "user" },
         ]
       },
       // Simulators
@@ -432,6 +433,10 @@ const menuCategories: MenuCategory[] = [
           { icon: DollarSign, label: "Finance Dashboard", path: "/dept/finance", minRole: "staff" },
           { icon: Bot, label: "Finance Agent", path: "/agent/finance", minRole: "staff" },
           { icon: DollarSign, label: "Financial Automation", path: "/financial-automation", minRole: "staff" },
+          { icon: TrendingUp, label: "Investment Portfolio", path: "/investments", minRole: "admin" },
+          { icon: Scale, label: "Investment Governance", path: "/investment-governance", minRole: "admin" },
+          { icon: BarChart3, label: "Investment Reports", path: "/investment-reports", minRole: "admin" },
+          { icon: Coins, label: "Crypto Wallet", path: "/crypto-wallet", minRole: "staff" },
           { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff" },
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },
           { icon: CreditCard, label: "Pricing", path: "/pricing", minRole: "admin" },

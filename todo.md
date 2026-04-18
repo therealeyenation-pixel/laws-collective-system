@@ -12768,3 +12768,34 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ### Escalation & Support
 - [x] Verify tech_support agent escalation flow works end-to-end
 - [x] Verify Support Log admin page displays escalated tickets
+
+## Phase 28: Coding/AI Simulator, Bitcoin/NFT Training, Virtual Library Enhancement, Investment Nav
+
+### Coding/AI Simulator
+- [x] Build interactive Coding Sandbox page with code editor (HTML/CSS/JS/Python)
+- [x] Add AI code review and hints system
+- [x] Add AI Technology Builder simulator (drag-and-drop AI pipeline concepts)
+- [x] Wire into Academy K-12 nav and App.tsx routes
+
+### Bitcoin & NFT Training
+- [x] Add Bitcoin/Crypto fundamentals course to Academy K-12 subjects
+- [x] Add NFT creation and digital art course to Academy K-12 subjects
+- [x] Add Blockchain Technology unit with real-world examples
+- [x] Seed curriculum content for crypto/NFT subjects
+
+### Virtual Library Enhancement
+- [x] Add mandatory Q&A system for K-9 readers (AI-generated comprehension questions)
+- [x] Add complex discussion system for 10+ readers
+- [x] Add reading progress tracking with comprehension scores
+- [x] Integrate with Academy K-12 progress system
+
+### Investment Tools Nav & Crypto Coverage
+- [x] Add Investment Portfolio, Governance, Reports to sidebar nav
+- [x] Add Crypto Wallet management to sidebar nav
+- [x] Ensure investment simulator includes Bitcoin/crypto trading (already present)
+- [x] Add NFT portfolio view to investment dashboard (linked from Crypto Wallet page)
+
+### End-to-End Testing
+- [x] Test full student flow: browse → enroll → lesson → assessment → progress
+- [x] Verify escalation flow works with tech_support agent
+- [x] Verify Support Log admin page
