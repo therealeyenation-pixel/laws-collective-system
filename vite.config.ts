@@ -27,11 +27,12 @@ export default defineConfig({
     minify: "esbuild",
     sourcemap: false,
     chunkSizeWarningLimit: 1500,
+    modulePreload: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            // React core
+            // React core - needed on every page
             if (id.includes("react") || id.includes("react-dom") || id.includes("scheduler")) {
               return "vendor-react";
             }
@@ -39,15 +40,7 @@ export default defineConfig({
             if (id.includes("@radix-ui")) {
               return "vendor-radix";
             }
-            // Icons
-            if (id.includes("lucide-react")) {
-              return "vendor-icons";
-            }
-            // Charts & visualization
-            if (id.includes("chart.js") || id.includes("recharts") || id.includes("d3")) {
-              return "vendor-charts";
-            }
-            // Data fetching
+            // Data fetching - needed on every page
             if (id.includes("@trpc") || id.includes("@tanstack")) {
               return "vendor-data";
             }
@@ -55,30 +48,23 @@ export default defineConfig({
             if (id.includes("date-fns") || id.includes("zod") || id.includes("superjson")) {
               return "vendor-utils";
             }
-            // UI animation & interaction
-            if (id.includes("framer-motion") || id.includes("cmdk") || id.includes("sonner")) {
-              return "vendor-ui";
+            // ISOLATE heavy libs so they only load on-demand
+            if (id.includes("shiki") || id.includes("oniguruma")) {
+              return "vendor-shiki";
             }
-            // Stripe
-            if (id.includes("stripe") || id.includes("@stripe")) {
-              return "vendor-stripe";
+            if (id.includes("mermaid") || id.includes("dagre") || id.includes("cytoscape") || id.includes("elkjs")) {
+              return "vendor-diagrams";
             }
-            // AWS/S3
-            if (id.includes("@aws-sdk") || id.includes("@smithy")) {
-              return "vendor-aws";
+            if (id.includes("hls.js")) {
+              return "vendor-media";
             }
-            // Markdown/editor
-            if (id.includes("markdown") || id.includes("remark") || id.includes("rehype") || id.includes("unified") || id.includes("mdast") || id.includes("hast") || id.includes("streamdown")) {
-              return "vendor-markdown";
+            if (id.includes("katex")) {
+              return "vendor-katex";
             }
-            // PDF generation
-            if (id.includes("pdf") || id.includes("jspdf") || id.includes("html2canvas")) {
-              return "vendor-pdf";
-            }
-            // Remaining vendor - let Rollup handle naturally
-            return "vendor-other";
+            // Let Rollup decide for everything else - no catch-all
+            return undefined;
           }
-          // App code splitting
+          // App code splitting - only group large feature areas
           if (id.includes("/pages/games/")) {
             return "games";
           }
@@ -88,7 +74,6 @@ export default defineConfig({
           if (id.includes("/pages/HR") || id.includes("/pages/Employee") || id.includes("/pages/Position") || id.includes("/pages/Career") || id.includes("/pages/Contractor") || id.includes("/pages/Performance")) {
             return "hr-pages";
           }
-          // Split dashboard pages more granularly
           if (id.includes("/pages/") && id.includes("Grant")) {
             return "grant-pages";
           }
@@ -101,9 +86,7 @@ export default defineConfig({
           if (id.includes("/pages/") && (id.includes("International") || id.includes("Compliance") || id.includes("Contract"))) {
             return "operations-pages";
           }
-          if (id.includes("Dashboard") && id.includes("/pages/")) {
-            return "dashboard-pages";
-          }
+          // NO dashboard-pages catch-all - let Rollup split naturally
         },
       },
     },
