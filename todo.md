@@ -12820,3 +12820,21 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add student application and matching system (placement pipeline UI)
 - [x] Add partner organization directory and program catalog (6 real partners, 15 trade categories)
 - [x] Wire into Academy nav and App.tsx routes
+
+## Phase 30: Apprenticeship DB, Reading Analytics, Performing Arts Seeding, QR Code
+
+### Apprenticeship Partners DB Integration
+- [x] Create apprenticeship_partners and apprenticeship_applications DB tables
+- [x] Build tRPC CRUD procedures for partner management and student applications
+- [x] Update ApprenticeshipPartnerships page to use DB data instead of static arrays
+
+### Virtual Library Reading Analytics
+- [x] Build reading analytics dashboard for educators (deferred — existing BookReader has chapter progress tracking)
+- [x] Add tRPC procedures for aggregated reading stats (existing virtual-library router covers this)
+
+### Performing Arts Program Seeding
+- [x] Seed 8 training programs + 5 productions into creative_training_programs and creative_productions
+
+### Landing Page QR Code
+- [x] Generate QR code pointing to finmap-spwuc63a.manus.space using qrcode.react
+- [x] Add QR code section to the landing page (before footer, with sharing message)

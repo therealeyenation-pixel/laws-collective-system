@@ -15,29 +15,14 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table";
-import {
   Handshake, Building2, Users, GraduationCap, Briefcase,
   MapPin, Calendar, Plus, Search, Star, Target,
   CheckCircle, Clock, ArrowRight, Award, TrendingUp,
-  FileText, Phone, Mail, Globe, ExternalLink
+  FileText, Phone, Mail, Globe, ExternalLink, Loader2
 } from "lucide-react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
-// Partner organization types
-const PARTNER_TYPES = [
-  { value: "trade_union", label: "Trade Union / Labor Organization" },
-  { value: "vocational_school", label: "Vocational / Technical School" },
-  { value: "community_college", label: "Community College" },
-  { value: "corporation", label: "Corporation / Business" },
-  { value: "nonprofit", label: "Nonprofit Organization" },
-  { value: "government", label: "Government Agency" },
-  { value: "professional_association", label: "Professional Association" },
-  { value: "cooperative", label: "Cooperative / Co-op" },
-];
-
-// Apprenticeship trade categories
 const TRADE_CATEGORIES = [
   { value: "construction", label: "Construction & Building Trades", icon: "🏗️" },
   { value: "electrical", label: "Electrical & Electronics", icon: "⚡" },
@@ -56,87 +41,11 @@ const TRADE_CATEGORIES = [
   { value: "renewable_energy", label: "Renewable Energy & Solar", icon: "☀️" },
 ];
 
-// Sample partner organizations (will be replaced by DB data)
-const SAMPLE_PARTNERS = [
-  {
-    id: 1, name: "National Joint Apprenticeship & Training Committee (NJATC)",
-    type: "trade_union", category: "electrical",
-    location: "National", status: "active",
-    description: "Premier electrical apprenticeship program providing 5-year training combining classroom instruction with on-the-job training.",
-    contact: "partnerships@njatc.org", phone: "(301) 715-2300",
-    website: "https://njatc.org",
-    slotsAvailable: 12, totalPlacements: 0,
-    certificationOffered: "Journeyman Electrician",
-    durationMonths: 60, paidTraining: true,
-  },
-  {
-    id: 2, name: "YouthBuild USA",
-    type: "nonprofit", category: "construction",
-    location: "Multiple Cities", status: "active",
-    description: "Community-based program for young adults 16-24 to earn GED/diploma while learning construction skills building affordable housing.",
-    contact: "info@youthbuild.org", phone: "(617) 741-6500",
-    website: "https://youthbuild.org",
-    slotsAvailable: 20, totalPlacements: 0,
-    certificationOffered: "OSHA 10, NCCER Core",
-    durationMonths: 12, paidTraining: true,
-  },
-  {
-    id: 3, name: "Per Scholas",
-    type: "nonprofit", category: "technology",
-    location: "National (15 cities)", status: "active",
-    description: "Free technology training and career development for underserved communities. Programs in IT Support, Cybersecurity, Cloud, and Software Engineering.",
-    contact: "partnerships@perscholas.org", phone: "(718) 991-8400",
-    website: "https://perscholas.org",
-    slotsAvailable: 30, totalPlacements: 0,
-    certificationOffered: "CompTIA A+, AWS, Google IT",
-    durationMonths: 4, paidTraining: false,
-  },
-  {
-    id: 4, name: "Helmets to Hardhats",
-    type: "professional_association", category: "construction",
-    location: "National", status: "prospective",
-    description: "Connects transitioning military service members with quality careers in the construction industry through registered apprenticeship programs.",
-    contact: "info@helmetstohardhats.org", phone: "(866) 741-6210",
-    website: "https://helmetstohardhats.org",
-    slotsAvailable: 15, totalPlacements: 0,
-    certificationOffered: "Various trade certifications",
-    durationMonths: 48, paidTraining: true,
-  },
-  {
-    id: 5, name: "Year Up",
-    type: "nonprofit", category: "business",
-    location: "National (30+ cities)", status: "active",
-    description: "One-year workforce development program providing professional training, college credits, and corporate internships for young adults.",
-    contact: "partnerships@yearup.org", phone: "(617) 542-1533",
-    website: "https://yearup.org",
-    slotsAvailable: 25, totalPlacements: 0,
-    certificationOffered: "College Credits, Professional Certifications",
-    durationMonths: 12, paidTraining: true,
-  },
-  {
-    id: 6, name: "Apprenti (Washington Technology Industry Association)",
-    type: "professional_association", category: "technology",
-    location: "National", status: "prospective",
-    description: "Tech apprenticeship intermediary connecting diverse talent to companies like Microsoft, Amazon, and JP Morgan Chase.",
-    contact: "info@apprenticareers.org", phone: "(206) 448-3033",
-    website: "https://apprenticareers.org",
-    slotsAvailable: 10, totalPlacements: 0,
-    certificationOffered: "Registered Apprenticeship Certificate",
-    durationMonths: 12, paidTraining: true,
-  },
-];
-
-// Sample student placements
-const SAMPLE_PLACEMENTS = [
-  { id: 1, studentName: "Pending First Placement", partnerId: 1, trade: "electrical", status: "available", startDate: null },
-];
-
 const statusColors: Record<string, string> = {
   active: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-  prospective: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-  negotiating: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
-  paused: "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300",
-  expired: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+  pending: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+  inactive: "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300",
+  archived: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
 };
 
 export default function ApprenticeshipPartnerships() {
@@ -144,26 +53,78 @@ export default function ApprenticeshipPartnerships() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [showAddPartnerDialog, setShowAddPartnerDialog] = useState(false);
+  const [showApplyDialog, setShowApplyDialog] = useState(false);
+  const [selectedPartner, setSelectedPartner] = useState<any>(null);
+
+  // Form state for adding partner
+  const [newPartner, setNewPartner] = useState({
+    name: "", industry: "technology", description: "", website: "",
+    contactEmail: "", contactPhone: "", durationWeeks: 0,
+    isPaid: false, certificationOffered: false, certificationName: "",
+    locations: "",
+  });
+
+  // Form state for application
+  const [application, setApplication] = useState({
+    programName: "", tradeCategory: "technology", coverLetter: "",
+    educationLevel: "", preferredStartDate: "",
+  });
+
+  // tRPC queries
+  const { data: partners = [], isLoading: loadingPartners } = trpc.apprenticeships.listPartners.useQuery();
+  const { data: stats } = trpc.apprenticeships.getStats.useQuery();
+  const { data: myApps = [] } = trpc.apprenticeships.getMyApplications.useQuery();
+  const utils = trpc.useUtils();
+
+  const createPartnerMut = trpc.apprenticeships.createPartner.useMutation({
+    onSuccess: () => {
+      toast.success("Partner organization added successfully");
+      setShowAddPartnerDialog(false);
+      utils.apprenticeships.listPartners.invalidate();
+      utils.apprenticeships.getStats.invalidate();
+      setNewPartner({ name: "", industry: "technology", description: "", website: "", contactEmail: "", contactPhone: "", durationWeeks: 0, isPaid: false, certificationOffered: false, certificationName: "", locations: "" });
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const submitAppMut = trpc.apprenticeships.submitApplication.useMutation({
+    onSuccess: () => {
+      toast.success("Application submitted successfully!");
+      setShowApplyDialog(false);
+      utils.apprenticeships.getMyApplications.invalidate();
+      utils.apprenticeships.getStats.invalidate();
+      setApplication({ programName: "", tradeCategory: "technology", coverLetter: "", educationLevel: "", preferredStartDate: "" });
+    },
+    onError: (err) => toast.error(err.message),
+  });
 
   const filteredPartners = useMemo(() => {
-    let result = SAMPLE_PARTNERS;
+    let result = partners;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      result = result.filter(p =>
+      result = result.filter((p: any) =>
         p.name.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.location.toLowerCase().includes(q)
+        (p.description || "").toLowerCase().includes(q) ||
+        p.industry.toLowerCase().includes(q)
       );
     }
     if (categoryFilter !== "all") {
-      result = result.filter(p => p.category === categoryFilter);
+      result = result.filter((p: any) => p.industry.toLowerCase().includes(categoryFilter));
     }
     return result;
-  }, [searchQuery, categoryFilter]);
+  }, [partners, searchQuery, categoryFilter]);
 
-  const activePartners = SAMPLE_PARTNERS.filter(p => p.status === "active");
-  const totalSlots = SAMPLE_PARTNERS.reduce((sum, p) => sum + p.slotsAvailable, 0);
-  const totalPlacements = SAMPLE_PARTNERS.reduce((sum, p) => sum + p.totalPlacements, 0);
+  const activePartners = partners.filter((p: any) => p.status === "active");
+
+  if (loadingPartners) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -185,63 +146,80 @@ export default function ApprenticeshipPartnerships() {
                 <Plus className="w-4 h-4" /> Add Partner
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg">
+            <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add Partnership Organization</DialogTitle>
                 <DialogDescription>Register a new apprenticeship partner for student placement opportunities.</DialogDescription>
               </DialogHeader>
               <form onSubmit={(e) => {
                 e.preventDefault();
-                toast.success("Partner organization added — feature coming soon with database integration");
-                setShowAddPartnerDialog(false);
+                createPartnerMut.mutate({
+                  name: newPartner.name,
+                  slug: newPartner.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+                  industry: newPartner.industry,
+                  description: newPartner.description || undefined,
+                  website: newPartner.website || undefined,
+                  contactEmail: newPartner.contactEmail || undefined,
+                  contactPhone: newPartner.contactPhone || undefined,
+                  durationWeeks: newPartner.durationWeeks || undefined,
+                  isPaid: newPartner.isPaid,
+                  certificationOffered: newPartner.certificationOffered,
+                  certificationName: newPartner.certificationName || undefined,
+                  locations: newPartner.locations ? newPartner.locations.split(",").map(s => s.trim()) : undefined,
+                });
               }} className="space-y-4 pt-4">
                 <div>
                   <Label>Organization Name</Label>
-                  <Input required placeholder="e.g., National Joint Apprenticeship Committee" />
+                  <Input required value={newPartner.name} onChange={e => setNewPartner(p => ({ ...p, name: e.target.value }))} placeholder="e.g., National Joint Apprenticeship Committee" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Type</Label>
-                    <Select defaultValue="trade_union">
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {PARTNER_TYPES.map(t => (
-                          <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label>Industry</Label>
+                    <Input value={newPartner.industry} onChange={e => setNewPartner(p => ({ ...p, industry: e.target.value }))} placeholder="e.g., Technology" />
                   </div>
                   <div>
-                    <Label>Trade Category</Label>
-                    <Select defaultValue="construction">
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {TRADE_CATEGORIES.map(c => (
-                          <SelectItem key={c.value} value={c.value}>{c.icon} {c.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label>Duration (weeks)</Label>
+                    <Input type="number" value={newPartner.durationWeeks || ""} onChange={e => setNewPartner(p => ({ ...p, durationWeeks: parseInt(e.target.value) || 0 }))} />
                   </div>
                 </div>
                 <div>
-                  <Label>Location</Label>
-                  <Input placeholder="City, State or National" />
+                  <Label>Locations (comma-separated)</Label>
+                  <Input value={newPartner.locations} onChange={e => setNewPartner(p => ({ ...p, locations: e.target.value }))} placeholder="New York, Chicago, National" />
                 </div>
                 <div>
                   <Label>Description</Label>
-                  <Textarea placeholder="Describe the partnership opportunity..." rows={3} />
+                  <Textarea value={newPartner.description} onChange={e => setNewPartner(p => ({ ...p, description: e.target.value }))} placeholder="Describe the partnership opportunity..." rows={3} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Contact Email</Label>
-                    <Input type="email" placeholder="contact@org.com" />
+                    <Input type="email" value={newPartner.contactEmail} onChange={e => setNewPartner(p => ({ ...p, contactEmail: e.target.value }))} placeholder="contact@org.com" />
                   </div>
                   <div>
-                    <Label>Phone</Label>
-                    <Input placeholder="(555) 123-4567" />
+                    <Label>Website</Label>
+                    <Input value={newPartner.website} onChange={e => setNewPartner(p => ({ ...p, website: e.target.value }))} placeholder="https://..." />
                   </div>
                 </div>
-                <Button type="submit" className="w-full">Add Partner Organization</Button>
+                <div className="flex items-center gap-6">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" checked={newPartner.isPaid} onChange={e => setNewPartner(p => ({ ...p, isPaid: e.target.checked }))} className="rounded" />
+                    Paid Training
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" checked={newPartner.certificationOffered} onChange={e => setNewPartner(p => ({ ...p, certificationOffered: e.target.checked }))} className="rounded" />
+                    Certification Offered
+                  </label>
+                </div>
+                {newPartner.certificationOffered && (
+                  <div>
+                    <Label>Certification Name</Label>
+                    <Input value={newPartner.certificationName} onChange={e => setNewPartner(p => ({ ...p, certificationName: e.target.value }))} placeholder="e.g., CompTIA A+" />
+                  </div>
+                )}
+                <Button type="submit" className="w-full" disabled={createPartnerMut.isPending}>
+                  {createPartnerMut.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  Add Partner Organization
+                </Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -256,7 +234,7 @@ export default function ApprenticeshipPartnerships() {
                   <Handshake className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{SAMPLE_PARTNERS.length}</p>
+                  <p className="text-2xl font-bold">{stats?.totalPartners ?? partners.length}</p>
                   <p className="text-xs text-muted-foreground">Total Partners</p>
                 </div>
               </div>
@@ -269,7 +247,7 @@ export default function ApprenticeshipPartnerships() {
                   <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{activePartners.length}</p>
+                  <p className="text-2xl font-bold">{stats?.activePartners ?? activePartners.length}</p>
                   <p className="text-xs text-muted-foreground">Active Partners</p>
                 </div>
               </div>
@@ -282,8 +260,8 @@ export default function ApprenticeshipPartnerships() {
                   <Target className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{totalSlots}</p>
-                  <p className="text-xs text-muted-foreground">Available Slots</p>
+                  <p className="text-2xl font-bold">{stats?.totalApplications ?? 0}</p>
+                  <p className="text-xs text-muted-foreground">Applications</p>
                 </div>
               </div>
             </CardContent>
@@ -295,7 +273,7 @@ export default function ApprenticeshipPartnerships() {
                   <GraduationCap className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{totalPlacements}</p>
+                  <p className="text-2xl font-bold">{stats?.placedStudents ?? 0}</p>
                   <p className="text-xs text-muted-foreground">Student Placements</p>
                 </div>
               </div>
@@ -305,17 +283,17 @@ export default function ApprenticeshipPartnerships() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="partners">Partners</TabsTrigger>
             <TabsTrigger value="trades">Trade Categories</TabsTrigger>
             <TabsTrigger value="placements">Placements</TabsTrigger>
+            <TabsTrigger value="my-apps">My Applications</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6 mt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Mission Card */}
               <Card className="lg:col-span-2">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -325,10 +303,10 @@ export default function ApprenticeshipPartnerships() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    The LuvOnPurpose Academy partners with established apprenticeship programs, trade unions, 
-                    vocational schools, and industry leaders to provide students with real-world career pathways. 
-                    Our goal is to bridge the gap between academic learning and skilled employment, ensuring every 
-                    student has access to paid training, industry certifications, and mentorship opportunities 
+                    The LuvOnPurpose Academy partners with established apprenticeship programs, trade unions,
+                    vocational schools, and industry leaders to provide students with real-world career pathways.
+                    Our goal is to bridge the gap between academic learning and skilled employment, ensuring every
+                    student has access to paid training, industry certifications, and mentorship opportunities
                     that lead to sustainable careers and generational wealth.
                   </p>
                   <div className="grid grid-cols-3 gap-4 mt-6">
@@ -351,7 +329,6 @@ export default function ApprenticeshipPartnerships() {
                 </CardContent>
               </Card>
 
-              {/* Active Partners */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">Active Partnerships</CardTitle>
@@ -359,23 +336,22 @@ export default function ApprenticeshipPartnerships() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {activePartners.map(partner => (
+                    {activePartners.slice(0, 6).map((partner: any) => (
                       <div key={partner.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                         <div className="flex items-center gap-3">
-                          <div className="text-lg">{TRADE_CATEGORIES.find(c => c.value === partner.category)?.icon || "🏢"}</div>
+                          <Building2 className="w-4 h-4 text-amber-500" />
                           <div>
-                            <p className="font-medium text-sm">{partner.name}</p>
-                            <p className="text-xs text-muted-foreground">{partner.location}</p>
+                            <p className="font-medium text-sm truncate max-w-[200px]">{partner.name}</p>
+                            <p className="text-xs text-muted-foreground">{partner.industry}</p>
                           </div>
                         </div>
-                        <Badge variant="outline" className="text-xs">{partner.slotsAvailable} slots</Badge>
+                        {partner.certificationOffered && <Badge variant="outline" className="text-xs">Certified</Badge>}
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Trade Distribution */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">Trade Coverage</CardTitle>
@@ -384,7 +360,7 @@ export default function ApprenticeshipPartnerships() {
                 <CardContent>
                   <div className="space-y-3">
                     {TRADE_CATEGORIES.slice(0, 8).map(trade => {
-                      const count = SAMPLE_PARTNERS.filter(p => p.category === trade.value).length;
+                      const count = partners.filter((p: any) => p.industry.toLowerCase().includes(trade.value)).length;
                       return (
                         <div key={trade.value} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -430,51 +406,81 @@ export default function ApprenticeshipPartnerships() {
             </div>
 
             <div className="space-y-4">
-              {filteredPartners.map(partner => (
-                <Card key={partner.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="pt-6">
-                    <div className="flex flex-col md:flex-row md:items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl">
-                        {TRADE_CATEGORIES.find(c => c.value === partner.category)?.icon || "🏢"}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <h3 className="font-semibold text-lg">{partner.name}</h3>
-                            <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
-                              <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {partner.location}</span>
-                              <span className="capitalize">{partner.type.replace(/_/g, " ")}</span>
+              {filteredPartners.map((partner: any) => {
+                const locations = partner.locations as string[] | null;
+                const trades = partner.tradeCategories as string[] | null;
+                return (
+                  <Card key={partner.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="pt-6">
+                      <div className="flex flex-col md:flex-row md:items-start gap-4">
+                        <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                          <Building2 className="w-6 h-6 text-amber-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <h3 className="font-semibold text-lg">{partner.name}</h3>
+                              <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
+                                <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {locations?.join(", ") || "National"}</span>
+                                <span>{partner.industry}</span>
+                              </div>
                             </div>
+                            <Badge className={statusColors[partner.status] || ""}>{partner.status}</Badge>
                           </div>
-                          <Badge className={statusColors[partner.status] || ""}>{partner.status}</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-3">{partner.description}</p>
-                        <div className="flex flex-wrap gap-4 mt-4 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1"><Award className="w-3 h-3" /> {partner.certificationOffered}</span>
-                          <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {partner.durationMonths} months</span>
-                          <span className="flex items-center gap-1"><Target className="w-3 h-3" /> {partner.slotsAvailable} slots available</span>
-                          {partner.paidTraining && (
-                            <Badge variant="outline" className="text-green-600 border-green-300 text-xs">Paid Training</Badge>
+                          <p className="text-sm text-muted-foreground mt-3">{partner.description}</p>
+                          <div className="flex flex-wrap gap-4 mt-4 text-xs text-muted-foreground">
+                            {partner.certificationName && (
+                              <span className="flex items-center gap-1"><Award className="w-3 h-3" /> {partner.certificationName}</span>
+                            )}
+                            {partner.durationWeeks && (
+                              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {Math.round(partner.durationWeeks / 4)} months</span>
+                            )}
+                            {partner.isPaid && (
+                              <Badge variant="outline" className="text-green-600 border-green-300 text-xs">
+                                Paid {partner.stipendAmount ? `(${partner.stipendAmount})` : "Training"}
+                              </Badge>
+                            )}
+                          </div>
+                          {trades && trades.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-3">
+                              {trades.map((t: string) => (
+                                <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>
+                              ))}
+                            </div>
                           )}
-                        </div>
-                        <div className="flex items-center gap-4 mt-4">
-                          {partner.website && (
-                            <Button variant="outline" size="sm" className="gap-1 text-xs" onClick={() => window.open(partner.website, "_blank")}>
-                              <Globe className="w-3 h-3" /> Website
+                          <div className="flex items-center gap-4 mt-4">
+                            {partner.website && (
+                              <Button variant="outline" size="sm" className="gap-1 text-xs" onClick={() => window.open(partner.website, "_blank")}>
+                                <Globe className="w-3 h-3" /> Website
+                              </Button>
+                            )}
+                            {partner.contactEmail && (
+                              <Button variant="outline" size="sm" className="gap-1 text-xs" onClick={() => toast.info(`Contact: ${partner.contactEmail}`)}>
+                                <Mail className="w-3 h-3" /> Contact
+                              </Button>
+                            )}
+                            <Button size="sm" className="gap-1 text-xs" onClick={() => {
+                              setSelectedPartner(partner);
+                              setApplication(a => ({ ...a, programName: partner.name, tradeCategory: partner.industry }));
+                              setShowApplyDialog(true);
+                            }}>
+                              <ArrowRight className="w-3 h-3" /> Apply
                             </Button>
-                          )}
-                          <Button variant="outline" size="sm" className="gap-1 text-xs" onClick={() => toast.info(`Contact: ${partner.contact}`)}>
-                            <Mail className="w-3 h-3" /> Contact
-                          </Button>
-                          <Button size="sm" className="gap-1 text-xs" onClick={() => toast.success("Placement request initiated — feature coming soon")}>
-                            <ArrowRight className="w-3 h-3" /> Request Placement
-                          </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+              {filteredPartners.length === 0 && (
+                <Card>
+                  <CardContent className="text-center py-12">
+                    <Search className="w-10 h-10 mx-auto text-muted-foreground/30 mb-3" />
+                    <p className="text-muted-foreground">No partners match your search criteria</p>
                   </CardContent>
                 </Card>
-              ))}
+              )}
             </div>
           </TabsContent>
 
@@ -483,11 +489,10 @@ export default function ApprenticeshipPartnerships() {
             <h3 className="text-lg font-semibold">Available Trade Categories</h3>
             <p className="text-sm text-muted-foreground">
               The Academy connects students with apprenticeship opportunities across these skilled trade categories.
-              Each category includes partner organizations offering paid training, certifications, and career placement.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {TRADE_CATEGORIES.map(trade => {
-                const partners = SAMPLE_PARTNERS.filter(p => p.category === trade.value);
+                const tradePartners = partners.filter((p: any) => p.industry.toLowerCase().includes(trade.value));
                 return (
                   <Card key={trade.value} className="hover:shadow-md transition-shadow">
                     <CardContent className="pt-6">
@@ -495,15 +500,15 @@ export default function ApprenticeshipPartnerships() {
                         <span className="text-3xl">{trade.icon}</span>
                         <div>
                           <h4 className="font-semibold">{trade.label}</h4>
-                          <p className="text-xs text-muted-foreground">{partners.length} partner{partners.length !== 1 ? "s" : ""}</p>
+                          <p className="text-xs text-muted-foreground">{tradePartners.length} partner{tradePartners.length !== 1 ? "s" : ""}</p>
                         </div>
                       </div>
-                      {partners.length > 0 ? (
+                      {tradePartners.length > 0 ? (
                         <div className="space-y-2">
-                          {partners.map(p => (
+                          {tradePartners.map((p: any) => (
                             <div key={p.id} className="flex items-center justify-between text-sm p-2 rounded bg-muted/50">
                               <span className="truncate">{p.name}</span>
-                              <Badge variant="outline" className="text-xs ml-2 flex-shrink-0">{p.slotsAvailable}</Badge>
+                              {p.certificationOffered && <Badge variant="outline" className="text-xs ml-2 flex-shrink-0">Cert</Badge>}
                             </div>
                           ))}
                         </div>
@@ -519,37 +524,6 @@ export default function ApprenticeshipPartnerships() {
 
           {/* Placements Tab */}
           <TabsContent value="placements" className="space-y-4 mt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold">Student Placements</h3>
-                <p className="text-sm text-muted-foreground">Track student apprenticeship placements and progress</p>
-              </div>
-              <Button className="gap-2" onClick={() => toast.info("Student placement matching — feature coming soon")}>
-                <Plus className="w-4 h-4" /> New Placement
-              </Button>
-            </div>
-
-            <Card>
-              <CardContent className="text-center py-16">
-                <GraduationCap className="w-16 h-16 mx-auto text-muted-foreground/30 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Ready for First Placements</h3>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                  As Academy students complete their K-12 curriculum and certification programs, 
-                  they will be matched with partner organizations for apprenticeship placements. 
-                  The matching system considers student skills, interests, location, and partner availability.
-                </p>
-                <div className="flex justify-center gap-3 mt-6">
-                  <Button variant="outline" onClick={() => setActiveTab("partners")}>
-                    View Partners
-                  </Button>
-                  <Button variant="outline" onClick={() => setActiveTab("trades")}>
-                    Browse Trades
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Placement Pipeline */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Placement Pipeline</CardTitle>
@@ -579,7 +553,98 @@ export default function ApprenticeshipPartnerships() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* My Applications Tab */}
+          <TabsContent value="my-apps" className="space-y-4 mt-6">
+            <h3 className="text-lg font-semibold">My Applications</h3>
+            {myApps.length === 0 ? (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <FileText className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
+                  <h4 className="font-semibold mb-2">No Applications Yet</h4>
+                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                    Browse our partner organizations and apply for apprenticeship opportunities that match your skills and interests.
+                  </p>
+                  <Button className="mt-4" onClick={() => setActiveTab("partners")}>Browse Partners</Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {myApps.map((app: any) => {
+                  const partner = partners.find((p: any) => p.id === app.partnerId);
+                  return (
+                    <Card key={app.id}>
+                      <CardContent className="pt-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold">{app.programName}</h4>
+                            <p className="text-sm text-muted-foreground">{partner?.name || "Partner"} — {app.tradeCategory}</p>
+                            <p className="text-xs text-muted-foreground mt-1">Applied {new Date(app.createdAt).toLocaleDateString()}</p>
+                          </div>
+                          <Badge className={
+                            app.status === "accepted" ? "bg-green-100 text-green-800" :
+                            app.status === "rejected" ? "bg-red-100 text-red-800" :
+                            app.status === "placed" ? "bg-purple-100 text-purple-800" :
+                            "bg-blue-100 text-blue-800"
+                          }>{app.status.replace(/_/g, " ")}</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
+
+        {/* Apply Dialog */}
+        <Dialog open={showApplyDialog} onOpenChange={setShowApplyDialog}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Apply for Apprenticeship</DialogTitle>
+              <DialogDescription>
+                {selectedPartner ? `Applying to ${selectedPartner.name}` : "Submit your application"}
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              if (!selectedPartner) return;
+              submitAppMut.mutate({
+                partnerId: selectedPartner.id,
+                programName: application.programName,
+                tradeCategory: application.tradeCategory,
+                coverLetter: application.coverLetter || undefined,
+                educationLevel: application.educationLevel || undefined,
+                preferredStartDate: application.preferredStartDate || undefined,
+              });
+            }} className="space-y-4 pt-4">
+              <div>
+                <Label>Program / Trade</Label>
+                <Input value={application.programName} onChange={e => setApplication(a => ({ ...a, programName: e.target.value }))} required />
+              </div>
+              <div>
+                <Label>Trade Category</Label>
+                <Input value={application.tradeCategory} onChange={e => setApplication(a => ({ ...a, tradeCategory: e.target.value }))} required />
+              </div>
+              <div>
+                <Label>Education Level</Label>
+                <Input value={application.educationLevel} onChange={e => setApplication(a => ({ ...a, educationLevel: e.target.value }))} placeholder="e.g., High School Diploma, Some College" />
+              </div>
+              <div>
+                <Label>Preferred Start Date</Label>
+                <Input type="date" value={application.preferredStartDate} onChange={e => setApplication(a => ({ ...a, preferredStartDate: e.target.value }))} />
+              </div>
+              <div>
+                <Label>Cover Letter</Label>
+                <Textarea value={application.coverLetter} onChange={e => setApplication(a => ({ ...a, coverLetter: e.target.value }))} placeholder="Tell us about your interest, skills, and goals..." rows={4} />
+              </div>
+              <Button type="submit" className="w-full" disabled={submitAppMut.isPending}>
+                {submitAppMut.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                Submit Application
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

@@ -320,6 +320,7 @@ import { vaultSuccessionRouter } from "./routers/vault-succession";
 import { lawsOnboardingRouter } from "./routers/laws-onboarding";
 import { supportTicketsRouter } from "./routers/supportTickets";
 import { academyK12Router } from "./routers/academy-k12";
+import { apprenticeshipsRouter } from "./routers/apprenticeships";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -331,6 +332,7 @@ export const appRouter = router({
   organization: organizationRouter,
   academy: academyRouter,
   academyK12: academyK12Router,
+  apprenticeships: apprenticeshipsRouter,
   simulators: simulatorsRouter,
   luvledger: luvledgerRouter,
   blockchain: blockchainRouter,

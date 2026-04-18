@@ -20478,3 +20478,61 @@ export const academyContentGenLog = mysqlTable("academy_content_gen_log", {
 });
 export type AcademyContentGenLog = typeof academyContentGenLog.$inferSelect;
 export type InsertAcademyContentGenLog = typeof academyContentGenLog.$inferInsert;
+
+
+// ============================================================
+// Apprenticeship Partners & Applications
+// ============================================================
+
+export const apprenticeshipPartners = mysqlTable("apprenticeship_partners", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull(),
+  description: text("description"),
+  website: varchar("website", { length: 500 }),
+  contactEmail: varchar("contactEmail", { length: 255 }),
+  contactPhone: varchar("contactPhone", { length: 50 }),
+  logoUrl: varchar("logoUrl", { length: 500 }),
+  industry: varchar("industry", { length: 100 }).notNull(),
+  tradeCategories: json("tradeCategories").$type<string[]>(),
+  programTypes: json("programTypes").$type<string[]>(),
+  locations: json("locations").$type<string[]>(),
+  minAge: int("minAge").default(16),
+  maxAge: int("maxAge").default(99),
+  durationWeeks: int("durationWeeks"),
+  isPaid: boolean("isPaid").default(false),
+  stipendAmount: varchar("stipendAmount", { length: 100 }),
+  certificationOffered: boolean("certificationOffered").default(false),
+  certificationName: varchar("certificationName", { length: 255 }),
+  status: mysqlEnum("ap_partner_status", ["active", "pending", "inactive", "archived"]).default("active").notNull(),
+  partnerSince: timestamp("partnerSince").defaultNow(),
+  notes: text("notes"),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ApprenticeshipPartner = typeof apprenticeshipPartners.$inferSelect;
+export type InsertApprenticeshipPartner = typeof apprenticeshipPartners.$inferInsert;
+
+export const apprenticeshipApplications = mysqlTable("apprenticeship_applications", {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("userId").notNull(),
+  partnerId: int("partnerId").notNull(),
+  programName: varchar("programName", { length: 255 }).notNull(),
+  tradeCategory: varchar("tradeCategory", { length: 100 }).notNull(),
+  status: mysqlEnum("ap_app_status", ["draft", "submitted", "under_review", "interview", "accepted", "rejected", "withdrawn", "placed"]).default("draft").notNull(),
+  coverLetter: text("coverLetter"),
+  resumeUrl: varchar("resumeUrl", { length: 500 }),
+  relevantSkills: json("relevantSkills").$type<string[]>(),
+  educationLevel: varchar("educationLevel", { length: 100 }),
+  preferredStartDate: timestamp("preferredStartDate"),
+  adminNotes: text("adminNotes"),
+  reviewedBy: int("reviewedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  placementStartDate: timestamp("placementStartDate"),
+  placementEndDate: timestamp("placementEndDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ApprenticeshipApplication = typeof apprenticeshipApplications.$inferSelect;
+export type InsertApprenticeshipApplication = typeof apprenticeshipApplications.$inferInsert;

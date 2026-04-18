@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
@@ -472,6 +473,30 @@ export default function Landing() {
               Start Your Journey
             </Button>
           </Link>
+        </div>
+      </section>
+
+      {/* QR Code Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="flex flex-col items-center text-center space-y-6">
+          <h3 className="text-2xl font-bold">Scan to Connect</h3>
+          <p className="text-muted-foreground max-w-md">
+            Scan this QR code with your phone to access the LuvOnPurpose platform
+            instantly — share it with family, friends, and community members.
+          </p>
+          <div className="bg-white p-6 rounded-2xl shadow-lg">
+            <QRCodeSVG
+              value="https://finmap-spwuc63a.manus.space"
+              size={200}
+              level="H"
+              includeMargin={false}
+              bgColor="#ffffff"
+              fgColor="#1a1a2e"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            finmap-spwuc63a.manus.space
+          </p>
         </div>
       </section>
 

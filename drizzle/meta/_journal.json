@@ -169,6 +169,20 @@
       "when": 1776544617153,
       "tag": "0023_unusual_magma",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1776550472925,
+      "tag": "0024_quiet_human_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1776550511810,
+      "tag": "0025_neat_goliath",
+      "breakpoints": true
     }
   ]
 }
