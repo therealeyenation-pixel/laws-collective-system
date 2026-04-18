@@ -197,10 +197,10 @@ export default function ContractManagement() {
       cancelled: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
       on_hold: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
     };
-    return <Badge className={styles[status] || styles.draft}>{status.replace(/_/g, ' ').toUpperCase()}</Badge>;
+    return <Badge className={styles[status] || styles.draft}>{(status || 'draft').replace(/_/g, ' ').toUpperCase()}</Badge>;
   };
 
-  const getContractTypeBadge = (type: string) => {
+  const getContractTypeBadge = (type: string | undefined | null) => {
     const styles: Record<string, string> = {
       msa: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400",
       sow: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-400",
@@ -211,7 +211,8 @@ export default function ContractManagement() {
       partnership: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
       other: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
     };
-    return <Badge className={styles[type] || styles.other}>{type.toUpperCase()}</Badge>;
+    const safeType = type || 'other';
+    return <Badge className={styles[safeType] || styles.other}>{safeType.toUpperCase()}</Badge>;
   };
 
   if (isLoading) {
