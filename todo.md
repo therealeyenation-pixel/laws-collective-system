@@ -12737,3 +12737,34 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 ### Phase 26.6: Landing Page CTA Fix (COMPLETE)
 - [x] Fixed /join-journey → /join (3 occurrences in Landing.tsx)
 - [x] Verified all Landing page CTA links route correctly
+
+## Phase 27: Academy Course Framework with AI + Human Collaboration
+
+### Schema & Data
+- [x] Add academy_assessments table (AI-generated questions, adaptive difficulty, human review)
+- [x] Add academy_assessment_results table (student answers, scores, AI feedback)
+- [x] Add academy_lesson_content table (rich content blocks: text, video, interactive, practice)
+- [x] Add academy_human_notes table (educator annotations, cultural context, perspective infusions)
+- [x] Seed real K-12 curriculum subjects (Math, Science, ELA, Social Studies, Coding/AI, Arts)
+- [x] Seed real units and lessons with standards-aligned content per subject
+- [x] Push schema changes to database
+
+### Backend (tRPC Routers)
+- [x] Build curriculum management router (CRUD for subjects, units, lessons)
+- [x] Build AI content generation endpoint (generate lesson content from subject/topic)
+- [x] Build AI assessment generation endpoint (adaptive questions based on student progress)
+- [x] Build human collaboration endpoints (add notes, review content, approve/customize)
+- [x] Build student assessment submission and scoring endpoint
+- [x] Build progress analytics endpoint (mastery tracking, readiness indicators)
+
+### Frontend Pages
+- [x] Build Course Catalog page (browse subjects, filter by age/level, enroll)
+- [x] Build Lesson Viewer page (content display, interactive elements, progress tracking)
+- [x] Build Assessment page (AI-generated quizzes, adaptive difficulty, immediate feedback)
+- [x] Build Educator Review page (content review, add human perspective, approve lessons)
+- [x] Build Student Progress Dashboard (mastery map, readiness indicators, next steps)
+- [x] Wire Academy navigation into existing AcademyDashboard
+
+### Escalation & Support
+- [x] Verify tech_support agent escalation flow works end-to-end
+- [x] Verify Support Log admin page displays escalated tickets

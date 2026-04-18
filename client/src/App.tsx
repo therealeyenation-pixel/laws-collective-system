@@ -453,6 +453,11 @@ const MarketingTeam = lazy(() => import("@/pages/MarketingTeam"));
 const PodcastNetwork = lazy(() => import("@/pages/PodcastNetwork"));
 const StreamingHub = lazy(() => import("@/pages/Streaming"));
 const StaffManagement = lazy(() => import("@/pages/StaffManagement"));
+const AcademyK12 = lazy(() => import("@/pages/AcademyK12"));
+const AcademyK12Unit = lazy(() => import("@/pages/AcademyK12Unit"));
+const AcademyK12MyLearning = lazy(() => import("@/pages/AcademyK12MyLearning"));
+const AcademyK12EducatorReview = lazy(() => import("@/pages/AcademyK12EducatorReview"));
+const AcademyK12Assessment = lazy(() => import("@/pages/AcademyK12Assessment"));
 
 
 // Access levels: user (member), staff, admin, owner
@@ -610,6 +615,11 @@ function Router() {
       <Route path="/getting-started">{() => <ProtectedRoute component={GettingStarted} minRole="user" />}</Route>
       <Route path="/academy">{() => <AcademyLanding />}</Route>
       <Route path="/academy/dashboard">{() => <ProtectedRoute component={AcademyDashboard} minRole="user" />}</Route>
+      <Route path="/academy/k12">{() => <ProtectedRoute component={AcademyK12} minRole="user" />}</Route>
+      <Route path="/academy/k12/unit/:id">{() => <ProtectedRoute component={AcademyK12Unit} minRole="user" />}</Route>
+      <Route path="/academy/k12/my-learning">{() => <ProtectedRoute component={AcademyK12MyLearning} minRole="user" />}</Route>
+      <Route path="/academy/k12/educator-review">{() => <ProtectedRoute component={AcademyK12EducatorReview} minRole="staff" />}</Route>
+      <Route path="/academy/k12/assessment/:id">{() => <ProtectedRoute component={AcademyK12Assessment} minRole="user" />}</Route>
       <Route path="/guardian-dashboard">{() => <ProtectedRoute component={GuardianDashboard} minRole="user" />}</Route>
       <Route path="/activation-progress">{() => <ProtectedRoute component={ActivationProgress} minRole="user" />}</Route>
       <Route path="/content-builder">{() => <ProtectedRoute component={ContentBuilder} minRole="user" />}</Route>

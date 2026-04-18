@@ -319,6 +319,7 @@ import { memberJourneyRouter } from "./routers/member-journey";
 import { vaultSuccessionRouter } from "./routers/vault-succession";
 import { lawsOnboardingRouter } from "./routers/laws-onboarding";
 import { supportTicketsRouter } from "./routers/supportTickets";
+import { academyK12Router } from "./routers/academy-k12";
 
 export const appRouter = router({
   socketio: socketioRouter,
@@ -329,6 +330,7 @@ export const appRouter = router({
   luv: luvSystemRouter,
   organization: organizationRouter,
   academy: academyRouter,
+  academyK12: academyK12Router,
   simulators: simulatorsRouter,
   luvledger: luvledgerRouter,
   blockchain: blockchainRouter,

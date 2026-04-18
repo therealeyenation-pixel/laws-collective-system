@@ -162,6 +162,13 @@
       "when": 1776527856541,
       "tag": "0022_woozy_wiccan",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1776544617153,
+      "tag": "0023_unusual_magma",
+      "breakpoints": true
     }
   ]
 }

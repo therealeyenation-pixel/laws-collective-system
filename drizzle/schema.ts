@@ -20225,3 +20225,256 @@ export const ticketMessages = mysqlTable("ticket_messages", {
 
 export type TicketMessage = typeof ticketMessages.$inferSelect;
 export type InsertTicketMessage = typeof ticketMessages.$inferInsert;
+
+
+// ============================================================================
+// ACADEMY K-12 HOMESCHOOL FRAMEWORK
+// Standards-aligned, self-paced curriculum with AI generation + human collaboration
+// Housed under LuvOnPurpose Academy and Outreach (508 entity)
+// ============================================================================
+
+/**
+ * Academy Subjects - Core K-12 subject areas aligned with traditional schooling standards
+ * Categories: "core_academic" (Math, Science, ELA, Social Studies),
+ *             "stem_extended" (Coding, AI, Engineering),
+ *             "creative_arts" (Music, Visual Arts, Performing Arts),
+ *             "life_skills" (Financial Literacy, Health, Career Readiness),
+ *             "laws_framework" (L.A.W.S. pillars — Land, Air, Water, Self)
+ */
+export const academySubjects = mysqlTable("academy_subjects", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 150 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  category: mysqlEnum("academy_subject_category", [
+    "core_academic", "stem_extended", "creative_arts", "life_skills", "laws_framework"
+  ]).notNull(),
+  iconEmoji: varchar("iconEmoji", { length: 10 }),
+  standardsAlignment: varchar("standardsAlignment", { length: 200 }), // e.g., "Common Core Math", "NGSS"
+  gradeRange: varchar("gradeRange", { length: 20 }), // e.g., "K-12", "6-12", "9-12"
+  orderIndex: int("orderIndex").default(0).notNull(),
+  status: mysqlEnum("academy_subject_status", ["active", "draft", "archived"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AcademySubject = typeof academySubjects.$inferSelect;
+export type InsertAcademySubject = typeof academySubjects.$inferInsert;
+
+/**
+ * Academy Units - Thematic units within a subject, organized by progression level
+ * Self-paced: students advance by mastery, not grade. Levels map to traditional grade bands.
+ */
+export const academyUnits = mysqlTable("academy_units", {
+  id: int("id").autoincrement().primaryKey(),
+  subjectId: int("subjectId").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  slug: varchar("slug", { length: 150 }).notNull(),
+  description: text("description"),
+  levelBand: mysqlEnum("academy_level_band", [
+    "early_elementary",   // K-2 equivalent
+    "upper_elementary",   // 3-5 equivalent
+    "middle_school",      // 6-8 equivalent
+    "high_school_intro",  // 9-10 equivalent
+    "high_school_adv",    // 11-12 equivalent
+    "certification"       // Post-secondary / skilled labor certs
+  ]).notNull(),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  estimatedHours: int("estimatedHours").default(10),
+  standardsCovered: json("standardsCovered"), // Array of standard codes
+  prerequisites: json("prerequisites"), // Array of unit IDs
+  learningObjectives: json("learningObjectives"), // Array of objective strings
+  aiGenerated: boolean("aiGenerated").default(false).notNull(),
+  humanReviewed: boolean("humanReviewed").default(false).notNull(),
+  reviewedBy: int("reviewedBy"), // User ID of educator who reviewed
+  reviewedAt: timestamp("reviewedAt"),
+  status: mysqlEnum("academy_unit_status", ["draft", "ai_generated", "human_review", "approved", "active", "archived"]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AcademyUnit = typeof academyUnits.$inferSelect;
+export type InsertAcademyUnit = typeof academyUnits.$inferInsert;
+
+/**
+ * Academy Unit Lessons - Individual lessons within a unit
+ * Each lesson has structured content blocks and can be AI-generated then human-refined
+ */
+export const academyUnitLessons = mysqlTable("academy_unit_lessons", {
+  id: int("id").autoincrement().primaryKey(),
+  unitId: int("unitId").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  slug: varchar("slug", { length: 150 }).notNull(),
+  summary: text("summary"), // Brief overview shown in course catalog
+  contentBlocks: json("contentBlocks"), // Array of { type, data } content blocks
+  // Content block types: "text", "video", "interactive", "practice_problem", "discussion_prompt",
+  //                      "real_world_connection", "cultural_context", "vocabulary", "key_concept"
+  contentType: mysqlEnum("academy_lesson_type", [
+    "instruction",    // Core teaching content
+    "practice",       // Guided practice problems
+    "exploration",    // Self-directed discovery
+    "project",        // Hands-on project
+    "discussion",     // Discussion/reflection
+    "lab",            // Science/coding lab
+    "reading",        // Reading comprehension
+    "simulation"      // Interactive simulator
+  ]).default("instruction").notNull(),
+  orderIndex: int("orderIndex").default(0).notNull(),
+  estimatedMinutes: int("estimatedMinutes").default(30),
+  resources: json("resources"), // Array of { title, url, type }
+  vocabularyTerms: json("vocabularyTerms"), // Array of { term, definition, example }
+  standardsCovered: json("standardsCovered"),
+  aiGenerated: boolean("aiGenerated").default(false).notNull(),
+  humanReviewed: boolean("humanReviewed").default(false).notNull(),
+  reviewedBy: int("reviewedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  tokensReward: int("tokensReward").default(10),
+  status: mysqlEnum("academy_lesson_status", ["draft", "ai_generated", "human_review", "approved", "active", "archived"]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AcademyUnitLesson = typeof academyUnitLessons.$inferSelect;
+export type InsertAcademyUnitLesson = typeof academyUnitLessons.$inferInsert;
+
+/**
+ * Academy Human Notes - Educator annotations and cultural perspective infusions
+ * Founding managers and educators add their lived experience, cultural context,
+ * and L.A.W.S. philosophy to AI-generated content
+ */
+export const academyHumanNotes = mysqlTable("academy_human_notes", {
+  id: int("id").autoincrement().primaryKey(),
+  // Polymorphic: can attach to unit or lesson
+  targetType: mysqlEnum("academy_note_target", ["unit", "lesson", "assessment"]).notNull(),
+  targetId: int("targetId").notNull(),
+  authorId: int("authorId").notNull(), // User who wrote the note
+  noteType: mysqlEnum("academy_note_type", [
+    "cultural_context",    // Cultural perspective and relevance
+    "real_world_example",  // Practical application from lived experience
+    "teaching_tip",        // Pedagogical guidance for other educators
+    "laws_connection",     // Connection to L.A.W.S. framework pillars
+    "differentiation",     // Suggestions for different learning styles
+    "parent_guidance",     // Notes for homeschool parents
+    "correction",          // Factual correction to AI content
+    "enrichment"           // Additional depth or extension activity
+  ]).notNull(),
+  title: varchar("title", { length: 200 }),
+  content: text("content").notNull(),
+  isPublished: boolean("isPublished").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AcademyHumanNote = typeof academyHumanNotes.$inferSelect;
+export type InsertAcademyHumanNote = typeof academyHumanNotes.$inferInsert;
+
+/**
+ * Academy Assessments - AI-generated assessments with adaptive difficulty
+ * Assessments adapt to each student's demonstrated mastery level
+ * Human educators can customize, add questions, or adjust difficulty curves
+ */
+export const academyAssessments = mysqlTable("academy_assessments", {
+  id: int("id").autoincrement().primaryKey(),
+  unitId: int("unitId"), // null if lesson-level assessment
+  lessonId: int("lessonId"), // null if unit-level assessment
+  title: varchar("title", { length: 200 }).notNull(),
+  assessmentType: mysqlEnum("academy_assessment_type", [
+    "lesson_check",       // Quick check after a lesson (3-5 questions)
+    "unit_quiz",          // End-of-unit quiz (10-15 questions)
+    "mastery_exam",       // Comprehensive mastery assessment (20-30 questions)
+    "practice_set",       // Unlimited practice problems (no grade)
+    "project_rubric",     // Rubric-based project evaluation
+    "oral_prompt",        // Discussion/oral assessment prompts
+    "portfolio_review"    // Portfolio submission criteria
+  ]).notNull(),
+  questions: json("questions"), // Array of question objects (see below)
+  // Question format: { id, type, stem, options?, correctAnswer, explanation, difficulty, standard, tags }
+  // Types: "multiple_choice", "true_false", "short_answer", "essay", "matching", "fill_blank", "coding"
+  totalPoints: int("totalPoints").default(100),
+  passingScore: int("passingScore").default(70), // Percentage needed to pass
+  timeLimit: int("timeLimit"), // Minutes, null = untimed
+  adaptiveDifficulty: boolean("adaptiveDifficulty").default(true).notNull(),
+  difficultyLevel: mysqlEnum("academy_difficulty", [
+    "foundational", "developing", "proficient", "advanced", "mastery"
+  ]).default("proficient").notNull(),
+  shuffleQuestions: boolean("shuffleQuestions").default(true).notNull(),
+  showFeedback: boolean("showFeedback").default(true).notNull(), // Immediate feedback after each question
+  maxAttempts: int("maxAttempts").default(3), // null = unlimited
+  aiGenerated: boolean("aiGenerated").default(false).notNull(),
+  humanReviewed: boolean("humanReviewed").default(false).notNull(),
+  reviewedBy: int("reviewedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  status: mysqlEnum("academy_assess_status", ["draft", "ai_generated", "human_review", "approved", "active", "archived"]).default("draft").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AcademyAssessment = typeof academyAssessments.$inferSelect;
+export type InsertAcademyAssessment = typeof academyAssessments.$inferInsert;
+
+/**
+ * Academy Assessment Results - Student submissions and AI-scored results
+ * Tracks each attempt with detailed per-question analysis for adaptive learning
+ */
+export const academyAssessmentResults = mysqlTable("academy_assessment_results", {
+  id: int("id").autoincrement().primaryKey(),
+  assessmentId: int("assessmentId").notNull(),
+  studentProfileId: int("studentProfileId").notNull(),
+  attemptNumber: int("attemptNumber").default(1).notNull(),
+  answers: json("answers"), // Array of { questionId, answer, isCorrect, pointsEarned, timeSpent }
+  totalScore: int("totalScore"),
+  percentageScore: int("percentageScore"),
+  passed: boolean("passed").default(false).notNull(),
+  difficultyAtStart: varchar("difficultyAtStart", { length: 20 }),
+  difficultyAtEnd: varchar("difficultyAtEnd", { length: 20 }),
+  // AI feedback
+  aiFeedback: text("aiFeedback"), // Personalized AI analysis of performance
+  strengthAreas: json("strengthAreas"), // Array of standard/topic strings
+  improvementAreas: json("improvementAreas"), // Array of standard/topic strings
+  recommendedNextSteps: json("recommendedNextSteps"), // Array of { type, id, reason }
+  timeSpentMinutes: int("timeSpentMinutes"),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AcademyAssessmentResult = typeof academyAssessmentResults.$inferSelect;
+export type InsertAcademyAssessmentResult = typeof academyAssessmentResults.$inferInsert;
+
+/**
+ * Academy Mastery Tracking - Tracks student mastery per standard/objective
+ * Powers the adaptive assessment engine and readiness indicators
+ */
+export const academyMasteryTracking = mysqlTable("academy_mastery_tracking", {
+  id: int("id").autoincrement().primaryKey(),
+  studentProfileId: int("studentProfileId").notNull(),
+  subjectId: int("subjectId").notNull(),
+  unitId: int("unitId"),
+  standardCode: varchar("standardCode", { length: 50 }), // e.g., "CCSS.MATH.4.NBT.1"
+  objectiveDescription: text("objectiveDescription"),
+  masteryLevel: mysqlEnum("academy_mastery_level", [
+    "not_started", "emerging", "developing", "proficient", "mastery"
+  ]).default("not_started").notNull(),
+  masteryScore: int("masteryScore").default(0), // 0-100
+  attemptsCount: int("attemptsCount").default(0),
+  lastAssessedAt: timestamp("lastAssessedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AcademyMasteryTracking = typeof academyMasteryTracking.$inferSelect;
+export type InsertAcademyMasteryTracking = typeof academyMasteryTracking.$inferInsert;
+
+/**
+ * Academy Content Generation Log - Tracks AI content generation for audit trail
+ */
+export const academyContentGenLog = mysqlTable("academy_content_gen_log", {
+  id: int("id").autoincrement().primaryKey(),
+  generationType: mysqlEnum("academy_gen_type", [
+    "lesson_content", "assessment_questions", "unit_outline", "vocabulary", "practice_problems"
+  ]).notNull(),
+  targetType: varchar("targetType", { length: 50 }).notNull(), // "unit", "lesson", "assessment"
+  targetId: int("targetId").notNull(),
+  prompt: text("prompt"), // The prompt sent to AI
+  generatedContent: json("generatedContent"), // The raw AI output
+  modelUsed: varchar("modelUsed", { length: 100 }),
+  tokensUsed: int("tokensUsed"),
+  generatedBy: int("generatedBy").notNull(), // User who triggered generation
+  status: mysqlEnum("academy_gen_status", ["pending", "completed", "failed", "applied"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AcademyContentGenLog = typeof academyContentGenLog.$inferSelect;
+export type InsertAcademyContentGenLog = typeof academyContentGenLog.$inferInsert;

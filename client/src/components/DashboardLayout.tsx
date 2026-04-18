@@ -195,6 +195,17 @@ const menuCategories: MenuCategory[] = [
           { icon: BookOpen, label: "Training Content", path: "/training-content", minRole: "admin" },
         ]
       },
+      // K-12 Homeschool Curriculum
+      {
+        icon: BookOpen,
+        label: "K-12 Curriculum",
+        minRole: "user",
+        items: [
+          { icon: BookOpen, label: "Browse Subjects", path: "/academy/k12", minRole: "user" },
+          { icon: GraduationCap, label: "My Learning", path: "/academy/k12/my-learning", minRole: "user" },
+          { icon: FileText, label: "Educator Review", path: "/academy/k12/educator-review", minRole: "staff" },
+        ]
+      },
       // Simulators
       {
         icon: Play,
