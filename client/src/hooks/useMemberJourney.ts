@@ -5,6 +5,7 @@ export type MemberStatus = "onboarding" | "academy_active" | "formation_in_progr
 
 // Categories that are always accessible regardless of member status
 const ALWAYS_ACTIVE_CATEGORIES = [
+  "Autonomous Wealth System",
   "L.A.W.S. Academy",
   "My Account",
   "Communication",
@@ -18,7 +19,7 @@ const ALWAYS_ACTIVE_CATEGORIES = [
 
 // Categories that require House activation
 const REQUIRES_HOUSE_ACTIVATION = [
-  "Trust",
+  "CALEA Freeman Family Trust",
   "Real-Eye-Nation",
   "The L.A.W.S. Collective",
   "Documents",

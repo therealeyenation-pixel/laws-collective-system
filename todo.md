@@ -12542,4 +12542,15 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add UNDRIP/ADRIP compliance section to 98 Trust Administration page
 - [x] Create entity hierarchy visualization on Trust Structure page (CALEA → LAWS LLC → Collective → sub-entities)
 - [x] Persist LAWS onboarding progress in DB (track completed steps per user)
+- [x] Save checkpoint
+
+## Sidebar Restructure: 5 Top-Level Entity Sections
+- [x] Separate CALEA Freeman Family Trust as its own top-level sidebar section (owner-only)
+- [x] Simplify Autonomous Wealth System section (removed trust items, kept House & Trust, Security, Admin sub-categories)
+- [x] Keep L.A.W.S. Academy as its own top-level section (unchanged)
+- [x] Keep Real-Eye-Nation as its own top-level section (unchanged)
+- [x] Keep The L.A.W.S. Collective as its own top-level section (unchanged)
+- [x] Update member journey locking to reference new CALEA Trust category name
+- [x] Add Autonomous Wealth System to always-active categories
+- [x] Fix duplicate Landmark import in DashboardLayout
 - [ ] Save checkpoint

@@ -41,8 +41,7 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert,
-  Landmark
+  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -85,6 +84,7 @@ interface MenuCategory {
   icon: any;
   label: string;
   minRole: AccessLevel;
+  path?: string;
   items?: MenuItem[];
   subCategories?: SubCategory[];
   defaultOpen?: boolean;
@@ -104,7 +104,25 @@ const hasAccess = (userRole: AccessLevel | undefined, requiredRole: AccessLevel)
 };
 
 const menuCategories: MenuCategory[] = [
-  // LUVONPURPOSE AUTONOMOUS WEALTH SYSTEM - Houses the House/Trust Architecture
+  // 1. CALEA FREEMAN FAMILY TRUST (98 Trust) — Sovereign Foreign Trust, top of hierarchy
+  //    NOT public-facing. For international relations (UNDRIP/ADRIP). Owner-only.
+  {
+    icon: Landmark,
+    label: "CALEA Freeman Family Trust",
+    minRole: "owner",
+    defaultOpen: false,
+    items: [
+      { icon: Landmark, label: "98 Trust Administration", path: "/trust-admin", minRole: "owner" },
+      { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
+      { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "owner" },
+      { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "owner" },
+      { icon: Globe2, label: "UNDRIP/ADRIP Compliance", path: "/trust-admin?tab=compliance", minRole: "owner" },
+      { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
+      { icon: Map, label: "System Map", path: "/system-map", minRole: "owner" },
+    ]
+  },
+
+  // 2. AUTONOMOUS WEALTH SYSTEM — Houses the House/Trust Architecture
   {
     icon: Crown,
     label: "Autonomous Wealth System",
@@ -117,22 +135,16 @@ const menuCategories: MenuCategory[] = [
         minRole: "user",
         items: [
           { icon: Crown, label: "LAWS Dashboard", path: "/autonomous-wealth-system", minRole: "user" },
-          { icon: Layers, label: "System Overview", path: "/system-overview", minRole: "owner" },
-          { icon: Map, label: "System Map", path: "/system-map", minRole: "owner" },
         ]
       },
       {
-        icon: Rocket,
+        icon: Home,
         label: "House & Trust",
         minRole: "user",
         items: [
           { icon: Rocket, label: "Start the First House", path: "/genesis", minRole: "admin" },
           { icon: Home, label: "My House", path: "/house", minRole: "user" },
           { icon: Building2, label: "House Management", path: "/houses", minRole: "admin" },
-          { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
-          { icon: Landmark, label: "98 Trust Administration", path: "/trust-admin", minRole: "owner" },
-          { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "admin" },
-          { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "admin" },
         ]
       },
       {
@@ -140,7 +152,7 @@ const menuCategories: MenuCategory[] = [
         label: "Security & Succession",
         minRole: "admin",
         items: [
-          { icon: Lock, label: "Identity Vault", path: "/founder/identity-vault", minRole: "admin" },
+          { icon: Fingerprint, label: "Identity Vault", path: "/founder/identity-vault", minRole: "admin" },
           { icon: ShieldAlert, label: "Succession Protocol", path: "/founder/succession-protocol", minRole: "admin" },
           { icon: Shield, label: "Trademark Documents", path: "/trademark-documents", minRole: "admin" },
         ]
@@ -158,7 +170,7 @@ const menuCategories: MenuCategory[] = [
     ]
   },
 
-  // L.A.W.S. ACADEMY - Education Entity
+  // 3. L.A.W.S. ACADEMY - Education Entity (508 - LuvOnPurpose Academy and Outreach)
   {
     icon: GraduationCap,
     label: "L.A.W.S. Academy",
@@ -182,7 +194,7 @@ const menuCategories: MenuCategory[] = [
     ]
   },
 
-  // REAL-EYE-NATION LLC - Media/Creative Entity (GA - EIN: 84-4976416)
+  // 4. REAL-EYE-NATION LLC - Performing Arts / Media Entity (Design dept under L.A.W.S. Collective)
   {
     icon: Eye,
     label: "Real-Eye-Nation",
@@ -219,7 +231,7 @@ const menuCategories: MenuCategory[] = [
     ]
   },
 
-  // L.A.W.S. COLLECTIVE - Operating Company with Departments
+  // 5. THE L.A.W.S. COLLECTIVE - Operating Company with Departments
   {
     icon: Building2,
     label: "The L.A.W.S. Collective",
