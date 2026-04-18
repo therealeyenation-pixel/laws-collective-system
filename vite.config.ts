@@ -32,11 +32,17 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return undefined;
-          // Only isolate heavy vendor libs that should never be in the initial load
+          // Isolate heavy vendor libs that should never be in the initial load
           if (id.includes("shiki") || id.includes("oniguruma")) return "vendor-shiki";
           if (id.includes("mermaid") || id.includes("dagre") || id.includes("cytoscape") || id.includes("elkjs")) return "vendor-diagrams";
           if (id.includes("hls.js")) return "vendor-media";
           if (id.includes("katex")) return "vendor-katex";
+          // Recharts is large (~350KB) and only used by a few pages
+          if (id.includes("recharts") || id.includes("d3-") || id.includes("victory")) return "vendor-charts";
+          // Framer motion is only used by specific pages
+          if (id.includes("framer-motion")) return "vendor-motion";
+          // Stripe is only needed for payment pages
+          if (id.includes("@stripe") || id.includes("stripe")) return "vendor-stripe";
           // Let Rollup handle everything else naturally - no forced grouping
           return undefined;
         },

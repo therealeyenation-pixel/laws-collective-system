@@ -12608,3 +12608,15 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Fix AdminSeeding.tsx missing DashboardLayout tags (opening + closing)
 - [x] Verify production build succeeds (built in 1m 20s)
 - [ ] Save checkpoint
+
+## Bundle Size Optimization
+- [x] Analyze current bundle composition and identify largest chunks
+- [x] Replace direct Streamdown imports with LazyStreamdown in 4 pages (Agents, BookReader, ContentBuilder, ContractAgent)
+- [x] Shiki/mermaid/katex now lazy-loaded via LazyStreamdown (only when chat/markdown pages visited)
+- [x] Lazy-load 10 course components in Dashboard.tsx (63% reduction: 751KB -> 275KB)
+- [x] Add vendor-charts manual chunk for recharts/d3 isolation (548KB, only loaded by chart pages)
+- [x] Add vendor-motion manual chunk for framer-motion isolation
+- [x] Add vendor-stripe manual chunk for Stripe isolation
+- [x] Verify production build succeeds (1m 16s)
+- [x] Verify all pages load correctly in browser
+- [x] Save checkpoint

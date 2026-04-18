@@ -40,7 +40,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Streamdown } from "streamdown";
+import { LazyStreamdown } from "@/components/LazyStreamdown";
 import { AGENT_TO_DEPARTMENT } from "../../../shared/departmentRegistry";
 import { Badge } from "@/components/ui/badge";
 
@@ -739,7 +739,7 @@ export default function Agents() {
                     }`}
                   >
                     {msg.role === "assistant" ? (
-                      <Streamdown>{msg.content}</Streamdown>
+                      <LazyStreamdown>{msg.content}</LazyStreamdown>
                     ) : (
                       <p className="whitespace-pre-wrap">{msg.content}</p>
                     )}
@@ -1135,7 +1135,7 @@ export default function Agents() {
                                   }`}
                                 >
                                   {msg.role === "assistant" ? (
-                                    <Streamdown>{msg.content}</Streamdown>
+                                    <LazyStreamdown>{msg.content}</LazyStreamdown>
                                   ) : (
                                     <p className="whitespace-pre-wrap">{msg.content}</p>
                                   )}

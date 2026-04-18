@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Streamdown } from "streamdown";
+import { LazyStreamdown } from "@/components/LazyStreamdown";
 import {
   FileText,
   Upload,
@@ -757,7 +757,7 @@ export default function ContractAgent() {
                             }`}
                           >
                             {message.role === "assistant" ? (
-                              <Streamdown>{message.content}</Streamdown>
+                              <LazyStreamdown>{message.content}</LazyStreamdown>
                             ) : (
                               <p>{message.content}</p>
                             )}

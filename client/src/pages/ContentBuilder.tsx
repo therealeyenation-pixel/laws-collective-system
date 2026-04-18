@@ -47,7 +47,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
-import { Streamdown } from "streamdown";
+import { LazyStreamdown } from "@/components/LazyStreamdown";
 
 const CONTENT_TYPES = [
   { value: "lesson", label: "Lesson", icon: BookOpen, description: "Structured learning module with objectives and key takeaways" },
@@ -415,7 +415,7 @@ export default function ContentBuilder() {
                       <div className="mt-4 p-4 bg-muted/30 rounded-lg">
                         <p className="text-xs font-medium text-muted-foreground mb-2">Preview</p>
                         <div className="prose prose-sm max-w-none dark:prose-invert">
-                          <Streamdown>{generatedContent}</Streamdown>
+                          <LazyStreamdown>{generatedContent}</LazyStreamdown>
                         </div>
                       </div>
                     </CardContent>

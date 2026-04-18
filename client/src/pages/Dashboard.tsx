@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { DepartmentNewsWidget } from "@/components/DepartmentNewsWidget";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
@@ -23,20 +23,11 @@ import {
   Briefcase,
   Link2,
   Coins,
+  Loader2,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import BusinessCourse from "@/components/BusinessCourse";
-import FinancialCourse from "@/components/FinancialCourse";
-import OperationsCourse from "@/components/OperationsCourse";
-import TrustCourse from "@/components/TrustCourse";
-import GrantWritingCourse from "@/components/GrantWritingCourse";
-import ContractsCourse from "@/components/ContractsCourse";
-import BusinessPlanCourse from "@/components/BusinessPlanCourse";
-import BlockchainCourse from "@/components/BlockchainCourse";
-import InsuranceCourse from "@/components/InsuranceCourse";
 import TokenChainProgress from "@/components/TokenChainProgress";
-import DBATrademarkCourse from "@/components/DBATrademarkCourse";
 import PostActivationProgress from "@/components/PostActivationProgress";
 import FormationChecklist from "@/components/FormationChecklist";
 import SplitCalculator from "@/components/SplitCalculator";
@@ -46,6 +37,24 @@ import { LuvLedgerWidget } from "@/components/LuvLedgerWidget";
 import { QuickActionsWidget } from "@/components/QuickActionsWidget";
 import { NotificationDashboardWidget } from "@/components/NotificationDashboardWidget";
 import { HealthStatusWidget } from "@/components/HealthStatusWidget";
+
+// Lazy-load course components to reduce initial bundle size
+const BusinessCourse = lazy(() => import("@/components/BusinessCourse"));
+const FinancialCourse = lazy(() => import("@/components/FinancialCourse"));
+const OperationsCourse = lazy(() => import("@/components/OperationsCourse"));
+const TrustCourse = lazy(() => import("@/components/TrustCourse"));
+const GrantWritingCourse = lazy(() => import("@/components/GrantWritingCourse"));
+const ContractsCourse = lazy(() => import("@/components/ContractsCourse"));
+const BusinessPlanCourse = lazy(() => import("@/components/BusinessPlanCourse"));
+const BlockchainCourse = lazy(() => import("@/components/BlockchainCourse"));
+const InsuranceCourse = lazy(() => import("@/components/InsuranceCourse"));
+const DBATrademarkCourse = lazy(() => import("@/components/DBATrademarkCourse"));
+
+const CourseFallback = () => (
+  <div className="flex items-center justify-center h-96">
+    <Loader2 className="w-8 h-8 animate-spin text-accent" />
+  </div>
+);
 
 type CourseType = "business" | "businessplan" | "grant" | "financial" | "trust" | "contracts" | "blockchain" | "insurance" | "operations" | "dba" | null;
 
@@ -307,10 +316,12 @@ export default function Dashboard() {
   if (activeCourse === "business") {
     return (
       <DashboardLayout>
-        <BusinessCourse
-          onComplete={(data, tokens) => handleCourseComplete("business", data, tokens)}
-          onExit={() => setActiveCourse(null)}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <BusinessCourse
+            onComplete={(data, tokens) => handleCourseComplete("business", data, tokens)}
+            onExit={() => setActiveCourse(null)}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -318,10 +329,12 @@ export default function Dashboard() {
   if (activeCourse === "financial") {
     return (
       <DashboardLayout>
-        <FinancialCourse
-          onComplete={(data, tokens) => handleCourseComplete("financial", data, tokens)}
-          onExit={() => setActiveCourse(null)}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <FinancialCourse
+            onComplete={(data, tokens) => handleCourseComplete("financial", data, tokens)}
+            onExit={() => setActiveCourse(null)}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -329,10 +342,12 @@ export default function Dashboard() {
   if (activeCourse === "operations") {
     return (
       <DashboardLayout>
-        <OperationsCourse
-          onComplete={(data, tokens) => handleCourseComplete("operations", data, tokens)}
-          onExit={() => setActiveCourse(null)}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <OperationsCourse
+            onComplete={(data, tokens) => handleCourseComplete("operations", data, tokens)}
+            onExit={() => setActiveCourse(null)}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -340,11 +355,13 @@ export default function Dashboard() {
   if (activeCourse === "trust") {
     return (
       <DashboardLayout>
-        <TrustCourse
-          onComplete={(tokens) => handleCourseComplete("trust", {}, tokens)}
-          onExit={() => setActiveCourse(null)}
-          connectedEntity={getConnectedEntity()}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <TrustCourse
+            onComplete={(tokens) => handleCourseComplete("trust", {}, tokens)}
+            onExit={() => setActiveCourse(null)}
+            connectedEntity={getConnectedEntity()}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -352,11 +369,13 @@ export default function Dashboard() {
   if (activeCourse === "grant") {
     return (
       <DashboardLayout>
-        <GrantWritingCourse
-          onComplete={(tokens) => handleCourseComplete("grant", {}, tokens)}
-          onExit={() => setActiveCourse(null)}
-          connectedEntity={getConnectedEntity()}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <GrantWritingCourse
+            onComplete={(tokens) => handleCourseComplete("grant", {}, tokens)}
+            onExit={() => setActiveCourse(null)}
+            connectedEntity={getConnectedEntity()}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -364,11 +383,13 @@ export default function Dashboard() {
   if (activeCourse === "contracts") {
     return (
       <DashboardLayout>
-        <ContractsCourse
-          onComplete={(tokens) => handleCourseComplete("contracts", {}, tokens)}
-          onExit={() => setActiveCourse(null)}
-          connectedEntity={getConnectedEntity()}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <ContractsCourse
+            onComplete={(tokens) => handleCourseComplete("contracts", {}, tokens)}
+            onExit={() => setActiveCourse(null)}
+            connectedEntity={getConnectedEntity()}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -376,11 +397,13 @@ export default function Dashboard() {
   if (activeCourse === "businessplan") {
     return (
       <DashboardLayout>
-        <BusinessPlanCourse
-          onComplete={(tokens) => handleCourseComplete("businessplan", {}, tokens)}
-          onExit={() => setActiveCourse(null)}
-          connectedEntity={getConnectedEntity()}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <BusinessPlanCourse
+            onComplete={(tokens) => handleCourseComplete("businessplan", {}, tokens)}
+            onExit={() => setActiveCourse(null)}
+            connectedEntity={getConnectedEntity()}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -388,11 +411,13 @@ export default function Dashboard() {
   if (activeCourse === "blockchain") {
     return (
       <DashboardLayout>
-        <BlockchainCourse
-          onComplete={(tokens) => handleCourseComplete("blockchain", {}, tokens)}
-          onExit={() => setActiveCourse(null)}
-          connectedEntity={getConnectedEntity()}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <BlockchainCourse
+            onComplete={(tokens) => handleCourseComplete("blockchain", {}, tokens)}
+            onExit={() => setActiveCourse(null)}
+            connectedEntity={getConnectedEntity()}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -400,11 +425,13 @@ export default function Dashboard() {
   if (activeCourse === "insurance") {
     return (
       <DashboardLayout>
-        <InsuranceCourse
-          onComplete={(tokens) => handleCourseComplete("insurance", {}, tokens)}
-          onExit={() => setActiveCourse(null)}
-          connectedEntity={getConnectedEntity()}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <InsuranceCourse
+            onComplete={(tokens) => handleCourseComplete("insurance", {}, tokens)}
+            onExit={() => setActiveCourse(null)}
+            connectedEntity={getConnectedEntity()}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }
@@ -412,11 +439,13 @@ export default function Dashboard() {
   if (activeCourse === "dba") {
     return (
       <DashboardLayout>
-        <DBATrademarkCourse
-          onComplete={(data, tokens) => handleCourseComplete("dba", data, tokens)}
-          onClose={() => setActiveCourse(null)}
-          connectedEntity={getConnectedEntity()}
-        />
+        <Suspense fallback={<CourseFallback />}>
+          <DBATrademarkCourse
+            onComplete={(data, tokens) => handleCourseComplete("dba", data, tokens)}
+            onClose={() => setActiveCourse(null)}
+            connectedEntity={getConnectedEntity()}
+          />
+        </Suspense>
       </DashboardLayout>
     );
   }

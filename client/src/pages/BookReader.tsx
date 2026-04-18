@@ -47,7 +47,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
-import { Streamdown } from "streamdown";
+import { LazyStreamdown } from "@/components/LazyStreamdown";
 
 const DISCUSSION_TYPES = {
   comprehension: { icon: HelpCircle, label: "Comprehension", description: "Basic understanding questions" },
@@ -461,7 +461,7 @@ export default function BookReader() {
                       }`}
                     >
                       {msg.role === "assistant" ? (
-                        <Streamdown>{msg.content}</Streamdown>
+                        <LazyStreamdown>{msg.content}</LazyStreamdown>
                       ) : (
                         <p>{msg.content}</p>
                       )}
