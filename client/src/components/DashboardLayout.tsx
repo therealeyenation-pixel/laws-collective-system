@@ -42,7 +42,7 @@ import {
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
   Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert, UserCog,
-  HelpCircle, Headphones, LifeBuoy, Code2
+  HelpCircle, Headphones, LifeBuoy, Code2, Handshake
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -205,6 +205,7 @@ const menuCategories: MenuCategory[] = [
           { icon: GraduationCap, label: "My Learning", path: "/academy/k12/my-learning", minRole: "user" },
           { icon: FileText, label: "Educator Review", path: "/academy/k12/educator-review", minRole: "staff" },
           { icon: Code2, label: "Coding & AI Simulator", path: "/academy/coding-simulator", minRole: "user" },
+          { icon: Handshake, label: "Apprenticeships", path: "/academy/apprenticeships", minRole: "user" },
         ]
       },
       // Simulators

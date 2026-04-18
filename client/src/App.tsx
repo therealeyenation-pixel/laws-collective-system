@@ -428,7 +428,7 @@ const OperatingAgreements = lazy(() => import("@/pages/placeholders").then(m => 
 const ProgressReporting = lazy(() => import("@/pages/placeholders").then(m => ({ default: m.ProgressReporting })));
 const Properties = lazy(() => import("@/pages/placeholders").then(m => ({ default: m.Properties })));
 const QualityStandards = lazy(() => import("@/pages/placeholders").then(m => ({ default: m.QualityStandards })));
-const RealEyeDashboard = lazy(() => import("@/pages/placeholders").then(m => ({ default: m.RealEyeDashboard })));
+const RealEyeDashboard = lazy(() => import("@/pages/RealEyeNationDashboard"));
 const SecurityCenter = lazy(() => import("@/pages/placeholders").then(m => ({ default: m.SecurityCenter })));
 const SystemAdmin = lazy(() => import("@/pages/placeholders").then(m => ({ default: m.SystemAdmin })));
 const SystemSettings = lazy(() => import("@/pages/placeholders").then(m => ({ default: m.SystemSettings })));
@@ -460,6 +460,7 @@ const AcademyK12MyLearning = lazy(() => import("@/pages/AcademyK12MyLearning"));
 const AcademyK12EducatorReview = lazy(() => import("@/pages/AcademyK12EducatorReview"));
 const AcademyK12Assessment = lazy(() => import("@/pages/AcademyK12Assessment"));
 const AcademyCodingSimulator = lazy(() => import("@/pages/AcademyCodingSimulator"));
+const ApprenticeshipPartnerships = lazy(() => import("@/pages/ApprenticeshipPartnerships"));
 
 
 // Access levels: user (member), staff, admin, owner
@@ -624,6 +625,7 @@ function Router() {
       <Route path="/academy/k12/educator-review">{() => <ProtectedRoute component={AcademyK12EducatorReview} minRole="staff" />}</Route>
       <Route path="/academy/k12/assessment/:id">{() => <ProtectedRoute component={AcademyK12Assessment} minRole="user" />}</Route>
       <Route path="/academy/coding-simulator">{() => <ProtectedRoute component={AcademyCodingSimulator} minRole="user" />}</Route>
+      <Route path="/academy/apprenticeships">{() => <ProtectedRoute component={ApprenticeshipPartnerships} minRole="user" />}</Route>
       <Route path="/guardian-dashboard">{() => <ProtectedRoute component={GuardianDashboard} minRole="user" />}</Route>
       <Route path="/activation-progress">{() => <ProtectedRoute component={ActivationProgress} minRole="user" />}</Route>
       <Route path="/content-builder">{() => <ProtectedRoute component={ContentBuilder} minRole="user" />}</Route>
