@@ -421,12 +421,13 @@ export default function AutonomousWealthSystem() {
               <div>
                 <h3 className="font-semibold mb-1">About the Autonomous Wealth System</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  The LuvOnPurpose Autonomous Wealth System is the sovereign architecture that houses 
-                  the trust and business management framework. Each "House" represents a family trust 
-                  structure with linked businesses that generate revenue, protected by encrypted identity 
-                  vaults and succession protocols. The system is designed for a 5-year implementation arc 
-                  with a 100+ year legacy vision — building generational wealth through purpose, structure, 
-                  and community.
+                  The LuvOnPurpose Autonomous Wealth System is the sovereign architecture anchored by 
+                  the CALEA Freeman Family Trust (98 Trust) — a foreign grantor trust that serves as the 
+                  root entity for all operations, including international relations under UNDRIP/ADRIP. 
+                  Each "House" represents a family trust structure with linked businesses that generate 
+                  revenue, protected by encrypted identity vaults and succession protocols. The system 
+                  is designed for a 5-year implementation arc with a 100+ year legacy vision — building 
+                  generational wealth through purpose, structure, and community.
                 </p>
               </div>
             </div>

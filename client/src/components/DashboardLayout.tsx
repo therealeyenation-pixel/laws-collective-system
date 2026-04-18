@@ -41,7 +41,8 @@ import {
   Wrench, Clipboard, Video, MessageSquare, Download, ClipboardCheck,
   Target, TrendingUp, ArrowLeftRight, History, Zap, Plug, FileSpreadsheet,
   Database, Activity, Lock, GitBranch, Archive, Workflow, Globe, Layout,
-  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert
+  Fingerprint, Smartphone, Disc3, Sparkles, Star, ListMusic, Mail, ShieldAlert,
+  Landmark
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -129,6 +130,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Home, label: "My House", path: "/house", minRole: "user" },
           { icon: Building2, label: "House Management", path: "/houses", minRole: "admin" },
           { icon: Shield, label: "Trust Governance", path: "/trust-governance", minRole: "owner" },
+          { icon: Landmark, label: "98 Trust Administration", path: "/trust-admin", minRole: "owner" },
           { icon: Scale, label: "Trust Structure", path: "/trust-structure", minRole: "admin" },
           { icon: Eye, label: "Entity Structure", path: "/entity-structure", minRole: "admin" },
         ]
