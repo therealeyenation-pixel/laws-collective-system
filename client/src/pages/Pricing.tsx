@@ -21,11 +21,29 @@ import {
   DollarSign,
   Briefcase,
   BookOpen,
-  Video,
   Heart,
   ShieldCheck,
   HelpCircle,
   ChevronDown,
+  Zap,
+  Clock,
+  Search,
+  FileCheck,
+  Scale,
+  BarChart3,
+  Handshake,
+  MessageSquare,
+  CalendarCheck,
+  Percent,
+  Info,
+  AlertTriangle,
+  Palette,
+  Image,
+  Video,
+  Megaphone,
+  Gem,
+  Layers,
+  PenTool,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -34,6 +52,7 @@ import { Link } from "wouter";
    
    Year 1  → Annual Membership Contribution (full commitment)
    Year 2+ → Monthly Access Contribution OR Annual Access Contribution (discounted)
+   Services → Three-tier professional services by L.A.W.S. Collective, LLC employees
    
    Language: "contribution" — never "subscription", "payment", or "fee"
    No refunds: framed as supporting the collective mission
@@ -204,120 +223,279 @@ export default function Pricing() {
     },
   ];
 
-  const servicePackages = [
+  /* ─── PROFESSIONAL SERVICES — Three-Tier Structure ─── */
+  const quickServices = [
     {
-      name: "Grant Writing Package",
-      price: "$3,500 - $15,000",
-      description: "Professional grant proposal development with research, writing, and submission support",
-      icon: <DollarSign className="w-6 h-6" />,
-      turnaround: "2-4 weeks",
-      entity: "LuvOnPurpose Autonomous Wealth System LLC",
+      name: "Contract Template Customization",
+      description: "Standard contract templates customized to your specific entity and business needs",
+      priceRange: "$75 – $150",
+      turnaround: "1–3 business days",
+      icon: <FileCheck className="w-5 h-5" />,
+    },
+    {
+      name: "Compliance Checklist & Filing",
+      description: "State-specific compliance checklists with filing preparation and guidance",
+      priceRange: "$100 – $200",
+      turnaround: "2–3 business days",
+      icon: <Scale className="w-5 h-5" />,
+    },
+    {
+      name: "Business Summary Document",
+      description: "Professional one-page business summary for investors, partners, or lenders",
+      priceRange: "$100 – $250",
+      turnaround: "2–4 business days",
+      icon: <FileText className="w-5 h-5" />,
+    },
+    {
+      name: "Market Snapshot Report",
+      description: "Quick competitive landscape and market overview for your target industry",
+      priceRange: "$150 – $250",
+      turnaround: "3–5 business days",
+      icon: <BarChart3 className="w-5 h-5" />,
+    },
+    {
+      name: "Document Review & Formatting",
+      description: "Professional review, editing, and formatting of existing business documents",
+      priceRange: "$75 – $175",
+      turnaround: "1–2 business days",
+      icon: <Search className="w-5 h-5" />,
+    },
+  ];
+
+  const standardProjects = [
+    {
+      name: "Grant Application",
+      description: "Complete grant proposal including research, narrative development, budget justification, and submission preparation",
+      priceRange: "$500 – $2,500",
+      turnaround: "2–4 weeks",
+      icon: <DollarSign className="w-5 h-5" />,
       deliverables: [
         "Grant opportunity research & matching",
         "Complete proposal narrative",
         "Budget development & justification",
         "Supporting documentation preparation",
-        "Review & revision cycles (up to 3)",
+        "Up to 3 revision cycles",
         "Submission assistance",
-        "Post-submission follow-up guidance",
       ],
     },
     {
-      name: "Proposal Development",
-      price: "$5,000 - $25,000",
-      description: "Commercial and government proposal creation for contracts and major opportunities",
-      icon: <FileText className="w-6 h-6" />,
-      turnaround: "1-3 weeks",
-      entity: "LuvOnPurpose Autonomous Wealth System LLC",
+      name: "Business Proposal Development",
+      description: "Professional business or funding proposals ready for submission to partners, investors, or government agencies",
+      priceRange: "$750 – $2,500",
+      turnaround: "1–3 weeks",
+      icon: <Briefcase className="w-5 h-5" />,
       deliverables: [
         "RFP/RFQ analysis & compliance matrix",
         "Technical approach development",
         "Management approach narrative",
-        "Past performance documentation",
         "Pricing strategy & cost proposal",
         "Executive summary & cover letter",
-        "Graphics & visual aids",
-        "Final formatting & submission",
+        "Final formatting & submission prep",
       ],
     },
     {
-      name: "Contract Management",
-      price: "$5,000 - $25,000",
-      description: "Professional contract creation, review, negotiation support, and ongoing management",
-      icon: <Gavel className="w-6 h-6" />,
-      turnaround: "5-14 days",
-      entity: "LuvOnPurpose Autonomous Wealth System LLC",
+      name: "Market Research Report",
+      description: "Detailed market analysis with competitive landscape, target demographics, and strategic recommendations",
+      priceRange: "$500 – $1,500",
+      turnaround: "1–2 weeks",
+      icon: <BarChart3 className="w-5 h-5" />,
       deliverables: [
-        "Contract drafting or comprehensive review",
-        "Terms & conditions analysis",
-        "Risk assessment & mitigation report",
-        "Negotiation strategy & support",
-        "Amendment & modification preparation",
-        "Compliance tracking & monitoring setup",
+        "Industry overview & trends",
+        "Competitive landscape analysis",
+        "Target market demographics",
+        "SWOT analysis",
+        "Strategic recommendations",
+        "Data sources & methodology",
       ],
     },
     {
-      name: "Business Plan Development",
-      price: "$2,500 - $10,000",
-      description: "Comprehensive business planning for startups, expansions, and investor presentations",
-      icon: <Briefcase className="w-6 h-6" />,
-      turnaround: "2-3 weeks",
-      entity: "LuvOnPurpose Autonomous Wealth System LLC",
+      name: "Business Formation Package",
+      description: "Guided entity setup including formation documents, EIN application, operating agreement, and compliance setup",
+      priceRange: "$750 – $2,000",
+      turnaround: "1–2 weeks",
+      icon: <Building2 className="w-5 h-5" />,
       deliverables: [
-        "Executive summary",
-        "Market analysis & research",
-        "Competitive landscape review",
-        "Financial projections (3-5 years)",
-        "Marketing & sales strategy",
-        "Funding requirements & use of funds",
-      ],
-    },
-    {
-      name: "Financial Literacy Course",
-      price: "$997 - $2,997",
-      description: "Comprehensive financial education for individuals and families",
-      icon: <BookOpen className="w-6 h-6" />,
-      turnaround: "Self-paced",
-      entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
-      deliverables: [
-        "12-module video curriculum",
-        "Workbooks & exercises",
-        "Live Q&A sessions",
-        "Certificate of completion",
-        "1-year access to materials",
-        "Community forum access",
-      ],
-    },
-    {
-      name: "Business Formation Workshop",
-      price: "$1,497 - $4,997",
-      description: "Hands-on training for starting and structuring businesses",
-      icon: <GraduationCap className="w-6 h-6" />,
-      turnaround: "2-day intensive",
-      entity: "LuvOnPurpose Outreach Temple and Academy Society, Inc.",
-      deliverables: [
-        "Entity selection guidance",
-        "Formation document templates",
-        "Tax structure optimization",
-        "Compliance checklist",
+        "Entity type selection guidance",
+        "Formation document preparation",
+        "EIN application assistance",
+        "Operating agreement drafting",
+        "Initial compliance checklist",
         "30-day follow-up support",
       ],
     },
     {
-      name: "Media Production Training",
-      price: "$1,997 - $5,997",
-      description: "Professional media and content creation skills development",
-      icon: <Video className="w-6 h-6" />,
-      turnaround: "4-6 weeks",
-      entity: "Real-Eye-Nation LLC",
+      name: "Multi-Document Contract Package",
+      description: "Comprehensive contract suite for your business including service agreements, vendor contracts, and NDAs",
+      priceRange: "$1,000 – $2,500",
+      turnaround: "1–3 weeks",
+      icon: <Gavel className="w-5 h-5" />,
       deliverables: [
-        "Video production fundamentals",
-        "Audio recording & editing",
-        "Social media content strategy",
-        "Equipment recommendations",
-        "Portfolio project guidance",
+        "Contract drafting (up to 5 documents)",
+        "Terms & conditions analysis",
+        "Risk assessment & mitigation notes",
+        "Negotiation strategy guidance",
+        "Amendment templates",
+        "Compliance tracking setup",
       ],
     },
+  ];
+
+  const customEngagements = [
+    {
+      name: "Multi-Grant Campaign",
+      description: "Strategic identification and application to multiple grant opportunities with coordinated submissions",
+      startingAt: "$2,500+",
+      icon: <DollarSign className="w-5 h-5" />,
+    },
+    {
+      name: "Full Business Launch Package",
+      description: "End-to-end business establishment including formation, compliance, marketing strategy, and operational setup",
+      startingAt: "$3,500+",
+      icon: <Briefcase className="w-5 h-5" />,
+    },
+    {
+      name: "Comprehensive Compliance Overhaul",
+      description: "Full audit and restructuring of business compliance across all jurisdictions and regulatory requirements",
+      startingAt: "$2,500+",
+      icon: <Scale className="w-5 h-5" />,
+    },
+    {
+      name: "Strategic Planning & Advisory",
+      description: "Ongoing strategic guidance including quarterly reviews, growth planning, and operational optimization",
+      startingAt: "$2,500+/quarter",
+      icon: <Handshake className="w-5 h-5" />,
+    },
+  ];
+
+  /* ─── REAL-EYE-NATION LLC — Creative & Design Services ─── */
+  const reyQuickServices = [
+    {
+      name: "Social Media Graphics Package",
+      description: "Custom-designed social media graphics for your brand across platforms (5-10 assets)",
+      priceRange: "$100 – $250",
+      turnaround: "2–3 business days",
+      icon: <Image className="w-5 h-5" />,
+    },
+    {
+      name: "Logo Refresh & Brand Mark",
+      description: "Professional logo refinement or secondary brand mark creation with source files",
+      priceRange: "$150 – $250",
+      turnaround: "3–5 business days",
+      icon: <PenTool className="w-5 h-5" />,
+    },
+    {
+      name: "Event Flyer & Promotional Material",
+      description: "Eye-catching event flyers, banners, and promotional materials (print + digital)",
+      priceRange: "$75 – $200",
+      turnaround: "1–3 business days",
+      icon: <Megaphone className="w-5 h-5" />,
+    },
+    {
+      name: "NFT Single Asset Design",
+      description: "Custom digital artwork designed and prepared for NFT minting on your chosen platform",
+      priceRange: "$150 – $250",
+      turnaround: "3–5 business days",
+      icon: <Gem className="w-5 h-5" />,
+    },
+    {
+      name: "Short-Form Video Edit",
+      description: "Professional editing of short-form video content for social media (up to 60 seconds)",
+      priceRange: "$100 – $200",
+      turnaround: "2–4 business days",
+      icon: <Video className="w-5 h-5" />,
+    },
+  ];
+
+  const reyStandardProjects = [
+    {
+      name: "NFT Collection Development",
+      description: "Full NFT collection design including artwork generation, trait system development, metadata structure, and minting strategy",
+      priceRange: "$1,000 – $2,500",
+      turnaround: "2–4 weeks",
+      icon: <Gem className="w-5 h-5" />,
+      deliverables: [
+        "Collection concept & art direction",
+        "Trait system design (10–50+ traits)",
+        "Generative artwork engine setup",
+        "Metadata & smart contract preparation",
+        "Minting platform guidance",
+        "Collection preview & revision cycles",
+      ],
+    },
+    {
+      name: "Full Brand Identity Package",
+      description: "Complete visual identity system including logo, color palette, typography, brand guidelines, and collateral templates",
+      priceRange: "$750 – $2,500",
+      turnaround: "2–3 weeks",
+      icon: <Palette className="w-5 h-5" />,
+      deliverables: [
+        "Primary & secondary logo designs",
+        "Color palette & typography system",
+        "Brand guidelines document",
+        "Business card & letterhead templates",
+        "Social media brand kit",
+        "Source files in all formats",
+      ],
+    },
+    {
+      name: "Video Production Package",
+      description: "Professional video production for promotional content, training materials, or community outreach campaigns",
+      priceRange: "$1,000 – $2,500",
+      turnaround: "2–4 weeks",
+      icon: <Video className="w-5 h-5" />,
+      deliverables: [
+        "Creative concept & storyboard",
+        "Script development",
+        "Production coordination",
+        "Professional editing & color grading",
+        "Motion graphics & titles",
+        "Multi-format delivery (web, social, broadcast)",
+      ],
+    },
+    {
+      name: "Outreach Campaign Design",
+      description: "Complete visual campaign for community outreach including digital and print materials across all touchpoints",
+      priceRange: "$500 – $1,500",
+      turnaround: "1–2 weeks",
+      icon: <Megaphone className="w-5 h-5" />,
+      deliverables: [
+        "Campaign visual concept & mood board",
+        "Social media content suite (15+ assets)",
+        "Email newsletter templates",
+        "Print materials (flyers, posters, banners)",
+        "Presentation deck design",
+        "Campaign style guide",
+      ],
+    },
+  ];
+
+  const reyCustomEngagements = [
+    {
+      name: "Enterprise NFT Strategy & Deployment",
+      description: "End-to-end NFT program including strategy, artwork, smart contracts, marketplace setup, and community building",
+      startingAt: "$3,500+",
+      icon: <Gem className="w-5 h-5" />,
+    },
+    {
+      name: "Full Creative Direction & Ongoing Design",
+      description: "Dedicated creative direction with ongoing design support for all brand, digital, and outreach needs",
+      startingAt: "$2,500+/quarter",
+      icon: <Palette className="w-5 h-5" />,
+    },
+    {
+      name: "Multi-Platform Media Campaign",
+      description: "Comprehensive media production across video, audio, print, and digital for large-scale outreach or launch campaigns",
+      startingAt: "$3,000+",
+      icon: <Layers className="w-5 h-5" />,
+    },
+  ];
+
+  /* ─── Member Discount Tiers ─── */
+  const memberDiscounts = [
+    { tier: "Explorer", discount: "10%", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" },
+    { tier: "Community Member", discount: "20%", color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400" },
+    { tier: "Builder", discount: "30% + Priority", color: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400" },
+    { tier: "Collective Partner", discount: "Custom Rates", color: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400" },
   ];
 
   const faqs = [
@@ -350,8 +528,24 @@ export default function Pricing() {
       a: "The Partner tier is application-based for those deeply committed to co-building the L.A.W.S. ecosystem. It includes contractor transition pathways, board eligibility, profit sharing, and governance voting rights. Partner contributions are structured individually based on the scope of engagement.",
     },
     {
+      q: "How do professional services work?",
+      a: "Professional services are provided by employees of L.A.W.S. Collective, LLC (business services) and Real-Eye-Nation LLC (creative & design services) using our AI-assisted infrastructure. Quick Services can be ordered directly. Standard Projects begin with an intake form — our team scopes the work and provides a quote before you commit. Custom Engagements start with a paid discovery consultation. All Collective members receive discounts on services from both entities.",
+    },
+    {
+      q: "What is Real-Eye-Nation LLC?",
+      a: "Real-Eye-Nation LLC is the creative and design arm of the L.A.W.S. Collective ecosystem, tied to the Design department. It provides NFT generation, graphic design, media production, and outreach design services. Like all entities in the ecosystem, its revenue follows the same 30/70 allocation model — 30% to the Academy, 70% to operations.",
+    },
+    {
+      q: "Do I need to be a member to use professional services?",
+      a: "No. Professional services are available to everyone. However, Collective members receive significant discounts: Explorers save 10%, Community Members save 20%, and Builders save 30% with priority scheduling. Non-members pay the standard rate.",
+    },
+    {
+      q: "What is the service contribution policy?",
+      a: "Service contributions are non-refundable once work has commenced. For Quick Services, this is upon order confirmation. For Standard Projects, this is upon scope approval. If the Collective is unable to deliver the agreed scope, a credit toward future services will be issued. All service revenue supports the collective mission.",
+    },
+    {
       q: "What methods of contribution are accepted?",
-      a: "We accept all major credit and debit cards through our secure portal. ACH transfers and custom invoicing are available for Collective Partner tier contributions.",
+      a: "We accept all major credit and debit cards through our secure portal. ACH transfers and custom invoicing are available for Collective Partner tier contributions and Custom Engagements.",
     },
   ];
 
@@ -761,76 +955,485 @@ export default function Pricing() {
 
           {/* ─── Services Tab ─── */}
           <TabsContent value="services">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-foreground mb-2">
-                Professional Services
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold text-foreground mb-2">
+                Done-For-You Professional Services
               </h2>
-              <p className="text-muted-foreground">
-                Expert services available individually or bundled with your membership contribution
+              <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
+                Our trained staff uses the same AI-assisted infrastructure to deliver completed work products.
+                You focus on your vision — we handle the execution.
               </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {servicePackages.map((service, idx) => (
-                <Card key={idx} className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-green-800/10 rounded-lg text-green-800">
-                      {service.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-foreground">{service.name}</h3>
-                      <p className="text-sm text-green-800 font-medium">{service.price}</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">{service.description}</p>
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="text-xs">
-                      {service.turnaround}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs border-green-800/30 text-green-800">
-                      {service.entity}
-                    </Badge>
-                  </div>
-                  <div className="border-t border-border pt-4">
-                    <p className="text-xs font-medium text-foreground mb-2">Deliverables:</p>
-                    <ul className="space-y-1">
-                      {service.deliverables.slice(0, 4).map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                          <Check className="w-3 h-3 text-green-700 mt-0.5 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                      {service.deliverables.length > 4 && (
-                        <li className="text-xs text-green-800">
-                          +{service.deliverables.length - 4} more deliverables
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                  <Button variant="outline" className="w-full mt-4" onClick={() => toast.info("Service request form coming soon.")}>
-                    Request Quote
-                  </Button>
-                </Card>
-              ))}
-            </div>
-
-            {/* Bundle Offer */}
-            <Card className="p-8 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div>
-                  <Badge className="mb-2 bg-green-800">Bundle & Save</Badge>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">
-                    Service Bundle Discount
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Combine any 3+ services and receive 15% off. Collective members receive an additional 10% discount on all services.
-                  </p>
-                </div>
-                <Button size="lg" className="gap-2 bg-green-800 hover:bg-green-900 text-white" onClick={() => toast.info("Bundle builder coming soon.")}>
-                  Build Your Bundle <ArrowRight className="w-4 h-4" />
-                </Button>
+              <div className="flex flex-wrap gap-2 justify-center">
+                <Badge className="bg-green-800 text-white">L.A.W.S. Collective, LLC — Business Services</Badge>
+                <Badge className="bg-purple-800 text-white">Real-Eye-Nation LLC — Creative & Design</Badge>
               </div>
-            </Card>
+            </div>
+
+            {/* DIY vs Done-For-You comparison */}
+            <div className="max-w-3xl mx-auto mb-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-5 rounded-xl border border-border bg-background">
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="w-5 h-5 text-green-800" />
+                  <h3 className="font-bold text-foreground text-sm">DIY with Platform Tools</h3>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3">
+                  Included with your membership contribution
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    "AI-assisted grant writing tools",
+                    "Business plan generators",
+                    "Contract templates & builders",
+                    "Market research dashboards",
+                    "Document formatting tools",
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <Check className="w-3.5 h-3.5 text-green-700 mt-0.5 flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-[10px] text-muted-foreground mt-3 italic">
+                  Available to Community Member and Builder tiers
+                </p>
+              </div>
+
+              <div className="p-5 rounded-xl border border-green-800/30 bg-green-800/[0.02]">
+                <div className="flex items-center gap-2 mb-3">
+                  <Handshake className="w-5 h-5 text-green-800" />
+                  <h3 className="font-bold text-foreground text-sm">Done-For-You Services</h3>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3">
+                  Professional staff delivers completed work products
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    "Dedicated professional assigned to your project",
+                    "AI-assisted drafting + human review & customization",
+                    "Multiple revision cycles included",
+                    "Final deliverable ready for submission",
+                    "Post-delivery support included",
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <Check className="w-3.5 h-3.5 text-green-700 mt-0.5 flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-[10px] text-muted-foreground mt-3 italic">
+                  Available to everyone — members receive discounts
+                </p>
+              </div>
+            </div>
+
+            {/* Member Discount Badges */}
+            <div className="max-w-3xl mx-auto mb-10">
+              <div className="flex items-center gap-2 mb-3 justify-center">
+                <Percent className="w-4 h-4 text-green-800" />
+                <p className="text-sm font-semibold text-foreground">Member Service Discounts</p>
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {memberDiscounts.map((md, i) => (
+                  <div key={i} className={`px-3 py-1.5 rounded-full text-xs font-medium ${md.color}`}>
+                    {md.tier}: {md.discount} off
+                  </div>
+                ))}
+                <div className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                  Non-member: Standard rate
+                </div>
+              </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════
+               L.A.W.S. COLLECTIVE, LLC — BUSINESS SERVICES
+               ═══════════════════════════════════════════════════ */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-green-800 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-sm">L</span>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-foreground">L.A.W.S. Collective, LLC</h3>
+                  <p className="text-sm text-muted-foreground">Business, Legal & Financial Services</p>
+                </div>
+              </div>
+              <div className="h-px bg-green-800/20 mt-4" />
+            </div>
+
+            {/* ─── TIER 1: Quick Services ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-green-800/10 rounded-lg">
+                  <Zap className="w-5 h-5 text-green-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Quick Services</h3>
+                  <p className="text-sm text-muted-foreground">$75 – $250 · Standardized deliverables · Order directly</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {quickServices.map((service, idx) => (
+                  <div key={idx} className="p-5 rounded-xl border border-border bg-background hover:border-green-800/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-1.5 bg-green-800/10 rounded-lg text-green-800">
+                        {service.icon}
+                      </div>
+                      <h4 className="font-semibold text-foreground text-sm">{service.name}</h4>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">{service.description}</p>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold text-green-800">{service.priceRange}</span>
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {service.turnaround}
+                      </span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => toast.info("Service ordering coming soon. Contact us directly for immediate requests.")}
+                    >
+                      Order Now
+                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ─── TIER 2: Standard Projects ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-green-800/10 rounded-lg">
+                  <FileText className="w-5 h-5 text-green-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Standard Projects</h3>
+                  <p className="text-sm text-muted-foreground">$500 – $2,500 · Scoped & quoted · Intake form required</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {standardProjects.map((project, idx) => (
+                  <Card key={idx} className="p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="p-1.5 bg-green-800/10 rounded-lg text-green-800">
+                            {project.icon}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-foreground">{project.name}</h4>
+                            <div className="flex items-center gap-3 mt-0.5">
+                              <span className="text-sm font-semibold text-green-800">{project.priceRange}</span>
+                              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Clock className="w-3 h-3" />
+                                {project.turnaround}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                      </div>
+
+                      <div className="lg:w-72 flex-shrink-0">
+                        <p className="text-xs font-semibold text-foreground mb-2">Deliverables:</p>
+                        <ul className="space-y-1.5 mb-4">
+                          {project.deliverables.map((d, i) => (
+                            <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                              <Check className="w-3 h-3 text-green-700 mt-0.5 flex-shrink-0" />
+                              {d}
+                            </li>
+                          ))}
+                        </ul>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => toast.info("Service intake form coming soon. Contact us directly for immediate requests.")}
+                        >
+                          <MessageSquare className="w-3.5 h-3.5 mr-1" />
+                          Request Quote
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* ─── TIER 3: Custom Engagements ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-green-800/10 rounded-lg">
+                  <Handshake className="w-5 h-5 text-green-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Custom Engagements</h3>
+                  <p className="text-sm text-muted-foreground">$2,500+ · Multi-phase work · Begins with paid discovery consultation</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {customEngagements.map((engagement, idx) => (
+                  <div key={idx} className="p-5 rounded-xl border border-green-800/20 bg-gradient-to-br from-green-50/50 to-emerald-50/30 dark:from-green-950/10 dark:to-emerald-950/5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-1.5 bg-green-800/10 rounded-lg text-green-800">
+                        {engagement.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">{engagement.name}</h4>
+                        <span className="text-xs font-medium text-green-800">Starting at {engagement.startingAt}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-4">{engagement.description}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => toast.info("Consultation booking coming soon. Contact us directly for immediate requests.")}
+                    >
+                      <CalendarCheck className="w-3.5 h-3.5 mr-1" />
+                      Book Discovery Consultation
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                <p className="text-xs text-muted-foreground">
+                  <span className="font-semibold text-green-800">Discovery consultation:</span>{" "}
+                  Custom Engagements begin with a $150 discovery consultation (credited toward your project if you proceed).
+                  This ensures we fully understand your needs before scoping the work.
+                </p>
+              </div>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════
+               REAL-EYE-NATION LLC — CREATIVE & DESIGN SERVICES
+               ═══════════════════════════════════════════════════ */}
+            <div className="mb-8 mt-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-purple-800 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-sm">R</span>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-foreground">Real-Eye-Nation LLC</h3>
+                  <p className="text-sm text-muted-foreground">Creative Design, NFT Generation, Media Production & Outreach</p>
+                </div>
+              </div>
+              <div className="h-px bg-purple-800/20 mt-4" />
+            </div>
+
+            {/* ─── REY TIER 1: Quick Creative Services ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-purple-800/10 rounded-lg">
+                  <Zap className="w-5 h-5 text-purple-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Quick Creative Services</h3>
+                  <p className="text-sm text-muted-foreground">$75 – $250 · Standardized deliverables · Order directly</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {reyQuickServices.map((service, idx) => (
+                  <div key={idx} className="p-5 rounded-xl border border-border bg-background hover:border-purple-800/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-1.5 bg-purple-800/10 rounded-lg text-purple-800">
+                        {service.icon}
+                      </div>
+                      <h4 className="font-semibold text-foreground text-sm">{service.name}</h4>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">{service.description}</p>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold text-purple-800">{service.priceRange}</span>
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {service.turnaround}
+                      </span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => toast.info("Service ordering coming soon. Contact us directly for immediate requests.")}
+                    >
+                      Order Now
+                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ─── REY TIER 2: Standard Creative Projects ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-purple-800/10 rounded-lg">
+                  <Palette className="w-5 h-5 text-purple-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Standard Creative Projects</h3>
+                  <p className="text-sm text-muted-foreground">$500 – $2,500 · Scoped & quoted · Intake form required</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {reyStandardProjects.map((project, idx) => (
+                  <Card key={idx} className="p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="p-1.5 bg-purple-800/10 rounded-lg text-purple-800">
+                            {project.icon}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-foreground">{project.name}</h4>
+                            <div className="flex items-center gap-3 mt-0.5">
+                              <span className="text-sm font-semibold text-purple-800">{project.priceRange}</span>
+                              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Clock className="w-3 h-3" />
+                                {project.turnaround}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                      </div>
+
+                      <div className="lg:w-72 flex-shrink-0">
+                        <p className="text-xs font-semibold text-foreground mb-2">Deliverables:</p>
+                        <ul className="space-y-1.5 mb-4">
+                          {project.deliverables.map((d, i) => (
+                            <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                              <Check className="w-3 h-3 text-purple-700 mt-0.5 flex-shrink-0" />
+                              {d}
+                            </li>
+                          ))}
+                        </ul>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => toast.info("Service intake form coming soon. Contact us directly for immediate requests.")}
+                        >
+                          <MessageSquare className="w-3.5 h-3.5 mr-1" />
+                          Request Quote
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* ─── REY TIER 3: Custom Creative Engagements ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-purple-800/10 rounded-lg">
+                  <Layers className="w-5 h-5 text-purple-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Custom Creative Engagements</h3>
+                  <p className="text-sm text-muted-foreground">$2,500+ · Multi-phase work · Begins with paid discovery consultation</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                {reyCustomEngagements.map((engagement, idx) => (
+                  <div key={idx} className="p-5 rounded-xl border border-purple-800/20 bg-gradient-to-br from-purple-50/50 to-fuchsia-50/30 dark:from-purple-950/10 dark:to-fuchsia-950/5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="p-1.5 bg-purple-800/10 rounded-lg text-purple-800">
+                        {engagement.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-foreground text-sm">{engagement.name}</h4>
+                        <span className="text-xs font-medium text-purple-800">Starting at {engagement.startingAt}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-4">{engagement.description}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => toast.info("Consultation booking coming soon. Contact us directly for immediate requests.")}
+                    >
+                      <CalendarCheck className="w-3.5 h-3.5 mr-1" />
+                      Book Discovery Consultation
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
+                <p className="text-xs text-muted-foreground">
+                  <span className="font-semibold text-purple-800">Discovery consultation:</span>{" "}
+                  Custom Creative Engagements begin with a $150 discovery consultation (credited toward your project if you proceed).
+                  This ensures we fully understand your creative vision before scoping the work.
+                </p>
+              </div>
+            </div>
+
+            {/* ─── Legal Disclaimers & Policies ─── */}
+            <div className="max-w-3xl mx-auto space-y-3 mb-8">
+              {/* Entity Attribution */}
+              <div className="p-4 rounded-lg border border-border bg-background">
+                <div className="flex items-start gap-3">
+                  <Info className="w-4 h-4 text-green-800 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-2 text-xs text-muted-foreground">
+                    <p>
+                      <span className="font-semibold text-foreground">Service Providers:</span>{" "}
+                      Business, legal, and financial services are provided by employees of <strong>L.A.W.S. Collective, LLC</strong>.
+                      Creative, design, NFT, and media services are provided by employees of <strong>Real-Eye-Nation LLC</strong>,
+                      the creative and design arm of the L.A.W.S. Collective ecosystem.
+                      AI-assisted tools are used to enhance efficiency and quality; all deliverables are
+                      reviewed and finalized by qualified professionals.
+                    </p>
+                    <p>
+                      <span className="font-semibold text-foreground">Revenue Allocation:</span>{" "}
+                      Service revenue from both entities follows the same allocation as membership contributions — 30% supports
+                      the LuvOnPurpose Academy & Outreach (508(c)(1)(a)) education programs, and 70% supports
+                      operations and staff.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service Contribution Policy */}
+              <div className="p-4 rounded-lg border border-amber-200 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/10">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-4 h-4 text-amber-700 dark:text-amber-500 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-2 text-xs text-muted-foreground">
+                    <p>
+                      <span className="font-semibold text-amber-800 dark:text-amber-500">Service Contribution Policy:</span>{" "}
+                      Service contributions are non-refundable once work has commenced. For Quick Services,
+                      this is upon order confirmation. For Standard Projects, this is upon scope approval.
+                      If the Collective is unable to deliver the agreed scope, a credit toward future services
+                      will be issued.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Important Disclaimers */}
+              <div className="p-4 rounded-lg border border-border bg-secondary/10">
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="w-4 h-4 text-green-800 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-1.5 text-[11px] text-muted-foreground">
+                    <p>Grant writing services do not guarantee funding approval. Success depends on funder criteria, competition, and eligibility.</p>
+                    <p>Legal document services (contracts, compliance) are not a substitute for licensed legal counsel. Consult an attorney for legal advice.</p>
+                    <p>NFT and digital asset services include artwork creation and minting preparation. Blockchain transaction fees (gas fees) are the client's responsibility. NFT market value is not guaranteed.</p>
+                    <p>Intellectual property for custom creative work transfers to the client upon full payment, unless otherwise specified in the project scope agreement.</p>
+                    <p>Service scope and pricing are confirmed in writing before work begins. No work commences without mutual agreement.</p>
+                    <p>Client data is handled confidentially within the L.A.W.S. Collective infrastructure. No client information is shared with third parties.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
 

@@ -12846,3 +12846,20 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Add no-refund policy framed positively (contribution supports the collective mission)
 - [x] Maintain existing tier structure adapted to new model
 - [x] Update FAQ section with contribution model explanations
+
+## Phase 33: Services Tab — Professional Services Catalog
+- [x] Build Services tab content on Pricing page with three-tier structure (Quick, Standard, Custom)
+- [x] Add service categories: Grant Writing, Business Services, Legal/Compliance, Market Research
+- [x] Implement member discount badges (Explorer 10%, Community 20%, Builder 30%, Partner custom)
+- [x] Add legal disclaimers (entity attribution, AI-assisted disclosure, no guarantee, not legal counsel)
+- [x] Add service contribution policy (non-refundable once work commenced, credit for undelivered scope)
+- [x] Add intake flow CTAs (Order Now for Quick, Request Quote for Standard, Book Consultation for Custom)
+- [x] Include DIY vs Done-For-You comparison section
+- [x] Add data privacy note for client information handling
+
+## Phase 33b: Real-Eye-Nation Creative Services in Services Tab
+- [x] Add Real-Eye-Nation LLC creative services: NFT Generation, Graphic Design, Media Production, Outreach Design
+- [x] Organize Services tab by entity (L.A.W.S. Collective business services vs Real-Eye-Nation creative services)
+- [x] Add Real-Eye-Nation entity attribution and legal disclaimers (IP, digital assets, licensing)
+- [x] Apply same three-tier structure (Quick/Standard/Custom) to creative services
+- [x] Include member discount structure for creative services
