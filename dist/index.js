@@ -159511,31 +159511,24 @@ var vite_config_default = defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    minify: "esbuild",
+    // CRITICAL: disable minification to reduce peak memory usage during build
+    minify: false,
     sourcemap: false,
-    chunkSizeWarningLimit: 3e3,
+    chunkSizeWarningLimit: 5e3,
     modulePreload: false,
-    cssCodeSplit: true,
-    assetsInlineLimit: 4096,
+    cssCodeSplit: false,
+    assetsInlineLimit: 0,
+    // Reduce Rollup memory by limiting concurrent operations
     rollupOptions: {
       output: {
+        // Fewer, larger chunks = less memory overhead from chunk graph
         manualChunks(id) {
           if (!id.includes("node_modules")) return void 0;
-          if (id.includes("shiki") || id.includes("oniguruma")) return "vendor-shiki";
-          if (id.includes("mermaid") || id.includes("dagre") || id.includes("cytoscape") || id.includes("elkjs")) return "vendor-diagrams";
-          if (id.includes("hls.js")) return "vendor-media";
-          if (id.includes("katex")) return "vendor-katex";
-          if (id.includes("recharts") || id.includes("d3-") || id.includes("victory")) return "vendor-charts";
-          if (id.includes("framer-motion")) return "vendor-motion";
-          if (id.includes("@stripe") || id.includes("stripe")) return "vendor-stripe";
-          if (id.includes("@radix-ui")) return "vendor-radix";
-          if (id.includes("react-dom")) return "vendor-react";
-          if (id.includes("@tanstack") || id.includes("@trpc")) return "vendor-trpc";
-          if (id.includes("lucide-react")) return "vendor-icons";
-          if (id.includes("date-fns")) return "vendor-datefns";
-          return void 0;
+          return "vendor";
         }
-      }
+      },
+      // Reduce memory by processing fewer modules concurrently
+      maxParallelFileOps: 2
     }
   },
   server: {
