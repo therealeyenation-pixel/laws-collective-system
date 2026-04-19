@@ -208,6 +208,7 @@ const PurchaseRequests = lazy(() => import("./pages/PurchaseRequests"));
 const TaxModule = lazy(() => import("./pages/TaxModule"));
 const TimekeepingDashboard = lazy(() => import("./pages/TimekeepingDashboard"));
 const ExternalIntegrations = lazy(() => import("./pages/ExternalIntegrations"));
+const AppStore = lazy(() => import("./pages/AppStore"));
 const GrantLaborReports = lazy(() => import("./pages/GrantLaborReports"));
 const PayrollDashboard = lazy(() => import("./pages/PayrollDashboard"));
 const HealthSimulator = lazy(() => import("./pages/simulators/HealthSimulator"));
@@ -602,6 +603,7 @@ function Router() {
       <Route path="/tiered-governance">{() => <ProtectedRoute component={TieredGovernanceDashboard} minRole="admin" />}</Route>
       <Route path="/investment-reports">{() => <ProtectedRoute component={InvestmentReportDashboard} minRole="admin" />}</Route>
       <Route path="/crypto-wallet">{() => <ProtectedRoute component={CryptoWallet} minRole="staff" />}</Route>
+      <Route path="/app-store">{() => <ProtectedRoute component={AppStore} minRole="user" />}</Route>
       <Route path="/financial-dashboard">{() => <ProtectedRoute component={ConsolidatedFinancialDashboard} minRole="admin" />}</Route>
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />

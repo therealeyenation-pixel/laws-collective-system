@@ -98,6 +98,7 @@ import { mediaRouter } from "./routers/media";
 import { stripeCheckoutRouter } from "./routers/stripeCheckout";
 import { onboardingRouter } from "./routers/onboarding";
 import { proceduresRouter } from "./routers/procedures";
+import { appIntegrationsRouter } from "./routers/appIntegrations";
 import { projectControlsRouter } from "./routers/projectControls";
 import { requisitionsRouter } from "./routers/requisitions";
 import { contractorTransitionRouter } from "./routers/contractor-transition";
@@ -420,6 +421,7 @@ export const appRouter = router({
   stripeCheckout: stripeCheckoutRouter,
   onboarding: onboardingRouter,
   procedures: proceduresRouter,
+  appIntegrations: appIntegrationsRouter,
   projectControls: projectControlsRouter,
   requisitions: requisitionsRouter,
   contractorTransition: contractorTransitionRouter,

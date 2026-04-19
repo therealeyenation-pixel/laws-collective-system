@@ -12957,3 +12957,14 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Removed dist/ from .gitignore so pre-built output gets committed
 - [x] Changed build script to only rebuild server (esbuild, fast, low memory)
 - [ ] Save checkpoint and re-publish
+
+
+## Phase 48: Centralized App Store for Third-Party Integrations
+- [x] Create database schema for app integrations (available_apps, user_app_connections)
+- [x] Build backend tRPC procedures (listAvailableApps, getUserConnections, connectApp, disconnectApp)
+- [x] Register appIntegrations router in server/routers.ts
+- [x] Build App Store UI page (AppStore.tsx) with category filtering and connection management
+- [x] Add /app-store route to App.tsx
+- [x] Add App Store link to DashboardLayout navigation (Finance menu)
+- [x] Build and verify no errors
+- [x] Ready for checkpoint and publish

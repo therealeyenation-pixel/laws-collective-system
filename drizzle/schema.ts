@@ -20545,3 +20545,71 @@ export const apprenticeshipApplications = mysqlTable("apprenticeship_application
 });
 export type ApprenticeshipApplication = typeof apprenticeshipApplications.$inferSelect;
 export type InsertApprenticeshipApplication = typeof apprenticeshipApplications.$inferInsert;
+
+
+/**
+ * Available Apps/Integrations - Catalog of third-party services users can connect
+ */
+export const availableApps = mysqlTable("available_apps", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  category: mysqlEnum("category", [
+    "investment",
+    "music_movies",
+    "ai_assistant",
+    "banking",
+    "business",
+    "education",
+    "health",
+    "social",
+    "other"
+  ]).notNull(),
+  description: text("description"),
+  logoUrl: varchar("logoUrl", { length: 500 }),
+  website: varchar("website", { length: 500 }),
+  authType: mysqlEnum("authType", ["oauth", "api_key", "username_password", "none"]).default("oauth").notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AvailableApp = typeof availableApps.$inferSelect;
+export type InsertAvailableApp = typeof availableApps.$inferInsert;
+
+/**
+ * User App Connections - Track which apps each user has connected
+ */
+export const userAppConnections = mysqlTable("user_app_connections", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  appId: int("appId").notNull(),
+  status: mysqlEnum("status", ["connected", "disconnected", "error", "pending"]).default("connected").notNull(),
+  // Store encrypted credentials/tokens
+  encryptedCredentials: text("encryptedCredentials"),
+  // Store app-specific data (e.g., account ID, username)
+  metadata: json("metadata").$type<Record<string, any>>(),
+  // Last sync/check timestamp
+  lastSyncedAt: timestamp("lastSyncedAt"),
+  // Error message if status is 'error'
+  errorMessage: text("errorMessage"),
+  connectedAt: timestamp("connectedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserAppConnection = typeof userAppConnections.$inferSelect;
+export type InsertUserAppConnection = typeof userAppConnections.$inferInsert;
+
+/**
+ * App Integration Logs - Audit trail for app connections and syncs
+ */
+export const appIntegrationLogs = mysqlTable("app_integration_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  appId: int("appId").notNull(),
+  action: mysqlEnum("action", ["connected", "disconnected", "synced", "error", "updated"]).notNull(),
+  details: json("details").$type<Record<string, any>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AppIntegrationLog = typeof appIntegrationLogs.$inferSelect;
+export type InsertAppIntegrationLog = typeof appIntegrationLogs.$inferInsert;

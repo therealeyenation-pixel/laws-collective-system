@@ -438,6 +438,7 @@ const menuCategories: MenuCategory[] = [
           { icon: Scale, label: "Investment Governance", path: "/investment-governance", minRole: "admin" },
           { icon: BarChart3, label: "Investment Reports", path: "/investment-reports", minRole: "admin" },
           { icon: Coins, label: "Crypto Wallet", path: "/crypto-wallet", minRole: "staff" },
+          { icon: Plug, label: "App Store", path: "/app-store", minRole: "user" },
           { icon: Coins, label: "Banking & Credit", path: "/banking", minRole: "staff" },
           { icon: PieChart, label: "Revenue Sharing", path: "/revenue-sharing", minRole: "admin" },
           { icon: CreditCard, label: "Pricing", path: "/pricing", minRole: "admin" },
