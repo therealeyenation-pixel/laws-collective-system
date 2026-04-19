@@ -20,6 +20,7 @@ import {
   Briefcase,
   Music,
   Languages,
+  Lock,
   ArrowRight,
   Check,
   Loader2,
@@ -85,6 +86,12 @@ const CURRICULUM_MODULES = [
     icon: <Music className="w-5 h-5" />,
     description: "Music, dance, visual arts, and ceremonial practices that connect generations.",
     color: "bg-pink-100 text-pink-800",
+  },
+  {
+    name: "Smart Contract & Blockchain Mastery",
+    icon: <Lock className="w-5 h-5" />,
+    description: "Smart contract development, NFT deployment, tokenomics, DeFi mechanics, and blockchain security — building sovereign digital infrastructure.",
+    color: "bg-cyan-100 text-cyan-800",
   },
 ];
 
@@ -199,7 +206,7 @@ export default function AcademyLanding() {
           <div className="container max-w-5xl mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               {[
-                { label: "Divine STEM Modules", value: "9" },
+                { label: "Divine STEM Modules", value: "10" },
                 { label: "Languages Offered", value: "15+" },
                 { label: "Certification Programs", value: "12" },
                 { label: "Self-Paced Learning", value: "100%" },
@@ -221,7 +228,7 @@ export default function AcademyLanding() {
                 Divine STEM Curriculum
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Nine interconnected modules blending ancestral knowledge with modern education.
+                Ten interconnected modules blending ancestral knowledge with modern education.
                 Each module builds on the others to create a holistic learning experience.
               </p>
             </div>
@@ -318,7 +325,7 @@ export default function AcademyLanding() {
               <ul className="space-y-3 mb-6">
                 {[
                   "Complete K-12 homeschool curriculum",
-                  "All 9 Divine STEM modules",
+                  "All 10 Divine STEM modules",
                   "15+ language courses",
                   "Financial literacy & business training",
                   "Skilled labor certification programs",

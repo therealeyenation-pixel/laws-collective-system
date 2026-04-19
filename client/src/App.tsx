@@ -8,6 +8,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { OfflineProvider } from "./contexts/OfflineContext";
+import { OfflineStatusBar } from "./components/OfflineStatusBar";
 
 
 
@@ -1065,13 +1067,16 @@ function App() {
         // switchable
       >
         <TooltipProvider>
-          <RadioPlayerProvider>
-            <MediaPlayerProvider>
-              <Toaster />
-              <Router />
-              <MiniPlayer />
-            </MediaPlayerProvider>
-          </RadioPlayerProvider>
+          <OfflineProvider>
+            <RadioPlayerProvider>
+              <MediaPlayerProvider>
+                <OfflineStatusBar variant="banner" />
+                <Toaster />
+                <Router />
+                <MiniPlayer />
+              </MediaPlayerProvider>
+            </RadioPlayerProvider>
+          </OfflineProvider>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

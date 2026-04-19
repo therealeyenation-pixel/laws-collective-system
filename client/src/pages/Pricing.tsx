@@ -44,6 +44,10 @@ import {
   Gem,
   Layers,
   PenTool,
+  Link2,
+  Lock,
+  Cpu,
+  Globe,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -490,6 +494,111 @@ export default function Pricing() {
     },
   ];
 
+  /* ─── CROSS-FUNCTIONAL: Smart Contract & Blockchain Services ─── */
+  /* Delivered jointly by Contracts (legal), IT (development), and Real-Eye-Nation (NFT art) */
+
+  const smartContractQuick = [
+    {
+      name: "Smart Contract Audit Review",
+      description: "Security review and vulnerability assessment of an existing smart contract with written report",
+      priceRange: "$150 – $250",
+      turnaround: "3–5 business days",
+      icon: <Lock className="w-5 h-5" />,
+      departments: ["IT", "Contracts"],
+    },
+    {
+      name: "NFT Metadata & Contract Setup",
+      description: "Metadata structure, IPFS pinning, and basic ERC-721/1155 contract configuration for your collection",
+      priceRange: "$150 – $250",
+      turnaround: "3–5 business days",
+      icon: <Gem className="w-5 h-5" />,
+      departments: ["IT", "Real-Eye-Nation"],
+    },
+    {
+      name: "Token Economics Blueprint",
+      description: "Tokenomics design document outlining supply, distribution, utility, and governance mechanics",
+      priceRange: "$200 – $250",
+      turnaround: "3–5 business days",
+      icon: <Cpu className="w-5 h-5" />,
+      departments: ["IT", "Contracts"],
+    },
+  ];
+
+  const smartContractStandard = [
+    {
+      name: "Custom Smart Contract Development",
+      description: "Bespoke smart contract for your business logic — escrow, royalties, vesting, governance, or custom tokenization",
+      priceRange: "$1,500 – $2,500",
+      turnaround: "2–4 weeks",
+      icon: <Lock className="w-5 h-5" />,
+      departments: ["IT", "Contracts"],
+      deliverables: [
+        "Requirements analysis & architecture",
+        "Smart contract development (Solidity/Rust)",
+        "Unit testing & security review",
+        "Testnet deployment & verification",
+        "Legal compliance review",
+        "Documentation & deployment guide",
+      ],
+    },
+    {
+      name: "NFT Collection Deployment",
+      description: "Full NFT collection launch including generative art engine, smart contract, minting page, and marketplace listing",
+      priceRange: "$2,000 – $2,500",
+      turnaround: "3–5 weeks",
+      icon: <Gem className="w-5 h-5" />,
+      departments: ["Real-Eye-Nation", "IT", "Contracts"],
+      deliverables: [
+        "Generative art engine & trait system",
+        "ERC-721/1155 smart contract",
+        "Minting page development",
+        "Metadata & IPFS storage",
+        "Marketplace listing setup",
+        "Royalty structure & legal review",
+      ],
+    },
+    {
+      name: "DAO & Governance Setup",
+      description: "Decentralized governance infrastructure including voting contracts, proposal systems, and treasury management",
+      priceRange: "$1,500 – $2,500",
+      turnaround: "2–4 weeks",
+      icon: <Globe className="w-5 h-5" />,
+      departments: ["IT", "Contracts"],
+      deliverables: [
+        "Governance token contract",
+        "Voting mechanism implementation",
+        "Proposal submission system",
+        "Treasury management contract",
+        "Legal framework documentation",
+        "Admin dashboard & monitoring",
+      ],
+    },
+  ];
+
+  const smartContractCustom = [
+    {
+      name: "Enterprise Blockchain Strategy & Build",
+      description: "End-to-end blockchain program: strategy, smart contracts, NFT ecosystem, tokenomics, marketplace, and community infrastructure",
+      startingAt: "$5,000+",
+      icon: <Link2 className="w-5 h-5" />,
+      departments: ["IT", "Contracts", "Real-Eye-Nation"],
+    },
+    {
+      name: "Full NFT Ecosystem Build",
+      description: "Complete NFT program including generative art, smart contracts, custom marketplace, staking mechanics, and community building",
+      startingAt: "$5,000+",
+      icon: <Gem className="w-5 h-5" />,
+      departments: ["Real-Eye-Nation", "IT", "Contracts"],
+    },
+    {
+      name: "DeFi Protocol Development",
+      description: "Custom decentralized finance protocol including liquidity pools, yield mechanics, and governance — from concept to mainnet",
+      startingAt: "$7,500+",
+      icon: <Cpu className="w-5 h-5" />,
+      departments: ["IT", "Contracts"],
+    },
+  ];
+
   /* ─── Member Discount Tiers ─── */
   const memberDiscounts = [
     { tier: "Explorer", discount: "10%", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" },
@@ -542,6 +651,18 @@ export default function Pricing() {
     {
       q: "What is the service contribution policy?",
       a: "Service contributions are non-refundable once work has commenced. For Quick Services, this is upon order confirmation. For Standard Projects, this is upon scope approval. If the Collective is unable to deliver the agreed scope, a credit toward future services will be issued. All service revenue supports the collective mission.",
+    },
+    {
+      q: "How do smart contract and blockchain services work?",
+      a: "Smart contract and blockchain services are delivered cross-functionally by three departments: Contracts handles legal compliance and terms translation, IT handles development, testing, and deployment, and Real-Eye-Nation handles NFT artwork and digital asset creation. This ensures every deliverable is legally sound, technically secure, and visually compelling. Quick blockchain services can be ordered directly, Standard projects require an intake form, and Custom engagements begin with a $250 discovery consultation.",
+    },
+    {
+      q: "Does the Academy teach smart contract development?",
+      a: "Yes. The Smart Contract & Blockchain Mastery module is part of the Divine STEM Curriculum. It covers smart contract fundamentals, NFT deployment, tokenomics, DeFi mechanics, security and auditing, and deployment management. This is education — teaching you how to build. If you need a professional team to build it for you, that's what the cross-functional blockchain services are for.",
+    },
+    {
+      q: "Is the AI technology used in services available for purchase or licensing?",
+      a: "No. The AI-assisted infrastructure, automation systems, and proprietary tools are the exclusive intellectual property of the LuvOnPurpose Trust, licensed exclusively to L.A.W.S. Collective, LLC and its affiliated entities. This technology is not available for external licensing, resale, or independent use. It is built exclusively for this ecosystem and its members.",
     },
     {
       q: "What methods of contribution are accepted?",
@@ -966,6 +1087,7 @@ export default function Pricing() {
               <div className="flex flex-wrap gap-2 justify-center">
                 <Badge className="bg-green-800 text-white">L.A.W.S. Collective, LLC — Business Services</Badge>
                 <Badge className="bg-purple-800 text-white">Real-Eye-Nation LLC — Creative & Design</Badge>
+                <Badge className="bg-cyan-800 text-white">Smart Contracts & Blockchain — Cross-Functional</Badge>
               </div>
             </div>
 
@@ -1378,6 +1500,187 @@ export default function Pricing() {
               </div>
             </div>
 
+            {/* ═══════════════════════════════════════════════════
+               CROSS-FUNCTIONAL: SMART CONTRACT & BLOCKCHAIN SERVICES
+               Delivered jointly by Contracts + IT + Real-Eye-Nation
+               ═══════════════════════════════════════════════════ */}
+            <div className="mb-8 mt-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-cyan-800 flex items-center justify-center flex-shrink-0">
+                  <Link2 className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-foreground">Smart Contract & Blockchain Services</h3>
+                  <p className="text-sm text-muted-foreground">Cross-Functional: Contracts + IT + Real-Eye-Nation</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mt-3 max-w-3xl">
+                Smart contract and blockchain services are delivered jointly across departments — <strong>Contracts</strong> handles legal compliance and terms translation,
+                <strong> IT</strong> handles development, testing, and deployment, and <strong>Real-Eye-Nation</strong> handles NFT artwork and digital asset creation.
+                This cross-functional model ensures every deliverable is legally sound, technically secure, and visually compelling.
+              </p>
+              <div className="h-px bg-cyan-800/20 mt-4" />
+            </div>
+
+            {/* ─── SC TIER 1: Quick Blockchain Services ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-cyan-800/10 rounded-lg">
+                  <Zap className="w-5 h-5 text-cyan-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Quick Blockchain Services</h3>
+                  <p className="text-sm text-muted-foreground">$150 – $250 · Standardized deliverables · Order directly</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {smartContractQuick.map((service, idx) => (
+                  <div key={idx} className="p-5 rounded-lg border border-border hover:border-cyan-800/30 transition-colors">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-1.5 bg-cyan-800/10 rounded-lg text-cyan-800">
+                        {service.icon}
+                      </div>
+                      <span className="font-bold text-foreground text-sm">{service.name}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-3">{service.description}</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {service.departments.map((dept, i) => (
+                        <Badge key={i} variant="outline" className="text-[10px] py-0 px-1.5">{dept}</Badge>
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between text-xs mb-3">
+                      <span className="font-semibold text-cyan-800">{service.priceRange}</span>
+                      <span className="text-muted-foreground flex items-center gap-1">
+                        <Clock className="w-3 h-3" /> {service.turnaround}
+                      </span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => toast.info("Service ordering coming soon. Contact us directly for immediate requests.")}
+                    >
+                      Order Now
+                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ─── SC TIER 2: Standard Blockchain Projects ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-cyan-800/10 rounded-lg">
+                  <Lock className="w-5 h-5 text-cyan-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Standard Blockchain Projects</h3>
+                  <p className="text-sm text-muted-foreground">$1,500 – $2,500 · Scoped & quoted · Intake form required</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {smartContractStandard.map((project, idx) => (
+                  <Card key={idx} className="p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="p-1.5 bg-cyan-800/10 rounded-lg text-cyan-800">
+                            {project.icon}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-foreground">{project.name}</h4>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {project.departments.map((dept, i) => (
+                                <Badge key={i} variant="outline" className="text-[10px] py-0 px-1.5">{dept}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-3">{project.description}</p>
+                        <div className="flex items-center gap-4 text-sm">
+                          <span className="font-semibold text-cyan-800">{project.priceRange}</span>
+                          <span className="text-muted-foreground flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" /> {project.turnaround}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="lg:w-64 flex-shrink-0">
+                        <p className="text-xs font-semibold text-foreground mb-2">Deliverables:</p>
+                        <ul className="space-y-1">
+                          {project.deliverables.map((d, i) => (
+                            <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                              <Check className="w-3 h-3 text-cyan-700 mt-0.5 flex-shrink-0" />
+                              {d}
+                            </li>
+                          ))}
+                        </ul>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full mt-4"
+                          onClick={() => toast.info("Service intake form coming soon. Contact us directly for immediate requests.")}
+                        >
+                          Request Quote
+                          <MessageSquare className="w-3.5 h-3.5 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* ─── SC TIER 3: Custom Blockchain Engagements ─── */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-cyan-800/10 rounded-lg">
+                  <CalendarCheck className="w-5 h-5 text-cyan-800" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Custom Blockchain Engagements</h3>
+                  <p className="text-sm text-muted-foreground">$5,000+ · Discovery consultation · Fully custom scope</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {smartContractCustom.map((engagement, idx) => (
+                  <Card key={idx} className="p-6">
+                    <div className="p-2 bg-cyan-800/10 rounded-lg text-cyan-800 w-fit mb-3">
+                      {engagement.icon}
+                    </div>
+                    <h4 className="font-bold text-foreground mb-2">{engagement.name}</h4>
+                    <p className="text-xs text-muted-foreground mb-3">{engagement.description}</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {engagement.departments.map((dept, i) => (
+                        <Badge key={i} variant="outline" className="text-[10px] py-0 px-1.5">{dept}</Badge>
+                      ))}
+                    </div>
+                    <p className="text-sm font-semibold text-cyan-800 mb-4">Starting at {engagement.startingAt}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => toast.info("Consultation booking coming soon. Contact us directly for immediate requests.")}
+                    >
+                      Book Consultation
+                      <CalendarCheck className="w-3.5 h-3.5 ml-1" />
+                    </Button>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="text-center p-4 bg-cyan-50 dark:bg-cyan-950/20 rounded-lg mt-6">
+                <p className="text-xs text-muted-foreground">
+                  <span className="font-semibold text-cyan-800">Discovery consultation:</span>{" "}
+                  Custom Blockchain Engagements begin with a $250 discovery consultation (credited toward your project if you proceed).
+                  This ensures we fully understand your technical requirements, legal needs, and creative vision across all departments.
+                </p>
+              </div>
+            </div>
+
             {/* ─── Legal Disclaimers & Policies ─── */}
             <div className="max-w-3xl mx-auto space-y-3 mb-8">
               {/* Entity Attribution */}
@@ -1390,6 +1693,7 @@ export default function Pricing() {
                       Business, legal, and financial services are provided by employees of <strong>L.A.W.S. Collective, LLC</strong>.
                       Creative, design, NFT, and media services are provided by employees of <strong>Real-Eye-Nation LLC</strong>,
                       the creative and design arm of the L.A.W.S. Collective ecosystem.
+                      Smart contract and blockchain services are delivered <strong>cross-functionally</strong> by the Contracts, IT, and Real-Eye-Nation departments.
                       AI-assisted tools are used to enhance efficiency and quality; all deliverables are
                       reviewed and finalized by qualified professionals.
                     </p>
@@ -1429,7 +1733,28 @@ export default function Pricing() {
                     <p>NFT and digital asset services include artwork creation and minting preparation. Blockchain transaction fees (gas fees) are the client's responsibility. NFT market value is not guaranteed.</p>
                     <p>Intellectual property for custom creative work transfers to the client upon full payment, unless otherwise specified in the project scope agreement.</p>
                     <p>Service scope and pricing are confirmed in writing before work begins. No work commences without mutual agreement.</p>
+                    <p>Smart contract services include development, testing, and testnet deployment. Mainnet deployment gas fees and blockchain transaction costs are the client's responsibility. Smart contract functionality is provided "as-is" after client-approved testing; L.A.W.S. Collective is not liable for post-deployment exploits or market conditions.</p>
                     <p>Client data is handled confidentially within the L.A.W.S. Collective infrastructure. No client information is shared with third parties.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Proprietary Technology & AI Exclusivity */}
+              <div className="p-4 rounded-lg border border-cyan-200 dark:border-cyan-800/40 bg-cyan-50/50 dark:bg-cyan-950/10">
+                <div className="flex items-start gap-3">
+                  <Lock className="w-4 h-4 text-cyan-800 dark:text-cyan-400 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-2 text-xs text-muted-foreground">
+                    <p>
+                      <span className="font-semibold text-cyan-800 dark:text-cyan-400">Proprietary Technology Notice:</span>{" "}
+                      The AI-assisted infrastructure, automation systems, and proprietary tools used to deliver all services
+                      are the exclusive intellectual property of the LuvOnPurpose Trust, licensed exclusively to L.A.W.S. Collective, LLC
+                      and its affiliated entities. This technology is not available for external licensing, resale, or independent use.
+                    </p>
+                    <p>
+                      All AI-generated outputs, automation workflows, and system-assisted deliverables are produced exclusively
+                      within the L.A.W.S. Collective ecosystem. The underlying technology, algorithms, and methodologies remain
+                      the property of the Trust and are protected under applicable intellectual property law.
+                    </p>
                   </div>
                 </div>
               </div>
