@@ -3,7 +3,7 @@
 .pnpm-store/
 
 # Build outputs
-dist/
+# dist/ is committed pre-built to avoid OOM during deploy
 build/
 *.dist
 

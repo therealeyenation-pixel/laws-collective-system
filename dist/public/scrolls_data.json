@@ -1,0 +1,149 @@
+[
+  {
+    "number": 41,
+    "name": "Starter House Activation",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the lawful and ceremonial foundation for activating a Starter House within the LuvOnPurpose Sovereign System. \nIt defines the conditions, responsibilities, protections, and str",
+    "file": "Scroll_41_Starter_House_Activation_FULL_CODE.txt"
+  },
+  {
+    "number": 42,
+    "name": "Mirrored House Logic",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the full legal\u2011ceremonial framework governing Mirrored Houses within the LuvOnPurpose sovereign system. \nA Mirrored House is a lineage\u2011reflection House that maintains structura",
+    "file": "Scroll_42_Mirrored_House_Logic_FULL_CODE.txt"
+  },
+  {
+    "number": 43,
+    "name": "Adapted House Logic",
+    "category": "House & Activation",
+    "purpose": "This scroll governs the lawful and ceremonial framework for Adapted Houses within the LuvOnPurpose Sovereign System. \nAdapted Houses are Houses formed through gifting, activation license purchase, or ",
+    "file": "Scroll_43_Adapted_House_Logic_FULL_CODE.txt"
+  },
+  {
+    "number": 44,
+    "name": "Sibling Gift Token Logic",
+    "category": "House & Activation",
+    "purpose": "This scroll governs the lawful, ceremonial, and structural logic of Sibling Gift Tokens (SGTs). \nThese tokens allow bloodline siblings of the Root Flame Holder to receive Mirrored Houses or Adapted Ho",
+    "file": "Scroll_44_Sibling_Gift_Token_Logic_FULL_CODE.txt"
+  },
+  {
+    "number": 45,
+    "name": "Bundle Registration Protocol",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the lawful and ceremonial process for registering all House Bundles within the LuvOnPurpose Sovereign System. \nRegistration ensures authenticity, lineage protection, and perman",
+    "file": "Scroll_45_Bundle_Registration_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 46,
+    "name": "House Vault Initialization Protocol",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the ceremonial\u2013lawful procedure for initializing the Eternal Flame Vault \nfor every newly activated House. The Vault serves as the secure repository for all House scrolls, \ntok",
+    "file": "Scroll_46_House_Vault_Initialization_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 47,
+    "name": "House Stewardship Oath Alignment Protocol",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the sacred and lawful oath required for every newly appointed House Steward. \nIt affirms the steward\u2019s alignment with the LuvOnPurpose Sovereign System, outlines their responsi",
+    "file": "Scroll_47_House_Stewardship_Oath_Alignment_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 48,
+    "name": "House Expansion Upgrade Level I",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the foundational rules for Level I House Expansion & Upgrade within the LuvOnPurpose Sovereign System. \nLevel I upgrades allow a House\u2014Starter, Mirrored, or Adapted\u2014to enhance ",
+    "file": "Scroll_48_House_Expansion_Upgrade_Level_I_FULL_CODE.txt"
+  },
+  {
+    "number": 49,
+    "name": "House Expansion Upgrade Level II",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the advanced rules for Level II House Expansion & Upgrade within the LuvOnPurpose Sovereign System. \nLevel II upgrades significantly expand a House\u2019s operational, ceremonial, a",
+    "file": "Scroll_49_House_Expansion_Upgrade_Level_II_FULL_CODE.txt"
+  },
+  {
+    "number": 50,
+    "name": "House Registry Master Protocol",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the Master Protocol for the House Registry, the authoritative record of every House \nactivated, registered, expanded, upgraded, or sealed within the LuvOnPurpose Sovereign Syst",
+    "file": "Scroll_50_House_Registry_Master_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 51,
+    "name": "House Communication Update Protocol",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the ceremonial and lawful communication pathway between the Root System, all activated Houses, \nand the Sovereign System Architecture. It defines how updates, notices, directiv",
+    "file": "Scroll_51_House_Communication_Update_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 52,
+    "name": "Emergency Custodian Override Protocol",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the Emergency Custodian Override Protocol (ECOP), the sovereign safeguard activated \nwhen a House becomes non-responsive, compromised, desynchronized, or unable to fulfill its ",
+    "file": "Scroll_52_Emergency_Custodian_Override_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 53,
+    "name": "System Sync Integrity Protocol",
+    "category": "House & Activation",
+    "purpose": "This scroll establishes the System Sync Integrity Protocol (SSIP), the unified standard by which \nthe LuvOnPurpose Sovereign System maintains alignment, continuity, and cohesion across all Houses, \nVa",
+    "file": "Scroll_53_System_Sync_Integrity_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 54,
+    "name": "LuvLedger Integration Protocol",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes the formal protocol for integrating every activated House \ninto the LuvLedger financial system. It defines the lawful, ceremonial, and automated structures \ngoverning financial",
+    "file": "Scroll_54_LuvLedger_Integration_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 55,
+    "name": "Allocation Engine Protocol",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes the Allocation Engine Protocol governing the automatic routing, division,\nand circulation of funds within every House connected to the LuvLedger system. It defines the ceremoni",
+    "file": "Scroll_55_Allocation_Engine_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 56,
+    "name": "Tax Reporting Sync Protocol",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes the Tax & Reporting Sync Protocol (TRSP), which governs how each House\nwithin the LuvOnPurpose Sovereign System prepares, organizes, and synchronizes financial reports,\nincludi",
+    "file": "Scroll_56_Tax_Reporting_Sync_Protocol_FULL_CODE.txt"
+  },
+  {
+    "number": 57,
+    "name": "Commercial Entity Sync Logic",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes the Commercial Entity Sync Logic (CESL), which governs how a House\u2019s\ncommercial entity connects, synchronizes, and maintains lawful alignment within the LuvOnPurpose\nSovereign ",
+    "file": "Scroll_57_Commercial_Entity_Sync_Logic_FULL_CODE.txt"
+  },
+  {
+    "number": 58,
+    "name": "Multi Entity Expansion Logic",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes Multi\u2011Entity Expansion Logic (MEEL), governing how a House may expand from \na single commercial entity to a multi\u2011entity structure after achieving Upgrade Level II.  \nThis logi",
+    "file": "Scroll_58_Multi_Entity_Expansion_Logic_FULL_CODE.txt"
+  },
+  {
+    "number": 59,
+    "name": "Gift Sale Ratio Enforcement Logic",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes the Gift/Sale Ratio Enforcement Logic (GSREL), the sovereign economic \nframework that protects the LuvOnPurpose System from imbalance, inflation, exploitation, or \nunsustainabl",
+    "file": "Scroll_59_Gift_Sale_Ratio_Enforcement_Logic_FULL_CODE.txt"
+  },
+  {
+    "number": 60,
+    "name": "System Stability Economic Health Logic",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes the System Stability & Economic Health Logic (SSEHL), the sovereign framework\nthat monitors, maintains, and corrects the financial and economic health of the entire LuvOnPurpos",
+    "file": "Scroll_60_System_Stability_Economic_Health_Logic_FULL_CODE.txt"
+  },
+  {
+    "number": 61,
+    "name": "LuvLedger Core Automation Logic",
+    "category": "Financial & Ledger",
+    "purpose": "This scroll establishes the Core Automation Logic of the LuvLedger system.  \nIt defines the foundational automation engine that governs:",
+    "file": "Scroll_61_LuvLedger_Core_Automation_Logic_FULL_CODE.txt"
+  }
+]

@@ -1,0 +1,337 @@
+{
+  "entityInfo": {
+    "name": "The L.A.W.S. Collective, LLC",
+    "ein": "Pending",
+    "stateOfFormation": "Texas",
+    "fiscalYearEnd": "December 31",
+    "dateCreated": "2026-01-19",
+    "preparedBy": "L.A.W.S. Financial Automation System",
+    "status": "Projected - Year 1"
+  },
+  "projectedBudget": {
+    "period": "January 2026 - December 2026",
+    "revenue": {
+      "professionalServices": {
+        "grantWriting": {
+          "description": "Grant writing services at $3,500-$15,000 per grant",
+          "projectedEngagements": 15,
+          "averageValue": 7500,
+          "total": 112500
+        },
+        "contractManagement": {
+          "description": "Contract management services at $5,000-$25,000",
+          "projectedEngagements": 8,
+          "averageValue": 12000,
+          "total": 96000
+        },
+        "businessDevelopment": {
+          "description": "Business development consulting at $2,500-$10,000",
+          "projectedEngagements": 12,
+          "averageValue": 5000,
+          "total": 60000
+        },
+        "subtotal": 268500
+      },
+      "academyTraining": {
+        "courses": {
+          "description": "Educational courses at $997-$5,997",
+          "projectedEnrollments": 50,
+          "averageValue": 2500,
+          "total": 125000
+        },
+        "certifications": {
+          "description": "Certification programs at $1,500-$3,500",
+          "projectedEnrollments": 25,
+          "averageValue": 2000,
+          "total": 50000
+        },
+        "corporateTraining": {
+          "description": "Corporate training engagements",
+          "projectedEngagements": 4,
+          "averageValue": 10000,
+          "total": 40000
+        },
+        "subtotal": 215000
+      },
+      "platformSubscriptions": {
+        "starterPlan": {
+          "description": "$49/month subscriptions",
+          "projectedSubscribers": 30,
+          "monthlyValue": 49,
+          "annualTotal": 17640
+        },
+        "professionalPlan": {
+          "description": "$149/month subscriptions",
+          "projectedSubscribers": 15,
+          "monthlyValue": 149,
+          "annualTotal": 26820
+        },
+        "enterprisePlan": {
+          "description": "$399/month subscriptions",
+          "projectedSubscribers": 5,
+          "monthlyValue": 399,
+          "annualTotal": 23940
+        },
+        "subtotal": 68400
+      },
+      "grantFunding": {
+        "description": "Projected grant awards",
+        "applications": 10,
+        "expectedAwards": 3,
+        "averageAward": 75000,
+        "total": 225000
+      },
+      "totalRevenue": 776900
+    },
+    "expenses": {
+      "personnel": {
+        "salaries": {
+          "ceo": 85000,
+          "cfo": 75000,
+          "chiefEducationOfficer": 65000,
+          "hrManager": 55000,
+          "grantWriter": 50000,
+          "platformAdmin": 45000,
+          "total": 375000
+        },
+        "payrollTaxes": {
+          "rate": 0.0765,
+          "total": 28688
+        },
+        "benefits": {
+          "healthInsurance": 36000,
+          "retirement401k": 11250,
+          "total": 47250
+        },
+        "subtotal": 450938
+      },
+      "operations": {
+        "officeSpace": {
+          "rent": 24000,
+          "utilities": 3600,
+          "total": 27600
+        },
+        "technology": {
+          "software": 12000,
+          "hosting": 6000,
+          "equipment": 8000,
+          "total": 26000
+        },
+        "insurance": {
+          "generalLiability": 3600,
+          "professionalLiability": 4800,
+          "workersComp": 2400,
+          "total": 10800
+        },
+        "subtotal": 64400
+      },
+      "marketing": {
+        "digitalMarketing": 18000,
+        "contentCreation": 12000,
+        "events": 6000,
+        "materials": 4000,
+        "subtotal": 40000
+      },
+      "professional": {
+        "legal": 12000,
+        "accounting": 8000,
+        "consulting": 6000,
+        "subtotal": 26000
+      },
+      "programDelivery": {
+        "trainingMaterials": 15000,
+        "certificationCosts": 8000,
+        "platformDevelopment": 25000,
+        "subtotal": 48000
+      },
+      "administrative": {
+        "travel": 12000,
+        "supplies": 3000,
+        "miscellaneous": 5000,
+        "subtotal": 20000
+      },
+      "totalExpenses": 649338
+    },
+    "netIncome": 127562,
+    "profitMargin": "16.4%"
+  },
+  "cashFlowProjection": {
+    "period": "January 2026 - December 2026",
+    "monthly": [
+      {"month": "January", "revenue": 45000, "expenses": 54111, "netCashFlow": -9111, "endingBalance": 40889},
+      {"month": "February", "revenue": 52000, "expenses": 54111, "netCashFlow": -2111, "endingBalance": 38778},
+      {"month": "March", "revenue": 58000, "expenses": 54111, "netCashFlow": 3889, "endingBalance": 42667},
+      {"month": "April", "revenue": 62000, "expenses": 54111, "netCashFlow": 7889, "endingBalance": 50556},
+      {"month": "May", "revenue": 65000, "expenses": 54111, "netCashFlow": 10889, "endingBalance": 61445},
+      {"month": "June", "revenue": 68000, "expenses": 54111, "netCashFlow": 13889, "endingBalance": 75334},
+      {"month": "July", "revenue": 70000, "expenses": 54111, "netCashFlow": 15889, "endingBalance": 91223},
+      {"month": "August", "revenue": 72000, "expenses": 54111, "netCashFlow": 17889, "endingBalance": 109112},
+      {"month": "September", "revenue": 75000, "expenses": 54111, "netCashFlow": 20889, "endingBalance": 130001},
+      {"month": "October", "revenue": 78000, "expenses": 54111, "netCashFlow": 23889, "endingBalance": 153890},
+      {"month": "November", "revenue": 65000, "expenses": 54111, "netCashFlow": 10889, "endingBalance": 164779},
+      {"month": "December", "revenue": 66900, "expenses": 54111, "netCashFlow": 12789, "endingBalance": 177568}
+    ],
+    "startingCash": 50000,
+    "endingCash": 177568,
+    "notes": "Assumes $50,000 initial capitalization. Revenue ramps up through year as client base grows."
+  },
+  "balanceSheet": {
+    "asOf": "December 31, 2026 (Projected)",
+    "assets": {
+      "current": {
+        "cash": 177568,
+        "accountsReceivable": 45000,
+        "prepaidExpenses": 8000,
+        "totalCurrent": 230568
+      },
+      "fixed": {
+        "equipment": 15000,
+        "accumulatedDepreciation": -3000,
+        "netFixed": 12000
+      },
+      "other": {
+        "securityDeposits": 4000,
+        "totalOther": 4000
+      },
+      "totalAssets": 246568
+    },
+    "liabilities": {
+      "current": {
+        "accountsPayable": 18000,
+        "accruedExpenses": 12000,
+        "deferredRevenue": 25000,
+        "totalCurrent": 55000
+      },
+      "longTerm": {
+        "notes": 0,
+        "totalLongTerm": 0
+      },
+      "totalLiabilities": 55000
+    },
+    "equity": {
+      "memberContributions": 50000,
+      "retainedEarnings": 127562,
+      "currentYearEarnings": 14006,
+      "totalEquity": 191568
+    },
+    "totalLiabilitiesAndEquity": 246568
+  },
+  "incomeStatement": {
+    "period": "January 1, 2026 - December 31, 2026 (Projected)",
+    "revenue": {
+      "professionalServices": 268500,
+      "academyTraining": 215000,
+      "platformSubscriptions": 68400,
+      "grantFunding": 225000,
+      "totalRevenue": 776900
+    },
+    "costOfServices": {
+      "directLabor": 180000,
+      "materials": 23000,
+      "platformCosts": 15000,
+      "totalCostOfServices": 218000
+    },
+    "grossProfit": 558900,
+    "grossMargin": "71.9%",
+    "operatingExpenses": {
+      "salariesAndWages": 270938,
+      "rentAndUtilities": 27600,
+      "marketing": 40000,
+      "professional": 26000,
+      "insurance": 10800,
+      "technology": 26000,
+      "administrative": 20000,
+      "totalOperating": 421338
+    },
+    "operatingIncome": 137562,
+    "otherExpenses": {
+      "interest": 0,
+      "depreciation": 3000,
+      "other": 7000,
+      "totalOther": 10000
+    },
+    "netIncome": 127562,
+    "netProfitMargin": "16.4%"
+  },
+  "startupCosts": {
+    "description": "Initial investment required to launch operations",
+    "items": [
+      {"category": "Legal & Formation", "item": "LLC Formation & Operating Agreement", "cost": 2500},
+      {"category": "Legal & Formation", "item": "Trademark Registration", "cost": 1500},
+      {"category": "Legal & Formation", "item": "Contract Templates", "cost": 3000},
+      {"category": "Technology", "item": "Platform Development (Initial)", "cost": 25000},
+      {"category": "Technology", "item": "Website & Branding", "cost": 8000},
+      {"category": "Technology", "item": "Software Licenses (Year 1)", "cost": 6000},
+      {"category": "Equipment", "item": "Computers & Hardware", "cost": 8000},
+      {"category": "Equipment", "item": "Office Furniture", "cost": 5000},
+      {"category": "Marketing", "item": "Initial Marketing Campaign", "cost": 10000},
+      {"category": "Marketing", "item": "Collateral & Materials", "cost": 3000},
+      {"category": "Operations", "item": "Office Setup & Deposits", "cost": 8000},
+      {"category": "Operations", "item": "Insurance (Initial Premium)", "cost": 5000},
+      {"category": "Working Capital", "item": "3-Month Operating Reserve", "cost": 65000}
+    ],
+    "totalStartupCosts": 150000,
+    "fundingSources": [
+      {"source": "Member Contributions", "amount": 50000},
+      {"source": "Grant Funding (Startup)", "amount": 75000},
+      {"source": "Line of Credit", "amount": 25000}
+    ]
+  },
+  "grantBudgetTemplate": {
+    "projectTitle": "[Grant Project Name]",
+    "requestedAmount": 0,
+    "projectPeriod": "12 months",
+    "categories": [
+      {
+        "category": "Personnel",
+        "items": [
+          {"description": "Project Director (0.5 FTE)", "calculation": "50% of $85,000", "amount": 42500},
+          {"description": "Program Coordinator (1.0 FTE)", "calculation": "100% of $45,000", "amount": 45000},
+          {"description": "Fringe Benefits (25%)", "calculation": "25% of salaries", "amount": 21875}
+        ],
+        "subtotal": 109375
+      },
+      {
+        "category": "Equipment",
+        "items": [
+          {"description": "Computers for Training Lab", "calculation": "10 units @ $1,200", "amount": 12000},
+          {"description": "Presentation Equipment", "calculation": "Projector, screens", "amount": 3000}
+        ],
+        "subtotal": 15000
+      },
+      {
+        "category": "Supplies",
+        "items": [
+          {"description": "Training Materials", "calculation": "100 participants @ $50", "amount": 5000},
+          {"description": "Office Supplies", "calculation": "Monthly allocation", "amount": 2400}
+        ],
+        "subtotal": 7400
+      },
+      {
+        "category": "Contractual",
+        "items": [
+          {"description": "External Trainers", "calculation": "4 sessions @ $2,500", "amount": 10000},
+          {"description": "Evaluation Consultant", "calculation": "Lump sum", "amount": 8000}
+        ],
+        "subtotal": 18000
+      },
+      {
+        "category": "Other",
+        "items": [
+          {"description": "Participant Stipends", "calculation": "50 participants @ $200", "amount": 10000},
+          {"description": "Marketing & Outreach", "calculation": "Recruitment costs", "amount": 5000},
+          {"description": "Travel", "calculation": "Site visits, conferences", "amount": 4000}
+        ],
+        "subtotal": 19000
+      },
+      {
+        "category": "Indirect Costs",
+        "items": [
+          {"description": "Indirect Rate (10%)", "calculation": "10% of direct costs", "amount": 16878}
+        ],
+        "subtotal": 16878
+      }
+    ],
+    "totalBudget": 185653
+  }
+}

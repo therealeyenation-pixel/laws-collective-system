@@ -1,0 +1,332 @@
+{
+  "metadata": {
+    "classification": "CONFIDENTIAL - FOUNDER/TRUSTEE ONLY",
+    "lastUpdated": "2026-01-17",
+    "document": "Founder Income Structure",
+    "purpose": "Define and track all income streams for Founder/Matriarch/CEO"
+  },
+  "founder": {
+    "name": "LaShanna Russell",
+    "roles": [
+      "Founder/Matriarch",
+      "Chief Executive Officer",
+      "Trustee - Calea Freeman Family Trust",
+      "Managing Member - The L.A.W.S. Collective, LLC",
+      "Managing Member - LuvOnPurpose Autonomous Wealth System LLC",
+      "Managing Member - Real-Eye-Nation LLC"
+    ]
+  },
+  "incomeStreams": {
+    "trustDistributions": {
+      "name": "Trust Distributions",
+      "source": "Calea Freeman Family Trust",
+      "description": "Distributions from trust assets and LLC ownership stakes held by the Trust",
+      "mechanism": "Trustee authorizes distributions to beneficiaries per trust document",
+      "frequency": "Monthly, Quarterly, or As-Needed",
+      "taxTreatment": "Trust income - may be taxed at trust level or passed through to beneficiary",
+      "ledgerCategory": "TRUST_DISTRIBUTION",
+      "ledgerTracking": {
+        "trackBy": "Distribution date, amount, source asset",
+        "reportingPeriod": "Monthly",
+        "documentation": "Trust distribution resolution, bank transfer records"
+      },
+      "estimatedAnnual": {
+        "startup": "$0 - $24,000",
+        "growth": "$24,000 - $60,000",
+        "mature": "$60,000+"
+      }
+    },
+    "llcDistributions": {
+      "name": "LLC Member Distributions",
+      "description": "Profit distributions from LLC ownership as Managing Member",
+      "mechanism": "Pass-through entity profits distributed to members per Operating Agreement",
+      "frequency": "Quarterly or Annual",
+      "taxTreatment": "Pass-through income on Schedule K-1, self-employment tax on active income",
+      "entities": [
+        {
+          "name": "The L.A.W.S. Collective, LLC",
+          "ownershipPercentage": "TBD per Operating Agreement",
+          "distributionPriority": "After operating expenses and reserves",
+          "ledgerCategory": "LLC_DISTRIBUTION_LAWS_COLLECTIVE"
+        },
+        {
+          "name": "LuvOnPurpose Autonomous Wealth System LLC",
+          "abbreviation": "LAWS, LLC",
+          "ownershipPercentage": "TBD per Operating Agreement",
+          "distributionPriority": "After operating expenses and reserves",
+          "ledgerCategory": "LLC_DISTRIBUTION_LAWS_LLC"
+        },
+        {
+          "name": "Real-Eye-Nation LLC",
+          "ownershipPercentage": "TBD per Operating Agreement",
+          "distributionPriority": "After operating expenses and reserves",
+          "ledgerCategory": "LLC_DISTRIBUTION_REAL_EYE"
+        }
+      ],
+      "ledgerTracking": {
+        "trackBy": "Entity, distribution date, amount, K-1 reference",
+        "reportingPeriod": "Quarterly",
+        "documentation": "Distribution resolution, bank transfer, Schedule K-1"
+      }
+    },
+    "tokenEarnings": {
+      "name": "Token Economy Earnings",
+      "description": "Earnings from the LuvOnPurpose token ecosystem",
+      "mechanism": "Tokens earned through governance, contributions, and system participation",
+      "tokenTypes": [
+        {
+          "token": "MIRROR",
+          "earnedFor": "Self-reflection, personal development activities",
+          "founderActivities": ["Vision setting", "Strategic planning", "Personal growth documentation"]
+        },
+        {
+          "token": "GIFT",
+          "earnedFor": "Contributions to others, mentorship, teaching",
+          "founderActivities": ["Mentoring team members", "Community teaching", "Knowledge sharing"]
+        },
+        {
+          "token": "SPARK",
+          "earnedFor": "Innovation, new ideas, creative contributions",
+          "founderActivities": ["New program development", "System innovation", "Creative direction"]
+        },
+        {
+          "token": "HOUSE",
+          "earnedFor": "Family/organizational building, governance",
+          "founderActivities": ["Governance decisions", "Organizational development", "Family coordination"]
+        },
+        {
+          "token": "CROWN",
+          "earnedFor": "Leadership, legacy building, succession planning",
+          "founderActivities": ["Executive leadership", "Legacy documentation", "Succession planning"]
+        }
+      ],
+      "conversion": {
+        "method": "Token-to-cash conversion at established rates",
+        "frequency": "Monthly or as accumulated",
+        "minimumConversion": "100 tokens"
+      },
+      "ledgerCategory": "TOKEN_EARNINGS",
+      "ledgerTracking": {
+        "trackBy": "Token type, activity, date earned, conversion date, cash value",
+        "reportingPeriod": "Monthly",
+        "documentation": "Token transaction log, conversion receipts"
+      }
+    },
+    "consultingFees": {
+      "name": "Consulting/Contractor Fees",
+      "description": "Payments for specific services contracted by entities",
+      "mechanism": "1099 contractor agreement between Founder and entity",
+      "serviceTypes": [
+        {
+          "service": "Contract Management",
+          "description": "Contract drafting, review, negotiation, compliance monitoring, and dispute resolution support",
+          "complexity": "High - requires legal knowledge, attention to detail, significant liability",
+          "suggestedRate": {
+            "hourly": "$175 - $350/hour",
+            "projectBased": {
+              "basicReview": "$500 - $1,500 per contract",
+              "drafting": "$1,000 - $5,000 per contract",
+              "complexNegotiations": "$2,500 - $10,000 per deal",
+              "ongoingManagement": "$2,000 - $5,000/month retainer",
+              "complianceAudit": "$1,500 - $7,500 per audit"
+            }
+          },
+          "activities": [
+            "Drafting and reviewing agreements",
+            "Negotiating terms with vendors/partners",
+            "Compliance monitoring and reporting",
+            "Contract renewal tracking",
+            "Dispute resolution support",
+            "Vendor/partner relationship management"
+          ]
+        },
+        {
+          "service": "Strategic Advisory",
+          "description": "High-level strategic guidance and decision support",
+          "suggestedRate": "$150 - $250/hour or project-based"
+        },
+        {
+          "service": "Training Delivery",
+          "description": "Conducting Academy courses or workshops",
+          "suggestedRate": "$500 - $1,500 per session"
+        },
+        {
+          "service": "Grant Consulting",
+          "description": "Grant strategy and narrative development",
+          "suggestedRate": "$100 - $175/hour"
+        },
+        {
+          "service": "Community Engagement",
+          "description": "Speaking, representing organization at events",
+          "suggestedRate": "$250 - $1,000 per event"
+        },
+        {
+          "service": "Curriculum Development",
+          "description": "Creating educational content, course materials, and training programs",
+          "suggestedRate": "$125 - $200/hour or $2,000 - $10,000 per course"
+        }
+      ],
+      "taxTreatment": "1099-NEC income, self-employment tax applies",
+      "ledgerCategory": "CONSULTING_FEES",
+      "ledgerTracking": {
+        "trackBy": "Service type, entity billed, hours/project, invoice number, payment date",
+        "reportingPeriod": "Monthly",
+        "documentation": "Contractor agreement, invoices, 1099-NEC"
+      }
+    },
+    "ipLicensing": {
+      "name": "Intellectual Property Licensing",
+      "description": "Royalties for IP owned personally and licensed to entities",
+      "mechanism": "Licensing agreement between Founder (IP owner) and entity (licensee)",
+      "ipTypes": [
+        {
+          "type": "Curriculum",
+          "description": "Academy course content, training materials",
+          "royaltyStructure": "Per-student fee or percentage of course revenue"
+        },
+        {
+          "type": "Brand/Trademarks",
+          "description": "LuvOnPurpose brand, L.A.W.S. framework",
+          "royaltyStructure": "Annual licensing fee or percentage of branded revenue"
+        },
+        {
+          "type": "Systems/Processes",
+          "description": "Proprietary business systems, automation frameworks",
+          "royaltyStructure": "Usage-based fee or flat annual license"
+        },
+        {
+          "type": "Content",
+          "description": "Books, videos, digital content",
+          "royaltyStructure": "Per-sale royalty or subscription share"
+        }
+      ],
+      "taxTreatment": "Royalty income, reported on Schedule E or C",
+      "ledgerCategory": "IP_ROYALTIES",
+      "ledgerTracking": {
+        "trackBy": "IP asset, licensee entity, period, royalty amount",
+        "reportingPeriod": "Quarterly",
+        "documentation": "Licensing agreement, royalty statements, payment records"
+      }
+    },
+    "grantFundedStipends": {
+      "name": "Grant-Funded Stipends",
+      "description": "Compensation funded through grants for specific roles",
+      "source": "LuvOnPurpose Outreach Temple and Academy Society, Inc. (508)",
+      "mechanism": "Grant budget includes Founder/Program Director stipend as allowable cost",
+      "requirements": [
+        "Must be reasonable and comparable to similar positions",
+        "Must be documented in grant budget and narrative",
+        "Must perform actual work for the grant-funded program",
+        "Subject to grant compliance and reporting"
+      ],
+      "suggestedRoles": [
+        {
+          "role": "Program Director",
+          "description": "Oversight of grant-funded programs",
+          "typicalStipend": "$500 - $2,000/month per grant"
+        },
+        {
+          "role": "Curriculum Developer",
+          "description": "Creating educational content for grant programs",
+          "typicalStipend": "Project-based, $2,000 - $10,000"
+        },
+        {
+          "role": "Community Liaison",
+          "description": "Representing organization in community partnerships",
+          "typicalStipend": "$300 - $1,000/month"
+        }
+      ],
+      "taxTreatment": "W-2 or 1099 depending on structure",
+      "ledgerCategory": "GRANT_STIPEND",
+      "ledgerTracking": {
+        "trackBy": "Grant name, role, period, amount, compliance status",
+        "reportingPeriod": "Per grant reporting cycle",
+        "documentation": "Grant agreement, time records, deliverables"
+      }
+    }
+  },
+  "ledgerIntegration": {
+    "description": "All Founder income is tracked in the LuvLedger system",
+    "categories": [
+      "TRUST_DISTRIBUTION",
+      "LLC_DISTRIBUTION_LAWS_COLLECTIVE",
+      "LLC_DISTRIBUTION_LAWS_LLC",
+      "LLC_DISTRIBUTION_REAL_EYE",
+      "TOKEN_EARNINGS",
+      "CONSULTING_FEES",
+      "IP_ROYALTIES",
+      "GRANT_STIPEND"
+    ],
+    "reports": [
+      {
+        "name": "Founder Income Summary",
+        "frequency": "Monthly",
+        "includes": ["All income categories", "YTD totals", "Comparison to prior periods"]
+      },
+      {
+        "name": "Tax Preparation Report",
+        "frequency": "Annual",
+        "includes": ["Income by category", "Supporting documentation references", "Estimated tax liability"]
+      },
+      {
+        "name": "Entity Contribution Report",
+        "frequency": "Quarterly",
+        "includes": ["Income by source entity", "Token earnings by activity", "Consulting hours by service"]
+      }
+    ],
+    "privacy": {
+      "accessLevel": "Founder/Trustee Only",
+      "encryption": "All financial data encrypted at rest",
+      "auditTrail": "All changes logged with timestamp and user"
+    }
+  },
+  "taxConsiderations": {
+    "estimatedTaxes": {
+      "frequency": "Quarterly",
+      "dueDates": ["April 15", "June 15", "September 15", "January 15"],
+      "calculation": "Based on projected annual income from all streams"
+    },
+    "selfEmploymentTax": {
+      "applies": ["Consulting fees", "Active LLC income", "Some token earnings"],
+      "rate": "15.3% (12.4% Social Security + 2.9% Medicare)",
+      "deduction": "50% of SE tax deductible"
+    },
+    "passThrough": {
+      "applies": ["LLC distributions"],
+      "benefit": "Potential 20% QBI deduction under Section 199A"
+    },
+    "trustIncome": {
+      "note": "Consult tax advisor for optimal trust distribution timing"
+    }
+  },
+  "projectedIncome": {
+    "year1": {
+      "trustDistributions": "$0 - $12,000",
+      "llcDistributions": "$0 - $24,000",
+      "tokenEarnings": "$6,000 - $18,000",
+      "consultingFees": "$12,000 - $36,000",
+      "ipRoyalties": "$0 - $6,000",
+      "grantStipends": "$6,000 - $24,000",
+      "totalRange": "$24,000 - $120,000"
+    },
+    "year3": {
+      "trustDistributions": "$24,000 - $48,000",
+      "llcDistributions": "$36,000 - $72,000",
+      "tokenEarnings": "$18,000 - $36,000",
+      "consultingFees": "$24,000 - $48,000",
+      "ipRoyalties": "$12,000 - $24,000",
+      "grantStipends": "$12,000 - $36,000",
+      "totalRange": "$126,000 - $264,000"
+    },
+    "year5": {
+      "trustDistributions": "$48,000 - $96,000",
+      "llcDistributions": "$72,000 - $144,000",
+      "tokenEarnings": "$36,000 - $60,000",
+      "consultingFees": "$36,000 - $60,000",
+      "ipRoyalties": "$24,000 - $48,000",
+      "grantStipends": "$18,000 - $48,000",
+      "totalRange": "$234,000 - $456,000"
+    },
+    "notes": "Projections assume successful grant acquisition, business growth, and token economy maturation. Actual results will vary."
+  }
+}
