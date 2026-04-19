@@ -74,9 +74,9 @@ export default function Landing() {
               <a href="#demo" className="text-muted-foreground hover:text-foreground transition-colors">
                 Demo
               </a>
-              <a href="#founder" className="text-muted-foreground hover:text-foreground transition-colors">
-                Founder
-              </a>
+              <Link href="/governance" className="text-muted-foreground hover:text-foreground transition-colors">
+                Our Structure
+              </Link>
               <Link href="/academy" className="text-muted-foreground hover:text-foreground transition-colors">
                 Academy
               </Link>
@@ -173,27 +173,11 @@ export default function Landing() {
             <div className="hidden lg:flex justify-center">
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 to-accent/10 rounded-2xl blur-xl" />
-                <div className="relative bg-card border border-border rounded-2xl p-8 space-y-6 shadow-lg">
-                  <h3 className="text-xl font-bold text-center">Your Journey</h3>
-                  <div className="space-y-4">
-                    {[
-                      { step: "1", label: "Join & Complete Profile", desc: "Create your account and tell us about yourself" },
-                      { step: "2", label: "Business Simulators", desc: "Validate your concept through guided training" },
-                      { step: "3", label: "Business Formation", desc: "Legally establish your business entity" },
-                      { step: "4", label: "Establish Your House", desc: "Your customized management structure goes live" },
-                    ].map((item) => (
-                      <div key={item.step} className="flex items-start gap-4">
-                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
-                          {item.step}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm">{item.label}</p>
-                          <p className="text-xs text-muted-foreground">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <img
+                  src="/manus-storage/brand-hero-tree_f7ff65ee.png"
+                  alt="L.A.W.S. Collective - Generational Wealth Tree"
+                  className="relative w-[480px] h-auto rounded-2xl shadow-lg object-contain"
+                />
               </div>
             </div>
           </div>
@@ -336,36 +320,42 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Meet Luv / Founder Section */}
-      <section id="founder" className="bg-secondary/30 border-y border-border">
+      {/* Our Mission Section */}
+      <section id="mission" className="bg-secondary/30 border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold">Meet Luv</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">Our Mission</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Luv's journey to building The L.A.W.S. Collective started with a
-                simple question: why do so many families struggle to build wealth
-                that lasts? With a career rooted in contract administration across
-                both government and commercial sectors, she saw firsthand how
-                systems are built — and how they often leave everyday families
-                behind.
+                The L.A.W.S. Collective was born from a simple question: why do
+                so many families struggle to build wealth that lasts? With roots
+                in contract administration across government and commercial
+                sectors, the Collective's founding team saw firsthand how systems
+                are built — and how they often leave everyday families behind.
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 That experience, combined with years of real-world observation,
                 community conversations, and a deep commitment to understanding
-                how wealth actually works, led her to create something different.
-                The L.A.W.S. Collective is her answer — a framework built on
-                purpose, not theory, designed to help families reconnect with
-                their roots and build something that outlasts any single
-                generation.
+                how wealth actually works, led to something different. The
+                L.A.W.S. Collective is a framework built on purpose, not theory
+                — designed to help families reconnect with their roots and build
+                something that outlasts any single generation.
               </p>
+              <Link href="/governance">
+                <Button variant="outline" className="gap-2 mt-2">
+                  View Our Structure
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
             </div>
             <div className="flex justify-center">
-              <img
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310519663294252884/SPWUc63a3tjYuzCxiuEomB/luv-photo_38d8d9aa.jpg"
-                alt="Luv - Founder of The L.A.W.S. Collective"
-                className="w-80 h-80 rounded-xl object-cover border border-border shadow-lg"
-              />
+              <div className="relative w-80 h-80 rounded-2xl overflow-hidden">
+                <img
+                  src="/manus-storage/brand-icon-laws_843a9c17.png"
+                  alt="L.A.W.S. Collective Emblem"
+                  className="w-full h-full object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -523,9 +513,9 @@ export default function Landing() {
                 <a href="#framework" className="block hover:text-foreground transition-colors">
                   L.A.W.S. Framework
                 </a>
-                <a href="#founder" className="block hover:text-foreground transition-colors">
-                  Meet Luv
-                </a>
+                <Link href="/governance" className="block hover:text-foreground transition-colors">
+                  Our Structure
+                </Link>
               </div>
             </div>
             <div className="space-y-3">

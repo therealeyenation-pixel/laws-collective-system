@@ -6,7 +6,7 @@ import { trpc } from "@/lib/trpc";
 import { ArrowLeft, Bot, Send, Loader2, Sparkles, MessageSquare, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useRoute, useLocation } from "wouter";
-import { Streamdown } from "streamdown";
+import { LazyStreamdown } from "@/components/LazyStreamdown";
 
 // Map agent types to display names and descriptions
 const AGENT_INFO: Record<string, { name: string; description: string; department: string }> = {
@@ -184,7 +184,7 @@ export default function AgentChat() {
                   }`}
                 >
                   {msg.role === "assistant" ? (
-                    <Streamdown>{msg.content}</Streamdown>
+                    <LazyStreamdown>{msg.content}</LazyStreamdown>
                   ) : (
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                   )}

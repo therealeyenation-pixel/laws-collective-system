@@ -28,6 +28,8 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 3000,
     modulePreload: false,
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -43,6 +45,12 @@ export default defineConfig({
           if (id.includes("framer-motion")) return "vendor-motion";
           // Stripe is only needed for payment pages
           if (id.includes("@stripe") || id.includes("stripe")) return "vendor-stripe";
+          // Group remaining large node_modules to reduce chunk count and memory
+          if (id.includes("@radix-ui")) return "vendor-radix";
+          if (id.includes("react-dom")) return "vendor-react";
+          if (id.includes("@tanstack") || id.includes("@trpc")) return "vendor-trpc";
+          if (id.includes("lucide-react")) return "vendor-icons";
+          if (id.includes("date-fns")) return "vendor-datefns";
           // Let Rollup handle everything else naturally - no forced grouping
           return undefined;
         },

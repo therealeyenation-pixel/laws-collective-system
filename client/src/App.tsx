@@ -182,6 +182,7 @@ const VolunteerPage = lazy(() => import("@/pages/VolunteerPage"));
 const HouseManagement = lazy(() => import("./pages/HouseManagement"));
 const TrustVisualization = lazy(() => import("./pages/TrustVisualization"));
 const EntityStructure = lazy(() => import("./pages/EntityStructure"));
+const GovernanceStructure = lazy(() => import("./pages/GovernanceStructure"));
 const FinancialStatements = lazy(() => import("./pages/FinancialStatements"));
 const BoardResolutions = lazy(() => import("./pages/BoardResolutions"));
 const ContingencyOffers = lazy(() => import("./pages/ContingencyOffers"));
@@ -580,6 +581,7 @@ function Router() {
       <Route path="/contact-us" component={ContactUs} />
       <Route path="/brand-guide" component={BrandGuide} />
       <Route path="/faq" component={FAQ} />
+      <Route path="/governance" component={GovernanceStructure} />
       <Route path="/purple-heart" component={PurpleHeart} />
       <Route path="/impact-dashboard" component={ImpactDashboard} />
       <Route path="/indigenous-rights" component={IndigenousRights} />

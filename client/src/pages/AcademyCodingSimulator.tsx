@@ -13,7 +13,7 @@ import {
   BookOpen, Cpu, Palette, Globe, Braces, Bot, Sparkles, ChevronRight,
   Terminal, FileCode, Layers, Zap
 } from "lucide-react";
-import { Streamdown } from "streamdown";
+import { LazyStreamdown } from "@/components/LazyStreamdown";
 
 // Language configurations
 const LANGUAGES = [
@@ -690,7 +690,7 @@ export default function AcademyCodingSimulator() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm">
-                <Streamdown>{aiHint}</Streamdown>
+                <LazyStreamdown>{aiHint}</LazyStreamdown>
               </CardContent>
             </Card>
           )}

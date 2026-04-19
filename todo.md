@@ -12922,3 +12922,25 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Build admin dashboard showing waitlist metrics
 - [x] Show total signups, interest breakdown, daily growth
 - [x] Add ability to export waitlist data
+
+## Phase 36: Privacy-First Brand Imagery + Governance Page + Deployment Fix
+
+### Phase 36a: Fix Deployment OOM (exit code 137)
+- [ ] Investigate and fix build memory issue causing deployment failure
+- [ ] Optimize bundle size or split chunks to reduce memory during build
+
+### Phase 36b: AI-Generated Brand Imagery
+- [x] Generate symbolic hero image (tree/roots/flame concept with L.A.W.S. elements)
+- [x] Generate community vision image (diverse families building together)
+- [x] Upload images to webdev static assets
+
+### Phase 36c: Landing Page Privacy Update
+- [x] Remove any personal photos from landing page
+- [x] Replace with AI-generated symbolic brand imagery
+- [x] Ensure zero personal identity exposure on all public-facing pages
+
+### Phase 36d: Governance & Structure Page
+- [x] Build Governance & Structure page showing entity hierarchy
+- [x] List entities professionally without personal names
+- [x] Show L.A.W.S. Collective LLC, Real-Eye-Nation LLC, Academy, Trust structure
+- [x] Use "Founding Members" and "The Collective" as identity references
