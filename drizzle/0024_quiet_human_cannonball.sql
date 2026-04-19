@@ -1,4 +1,4 @@
-CREATE TABLE `apprenticeship_applications` (
+CREATE TABLE IF NOT EXISTS `apprenticeship_applications` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`userId` int NOT NULL,
 	`partnerId` int NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE `apprenticeship_applications` (
 	`ap_app_status` enum('draft','submitted','under_review','interview','accepted','rejected','withdrawn','placed') NOT NULL DEFAULT 'draft',
 	`coverLetter` text,
 	`resumeUrl` varchar(500),
-	`relevantSkills` json DEFAULT ('[]'),
+	`relevantSkills` json,
 	`educationLevel` varchar(100),
 	`preferredStartDate` timestamp,
 	`adminNotes` text,
@@ -20,7 +20,7 @@ CREATE TABLE `apprenticeship_applications` (
 	CONSTRAINT `apprenticeship_applications_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `apprenticeship_partners` (
+CREATE TABLE IF NOT EXISTS `apprenticeship_partners` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`name` varchar(255) NOT NULL,
 	`slug` varchar(255) NOT NULL,
@@ -30,9 +30,9 @@ CREATE TABLE `apprenticeship_partners` (
 	`contactPhone` varchar(50),
 	`logoUrl` varchar(500),
 	`industry` varchar(100) NOT NULL,
-	`tradeCategories` json DEFAULT ('[]'),
-	`programTypes` json DEFAULT ('[]'),
-	`locations` json DEFAULT ('[]'),
+	`tradeCategories` json,
+	`programTypes` json,
+	`locations` json,
 	`minAge` int DEFAULT 16,
 	`maxAge` int DEFAULT 99,
 	`durationWeeks` int,

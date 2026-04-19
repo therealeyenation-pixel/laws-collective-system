@@ -22,6 +22,8 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 // Lazy-loaded page components for code-splitting
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const QRHolding = lazy(() => import("./pages/QRHolding"));
+const WaitlistLanding = lazy(() => import("./pages/WaitlistLanding"));
+const RedeemGift = lazy(() => import("./pages/RedeemGift"));
 const Login = lazy(() => import("./pages/Login"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const DocumentAdmin = lazy(() => import("./pages/DocumentAdmin"));
@@ -559,6 +561,8 @@ function Router() {
       <Switch>
       {/* Public routes - no authentication required */}
       <Route path="/qr-holding" component={QRHolding} />
+      <Route path="/waitlist" component={WaitlistLanding} />
+      <Route path="/redeem/:code" component={RedeemGift} />
       <Route path="/login" component={Login} />
       <Route path="/demo" component={ShellDemo} />
       <Route path="/shell-demo" component={ShellDemo} />

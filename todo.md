@@ -12894,3 +12894,31 @@ Comprehensive autonomous telecom infrastructure with offline-first capability, s
 - [x] Implement conflict resolution UI when reconnecting
 - [x] Add offline mode indicators to DashboardLayout
 - [x] Test offline functionality across key pages
+
+## Phase 35: House/Gifting Verification + Waitlist + QR Code Advertisement
+
+### Phase 35a: House/Mirror/Gifting System Audit
+- [x] Audit MIRROR token activation flow
+- [x] Audit GIFT token generation and delivery mechanism
+- [x] Verify SPARK → HOUSE → CROWN token sequence
+- [x] Ensure gifting supports both email delivery and QR code delivery
+- [x] Verify one-time use gift codes with expiration
+- [x] Test end-to-end activation ceremony flow
+
+### Phase 35b: Waitlist Landing Page
+- [x] Build pre-launch waitlist landing page with email capture
+- [x] Include interest categories (Academy, Services, Membership)
+- [x] Add compelling vision messaging and L.A.W.S. framework overview
+- [x] Store waitlist entries in database
+- [x] Add confirmation email/toast on signup
+
+### Phase 35c: QR Code Advertisement
+- [x] Generate QR code pointing to waitlist page
+- [x] Design digital advertisement/flyer with QR code
+- [x] Include L.A.W.S. branding, compelling headline, and CTA
+- [x] Make printable and shareable
+
+### Phase 35d: Waitlist Dashboard
+- [x] Build admin dashboard showing waitlist metrics
+- [x] Show total signups, interest breakdown, daily growth
+- [x] Add ability to export waitlist data

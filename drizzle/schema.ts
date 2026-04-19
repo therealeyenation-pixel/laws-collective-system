@@ -43,8 +43,11 @@ export type InsertUser = typeof users.$inferInsert;
 export const waitlistSignups = mysqlTable("waitlist_signups", {
   id: int("id").autoincrement().primaryKey(),
   email: varchar("email", { length: 320 }).notNull().unique(),
+  fullName: varchar("fullName", { length: 255 }),
   businessName: varchar("businessName", { length: 255 }),
+  interestCategories: json("interestCategories").$type<string[]>(),
   source: varchar("source", { length: 100 }).default("landing_page"),
+  referralCode: varchar("referralCode", { length: 32 }),
   status: mysqlEnum("status", ["pending", "confirmed", "unsubscribed"]).default("pending").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   confirmedAt: timestamp("confirmedAt"),
@@ -2876,6 +2879,12 @@ export const giftTokens = mysqlTable("gift_tokens", {
   claimedAt: timestamp("claimedAt"),
   revokedAt: timestamp("revokedAt"),
   revokeReason: text("revokeReason"),
+  
+  // Delivery & redemption
+  redemptionCode: varchar("redemptionCode", { length: 32 }).unique(),
+  deliveryMethod: mysqlEnum("deliveryMethod", ["email", "qr_code", "direct_link", "in_person"]),
+  deliveryStatus: mysqlEnum("deliveryStatus", ["pending", "sent", "delivered", "failed"]).default("pending"),
+  deliverySentAt: timestamp("deliverySentAt"),
   
   // Hash for verification
   giftHash: varchar("giftHash", { length: 64 }),

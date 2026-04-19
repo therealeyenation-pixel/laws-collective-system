@@ -10,6 +10,7 @@ import {
 import { eq, and, desc, sql, gte, lte } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import crypto from "crypto";
+import QRCode from "qrcode";
 
 // Stewardship scrolls required for gift activation (from Scroll 25)
 const STEWARDSHIP_SCROLLS = [7, 14, 16, 25, 26, 27, 28, 29, 30, 31, 32, 33];
@@ -24,6 +25,11 @@ async function requireDb() {
     });
   }
   return database;
+}
+
+// Generate unique redemption code
+function generateRedemptionCode(): string {
+  return crypto.randomBytes(12).toString("base64url").slice(0, 16).toUpperCase();
 }
 
 // Generate gift hash for verification
@@ -160,17 +166,22 @@ export const giftingSystemRouter = router({
         createdAt: giftData.createdAt,
       });
 
+      const redemptionCode = generateRedemptionCode();
+
       const [gift] = await database
         .insert(giftTokens)
         .values({
           ...giftData,
           giftHash,
+          redemptionCode,
+          deliveryStatus: "pending" as const,
         })
         .$returningId();
 
       return {
         id: gift.id,
         giftHash,
+        redemptionCode,
         status: "pending",
         message: "Mirror Gift created. Awaiting lineage verification.",
       };
@@ -232,11 +243,15 @@ export const giftingSystemRouter = router({
         createdAt: giftData.createdAt,
       });
 
+      const adaptiveRedemptionCode = generateRedemptionCode();
+
       const [gift] = await database
         .insert(giftTokens)
         .values({
           ...giftData,
           giftHash,
+          redemptionCode: adaptiveRedemptionCode,
+          deliveryStatus: "pending" as const,
         })
         .$returningId();
 
@@ -254,6 +269,7 @@ export const giftingSystemRouter = router({
       return {
         id: gift.id,
         giftHash,
+        redemptionCode: adaptiveRedemptionCode,
         status: "pending",
         message: "Adaptive Gift created successfully.",
       };
@@ -305,17 +321,22 @@ export const giftingSystemRouter = router({
         createdAt: giftData.createdAt,
       });
 
+      const lockedRedemptionCode = generateRedemptionCode();
+
       const [gift] = await database
         .insert(giftTokens)
         .values({
           ...giftData,
           giftHash,
+          redemptionCode: lockedRedemptionCode,
+          deliveryStatus: "pending" as const,
         })
         .$returningId();
 
       return {
         id: gift.id,
         giftHash,
+        redemptionCode: lockedRedemptionCode,
         lockExpiresAt,
         status: "awaiting_activation",
         message: `Locked Gift created. Will unlock on ${lockExpiresAt.toISOString()}.`,
@@ -604,5 +625,147 @@ export const giftingSystemRouter = router({
         .orderBy(desc(giftActivationAttempts.createdAt));
 
       return attempts;
+    }),
+
+  // Generate QR code for a gift
+  generateGiftQR: protectedProcedure
+    .input(z.object({ giftId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const database = await requireDb();
+
+      const [gift] = await database
+        .select()
+        .from(giftTokens)
+        .where(
+          and(
+            eq(giftTokens.id, input.giftId),
+            eq(giftTokens.sourceUserId, ctx.user.openId)
+          )
+        )
+        .limit(1);
+
+      if (!gift) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Gift not found" });
+      }
+
+      if (!gift.redemptionCode) {
+        // Generate one if missing (for older gifts)
+        const code = generateRedemptionCode();
+        await database
+          .update(giftTokens)
+          .set({ redemptionCode: code })
+          .where(eq(giftTokens.id, input.giftId));
+        gift.redemptionCode = code;
+      }
+
+      // Generate QR code as data URL
+      const redeemUrl = `${process.env.VITE_APP_URL || ''}/redeem/${gift.redemptionCode}`;
+      const qrDataUrl = await QRCode.toDataURL(redeemUrl, {
+        width: 400,
+        margin: 2,
+        color: { dark: "#1a1a2e", light: "#ffffff" },
+      });
+
+      // Update delivery method
+      await database
+        .update(giftTokens)
+        .set({
+          deliveryMethod: "qr_code" as const,
+          deliveryStatus: "sent" as const,
+          deliverySentAt: new Date(),
+        })
+        .where(eq(giftTokens.id, input.giftId));
+
+      return {
+        qrDataUrl,
+        redemptionCode: gift.redemptionCode,
+        redeemUrl,
+        giftType: gift.giftType,
+        targetName: gift.targetName,
+      };
+    }),
+
+  // Get gift details by redemption code (public - for recipients)
+  getGiftByCode: publicProcedure
+    .input(z.object({ code: z.string() }))
+    .query(async ({ input }) => {
+      const database = await requireDb();
+
+      const [gift] = await database
+        .select({
+          id: giftTokens.id,
+          giftType: giftTokens.giftType,
+          giftMessage: giftTokens.giftMessage,
+          giftDescription: giftTokens.giftDescription,
+          giftStatus: giftTokens.giftStatus,
+          targetName: giftTokens.targetName,
+          createdAt: giftTokens.createdAt,
+        })
+        .from(giftTokens)
+        .where(eq(giftTokens.redemptionCode, input.code))
+        .limit(1);
+
+      if (!gift) {
+        return { found: false, gift: null };
+      }
+
+      return {
+        found: true,
+        gift: {
+          ...gift,
+          isClaimable: gift.giftStatus === "pending" || gift.giftStatus === "awaiting_activation",
+        },
+      };
+    }),
+
+  // Mark gift delivery via email
+  deliverGiftByEmail: protectedProcedure
+    .input(z.object({ giftId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const database = await requireDb();
+
+      const [gift] = await database
+        .select()
+        .from(giftTokens)
+        .where(
+          and(
+            eq(giftTokens.id, input.giftId),
+            eq(giftTokens.sourceUserId, ctx.user.openId)
+          )
+        )
+        .limit(1);
+
+      if (!gift) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Gift not found" });
+      }
+
+      if (!gift.redemptionCode) {
+        const code = generateRedemptionCode();
+        await database
+          .update(giftTokens)
+          .set({ redemptionCode: code })
+          .where(eq(giftTokens.id, input.giftId));
+        gift.redemptionCode = code;
+      }
+
+      // Update delivery method
+      await database
+        .update(giftTokens)
+        .set({
+          deliveryMethod: "email" as const,
+          deliveryStatus: "sent" as const,
+          deliverySentAt: new Date(),
+        })
+        .where(eq(giftTokens.id, input.giftId));
+
+      const redeemUrl = `${process.env.VITE_APP_URL || ''}/redeem/${gift.redemptionCode}`;
+
+      return {
+        success: true,
+        redemptionCode: gift.redemptionCode,
+        redeemUrl,
+        targetEmail: gift.targetEmail,
+        message: "Gift delivery marked. Share the redemption link with the recipient.",
+      };
     }),
 });
