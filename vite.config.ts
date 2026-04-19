@@ -24,25 +24,37 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    // CRITICAL: disable minification to reduce peak memory usage during build
-    minify: false,
+    minify: "esbuild",
     sourcemap: false,
-    chunkSizeWarningLimit: 5000,
+    chunkSizeWarningLimit: 3000,
     modulePreload: false,
-    cssCodeSplit: false,
-    assetsInlineLimit: 0,
-    // Reduce Rollup memory by limiting concurrent operations
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
-        // Fewer, larger chunks = less memory overhead from chunk graph
         manualChunks(id) {
           if (!id.includes("node_modules")) return undefined;
-          // Group ALL vendor code into one chunk to minimize chunk count
-          return "vendor";
+          // Isolate heavy vendor libs that should never be in the initial load
+          if (id.includes("shiki") || id.includes("oniguruma")) return "vendor-shiki";
+          if (id.includes("mermaid") || id.includes("dagre") || id.includes("cytoscape") || id.includes("elkjs")) return "vendor-diagrams";
+          if (id.includes("hls.js")) return "vendor-media";
+          if (id.includes("katex")) return "vendor-katex";
+          // Recharts is large (~350KB) and only used by a few pages
+          if (id.includes("recharts") || id.includes("d3-") || id.includes("victory")) return "vendor-charts";
+          // Framer motion is only used by specific pages
+          if (id.includes("framer-motion")) return "vendor-motion";
+          // Stripe is only needed for payment pages
+          if (id.includes("@stripe") || id.includes("stripe")) return "vendor-stripe";
+          // Group remaining large node_modules to reduce chunk count and memory
+          if (id.includes("@radix-ui")) return "vendor-radix";
+          if (id.includes("react-dom")) return "vendor-react";
+          if (id.includes("@tanstack") || id.includes("@trpc")) return "vendor-trpc";
+          if (id.includes("lucide-react")) return "vendor-icons";
+          if (id.includes("date-fns")) return "vendor-datefns";
+          // Let Rollup handle everything else naturally - no forced grouping
+          return undefined;
         },
       },
-      // Reduce memory by processing fewer modules concurrently
-      maxParallelFileOps: 2,
     },
   },
   server: {

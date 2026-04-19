@@ -159511,24 +159511,31 @@ var vite_config_default = defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    // CRITICAL: disable minification to reduce peak memory usage during build
-    minify: false,
+    minify: "esbuild",
     sourcemap: false,
-    chunkSizeWarningLimit: 5e3,
+    chunkSizeWarningLimit: 3e3,
     modulePreload: false,
-    cssCodeSplit: false,
-    assetsInlineLimit: 0,
-    // Reduce Rollup memory by limiting concurrent operations
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
-        // Fewer, larger chunks = less memory overhead from chunk graph
         manualChunks(id) {
           if (!id.includes("node_modules")) return void 0;
-          return "vendor";
+          if (id.includes("shiki") || id.includes("oniguruma")) return "vendor-shiki";
+          if (id.includes("mermaid") || id.includes("dagre") || id.includes("cytoscape") || id.includes("elkjs")) return "vendor-diagrams";
+          if (id.includes("hls.js")) return "vendor-media";
+          if (id.includes("katex")) return "vendor-katex";
+          if (id.includes("recharts") || id.includes("d3-") || id.includes("victory")) return "vendor-charts";
+          if (id.includes("framer-motion")) return "vendor-motion";
+          if (id.includes("@stripe") || id.includes("stripe")) return "vendor-stripe";
+          if (id.includes("@radix-ui")) return "vendor-radix";
+          if (id.includes("react-dom")) return "vendor-react";
+          if (id.includes("@tanstack") || id.includes("@trpc")) return "vendor-trpc";
+          if (id.includes("lucide-react")) return "vendor-icons";
+          if (id.includes("date-fns")) return "vendor-datefns";
+          return void 0;
         }
-      },
-      // Reduce memory by processing fewer modules concurrently
-      maxParallelFileOps: 2
+      }
     }
   },
   server: {
@@ -159590,14 +159597,6 @@ function serveStatic(app) {
   const clientPublicPath = path2.resolve(import.meta.dirname, "../../", "client", "public");
   if (fs.existsSync(clientPublicPath)) {
     app.use(express.static(clientPublicPath));
-  }
-  console.log(`[Static] import.meta.dirname: ${import.meta.dirname}`);
-  console.log(`[Static] distPath: ${distPath}`);
-  console.log(`[Static] distPath exists: ${fs.existsSync(distPath)}`);
-  console.log(`[Static] index.html exists: ${fs.existsSync(path2.resolve(distPath, "index.html"))}`);
-  if (fs.existsSync(distPath)) {
-    const files = fs.readdirSync(distPath);
-    console.log(`[Static] distPath contents (${files.length} items): ${files.slice(0, 10).join(", ")}${files.length > 10 ? "..." : ""}`);
   }
   if (!fs.existsSync(distPath)) {
     console.error(
