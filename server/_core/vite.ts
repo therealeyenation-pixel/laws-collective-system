@@ -59,6 +59,17 @@ export function serveStatic(app: Express) {
     app.use(express.static(clientPublicPath));
   }
   
+  console.log(`[Static] import.meta.dirname: ${import.meta.dirname}`);
+  console.log(`[Static] distPath: ${distPath}`);
+  console.log(`[Static] distPath exists: ${fs.existsSync(distPath)}`);
+  console.log(`[Static] index.html exists: ${fs.existsSync(path.resolve(distPath, 'index.html'))}`);
+  
+  // List files in distPath for debugging
+  if (fs.existsSync(distPath)) {
+    const files = fs.readdirSync(distPath);
+    console.log(`[Static] distPath contents (${files.length} items): ${files.slice(0, 10).join(', ')}${files.length > 10 ? '...' : ''}`);
+  }
+  
   if (!fs.existsSync(distPath)) {
     console.error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
