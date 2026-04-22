@@ -3,13 +3,25 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MediaPlayer } from "@/components/MediaPlayer";
 import { trpc } from "@/lib/trpc";
 import { Play, Music, Radio, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
+interface Channel {
+  id: number;
+  title: string;
+  category: string;
+  description?: string;
+  contentType: string;
+  streamUrl?: string;
+  artist?: string;
+}
+
 export default function Streaming() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedChannel, setSelectedChannel] = useState<any>(null);
 
   // Fetch approved channels
   const { data: channelsData, isLoading, error } = trpc.streamingContent.getApprovedChannels.useQuery(
@@ -35,12 +47,21 @@ export default function Streaming() {
   }, [channels, searchQuery]);
 
   const handlePlayChannel = (channel: any) => {
-    toast.success(`Playing: ${channel.title}`);
-    // TODO: Implement actual playback
+    if (!channel.streamUrl) {
+      toast.error("Stream URL not available for this channel");
+      return;
+    }
+    setSelectedChannel(channel);
   };
 
   return (
     <DashboardLayout>
+      {selectedChannel && (
+        <MediaPlayer
+          channel={selectedChannel}
+          onClose={() => setSelectedChannel(null)}
+        />
+      )}
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Streaming Hub</h1>
