@@ -144,8 +144,11 @@ export default function AdminChannelDiscovery() {
       const externalIds = Array.from(selectedChannels);
       const result = await approveChannels.mutateAsync({ externalIds });
       if (result.success) {
-        toast.success(`Approved ${result.approved} channels`);
+        // Remove approved channels from UI
+        const updatedChannels = channels.filter((c) => !selectedChannels.has(c.externalId));
+        setChannels(updatedChannels);
         setSelectedChannels(new Set());
+        toast.success(`Approved ${result.approved} channels`);
       } else {
         toast.error(result.message || "Failed to approve channels");
       }
@@ -159,8 +162,11 @@ export default function AdminChannelDiscovery() {
       const externalIds = Array.from(selectedChannels);
       const result = await rejectChannels.mutateAsync({ externalIds });
       if (result.success) {
-        toast.success(`Rejected ${result.rejected} channels`);
+        // Remove rejected channels from UI
+        const updatedChannels = channels.filter((c) => !selectedChannels.has(c.externalId));
+        setChannels(updatedChannels);
         setSelectedChannels(new Set());
+        toast.success(`Rejected ${result.rejected} channels`);
       } else {
         toast.error(result.message || "Failed to reject channels");
       }

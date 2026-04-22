@@ -1,0 +1,1 @@
+ALTER TABLE `streaming_content` MODIFY COLUMN `status` enum('active','archived','offline','maintenance','pending','approved','rejected') NOT NULL DEFAULT 'pending';

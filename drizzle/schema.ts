@@ -19510,6 +19510,11 @@ export const streamingContent = mysqlTable("streaming_content", {
   isVerified: boolean("isVerified").default(false),
   metadata: json("metadata"), // Additional data (country, region, etc.)
   
+  // Channel discovery approval workflow
+  approvalStatus: mysqlEnum("approvalStatus", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  approvedBy: int("approvedBy"), // User ID who approved
+  approvedAt: timestamp("approvedAt"),
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
