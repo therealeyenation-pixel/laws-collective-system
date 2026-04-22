@@ -467,6 +467,7 @@ const AcademyK12EducatorReview = lazy(() => import("@/pages/AcademyK12EducatorRe
 const AcademyK12Assessment = lazy(() => import("@/pages/AcademyK12Assessment"));
 const AcademyCodingSimulator = lazy(() => import("@/pages/AcademyCodingSimulator"));
 const ApprenticeshipPartnerships = lazy(() => import("@/pages/ApprenticeshipPartnerships"));
+const AdminChannelDiscovery = lazy(() => import("@/pages/AdminChannelDiscovery"));
 
 
 // Access levels: user (member), staff, admin, owner
@@ -604,6 +605,7 @@ function Router() {
       <Route path="/investment-reports">{() => <ProtectedRoute component={InvestmentReportDashboard} minRole="admin" />}</Route>
       <Route path="/crypto-wallet">{() => <ProtectedRoute component={CryptoWallet} minRole="staff" />}</Route>
       <Route path="/app-store">{() => <ProtectedRoute component={AppStore} minRole="user" />}</Route>
+      <Route path="/admin/channel-discovery">{() => <ProtectedRoute component={AdminChannelDiscovery} minRole="admin" />}</Route>
       <Route path="/financial-dashboard">{() => <ProtectedRoute component={ConsolidatedFinancialDashboard} minRole="admin" />}</Route>
       <Route path="/verify-signature" component={SignatureVerification} />
       <Route path="/admin/signature-compliance" component={SignatureComplianceAdmin} />
