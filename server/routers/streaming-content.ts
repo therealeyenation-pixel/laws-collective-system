@@ -4,13 +4,14 @@
  * Uses data integration service to fetch from real sources with caching
  */
 
-import { publicProcedure, router } from '../_core/trpc';
+import { publicProcedure, protectedProcedure, router } from '../_core/trpc';
 import { z } from 'zod';
 import {
   fetchIPTVChannels,
   fetchRadioStations,
   fetchMusicTracks,
 } from '../services/data-integration';
+import { discoverAndSyncChannels, getDiscoveryStats } from '../services/channel-discovery';
 
 // In-memory cache for streaming data
 let cachedData: {
@@ -244,5 +245,49 @@ export const streamingContentRouter = router({
         cachedData.lastUpdated + CACHE_EXPIRATION_MS
       ),
     };
+  }),
+
+  /**
+   * Trigger channel auto-discovery (admin only)
+   */
+  triggerDiscovery: protectedProcedure.mutation(async ({ ctx }) => {
+    if (ctx.user?.role !== 'admin' && ctx.user?.role !== 'owner') {
+      throw new Error('Only admins can trigger channel discovery');
+    }
+    
+    try {
+      console.log('[Streaming Content] Admin triggered channel discovery');
+      const result = await discoverAndSyncChannels();
+      return {
+        success: true,
+        message: 'Channel discovery completed',
+        data: result,
+      };
+    } catch (error) {
+      console.error('[Streaming Content] Discovery trigger failed:', error);
+      return {
+        success: false,
+        message: 'Channel discovery failed',
+        error: String(error),
+      };
+    }
+  }),
+
+  /**
+   * Get channel discovery statistics
+   */
+  getDiscoveryStats: publicProcedure.query(async () => {
+    try {
+      return await getDiscoveryStats();
+    } catch (error) {
+      console.error('[Streaming Content] Error getting discovery stats:', error);
+      return {
+        totalChannels: 0,
+        bySource: {},
+        byCategory: {},
+        lastUpdated: new Date(),
+        error: String(error),
+      };
+    }
   }),
 });
