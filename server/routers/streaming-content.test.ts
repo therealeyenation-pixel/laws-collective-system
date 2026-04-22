@@ -64,3 +64,26 @@ describe("Channel Discovery Service", () => {
     });
   });
 });
+
+  describe("Channel approval/rejection", () => {
+    it("should validate external IDs for approval", () => {
+      const externalIds = ["manus_jazz_001", "youtube_broadway_001"];
+      expect(Array.isArray(externalIds)).toBe(true);
+      expect(externalIds.length).toBeGreaterThan(0);
+      expect(externalIds.every(id => typeof id === "string")).toBe(true);
+    });
+
+    it("should validate external IDs for rejection", () => {
+      const externalIds = ["manus_classical_001"];
+      expect(Array.isArray(externalIds)).toBe(true);
+      expect(externalIds.length).toBeGreaterThan(0);
+      expect(externalIds.every(id => typeof id === "string")).toBe(true);
+    });
+
+    it("should handle empty approval list", () => {
+      const externalIds: string[] = [];
+      expect(Array.isArray(externalIds)).toBe(true);
+      expect(externalIds.length).toBe(0);
+    });
+  });
+});

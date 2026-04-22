@@ -28,6 +28,8 @@ export default function AdminChannelDiscovery() {
 
   const triggerDiscovery = trpc.streamingContent.triggerDiscovery.useMutation();
   const getStats = trpc.streamingContent.getDiscoveryStats.useQuery();
+  const approveChannels = trpc.streamingContent.approveChannels.useMutation();
+  const rejectChannels = trpc.streamingContent.rejectChannels.useMutation();
 
   // Fetch discovery stats on mount
   useEffect(() => {
@@ -137,16 +139,34 @@ export default function AdminChannelDiscovery() {
     }
   };
 
-  const handleApproveSelected = () => {
-    toast.success(`Approved ${selectedChannels.size} channels`);
-    setSelectedChannels(new Set());
-    // In production, this would call an API to approve channels
+  const handleApproveSelected = async () => {
+    try {
+      const externalIds = Array.from(selectedChannels);
+      const result = await approveChannels.mutateAsync({ externalIds });
+      if (result.success) {
+        toast.success(`Approved ${result.approved} channels`);
+        setSelectedChannels(new Set());
+      } else {
+        toast.error(result.message || "Failed to approve channels");
+      }
+    } catch (error) {
+      toast.error("Error approving channels");
+    }
   };
 
-  const handleRejectSelected = () => {
-    toast.info(`Rejected ${selectedChannels.size} channels`);
-    setSelectedChannels(new Set());
-    // In production, this would call an API to reject channels
+  const handleRejectSelected = async () => {
+    try {
+      const externalIds = Array.from(selectedChannels);
+      const result = await rejectChannels.mutateAsync({ externalIds });
+      if (result.success) {
+        toast.success(`Rejected ${result.rejected} channels`);
+        setSelectedChannels(new Set());
+      } else {
+        toast.error(result.message || "Failed to reject channels");
+      }
+    } catch (error) {
+      toast.error("Error rejecting channels");
+    }
   };
 
   const categories = Array.from(new Set(channels.map((c) => c.category)));

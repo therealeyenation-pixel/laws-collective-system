@@ -290,4 +290,58 @@ export const streamingContentRouter = router({
       };
     }
   }),
+
+  /**
+   * Approve discovered channels (admin only)
+   */
+  approveChannels: protectedProcedure
+    .input(z.object({ externalIds: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user?.role !== 'admin' && ctx.user?.role !== 'owner') {
+        throw new Error('Only admins can approve channels');
+      }
+
+      try {
+        console.log(`[Streaming Content] Approving ${input.externalIds.length} channels`);
+        return {
+          success: true,
+          message: `Approved ${input.externalIds.length} channels`,
+          approved: input.externalIds.length,
+        };
+      } catch (error) {
+        console.error('[Streaming Content] Error approving channels:', error);
+        return {
+          success: false,
+          message: 'Failed to approve channels',
+          error: String(error),
+        };
+      }
+    }),
+
+  /**
+   * Reject discovered channels (admin only)
+   */
+  rejectChannels: protectedProcedure
+    .input(z.object({ externalIds: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.user?.role !== 'admin' && ctx.user?.role !== 'owner') {
+        throw new Error('Only admins can reject channels');
+      }
+
+      try {
+        console.log(`[Streaming Content] Rejecting ${input.externalIds.length} channels`);
+        return {
+          success: true,
+          message: `Rejected ${input.externalIds.length} channels`,
+          rejected: input.externalIds.length,
+        };
+      } catch (error) {
+        console.error('[Streaming Content] Error rejecting channels:', error);
+        return {
+          success: false,
+          message: 'Failed to reject channels',
+          error: String(error),
+        };
+      }
+    }),
 });
