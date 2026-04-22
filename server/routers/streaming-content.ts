@@ -12,6 +12,9 @@ import {
   fetchMusicTracks,
 } from '../services/data-integration';
 import { discoverAndSyncChannels, getDiscoveryStats } from '../services/channel-discovery';
+import { getDb } from '../db';
+import { streamingHistory } from '../../drizzle/schema';
+import { eq, desc } from 'drizzle-orm';
 
 // In-memory cache for streaming data
 let cachedData: {
@@ -374,6 +377,58 @@ export const streamingContentRouter = router({
           message: 'Failed to reject channels',
           error: String(error),
         };
+      }
+    }),
+
+  /**
+   * Log channel playback for user
+   */
+  logPlayback: protectedProcedure
+    .input(z.object({ contentId: z.string(), contentType: z.enum(['channel', 'station', 'track']) }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const db = await getDb();
+        if (!db) throw new Error('Database not available');
+        
+        await db.insert(streamingHistory).values({
+          userId: ctx.user.id,
+          contentId: input.contentId,
+          contentType: input.contentType,
+          watchedAt: new Date(),
+        });
+
+        return { success: true, message: 'Playback logged' };
+      } catch (error) {
+        console.error('[Streaming Content] Error logging playback:', error);
+        return { success: false, message: 'Failed to log playback' };
+      }
+    }),
+
+  /**
+   * Get recently played channels for user
+   */
+  getRecentlyPlayed: protectedProcedure
+    .input(z.object({ limit: z.number().default(10) }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const db = await getDb();
+        if (!db) throw new Error('Database not available');
+        
+        const recentlyPlayed = await db
+          .select()
+          .from(streamingHistory)
+          .where(eq(streamingHistory.userId, ctx.user.id))
+          .orderBy(desc(streamingHistory.watchedAt))
+          .limit(input.limit);
+
+        return {
+          success: true,
+          channels: recentlyPlayed,
+          total: recentlyPlayed.length,
+        };
+      } catch (error) {
+        console.error('[Streaming Content] Error fetching recently played:', error);
+        return { success: false, channels: [], total: 0 };
       }
     }),
 });

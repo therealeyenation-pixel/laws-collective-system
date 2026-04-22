@@ -56,7 +56,10 @@ export function MediaPlayer({ channel, onClose }: MediaPlayerProps) {
       
       // Log playback on first play
       if (!playbackLoggedRef.current) {
-        logPlayback({ channelId: channel.id });
+        logPlayback({ 
+          contentId: String(channel.id), 
+          contentType: channel.contentType as 'channel' | 'station' | 'track'
+        });
         playbackLoggedRef.current = true;
       }
     }

@@ -29,7 +29,14 @@ export default function Streaming() {
     { staleTime: 5 * 60 * 1000 } // Cache for 5 minutes
   );
 
+  // Fetch recently played channels
+  const { data: recentlyPlayedData } = trpc.streamingContent.getRecentlyPlayed.useQuery(
+    { limit: 6 },
+    { staleTime: 1 * 60 * 1000 } // Cache for 1 minute
+  );
+
   const channels = channelsData?.channels || [];
+  const recentlyPlayed = recentlyPlayedData?.channels || [];
   
   // Get unique categories
   const categories = useMemo(() => {
@@ -67,6 +74,27 @@ export default function Streaming() {
           <h1 className="text-2xl font-bold text-foreground">Streaming Hub</h1>
           <p className="text-muted-foreground mt-1">Discover and stream approved channels</p>
         </div>
+
+        {/* Recently Played Section */}
+        {recentlyPlayed.length > 0 && (
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold text-foreground">Recently Played</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              {recentlyPlayed.map((history: any) => (
+                <Card key={history.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handlePlayChannel({ id: history.contentId, title: 'Channel', contentType: history.contentType })}>
+                  <CardContent className="p-3 flex flex-col items-center justify-center h-24">
+                    {history.contentType === 'radio_station' || history.contentType === 'music_track' ? (
+                      <Music className="w-6 h-6 text-accent mb-2" />
+                    ) : (
+                      <Radio className="w-6 h-6 text-accent mb-2" />
+                    )}
+                    <p className="text-xs text-center font-medium line-clamp-2">Recently Played</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Search and Filter */}
         <div className="space-y-4">

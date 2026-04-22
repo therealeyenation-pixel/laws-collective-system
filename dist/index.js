@@ -37500,7 +37500,7 @@ var recommendationRouter = {
   analyzePortfolioRisk: protectedProcedure.input(z50.object({ portfolioId: z50.number() })).query(async ({ input, ctx }) => {
     const { portfolioId } = input;
     const holdings3 = await ctx.db.query.holdings.findMany({
-      where: (holdings4, { eq: eq159 }) => eq159(holdings4.portfolioId, portfolioId)
+      where: (holdings4, { eq: eq160 }) => eq160(holdings4.portfolioId, portfolioId)
     });
     const riskMetrics = {
       volatility: calculateVolatility(holdings3),
@@ -37532,7 +37532,7 @@ var recommendationRouter = {
   identifyDiversificationGaps: protectedProcedure.input(z50.object({ portfolioId: z50.number() })).query(async ({ input, ctx }) => {
     const { portfolioId } = input;
     const holdings3 = await ctx.db.query.holdings.findMany({
-      where: (holdings4, { eq: eq159 }) => eq159(holdings4.portfolioId, portfolioId)
+      where: (holdings4, { eq: eq160 }) => eq160(holdings4.portfolioId, portfolioId)
     });
     const sectorAllocation = analyzeSectorAllocation(holdings3);
     const recommendations = await invokeLLM({
@@ -37559,7 +37559,7 @@ var recommendationRouter = {
   assessSectorConcentration: protectedProcedure.input(z50.object({ portfolioId: z50.number() })).query(async ({ input, ctx }) => {
     const { portfolioId } = input;
     const holdings3 = await ctx.db.query.holdings.findMany({
-      where: (holdings4, { eq: eq159 }) => eq159(holdings4.portfolioId, portfolioId)
+      where: (holdings4, { eq: eq160 }) => eq160(holdings4.portfolioId, portfolioId)
     });
     const concentration = calculateSectorConcentration(holdings3);
     const assessment = await invokeLLM({
@@ -37592,7 +37592,7 @@ var recommendationRouter = {
   ).query(async ({ input, ctx }) => {
     const { portfolioId, riskProfile } = input;
     const holdings3 = await ctx.db.query.holdings.findMany({
-      where: (holdings4, { eq: eq159 }) => eq159(holdings4.portfolioId, portfolioId)
+      where: (holdings4, { eq: eq160 }) => eq160(holdings4.portfolioId, portfolioId)
     });
     const currentAllocation = calculateAssetAllocation(holdings3);
     const recommendedAllocation = getRecommendedAllocation(riskProfile);
@@ -37654,10 +37654,10 @@ Provide evaluation and rebalancing suggestions.`
   ).query(async ({ input, ctx }) => {
     const { portfolioId, riskProfile, investmentGoals: investmentGoals2 } = input;
     const portfolio = await ctx.db.query.portfolios.findFirst({
-      where: (portfolios, { eq: eq159 }) => eq159(portfolios.id, portfolioId)
+      where: (portfolios, { eq: eq160 }) => eq160(portfolios.id, portfolioId)
     });
     const holdings3 = await ctx.db.query.holdings.findMany({
-      where: (holdings4, { eq: eq159 }) => eq159(holdings4.portfolioId, portfolioId)
+      where: (holdings4, { eq: eq160 }) => eq160(holdings4.portfolioId, portfolioId)
     });
     const recommendations = await invokeLLM({
       messages: [
@@ -37690,8 +37690,8 @@ Provide 3-5 specific recommendations with rationale.`
   getRecommendationHistory: protectedProcedure.input(z50.object({ portfolioId: z50.number(), limit: z50.number().default(10) })).query(async ({ input, ctx }) => {
     const { portfolioId, limit } = input;
     const history = await ctx.db.query.recommendations.findMany({
-      where: (recommendations, { eq: eq159 }) => eq159(recommendations.portfolioId, portfolioId),
-      orderBy: (recommendations, { desc: desc122 }) => [desc122(recommendations.createdAt)],
+      where: (recommendations, { eq: eq160 }) => eq160(recommendations.portfolioId, portfolioId),
+      orderBy: (recommendations, { desc: desc123 }) => [desc123(recommendations.createdAt)],
       limit
     });
     return history;
@@ -39711,6 +39711,9 @@ async function getDiscoveryStats() {
 }
 
 // server/routers/streaming-content.ts
+init_db();
+init_schema();
+import { eq as eq46, desc as desc27 } from "drizzle-orm";
 var cachedData = {
   channels: [],
   stations: [],
@@ -40005,6 +40008,43 @@ var streamingContentRouter = router({
         error: String(error)
       };
     }
+  }),
+  /**
+   * Log channel playback for user
+   */
+  logPlayback: protectedProcedure.input(z51.object({ contentId: z51.string(), contentType: z51.enum(["channel", "station", "track"]) })).mutation(async ({ ctx, input }) => {
+    try {
+      const db7 = await getDb();
+      if (!db7) throw new Error("Database not available");
+      await db7.insert(streamingHistory).values({
+        userId: ctx.user.id,
+        contentId: input.contentId,
+        contentType: input.contentType,
+        watchedAt: /* @__PURE__ */ new Date()
+      });
+      return { success: true, message: "Playback logged" };
+    } catch (error) {
+      console.error("[Streaming Content] Error logging playback:", error);
+      return { success: false, message: "Failed to log playback" };
+    }
+  }),
+  /**
+   * Get recently played channels for user
+   */
+  getRecentlyPlayed: protectedProcedure.input(z51.object({ limit: z51.number().default(10) })).query(async ({ ctx, input }) => {
+    try {
+      const db7 = await getDb();
+      if (!db7) throw new Error("Database not available");
+      const recentlyPlayed = await db7.select().from(streamingHistory).where(eq46(streamingHistory.userId, ctx.user.id)).orderBy(desc27(streamingHistory.watchedAt)).limit(input.limit);
+      return {
+        success: true,
+        channels: recentlyPlayed,
+        total: recentlyPlayed.length
+      };
+    } catch (error) {
+      console.error("[Streaming Content] Error fetching recently played:", error);
+      return { success: false, channels: [], total: 0 };
+    }
   })
 });
 
@@ -40012,7 +40052,7 @@ var streamingContentRouter = router({
 init_db();
 init_schema();
 import { z as z52 } from "zod";
-import { eq as eq46, and as and33, desc as desc27, sql as sql22 } from "drizzle-orm";
+import { eq as eq47, and as and33, desc as desc28, sql as sql22 } from "drizzle-orm";
 var CONTENT_TYPE_MAP = {
   tv: "channel",
   radio: "station",
@@ -40052,8 +40092,8 @@ var streamingFavoritesRouter = router({
     try {
       await db.delete(userFavorites).where(
         and33(
-          eq46(userFavorites.userId, ctx.user.id),
-          eq46(userFavorites.contentId, input.contentId)
+          eq47(userFavorites.userId, ctx.user.id),
+          eq47(userFavorites.contentId, input.contentId)
         )
       );
       return { success: true };
@@ -40067,8 +40107,8 @@ var streamingFavoritesRouter = router({
     try {
       const favorite = await db.select().from(userFavorites).where(
         and33(
-          eq46(userFavorites.userId, ctx.user.id),
-          eq46(userFavorites.contentId, input.contentId)
+          eq47(userFavorites.userId, ctx.user.id),
+          eq47(userFavorites.contentId, input.contentId)
         )
       ).limit(1);
       return favorite.length > 0 && favorite[0].isFavorite;
@@ -40087,14 +40127,14 @@ var streamingFavoritesRouter = router({
   ).query(async ({ ctx, input }) => {
     try {
       const conditions = [
-        eq46(userFavorites.userId, ctx.user.id),
-        eq46(userFavorites.isFavorite, true)
+        eq47(userFavorites.userId, ctx.user.id),
+        eq47(userFavorites.isFavorite, true)
       ];
       if (input.contentType) {
         const dbType = mapContentType(input.contentType);
-        conditions.push(eq46(userFavorites.contentType, dbType));
+        conditions.push(eq47(userFavorites.contentType, dbType));
       }
-      const favorites = await db.select().from(userFavorites).where(and33(...conditions)).limit(input.limit).offset(input.offset).orderBy(desc27(userFavorites.addedAt));
+      const favorites = await db.select().from(userFavorites).where(and33(...conditions)).limit(input.limit).offset(input.offset).orderBy(desc28(userFavorites.addedAt));
       return favorites;
     } catch (error) {
       console.error("Error getting favorites:", error);
@@ -40107,9 +40147,9 @@ var streamingFavoritesRouter = router({
       const dbType = mapContentType(input.contentType);
       const favorites = await db.select({ contentId: userFavorites.contentId }).from(userFavorites).where(
         and33(
-          eq46(userFavorites.userId, ctx.user.id),
-          eq46(userFavorites.contentType, dbType),
-          eq46(userFavorites.isFavorite, true)
+          eq47(userFavorites.userId, ctx.user.id),
+          eq47(userFavorites.contentType, dbType),
+          eq47(userFavorites.isFavorite, true)
         )
       );
       return favorites.map((f) => f.contentId);
@@ -40129,15 +40169,15 @@ var streamingFavoritesRouter = router({
       const dbType = mapContentType(input.contentType);
       const existing = await db.select().from(userFavorites).where(
         and33(
-          eq46(userFavorites.userId, ctx.user.id),
-          eq46(userFavorites.contentId, input.contentId)
+          eq47(userFavorites.userId, ctx.user.id),
+          eq47(userFavorites.contentId, input.contentId)
         )
       ).limit(1);
       if (existing.length > 0) {
         await db.delete(userFavorites).where(
           and33(
-            eq46(userFavorites.userId, ctx.user.id),
-            eq46(userFavorites.contentId, input.contentId)
+            eq47(userFavorites.userId, ctx.user.id),
+            eq47(userFavorites.contentId, input.contentId)
           )
         );
         return { isFavorited: false };
@@ -40185,12 +40225,12 @@ var streamingFavoritesRouter = router({
     })
   ).query(async ({ ctx, input }) => {
     try {
-      const conditions = [eq46(userPlaybackHistory.userId, ctx.user.id)];
+      const conditions = [eq47(userPlaybackHistory.userId, ctx.user.id)];
       if (input.contentType) {
         const dbType = mapContentType(input.contentType);
-        conditions.push(eq46(userPlaybackHistory.contentType, dbType));
+        conditions.push(eq47(userPlaybackHistory.contentType, dbType));
       }
-      const history = await db.select().from(userPlaybackHistory).where(and33(...conditions)).limit(input.limit).orderBy(desc27(userPlaybackHistory.lastPlayedAt));
+      const history = await db.select().from(userPlaybackHistory).where(and33(...conditions)).limit(input.limit).orderBy(desc28(userPlaybackHistory.lastPlayedAt));
       return history;
     } catch (error) {
       console.error("Error getting recently played:", error);
@@ -40206,12 +40246,12 @@ var streamingFavoritesRouter = router({
     })
   ).query(async ({ ctx, input }) => {
     try {
-      const conditions = [eq46(userPlaybackHistory.userId, ctx.user.id)];
+      const conditions = [eq47(userPlaybackHistory.userId, ctx.user.id)];
       if (input.contentType) {
         const dbType = mapContentType(input.contentType);
-        conditions.push(eq46(userPlaybackHistory.contentType, dbType));
+        conditions.push(eq47(userPlaybackHistory.contentType, dbType));
       }
-      const history = await db.select().from(userPlaybackHistory).where(and33(...conditions)).limit(input.limit).offset(input.offset).orderBy(desc27(userPlaybackHistory.lastPlayedAt));
+      const history = await db.select().from(userPlaybackHistory).where(and33(...conditions)).limit(input.limit).offset(input.offset).orderBy(desc28(userPlaybackHistory.lastPlayedAt));
       return history;
     } catch (error) {
       console.error("Error getting history:", error);
@@ -40426,7 +40466,7 @@ import { z as z54 } from "zod";
 // server/services/brain-safety.ts
 init_db();
 init_schema();
-import { eq as eq47, and as and34, desc as desc28 } from "drizzle-orm";
+import { eq as eq48, and as and34, desc as desc29 } from "drizzle-orm";
 var OPERATION_RISK_MAP = {
   ["generate_insight" /* GENERATE_INSIGHT */]: "low" /* LOW */,
   ["send_alert" /* SEND_ALERT */]: "low" /* LOW */,
@@ -40443,7 +40483,7 @@ var OPERATION_RISK_MAP = {
 };
 async function checkBrainPermission(userId, operationType) {
   const riskLevel = OPERATION_RISK_MAP[operationType];
-  const permission = await db.select().from(brainPermissions).where(eq47(brainPermissions.userId, userId)).limit(1);
+  const permission = await db.select().from(brainPermissions).where(eq48(brainPermissions.userId, userId)).limit(1);
   if (!permission || permission.length === 0) {
     return false;
   }
@@ -40543,15 +40583,15 @@ async function logBrainAction(action, status, details) {
   });
 }
 async function getBrainActionHistory(userId, limit = 50) {
-  return await db.select().from(brainAuditLog).where(eq47(brainAuditLog.userId, userId)).orderBy(desc28(brainAuditLog.createdAt)).limit(limit);
+  return await db.select().from(brainAuditLog).where(eq48(brainAuditLog.userId, userId)).orderBy(desc29(brainAuditLog.createdAt)).limit(limit);
 }
 async function getPendingApprovals(userId) {
   return await db.select().from(brainAuditLog).where(
     and34(
-      eq47(brainAuditLog.userId, userId),
-      eq47(brainAuditLog.status, "pending_approval")
+      eq48(brainAuditLog.userId, userId),
+      eq48(brainAuditLog.status, "pending_approval")
     )
-  ).orderBy(desc28(brainAuditLog.createdAt));
+  ).orderBy(desc29(brainAuditLog.createdAt));
 }
 async function detectAnomalies(userId) {
   const anomalies = [];
@@ -42356,7 +42396,7 @@ var collectiveInvestmentPoolsRouter = router({
 import { z as z59 } from "zod";
 init_db();
 init_schema();
-import { eq as eq48, and as and35, desc as desc29, sql as sql23 } from "drizzle-orm";
+import { eq as eq49, and as and35, desc as desc30, sql as sql23 } from "drizzle-orm";
 import { TRPCError as TRPCError18 } from "@trpc/server";
 var TREASURY_SPLIT = {
   ENTITY_RETAINED: 70,
@@ -42449,11 +42489,11 @@ var communityFundsRouter = router({
     if (!userId) throw new TRPCError18({ code: "UNAUTHORIZED" });
     let houseId = input?.houseId;
     if (!houseId) {
-      const userHouse = await db7.select().from(houses).where(eq48(houses.ownerUserId, userId)).limit(1);
+      const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
       if (!userHouse.length) return { funds: [], totals: { balance: 0, contributions: 0, disbursements: 0 } };
       houseId = userHouse[0].id;
     }
-    const funds = await db7.select().from(communityFunds).where(eq48(communityFunds.houseId, houseId));
+    const funds = await db7.select().from(communityFunds).where(eq49(communityFunds.houseId, houseId));
     const totals = funds.reduce((acc, fund) => ({
       balance: acc.balance + parseFloat(fund.currentBalance || "0"),
       contributions: acc.contributions + parseFloat(fund.totalContributions || "0"),
@@ -42485,7 +42525,7 @@ var communityFundsRouter = router({
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError18({ code: "UNAUTHORIZED" });
-    const userHouse = await db7.select().from(houses).where(eq48(houses.ownerUserId, userId)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
     if (!userHouse.length) {
       throw new TRPCError18({ code: "NOT_FOUND", message: "House not found" });
     }
@@ -42496,7 +42536,7 @@ var communityFundsRouter = router({
     const platformFee = grossRevenue * (TREASURY_SPLIT.PLATFORM_FEE / 100);
     const reserveAmount = platformFee * (HOUSE_INTERNAL_SPLIT.RESERVE / 100);
     const communityShareAmount = platformFee * (HOUSE_INTERNAL_SPLIT.COMMUNITY / 100);
-    const funds = await db7.select().from(communityFunds).where(eq48(communityFunds.houseId, parentHouseId));
+    const funds = await db7.select().from(communityFunds).where(eq49(communityFunds.houseId, parentHouseId));
     const fundAllocations = {};
     for (const fund of funds) {
       const fundPercentage = parseFloat(fund.allocationPercentage || "0");
@@ -42511,7 +42551,7 @@ var communityFundsRouter = router({
       communityShareAmount,
       fundAllocations
     });
-    const account = await db7.select().from(luvLedgerAccounts).where(eq48(luvLedgerAccounts.userId, userId)).limit(1);
+    const account = await db7.select().from(luvLedgerAccounts).where(eq49(luvLedgerAccounts.userId, userId)).limit(1);
     let parentLedgerTransactionId = null;
     if (account.length) {
       const [ledgerTx] = await db7.insert(luvLedgerTransactions).values({
@@ -42568,7 +42608,7 @@ var communityFundsRouter = router({
         await db7.update(communityFunds).set({
           currentBalance: sql23`${communityFunds.currentBalance} + ${fundAmount}`,
           totalContributions: sql23`${communityFunds.totalContributions} + ${fundAmount}`
-        }).where(eq48(communityFunds.id, fund.id));
+        }).where(eq49(communityFunds.id, fund.id));
       }
     }
     return {
@@ -42594,9 +42634,9 @@ var communityFundsRouter = router({
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError18({ code: "UNAUTHORIZED" });
-    const userHouse = await db7.select().from(houses).where(eq48(houses.ownerUserId, userId)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
     if (!userHouse.length) return { events: [], totals: { grossRevenue: 0, platformFees: 0, communityShare: 0 } };
-    const events = await db7.select().from(revenueSharingEvents).where(eq48(revenueSharingEvents.parentHouseId, userHouse[0].id)).orderBy(desc29(revenueSharingEvents.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
+    const events = await db7.select().from(revenueSharingEvents).where(eq49(revenueSharingEvents.parentHouseId, userHouse[0].id)).orderBy(desc30(revenueSharingEvents.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
     const totals = events.reduce((acc, event) => ({
       grossRevenue: acc.grossRevenue + parseFloat(event.grossRevenue || "0"),
       platformFees: acc.platformFees + parseFloat(event.platformFeeAmount || "0"),
@@ -42631,7 +42671,7 @@ var communityFundsRouter = router({
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError18({ code: "UNAUTHORIZED" });
-    const [fund] = await db7.select().from(communityFunds).where(eq48(communityFunds.id, input.fundId));
+    const [fund] = await db7.select().from(communityFunds).where(eq49(communityFunds.id, input.fundId));
     if (!fund) throw new TRPCError18({ code: "NOT_FOUND", message: "Fund not found" });
     const currentBalance = parseFloat(fund.currentBalance || "0");
     if (input.requestedAmount > currentBalance) {
@@ -42686,14 +42726,14 @@ var communityFundsRouter = router({
         approvedAt: /* @__PURE__ */ new Date(),
         approvedAmount: input.approvedAmount?.toString(),
         approvalNotes: input.notes
-      }).where(eq48(fundDisbursements.id, input.disbursementId));
+      }).where(eq49(fundDisbursements.id, input.disbursementId));
       await processDisbursement(db7, input.disbursementId, userId);
     } else {
       await db7.update(fundDisbursements).set({
         status: "rejected",
         approvedBy: userId,
         rejectionReason: input.notes
-      }).where(eq48(fundDisbursements.id, input.disbursementId));
+      }).where(eq49(fundDisbursements.id, input.disbursementId));
     }
     return { success: true, action: input.action };
   }),
@@ -42703,12 +42743,12 @@ var communityFundsRouter = router({
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError18({ code: "UNAUTHORIZED" });
-    const userHouse = await db7.select().from(houses).where(eq48(houses.ownerUserId, userId)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
     if (!userHouse.length) return [];
     const disbursements = await db7.select().from(fundDisbursements).where(and35(
-      eq48(fundDisbursements.houseId, userHouse[0].id),
-      eq48(fundDisbursements.status, "pending_approval")
-    )).orderBy(desc29(fundDisbursements.requestedAt));
+      eq49(fundDisbursements.houseId, userHouse[0].id),
+      eq49(fundDisbursements.status, "pending_approval")
+    )).orderBy(desc30(fundDisbursements.requestedAt));
     return disbursements;
   }),
   // Create Platform Services Agreement
@@ -42724,7 +42764,7 @@ var communityFundsRouter = router({
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError18({ code: "UNAUTHORIZED" });
-    const userHouse = await db7.select().from(houses).where(eq48(houses.ownerUserId, userId)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
     if (!userHouse.length) {
       throw new TRPCError18({ code: "NOT_FOUND", message: "House not found" });
     }
@@ -42755,7 +42795,7 @@ var communityFundsRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const contributions = await db7.select().from(fundContributions).where(eq48(fundContributions.fundId, input.fundId)).orderBy(desc29(fundContributions.contributedAt)).limit(input.limit);
+    const contributions = await db7.select().from(fundContributions).where(eq49(fundContributions.fundId, input.fundId)).orderBy(desc30(fundContributions.contributedAt)).limit(input.limit);
     return contributions;
   }),
   // Get fund disbursement history
@@ -42765,7 +42805,7 @@ var communityFundsRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const disbursements = await db7.select().from(fundDisbursements).where(eq48(fundDisbursements.fundId, input.fundId)).orderBy(desc29(fundDisbursements.requestedAt)).limit(input.limit);
+    const disbursements = await db7.select().from(fundDisbursements).where(eq49(fundDisbursements.fundId, input.fundId)).orderBy(desc30(fundDisbursements.requestedAt)).limit(input.limit);
     return disbursements;
   }),
   // Update fund allocation percentages
@@ -42785,7 +42825,7 @@ var communityFundsRouter = router({
       });
     }
     for (const allocation of input.allocations) {
-      await db7.update(communityFunds).set({ allocationPercentage: allocation.percentage.toString() }).where(eq48(communityFunds.id, allocation.fundId));
+      await db7.update(communityFunds).set({ allocationPercentage: allocation.percentage.toString() }).where(eq49(communityFunds.id, allocation.fundId));
     }
     return { success: true };
   }),
@@ -42795,7 +42835,7 @@ var communityFundsRouter = router({
     if (!db7) throw new TRPCError18({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError18({ code: "UNAUTHORIZED" });
-    const userHouse = await db7.select().from(houses).where(eq48(houses.ownerUserId, userId)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
     if (!userHouse.length) {
       return {
         splits: { treasurySplit: TREASURY_SPLIT, houseInternalSplit: HOUSE_INTERNAL_SPLIT },
@@ -42809,8 +42849,8 @@ var communityFundsRouter = router({
       platformFees: sql23`SUM(CAST(platform_fee_amount AS DECIMAL(18,2)))`,
       reserve: sql23`SUM(CAST(reserve_amount AS DECIMAL(18,2)))`,
       communityShare: sql23`SUM(CAST(community_share_amount AS DECIMAL(18,2)))`
-    }).from(revenueSharingEvents).where(eq48(revenueSharingEvents.parentHouseId, userHouse[0].id));
-    const funds = await db7.select().from(communityFunds).where(eq48(communityFunds.houseId, userHouse[0].id));
+    }).from(revenueSharingEvents).where(eq49(revenueSharingEvents.parentHouseId, userHouse[0].id));
+    const funds = await db7.select().from(communityFunds).where(eq49(communityFunds.houseId, userHouse[0].id));
     return {
       splits: {
         treasurySplit: TREASURY_SPLIT,
@@ -42837,7 +42877,7 @@ var communityFundsRouter = router({
   })
 });
 async function processDisbursement(db7, disbursementId, userId) {
-  const [disbursement] = await db7.select().from(fundDisbursements).where(eq48(fundDisbursements.id, disbursementId));
+  const [disbursement] = await db7.select().from(fundDisbursements).where(eq49(fundDisbursements.id, disbursementId));
   if (!disbursement) return;
   const amount = parseFloat(disbursement.approvedAmount || disbursement.requestedAmount || "0");
   const blockchainHash = await recordToBlockchain3("disbursement", disbursementId, {
@@ -42849,14 +42889,14 @@ async function processDisbursement(db7, disbursementId, userId) {
   await db7.update(communityFunds).set({
     currentBalance: sql23`${communityFunds.currentBalance} - ${amount}`,
     totalDisbursements: sql23`${communityFunds.totalDisbursements} + ${amount}`
-  }).where(eq48(communityFunds.id, disbursement.fundId));
+  }).where(eq49(communityFunds.id, disbursement.fundId));
   await db7.update(fundDisbursements).set({
     status: "disbursed",
     disbursedAmount: amount.toString(),
     disbursedAt: /* @__PURE__ */ new Date(),
     blockchainHash
-  }).where(eq48(fundDisbursements.id, disbursementId));
-  const account = await db7.select().from(luvLedgerAccounts).where(eq48(luvLedgerAccounts.userId, userId)).limit(1);
+  }).where(eq49(fundDisbursements.id, disbursementId));
+  const account = await db7.select().from(luvLedgerAccounts).where(eq49(luvLedgerAccounts.userId, userId)).limit(1);
   if (account.length) {
     await db7.insert(luvLedgerTransactions).values({
       fromAccountId: account[0].id,
@@ -42873,7 +42913,7 @@ async function processDisbursement(db7, disbursementId, userId) {
 import { z as z60 } from "zod";
 init_db();
 init_schema();
-import { eq as eq49, and as and36, desc as desc30, sql as sql24 } from "drizzle-orm";
+import { eq as eq50, and as and36, desc as desc31, sql as sql24 } from "drizzle-orm";
 import { TRPCError as TRPCError19 } from "@trpc/server";
 var DEFAULT_VESTING_MILESTONES = [
   { type: "age", targetAge: 18, percentage: 25, name: "Age 18 - Initial Vesting" },
@@ -42940,13 +42980,13 @@ var heirDistributionRouter = router({
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
     let houseId = input.houseId;
     if (!houseId) {
-      const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
+      const userHouse = await db7.select().from(houses).where(eq50(houses.ownerUserId, userId)).limit(1);
       if (!userHouse.length) {
         throw new TRPCError19({ code: "NOT_FOUND", message: "House not found" });
       }
       houseId = userHouse[0].id;
     }
-    const [lock] = await db7.select().from(heirDistributionLocks).where(eq49(heirDistributionLocks.houseId, houseId));
+    const [lock] = await db7.select().from(heirDistributionLocks).where(eq50(heirDistributionLocks.houseId, houseId));
     if (lock?.isLocked) {
       throw new TRPCError19({
         code: "FORBIDDEN",
@@ -42954,7 +42994,7 @@ var heirDistributionRouter = router({
       });
     }
     const existingHeirs = await db7.select().from(houseHeirs).where(
-      and36(eq49(houseHeirs.houseId, houseId), eq49(houseHeirs.status, "active"))
+      and36(eq50(houseHeirs.houseId, houseId), eq50(houseHeirs.status, "active"))
     );
     const currentTotal = existingHeirs.reduce((sum5, h) => sum5 + parseFloat(h.distributionPercentage || "0"), 0);
     if (currentTotal + input.distributionPercentage > 100) {
@@ -43025,14 +43065,14 @@ var heirDistributionRouter = router({
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
     let houseId = input.houseId;
     if (!houseId) {
-      const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
+      const userHouse = await db7.select().from(houses).where(eq50(houses.ownerUserId, userId)).limit(1);
       if (!userHouse.length) {
         throw new TRPCError19({ code: "NOT_FOUND", message: "House not found" });
       }
       houseId = userHouse[0].id;
     }
     const heirs = await db7.select().from(houseHeirs).where(
-      and36(eq49(houseHeirs.houseId, houseId), eq49(houseHeirs.status, "active"))
+      and36(eq50(houseHeirs.houseId, houseId), eq50(houseHeirs.status, "active"))
     );
     if (heirs.length === 0) {
       throw new TRPCError19({ code: "BAD_REQUEST", message: "No heirs designated. Cannot lock." });
@@ -43049,9 +43089,9 @@ var heirDistributionRouter = router({
         percentageLocked: true,
         percentageLockedAt: /* @__PURE__ */ new Date(),
         percentageLockedBy: userId
-      }).where(eq49(houseHeirs.id, heir.id));
+      }).where(eq50(houseHeirs.id, heir.id));
     }
-    const [existingLock] = await db7.select().from(heirDistributionLocks).where(eq49(heirDistributionLocks.houseId, houseId));
+    const [existingLock] = await db7.select().from(heirDistributionLocks).where(eq50(heirDistributionLocks.houseId, houseId));
     if (existingLock) {
       await db7.update(heirDistributionLocks).set({
         isLocked: true,
@@ -43061,7 +43101,7 @@ var heirDistributionRouter = router({
         totalAllocatedPercentage: totalPercentage.toString(),
         lastModifiedAt: /* @__PURE__ */ new Date(),
         lastModifiedBy: userId
-      }).where(eq49(heirDistributionLocks.id, existingLock.id));
+      }).where(eq50(heirDistributionLocks.id, existingLock.id));
     } else {
       await db7.insert(heirDistributionLocks).values({
         houseId,
@@ -43092,13 +43132,13 @@ var heirDistributionRouter = router({
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
-    const [event] = await db7.select().from(revenueSharingEvents).where(eq49(revenueSharingEvents.id, input.revenueSharingEventId));
+    const [event] = await db7.select().from(revenueSharingEvents).where(eq50(revenueSharingEvents.id, input.revenueSharingEventId));
     if (!event) {
       throw new TRPCError19({ code: "NOT_FOUND", message: "Revenue sharing event not found" });
     }
     const houseId = event.parentHouseId;
     const heirs = await db7.select().from(houseHeirs).where(
-      and36(eq49(houseHeirs.houseId, houseId), eq49(houseHeirs.status, "active"))
+      and36(eq50(houseHeirs.houseId, houseId), eq50(houseHeirs.status, "active"))
     );
     if (heirs.length === 0) {
       return { success: true, message: "No heirs to distribute to", distributions: [] };
@@ -43148,12 +43188,12 @@ var heirDistributionRouter = router({
         await db7.update(heirAccumulationAccounts).set({
           currentBalance: sql24`${heirAccumulationAccounts.currentBalance} + ${accumulatedAmount}`,
           totalDeposits: sql24`${heirAccumulationAccounts.totalDeposits} + ${accumulatedAmount}`
-        }).where(eq49(heirAccumulationAccounts.heirId, heir.id));
+        }).where(eq50(heirAccumulationAccounts.heirId, heir.id));
       }
       await db7.update(houseHeirs).set({
         totalDistributed: sql24`${houseHeirs.totalDistributed} + ${distributedAmount}`,
         totalAccumulated: sql24`${houseHeirs.totalAccumulated} + ${accumulatedAmount}`
-      }).where(eq49(houseHeirs.id, heir.id));
+      }).where(eq50(houseHeirs.id, heir.id));
       distributions.push({
         heirId: heir.id,
         heirName: heir.fullName,
@@ -43179,11 +43219,11 @@ var heirDistributionRouter = router({
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
-    const [heir] = await db7.select().from(houseHeirs).where(eq49(houseHeirs.id, input.heirId));
+    const [heir] = await db7.select().from(houseHeirs).where(eq50(houseHeirs.id, input.heirId));
     if (!heir) {
       throw new TRPCError19({ code: "NOT_FOUND", message: "Heir not found" });
     }
-    const schedules = await db7.select().from(heirVestingSchedules).where(eq49(heirVestingSchedules.heirId, input.heirId)).orderBy(heirVestingSchedules.milestoneOrder);
+    const schedules = await db7.select().from(heirVestingSchedules).where(eq50(heirVestingSchedules.heirId, input.heirId)).orderBy(heirVestingSchedules.milestoneOrder);
     let totalVested = 0;
     const updates = [];
     for (const schedule of schedules) {
@@ -43204,7 +43244,7 @@ var heirDistributionRouter = router({
           achievedAt: /* @__PURE__ */ new Date(),
           verifiedBy: userId,
           verificationNotes: "Auto-verified based on age"
-        }).where(eq49(heirVestingSchedules.id, schedule.id));
+        }).where(eq50(heirVestingSchedules.id, schedule.id));
         totalVested += parseFloat(schedule.vestingPercentage || "0");
         updates.push({
           milestone: schedule.milestoneName,
@@ -43216,7 +43256,7 @@ var heirDistributionRouter = router({
     await db7.update(houseHeirs).set({
       vestedPercentage: Math.min(totalVested, 100).toString(),
       vestingStatus
-    }).where(eq49(houseHeirs.id, input.heirId));
+    }).where(eq50(houseHeirs.id, input.heirId));
     return {
       success: true,
       heirId: input.heirId,
@@ -43239,16 +43279,16 @@ var heirDistributionRouter = router({
       achievedAt: /* @__PURE__ */ new Date(),
       verifiedBy: userId,
       verificationNotes: input.verificationNotes || "Manually verified"
-    }).where(eq49(heirVestingSchedules.id, input.scheduleId));
-    const [schedule] = await db7.select().from(heirVestingSchedules).where(eq49(heirVestingSchedules.id, input.scheduleId));
+    }).where(eq50(heirVestingSchedules.id, input.scheduleId));
+    const [schedule] = await db7.select().from(heirVestingSchedules).where(eq50(heirVestingSchedules.id, input.scheduleId));
     if (schedule) {
-      const allSchedules = await db7.select().from(heirVestingSchedules).where(and36(eq49(heirVestingSchedules.heirId, schedule.heirId), eq49(heirVestingSchedules.status, "achieved")));
+      const allSchedules = await db7.select().from(heirVestingSchedules).where(and36(eq50(heirVestingSchedules.heirId, schedule.heirId), eq50(heirVestingSchedules.status, "achieved")));
       const totalVested = allSchedules.reduce((sum5, s) => sum5 + parseFloat(s.vestingPercentage || "0"), 0);
       const vestingStatus = totalVested >= 100 ? "fully_vested" : totalVested > 0 ? "partial" : "not_started";
       await db7.update(houseHeirs).set({
         vestedPercentage: Math.min(totalVested, 100).toString(),
         vestingStatus
-      }).where(eq49(houseHeirs.id, schedule.heirId));
+      }).where(eq50(houseHeirs.id, schedule.heirId));
     }
     return { success: true };
   }),
@@ -43260,12 +43300,12 @@ var heirDistributionRouter = router({
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
     let houseId = input?.houseId;
     if (!houseId) {
-      const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
+      const userHouse = await db7.select().from(houses).where(eq50(houses.ownerUserId, userId)).limit(1);
       if (!userHouse.length) return { heirs: [], lock: null, totalPercentage: 0 };
       houseId = userHouse[0].id;
     }
-    const heirs = await db7.select().from(houseHeirs).where(and36(eq49(houseHeirs.houseId, houseId), eq49(houseHeirs.status, "active")));
-    const [lock] = await db7.select().from(heirDistributionLocks).where(eq49(heirDistributionLocks.houseId, houseId));
+    const heirs = await db7.select().from(houseHeirs).where(and36(eq50(houseHeirs.houseId, houseId), eq50(houseHeirs.status, "active")));
+    const [lock] = await db7.select().from(heirDistributionLocks).where(eq50(heirDistributionLocks.houseId, houseId));
     const totalPercentage = heirs.reduce((sum5, h) => sum5 + parseFloat(h.distributionPercentage || "0"), 0);
     return {
       heirs: heirs.map((h) => ({
@@ -43283,14 +43323,14 @@ var heirDistributionRouter = router({
   getHeirVesting: protectedProcedure.input(z60.object({ heirId: z60.number() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const schedules = await db7.select().from(heirVestingSchedules).where(eq49(heirVestingSchedules.heirId, input.heirId)).orderBy(heirVestingSchedules.milestoneOrder);
+    const schedules = await db7.select().from(heirVestingSchedules).where(eq50(heirVestingSchedules.heirId, input.heirId)).orderBy(heirVestingSchedules.milestoneOrder);
     return schedules;
   }),
   // Get heir's accumulation account
   getAccumulationAccount: protectedProcedure.input(z60.object({ heirId: z60.number() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [account] = await db7.select().from(heirAccumulationAccounts).where(eq49(heirAccumulationAccounts.heirId, input.heirId));
+    const [account] = await db7.select().from(heirAccumulationAccounts).where(eq50(heirAccumulationAccounts.heirId, input.heirId));
     if (!account) return null;
     return {
       ...account,
@@ -43307,7 +43347,7 @@ var heirDistributionRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const distributions = await db7.select().from(heirDistributions).where(eq49(heirDistributions.heirId, input.heirId)).orderBy(desc30(heirDistributions.processedAt)).limit(input.limit);
+    const distributions = await db7.select().from(heirDistributions).where(eq50(heirDistributions.heirId, input.heirId)).orderBy(desc31(heirDistributions.processedAt)).limit(input.limit);
     return distributions.map((d) => ({
       ...d,
       grossAmount: parseFloat(d.grossAmount || "0"),
@@ -43326,7 +43366,7 @@ var heirDistributionRouter = router({
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
-    const [account] = await db7.select().from(heirAccumulationAccounts).where(eq49(heirAccumulationAccounts.heirId, input.heirId));
+    const [account] = await db7.select().from(heirAccumulationAccounts).where(eq50(heirAccumulationAccounts.heirId, input.heirId));
     if (!account) {
       throw new TRPCError19({ code: "NOT_FOUND", message: "Accumulation account not found" });
     }
@@ -43337,7 +43377,7 @@ var heirDistributionRouter = router({
         message: `Insufficient balance. Available: $${currentBalance.toFixed(2)}`
       });
     }
-    const [heir] = await db7.select().from(houseHeirs).where(eq49(houseHeirs.id, input.heirId));
+    const [heir] = await db7.select().from(houseHeirs).where(eq50(houseHeirs.id, input.heirId));
     if (!heir) {
       throw new TRPCError19({ code: "NOT_FOUND", message: "Heir not found" });
     }
@@ -43358,7 +43398,7 @@ var heirDistributionRouter = router({
     await db7.update(heirAccumulationAccounts).set({
       currentBalance: sql24`${heirAccumulationAccounts.currentBalance} - ${input.amount}`,
       totalWithdrawals: sql24`${heirAccumulationAccounts.totalWithdrawals} + ${input.amount}`
-    }).where(eq49(heirAccumulationAccounts.id, account.id));
+    }).where(eq50(heirAccumulationAccounts.id, account.id));
     await db7.insert(heirDistributions).values({
       heirId: input.heirId,
       houseId: heir.houseId,
@@ -43375,7 +43415,7 @@ var heirDistributionRouter = router({
     await db7.update(houseHeirs).set({
       totalDistributed: sql24`${houseHeirs.totalDistributed} + ${input.amount}`,
       totalAccumulated: sql24`${houseHeirs.totalAccumulated} - ${input.amount}`
-    }).where(eq49(houseHeirs.id, input.heirId));
+    }).where(eq50(houseHeirs.id, input.heirId));
     return {
       success: true,
       releasedAmount: input.amount,
@@ -43413,7 +43453,7 @@ var heirDistributionRouter = router({
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
-    const [heir] = await db7.select().from(houseHeirs).where(eq49(houseHeirs.id, input.heirId));
+    const [heir] = await db7.select().from(houseHeirs).where(eq50(houseHeirs.id, input.heirId));
     if (!heir) {
       throw new TRPCError19({ code: "NOT_FOUND", message: "Heir not found" });
     }
@@ -43426,8 +43466,8 @@ var heirDistributionRouter = router({
     if (input.distributionPercentage !== void 0) {
       const otherHeirs = await db7.select().from(houseHeirs).where(
         and36(
-          eq49(houseHeirs.houseId, heir.houseId),
-          eq49(houseHeirs.status, "active")
+          eq50(houseHeirs.houseId, heir.houseId),
+          eq50(houseHeirs.status, "active")
         )
       );
       const otherTotal = otherHeirs.filter((h) => h.id !== input.heirId).reduce((sum5, h) => sum5 + parseFloat(h.distributionPercentage || "0"), 0);
@@ -43449,7 +43489,7 @@ var heirDistributionRouter = router({
     if (input.distributionMethod) updateData.distributionMethod = input.distributionMethod;
     if (input.accumulationPercentage !== void 0) updateData.accumulationPercentage = input.accumulationPercentage.toString();
     if (input.spendthriftEnabled !== void 0) updateData.spendthriftEnabled = input.spendthriftEnabled;
-    await db7.update(houseHeirs).set(updateData).where(eq49(houseHeirs.id, input.heirId));
+    await db7.update(houseHeirs).set(updateData).where(eq50(houseHeirs.id, input.heirId));
     return {
       success: true,
       heirId: input.heirId,
@@ -43465,11 +43505,11 @@ var heirDistributionRouter = router({
     if (!db7) throw new TRPCError19({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
-    const [heir] = await db7.select().from(houseHeirs).where(eq49(houseHeirs.id, input.heirId));
+    const [heir] = await db7.select().from(houseHeirs).where(eq50(houseHeirs.id, input.heirId));
     if (!heir) {
       throw new TRPCError19({ code: "NOT_FOUND", message: "Heir not found" });
     }
-    const [lock] = await db7.select().from(heirDistributionLocks).where(eq49(heirDistributionLocks.houseId, heir.houseId));
+    const [lock] = await db7.select().from(heirDistributionLocks).where(eq50(heirDistributionLocks.houseId, heir.houseId));
     if (lock?.isLocked) {
       throw new TRPCError19({
         code: "FORBIDDEN",
@@ -43478,7 +43518,7 @@ var heirDistributionRouter = router({
     }
     await db7.update(houseHeirs).set({
       status: "removed"
-    }).where(eq49(houseHeirs.id, input.heirId));
+    }).where(eq50(houseHeirs.id, input.heirId));
     const blockchainHash = await recordToBlockchain4("heir_removed", input.heirId, {
       heirName: heir.fullName,
       reason: input.reason || "Removed by administrator",
@@ -43499,7 +43539,7 @@ var heirDistributionRouter = router({
     if (!userId) throw new TRPCError19({ code: "UNAUTHORIZED" });
     let houseId = input?.houseId;
     if (!houseId) {
-      const userHouse = await db7.select().from(houses).where(eq49(houses.ownerUserId, userId)).limit(1);
+      const userHouse = await db7.select().from(houses).where(eq50(houses.ownerUserId, userId)).limit(1);
       if (!userHouse.length) {
         return {
           totalHeirs: 0,
@@ -43511,8 +43551,8 @@ var heirDistributionRouter = router({
       }
       houseId = userHouse[0].id;
     }
-    const heirs = await db7.select().from(houseHeirs).where(and36(eq49(houseHeirs.houseId, houseId), eq49(houseHeirs.status, "active")));
-    const [lock] = await db7.select().from(heirDistributionLocks).where(eq49(heirDistributionLocks.houseId, houseId));
+    const heirs = await db7.select().from(houseHeirs).where(and36(eq50(houseHeirs.houseId, houseId), eq50(houseHeirs.status, "active")));
+    const [lock] = await db7.select().from(heirDistributionLocks).where(eq50(heirDistributionLocks.houseId, houseId));
     const totalDistributed = heirs.reduce((sum5, h) => sum5 + parseFloat(h.totalDistributed || "0"), 0);
     const totalAccumulated = heirs.reduce((sum5, h) => sum5 + parseFloat(h.totalAccumulated || "0"), 0);
     return {
@@ -44062,31 +44102,31 @@ var emailDigestRouter = router({
 import { z as z63 } from "zod";
 init_db();
 init_schema();
-import { eq as eq50, desc as desc31, and as and37, gte as gte4, lte as lte5, sql as sql25 } from "drizzle-orm";
+import { eq as eq51, desc as desc32, and as and37, gte as gte4, lte as lte5, sql as sql25 } from "drizzle-orm";
 import { TRPCError as TRPCError20 } from "@trpc/server";
 var houseContractsRouter = router({
   // Get all contracts for a specific house
   getByHouse: protectedProcedure.input(z63.object({ houseId: z63.number() })).query(async ({ input }) => {
-    const contracts2 = await db.select().from(houseContracts).where(eq50(houseContracts.houseId, input.houseId)).orderBy(desc31(houseContracts.createdAt));
+    const contracts2 = await db.select().from(houseContracts).where(eq51(houseContracts.houseId, input.houseId)).orderBy(desc32(houseContracts.createdAt));
     return contracts2;
   }),
   // Get all contracts for the current user's houses
   getMyContracts: protectedProcedure.query(async ({ ctx }) => {
-    const userHouses = await db.select({ id: houses.id, name: houses.name }).from(houses).where(eq50(houses.userId, ctx.user.id));
+    const userHouses = await db.select({ id: houses.id, name: houses.name }).from(houses).where(eq51(houses.userId, ctx.user.id));
     if (userHouses.length === 0) {
       return [];
     }
     const houseIds = userHouses.map((h) => h.id);
-    const contracts2 = await db.select().from(houseContracts).where(sql25`${houseContracts.houseId} IN (${sql25.join(houseIds, sql25`, `)})`).orderBy(desc31(houseContracts.createdAt));
+    const contracts2 = await db.select().from(houseContracts).where(sql25`${houseContracts.houseId} IN (${sql25.join(houseIds, sql25`, `)})`).orderBy(desc32(houseContracts.createdAt));
     return contracts2;
   }),
   // Get a single contract by ID
   getById: protectedProcedure.input(z63.object({ id: z63.number() })).query(async ({ input }) => {
-    const [contract] = await db.select().from(houseContracts).where(eq50(houseContracts.id, input.id));
+    const [contract] = await db.select().from(houseContracts).where(eq51(houseContracts.id, input.id));
     if (!contract) {
       throw new TRPCError20({ code: "NOT_FOUND", message: "Contract not found" });
     }
-    const milestones = await db.select().from(contractMilestones).where(eq50(contractMilestones.contractId, input.id)).orderBy(contractMilestones.dueDate);
+    const milestones = await db.select().from(contractMilestones).where(eq51(contractMilestones.contractId, input.id)).orderBy(contractMilestones.dueDate);
     return { ...contract, milestones };
   }),
   // Create a new contract
@@ -44177,7 +44217,7 @@ var houseContractsRouter = router({
     id: z63.number(),
     status: z63.enum(["draft", "pending_approval", "active", "suspended", "expired", "terminated", "renewed"])
   })).mutation(async ({ input }) => {
-    await db.update(houseContracts).set({ status: input.status }).where(eq50(houseContracts.id, input.id));
+    await db.update(houseContracts).set({ status: input.status }).where(eq51(houseContracts.id, input.id));
     return { success: true };
   }),
   // Update signature status
@@ -44197,12 +44237,12 @@ var houseContractsRouter = router({
       updates.counterpartySignedAt = /* @__PURE__ */ new Date();
       updates.status = "active";
     }
-    await db.update(houseContracts).set(updates).where(eq50(houseContracts.id, input.id));
+    await db.update(houseContracts).set(updates).where(eq51(houseContracts.id, input.id));
     return { success: true };
   }),
   // Record contract on LuvLedger
   recordOnLuvLedger: protectedProcedure.input(z63.object({ contractId: z63.number() })).mutation(async ({ ctx, input }) => {
-    const [contract] = await db.select().from(houseContracts).where(eq50(houseContracts.id, input.contractId));
+    const [contract] = await db.select().from(houseContracts).where(eq51(houseContracts.id, input.contractId));
     if (!contract) {
       throw new TRPCError20({ code: "NOT_FOUND", message: "Contract not found" });
     }
@@ -44226,14 +44266,14 @@ var houseContractsRouter = router({
       luvLedgerRecorded: true,
       luvLedgerTransactionId: transaction.id,
       luvLedgerHash: `0x${Date.now().toString(16)}${Math.random().toString(16).slice(2, 10)}`
-    }).where(eq50(houseContracts.id, input.contractId));
+    }).where(eq51(houseContracts.id, input.contractId));
     return { success: true, transactionId: transaction.id };
   }),
   // Get contracts expiring soon (for compliance alerts)
   getExpiringSoon: protectedProcedure.input(z63.object({ daysAhead: z63.number().default(30) })).query(async ({ ctx, input }) => {
     const futureDate = /* @__PURE__ */ new Date();
     futureDate.setDate(futureDate.getDate() + input.daysAhead);
-    const userHouses = await db.select({ id: houses.id }).from(houses).where(eq50(houses.userId, ctx.user.id));
+    const userHouses = await db.select({ id: houses.id }).from(houses).where(eq51(houses.userId, ctx.user.id));
     if (userHouses.length === 0) {
       return [];
     }
@@ -44241,7 +44281,7 @@ var houseContractsRouter = router({
     const expiringContracts = await db.select().from(houseContracts).where(
       and37(
         sql25`${houseContracts.houseId} IN (${sql25.join(houseIds, sql25`, `)})`,
-        eq50(houseContracts.status, "active"),
+        eq51(houseContracts.status, "active"),
         lte5(houseContracts.expirationDate, futureDate),
         gte4(houseContracts.expirationDate, /* @__PURE__ */ new Date())
       )
@@ -44250,12 +44290,12 @@ var houseContractsRouter = router({
   }),
   // Get contract templates
   getTemplates: protectedProcedure.query(async () => {
-    const templates = await db.select().from(contractTemplates).where(eq50(contractTemplates.isActive, true)).orderBy(desc31(contractTemplates.usageCount));
+    const templates = await db.select().from(contractTemplates).where(eq51(contractTemplates.isActive, true)).orderBy(desc32(contractTemplates.usageCount));
     return templates;
   }),
   // Get contract statistics for a house
   getStats: protectedProcedure.input(z63.object({ houseId: z63.number() })).query(async ({ input }) => {
-    const contracts2 = await db.select().from(houseContracts).where(eq50(houseContracts.houseId, input.houseId));
+    const contracts2 = await db.select().from(houseContracts).where(eq51(houseContracts.houseId, input.houseId));
     const stats = {
       total: contracts2.length,
       active: contracts2.filter((c) => c.status === "active").length,
@@ -44304,7 +44344,7 @@ var houseContractsRouter = router({
     await db.update(contractMilestones).set({
       status: "completed",
       completedDate: /* @__PURE__ */ new Date()
-    }).where(eq50(contractMilestones.id, input.id));
+    }).where(eq51(contractMilestones.id, input.id));
     return { success: true };
   }),
   // Sign contract with e-signature
@@ -44315,7 +44355,7 @@ var houseContractsRouter = router({
     signerName: z63.string(),
     signerRole: z63.enum(["internal", "counterparty"]).default("internal")
   })).mutation(async ({ ctx, input }) => {
-    const [contract] = await db.select().from(houseContracts).where(eq50(houseContracts.id, input.contractId));
+    const [contract] = await db.select().from(houseContracts).where(eq51(houseContracts.id, input.contractId));
     if (!contract) {
       throw new TRPCError20({ code: "NOT_FOUND", message: "Contract not found" });
     }
@@ -44350,7 +44390,7 @@ var houseContractsRouter = router({
           signatureRecord
         ]
       }
-    }).where(eq50(houseContracts.id, input.contractId));
+    }).where(eq51(houseContracts.id, input.contractId));
     await db.insert(luvLedgerTransactions).values({
       userId: ctx.user.id,
       transactionType: "contract_signature",
@@ -44371,7 +44411,7 @@ var houseContractsRouter = router({
       await db.update(houseContracts).set({
         luvLedgerRecorded: true,
         luvLedgerHash: blockchainHash
-      }).where(eq50(houseContracts.id, input.contractId));
+      }).where(eq51(houseContracts.id, input.contractId));
       await db.insert(luvLedgerTransactions).values({
         userId: ctx.user.id,
         transactionType: "contract_execution",
@@ -44395,7 +44435,7 @@ var houseContractsRouter = router({
   getUpcomingMilestones: protectedProcedure.input(z63.object({ daysAhead: z63.number().default(30) })).query(async ({ ctx, input }) => {
     const futureDate = /* @__PURE__ */ new Date();
     futureDate.setDate(futureDate.getDate() + input.daysAhead);
-    const userHouses = await db.select({ id: houses.id }).from(houses).where(eq50(houses.userId, ctx.user.id));
+    const userHouses = await db.select({ id: houses.id }).from(houses).where(eq51(houses.userId, ctx.user.id));
     if (userHouses.length === 0) {
       return [];
     }
@@ -44408,10 +44448,10 @@ var houseContractsRouter = router({
     const milestones = await db.select({
       milestone: contractMilestones,
       contract: houseContracts
-    }).from(contractMilestones).innerJoin(houseContracts, eq50(contractMilestones.contractId, houseContracts.id)).where(
+    }).from(contractMilestones).innerJoin(houseContracts, eq51(contractMilestones.contractId, houseContracts.id)).where(
       and37(
         sql25`${contractMilestones.contractId} IN (${sql25.join(contractIds, sql25`, `)})`,
-        eq50(contractMilestones.status, "pending"),
+        eq51(contractMilestones.status, "pending"),
         lte5(contractMilestones.dueDate, futureDate),
         gte4(contractMilestones.dueDate, /* @__PURE__ */ new Date())
       )
@@ -44424,7 +44464,7 @@ var houseContractsRouter = router({
 import { z as z64 } from "zod";
 init_db();
 init_schema();
-import { eq as eq51, and as and38, desc as desc32, count as count3 } from "drizzle-orm";
+import { eq as eq52, and as and38, desc as desc33, count as count3 } from "drizzle-orm";
 import { TRPCError as TRPCError21 } from "@trpc/server";
 var TREASURY_SPLIT2 = {
   ENTITY_SHARE: 70,
@@ -44472,20 +44512,20 @@ var houseDashboardRouter = router({
     let houseId = input?.houseId;
     let house;
     if (!houseId) {
-      const userHouses = await db7.select().from(houses).where(eq51(houses.ownerUserId, userId)).limit(1);
+      const userHouses = await db7.select().from(houses).where(eq52(houses.ownerUserId, userId)).limit(1);
       if (!userHouses.length) {
         return { hasHouse: false, house: null };
       }
       house = userHouses[0];
       houseId = house.id;
     } else {
-      const [foundHouse] = await db7.select().from(houses).where(eq51(houses.id, houseId));
+      const [foundHouse] = await db7.select().from(houses).where(eq52(houses.id, houseId));
       if (!foundHouse) {
         throw new TRPCError21({ code: "NOT_FOUND", message: "House not found" });
       }
       house = foundHouse;
     }
-    const [founder] = await db7.select().from(users).where(eq51(users.id, house.ownerUserId));
+    const [founder] = await db7.select().from(users).where(eq52(users.id, house.ownerUserId));
     const houseIdentity = {
       id: house.id,
       registryId: `HOUSE-${house.id}-${house.createdAt.getTime()}`,
@@ -44504,9 +44544,9 @@ var houseDashboardRouter = router({
       // Generated crest identifier
       motto: "Building Generational Wealth Through Purpose & Community"
     };
-    const [ledgerAccount] = await db7.select().from(luvLedgerAccounts).where(eq51(luvLedgerAccounts.userId, userId));
-    const recentTransactions = ledgerAccount ? await db7.select().from(luvLedgerTransactions).where(eq51(luvLedgerTransactions.fromAccountId, ledgerAccount.id)).orderBy(desc32(luvLedgerTransactions.createdAt)).limit(10) : [];
-    const revenueEvents = await db7.select().from(revenueSharingEvents).where(eq51(revenueSharingEvents.parentHouseId, houseId)).orderBy(desc32(revenueSharingEvents.createdAt)).limit(10);
+    const [ledgerAccount] = await db7.select().from(luvLedgerAccounts).where(eq52(luvLedgerAccounts.userId, userId));
+    const recentTransactions = ledgerAccount ? await db7.select().from(luvLedgerTransactions).where(eq52(luvLedgerTransactions.fromAccountId, ledgerAccount.id)).orderBy(desc33(luvLedgerTransactions.createdAt)).limit(10) : [];
+    const revenueEvents = await db7.select().from(revenueSharingEvents).where(eq52(revenueSharingEvents.parentHouseId, houseId)).orderBy(desc33(revenueSharingEvents.createdAt)).limit(10);
     const totalPlatformFees = revenueEvents.reduce((sum5, e) => sum5 + parseFloat(e.platformFeeAmount || "0"), 0);
     const totalReserve = totalPlatformFees * (HOUSE_INTERNAL_SPLIT2.RESERVE / 100);
     const totalCommunityShare = totalPlatformFees * (HOUSE_INTERNAL_SPLIT2.COMMUNITY / 100);
@@ -44542,11 +44582,11 @@ var houseDashboardRouter = router({
         createdAt: e.createdAt
       }))
     };
-    const heirs = await db7.select().from(houseHeirs).where(and38(eq51(houseHeirs.houseId, houseId), eq51(houseHeirs.status, "active")));
-    const [distributionLock] = await db7.select().from(heirDistributionLocks).where(eq51(heirDistributionLocks.houseId, houseId));
+    const heirs = await db7.select().from(houseHeirs).where(and38(eq52(houseHeirs.houseId, houseId), eq52(houseHeirs.status, "active")));
+    const [distributionLock] = await db7.select().from(heirDistributionLocks).where(eq52(heirDistributionLocks.houseId, houseId));
     const heirsWithDetails = await Promise.all(heirs.map(async (heir) => {
-      const [accumAccount] = await db7.select().from(heirAccumulationAccounts).where(eq51(heirAccumulationAccounts.heirId, heir.id));
-      const vestingSchedules = await db7.select().from(heirVestingSchedules).where(eq51(heirVestingSchedules.heirId, heir.id)).orderBy(heirVestingSchedules.milestoneOrder);
+      const [accumAccount] = await db7.select().from(heirAccumulationAccounts).where(eq52(heirAccumulationAccounts.heirId, heir.id));
+      const vestingSchedules = await db7.select().from(heirVestingSchedules).where(eq52(heirVestingSchedules.heirId, heir.id)).orderBy(heirVestingSchedules.milestoneOrder);
       const achievedMilestones = vestingSchedules.filter((s) => s.status === "achieved").length;
       const totalMilestones = vestingSchedules.length;
       return {
@@ -44591,7 +44631,7 @@ var houseDashboardRouter = router({
         description: "40% of Platform Services Fee automatically distributed to designated heirs based on locked percentages"
       }
     };
-    const funds = await db7.select().from(communityFunds).where(eq51(communityFunds.houseId, houseId));
+    const funds = await db7.select().from(communityFunds).where(eq52(communityFunds.houseId, houseId));
     const communityFundsData = {
       allocations: COMMUNITY_FUND_ALLOCATIONS,
       funds: funds.map((f) => ({
@@ -44604,12 +44644,12 @@ var houseDashboardRouter = router({
       })),
       totalBalance: funds.reduce((sum5, f) => sum5 + parseFloat(f.currentBalance || "0"), 0)
     };
-    const properties2 = await db7.select().from(realEstateProperties).where(eq51(realEstateProperties.houseId, houseId));
-    const entities = await db7.select().from(businessEntities).where(eq51(businessEntities.userId, userId));
-    const [vault] = await db7.select().from(houseDocumentVaults).where(eq51(houseDocumentVaults.houseId, houseId));
+    const properties2 = await db7.select().from(realEstateProperties).where(eq52(realEstateProperties.houseId, houseId));
+    const entities = await db7.select().from(businessEntities).where(eq52(businessEntities.userId, userId));
+    const [vault] = await db7.select().from(houseDocumentVaults).where(eq52(houseDocumentVaults.houseId, houseId));
     let documentCount = 0;
     if (vault) {
-      const [docCount] = await db7.select({ count: count3() }).from(vaultDocuments).where(eq51(vaultDocuments.vaultId, vault.id));
+      const [docCount] = await db7.select({ count: count3() }).from(vaultDocuments).where(eq52(vaultDocuments.vaultId, vault.id));
       documentCount = docCount?.count || 0;
     }
     const assetManagement = {
@@ -44641,8 +44681,8 @@ var houseDashboardRouter = router({
         storageLimit: vault ? vault.storageQuotaBytes : 0
       }
     };
-    const [tokenState] = await db7.select().from(tokenChainStates).where(eq51(tokenChainStates.userId, String(userId)));
-    const gifts = await db7.select().from(giftTokens).where(eq51(giftTokens.sourceHouseId, houseId));
+    const [tokenState] = await db7.select().from(tokenChainStates).where(eq52(tokenChainStates.userId, String(userId)));
+    const gifts = await db7.select().from(giftTokens).where(eq52(giftTokens.sourceHouseId, houseId));
     const postActivationCourseTypes = [
       { name: "Trust Formation", type: "trust", completed: false },
       { name: "Contract Fundamentals", type: "contracts", completed: false },
@@ -44716,13 +44756,13 @@ var houseDashboardRouter = router({
     if (!userId) throw new TRPCError21({ code: "UNAUTHORIZED" });
     let houseId = input?.houseId;
     if (!houseId) {
-      const userHouses = await db7.select().from(houses).where(eq51(houses.ownerUserId, userId)).limit(1);
+      const userHouses = await db7.select().from(houses).where(eq52(houses.ownerUserId, userId)).limit(1);
       if (!userHouses.length) return null;
       houseId = userHouses[0].id;
     }
-    const [house] = await db7.select().from(houses).where(eq51(houses.id, houseId));
+    const [house] = await db7.select().from(houses).where(eq52(houses.id, houseId));
     if (!house) return null;
-    const [founder] = await db7.select().from(users).where(eq51(users.id, house.ownerUserId));
+    const [founder] = await db7.select().from(users).where(eq52(users.id, house.ownerUserId));
     return {
       house: {
         id: house.id,
@@ -44750,11 +44790,11 @@ var houseDashboardRouter = router({
     if (!userId) throw new TRPCError21({ code: "UNAUTHORIZED" });
     let houseId = input?.houseId;
     if (!houseId) {
-      const userHouses = await db7.select().from(houses).where(eq51(houses.ownerUserId, userId)).limit(1);
+      const userHouses = await db7.select().from(houses).where(eq52(houses.ownerUserId, userId)).limit(1);
       if (!userHouses.length) return null;
       houseId = userHouses[0].id;
     }
-    const [ledgerAccount] = await db7.select().from(luvLedgerAccounts).where(eq51(luvLedgerAccounts.userId, userId));
+    const [ledgerAccount] = await db7.select().from(luvLedgerAccounts).where(eq52(luvLedgerAccounts.userId, userId));
     if (!ledgerAccount) return null;
     return {
       currentBalance: parseFloat(ledgerAccount.balance || "0"),
@@ -44775,12 +44815,12 @@ var houseDashboardRouter = router({
     if (!userId) throw new TRPCError21({ code: "UNAUTHORIZED" });
     let houseId = input?.houseId;
     if (!houseId) {
-      const userHouses = await db7.select().from(houses).where(eq51(houses.ownerUserId, userId)).limit(1);
+      const userHouses = await db7.select().from(houses).where(eq52(houses.ownerUserId, userId)).limit(1);
       if (!userHouses.length) return null;
       houseId = userHouses[0].id;
     }
-    const heirs = await db7.select().from(houseHeirs).where(and38(eq51(houseHeirs.houseId, houseId), eq51(houseHeirs.status, "active")));
-    const [lock] = await db7.select().from(heirDistributionLocks).where(eq51(heirDistributionLocks.houseId, houseId));
+    const heirs = await db7.select().from(houseHeirs).where(and38(eq52(houseHeirs.houseId, houseId), eq52(houseHeirs.status, "active")));
+    const [lock] = await db7.select().from(heirDistributionLocks).where(eq52(heirDistributionLocks.houseId, houseId));
     const totalDistributed = heirs.reduce((sum5, h) => sum5 + parseFloat(h.totalDistributed || "0"), 0);
     const totalAccumulated = heirs.reduce((sum5, h) => sum5 + parseFloat(h.totalAccumulated || "0"), 0);
     const totalPercentage = heirs.reduce((sum5, h) => sum5 + parseFloat(h.distributionPercentage || "0"), 0);
@@ -44814,12 +44854,12 @@ var houseDashboardRouter = router({
     if (!userId) throw new TRPCError21({ code: "UNAUTHORIZED" });
     let houseId = input?.houseId;
     if (!houseId) {
-      const userHouses = await db7.select().from(houses).where(eq51(houses.ownerUserId, userId)).limit(1);
+      const userHouses = await db7.select().from(houses).where(eq52(houses.ownerUserId, userId)).limit(1);
       if (!userHouses.length) return null;
       houseId = userHouses[0].id;
     }
-    const [house] = await db7.select().from(houses).where(eq51(houses.id, houseId));
-    const [tokenState] = await db7.select().from(tokenChainStates).where(eq51(tokenChainStates.userId, String(userId)));
+    const [house] = await db7.select().from(houses).where(eq52(houses.id, houseId));
+    const [tokenState] = await db7.select().from(tokenChainStates).where(eq52(tokenChainStates.userId, String(userId)));
     const postActivationCourseTypes = [
       { id: 1, name: "Trust Formation", type: "trust", status: "pending", associatedToken: "SPARK" },
       { id: 2, name: "Contract Fundamentals", type: "contracts", status: "pending", associatedToken: "SPARK" },
@@ -44874,7 +44914,7 @@ init_db();
 init_schema();
 init_storage();
 init_env();
-import { eq as eq52 } from "drizzle-orm";
+import { eq as eq53 } from "drizzle-orm";
 import { TRPCError as TRPCError22 } from "@trpc/server";
 import crypto24 from "crypto";
 function isOwner(userId, userRole) {
@@ -45060,17 +45100,17 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can access this" });
     }
-    const userHouse = await db7.select().from(houses).where(eq52(houses.ownerUserId, ctx.user.id)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq53(houses.ownerUserId, ctx.user.id)).limit(1);
     if (!userHouse.length) {
       return { house: null, hasHouse: false };
     }
     const linkedBusinesses = await db7.select({
       link: houseBusinesses,
       business: businessEntities
-    }).from(houseBusinesses).innerJoin(businessEntities, eq52(houseBusinesses.businessEntityId, businessEntities.id)).where(eq52(houseBusinesses.houseId, userHouse[0].id));
-    const members = await db7.select().from(houseMembers).where(eq52(houseMembers.houseId, userHouse[0].id));
-    const heirs = await db7.select().from(houseHeirs).where(eq52(houseHeirs.houseId, userHouse[0].id));
-    const funds = await db7.select().from(communityFunds).where(eq52(communityFunds.houseId, userHouse[0].id));
+    }).from(houseBusinesses).innerJoin(businessEntities, eq53(houseBusinesses.businessEntityId, businessEntities.id)).where(eq53(houseBusinesses.houseId, userHouse[0].id));
+    const members = await db7.select().from(houseMembers).where(eq53(houseMembers.houseId, userHouse[0].id));
+    const heirs = await db7.select().from(houseHeirs).where(eq53(houseHeirs.houseId, userHouse[0].id));
+    const funds = await db7.select().from(communityFunds).where(eq53(communityFunds.houseId, userHouse[0].id));
     return {
       house: userHouse[0],
       hasHouse: true,
@@ -45097,7 +45137,7 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can use this bypass" });
     }
-    const existingHouse = await db7.select().from(houses).where(eq52(houses.ownerUserId, ctx.user.id)).limit(1);
+    const existingHouse = await db7.select().from(houses).where(eq53(houses.ownerUserId, ctx.user.id)).limit(1);
     if (existingHouse.length > 0) {
       throw new TRPCError22({
         code: "PRECONDITION_FAILED",
@@ -45226,7 +45266,7 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can import businesses" });
     }
-    const userHouse = await db7.select().from(houses).where(eq52(houses.ownerUserId, ctx.user.id)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq53(houses.ownerUserId, ctx.user.id)).limit(1);
     if (!userHouse.length) {
       throw new TRPCError22({
         code: "PRECONDITION_FAILED",
@@ -45295,7 +45335,7 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can add heirs" });
     }
-    const userHouse = await db7.select().from(houses).where(eq52(houses.ownerUserId, ctx.user.id)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq53(houses.ownerUserId, ctx.user.id)).limit(1);
     if (!userHouse.length) {
       throw new TRPCError22({
         code: "PRECONDITION_FAILED",
@@ -45337,7 +45377,7 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can update House configuration" });
     }
-    const userHouse = await db7.select().from(houses).where(eq52(houses.ownerUserId, ctx.user.id)).limit(1);
+    const userHouse = await db7.select().from(houses).where(eq53(houses.ownerUserId, ctx.user.id)).limit(1);
     if (!userHouse.length) {
       throw new TRPCError22({
         code: "PRECONDITION_FAILED",
@@ -45365,7 +45405,7 @@ var ownerHouseSetupRouter = router({
       interHouseDistribution: interDist.toFixed(2),
       intraHouseOperations: intraOps.toFixed(2),
       intraHouseInheritance: intraInherit.toFixed(2)
-    }).where(eq52(houses.id, userHouse[0].id));
+    }).where(eq53(houses.id, userHouse[0].id));
     return {
       status: "UPDATED",
       configuration: {
@@ -45386,12 +45426,12 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can access this" });
     }
-    const allBusinesses = await db7.select().from(businessEntities).where(eq52(businessEntities.userId, ctx.user.id));
-    const userHouse = await db7.select().from(houses).where(eq52(houses.ownerUserId, ctx.user.id)).limit(1);
+    const allBusinesses = await db7.select().from(businessEntities).where(eq53(businessEntities.userId, ctx.user.id));
+    const userHouse = await db7.select().from(houses).where(eq53(houses.ownerUserId, ctx.user.id)).limit(1);
     if (!userHouse.length) {
       return { businesses: allBusinesses, linkedBusinessIds: [] };
     }
-    const linkedBusinesses = await db7.select().from(houseBusinesses).where(eq52(houseBusinesses.houseId, userHouse[0].id));
+    const linkedBusinesses = await db7.select().from(houseBusinesses).where(eq53(houseBusinesses.houseId, userHouse[0].id));
     const linkedIds = linkedBusinesses.map((lb) => lb.businessEntityId);
     return {
       businesses: allBusinesses,
@@ -45425,14 +45465,14 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can activate the Genesis House" });
     }
-    const existingGenesis = await db7.select().from(houses).where(eq52(houses.isGenesis, true)).limit(1);
+    const existingGenesis = await db7.select().from(houses).where(eq53(houses.isGenesis, true)).limit(1);
     if (existingGenesis.length > 0) {
       throw new TRPCError22({
         code: "PRECONDITION_FAILED",
         message: "A Genesis House already exists. There can only be one."
       });
     }
-    const existingHouse = await db7.select().from(houses).where(eq52(houses.ownerUserId, ctx.user.id)).limit(1);
+    const existingHouse = await db7.select().from(houses).where(eq53(houses.ownerUserId, ctx.user.id)).limit(1);
     if (existingHouse.length > 0) {
       throw new TRPCError22({
         code: "PRECONDITION_FAILED",
@@ -45586,11 +45626,11 @@ var ownerHouseSetupRouter = router({
       tags: ["genesis", "founding", "ceremony", "declaration"],
       uploadedByUserId: ctx.user.id
     }).$returningId();
-    await db7.update(houses).set({ genesisDeclarationDocId: doc.id }).where(eq52(houses.id, house.id));
+    await db7.update(houses).set({ genesisDeclarationDocId: doc.id }).where(eq53(houses.id, house.id));
     await db7.update(houseDocumentVaults).set({
       totalDocuments: 1,
       totalStorageBytes: declarationBuffer.length
-    }).where(eq52(houseDocumentVaults.id, vault.id));
+    }).where(eq53(houseDocumentVaults.id, vault.id));
     return {
       houseId: house.id,
       genesisRIN,
@@ -45612,14 +45652,14 @@ var ownerHouseSetupRouter = router({
     if (!isOwner(userId, userRole)) {
       throw new TRPCError22({ code: "FORBIDDEN", message: "Only the system owner can access the Genesis Declaration" });
     }
-    const genesisHouse = await db7.select().from(houses).where(eq52(houses.isGenesis, true)).limit(1);
+    const genesisHouse = await db7.select().from(houses).where(eq53(houses.isGenesis, true)).limit(1);
     if (!genesisHouse.length) {
       return { exists: false, declaration: null };
     }
     const house = genesisHouse[0];
     let declaration = null;
     if (house.genesisDeclarationDocId) {
-      const docs = await db7.select().from(vaultDocuments).where(eq52(vaultDocuments.id, house.genesisDeclarationDocId)).limit(1);
+      const docs = await db7.select().from(vaultDocuments).where(eq53(vaultDocuments.id, house.genesisDeclarationDocId)).limit(1);
       declaration = docs[0] || null;
     }
     return {
@@ -45643,7 +45683,7 @@ var ownerHouseSetupRouter = router({
 import { z as z66 } from "zod";
 init_db();
 init_schema();
-import { eq as eq53, and as and40, desc as desc34 } from "drizzle-orm";
+import { eq as eq54, and as and40, desc as desc35 } from "drizzle-orm";
 import { TRPCError as TRPCError23 } from "@trpc/server";
 
 // server/vault-crypto.ts
@@ -45756,7 +45796,7 @@ var genesisHouseRouter = router({
     requireOwner(ctx.user.role);
     const db7 = await getDb();
     if (!db7) throw new TRPCError23({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const genesisHouse = await db7.select().from(houses).where(eq53(houses.isGenesis, true)).limit(1);
+    const genesisHouse = await db7.select().from(houses).where(eq54(houses.isGenesis, true)).limit(1);
     if (!genesisHouse.length) {
       return {
         exists: false,
@@ -45775,10 +45815,10 @@ var genesisHouseRouter = router({
       };
     }
     const house = genesisHouse[0];
-    const members = await db7.select().from(houseMembers).where(eq53(houseMembers.houseId, house.id));
-    const vaultEntries = await db7.select().from(identityVault).where(eq53(identityVault.houseId, house.id));
-    const heirs = await db7.select().from(houseHeirs).where(eq53(houseHeirs.houseId, house.id));
-    const sysConfig = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, "system_open")).limit(1);
+    const members = await db7.select().from(houseMembers).where(eq54(houseMembers.houseId, house.id));
+    const vaultEntries = await db7.select().from(identityVault).where(eq54(identityVault.houseId, house.id));
+    const heirs = await db7.select().from(houseHeirs).where(eq54(houseHeirs.houseId, house.id));
+    const sysConfig = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, "system_open")).limit(1);
     const systemOpen = sysConfig.length > 0 && sysConfig[0].configValue === "true";
     return {
       exists: true,
@@ -45837,9 +45877,9 @@ var genesisHouseRouter = router({
     if (!db7) throw new TRPCError23({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const pinHash = hashVaultPin(input.pin, ctx.user.id);
     const configKey = `vault_pin_${ctx.user.id}`;
-    const existing = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, configKey)).limit(1);
+    const existing = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, configKey)).limit(1);
     if (existing.length > 0) {
-      await db7.update(systemConfig).set({ configValue: pinHash, updatedByUserId: ctx.user.id }).where(eq53(systemConfig.configKey, configKey));
+      await db7.update(systemConfig).set({ configValue: pinHash, updatedByUserId: ctx.user.id }).where(eq54(systemConfig.configKey, configKey));
     } else {
       await db7.insert(systemConfig).values({
         configKey,
@@ -45861,7 +45901,7 @@ var genesisHouseRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError23({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const configKey = `vault_pin_${ctx.user.id}`;
-    const stored = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, configKey)).limit(1);
+    const stored = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, configKey)).limit(1);
     if (!stored.length) {
       throw new TRPCError23({
         code: "PRECONDITION_FAILED",
@@ -45917,11 +45957,11 @@ var genesisHouseRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError23({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const configKey = `vault_pin_${ctx.user.id}`;
-    const stored = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, configKey)).limit(1);
+    const stored = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, configKey)).limit(1);
     if (!stored.length || !verifyVaultPin(input.vaultPin, ctx.user.id, stored[0].configValue)) {
       throw new TRPCError23({ code: "UNAUTHORIZED", message: "Invalid vault PIN" });
     }
-    const genesisHouse = await db7.select().from(houses).where(and40(eq53(houses.isGenesis, true), eq53(houses.ownerUserId, ctx.user.id))).limit(1);
+    const genesisHouse = await db7.select().from(houses).where(and40(eq54(houses.isGenesis, true), eq54(houses.ownerUserId, ctx.user.id))).limit(1);
     if (!genesisHouse.length) {
       throw new TRPCError23({
         code: "PRECONDITION_FAILED",
@@ -46002,19 +46042,19 @@ var genesisHouseRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError23({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const configKey = `vault_pin_${ctx.user.id}`;
-    const stored = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, configKey)).limit(1);
+    const stored = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, configKey)).limit(1);
     if (!stored.length || !verifyVaultPin(input.vaultPin, ctx.user.id, stored[0].configValue)) {
       throw new TRPCError23({ code: "UNAUTHORIZED", message: "Invalid vault PIN" });
     }
     let houseId = input.houseId;
     if (!houseId) {
-      const genesisHouse = await db7.select().from(houses).where(and40(eq53(houses.isGenesis, true), eq53(houses.ownerUserId, ctx.user.id))).limit(1);
+      const genesisHouse = await db7.select().from(houses).where(and40(eq54(houses.isGenesis, true), eq54(houses.ownerUserId, ctx.user.id))).limit(1);
       if (!genesisHouse.length) {
         throw new TRPCError23({ code: "NOT_FOUND", message: "Genesis House not found" });
       }
       houseId = genesisHouse[0].id;
     }
-    const entries = await db7.select().from(identityVault).where(eq53(identityVault.houseId, houseId));
+    const entries = await db7.select().from(identityVault).where(eq54(identityVault.houseId, houseId));
     const decryptedEntries = entries.map((entry) => {
       const decrypted = vaultDecryptFields({
         legalName: entry.encryptedLegalName,
@@ -46061,7 +46101,7 @@ var genesisHouseRouter = router({
         lastAccessedAt: /* @__PURE__ */ new Date(),
         lastAccessedBy: ctx.user.id,
         accessCount: (entry.accessCount || 0) + 1
-      }).where(eq53(identityVault.id, entry.id));
+      }).where(eq54(identityVault.id, entry.id));
     }
     return {
       houseId,
@@ -46094,11 +46134,11 @@ var genesisHouseRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError23({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const configKey = `vault_pin_${ctx.user.id}`;
-    const stored = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, configKey)).limit(1);
+    const stored = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, configKey)).limit(1);
     if (!stored.length || !verifyVaultPin(input.vaultPin, ctx.user.id, stored[0].configValue)) {
       throw new TRPCError23({ code: "UNAUTHORIZED", message: "Invalid vault PIN" });
     }
-    const existing = await db7.select().from(identityVault).where(eq53(identityVault.id, input.vaultEntryId)).limit(1);
+    const existing = await db7.select().from(identityVault).where(eq54(identityVault.id, input.vaultEntryId)).limit(1);
     if (!existing.length) {
       throw new TRPCError23({ code: "NOT_FOUND", message: "Vault entry not found" });
     }
@@ -46153,7 +46193,7 @@ var genesisHouseRouter = router({
       fieldsUpdated.push("inheritanceOrder");
     }
     if (Object.keys(updateData).length > 0) {
-      await db7.update(identityVault).set(updateData).where(eq53(identityVault.id, input.vaultEntryId));
+      await db7.update(identityVault).set(updateData).where(eq54(identityVault.id, input.vaultEntryId));
     }
     await db7.insert(vaultAccessLog).values({
       houseId: existing[0].houseId,
@@ -46182,13 +46222,13 @@ var genesisHouseRouter = router({
     if (!db7) throw new TRPCError23({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     let houseId = input.houseId;
     if (!houseId) {
-      const genesisHouse = await db7.select().from(houses).where(and40(eq53(houses.isGenesis, true), eq53(houses.ownerUserId, ctx.user.id))).limit(1);
+      const genesisHouse = await db7.select().from(houses).where(and40(eq54(houses.isGenesis, true), eq54(houses.ownerUserId, ctx.user.id))).limit(1);
       if (!genesisHouse.length) {
         return { logs: [], total: 0 };
       }
       houseId = genesisHouse[0].id;
     }
-    const logs = await db7.select().from(vaultAccessLog).where(eq53(vaultAccessLog.houseId, houseId)).orderBy(desc34(vaultAccessLog.accessedAt)).limit(input.limit);
+    const logs = await db7.select().from(vaultAccessLog).where(eq54(vaultAccessLog.houseId, houseId)).orderBy(desc35(vaultAccessLog.accessedAt)).limit(input.limit);
     return {
       logs,
       total: logs.length
@@ -46214,35 +46254,35 @@ var genesisHouseRouter = router({
       });
     }
     const configKey = `vault_pin_${ctx.user.id}`;
-    const stored = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, configKey)).limit(1);
+    const stored = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, configKey)).limit(1);
     if (!stored.length || !verifyVaultPin(input.vaultPin, ctx.user.id, stored[0].configValue)) {
       throw new TRPCError23({ code: "UNAUTHORIZED", message: "Invalid vault PIN" });
     }
-    const genesisHouse = await db7.select().from(houses).where(and40(eq53(houses.isGenesis, true), eq53(houses.ownerUserId, ctx.user.id))).limit(1);
+    const genesisHouse = await db7.select().from(houses).where(and40(eq54(houses.isGenesis, true), eq54(houses.ownerUserId, ctx.user.id))).limit(1);
     if (!genesisHouse.length) {
       throw new TRPCError23({
         code: "PRECONDITION_FAILED",
         message: "Genesis House must be created first"
       });
     }
-    const vaultEntries = await db7.select().from(identityVault).where(eq53(identityVault.houseId, genesisHouse[0].id));
+    const vaultEntries = await db7.select().from(identityVault).where(eq54(identityVault.houseId, genesisHouse[0].id));
     if (vaultEntries.length === 0) {
       throw new TRPCError23({
         code: "PRECONDITION_FAILED",
         message: "At least one family member must be added to the vault before activation"
       });
     }
-    await db7.update(houses).set({ status: "active" }).where(eq53(houses.id, genesisHouse[0].id));
+    await db7.update(houses).set({ status: "active" }).where(eq54(houses.id, genesisHouse[0].id));
     await db7.update(users).set({
       memberStatus: "house_activated",
       houseActivatedAt: /* @__PURE__ */ new Date()
-    }).where(eq53(users.id, ctx.user.id));
-    const existingConfig = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, "system_open")).limit(1);
+    }).where(eq54(users.id, ctx.user.id));
+    const existingConfig = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, "system_open")).limit(1);
     if (existingConfig.length > 0) {
       await db7.update(systemConfig).set({
         configValue: "true",
         updatedByUserId: ctx.user.id
-      }).where(eq53(systemConfig.configKey, "system_open"));
+      }).where(eq54(systemConfig.configKey, "system_open"));
     } else {
       await db7.insert(systemConfig).values({
         configKey: "system_open",
@@ -46252,7 +46292,7 @@ var genesisHouseRouter = router({
         updatedByUserId: ctx.user.id
       });
     }
-    const existingTimestamp = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, "genesis_activated_at")).limit(1);
+    const existingTimestamp = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, "genesis_activated_at")).limit(1);
     if (existingTimestamp.length === 0) {
       await db7.insert(systemConfig).values({
         configKey: "genesis_activated_at",
@@ -46274,7 +46314,7 @@ var genesisHouseRouter = router({
   isSystemOpen: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) return { systemOpen: false };
-    const config = await db7.select().from(systemConfig).where(eq53(systemConfig.configKey, "system_open")).limit(1);
+    const config = await db7.select().from(systemConfig).where(eq54(systemConfig.configKey, "system_open")).limit(1);
     return {
       systemOpen: config.length > 0 && config[0].configValue === "true"
     };
@@ -46293,7 +46333,7 @@ var genesisHouseRouter = router({
     let houseId = input.houseId;
     if (!houseId) {
       if (ctx.user.role === "owner" || ctx.user.role === "admin") {
-        const genesisHouse = await db7.select().from(houses).where(eq53(houses.isGenesis, true)).limit(1);
+        const genesisHouse = await db7.select().from(houses).where(eq54(houses.isGenesis, true)).limit(1);
         if (genesisHouse.length) {
           houseId = genesisHouse[0].id;
         }
@@ -46310,7 +46350,7 @@ var genesisHouseRouter = router({
       inheritancePercentage: identityVault.inheritancePercentage,
       inheritanceOrder: identityVault.inheritanceOrder,
       status: identityVault.status
-    }).from(identityVault).where(eq53(identityVault.houseId, houseId));
+    }).from(identityVault).where(eq54(identityVault.houseId, houseId));
     return {
       houseId,
       members: entries
@@ -46334,7 +46374,7 @@ var genesisHouseRouter = router({
 import { z as z67 } from "zod";
 init_db();
 init_schema();
-import { eq as eq54, and as and41, desc as desc35, sql as sql27 } from "drizzle-orm";
+import { eq as eq55, and as and41, desc as desc36, sql as sql27 } from "drizzle-orm";
 import { TRPCError as TRPCError24 } from "@trpc/server";
 var positionManagementRouter = router({
   // ============================================
@@ -46384,11 +46424,11 @@ var positionManagementRouter = router({
   ).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [entity] = await db7.select().from(businessEntities).where(eq54(businessEntities.id, input.businessEntityId)).limit(1);
+    const [entity] = await db7.select().from(businessEntities).where(eq55(businessEntities.id, input.businessEntityId)).limit(1);
     if (!entity) {
       throw new TRPCError24({ code: "NOT_FOUND", message: "Business entity not found" });
     }
-    const [userHouse] = await db7.select().from(houses).where(eq54(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq55(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const [position] = await db7.insert(businessPositions).values({
       businessEntityId: input.businessEntityId,
@@ -46422,7 +46462,7 @@ var positionManagementRouter = router({
   getAllPositions: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const positions = await db7.select().from(businessPositions).orderBy(desc35(businessPositions.createdAt));
+    const positions = await db7.select().from(businessPositions).orderBy(desc36(businessPositions.createdAt));
     return positions;
   }),
   /**
@@ -46431,13 +46471,13 @@ var positionManagementRouter = router({
   getPositionsByEntity: protectedProcedure.input(z67.object({ businessEntityId: z67.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const positions = await db7.select().from(businessPositions).where(eq54(businessPositions.businessEntityId, input.businessEntityId)).orderBy(desc35(businessPositions.createdAt));
+    const positions = await db7.select().from(businessPositions).where(eq55(businessPositions.businessEntityId, input.businessEntityId)).orderBy(desc36(businessPositions.createdAt));
     const positionsWithHolders = await Promise.all(
       positions.map(async (position) => {
         if (position.status === "filled") {
           const [holder] = await db7.select().from(positionHolders).where(and41(
-            eq54(positionHolders.positionId, position.id),
-            eq54(positionHolders.status, "active")
+            eq55(positionHolders.positionId, position.id),
+            eq55(positionHolders.status, "active")
           )).limit(1);
           return {
             ...position,
@@ -46462,11 +46502,11 @@ var positionManagementRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = input.userId || ctx.user.id;
-    const holders = await db7.select().from(positionHolders).where(eq54(positionHolders.userId, userId));
+    const holders = await db7.select().from(positionHolders).where(eq55(positionHolders.userId, userId));
     const positionsWithDetails = await Promise.all(
       holders.map(async (holder) => {
-        const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, holder.positionId)).limit(1);
-        const [entity] = position ? await db7.select().from(businessEntities).where(eq54(businessEntities.id, position.businessEntityId)).limit(1) : [null];
+        const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, holder.positionId)).limit(1);
+        const [entity] = position ? await db7.select().from(businessEntities).where(eq55(businessEntities.id, position.businessEntityId)).limit(1) : [null];
         return { ...holder, position, entity };
       })
     );
@@ -46495,7 +46535,7 @@ var positionManagementRouter = router({
       ...rest,
       ...salaryAmount !== void 0 && { salaryAmount: salaryAmount.toString() },
       ...hourlyRate !== void 0 && { hourlyRate: hourlyRate.toString() }
-    }).where(eq54(businessPositions.id, positionId));
+    }).where(eq55(businessPositions.id, positionId));
     return { success: true };
   }),
   // ============================================
@@ -46542,7 +46582,7 @@ var positionManagementRouter = router({
   ).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, input.positionId)).limit(1);
+    const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, input.positionId)).limit(1);
     if (!position) throw new TRPCError24({ code: "NOT_FOUND", message: "Position not found" });
     if (position.status === "closed") throw new TRPCError24({ code: "BAD_REQUEST", message: "Position is closed" });
     if (position.currentHolders && position.maxHolders && position.currentHolders >= position.maxHolders) {
@@ -46575,7 +46615,7 @@ var positionManagementRouter = router({
     await db7.update(businessPositions).set({
       currentHolders: sql27`${businessPositions.currentHolders} + 1`,
       status: (position.currentHolders || 0) + 1 >= (position.maxHolders || 1) ? "filled" : "open"
-    }).where(eq54(businessPositions.id, input.positionId));
+    }).where(eq55(businessPositions.id, input.positionId));
     const complianceItems = [
       { taskType: "custom", taskName: `Complete I-9 for ${input.fullName}`, description: "Employment eligibility verification within 3 days", dueDate: new Date(new Date(input.startDate).getTime() + 3 * 24 * 60 * 60 * 1e3) },
       { taskType: "performance_review", taskName: `90-day review for ${input.fullName}`, description: "Initial performance review", dueDate: new Date(new Date(input.startDate).getTime() + 90 * 24 * 60 * 60 * 1e3) }
@@ -46615,7 +46655,7 @@ var positionManagementRouter = router({
       ...email && { email },
       ...phone && { phone },
       ...address && { address }
-    }).where(eq54(positionHolders.id, positionHolderId));
+    }).where(eq55(positionHolders.id, positionHolderId));
     return { success: true };
   }),
   /**
@@ -46636,11 +46676,11 @@ var positionManagementRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [holder] = await db7.select().from(positionHolders).where(eq54(positionHolders.id, input.positionHolderId)).limit(1);
+    const [holder] = await db7.select().from(positionHolders).where(eq55(positionHolders.id, input.positionHolderId)).limit(1);
     if (!holder) throw new TRPCError24({ code: "NOT_FOUND", message: "Position holder not found" });
-    const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, holder.positionId)).limit(1);
+    const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, holder.positionId)).limit(1);
     if (!position) throw new TRPCError24({ code: "NOT_FOUND", message: "Position not found" });
-    const [entity] = await db7.select().from(businessEntities).where(eq54(businessEntities.id, position.businessEntityId)).limit(1);
+    const [entity] = await db7.select().from(businessEntities).where(eq55(businessEntities.id, position.businessEntityId)).limit(1);
     const generatedDocs = [];
     const requiresSignature = ["offer_letter", "employment_agreement", "w4_form", "i9_form", "direct_deposit_form", "handbook_acknowledgment", "confidentiality_agreement"];
     for (const docType of input.documentTypes) {
@@ -46670,17 +46710,17 @@ var positionManagementRouter = router({
       signedByUserId: ctx.user.id,
       signatureHash: input.signatureHash || `SIG-${Date.now()}-${ctx.user.id}`,
       status: "signed"
-    }).where(eq54(employmentDocuments.id, input.documentId));
-    const [doc] = await db7.select().from(employmentDocuments).where(eq54(employmentDocuments.id, input.documentId)).limit(1);
+    }).where(eq55(employmentDocuments.id, input.documentId));
+    const [doc] = await db7.select().from(employmentDocuments).where(eq55(employmentDocuments.id, input.documentId)).limit(1);
     if (doc) {
-      const allDocs = await db7.select().from(employmentDocuments).where(eq54(employmentDocuments.positionHolderId, doc.positionHolderId));
+      const allDocs = await db7.select().from(employmentDocuments).where(eq55(employmentDocuments.positionHolderId, doc.positionHolderId));
       const allSigned = allDocs.every((d) => !d.requiresSignature || d.status === "signed");
       if (allSigned) {
         await db7.update(positionHolders).set({
           onboardingComplete: true,
           onboardingCompletedAt: /* @__PURE__ */ new Date(),
           status: "active"
-        }).where(eq54(positionHolders.id, doc.positionHolderId));
+        }).where(eq55(positionHolders.id, doc.positionHolderId));
       }
     }
     return { success: true };
@@ -46691,10 +46731,10 @@ var positionManagementRouter = router({
   getOnboardingStatus: protectedProcedure.input(z67.object({ positionHolderId: z67.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [holder] = await db7.select().from(positionHolders).where(eq54(positionHolders.id, input.positionHolderId)).limit(1);
+    const [holder] = await db7.select().from(positionHolders).where(eq55(positionHolders.id, input.positionHolderId)).limit(1);
     if (!holder) throw new TRPCError24({ code: "NOT_FOUND", message: "Position holder not found" });
-    const documents2 = await db7.select().from(employmentDocuments).where(eq54(employmentDocuments.positionHolderId, input.positionHolderId));
-    const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, holder.positionId)).limit(1);
+    const documents2 = await db7.select().from(employmentDocuments).where(eq55(employmentDocuments.positionHolderId, input.positionHolderId));
+    const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, holder.positionId)).limit(1);
     return {
       holder,
       position,
@@ -46725,9 +46765,9 @@ var positionManagementRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [holder] = await db7.select().from(positionHolders).where(eq54(positionHolders.id, input.positionHolderId)).limit(1);
+    const [holder] = await db7.select().from(positionHolders).where(eq55(positionHolders.id, input.positionHolderId)).limit(1);
     if (!holder) throw new TRPCError24({ code: "NOT_FOUND", message: "Position holder not found" });
-    const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, holder.positionId)).limit(1);
+    const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, holder.positionId)).limit(1);
     if (!position) throw new TRPCError24({ code: "NOT_FOUND", message: "Position not found" });
     const hourlyRate = parseFloat(holder.actualHourlyRate || position.hourlyRate || "0");
     const salary = parseFloat(holder.actualSalary || position.salaryAmount || "0");
@@ -46793,8 +46833,8 @@ var positionManagementRouter = router({
   getPayrollHistory: protectedProcedure.input(z67.object({ positionHolderId: z67.number(), year: z67.number().optional() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const records = await db7.select().from(payrollRecords).where(eq54(payrollRecords.positionHolderId, input.positionHolderId)).orderBy(desc35(payrollRecords.payDate));
-    const [ytd] = await db7.select().from(ytdTotals).where(and41(eq54(ytdTotals.positionHolderId, input.positionHolderId), eq54(ytdTotals.taxYear, input.year || (/* @__PURE__ */ new Date()).getFullYear()))).limit(1);
+    const records = await db7.select().from(payrollRecords).where(eq55(payrollRecords.positionHolderId, input.positionHolderId)).orderBy(desc36(payrollRecords.payDate));
+    const [ytd] = await db7.select().from(ytdTotals).where(and41(eq55(ytdTotals.positionHolderId, input.positionHolderId), eq55(ytdTotals.taxYear, input.year || (/* @__PURE__ */ new Date()).getFullYear()))).limit(1);
     return { records, ytdTotals: ytd };
   }),
   /**
@@ -46815,7 +46855,7 @@ var positionManagementRouter = router({
       bonusPay: payrollRecords.bonusPay,
       employeeName: positionHolders.fullName,
       positionTitle: businessPositions.title
-    }).from(payrollRecords).leftJoin(positionHolders, eq54(payrollRecords.positionHolderId, positionHolders.id)).leftJoin(businessPositions, eq54(payrollRecords.positionId, businessPositions.id)).where(eq54(payrollRecords.businessEntityId, input.businessEntityId)).orderBy(desc35(payrollRecords.payDate));
+    }).from(payrollRecords).leftJoin(positionHolders, eq55(payrollRecords.positionHolderId, positionHolders.id)).leftJoin(businessPositions, eq55(payrollRecords.positionId, businessPositions.id)).where(eq55(payrollRecords.businessEntityId, input.businessEntityId)).orderBy(desc36(payrollRecords.payDate));
     return { records };
   }),
   // ============================================
@@ -46827,12 +46867,12 @@ var positionManagementRouter = router({
   generateW2: protectedProcedure.input(z67.object({ positionHolderId: z67.number(), taxYear: z67.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [holder] = await db7.select().from(positionHolders).where(eq54(positionHolders.id, input.positionHolderId)).limit(1);
+    const [holder] = await db7.select().from(positionHolders).where(eq55(positionHolders.id, input.positionHolderId)).limit(1);
     if (!holder) throw new TRPCError24({ code: "NOT_FOUND", message: "Position holder not found" });
-    const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, holder.positionId)).limit(1);
+    const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, holder.positionId)).limit(1);
     if (!position) throw new TRPCError24({ code: "NOT_FOUND", message: "Position not found" });
-    const [entity] = await db7.select().from(businessEntities).where(eq54(businessEntities.id, position.businessEntityId)).limit(1);
-    const [ytd] = await db7.select().from(ytdTotals).where(and41(eq54(ytdTotals.positionHolderId, input.positionHolderId), eq54(ytdTotals.taxYear, input.taxYear))).limit(1);
+    const [entity] = await db7.select().from(businessEntities).where(eq55(businessEntities.id, position.businessEntityId)).limit(1);
+    const [ytd] = await db7.select().from(ytdTotals).where(and41(eq55(ytdTotals.positionHolderId, input.positionHolderId), eq55(ytdTotals.taxYear, input.taxYear))).limit(1);
     if (!ytd) throw new TRPCError24({ code: "NOT_FOUND", message: "No payroll records found for this year" });
     const [w2] = await db7.insert(employerTaxForms).values({
       positionHolderId: input.positionHolderId,
@@ -46869,18 +46909,18 @@ var positionManagementRouter = router({
   terminateEmployee: protectedProcedure.input(z67.object({ positionHolderId: z67.number(), terminationDate: z67.string(), reason: z67.string(), generateFinalPaycheck: z67.boolean().default(true) })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [holder] = await db7.select().from(positionHolders).where(eq54(positionHolders.id, input.positionHolderId)).limit(1);
+    const [holder] = await db7.select().from(positionHolders).where(eq55(positionHolders.id, input.positionHolderId)).limit(1);
     if (!holder) throw new TRPCError24({ code: "NOT_FOUND", message: "Position holder not found" });
     await db7.update(positionHolders).set({
       status: "terminated",
       endDate: new Date(input.terminationDate),
       terminationReason: input.reason
-    }).where(eq54(positionHolders.id, input.positionHolderId));
+    }).where(eq55(positionHolders.id, input.positionHolderId));
     await db7.update(businessPositions).set({
       currentHolders: sql27`${businessPositions.currentHolders} - 1`,
       status: "open"
-    }).where(eq54(businessPositions.id, holder.positionId));
-    const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, holder.positionId)).limit(1);
+    }).where(eq55(businessPositions.id, holder.positionId));
+    const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, holder.positionId)).limit(1);
     if (position) {
       await db7.insert(employmentDocuments).values({
         positionHolderId: input.positionHolderId,
@@ -46957,7 +46997,7 @@ var positionManagementRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [position] = await db7.select().from(businessPositions).where(eq54(businessPositions.id, input.positionId)).limit(1);
+    const [position] = await db7.select().from(businessPositions).where(eq55(businessPositions.id, input.positionId)).limit(1);
     if (!position) throw new TRPCError24({ code: "NOT_FOUND", message: "Position not found" });
     if (position.status !== "open") throw new TRPCError24({ code: "BAD_REQUEST", message: "Position is not open" });
     const { getDepartment: getDepartment2 } = await Promise.resolve().then(() => (init_departmentRegistry(), departmentRegistry_exports));
@@ -46976,7 +47016,7 @@ var positionManagementRouter = router({
       status: "filled",
       currentHolders: 1,
       department: dept.name
-    }).where(eq54(businessPositions.id, input.positionId));
+    }).where(eq55(businessPositions.id, input.positionId));
     return {
       success: true,
       holderId: holder.insertId,
@@ -47015,15 +47055,15 @@ var positionManagementRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError24({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq54(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq55(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
-    const positions = await db7.select().from(businessPositions).where(eq54(businessPositions.houseId, houseId));
+    const positions = await db7.select().from(businessPositions).where(eq55(businessPositions.houseId, houseId));
     const positionIds = positions.map((p) => p.id);
     let holders = [];
     if (positionIds.length > 0) {
       holders = await db7.select().from(positionHolders).where(sql27`${positionHolders.positionId} IN (${sql27.join(positionIds.map((id) => sql27`${id}`), sql27`, `)})`);
     }
-    const pendingTasks = await db7.select().from(complianceTasks).where(and41(eq54(complianceTasks.houseId, houseId), sql27`${complianceTasks.status} IN ('upcoming', 'due_soon', 'overdue')`)).orderBy(complianceTasks.dueDate).limit(10);
+    const pendingTasks = await db7.select().from(complianceTasks).where(and41(eq55(complianceTasks.houseId, houseId), sql27`${complianceTasks.status} IN ('upcoming', 'due_soon', 'overdue')`)).orderBy(complianceTasks.dueDate).limit(10);
     const activeEmployees = holders.filter((h) => h.status === "active").length;
     const pendingOnboarding = holders.filter((h) => h.status === "pending_onboarding").length;
     const openPositions = positions.filter((p) => p.status === "open").length;
@@ -47047,7 +47087,7 @@ var positionManagementRouter = router({
 import { z as z68 } from "zod";
 init_db();
 init_schema();
-import { eq as eq55 } from "drizzle-orm";
+import { eq as eq56 } from "drizzle-orm";
 import { TRPCError as TRPCError25 } from "@trpc/server";
 var serviceAgreements = /* @__PURE__ */ new Map();
 var contractPayments = /* @__PURE__ */ new Map();
@@ -47084,11 +47124,11 @@ var b2bContractingRouter = router({
   ).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError25({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [clientBiz] = await db7.select().from(businessEntities).where(eq55(businessEntities.id, input.clientBusinessId)).limit(1);
-    const [contractorBiz] = await db7.select().from(businessEntities).where(eq55(businessEntities.id, input.contractorBusinessId)).limit(1);
+    const [clientBiz] = await db7.select().from(businessEntities).where(eq56(businessEntities.id, input.clientBusinessId)).limit(1);
+    const [contractorBiz] = await db7.select().from(businessEntities).where(eq56(businessEntities.id, input.contractorBusinessId)).limit(1);
     if (!clientBiz) throw new TRPCError25({ code: "NOT_FOUND", message: "Client business not found" });
     if (!contractorBiz) throw new TRPCError25({ code: "NOT_FOUND", message: "Contractor business not found" });
-    const [userHouse] = await db7.select().from(houses).where(eq55(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq56(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     let estimatedValue = 0;
     if (input.compensationType === "fixed_fee" && input.fixedFeeAmount) {
@@ -47274,9 +47314,9 @@ var b2bContractingRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError25({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq55(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq56(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
-    const [contractorBiz] = await db7.select().from(businessEntities).where(eq55(businessEntities.id, input.contractorBusinessId)).limit(1);
+    const [contractorBiz] = await db7.select().from(businessEntities).where(eq56(businessEntities.id, input.contractorBusinessId)).limit(1);
     if (!contractorBiz) throw new TRPCError25({ code: "NOT_FOUND", message: "Contractor business not found" });
     let totalPayments = 0;
     const agreementSummaries = [];
@@ -47367,7 +47407,7 @@ var b2bContractingRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError25({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq55(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq56(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const allAgreements = Array.from(serviceAgreements.values()).filter((a) => a.houseId === houseId);
     const activeAgreements = allAgreements.filter((a) => a.status === "active");
@@ -47403,7 +47443,7 @@ var b2bContractingRouter = router({
 import { z as z69 } from "zod";
 init_db();
 init_schema();
-import { eq as eq56 } from "drizzle-orm";
+import { eq as eq57 } from "drizzle-orm";
 import { TRPCError as TRPCError26 } from "@trpc/server";
 var transitionPlans = /* @__PURE__ */ new Map();
 var employeeTransitionRouter = router({
@@ -47422,10 +47462,10 @@ var employeeTransitionRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError26({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [holder] = await db7.select().from(positionHolders).where(eq56(positionHolders.id, input.positionHolderId)).limit(1);
+    const [holder] = await db7.select().from(positionHolders).where(eq57(positionHolders.id, input.positionHolderId)).limit(1);
     if (!holder) throw new TRPCError26({ code: "NOT_FOUND", message: "Position holder not found" });
     if (holder.status !== "active") throw new TRPCError26({ code: "BAD_REQUEST", message: "Employee must be active to initiate transition" });
-    const [userHouse] = await db7.select().from(houses).where(eq56(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq57(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const transitionId = `TRANS-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
     const milestones = [
@@ -47566,7 +47606,7 @@ var employeeTransitionRouter = router({
   getTransitions: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError26({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq56(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq57(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const transitions = Array.from(transitionPlans.values()).filter((t2) => t2.houseId === houseId);
     return transitions;
@@ -47650,7 +47690,7 @@ var employeeTransitionRouter = router({
     if (!db7) throw new TRPCError26({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const plan = transitionPlans.get(input.transitionId);
     if (!plan) throw new TRPCError26({ code: "NOT_FOUND", message: "Transition plan not found" });
-    const [business] = await db7.select().from(businessEntities).where(eq56(businessEntities.id, input.businessEntityId)).limit(1);
+    const [business] = await db7.select().from(businessEntities).where(eq57(businessEntities.id, input.businessEntityId)).limit(1);
     if (!business) throw new TRPCError26({ code: "NOT_FOUND", message: "Business entity not found" });
     plan.targetBusiness.entityId = input.businessEntityId;
     const milestone = plan.milestones.find((m) => m.title === "Business Entity Formation");
@@ -47679,7 +47719,7 @@ var employeeTransitionRouter = router({
     await db7.update(positionHolders).set({
       status: "terminated",
       terminationReason: `Transition to business owner: ${plan.targetBusiness.name}`
-    }).where(eq56(positionHolders.id, plan.positionHolderId));
+    }).where(eq57(positionHolders.id, plan.positionHolderId));
     const terminationDoc = {
       type: "termination_letter",
       employeeName: plan.employeeName,
@@ -47792,7 +47832,7 @@ var employeeTransitionRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError26({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq56(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq57(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const allTransitions = Array.from(transitionPlans.values()).filter((t2) => t2.houseId === houseId);
     const inProgress = allTransitions.filter((t2) => t2.status === "in_progress");
@@ -47827,7 +47867,7 @@ var employeeTransitionRouter = router({
 import { z as z70 } from "zod";
 init_db();
 init_schema();
-import { eq as eq57 } from "drizzle-orm";
+import { eq as eq58 } from "drizzle-orm";
 import { TRPCError as TRPCError27 } from "@trpc/server";
 var interCompanyContracts = /* @__PURE__ */ new Map();
 var interCompanyPayments = /* @__PURE__ */ new Map();
@@ -47880,14 +47920,14 @@ var interCompanyRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError27({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [providerBiz] = await db7.select().from(businessEntities).where(eq57(businessEntities.id, input.providerBusinessId)).limit(1);
-    const [clientBiz] = await db7.select().from(businessEntities).where(eq57(businessEntities.id, input.clientBusinessId)).limit(1);
+    const [providerBiz] = await db7.select().from(businessEntities).where(eq58(businessEntities.id, input.providerBusinessId)).limit(1);
+    const [clientBiz] = await db7.select().from(businessEntities).where(eq58(businessEntities.id, input.clientBusinessId)).limit(1);
     if (!providerBiz) throw new TRPCError27({ code: "NOT_FOUND", message: "Provider business not found" });
     if (!clientBiz) throw new TRPCError27({ code: "NOT_FOUND", message: "Client business not found" });
     if (input.providerBusinessId === input.clientBusinessId) {
       throw new TRPCError27({ code: "BAD_REQUEST", message: "Cannot create contract with self" });
     }
-    const [userHouse] = await db7.select().from(houses).where(eq57(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const contractId = `ICC-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
     const contract = {
@@ -48125,7 +48165,7 @@ var interCompanyRouter = router({
   })).query(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError27({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq57(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const houseContracts2 = Array.from(interCompanyContracts.values()).filter(
       (c) => c.houseId === houseId || c.provider.houseId === houseId || c.client.houseId === houseId
@@ -48172,7 +48212,7 @@ var interCompanyRouter = router({
   reconcileAccounts: protectedProcedure.input(z70.object({ asOfDate: z70.string() })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError27({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq57(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const houseContracts2 = Array.from(interCompanyContracts.values()).filter(
       (c) => c.houseId === houseId
@@ -48244,7 +48284,7 @@ var interCompanyRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError27({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq57(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const allContracts = Array.from(interCompanyContracts.values()).filter(
       (c) => c.houseId === houseId
@@ -48289,7 +48329,7 @@ var interCompanyRouter = router({
 import { z as z71 } from "zod";
 init_db();
 init_schema();
-import { eq as eq58 } from "drizzle-orm";
+import { eq as eq59 } from "drizzle-orm";
 import { TRPCError as TRPCError28 } from "@trpc/server";
 var STATE_FILING_INFO = {
   AL: { name: "Alabama", sosWebsite: "sos.alabama.gov", eFilingAvailable: true, llcFilingFee: 200, corpFilingFee: 200, annualReportFee: 0, processingTime: "5-7 days" },
@@ -48430,7 +48470,7 @@ var businessFormationRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError28({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const stateInfo = STATE_FILING_INFO[input.stateCode.toUpperCase()];
     if (!stateInfo) throw new TRPCError28({ code: "NOT_FOUND", message: "State not found" });
@@ -48486,7 +48526,7 @@ var businessFormationRouter = router({
   getTrackers: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError28({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const trackers = Array.from(formationTrackers.values()).filter((t2) => t2.houseId === houseId);
     return trackers;
@@ -48607,7 +48647,7 @@ var businessFormationRouter = router({
   getActivationChecklist: protectedProcedure.input(z71.object({ businessEntityId: z71.number().optional() })).query(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError28({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const trackers = Array.from(formationTrackers.values()).filter((t2) => {
       if (input.businessEntityId) {
@@ -48642,7 +48682,7 @@ var businessFormationRouter = router({
   createDepartmentEntities: protectedProcedure.mutation(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError28({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
     if (!userHouse) throw new TRPCError28({ code: "NOT_FOUND", message: "House not found" });
     const departmentEntities = [
       {
@@ -48684,7 +48724,7 @@ var businessFormationRouter = router({
     ];
     const created = [];
     for (const entity of departmentEntities) {
-      const [existing] = await db7.select().from(businessEntities).where(eq58(businessEntities.name, entity.name)).limit(1);
+      const [existing] = await db7.select().from(businessEntities).where(eq59(businessEntities.name, entity.name)).limit(1);
       if (!existing) {
         await db7.insert(businessEntities).values({
           userId: ctx.user.id,
@@ -48715,7 +48755,7 @@ var businessFormationRouter = router({
   getDepartmentEntities: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError28({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const entities = await db7.select().from(businessEntities).where(eq58(businessEntities.userId, ctx.user.id));
+    const entities = await db7.select().from(businessEntities).where(eq59(businessEntities.userId, ctx.user.id));
     const departmentMap = {
       "Amber's Health & Wellness LLC": { department: "Health", manager: "Amber" },
       "Essence Design & Technology LLC": { department: "Design, IT", manager: "Essence" },
@@ -48736,7 +48776,7 @@ var businessFormationRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError28({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq58(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const trackers = Array.from(formationTrackers.values()).filter((t2) => t2.houseId === houseId);
     const inProgress = trackers.filter((t2) => t2.status === "in_progress");
@@ -48773,7 +48813,7 @@ var businessFormationRouter = router({
 import { z as z72 } from "zod";
 init_db();
 init_schema();
-import { eq as eq59 } from "drizzle-orm";
+import { eq as eq60 } from "drizzle-orm";
 import { TRPCError as TRPCError29 } from "@trpc/server";
 var ACCOUNT_TYPES = {
   operating: {
@@ -49005,7 +49045,7 @@ var bankingCreditRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError29({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const accountId = `BANK-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
     const account = {
@@ -49041,7 +49081,7 @@ var bankingCreditRouter = router({
   getAccounts: protectedProcedure.input(z72.object({ businessEntityId: z72.number().optional() })).query(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError29({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     let accounts2 = Array.from(bankAccounts.values()).filter((a) => a.houseId === houseId);
     if (input.businessEntityId) {
@@ -49086,7 +49126,7 @@ var bankingCreditRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError29({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const trackerId = `CREDIT-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
     const steps = CREDIT_BUILDING_STEPS.map((step) => ({
@@ -49138,7 +49178,7 @@ var bankingCreditRouter = router({
   getCreditTrackers: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError29({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     return Array.from(creditBuildingTrackers.values()).filter((t2) => t2.houseId === houseId);
   }),
@@ -49326,7 +49366,7 @@ var bankingCreditRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError29({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const accounts2 = Array.from(bankAccounts.values()).filter((a) => a.houseId === houseId);
     const creditTrackers = Array.from(creditBuildingTrackers.values()).filter((t2) => t2.houseId === houseId);
@@ -49382,7 +49422,7 @@ var bankingCreditRouter = router({
   getActivationRequirements: protectedProcedure.input(z72.object({ businessEntityId: z72.number().optional() })).query(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError29({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq59(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     let accounts2 = Array.from(bankAccounts.values()).filter((a) => a.houseId === houseId);
     let creditTrackers = Array.from(creditBuildingTrackers.values()).filter((t2) => t2.houseId === houseId);
@@ -49432,7 +49472,7 @@ var bankingCreditRouter = router({
 import { z as z73 } from "zod";
 init_db();
 init_schema();
-import { eq as eq60 } from "drizzle-orm";
+import { eq as eq61 } from "drizzle-orm";
 import { TRPCError as TRPCError30 } from "@trpc/server";
 import crypto26 from "crypto";
 var signatureRequests2 = /* @__PURE__ */ new Map();
@@ -49477,7 +49517,7 @@ var digitalSignaturesRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError30({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq61(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const requestId = `SIG-${Date.now()}-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
     const documentHash = input.documentContent ? generateDocumentHash(input.documentContent) : generateDocumentHash(input.documentUrl + input.documentTitle);
@@ -49539,7 +49579,7 @@ var digitalSignaturesRouter = router({
   })).query(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError30({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq61(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     let requests2 = Array.from(signatureRequests2.values()).filter((r) => r.houseId === houseId);
     if (input.status !== "all") {
@@ -49900,7 +49940,7 @@ var digitalSignaturesRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError30({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [userHouse] = await db7.select().from(houses).where(eq60(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq61(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const allRequests = Array.from(signatureRequests2.values()).filter((r) => r.houseId === houseId);
     const pending = allRequests.filter((r) => r.status === "pending");
@@ -49938,13 +49978,13 @@ var digitalSignaturesRouter = router({
 import { z as z74 } from "zod";
 init_db();
 init_schema();
-import { eq as eq62, and as and46, desc as desc39, lt as lt2, isNotNull as isNotNull2, sql as sql30, gte as gte6, lte as lte7 } from "drizzle-orm";
+import { eq as eq63, and as and46, desc as desc40, lt as lt2, isNotNull as isNotNull2, sql as sql30, gte as gte6, lte as lte7 } from "drizzle-orm";
 import crypto27 from "crypto";
 
 // server/services/signatureExpirationNotifier.ts
 init_db();
 init_schema();
-import { eq as eq61, and as and45, isNotNull, sql as sql29, gte as gte5, lte as lte6, inArray as inArray2 } from "drizzle-orm";
+import { eq as eq62, and as and45, isNotNull, sql as sql29, gte as gte5, lte as lte6, inArray as inArray2 } from "drizzle-orm";
 var NOTIFICATION_INTERVALS = [30, 14, 7, 1];
 async function getSignaturesExpiringInDays(daysFromNow, toleranceDays = 0) {
   const db7 = await getDb();
@@ -49966,7 +50006,7 @@ async function getSignaturesExpiringInDays(daysFromNow, toleranceDays = 0) {
     expiresAt: electronicSignatures.expiresAt
   }).from(electronicSignatures).where(
     and45(
-      eq61(electronicSignatures.requiresReAcknowledgment, true),
+      eq62(electronicSignatures.requiresReAcknowledgment, true),
       isNotNull(electronicSignatures.expiresAt),
       gte5(electronicSignatures.expiresAt, startOfTargetDay),
       lte6(electronicSignatures.expiresAt, endOfTargetDay)
@@ -50011,8 +50051,8 @@ async function wasNotificationSent(signatureId, daysUntilExpiration) {
   if (!db7) throw new Error("Database not available");
   const existing = await db7.select().from(notifications).where(
     and45(
-      eq61(notifications.referenceType, "signature"),
-      eq61(notifications.referenceId, signatureId),
+      eq62(notifications.referenceType, "signature"),
+      eq62(notifications.referenceId, signatureId),
       sql29`JSON_EXTRACT(${notifications.metadata}, '$.notificationType') = 'expiration_reminder'`,
       sql29`JSON_EXTRACT(${notifications.metadata}, '$.daysUntilExpiration') = ${daysUntilExpiration}`
     )
@@ -50063,7 +50103,7 @@ async function getUsersWithExpiringSignatures(daysAhead = 30) {
     expiresAt: electronicSignatures.expiresAt
   }).from(electronicSignatures).where(
     and45(
-      eq61(electronicSignatures.requiresReAcknowledgment, true),
+      eq62(electronicSignatures.requiresReAcknowledgment, true),
       isNotNull(electronicSignatures.expiresAt),
       lte6(electronicSignatures.expiresAt, futureDate)
     )
@@ -50262,7 +50302,7 @@ var electronicSignatureRouter = router({
   ).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const [signature] = await db7.select().from(electronicSignatures).where(eq62(electronicSignatures.verificationCode, input.verificationCode)).limit(1);
+    const [signature] = await db7.select().from(electronicSignatures).where(eq63(electronicSignatures.verificationCode, input.verificationCode)).limit(1);
     if (!signature) {
       return { valid: false, message: "Signature not found" };
     }
@@ -50302,10 +50342,10 @@ var electronicSignatureRouter = router({
     if (!db7) throw new Error("Database not available");
     const signatures4 = await db7.select().from(electronicSignatures).where(
       and46(
-        eq62(electronicSignatures.documentType, input.documentType),
-        eq62(electronicSignatures.documentId, input.documentId)
+        eq63(electronicSignatures.documentType, input.documentType),
+        eq63(electronicSignatures.documentId, input.documentId)
       )
-    ).orderBy(desc39(electronicSignatures.signedAt));
+    ).orderBy(desc40(electronicSignatures.signedAt));
     return signatures4.map((sig) => ({
       ...sig,
       isExpired: sig.expiresAt ? new Date(sig.expiresAt) < /* @__PURE__ */ new Date() : false
@@ -50322,11 +50362,11 @@ var electronicSignatureRouter = router({
     if (!db7) throw new Error("Database not available");
     const [signature] = await db7.select().from(electronicSignatures).where(
       and46(
-        eq62(electronicSignatures.documentType, input.documentType),
-        eq62(electronicSignatures.documentId, input.documentId),
-        eq62(electronicSignatures.signerId, ctx.user.id)
+        eq63(electronicSignatures.documentType, input.documentType),
+        eq63(electronicSignatures.documentId, input.documentId),
+        eq63(electronicSignatures.signerId, ctx.user.id)
       )
-    ).orderBy(desc39(electronicSignatures.signedAt)).limit(1);
+    ).orderBy(desc40(electronicSignatures.signedAt)).limit(1);
     if (!signature) return null;
     return {
       ...signature,
@@ -50343,7 +50383,7 @@ var electronicSignatureRouter = router({
   ).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const signatures4 = await db7.select().from(electronicSignatures).where(eq62(electronicSignatures.signerId, ctx.user.id)).orderBy(desc39(electronicSignatures.signedAt)).limit(input.limit).offset(input.offset);
+    const signatures4 = await db7.select().from(electronicSignatures).where(eq63(electronicSignatures.signerId, ctx.user.id)).orderBy(desc40(electronicSignatures.signedAt)).limit(input.limit).offset(input.offset);
     return signatures4.map((sig) => ({
       ...sig,
       isExpired: sig.expiresAt ? new Date(sig.expiresAt) < /* @__PURE__ */ new Date() : false
@@ -50362,7 +50402,7 @@ var electronicSignatureRouter = router({
     futureDate.setDate(futureDate.getDate() + input.daysAhead);
     const signatures4 = await db7.select().from(electronicSignatures).where(
       and46(
-        eq62(electronicSignatures.signerId, ctx.user.id),
+        eq63(electronicSignatures.signerId, ctx.user.id),
         isNotNull2(electronicSignatures.expiresAt),
         sql30`${electronicSignatures.expiresAt} > ${now.toISOString()}`,
         sql30`${electronicSignatures.expiresAt} <= ${futureDate.toISOString()}`
@@ -50380,8 +50420,8 @@ var electronicSignatureRouter = router({
     const now = /* @__PURE__ */ new Date();
     const signatures4 = await db7.select().from(electronicSignatures).where(
       and46(
-        eq62(electronicSignatures.signerId, ctx.user.id),
-        eq62(electronicSignatures.requiresReAcknowledgment, true),
+        eq63(electronicSignatures.signerId, ctx.user.id),
+        eq63(electronicSignatures.requiresReAcknowledgment, true),
         isNotNull2(electronicSignatures.expiresAt),
         lt2(electronicSignatures.expiresAt, now)
       )
@@ -50395,7 +50435,7 @@ var electronicSignatureRouter = router({
     const now = /* @__PURE__ */ new Date();
     const thirtyDaysFromNow = /* @__PURE__ */ new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-    const allSignatures = await db7.select().from(electronicSignatures).where(eq62(electronicSignatures.signerId, ctx.user.id));
+    const allSignatures = await db7.select().from(electronicSignatures).where(eq63(electronicSignatures.signerId, ctx.user.id));
     const totalSignatures = allSignatures.length;
     const expiredCount = allSignatures.filter(
       (sig) => sig.expiresAt && new Date(sig.expiresAt) < now
@@ -50430,7 +50470,7 @@ var electronicSignatureRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const user = ctx.user;
-    const [originalSignature] = await db7.select().from(electronicSignatures).where(eq62(electronicSignatures.id, input.originalSignatureId)).limit(1);
+    const [originalSignature] = await db7.select().from(electronicSignatures).where(eq63(electronicSignatures.id, input.originalSignatureId)).limit(1);
     if (!originalSignature) {
       throw new Error("Original signature not found");
     }
@@ -50503,7 +50543,7 @@ var electronicSignatureRouter = router({
   ).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const logs = await db7.select().from(signatureAuditLog).where(eq62(signatureAuditLog.signatureId, input.signatureId)).orderBy(desc39(signatureAuditLog.createdAt));
+    const logs = await db7.select().from(signatureAuditLog).where(eq63(signatureAuditLog.signatureId, input.signatureId)).orderBy(desc40(signatureAuditLog.createdAt));
     return logs;
   }),
   // Process expiration notifications (admin/scheduled job)
@@ -50539,10 +50579,10 @@ var electronicSignatureRouter = router({
     if (!db7) throw new Error("Database not available");
     const notifs = await db7.select().from(notifications).where(
       and46(
-        eq62(notifications.referenceType, "signature"),
-        eq62(notifications.referenceId, input.signatureId)
+        eq63(notifications.referenceType, "signature"),
+        eq63(notifications.referenceId, input.signatureId)
       )
-    ).orderBy(desc39(notifications.createdAt));
+    ).orderBy(desc40(notifications.createdAt));
     return notifs;
   }),
   // Get all expiring signatures for admin dashboard
@@ -50560,13 +50600,13 @@ var electronicSignatureRouter = router({
     let conditions;
     if (input.includeExpired) {
       conditions = and46(
-        eq62(electronicSignatures.requiresReAcknowledgment, true),
+        eq63(electronicSignatures.requiresReAcknowledgment, true),
         isNotNull2(electronicSignatures.expiresAt),
         lte7(electronicSignatures.expiresAt, futureDate)
       );
     } else {
       conditions = and46(
-        eq62(electronicSignatures.requiresReAcknowledgment, true),
+        eq63(electronicSignatures.requiresReAcknowledgment, true),
         isNotNull2(electronicSignatures.expiresAt),
         gte6(electronicSignatures.expiresAt, now),
         lte7(electronicSignatures.expiresAt, futureDate)
@@ -50707,7 +50747,7 @@ var exchangeRatesRouter = router({
 import { z as z76 } from "zod";
 init_db();
 init_schema();
-import { eq as eq63, desc as desc40, and as and47 } from "drizzle-orm";
+import { eq as eq64, desc as desc41, and as and47 } from "drizzle-orm";
 var grantManagementRouter = router({
   // Get all grant opportunities
   getOpportunities: protectedProcedure.input(z76.object({
@@ -50719,24 +50759,24 @@ var grantManagementRouter = router({
     if (!db7) throw new Error("Database not available");
     const conditions = [];
     if (input?.status) {
-      conditions.push(eq63(grantOpportunities.status, input.status));
+      conditions.push(eq64(grantOpportunities.status, input.status));
     }
     if (input?.funderType) {
-      conditions.push(eq63(grantOpportunities.funderType, input.funderType));
+      conditions.push(eq64(grantOpportunities.funderType, input.funderType));
     }
     if (input?.priority) {
-      conditions.push(eq63(grantOpportunities.priority, input.priority));
+      conditions.push(eq64(grantOpportunities.priority, input.priority));
     }
     if (conditions.length > 0) {
-      return await db7.select().from(grantOpportunities).where(and47(...conditions)).orderBy(desc40(grantOpportunities.createdAt));
+      return await db7.select().from(grantOpportunities).where(and47(...conditions)).orderBy(desc41(grantOpportunities.createdAt));
     }
-    return await db7.select().from(grantOpportunities).orderBy(desc40(grantOpportunities.createdAt));
+    return await db7.select().from(grantOpportunities).orderBy(desc41(grantOpportunities.createdAt));
   }),
   // Get single grant opportunity
   getOpportunity: protectedProcedure.input(z76.object({ id: z76.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const [grant] = await db7.select().from(grantOpportunities).where(eq63(grantOpportunities.id, input.id));
+    const [grant] = await db7.select().from(grantOpportunities).where(eq64(grantOpportunities.id, input.id));
     return grant;
   }),
   // Create new grant opportunity
@@ -50790,14 +50830,14 @@ var grantManagementRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...data } = input;
-    await db7.update(grantOpportunities).set(data).where(eq63(grantOpportunities.id, id));
+    await db7.update(grantOpportunities).set(data).where(eq64(grantOpportunities.id, id));
     return { success: true };
   }),
   // Delete grant opportunity
   deleteOpportunity: protectedProcedure.input(z76.object({ id: z76.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(grantOpportunities).where(eq63(grantOpportunities.id, input.id));
+    await db7.delete(grantOpportunities).where(eq64(grantOpportunities.id, input.id));
     return { success: true };
   }),
   // Get all applications
@@ -50809,15 +50849,15 @@ var grantManagementRouter = router({
     if (!db7) throw new Error("Database not available");
     const conditions = [];
     if (input?.grantId) {
-      conditions.push(eq63(grantApplications.grantOpportunityId, input.grantId));
+      conditions.push(eq64(grantApplications.grantOpportunityId, input.grantId));
     }
     if (input?.status) {
-      conditions.push(eq63(grantApplications.status, input.status));
+      conditions.push(eq64(grantApplications.status, input.status));
     }
     if (conditions.length > 0) {
-      return await db7.select().from(grantApplications).where(and47(...conditions)).orderBy(desc40(grantApplications.startedAt));
+      return await db7.select().from(grantApplications).where(and47(...conditions)).orderBy(desc41(grantApplications.startedAt));
     }
-    return await db7.select().from(grantApplications).orderBy(desc40(grantApplications.startedAt));
+    return await db7.select().from(grantApplications).orderBy(desc41(grantApplications.startedAt));
   }),
   // Create application
   createApplication: protectedProcedure.input(z76.object({
@@ -50834,7 +50874,7 @@ var grantManagementRouter = router({
       ...input,
       status: "draft"
     });
-    await db7.update(grantOpportunities).set({ status: "applying" }).where(eq63(grantOpportunities.id, input.grantOpportunityId));
+    await db7.update(grantOpportunities).set({ status: "applying" }).where(eq64(grantOpportunities.id, input.grantOpportunityId));
     return { id: result.insertId };
   }),
   // Update application
@@ -50851,11 +50891,11 @@ var grantManagementRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...data } = input;
-    await db7.update(grantApplications).set(data).where(eq63(grantApplications.id, id));
+    await db7.update(grantApplications).set(data).where(eq64(grantApplications.id, id));
     if (data.status === "approved") {
-      const [app] = await db7.select().from(grantApplications).where(eq63(grantApplications.id, id));
+      const [app] = await db7.select().from(grantApplications).where(eq64(grantApplications.id, id));
       if (app) {
-        await db7.update(grantOpportunities).set({ status: "submitted" }).where(eq63(grantOpportunities.id, app.grantOpportunityId));
+        await db7.update(grantOpportunities).set({ status: "submitted" }).where(eq64(grantOpportunities.id, app.grantOpportunityId));
       }
     }
     return { success: true };
@@ -50864,7 +50904,7 @@ var grantManagementRouter = router({
   getSuggestedBundles: protectedProcedure.input(z76.object({ grantId: z76.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const [grant] = await db7.select().from(grantOpportunities).where(eq63(grantOpportunities.id, input.grantId));
+    const [grant] = await db7.select().from(grantOpportunities).where(eq64(grantOpportunities.id, input.grantId));
     if (!grant) return [];
     const focusAreas = grant.focusAreas || [];
     const funderType = grant.funderType;
@@ -51189,7 +51229,7 @@ var grantManagementRouter = router({
     ];
     let seededCount = 0;
     for (const grant of grantsToSeed) {
-      const existing = await db7.select().from(grantOpportunities).where(eq63(grantOpportunities.name, grant.name));
+      const existing = await db7.select().from(grantOpportunities).where(eq64(grantOpportunities.name, grant.name));
       if (existing.length === 0) {
         await db7.insert(grantOpportunities).values(grant);
         seededCount++;
@@ -51203,7 +51243,7 @@ var grantManagementRouter = router({
 import { z as z77 } from "zod";
 init_db();
 init_schema();
-import { eq as eq64, desc as desc41 } from "drizzle-orm";
+import { eq as eq65, desc as desc42 } from "drizzle-orm";
 var businessPlanRouter = router({
   // Save a business plan from the simulator
   save: protectedProcedure.input(
@@ -51241,7 +51281,7 @@ var businessPlanRouter = router({
   ).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const existing = await db7.select().from(businessPlans).where(eq64(businessPlans.entityName, input.entityName)).limit(1);
+    const existing = await db7.select().from(businessPlans).where(eq65(businessPlans.entityName, input.entityName)).limit(1);
     const planData = {
       entityName: input.entityName,
       entityType: input.entityType,
@@ -51273,7 +51313,7 @@ var businessPlanRouter = router({
       updatedAt: /* @__PURE__ */ new Date()
     };
     if (existing.length > 0) {
-      await db7.update(businessPlans).set(planData).where(eq64(businessPlans.id, existing[0].id));
+      await db7.update(businessPlans).set(planData).where(eq65(businessPlans.id, existing[0].id));
       return { success: true, id: existing[0].id, updated: true };
     } else {
       const result = await db7.insert(businessPlans).values({
@@ -51287,7 +51327,7 @@ var businessPlanRouter = router({
   getByEntityName: protectedProcedure.input(z77.object({ entityName: z77.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const plans = await db7.select().from(businessPlans).where(eq64(businessPlans.entityName, input.entityName)).limit(1);
+    const plans = await db7.select().from(businessPlans).where(eq65(businessPlans.entityName, input.entityName)).limit(1);
     if (plans.length === 0) {
       return null;
     }
@@ -51301,7 +51341,7 @@ var businessPlanRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const plans = await db7.select().from(businessPlans).where(eq64(businessPlans.createdByUserId, ctx.user.id)).orderBy(desc41(businessPlans.updatedAt));
+    const plans = await db7.select().from(businessPlans).where(eq65(businessPlans.createdByUserId, ctx.user.id)).orderBy(desc42(businessPlans.updatedAt));
     return plans.map((plan) => ({
       ...plan,
       keyPersonnel: plan.keyPersonnel ? typeof plan.keyPersonnel === "string" ? JSON.parse(plan.keyPersonnel) : plan.keyPersonnel : []
@@ -51311,7 +51351,7 @@ var businessPlanRouter = router({
   getSummaryForGrant: protectedProcedure.input(z77.object({ entityName: z77.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const plans = await db7.select().from(businessPlans).where(eq64(businessPlans.entityName, input.entityName)).limit(1);
+    const plans = await db7.select().from(businessPlans).where(eq65(businessPlans.entityName, input.entityName)).limit(1);
     if (plans.length === 0) {
       return null;
     }
@@ -51355,7 +51395,7 @@ var businessPlanRouter = router({
 import { z as z78 } from "zod";
 init_db();
 init_schema();
-import { eq as eq65 } from "drizzle-orm";
+import { eq as eq66 } from "drizzle-orm";
 init_storage();
 var extractedDataSchema = z78.object({
   entityName: z78.string(),
@@ -51503,7 +51543,7 @@ Return ONLY valid JSON with the extracted fields. Use null for any field not fou
       const extractedData = JSON.parse(content);
       const db7 = await getDb();
       if (!db7) throw new Error("Database not available");
-      const existing = await db7.select().from(businessPlans).where(eq65(businessPlans.entityName, input.entityName)).limit(1);
+      const existing = await db7.select().from(businessPlans).where(eq66(businessPlans.entityName, input.entityName)).limit(1);
       const planData = {
         entityName: input.entityName,
         entityType: input.entityType,
@@ -51533,7 +51573,7 @@ Return ONLY valid JSON with the extracted fields. Use null for any field not fou
         updatedAt: /* @__PURE__ */ new Date()
       };
       if (existing.length > 0) {
-        await db7.update(businessPlans).set(planData).where(eq65(businessPlans.id, existing[0].id));
+        await db7.update(businessPlans).set(planData).where(eq66(businessPlans.id, existing[0].id));
         return {
           success: true,
           id: existing[0].id,
@@ -51633,7 +51673,7 @@ missionStatement, visionStatement, organizationDescription, yearFounded, product
         throw new Error("Could not extract JSON from response");
       }
       const extractedData = JSON.parse(jsonMatch[0]);
-      const existing = await db7.select().from(businessPlans).where(eq65(businessPlans.entityName, input.entityName)).limit(1);
+      const existing = await db7.select().from(businessPlans).where(eq66(businessPlans.entityName, input.entityName)).limit(1);
       const planData = {
         entityName: input.entityName,
         entityType: input.entityType,
@@ -51644,7 +51684,7 @@ missionStatement, visionStatement, organizationDescription, yearFounded, product
         updatedAt: /* @__PURE__ */ new Date()
       };
       if (existing.length > 0) {
-        await db7.update(businessPlans).set(planData).where(eq65(businessPlans.id, existing[0].id));
+        await db7.update(businessPlans).set(planData).where(eq66(businessPlans.id, existing[0].id));
       } else {
         await db7.insert(businessPlans).values({
           ...planData,
@@ -51671,7 +51711,7 @@ missionStatement, visionStatement, organizationDescription, yearFounded, product
   getParsedPlan: protectedProcedure.input(z78.object({ entityName: z78.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const plans = await db7.select().from(businessPlans).where(eq65(businessPlans.entityName, input.entityName)).limit(1);
+    const plans = await db7.select().from(businessPlans).where(eq66(businessPlans.entityName, input.entityName)).limit(1);
     return plans.length > 0 ? plans[0] : null;
   })
 });
@@ -51680,7 +51720,7 @@ missionStatement, visionStatement, organizationDescription, yearFounded, product
 import { z as z79 } from "zod";
 init_db();
 init_schema();
-import { eq as eq66, desc as desc42, and as and48, asc as asc2 } from "drizzle-orm";
+import { eq as eq67, desc as desc43, and as and48, asc as asc2 } from "drizzle-orm";
 import { TRPCError as TRPCError31 } from "@trpc/server";
 var adminProcedure2 = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin" && ctx.user.role !== "owner") {
@@ -51706,11 +51746,11 @@ var trainingRouter = router({
     const isAdmin = ctx.user && (ctx.user.role === "admin" || ctx.user.role === "owner");
     if (!isAdmin || !input?.includeInactive) {
       query = query.where(and48(
-        eq66(trainingModules.isActive, true),
-        eq66(trainingModules.isPublic, true)
+        eq67(trainingModules.isActive, true),
+        eq67(trainingModules.isPublic, true)
       ));
     }
-    const modules = await query.orderBy(desc42(trainingModules.createdAt));
+    const modules = await query.orderBy(desc43(trainingModules.createdAt));
     let filtered = modules;
     if (input?.agentType) {
       filtered = filtered.filter((m) => m.agentType === input.agentType);
@@ -51726,13 +51766,13 @@ var trainingRouter = router({
   getModule: publicProcedure.input(z79.object({ moduleId: z79.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const [module] = await db7.select().from(trainingModules).where(eq66(trainingModules.id, input.moduleId));
+    const [module] = await db7.select().from(trainingModules).where(eq67(trainingModules.id, input.moduleId));
     if (!module) return null;
-    const topics = await db7.select().from(trainingTopics).where(eq66(trainingTopics.moduleId, input.moduleId)).orderBy(asc2(trainingTopics.orderIndex));
+    const topics = await db7.select().from(trainingTopics).where(eq67(trainingTopics.moduleId, input.moduleId)).orderBy(asc2(trainingTopics.orderIndex));
     const topicsWithQuestions = await Promise.all(topics.map(async (topic) => {
-      const questions = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.topicId, topic.id)).orderBy(asc2(trainingQuestions.orderIndex));
+      const questions = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.topicId, topic.id)).orderBy(asc2(trainingQuestions.orderIndex));
       const questionsWithAnswers = await Promise.all(questions.map(async (q) => {
-        const answers = await db7.select().from(trainingAnswers).where(eq66(trainingAnswers.questionId, q.id)).orderBy(asc2(trainingAnswers.orderIndex));
+        const answers = await db7.select().from(trainingAnswers).where(eq67(trainingAnswers.questionId, q.id)).orderBy(asc2(trainingAnswers.orderIndex));
         return { ...q, answers };
       }));
       return { ...topic, questions: questionsWithAnswers };
@@ -51779,7 +51819,7 @@ var trainingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const { moduleId, ...updates } = input;
-    await db7.update(trainingModules).set(updates).where(eq66(trainingModules.id, moduleId));
+    await db7.update(trainingModules).set(updates).where(eq67(trainingModules.id, moduleId));
     return { success: true };
   }),
   /**
@@ -51788,17 +51828,17 @@ var trainingRouter = router({
   deleteModule: adminProcedure2.input(z79.object({ moduleId: z79.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const topics = await db7.select().from(trainingTopics).where(eq66(trainingTopics.moduleId, input.moduleId));
+    const topics = await db7.select().from(trainingTopics).where(eq67(trainingTopics.moduleId, input.moduleId));
     for (const topic of topics) {
-      const questions = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.topicId, topic.id));
+      const questions = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.topicId, topic.id));
       for (const q of questions) {
-        await db7.delete(trainingAnswers).where(eq66(trainingAnswers.questionId, q.id));
+        await db7.delete(trainingAnswers).where(eq67(trainingAnswers.questionId, q.id));
       }
-      await db7.delete(trainingQuestions).where(eq66(trainingQuestions.topicId, topic.id));
+      await db7.delete(trainingQuestions).where(eq67(trainingQuestions.topicId, topic.id));
     }
-    await db7.delete(trainingTopics).where(eq66(trainingTopics.moduleId, input.moduleId));
-    await db7.delete(trainingSessions).where(eq66(trainingSessions.moduleId, input.moduleId));
-    await db7.delete(trainingModules).where(eq66(trainingModules.id, input.moduleId));
+    await db7.delete(trainingTopics).where(eq67(trainingTopics.moduleId, input.moduleId));
+    await db7.delete(trainingSessions).where(eq67(trainingSessions.moduleId, input.moduleId));
+    await db7.delete(trainingModules).where(eq67(trainingModules.id, input.moduleId));
     return { success: true };
   }),
   // ============================================
@@ -51830,7 +51870,7 @@ var trainingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const { topicId, ...updates } = input;
-    await db7.update(trainingTopics).set(updates).where(eq66(trainingTopics.id, topicId));
+    await db7.update(trainingTopics).set(updates).where(eq67(trainingTopics.id, topicId));
     return { success: true };
   }),
   /**
@@ -51839,12 +51879,12 @@ var trainingRouter = router({
   deleteTopic: adminProcedure2.input(z79.object({ topicId: z79.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const questions = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.topicId, input.topicId));
+    const questions = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.topicId, input.topicId));
     for (const q of questions) {
-      await db7.delete(trainingAnswers).where(eq66(trainingAnswers.questionId, q.id));
+      await db7.delete(trainingAnswers).where(eq67(trainingAnswers.questionId, q.id));
     }
-    await db7.delete(trainingQuestions).where(eq66(trainingQuestions.topicId, input.topicId));
-    await db7.delete(trainingTopics).where(eq66(trainingTopics.id, input.topicId));
+    await db7.delete(trainingQuestions).where(eq67(trainingQuestions.topicId, input.topicId));
+    await db7.delete(trainingTopics).where(eq67(trainingTopics.id, input.topicId));
     return { success: true };
   }),
   // ============================================
@@ -51897,7 +51937,7 @@ var trainingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const { questionId, ...updates } = input;
-    await db7.update(trainingQuestions).set(updates).where(eq66(trainingQuestions.id, questionId));
+    await db7.update(trainingQuestions).set(updates).where(eq67(trainingQuestions.id, questionId));
     return { success: true };
   }),
   /**
@@ -51906,8 +51946,8 @@ var trainingRouter = router({
   deleteQuestion: adminProcedure2.input(z79.object({ questionId: z79.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.delete(trainingAnswers).where(eq66(trainingAnswers.questionId, input.questionId));
-    await db7.delete(trainingQuestions).where(eq66(trainingQuestions.id, input.questionId));
+    await db7.delete(trainingAnswers).where(eq67(trainingAnswers.questionId, input.questionId));
+    await db7.delete(trainingQuestions).where(eq67(trainingQuestions.id, input.questionId));
     return { success: true };
   }),
   // ============================================
@@ -51941,7 +51981,7 @@ var trainingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const { answerId, ...updates } = input;
-    await db7.update(trainingAnswers).set(updates).where(eq66(trainingAnswers.id, answerId));
+    await db7.update(trainingAnswers).set(updates).where(eq67(trainingAnswers.id, answerId));
     return { success: true };
   }),
   /**
@@ -51950,7 +51990,7 @@ var trainingRouter = router({
   deleteAnswer: adminProcedure2.input(z79.object({ answerId: z79.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.delete(trainingAnswers).where(eq66(trainingAnswers.id, input.answerId));
+    await db7.delete(trainingAnswers).where(eq67(trainingAnswers.id, input.answerId));
     return { success: true };
   }),
   // ============================================
@@ -51965,13 +52005,13 @@ var trainingRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const topics = await db7.select().from(trainingTopics).where(eq66(trainingTopics.moduleId, input.moduleId));
+    const topics = await db7.select().from(trainingTopics).where(eq67(trainingTopics.moduleId, input.moduleId));
     let totalQuestions = 0;
     let totalPoints = 0;
     let firstTopicId = null;
     let firstQuestionId = null;
     for (const topic of topics) {
-      const questions = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.topicId, topic.id));
+      const questions = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.topicId, topic.id));
       totalQuestions += questions.length;
       totalPoints += questions.reduce((sum5, q) => sum5 + q.points, 0);
       if (!firstTopicId && questions.length > 0) {
@@ -52002,19 +52042,19 @@ var trainingRouter = router({
     const db7 = await getDb();
     if (!db7) return null;
     const [session] = await db7.select().from(trainingSessions).where(and48(
-      eq66(trainingSessions.id, input.sessionId),
-      eq66(trainingSessions.userId, ctx.user.id)
+      eq67(trainingSessions.id, input.sessionId),
+      eq67(trainingSessions.userId, ctx.user.id)
     ));
     if (!session) return null;
     let currentQuestion = null;
     if (session.currentQuestionId) {
-      const [q] = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.id, session.currentQuestionId));
+      const [q] = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.id, session.currentQuestionId));
       if (q) {
         const answers = await db7.select({
           id: trainingAnswers.id,
           answerText: trainingAnswers.answerText,
           orderIndex: trainingAnswers.orderIndex
-        }).from(trainingAnswers).where(eq66(trainingAnswers.questionId, q.id)).orderBy(asc2(trainingAnswers.orderIndex));
+        }).from(trainingAnswers).where(eq67(trainingAnswers.questionId, q.id)).orderBy(asc2(trainingAnswers.orderIndex));
         currentQuestion = { ...q, answers };
       }
     }
@@ -52035,16 +52075,16 @@ var trainingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const [session] = await db7.select().from(trainingSessions).where(and48(
-      eq66(trainingSessions.id, input.sessionId),
-      eq66(trainingSessions.userId, ctx.user.id)
+      eq67(trainingSessions.id, input.sessionId),
+      eq67(trainingSessions.userId, ctx.user.id)
     ));
     if (!session) throw new TRPCError31({ code: "NOT_FOUND", message: "Session not found" });
-    const [question] = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.id, input.questionId));
+    const [question] = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.id, input.questionId));
     if (!question) throw new TRPCError31({ code: "NOT_FOUND", message: "Question not found" });
     let isCorrect = false;
     let feedback = "";
     if (input.answerId) {
-      const [answer] = await db7.select().from(trainingAnswers).where(eq66(trainingAnswers.id, input.answerId));
+      const [answer] = await db7.select().from(trainingAnswers).where(eq67(trainingAnswers.id, input.answerId));
       if (answer) {
         isCorrect = answer.isCorrect;
         feedback = answer.feedback || (isCorrect ? "Correct!" : "Incorrect.");
@@ -52064,19 +52104,19 @@ var trainingRouter = router({
     const newCorrectAnswers = session.correctAnswers + (isCorrect ? 1 : 0);
     const newEarnedPoints = session.earnedPoints + pointsEarned;
     const newScore = session.totalPoints > 0 ? Math.round(newEarnedPoints / session.totalPoints * 100) : 0;
-    const topic = await db7.select().from(trainingTopics).where(eq66(trainingTopics.id, question.topicId));
-    const allQuestions = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.topicId, question.topicId)).orderBy(asc2(trainingQuestions.orderIndex));
+    const topic = await db7.select().from(trainingTopics).where(eq67(trainingTopics.id, question.topicId));
+    const allQuestions = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.topicId, question.topicId)).orderBy(asc2(trainingQuestions.orderIndex));
     const currentIndex = allQuestions.findIndex((q) => q.id === input.questionId);
     let nextQuestionId = null;
     let nextTopicId = session.currentTopicId;
     if (currentIndex < allQuestions.length - 1) {
       nextQuestionId = allQuestions[currentIndex + 1].id;
     } else {
-      const allTopics = await db7.select().from(trainingTopics).where(eq66(trainingTopics.moduleId, session.moduleId)).orderBy(asc2(trainingTopics.orderIndex));
+      const allTopics = await db7.select().from(trainingTopics).where(eq67(trainingTopics.moduleId, session.moduleId)).orderBy(asc2(trainingTopics.orderIndex));
       const topicIndex = allTopics.findIndex((t2) => t2.id === question.topicId);
       if (topicIndex < allTopics.length - 1) {
         nextTopicId = allTopics[topicIndex + 1].id;
-        const nextTopicQuestions = await db7.select().from(trainingQuestions).where(eq66(trainingQuestions.topicId, nextTopicId)).orderBy(asc2(trainingQuestions.orderIndex));
+        const nextTopicQuestions = await db7.select().from(trainingQuestions).where(eq67(trainingQuestions.topicId, nextTopicId)).orderBy(asc2(trainingQuestions.orderIndex));
         if (nextTopicQuestions.length > 0) {
           nextQuestionId = nextTopicQuestions[0].id;
         }
@@ -52092,8 +52132,8 @@ var trainingRouter = router({
       currentQuestionId: nextQuestionId,
       status: isComplete ? "completed" : "in_progress",
       completedAt: isComplete ? /* @__PURE__ */ new Date() : null
-    }).where(eq66(trainingSessions.id, input.sessionId));
-    const [module] = await db7.select().from(trainingModules).where(eq66(trainingModules.id, session.moduleId));
+    }).where(eq67(trainingSessions.id, input.sessionId));
+    const [module] = await db7.select().from(trainingModules).where(eq67(trainingModules.id, session.moduleId));
     const passed = isComplete && newScore >= (module?.passingScore || 70);
     return {
       isCorrect,
@@ -52115,13 +52155,13 @@ var trainingRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    let conditions = eq66(trainingSessions.userId, ctx.user.id);
+    let conditions = eq67(trainingSessions.userId, ctx.user.id);
     if (input.moduleId) {
-      conditions = and48(conditions, eq66(trainingSessions.moduleId, input.moduleId));
+      conditions = and48(conditions, eq67(trainingSessions.moduleId, input.moduleId));
     }
-    const sessions = await db7.select().from(trainingSessions).where(conditions).orderBy(desc42(trainingSessions.startedAt)).limit(input.limit);
+    const sessions = await db7.select().from(trainingSessions).where(conditions).orderBy(desc43(trainingSessions.startedAt)).limit(input.limit);
     const sessionsWithModules = await Promise.all(sessions.map(async (s) => {
-      const [module] = await db7.select({ name: trainingModules.name }).from(trainingModules).where(eq66(trainingModules.id, s.moduleId));
+      const [module] = await db7.select({ name: trainingModules.name }).from(trainingModules).where(eq67(trainingModules.id, s.moduleId));
       return { ...s, moduleName: module?.name || "Unknown" };
     }));
     return sessionsWithModules;
@@ -52133,7 +52173,7 @@ import { z as z80 } from "zod";
 init_db();
 init_schema();
 init_storage();
-import { eq as eq67, desc as desc43, and as and49, like as like2, or as or5 } from "drizzle-orm";
+import { eq as eq68, desc as desc44, and as and49, like as like2, or as or5 } from "drizzle-orm";
 import { TRPCError as TRPCError32 } from "@trpc/server";
 import crypto28 from "crypto";
 function randomSuffix() {
@@ -52260,10 +52300,10 @@ var jobApplicationsRouter = router({
     if (!db7) return [];
     const filters = [];
     if (input?.status) {
-      filters.push(eq67(jobApplications.status, input.status));
+      filters.push(eq68(jobApplications.status, input.status));
     }
     if (input?.positionId) {
-      filters.push(eq67(jobApplications.positionId, input.positionId));
+      filters.push(eq68(jobApplications.positionId, input.positionId));
     }
     if (input?.search) {
       filters.push(
@@ -52274,19 +52314,19 @@ var jobApplicationsRouter = router({
         )
       );
     }
-    const applications2 = await db7.select().from(jobApplications).where(filters.length > 0 ? and49(...filters) : void 0).orderBy(desc43(jobApplications.appliedAt)).limit(input?.limit || 50).offset(input?.offset || 0);
+    const applications2 = await db7.select().from(jobApplications).where(filters.length > 0 ? and49(...filters) : void 0).orderBy(desc44(jobApplications.appliedAt)).limit(input?.limit || 50).offset(input?.offset || 0);
     return applications2;
   }),
   // Get single application details
   getById: protectedProcedure.input(z80.object({ id: z80.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError32({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [application] = await db7.select().from(jobApplications).where(eq67(jobApplications.id, input.id));
+    const [application] = await db7.select().from(jobApplications).where(eq68(jobApplications.id, input.id));
     if (!application) {
       throw new TRPCError32({ code: "NOT_FOUND", message: "Application not found" });
     }
-    const documents2 = await db7.select().from(applicationDocuments).where(eq67(applicationDocuments.applicationId, input.id));
-    const activityLog = await db7.select().from(applicationActivityLog).where(eq67(applicationActivityLog.applicationId, input.id)).orderBy(desc43(applicationActivityLog.createdAt));
+    const documents2 = await db7.select().from(applicationDocuments).where(eq68(applicationDocuments.applicationId, input.id));
+    const activityLog = await db7.select().from(applicationActivityLog).where(eq68(applicationActivityLog.applicationId, input.id)).orderBy(desc44(applicationActivityLog.createdAt));
     return {
       ...application,
       documents: documents2,
@@ -52313,14 +52353,14 @@ var jobApplicationsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError32({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [current] = await db7.select().from(jobApplications).where(eq67(jobApplications.id, input.id));
+    const [current] = await db7.select().from(jobApplications).where(eq68(jobApplications.id, input.id));
     if (!current) {
       throw new TRPCError32({ code: "NOT_FOUND", message: "Application not found" });
     }
     await db7.update(jobApplications).set({
       status: input.status,
       statusNotes: input.notes || current.statusNotes
-    }).where(eq67(jobApplications.id, input.id));
+    }).where(eq68(jobApplications.id, input.id));
     await db7.insert(applicationActivityLog).values({
       applicationId: input.id,
       actorId: ctx.user?.id,
@@ -52350,7 +52390,7 @@ var jobApplicationsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError32({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [current] = await db7.select().from(jobApplications).where(eq67(jobApplications.id, input.id));
+    const [current] = await db7.select().from(jobApplications).where(eq68(jobApplications.id, input.id));
     if (!current) {
       throw new TRPCError32({ code: "NOT_FOUND", message: "Application not found" });
     }
@@ -52359,7 +52399,7 @@ var jobApplicationsRouter = router({
       interviewDate: new Date(input.interviewDate),
       interviewType: input.interviewType,
       interviewNotes: input.notes
-    }).where(eq67(jobApplications.id, input.id));
+    }).where(eq68(jobApplications.id, input.id));
     await db7.insert(applicationActivityLog).values({
       applicationId: input.id,
       actorId: ctx.user?.id,
@@ -52378,7 +52418,7 @@ var jobApplicationsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError32({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [current] = await db7.select().from(jobApplications).where(eq67(jobApplications.id, input.id));
+    const [current] = await db7.select().from(jobApplications).where(eq68(jobApplications.id, input.id));
     if (!current) {
       throw new TRPCError32({ code: "NOT_FOUND", message: "Application not found" });
     }
@@ -52386,7 +52426,7 @@ var jobApplicationsRouter = router({
       status: "interview_completed",
       interviewScore: input.score,
       interviewNotes: input.notes
-    }).where(eq67(jobApplications.id, input.id));
+    }).where(eq68(jobApplications.id, input.id));
     await db7.insert(applicationActivityLog).values({
       applicationId: input.id,
       actorId: ctx.user?.id,
@@ -52427,7 +52467,7 @@ var jobApplicationsRouter = router({
       decisionMadeBy: ctx.user?.id,
       decisionDate: /* @__PURE__ */ new Date(),
       decisionReason: input.notes
-    }).where(eq67(jobApplications.id, input.id));
+    }).where(eq68(jobApplications.id, input.id));
     await db7.insert(applicationActivityLog).values({
       applicationId: input.id,
       actorId: ctx.user?.id,
@@ -52500,7 +52540,7 @@ var jobApplicationsRouter = router({
 import { z as z81 } from "zod";
 init_db();
 init_schema();
-import { eq as eq68, desc as desc44, and as and50, like as like3, or as or6, sql as sql32 } from "drizzle-orm";
+import { eq as eq69, desc as desc45, and as and50, like as like3, or as or6, sql as sql32 } from "drizzle-orm";
 var employeesRouter = router({
   /**
    * Get all employees with optional filters
@@ -52519,16 +52559,16 @@ var employeesRouter = router({
         id: businessEntities.id,
         name: businessEntities.name
       }
-    }).from(employees).leftJoin(businessEntities, eq68(employees.entityId, businessEntities.id)).orderBy(desc44(employees.createdAt));
+    }).from(employees).leftJoin(businessEntities, eq69(employees.entityId, businessEntities.id)).orderBy(desc45(employees.createdAt));
     const conditions = [];
     if (input?.entityId) {
-      conditions.push(eq68(employees.entityId, input.entityId));
+      conditions.push(eq69(employees.entityId, input.entityId));
     }
     if (input?.department) {
-      conditions.push(eq68(employees.department, input.department));
+      conditions.push(eq69(employees.department, input.department));
     }
     if (input?.status) {
-      conditions.push(eq68(employees.status, input.status));
+      conditions.push(eq69(employees.status, input.status));
     }
     if (input?.search) {
       const searchTerm = `%${input.search}%`;
@@ -52562,7 +52602,7 @@ var employeesRouter = router({
         id: businessEntities.id,
         name: businessEntities.name
       }
-    }).from(employees).leftJoin(businessEntities, eq68(employees.entityId, businessEntities.id)).where(eq68(employees.id, input.id)).limit(1);
+    }).from(employees).leftJoin(businessEntities, eq69(employees.entityId, businessEntities.id)).where(eq69(employees.id, input.id)).limit(1);
     if (!result.length) return null;
     return {
       ...result[0].employee,
@@ -52655,7 +52695,7 @@ var employeesRouter = router({
     const cleanData = Object.fromEntries(
       Object.entries(updateData).filter(([_, v]) => v !== void 0)
     );
-    await db7.update(employees).set(cleanData).where(eq68(employees.id, id));
+    await db7.update(employees).set(cleanData).where(eq69(employees.id, id));
     return { success: true, message: "Employee updated successfully" };
   }),
   /**
@@ -52664,7 +52704,7 @@ var employeesRouter = router({
   delete: protectedProcedure.input(z81.object({ id: z81.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.delete(employees).where(eq68(employees.id, input.id));
+    await db7.delete(employees).where(eq69(employees.id, input.id));
     return { success: true, message: "Employee deleted successfully" };
   }),
   /**
@@ -52673,7 +52713,7 @@ var employeesRouter = router({
   getDepartments: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    const result = await db7.selectDistinct({ department: employees.department }).from(employees).where(eq68(employees.status, "active"));
+    const result = await db7.selectDistinct({ department: employees.department }).from(employees).where(eq69(employees.status, "active"));
     return result.map((r) => r.department);
   }),
   /**
@@ -52719,7 +52759,7 @@ var employeesRouter = router({
         id: businessEntities.id,
         name: businessEntities.name
       }
-    }).from(employees).leftJoin(businessEntities, eq68(employees.entityId, businessEntities.id)).where(eq68(employees.status, "active"));
+    }).from(employees).leftJoin(businessEntities, eq69(employees.entityId, businessEntities.id)).where(eq69(employees.status, "active"));
     return allEmployees.map((r) => ({
       ...r.employee,
       entityName: r.entity?.name || "Unknown Entity"
@@ -52737,7 +52777,7 @@ var employeesRouter = router({
         id: businessEntities.id,
         name: businessEntities.name
       }
-    }).from(employees).leftJoin(businessEntities, eq68(employees.entityId, businessEntities.id)).where(eq68(employees.userId, ctx.user.id)).limit(1);
+    }).from(employees).leftJoin(businessEntities, eq69(employees.entityId, businessEntities.id)).where(eq69(employees.userId, ctx.user.id)).limit(1);
     if (!result.length) return null;
     return {
       ...result[0].employee,
@@ -52756,14 +52796,14 @@ var employeesRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const existing = await db7.select().from(employees).where(eq68(employees.userId, ctx.user.id)).limit(1);
+    const existing = await db7.select().from(employees).where(eq69(employees.userId, ctx.user.id)).limit(1);
     if (!existing.length) {
       throw new Error("No employee profile linked to your account");
     }
     const cleanData = Object.fromEntries(
       Object.entries(input).filter(([_, v]) => v !== void 0)
     );
-    await db7.update(employees).set(cleanData).where(eq68(employees.userId, ctx.user.id));
+    await db7.update(employees).set(cleanData).where(eq69(employees.userId, ctx.user.id));
     return { success: true, message: "Profile updated successfully" };
   }),
   /**
@@ -52775,7 +52815,7 @@ var employeesRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.update(employees).set({ userId: input.userId }).where(eq68(employees.id, input.employeeId));
+    await db7.update(employees).set({ userId: input.userId }).where(eq69(employees.id, input.employeeId));
     return { success: true, message: "Employee linked to user account" };
   }),
   /**
@@ -52784,7 +52824,7 @@ var employeesRouter = router({
   unlinkFromUser: protectedProcedure.input(z81.object({ employeeId: z81.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.update(employees).set({ userId: null }).where(eq68(employees.id, input.employeeId));
+    await db7.update(employees).set({ userId: null }).where(eq69(employees.id, input.employeeId));
     return { success: true, message: "Employee unlinked from user account" };
   }),
   /**
@@ -52799,7 +52839,7 @@ var employeesRouter = router({
         id: businessEntities.id,
         name: businessEntities.name
       }
-    }).from(employees).leftJoin(businessEntities, eq68(employees.entityId, businessEntities.id)).where(sql32`${employees.userId} IS NULL`);
+    }).from(employees).leftJoin(businessEntities, eq69(employees.entityId, businessEntities.id)).where(sql32`${employees.userId} IS NULL`);
     return result.map((r) => ({
       ...r.employee,
       entityName: r.entity?.name || "Unknown Entity"
@@ -52847,7 +52887,7 @@ var employeesRouter = router({
 import { z as z82 } from "zod";
 init_db();
 init_schema();
-import { eq as eq69, desc as desc45, and as and51 } from "drizzle-orm";
+import { eq as eq70, desc as desc46, and as and51 } from "drizzle-orm";
 var SEED_CHANNELS = [
   {
     userId: 1,
@@ -53252,7 +53292,7 @@ var broadcastRouter = router({
       try {
         const db7 = await getDb();
         if (!db7) return [];
-        return await db7.select().from(broadcastChannels).orderBy(desc45(broadcastChannels.createdAt));
+        return await db7.select().from(broadcastChannels).orderBy(desc46(broadcastChannels.createdAt));
       } catch (error) {
         console.error("Error fetching channels:", error);
         return [];
@@ -53262,7 +53302,7 @@ var broadcastRouter = router({
       try {
         const db7 = await getDb();
         if (!db7) return null;
-        const result = await db7.select().from(broadcastChannels).where(eq69(broadcastChannels.id, input.id)).limit(1);
+        const result = await db7.select().from(broadcastChannels).where(eq70(broadcastChannels.id, input.id)).limit(1);
         return result[0] || null;
       } catch (error) {
         console.error("Error fetching channel:", error);
@@ -53313,7 +53353,7 @@ var broadcastRouter = router({
         const db7 = await getDb();
         if (!db7) throw new Error("Database not available");
         const { id, ...updates } = input;
-        const result = await db7.update(broadcastChannels).set(updates).where(and51(eq69(broadcastChannels.id, id), eq69(broadcastChannels.userId, ctx.user.id))).returning();
+        const result = await db7.update(broadcastChannels).set(updates).where(and51(eq70(broadcastChannels.id, id), eq70(broadcastChannels.userId, ctx.user.id))).returning();
         return result[0] || null;
       } catch (error) {
         console.error("Error updating channel:", error);
@@ -53324,7 +53364,7 @@ var broadcastRouter = router({
       try {
         const db7 = await getDb();
         if (!db7) throw new Error("Database not available");
-        await db7.delete(broadcastChannels).where(and51(eq69(broadcastChannels.id, input.id), eq69(broadcastChannels.userId, ctx.user.id)));
+        await db7.delete(broadcastChannels).where(and51(eq70(broadcastChannels.id, input.id), eq70(broadcastChannels.userId, ctx.user.id)));
         return { success: true };
       } catch (error) {
         console.error("Error deleting channel:", error);
@@ -53340,9 +53380,9 @@ var broadcastRouter = router({
         if (!db7) return [];
         let query = db7.select().from(broadcastEpisodes);
         if (input?.channelId) {
-          query = query.where(eq69(broadcastEpisodes.channelId, input.channelId));
+          query = query.where(eq70(broadcastEpisodes.channelId, input.channelId));
         }
-        return await query.orderBy(desc45(broadcastEpisodes.publishedAt)).limit(input?.limit || 50);
+        return await query.orderBy(desc46(broadcastEpisodes.publishedAt)).limit(input?.limit || 50);
       } catch (error) {
         console.error("Error fetching episodes:", error);
         return [];
@@ -53352,7 +53392,7 @@ var broadcastRouter = router({
       try {
         const db7 = await getDb();
         if (!db7) return null;
-        const result = await db7.select().from(broadcastEpisodes).where(eq69(broadcastEpisodes.id, input.id)).limit(1);
+        const result = await db7.select().from(broadcastEpisodes).where(eq70(broadcastEpisodes.id, input.id)).limit(1);
         return result[0] || null;
       } catch (error) {
         console.error("Error fetching episode:", error);
@@ -53397,7 +53437,7 @@ var broadcastRouter = router({
         const db7 = await getDb();
         if (!db7) throw new Error("Database not available");
         const { id, ...updates } = input;
-        const result = await db7.update(broadcastEpisodes).set(updates).where(eq69(broadcastEpisodes.id, id)).returning();
+        const result = await db7.update(broadcastEpisodes).set(updates).where(eq70(broadcastEpisodes.id, id)).returning();
         return result[0] || null;
       } catch (error) {
         console.error("Error updating episode:", error);
@@ -53408,7 +53448,7 @@ var broadcastRouter = router({
       try {
         const db7 = await getDb();
         if (!db7) throw new Error("Database not available");
-        await db7.delete(broadcastEpisodes).where(eq69(broadcastEpisodes.id, input.id));
+        await db7.delete(broadcastEpisodes).where(eq70(broadcastEpisodes.id, input.id));
         return { success: true };
       } catch (error) {
         console.error("Error deleting episode:", error);
@@ -53424,12 +53464,12 @@ var broadcastRouter = router({
         if (!db7) return [];
         let query = db7.select().from(liveBroadcasts);
         if (input?.channelId) {
-          query = query.where(eq69(liveBroadcasts.channelId, input.channelId));
+          query = query.where(eq70(liveBroadcasts.channelId, input.channelId));
         }
         if (input?.status) {
-          query = query.where(eq69(liveBroadcasts.status, input.status));
+          query = query.where(eq70(liveBroadcasts.status, input.status));
         }
-        return await query.orderBy(desc45(liveBroadcasts.scheduledStartTime));
+        return await query.orderBy(desc46(liveBroadcasts.scheduledStartTime));
       } catch (error) {
         console.error("Error fetching live broadcasts:", error);
         return [];
@@ -53439,7 +53479,7 @@ var broadcastRouter = router({
       try {
         const db7 = await getDb();
         if (!db7) return null;
-        const result = await db7.select().from(liveBroadcasts).where(eq69(liveBroadcasts.id, input.id)).limit(1);
+        const result = await db7.select().from(liveBroadcasts).where(eq70(liveBroadcasts.id, input.id)).limit(1);
         return result[0] || null;
       } catch (error) {
         console.error("Error fetching live broadcast:", error);
@@ -53488,7 +53528,7 @@ var broadcastRouter = router({
         const db7 = await getDb();
         if (!db7) throw new Error("Database not available");
         const { id, ...updates } = input;
-        const result = await db7.update(liveBroadcasts).set(updates).where(eq69(liveBroadcasts.id, id)).returning();
+        const result = await db7.update(liveBroadcasts).set(updates).where(eq70(liveBroadcasts.id, id)).returning();
         return result[0] || null;
       } catch (error) {
         console.error("Error updating live broadcast:", error);
@@ -53499,7 +53539,7 @@ var broadcastRouter = router({
       try {
         const db7 = await getDb();
         if (!db7) throw new Error("Database not available");
-        await db7.delete(liveBroadcasts).where(eq69(liveBroadcasts.id, input.id));
+        await db7.delete(liveBroadcasts).where(eq70(liveBroadcasts.id, input.id));
         return { success: true };
       } catch (error) {
         console.error("Error deleting live broadcast:", error);
@@ -53546,7 +53586,7 @@ var broadcastRouter = router({
 import { z as z83 } from "zod";
 init_db();
 init_schema();
-import { eq as eq70, desc as desc46, and as and52, like as like4, or as or7 } from "drizzle-orm";
+import { eq as eq71, desc as desc47, and as and52, like as like4, or as or7 } from "drizzle-orm";
 var contactSubmissionsRouter = router({
   /**
    * Submit a contact form (public)
@@ -53591,7 +53631,7 @@ var contactSubmissionsRouter = router({
     let query = db7.select().from(contactSubmissions);
     const conditions = [];
     if (input?.status) {
-      conditions.push(eq70(contactSubmissions.status, input.status));
+      conditions.push(eq71(contactSubmissions.status, input.status));
     }
     if (input?.search) {
       const searchTerm = `%${input.search}%`;
@@ -53607,7 +53647,7 @@ var contactSubmissionsRouter = router({
     if (conditions.length > 0) {
       query = query.where(and52(...conditions));
     }
-    const submissions = await query.orderBy(desc46(contactSubmissions.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
+    const submissions = await query.orderBy(desc47(contactSubmissions.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
     const countQuery = db7.select().from(contactSubmissions);
     let countQueryWithConditions = countQuery;
     if (conditions.length > 0) {
@@ -53625,7 +53665,7 @@ var contactSubmissionsRouter = router({
   getById: protectedProcedure.input(z83.object({ id: z83.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const result = await db7.select().from(contactSubmissions).where(eq70(contactSubmissions.id, input.id)).limit(1);
+    const result = await db7.select().from(contactSubmissions).where(eq71(contactSubmissions.id, input.id)).limit(1);
     return result[0] || null;
   }),
   /**
@@ -53634,7 +53674,7 @@ var contactSubmissionsRouter = router({
   markAsRead: protectedProcedure.input(z83.object({ id: z83.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.update(contactSubmissions).set({ status: "read" }).where(eq70(contactSubmissions.id, input.id));
+    await db7.update(contactSubmissions).set({ status: "read" }).where(eq71(contactSubmissions.id, input.id));
     return { success: true, message: "Marked as read" };
   }),
   /**
@@ -53649,7 +53689,7 @@ var contactSubmissionsRouter = router({
     await db7.update(contactSubmissions).set({
       status: "replied",
       repliedAt: input.repliedAt || /* @__PURE__ */ new Date()
-    }).where(eq70(contactSubmissions.id, input.id));
+    }).where(eq71(contactSubmissions.id, input.id));
     return { success: true, message: "Marked as replied" };
   }),
   /**
@@ -53658,7 +53698,7 @@ var contactSubmissionsRouter = router({
   archive: protectedProcedure.input(z83.object({ id: z83.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.update(contactSubmissions).set({ status: "archived" }).where(eq70(contactSubmissions.id, input.id));
+    await db7.update(contactSubmissions).set({ status: "archived" }).where(eq71(contactSubmissions.id, input.id));
     return { success: true, message: "Archived" };
   }),
   /**
@@ -53667,7 +53707,7 @@ var contactSubmissionsRouter = router({
   delete: protectedProcedure.input(z83.object({ id: z83.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.delete(contactSubmissions).where(eq70(contactSubmissions.id, input.id));
+    await db7.delete(contactSubmissions).where(eq71(contactSubmissions.id, input.id));
     return { success: true, message: "Deleted" };
   }),
   /**
@@ -53691,7 +53731,7 @@ var contactSubmissionsRouter = router({
 init_db();
 init_schema();
 import { z as z84 } from "zod";
-import { eq as eq71, desc as desc47, and as and53 } from "drizzle-orm";
+import { eq as eq72, desc as desc48, and as and53 } from "drizzle-orm";
 import { TRPCError as TRPCError33 } from "@trpc/server";
 var emergencyRouter = router({
   // Trigger SOS alert
@@ -53714,7 +53754,7 @@ var emergencyRouter = router({
         createdAt: /* @__PURE__ */ new Date(),
         updatedAt: /* @__PURE__ */ new Date()
       });
-      const contacts = await db.select().from(emergencyContacts).where(eq71(emergencyContacts.userId, ctx.user.id));
+      const contacts = await db.select().from(emergencyContacts).where(eq72(emergencyContacts.userId, ctx.user.id));
       for (const contact of contacts) {
         await db.insert(emergencyResponses).values({
           alertId: alert[0].insertId,
@@ -53740,10 +53780,10 @@ var emergencyRouter = router({
     try {
       const alerts = await db.select().from(emergencyAlerts).where(
         and53(
-          eq71(emergencyAlerts.userId, ctx.user.id),
-          eq71(emergencyAlerts.status, "active")
+          eq72(emergencyAlerts.userId, ctx.user.id),
+          eq72(emergencyAlerts.status, "active")
         )
-      ).orderBy(desc47(emergencyAlerts.createdAt));
+      ).orderBy(desc48(emergencyAlerts.createdAt));
       return alerts;
     } catch (error) {
       throw new TRPCError33({
@@ -53755,7 +53795,7 @@ var emergencyRouter = router({
   // Get alert history
   getAlertHistory: protectedProcedure.input(z84.object({ limit: z84.number().default(50) })).query(async ({ ctx, input }) => {
     try {
-      const alerts = await db.select().from(emergencyAlerts).where(eq71(emergencyAlerts.userId, ctx.user.id)).orderBy(desc47(emergencyAlerts.createdAt)).limit(input.limit);
+      const alerts = await db.select().from(emergencyAlerts).where(eq72(emergencyAlerts.userId, ctx.user.id)).orderBy(desc48(emergencyAlerts.createdAt)).limit(input.limit);
       return alerts;
     } catch (error) {
       throw new TRPCError33({
@@ -53769,8 +53809,8 @@ var emergencyRouter = router({
     try {
       const alert = await db.select().from(emergencyAlerts).where(
         and53(
-          eq71(emergencyAlerts.id, input.alertId),
-          eq71(emergencyAlerts.userId, ctx.user.id)
+          eq72(emergencyAlerts.id, input.alertId),
+          eq72(emergencyAlerts.userId, ctx.user.id)
         )
       );
       if (!alert.length) {
@@ -53783,7 +53823,7 @@ var emergencyRouter = router({
         status: "resolved",
         resolution: input.resolution,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq71(emergencyAlerts.id, input.alertId));
+      }).where(eq72(emergencyAlerts.id, input.alertId));
       return { success: true };
     } catch (error) {
       if (error instanceof TRPCError33) throw error;
@@ -53822,7 +53862,7 @@ var emergencyRouter = router({
   // Get emergency contacts
   getContacts: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const contacts = await db.select().from(emergencyContacts).where(eq71(emergencyContacts.userId, ctx.user.id));
+      const contacts = await db.select().from(emergencyContacts).where(eq72(emergencyContacts.userId, ctx.user.id));
       return contacts;
     } catch (error) {
       throw new TRPCError33({
@@ -53836,8 +53876,8 @@ var emergencyRouter = router({
     try {
       const contact = await db.select().from(emergencyContacts).where(
         and53(
-          eq71(emergencyContacts.id, input.contactId),
-          eq71(emergencyContacts.userId, ctx.user.id)
+          eq72(emergencyContacts.id, input.contactId),
+          eq72(emergencyContacts.userId, ctx.user.id)
         )
       );
       if (!contact.length) {
@@ -53846,7 +53886,7 @@ var emergencyRouter = router({
           message: "Contact not found"
         });
       }
-      await db.delete(emergencyContacts).where(eq71(emergencyContacts.id, input.contactId));
+      await db.delete(emergencyContacts).where(eq72(emergencyContacts.id, input.contactId));
       return { success: true };
     } catch (error) {
       if (error instanceof TRPCError33) throw error;
@@ -53859,7 +53899,7 @@ var emergencyRouter = router({
   // Get response status for alert
   getResponseStatus: protectedProcedure.input(z84.object({ alertId: z84.number() })).query(async ({ ctx, input }) => {
     try {
-      const responses = await db.select().from(emergencyResponses).where(eq71(emergencyResponses.alertId, input.alertId));
+      const responses = await db.select().from(emergencyResponses).where(eq72(emergencyResponses.alertId, input.alertId));
       return responses;
     } catch (error) {
       throw new TRPCError33({
@@ -53874,7 +53914,7 @@ var emergencyRouter = router({
 init_db();
 init_schema();
 import { z as z85 } from "zod";
-import { eq as eq72, desc as desc48, and as and54, gte as gte7 } from "drizzle-orm";
+import { eq as eq73, desc as desc49, and as and54, gte as gte7 } from "drizzle-orm";
 import { TRPCError as TRPCError34 } from "@trpc/server";
 var conferenceRouter = router({
   // Create conference room
@@ -53905,7 +53945,7 @@ var conferenceRouter = router({
   // Get all conference rooms
   getRooms: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const rooms = await db.select().from(conferenceRooms).where(eq72(conferenceRooms.userId, ctx.user.id)).orderBy(desc48(conferenceRooms.createdAt));
+      const rooms = await db.select().from(conferenceRooms).where(eq73(conferenceRooms.userId, ctx.user.id)).orderBy(desc49(conferenceRooms.createdAt));
       return rooms;
     } catch (error) {
       throw new TRPCError34({
@@ -53928,8 +53968,8 @@ var conferenceRouter = router({
     try {
       const room = await db.select().from(conferenceRooms).where(
         and54(
-          eq72(conferenceRooms.id, input.roomId),
-          eq72(conferenceRooms.userId, ctx.user.id)
+          eq73(conferenceRooms.id, input.roomId),
+          eq73(conferenceRooms.userId, ctx.user.id)
         )
       );
       if (!room.length) {
@@ -53962,8 +54002,8 @@ var conferenceRouter = router({
     try {
       const room = await db.select().from(conferenceRooms).where(
         and54(
-          eq72(conferenceRooms.id, input.roomId),
-          eq72(conferenceRooms.userId, ctx.user.id)
+          eq73(conferenceRooms.id, input.roomId),
+          eq73(conferenceRooms.userId, ctx.user.id)
         )
       );
       if (!room.length) {
@@ -53972,7 +54012,7 @@ var conferenceRouter = router({
           message: "Conference room not found"
         });
       }
-      const sessions = await db.select().from(conferenceSessions).where(eq72(conferenceSessions.roomId, input.roomId)).orderBy(desc48(conferenceSessions.startTime));
+      const sessions = await db.select().from(conferenceSessions).where(eq73(conferenceSessions.roomId, input.roomId)).orderBy(desc49(conferenceSessions.startTime));
       return sessions;
     } catch (error) {
       if (error instanceof TRPCError34) throw error;
@@ -53988,10 +54028,10 @@ var conferenceRouter = router({
       const now = /* @__PURE__ */ new Date();
       const sessions = await db.select().from(conferenceSessions).innerJoin(
         conferenceRooms,
-        eq72(conferenceSessions.roomId, conferenceRooms.id)
+        eq73(conferenceSessions.roomId, conferenceRooms.id)
       ).where(
         and54(
-          eq72(conferenceRooms.userId, ctx.user.id),
+          eq73(conferenceRooms.userId, ctx.user.id),
           gte7(conferenceSessions.startTime, now)
         )
       ).orderBy(conferenceSessions.startTime);
@@ -54033,7 +54073,7 @@ var conferenceRouter = router({
   // Get session participants
   getParticipants: protectedProcedure.input(z85.object({ sessionId: z85.number() })).query(async ({ ctx, input }) => {
     try {
-      const participants = await db.select().from(conferenceParticipants).where(eq72(conferenceParticipants.sessionId, input.sessionId)).orderBy(conferenceParticipants.role);
+      const participants = await db.select().from(conferenceParticipants).where(eq73(conferenceParticipants.sessionId, input.sessionId)).orderBy(conferenceParticipants.role);
       return participants;
     } catch (error) {
       throw new TRPCError34({
@@ -54048,7 +54088,7 @@ var conferenceRouter = router({
       await db.update(conferenceSessions).set({
         status: "active",
         startedAt: /* @__PURE__ */ new Date()
-      }).where(eq72(conferenceSessions.id, input.sessionId));
+      }).where(eq73(conferenceSessions.id, input.sessionId));
       return { success: true };
     } catch (error) {
       throw new TRPCError34({
@@ -54064,7 +54104,7 @@ var conferenceRouter = router({
         status: "completed",
         endedAt: /* @__PURE__ */ new Date(),
         notes: input.notes
-      }).where(eq72(conferenceSessions.id, input.sessionId));
+      }).where(eq73(conferenceSessions.id, input.sessionId));
       return { success: true };
     } catch (error) {
       throw new TRPCError34({
@@ -54079,7 +54119,7 @@ var conferenceRouter = router({
       await db.update(conferenceParticipants).set({
         status: "joined",
         joinedAt: /* @__PURE__ */ new Date()
-      }).where(eq72(conferenceParticipants.id, input.participantId));
+      }).where(eq73(conferenceParticipants.id, input.participantId));
       return { success: true };
     } catch (error) {
       throw new TRPCError34({
@@ -54094,7 +54134,7 @@ var conferenceRouter = router({
 init_db();
 init_schema();
 import { z as z86 } from "zod";
-import { eq as eq73, desc as desc49, and as and55 } from "drizzle-orm";
+import { eq as eq74, desc as desc50, and as and55 } from "drizzle-orm";
 import { TRPCError as TRPCError35 } from "@trpc/server";
 var mediaRouter = router({
   // Create playlist
@@ -54126,7 +54166,7 @@ var mediaRouter = router({
   // Get user playlists
   getPlaylists: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const playlists = await db.select().from(mediaPlaylists).where(eq73(mediaPlaylists.userId, ctx.user.id)).orderBy(desc49(mediaPlaylists.createdAt));
+      const playlists = await db.select().from(mediaPlaylists).where(eq74(mediaPlaylists.userId, ctx.user.id)).orderBy(desc50(mediaPlaylists.createdAt));
       return playlists;
     } catch (error) {
       throw new TRPCError35({
@@ -54149,8 +54189,8 @@ var mediaRouter = router({
     try {
       const playlist = await db.select().from(mediaPlaylists).where(
         and55(
-          eq73(mediaPlaylists.id, input.playlistId),
-          eq73(mediaPlaylists.userId, ctx.user.id)
+          eq74(mediaPlaylists.id, input.playlistId),
+          eq74(mediaPlaylists.userId, ctx.user.id)
         )
       );
       if (!playlist.length) {
@@ -54171,7 +54211,7 @@ var mediaRouter = router({
       await db.update(mediaPlaylists).set({
         trackCount: playlist[0].trackCount + 1,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq73(mediaPlaylists.id, input.playlistId));
+      }).where(eq74(mediaPlaylists.id, input.playlistId));
       return { success: true, trackId: track[0].insertId };
     } catch (error) {
       if (error instanceof TRPCError35) throw error;
@@ -54186,8 +54226,8 @@ var mediaRouter = router({
     try {
       const playlist = await db.select().from(mediaPlaylists).where(
         and55(
-          eq73(mediaPlaylists.id, input.playlistId),
-          eq73(mediaPlaylists.userId, ctx.user.id)
+          eq74(mediaPlaylists.id, input.playlistId),
+          eq74(mediaPlaylists.userId, ctx.user.id)
         )
       );
       if (!playlist.length) {
@@ -54196,7 +54236,7 @@ var mediaRouter = router({
           message: "Playlist not found"
         });
       }
-      const tracks = await db.select().from(mediaTracks).where(eq73(mediaTracks.playlistId, input.playlistId)).orderBy(mediaTracks.addedAt);
+      const tracks = await db.select().from(mediaTracks).where(eq74(mediaTracks.playlistId, input.playlistId)).orderBy(mediaTracks.addedAt);
       return tracks;
     } catch (error) {
       if (error instanceof TRPCError35) throw error;
@@ -54211,8 +54251,8 @@ var mediaRouter = router({
     try {
       const playlist = await db.select().from(mediaPlaylists).where(
         and55(
-          eq73(mediaPlaylists.id, input.playlistId),
-          eq73(mediaPlaylists.userId, ctx.user.id)
+          eq74(mediaPlaylists.id, input.playlistId),
+          eq74(mediaPlaylists.userId, ctx.user.id)
         )
       );
       if (!playlist.length) {
@@ -54221,11 +54261,11 @@ var mediaRouter = router({
           message: "Playlist not found"
         });
       }
-      await db.delete(mediaTracks).where(eq73(mediaTracks.id, input.trackId));
+      await db.delete(mediaTracks).where(eq74(mediaTracks.id, input.trackId));
       await db.update(mediaPlaylists).set({
         trackCount: Math.max(0, playlist[0].trackCount - 1),
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq73(mediaPlaylists.id, input.playlistId));
+      }).where(eq74(mediaPlaylists.id, input.playlistId));
       return { success: true };
     } catch (error) {
       if (error instanceof TRPCError35) throw error;
@@ -54262,7 +54302,7 @@ var mediaRouter = router({
   // Get playback history
   getPlaybackHistory: protectedProcedure.input(z86.object({ limit: z86.number().default(50) })).query(async ({ ctx, input }) => {
     try {
-      const history = await db.select().from(playbackHistory).where(eq73(playbackHistory.userId, ctx.user.id)).orderBy(desc49(playbackHistory.playedAt)).limit(input.limit);
+      const history = await db.select().from(playbackHistory).where(eq74(playbackHistory.userId, ctx.user.id)).orderBy(desc50(playbackHistory.playedAt)).limit(input.limit);
       return history;
     } catch (error) {
       throw new TRPCError35({
@@ -54274,7 +54314,7 @@ var mediaRouter = router({
   // Get recently played
   getRecentlyPlayed: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const recentTracks = await db.select().from(playbackHistory).where(eq73(playbackHistory.userId, ctx.user.id)).orderBy(desc49(playbackHistory.playedAt)).limit(10);
+      const recentTracks = await db.select().from(playbackHistory).where(eq74(playbackHistory.userId, ctx.user.id)).orderBy(desc50(playbackHistory.playedAt)).limit(10);
       return recentTracks;
     } catch (error) {
       throw new TRPCError35({
@@ -54288,8 +54328,8 @@ var mediaRouter = router({
     try {
       const playlist = await db.select().from(mediaPlaylists).where(
         and55(
-          eq73(mediaPlaylists.id, input.playlistId),
-          eq73(mediaPlaylists.userId, ctx.user.id)
+          eq74(mediaPlaylists.id, input.playlistId),
+          eq74(mediaPlaylists.userId, ctx.user.id)
         )
       );
       if (!playlist.length) {
@@ -54298,8 +54338,8 @@ var mediaRouter = router({
           message: "Playlist not found"
         });
       }
-      await db.delete(mediaTracks).where(eq73(mediaTracks.playlistId, input.playlistId));
-      await db.delete(mediaPlaylists).where(eq73(mediaPlaylists.id, input.playlistId));
+      await db.delete(mediaTracks).where(eq74(mediaTracks.playlistId, input.playlistId));
+      await db.delete(mediaPlaylists).where(eq74(mediaPlaylists.id, input.playlistId));
       return { success: true };
     } catch (error) {
       if (error instanceof TRPCError35) throw error;
@@ -54711,7 +54751,7 @@ var stripeCheckoutRouter = router({
 import { z as z88 } from "zod";
 init_db();
 init_schema();
-import { eq as eq74, desc as desc50, and as and56, sql as sql33 } from "drizzle-orm";
+import { eq as eq75, desc as desc51, and as and56, sql as sql33 } from "drizzle-orm";
 var onboardingRouter = router({
   /**
    * Get all onboarding checklists
@@ -54719,9 +54759,9 @@ var onboardingRouter = router({
   getChecklists: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    const checklists = await db7.select().from(onboardingChecklists).orderBy(desc50(onboardingChecklists.createdAt));
+    const checklists = await db7.select().from(onboardingChecklists).orderBy(desc51(onboardingChecklists.createdAt));
     const result = await Promise.all(checklists.map(async (checklist) => {
-      const items = await db7.select().from(onboardingChecklistItems).where(eq74(onboardingChecklistItems.checklistId, checklist.id));
+      const items = await db7.select().from(onboardingChecklistItems).where(eq75(onboardingChecklistItems.checklistId, checklist.id));
       return {
         ...checklist,
         itemCount: items.length
@@ -54735,9 +54775,9 @@ var onboardingRouter = router({
   getChecklistById: protectedProcedure.input(z88.object({ id: z88.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const checklist = await db7.select().from(onboardingChecklists).where(eq74(onboardingChecklists.id, input.id)).limit(1);
+    const checklist = await db7.select().from(onboardingChecklists).where(eq75(onboardingChecklists.id, input.id)).limit(1);
     if (!checklist.length) return null;
-    const items = await db7.select().from(onboardingChecklistItems).where(eq74(onboardingChecklistItems.checklistId, input.id)).orderBy(onboardingChecklistItems.sortOrder);
+    const items = await db7.select().from(onboardingChecklistItems).where(eq75(onboardingChecklistItems.checklistId, input.id)).orderBy(onboardingChecklistItems.sortOrder);
     return {
       ...checklist[0],
       items
@@ -54816,9 +54856,9 @@ var onboardingRouter = router({
         id: businessEntities.id,
         name: businessEntities.name
       }
-    }).from(employeeOnboarding).leftJoin(employees, eq74(employeeOnboarding.employeeId, employees.id)).leftJoin(onboardingChecklists, eq74(employeeOnboarding.checklistId, onboardingChecklists.id)).leftJoin(businessEntities, eq74(employees.entityId, businessEntities.id)).orderBy(desc50(employeeOnboarding.createdAt));
+    }).from(employeeOnboarding).leftJoin(employees, eq75(employeeOnboarding.employeeId, employees.id)).leftJoin(onboardingChecklists, eq75(employeeOnboarding.checklistId, onboardingChecklists.id)).leftJoin(businessEntities, eq75(employees.entityId, businessEntities.id)).orderBy(desc51(employeeOnboarding.createdAt));
     const enrichedResults = await Promise.all(results.map(async (r) => {
-      const tasks = await db7.select().from(onboardingTaskProgress).where(eq74(onboardingTaskProgress.onboardingId, r.onboarding.id));
+      const tasks = await db7.select().from(onboardingTaskProgress).where(eq75(onboardingTaskProgress.onboardingId, r.onboarding.id));
       const completedTasks = tasks.filter((t2) => t2.status === "completed").length;
       const totalTasks = tasks.length;
       return {
@@ -54847,11 +54887,11 @@ var onboardingRouter = router({
         id: businessEntities.id,
         name: businessEntities.name
       }
-    }).from(employeeOnboarding).leftJoin(employees, eq74(employeeOnboarding.employeeId, employees.id)).leftJoin(onboardingChecklists, eq74(employeeOnboarding.checklistId, onboardingChecklists.id)).leftJoin(businessEntities, eq74(employees.entityId, businessEntities.id)).where(eq74(employeeOnboarding.id, input.id)).limit(1);
+    }).from(employeeOnboarding).leftJoin(employees, eq75(employeeOnboarding.employeeId, employees.id)).leftJoin(onboardingChecklists, eq75(employeeOnboarding.checklistId, onboardingChecklists.id)).leftJoin(businessEntities, eq75(employees.entityId, businessEntities.id)).where(eq75(employeeOnboarding.id, input.id)).limit(1);
     if (!results.length) return null;
     const r = results[0];
-    const taskProgress = await db7.select().from(onboardingTaskProgress).where(eq74(onboardingTaskProgress.onboardingId, input.id));
-    const checklistItems = await db7.select().from(onboardingChecklistItems).where(eq74(onboardingChecklistItems.checklistId, r.checklist?.id || 0)).orderBy(onboardingChecklistItems.sortOrder);
+    const taskProgress = await db7.select().from(onboardingTaskProgress).where(eq75(onboardingTaskProgress.onboardingId, input.id));
+    const checklistItems = await db7.select().from(onboardingChecklistItems).where(eq75(onboardingChecklistItems.checklistId, r.checklist?.id || 0)).orderBy(onboardingChecklistItems.sortOrder);
     const tasks = checklistItems.map((item) => {
       const progress = taskProgress.find((p) => p.checklistItemId === item.id);
       return {
@@ -54879,7 +54919,7 @@ var onboardingRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const application = await db7.select().from(jobApplications).where(eq74(jobApplications.id, input.applicationId)).limit(1);
+    const application = await db7.select().from(jobApplications).where(eq75(jobApplications.id, input.applicationId)).limit(1);
     if (!application.length) {
       throw new Error("Application not found");
     }
@@ -54888,7 +54928,7 @@ var onboardingRouter = router({
       throw new Error("Application must be in 'hired' status to start onboarding");
     }
     const entityName = app.entity;
-    const entities = await db7.select().from(businessEntities).where(eq74(businessEntities.name, entityName)).limit(1);
+    const entities = await db7.select().from(businessEntities).where(eq75(businessEntities.name, entityName)).limit(1);
     const entityId = entities.length > 0 ? entities[0].id : 5;
     const employeeResult = await db7.insert(employees).values({
       firstName: app.firstName,
@@ -54905,7 +54945,7 @@ var onboardingRouter = router({
       status: "pending"
     });
     const employeeId = employeeResult[0].insertId;
-    const checklistItems = await db7.select().from(onboardingChecklistItems).where(eq74(onboardingChecklistItems.checklistId, input.checklistId));
+    const checklistItems = await db7.select().from(onboardingChecklistItems).where(eq75(onboardingChecklistItems.checklistId, input.checklistId));
     const startDate = input.startDate || /* @__PURE__ */ new Date();
     const targetDate = new Date(startDate);
     targetDate.setDate(targetDate.getDate() + 30);
@@ -54955,11 +54995,11 @@ var onboardingRouter = router({
       updateData.completedAt = /* @__PURE__ */ new Date();
       updateData.completedBy = ctx.user.id;
     }
-    await db7.update(onboardingTaskProgress).set(updateData).where(eq74(onboardingTaskProgress.id, input.taskProgressId));
-    const progress = await db7.select().from(onboardingTaskProgress).where(eq74(onboardingTaskProgress.id, input.taskProgressId)).limit(1);
+    await db7.update(onboardingTaskProgress).set(updateData).where(eq75(onboardingTaskProgress.id, input.taskProgressId));
+    const progress = await db7.select().from(onboardingTaskProgress).where(eq75(onboardingTaskProgress.id, input.taskProgressId)).limit(1);
     if (progress.length) {
       const onboardingId = progress[0].onboardingId;
-      const allTasks = await db7.select().from(onboardingTaskProgress).where(eq74(onboardingTaskProgress.onboardingId, onboardingId));
+      const allTasks = await db7.select().from(onboardingTaskProgress).where(eq75(onboardingTaskProgress.onboardingId, onboardingId));
       const allComplete = allTasks.every(
         (t2) => t2.status === "completed" || t2.status === "skipped"
       );
@@ -54967,10 +55007,10 @@ var onboardingRouter = router({
         await db7.update(employeeOnboarding).set({
           status: "completed",
           actualCompletionDate: /* @__PURE__ */ new Date()
-        }).where(eq74(employeeOnboarding.id, onboardingId));
-        const onboarding = await db7.select().from(employeeOnboarding).where(eq74(employeeOnboarding.id, onboardingId)).limit(1);
+        }).where(eq75(employeeOnboarding.id, onboardingId));
+        const onboarding = await db7.select().from(employeeOnboarding).where(eq75(employeeOnboarding.id, onboardingId)).limit(1);
         if (onboarding.length) {
-          await db7.update(employees).set({ status: "active" }).where(eq74(employees.id, onboarding[0].employeeId));
+          await db7.update(employees).set({ status: "active" }).where(eq75(employees.id, onboarding[0].employeeId));
         }
       }
     }
@@ -54982,7 +55022,7 @@ var onboardingRouter = router({
   getHiredApplications: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    const hiredApps = await db7.select().from(jobApplications).where(eq74(jobApplications.status, "hired"));
+    const hiredApps = await db7.select().from(jobApplications).where(eq75(jobApplications.status, "hired"));
     const existingOnboarding = await db7.select({ applicationId: employeeOnboarding.applicationId }).from(employeeOnboarding).where(sql33`${employeeOnboarding.applicationId} IS NOT NULL`);
     const existingAppIds = new Set(existingOnboarding.map((o) => o.applicationId));
     return hiredApps.filter((app) => !existingAppIds.has(app.id));
@@ -54999,13 +55039,13 @@ var onboardingRouter = router({
     let checklist = null;
     if (input.department && input.positionLevel) {
       const result = await db7.select().from(onboardingChecklists).where(and56(
-        eq74(onboardingChecklists.department, input.department),
-        eq74(onboardingChecklists.positionLevel, input.positionLevel)
+        eq75(onboardingChecklists.department, input.department),
+        eq75(onboardingChecklists.positionLevel, input.positionLevel)
       )).limit(1);
       if (result.length) checklist = result[0];
     }
     if (!checklist) {
-      const result = await db7.select().from(onboardingChecklists).where(eq74(onboardingChecklists.isDefault, true)).limit(1);
+      const result = await db7.select().from(onboardingChecklists).where(eq75(onboardingChecklists.isDefault, true)).limit(1);
       if (result.length) checklist = result[0];
     }
     if (!checklist) {
@@ -55057,7 +55097,7 @@ function getPositionLevel(title) {
 import { z as z89 } from "zod";
 init_db();
 init_schema();
-import { eq as eq75, and as and57, like as like5, desc as desc51, asc as asc3, sql as sql34, or as or8 } from "drizzle-orm";
+import { eq as eq76, and as and57, like as like5, desc as desc52, asc as asc3, sql as sql34, or as or8 } from "drizzle-orm";
 import { TRPCError as TRPCError36 } from "@trpc/server";
 var proceduresRouter = router({
   // Get all procedures with optional filtering
@@ -55072,16 +55112,16 @@ var proceduresRouter = router({
     if (!db7) return [];
     const conditions = [];
     if (input?.category) {
-      conditions.push(eq75(operatingProcedures.category, input.category));
+      conditions.push(eq76(operatingProcedures.category, input.category));
     }
     if (input?.department) {
-      conditions.push(eq75(operatingProcedures.department, input.department));
+      conditions.push(eq76(operatingProcedures.department, input.department));
     }
     if (input?.status) {
-      conditions.push(eq75(operatingProcedures.status, input.status));
+      conditions.push(eq76(operatingProcedures.status, input.status));
     }
     if (input?.entityId) {
-      conditions.push(eq75(operatingProcedures.entityId, input.entityId));
+      conditions.push(eq76(operatingProcedures.entityId, input.entityId));
     }
     if (input?.search) {
       conditions.push(
@@ -55092,7 +55132,7 @@ var proceduresRouter = router({
         )
       );
     }
-    const procedures = await db7.select().from(operatingProcedures).where(conditions.length > 0 ? and57(...conditions) : void 0).orderBy(desc51(operatingProcedures.updatedAt));
+    const procedures = await db7.select().from(operatingProcedures).where(conditions.length > 0 ? and57(...conditions) : void 0).orderBy(desc52(operatingProcedures.updatedAt));
     return procedures;
   }),
   // Get procedures by department (for dashboard use)
@@ -55105,23 +55145,23 @@ var proceduresRouter = router({
     if (!db7) return [];
     const conditions = [
       or8(
-        eq75(operatingProcedures.status, "approved"),
-        eq75(operatingProcedures.status, "published")
+        eq76(operatingProcedures.status, "approved"),
+        eq76(operatingProcedures.status, "published")
       )
     ];
     if (input.includeCompanyWide) {
       conditions.push(
         or8(
-          eq75(operatingProcedures.department, input.department),
+          eq76(operatingProcedures.department, input.department),
           sql34`${operatingProcedures.department} IS NULL`,
-          eq75(operatingProcedures.department, "all")
+          eq76(operatingProcedures.department, "all")
         )
       );
     } else {
-      conditions.push(eq75(operatingProcedures.department, input.department));
+      conditions.push(eq76(operatingProcedures.department, input.department));
     }
     if (input.category) {
-      conditions.push(eq75(operatingProcedures.category, input.category));
+      conditions.push(eq76(operatingProcedures.category, input.category));
     }
     const procedures = await db7.select().from(operatingProcedures).where(and57(...conditions)).orderBy(asc3(operatingProcedures.category), asc3(operatingProcedures.title));
     return procedures;
@@ -55130,7 +55170,7 @@ var proceduresRouter = router({
   getById: protectedProcedure.input(z89.object({ id: z89.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError36({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [procedure] = await db7.select().from(operatingProcedures).where(eq75(operatingProcedures.id, input.id));
+    const [procedure] = await db7.select().from(operatingProcedures).where(eq76(operatingProcedures.id, input.id));
     if (!procedure) {
       throw new TRPCError36({ code: "NOT_FOUND", message: "Procedure not found" });
     }
@@ -55190,7 +55230,7 @@ var proceduresRouter = router({
       effectiveDate: effectiveDate ? new Date(effectiveDate) : void 0,
       reviewDate: reviewDate ? new Date(reviewDate) : void 0,
       expirationDate: expirationDate ? new Date(expirationDate) : void 0
-    }).where(eq75(operatingProcedures.id, id));
+    }).where(eq76(operatingProcedures.id, id));
     return { message: "Procedure updated successfully" };
   }),
   // Approve a procedure
@@ -55201,14 +55241,14 @@ var proceduresRouter = router({
       status: "approved",
       approvedBy: ctx.user.id,
       approvedAt: /* @__PURE__ */ new Date()
-    }).where(eq75(operatingProcedures.id, input.id));
+    }).where(eq76(operatingProcedures.id, input.id));
     return { message: "Procedure approved successfully" };
   }),
   // Delete a procedure
   delete: protectedProcedure.input(z89.object({ id: z89.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError36({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    await db7.delete(operatingProcedures).where(eq75(operatingProcedures.id, input.id));
+    await db7.delete(operatingProcedures).where(eq76(operatingProcedures.id, input.id));
     return { message: "Procedure deleted successfully" };
   }),
   // Acknowledge a procedure
@@ -55222,9 +55262,9 @@ var proceduresRouter = router({
     if (!db7) throw new TRPCError36({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const existing = await db7.select().from(procedureAcknowledgments).where(
       and57(
-        eq75(procedureAcknowledgments.procedureId, input.procedureId),
-        eq75(procedureAcknowledgments.userId, ctx.user.id),
-        eq75(procedureAcknowledgments.version, input.version)
+        eq76(procedureAcknowledgments.procedureId, input.procedureId),
+        eq76(procedureAcknowledgments.userId, ctx.user.id),
+        eq76(procedureAcknowledgments.version, input.version)
       )
     );
     if (existing.length > 0) {
@@ -55243,7 +55283,7 @@ var proceduresRouter = router({
   getAcknowledgments: protectedProcedure.input(z89.object({ procedureId: z89.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const acknowledgments = await db7.select().from(procedureAcknowledgments).where(eq75(procedureAcknowledgments.procedureId, input.procedureId)).orderBy(desc51(procedureAcknowledgments.acknowledgedAt));
+    const acknowledgments = await db7.select().from(procedureAcknowledgments).where(eq76(procedureAcknowledgments.procedureId, input.procedureId)).orderBy(desc52(procedureAcknowledgments.acknowledgedAt));
     return acknowledgments;
   }),
   // Get user's acknowledgment status for a procedure
@@ -55252,10 +55292,10 @@ var proceduresRouter = router({
     if (!db7) return null;
     const [acknowledgment] = await db7.select().from(procedureAcknowledgments).where(
       and57(
-        eq75(procedureAcknowledgments.procedureId, input.procedureId),
-        eq75(procedureAcknowledgments.userId, ctx.user.id)
+        eq76(procedureAcknowledgments.procedureId, input.procedureId),
+        eq76(procedureAcknowledgments.userId, ctx.user.id)
       )
-    ).orderBy(desc51(procedureAcknowledgments.acknowledgedAt)).limit(1);
+    ).orderBy(desc52(procedureAcknowledgments.acknowledgedAt)).limit(1);
     return acknowledgment || null;
   }),
   // Get all categories
@@ -55307,7 +55347,7 @@ var proceduresRouter = router({
   getAcknowledgmentDashboard: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return { procedures: [], employees: [] };
-    const procedures = await db7.select().from(operatingProcedures).where(eq75(operatingProcedures.status, "approved"));
+    const procedures = await db7.select().from(operatingProcedures).where(eq76(operatingProcedures.status, "approved"));
     const acknowledgments = await db7.select({
       id: procedureAcknowledgments.id,
       procedureId: procedureAcknowledgments.procedureId,
@@ -55370,11 +55410,11 @@ var proceduresRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError36({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [procedure] = await db7.select().from(operatingProcedures).where(eq75(operatingProcedures.id, input.procedureId));
+    const [procedure] = await db7.select().from(operatingProcedures).where(eq76(operatingProcedures.id, input.procedureId));
     if (!procedure) {
       throw new TRPCError36({ code: "NOT_FOUND", message: "Procedure not found" });
     }
-    const acknowledgments = await db7.select().from(procedureAcknowledgments).where(eq75(procedureAcknowledgments.procedureId, input.procedureId));
+    const acknowledgments = await db7.select().from(procedureAcknowledgments).where(eq76(procedureAcknowledgments.procedureId, input.procedureId));
     const acknowledgedUserIds = acknowledgments.map((a) => a.userId);
     const { users: users8 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
     let pendingUsers = await db7.select().from(users8);
@@ -55395,8 +55435,8 @@ var proceduresRouter = router({
   getPendingAcknowledgments: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const approvedProcedures = await db7.select().from(operatingProcedures).where(eq75(operatingProcedures.status, "approved"));
-    const userAcknowledgments = await db7.select().from(procedureAcknowledgments).where(eq75(procedureAcknowledgments.userId, ctx.user.id));
+    const approvedProcedures = await db7.select().from(operatingProcedures).where(eq76(operatingProcedures.status, "approved"));
+    const userAcknowledgments = await db7.select().from(procedureAcknowledgments).where(eq76(procedureAcknowledgments.userId, ctx.user.id));
     const pending = approvedProcedures.filter((proc) => {
       const ack = userAcknowledgments.find((a) => a.procedureId === proc.id);
       return !ack || ack.version !== proc.version;
@@ -55457,7 +55497,7 @@ var proceduresRouter = router({
     await db7.update(operatingProcedures).set({
       isRequired: input.isRequired,
       requiredForDepartments: input.requiredForDepartments ? JSON.stringify(input.requiredForDepartments) : null
-    }).where(eq75(operatingProcedures.id, input.id));
+    }).where(eq76(operatingProcedures.id, input.id));
     return { message: "Procedure requirement updated successfully" };
   }),
   // Get required procedures for a department
@@ -55468,8 +55508,8 @@ var proceduresRouter = router({
     if (!db7) return [];
     const procedures = await db7.select().from(operatingProcedures).where(
       and57(
-        eq75(operatingProcedures.isRequired, true),
-        eq75(operatingProcedures.status, "approved")
+        eq76(operatingProcedures.isRequired, true),
+        eq76(operatingProcedures.status, "approved")
       )
     );
     return procedures.filter((p) => {
@@ -55486,8 +55526,8 @@ var proceduresRouter = router({
     if (!db7) return { totalRequired: 0, totalAcknowledged: 0, complianceRate: 0, byProcedure: [] };
     const requiredProcs = await db7.select().from(operatingProcedures).where(
       and57(
-        eq75(operatingProcedures.isRequired, true),
-        eq75(operatingProcedures.status, "approved")
+        eq76(operatingProcedures.isRequired, true),
+        eq76(operatingProcedures.status, "approved")
       )
     );
     const acknowledgments = await db7.select().from(procedureAcknowledgments);
@@ -55511,13 +55551,13 @@ var proceduresRouter = router({
 init_schema();
 init_db();
 import { z as z90 } from "zod";
-import { eq as eq76, and as and58 } from "drizzle-orm";
+import { eq as eq77, and as and58 } from "drizzle-orm";
 var appIntegrationsRouter = router({
   /**
    * List all available apps in the store
    */
   listAvailableApps: publicProcedure.input(z90.object({ category: z90.string().optional() }).optional()).query(async ({ input }) => {
-    const query = db.select().from(availableApps).where(eq76(availableApps.isActive, true));
+    const query = db.select().from(availableApps).where(eq77(availableApps.isActive, true));
     const apps = await query;
     return apps;
   }),
@@ -55525,7 +55565,7 @@ var appIntegrationsRouter = router({
    * Get a specific app details
    */
   getApp: publicProcedure.input(z90.object({ appId: z90.number() })).query(async ({ input }) => {
-    const app = await db.select().from(availableApps).where(eq76(availableApps.id, input.appId)).limit(1);
+    const app = await db.select().from(availableApps).where(eq77(availableApps.id, input.appId)).limit(1);
     return app[0] || null;
   }),
   /**
@@ -55546,7 +55586,7 @@ var appIntegrationsRouter = router({
         logoUrl: availableApps.logoUrl,
         category: availableApps.category
       }
-    }).from(userAppConnections).innerJoin(availableApps, eq76(userAppConnections.appId, availableApps.id)).where(eq76(userAppConnections.userId, ctx.user.id));
+    }).from(userAppConnections).innerJoin(availableApps, eq77(userAppConnections.appId, availableApps.id)).where(eq77(userAppConnections.userId, ctx.user.id));
     return connections;
   }),
   /**
@@ -55560,8 +55600,8 @@ var appIntegrationsRouter = router({
   ).mutation(async ({ input, ctx }) => {
     const existing = await db.select().from(userAppConnections).where(
       and58(
-        eq76(userAppConnections.userId, ctx.user.id),
-        eq76(userAppConnections.appId, input.appId)
+        eq77(userAppConnections.userId, ctx.user.id),
+        eq77(userAppConnections.appId, input.appId)
       )
     ).limit(1);
     if (existing.length > 0) {
@@ -55586,11 +55626,11 @@ var appIntegrationsRouter = router({
    * Disconnect an app
    */
   disconnectApp: protectedProcedure.input(z90.object({ connectionId: z90.number() })).mutation(async ({ input, ctx }) => {
-    const connection = await db.select().from(userAppConnections).where(eq76(userAppConnections.id, input.connectionId)).limit(1);
+    const connection = await db.select().from(userAppConnections).where(eq77(userAppConnections.id, input.connectionId)).limit(1);
     if (!connection.length || connection[0].userId !== ctx.user.id) {
       throw new Error("Connection not found or unauthorized");
     }
-    await db.update(userAppConnections).set({ status: "disconnected", updatedAt: /* @__PURE__ */ new Date() }).where(eq76(userAppConnections.id, input.connectionId));
+    await db.update(userAppConnections).set({ status: "disconnected", updatedAt: /* @__PURE__ */ new Date() }).where(eq77(userAppConnections.id, input.connectionId));
     await db.insert(appIntegrationLogs).values({
       userId: ctx.user.id,
       appId: connection[0].appId,
@@ -55603,7 +55643,7 @@ var appIntegrationsRouter = router({
    * Get connection status
    */
   getConnectionStatus: protectedProcedure.input(z90.object({ connectionId: z90.number() })).query(async ({ input, ctx }) => {
-    const connection = await db.select().from(userAppConnections).where(eq76(userAppConnections.id, input.connectionId)).limit(1);
+    const connection = await db.select().from(userAppConnections).where(eq77(userAppConnections.id, input.connectionId)).limit(1);
     if (!connection.length || connection[0].userId !== ctx.user.id) {
       return null;
     }
@@ -55618,7 +55658,7 @@ var appIntegrationsRouter = router({
       metadata: z90.record(z90.any())
     })
   ).mutation(async ({ input, ctx }) => {
-    const connection = await db.select().from(userAppConnections).where(eq76(userAppConnections.id, input.connectionId)).limit(1);
+    const connection = await db.select().from(userAppConnections).where(eq77(userAppConnections.id, input.connectionId)).limit(1);
     if (!connection.length || connection[0].userId !== ctx.user.id) {
       throw new Error("Connection not found or unauthorized");
     }
@@ -55626,14 +55666,14 @@ var appIntegrationsRouter = router({
       metadata: input.metadata,
       lastSyncedAt: /* @__PURE__ */ new Date(),
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq76(userAppConnections.id, input.connectionId));
+    }).where(eq77(userAppConnections.id, input.connectionId));
     return { success: true };
   }),
   /**
    * Get integration logs for a user
    */
   getIntegrationLogs: protectedProcedure.input(z90.object({ limit: z90.number().default(50) })).query(async ({ input, ctx }) => {
-    const logs = await db.select().from(appIntegrationLogs).where(eq76(appIntegrationLogs.userId, ctx.user.id)).orderBy(appIntegrationLogs.createdAt).limit(input.limit);
+    const logs = await db.select().from(appIntegrationLogs).where(eq77(appIntegrationLogs.userId, ctx.user.id)).orderBy(appIntegrationLogs.createdAt).limit(input.limit);
     return logs;
   })
 });
@@ -55642,7 +55682,7 @@ var appIntegrationsRouter = router({
 import { z as z91 } from "zod";
 init_db();
 init_schema();
-import { eq as eq77, desc as desc52, and as and59, sql as sql35, count as count4, sum as sum4 } from "drizzle-orm";
+import { eq as eq78, desc as desc53, and as and59, sql as sql35, count as count4, sum as sum4 } from "drizzle-orm";
 var projectControlsRouter = router({
   // ============================================
   // PROJECTS
@@ -55657,23 +55697,23 @@ var projectControlsRouter = router({
     let query = db7.select().from(projects);
     const conditions = [];
     if (input?.status) {
-      conditions.push(eq77(projects.status, input.status));
+      conditions.push(eq78(projects.status, input.status));
     }
     if (input?.entityId) {
-      conditions.push(eq77(projects.entityId, input.entityId));
+      conditions.push(eq78(projects.entityId, input.entityId));
     }
     if (input?.projectType) {
-      conditions.push(eq77(projects.projectType, input.projectType));
+      conditions.push(eq78(projects.projectType, input.projectType));
     }
     if (conditions.length > 0) {
       query = query.where(and59(...conditions));
     }
-    return query.orderBy(desc52(projects.createdAt));
+    return query.orderBy(desc53(projects.createdAt));
   }),
   getProject: protectedProcedure.input(z91.object({ id: z91.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const [project] = await db7.select().from(projects).where(eq77(projects.id, input.id));
+    const [project] = await db7.select().from(projects).where(eq78(projects.id, input.id));
     return project || null;
   }),
   createProject: protectedProcedure.input(z91.object({
@@ -55722,13 +55762,13 @@ var projectControlsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...updates } = input;
-    await db7.update(projects).set(updates).where(eq77(projects.id, id));
+    await db7.update(projects).set(updates).where(eq78(projects.id, id));
     return { message: "Project updated successfully" };
   }),
   deleteProject: protectedProcedure.input(z91.object({ id: z91.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(projects).where(eq77(projects.id, input.id));
+    await db7.delete(projects).where(eq78(projects.id, input.id));
     return { message: "Project deleted successfully" };
   }),
   // ============================================
@@ -55737,7 +55777,7 @@ var projectControlsRouter = router({
   listMilestones: protectedProcedure.input(z91.object({ projectId: z91.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    return db7.select().from(projectMilestones).where(eq77(projectMilestones.projectId, input.projectId)).orderBy(projectMilestones.plannedDate);
+    return db7.select().from(projectMilestones).where(eq78(projectMilestones.projectId, input.projectId)).orderBy(projectMilestones.plannedDate);
   }),
   createMilestone: protectedProcedure.input(z91.object({
     projectId: z91.number(),
@@ -55772,13 +55812,13 @@ var projectControlsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...updates } = input;
-    await db7.update(projectMilestones).set(updates).where(eq77(projectMilestones.id, id));
+    await db7.update(projectMilestones).set(updates).where(eq78(projectMilestones.id, id));
     return { message: "Milestone updated successfully" };
   }),
   deleteMilestone: protectedProcedure.input(z91.object({ id: z91.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(projectMilestones).where(eq77(projectMilestones.id, input.id));
+    await db7.delete(projectMilestones).where(eq78(projectMilestones.id, input.id));
     return { message: "Milestone deleted successfully" };
   }),
   // ============================================
@@ -55790,9 +55830,9 @@ var projectControlsRouter = router({
   })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const conditions = [eq77(projectTasks.projectId, input.projectId)];
+    const conditions = [eq78(projectTasks.projectId, input.projectId)];
     if (input.milestoneId) {
-      conditions.push(eq77(projectTasks.milestoneId, input.milestoneId));
+      conditions.push(eq78(projectTasks.milestoneId, input.milestoneId));
     }
     return db7.select().from(projectTasks).where(and59(...conditions)).orderBy(projectTasks.plannedStart);
   }),
@@ -55844,13 +55884,13 @@ var projectControlsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...updates } = input;
-    await db7.update(projectTasks).set(updates).where(eq77(projectTasks.id, id));
+    await db7.update(projectTasks).set(updates).where(eq78(projectTasks.id, id));
     return { message: "Task updated successfully" };
   }),
   deleteTask: protectedProcedure.input(z91.object({ id: z91.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(projectTasks).where(eq77(projectTasks.id, input.id));
+    await db7.delete(projectTasks).where(eq78(projectTasks.id, input.id));
     return { message: "Task deleted successfully" };
   }),
   // ============================================
@@ -55859,7 +55899,7 @@ var projectControlsRouter = router({
   listBudgetItems: protectedProcedure.input(z91.object({ projectId: z91.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    return db7.select().from(projectBudgetItems).where(eq77(projectBudgetItems.projectId, input.projectId)).orderBy(projectBudgetItems.category);
+    return db7.select().from(projectBudgetItems).where(eq78(projectBudgetItems.projectId, input.projectId)).orderBy(projectBudgetItems.category);
   }),
   createBudgetItem: protectedProcedure.input(z91.object({
     projectId: z91.number(),
@@ -55895,13 +55935,13 @@ var projectControlsRouter = router({
       const actual = parseFloat(updates.actualAmount);
       updates.variance = (planned - actual).toFixed(2);
     }
-    await db7.update(projectBudgetItems).set(updates).where(eq77(projectBudgetItems.id, id));
+    await db7.update(projectBudgetItems).set(updates).where(eq78(projectBudgetItems.id, id));
     return { message: "Budget item updated successfully" };
   }),
   deleteBudgetItem: protectedProcedure.input(z91.object({ id: z91.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(projectBudgetItems).where(eq77(projectBudgetItems.id, input.id));
+    await db7.delete(projectBudgetItems).where(eq78(projectBudgetItems.id, input.id));
     return { message: "Budget item deleted successfully" };
   }),
   // ============================================
@@ -55910,7 +55950,7 @@ var projectControlsRouter = router({
   listChangeOrders: protectedProcedure.input(z91.object({ projectId: z91.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    return db7.select().from(changeOrders).where(eq77(changeOrders.projectId, input.projectId)).orderBy(desc52(changeOrders.requestedDate));
+    return db7.select().from(changeOrders).where(eq78(changeOrders.projectId, input.projectId)).orderBy(desc53(changeOrders.requestedDate));
   }),
   createChangeOrder: protectedProcedure.input(z91.object({
     projectId: z91.number(),
@@ -55953,13 +55993,13 @@ var projectControlsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...updates } = input;
-    await db7.update(changeOrders).set(updates).where(eq77(changeOrders.id, id));
+    await db7.update(changeOrders).set(updates).where(eq78(changeOrders.id, id));
     return { message: "Change order updated successfully" };
   }),
   deleteChangeOrder: protectedProcedure.input(z91.object({ id: z91.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(changeOrders).where(eq77(changeOrders.id, input.id));
+    await db7.delete(changeOrders).where(eq78(changeOrders.id, input.id));
     return { message: "Change order deleted successfully" };
   }),
   // ============================================
@@ -55968,7 +56008,7 @@ var projectControlsRouter = router({
   listRisks: protectedProcedure.input(z91.object({ projectId: z91.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    return db7.select().from(projectRisks).where(eq77(projectRisks.projectId, input.projectId)).orderBy(desc52(projectRisks.riskScore));
+    return db7.select().from(projectRisks).where(eq78(projectRisks.projectId, input.projectId)).orderBy(desc53(projectRisks.riskScore));
   }),
   createRisk: protectedProcedure.input(z91.object({
     projectId: z91.number(),
@@ -56025,13 +56065,13 @@ var projectControlsRouter = router({
         updates.riskScore = (probMap[updates.probability] || 1) * (impactMap[updates.impact] || 1);
       }
     }
-    await db7.update(projectRisks).set(updates).where(eq77(projectRisks.id, id));
+    await db7.update(projectRisks).set(updates).where(eq78(projectRisks.id, id));
     return { message: "Risk updated successfully" };
   }),
   deleteRisk: protectedProcedure.input(z91.object({ id: z91.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(projectRisks).where(eq77(projectRisks.id, input.id));
+    await db7.delete(projectRisks).where(eq78(projectRisks.id, input.id));
     return { message: "Risk deleted successfully" };
   }),
   // ============================================
@@ -56040,7 +56080,7 @@ var projectControlsRouter = router({
   listStatusReports: protectedProcedure.input(z91.object({ projectId: z91.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    return db7.select().from(projectStatusReports).where(eq77(projectStatusReports.projectId, input.projectId)).orderBy(desc52(projectStatusReports.reportDate));
+    return db7.select().from(projectStatusReports).where(eq78(projectStatusReports.projectId, input.projectId)).orderBy(desc53(projectStatusReports.reportDate));
   }),
   createStatusReport: protectedProcedure.input(z91.object({
     projectId: z91.number(),
@@ -56128,13 +56168,13 @@ var projectControlsRouter = router({
   getProjectSummary: protectedProcedure.input(z91.object({ id: z91.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const [project] = await db7.select().from(projects).where(eq77(projects.id, input.id));
+    const [project] = await db7.select().from(projects).where(eq78(projects.id, input.id));
     if (!project) return null;
-    const milestones = await db7.select().from(projectMilestones).where(eq77(projectMilestones.projectId, input.id));
-    const tasks = await db7.select().from(projectTasks).where(eq77(projectTasks.projectId, input.id));
-    const budgetItems = await db7.select().from(projectBudgetItems).where(eq77(projectBudgetItems.projectId, input.id));
-    const risks2 = await db7.select().from(projectRisks).where(eq77(projectRisks.projectId, input.id));
-    const changeOrdersList = await db7.select().from(changeOrders).where(eq77(changeOrders.projectId, input.id));
+    const milestones = await db7.select().from(projectMilestones).where(eq78(projectMilestones.projectId, input.id));
+    const tasks = await db7.select().from(projectTasks).where(eq78(projectTasks.projectId, input.id));
+    const budgetItems = await db7.select().from(projectBudgetItems).where(eq78(projectBudgetItems.projectId, input.id));
+    const risks2 = await db7.select().from(projectRisks).where(eq78(projectRisks.projectId, input.id));
+    const changeOrdersList = await db7.select().from(changeOrders).where(eq78(changeOrders.projectId, input.id));
     return {
       project,
       milestones,
@@ -56156,7 +56196,7 @@ var projectControlsRouter = router({
 
 // server/routers/requisitions.ts
 import { z as z92 } from "zod";
-import { eq as eq78, desc as desc53 } from "drizzle-orm";
+import { eq as eq79, desc as desc54 } from "drizzle-orm";
 import { TRPCError as TRPCError37 } from "@trpc/server";
 init_db();
 init_schema();
@@ -56165,14 +56205,14 @@ var requisitionsRouter = router({
   list: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    const requisitions = await db7.select().from(positionRequisitions).orderBy(desc53(positionRequisitions.createdAt));
+    const requisitions = await db7.select().from(positionRequisitions).orderBy(desc54(positionRequisitions.createdAt));
     return requisitions;
   }),
   // Get requisition by ID
   getById: protectedProcedure.input(z92.object({ id: z92.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError37({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [requisition] = await db7.select().from(positionRequisitions).where(eq78(positionRequisitions.id, input.id));
+    const [requisition] = await db7.select().from(positionRequisitions).where(eq79(positionRequisitions.id, input.id));
     if (!requisition) {
       throw new TRPCError37({ code: "NOT_FOUND", message: "Requisition not found" });
     }
@@ -56228,8 +56268,8 @@ var requisitionsRouter = router({
     if (input.status === "filled") {
       updateData.filledDate = /* @__PURE__ */ new Date();
     }
-    const [requisition] = await db7.select().from(positionRequisitions).where(eq78(positionRequisitions.id, input.id));
-    await db7.update(positionRequisitions).set(updateData).where(eq78(positionRequisitions.id, input.id));
+    const [requisition] = await db7.select().from(positionRequisitions).where(eq79(positionRequisitions.id, input.id));
+    await db7.update(positionRequisitions).set(updateData).where(eq79(positionRequisitions.id, input.id));
     if (requisition && (input.status === "approved" || input.status === "rejected")) {
       const statusText = input.status === "approved" ? "Approved" : "Rejected";
       const notificationTitle = `Position Requisition ${statusText}: ${requisition.positionTitle}`;
@@ -56263,7 +56303,7 @@ ${input.status === "approved" ? "\nThis position is now approved for hiring." : 
       candidateName: input.candidateName,
       candidateEmail: input.candidateEmail,
       filledDate: /* @__PURE__ */ new Date()
-    }).where(eq78(positionRequisitions.id, input.id));
+    }).where(eq79(positionRequisitions.id, input.id));
     return { success: true };
   }),
   // Create offer letter from approved requisition
@@ -56272,7 +56312,7 @@ ${input.status === "approved" ? "\nThis position is now approved for hiring." : 
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError37({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [requisition] = await db7.select().from(positionRequisitions).where(eq78(positionRequisitions.id, input.requisitionId));
+    const [requisition] = await db7.select().from(positionRequisitions).where(eq79(positionRequisitions.id, input.requisitionId));
     if (!requisition) {
       throw new TRPCError37({ code: "NOT_FOUND", message: "Requisition not found" });
     }
@@ -56313,7 +56353,7 @@ ${input.status === "approved" ? "\nThis position is now approved for hiring." : 
 import { z as z93 } from "zod";
 init_db();
 init_schema();
-import { eq as eq79, and as and60, desc as desc54, sql as sql36, or as or9 } from "drizzle-orm";
+import { eq as eq80, and as and60, desc as desc55, sql as sql36, or as or9 } from "drizzle-orm";
 import { TRPCError as TRPCError38 } from "@trpc/server";
 var TRANSITION_PHASES = {
   initiated: {
@@ -56457,7 +56497,7 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [employee] = await db7.select().from(employees).where(eq79(employees.id, input.employeeId)).limit(1);
+    const [employee] = await db7.select().from(employees).where(eq80(employees.id, input.employeeId)).limit(1);
     if (!employee) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Employee not found" });
     }
@@ -56469,8 +56509,8 @@ var contractorTransitionRouter = router({
       });
     }
     const [existingTransition] = await db7.select().from(contractorTransitions).where(and60(
-      eq79(contractorTransitions.employeeId, input.employeeId),
-      eq79(contractorTransitions.status, "active")
+      eq80(contractorTransitions.employeeId, input.employeeId),
+      eq80(contractorTransitions.status, "active")
     )).limit(1);
     if (existingTransition) {
       throw new TRPCError38({
@@ -56478,7 +56518,7 @@ var contractorTransitionRouter = router({
         message: "An active transition already exists for this employee"
       });
     }
-    const allFoundingMembers = await db7.select().from(foundingMembers).where(eq79(foundingMembers.status, "active"));
+    const allFoundingMembers = await db7.select().from(foundingMembers).where(eq80(foundingMembers.status, "active"));
     const fmNames = new Set(allFoundingMembers.map((fm) => fm.fullName.toLowerCase()));
     const isFoundingMember = fmNames.has(employeeFullName.toLowerCase()) || employee.positionLevel === "manager" || employee.positionLevel === "executive";
     const isCoordinator = employee.positionLevel === "coordinator" || employee.positionLevel === "lead";
@@ -56518,9 +56558,9 @@ var contractorTransitionRouter = router({
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     let query = db7.select().from(contractorTransitions);
     if (input?.status && input.status !== "all") {
-      query = query.where(eq79(contractorTransitions.status, input.status));
+      query = query.where(eq80(contractorTransitions.status, input.status));
     }
-    const transitions = await query.orderBy(desc54(contractorTransitions.createdAt));
+    const transitions = await query.orderBy(desc55(contractorTransitions.createdAt));
     return transitions.map((t2) => ({
       ...t2,
       phaseInfo: TRANSITION_PHASES[t2.phase],
@@ -56535,11 +56575,11 @@ var contractorTransitionRouter = router({
   getTransition: protectedProcedure.input(z93.object({ transitionId: z93.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
-    const [employee] = await db7.select().from(employees).where(eq79(employees.id, transition.employeeId)).limit(1);
+    const [employee] = await db7.select().from(employees).where(eq80(employees.id, transition.employeeId)).limit(1);
     const gateStatus = {
       trainingCompleted: transition.certificationIssued,
       entityRegistered: !!transition.entityName,
@@ -56569,7 +56609,7 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
@@ -56582,7 +56622,7 @@ var contractorTransitionRouter = router({
     await db7.update(contractorTransitions).set({
       phase: "training_assigned",
       trainingStartDate: /* @__PURE__ */ new Date()
-    }).where(eq79(contractorTransitions.id, input.transitionId));
+    }).where(eq80(contractorTransitions.id, input.transitionId));
     return {
       success: true,
       message: "Training modules assigned. Employee can now begin contractor training.",
@@ -56601,19 +56641,19 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
     if (transition.phase === "training_assigned") {
       await db7.update(contractorTransitions).set({
         phase: "training_in_progress"
-      }).where(eq79(contractorTransitions.id, input.transitionId));
+      }).where(eq80(contractorTransitions.id, input.transitionId));
     }
     if (input.passed) {
       await db7.update(contractorTransitions).set({
         trainingScore: input.score
-      }).where(eq79(contractorTransitions.id, input.transitionId));
+      }).where(eq80(contractorTransitions.id, input.transitionId));
     }
     return {
       success: true,
@@ -56633,7 +56673,7 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
@@ -56648,7 +56688,7 @@ var contractorTransitionRouter = router({
       trainingCompletionDate: /* @__PURE__ */ new Date(),
       trainingScore: input.finalScore,
       certificationIssued: true
-    }).where(eq79(contractorTransitions.id, input.transitionId));
+    }).where(eq80(contractorTransitions.id, input.transitionId));
     return {
       success: true,
       message: "Training completed! Certification issued. Employee can now proceed to entity formation.",
@@ -56673,7 +56713,7 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
@@ -56687,7 +56727,7 @@ var contractorTransitionRouter = router({
       phase: "entity_formation",
       entityName: input.proposedEntityName,
       entityType: input.entityType
-    }).where(eq79(contractorTransitions.id, input.transitionId));
+    }).where(eq80(contractorTransitions.id, input.transitionId));
     return {
       success: true,
       message: `Entity formation started for ${input.proposedEntityName}`,
@@ -56717,7 +56757,7 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
@@ -56738,7 +56778,7 @@ var contractorTransitionRouter = router({
       einObtained: true,
       businessBankSetup: true,
       entityFormationDate: new Date(input.formationDate)
-    }).where(eq79(contractorTransitions.id, input.transitionId));
+    }).where(eq80(contractorTransitions.id, input.transitionId));
     return {
       success: true,
       message: "Entity verified! All business requirements met. Ready for contractor agreement.",
@@ -56769,7 +56809,7 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
@@ -56795,7 +56835,7 @@ var contractorTransitionRouter = router({
     await db7.update(contractorTransitions).set({
       phase: "contract_pending",
       contractTerms
-    }).where(eq79(contractorTransitions.id, input.transitionId));
+    }).where(eq80(contractorTransitions.id, input.transitionId));
     return {
       success: true,
       message: "Contractor agreement generated. Awaiting signature.",
@@ -56819,7 +56859,7 @@ var contractorTransitionRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const [transition] = await db7.select().from(contractorTransitions).where(eq79(contractorTransitions.id, input.transitionId)).limit(1);
+    const [transition] = await db7.select().from(contractorTransitions).where(eq80(contractorTransitions.id, input.transitionId)).limit(1);
     if (!transition) {
       throw new TRPCError38({ code: "NOT_FOUND", message: "Transition not found" });
     }
@@ -56842,10 +56882,10 @@ var contractorTransitionRouter = router({
       status: "completed",
       contractSignedDate: /* @__PURE__ */ new Date(),
       completedDate: /* @__PURE__ */ new Date()
-    }).where(eq79(contractorTransitions.id, input.transitionId));
+    }).where(eq80(contractorTransitions.id, input.transitionId));
     await db7.update(employees).set({
       workerType: "contractor"
-    }).where(eq79(employees.id, transition.employeeId));
+    }).where(eq80(employees.id, transition.employeeId));
     await db7.insert(contractorBusinesses).values({
       transitionId: transition.id,
       contractorId: transition.employeeId,
@@ -56869,12 +56909,12 @@ var contractorTransitionRouter = router({
       dataSource: "L.A.W.S. Business OS"
     });
     if (transition.transitionType === "founding_member") {
-      const [emp] = await db7.select().from(employees).where(eq79(employees.id, transition.employeeId)).limit(1);
+      const [emp] = await db7.select().from(employees).where(eq80(employees.id, transition.employeeId)).limit(1);
       await db7.execute(sql36`INSERT INTO board_members (employeeId, userId, memberName, memberType, seatType, votingRights, termStartDate, isActive, entityId) VALUES (${transition.employeeId}, ${emp?.userId || null}, ${transition.employeeName}, 'founding', 'board_member', 1, NOW(), 1, ${emp?.entityId || 1})`);
       await db7.update(contractorTransitions).set({
         profitSharePercent: "5.00"
         // Default 5% profit share for founding members
-      }).where(eq79(contractorTransitions.id, input.transitionId));
+      }).where(eq80(contractorTransitions.id, input.transitionId));
     }
     return {
       success: true,
@@ -56954,7 +56994,7 @@ var contractorTransitionRouter = router({
       phase: "cancelled",
       status: "cancelled",
       cancellationReason: input.reason
-    }).where(eq79(contractorTransitions.id, input.transitionId));
+    }).where(eq80(contractorTransitions.id, input.transitionId));
     return {
       success: true,
       message: "Transition cancelled"
@@ -56971,18 +57011,18 @@ var contractorTransitionRouter = router({
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const allEmployees = await db7.select().from(employees).where(
       and60(
-        eq79(employees.status, "active"),
-        eq79(employees.workerType, "employee")
+        eq80(employees.status, "active"),
+        eq80(employees.workerType, "employee")
       )
     );
     const allFoundingMembers = await db7.select().from(foundingMembers).where(
-      eq79(foundingMembers.status, "active")
+      eq80(foundingMembers.status, "active")
     );
     const foundingMemberNames = new Set(allFoundingMembers.map((fm) => fm.fullName.toLowerCase()));
     const existingTransitions = await db7.select().from(contractorTransitions).where(
       or9(
-        eq79(contractorTransitions.status, "active"),
-        eq79(contractorTransitions.status, "completed")
+        eq80(contractorTransitions.status, "active"),
+        eq80(contractorTransitions.status, "completed")
       )
     );
     const transitionedEmployeeIds = new Set(existingTransitions.map((t2) => t2.employeeId));
@@ -57048,11 +57088,11 @@ var contractorTransitionRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError38({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const allFoundingMembers = await db7.select().from(foundingMembers).where(
-      eq79(foundingMembers.status, "active")
+      eq80(foundingMembers.status, "active")
     );
     const [allBoardMembers] = await db7.execute(sql36`SELECT id, employeeId, memberName, memberType, seatType, isActive, entityId FROM board_members`);
     const fmTransitions = await db7.select().from(contractorTransitions).where(
-      eq79(contractorTransitions.transitionType, "founding_member")
+      eq80(contractorTransitions.transitionType, "founding_member")
     );
     const allEmployees = await db7.select().from(employees);
     const employeeMap = new Map(allEmployees.map((e) => [e.id, e]));
@@ -63277,7 +63317,7 @@ init_db();
 init_env();
 init_schema();
 init_storage();
-import { eq as eq80, and as and61, desc as desc55 } from "drizzle-orm";
+import { eq as eq81, and as and61, desc as desc56 } from "drizzle-orm";
 import crypto29 from "crypto";
 var GRANT_DOCUMENT_CATEGORIES = [
   "budget",
@@ -63495,10 +63535,10 @@ var grantDocumentsRouter = router({
     const isOwner2 = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === "admin";
     const docs = await db7.select().from(secureDocuments).where(
       and61(
-        eq80(secureDocuments.documentType, "grant_application"),
-        isOwner2 ? void 0 : eq80(secureDocuments.ownerId, userId)
+        eq81(secureDocuments.documentType, "grant_application"),
+        isOwner2 ? void 0 : eq81(secureDocuments.ownerId, userId)
       )
-    ).orderBy(desc55(secureDocuments.createdAt));
+    ).orderBy(desc56(secureDocuments.createdAt));
     const filteredDocs = docs.filter((doc) => {
       const metadata = doc.metadata;
       if (!metadata?.entityId) return false;
@@ -63533,10 +63573,10 @@ var grantDocumentsRouter = router({
     const isOwner2 = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === "admin";
     const docs = await db7.select().from(secureDocuments).where(
       and61(
-        eq80(secureDocuments.documentType, "grant_application"),
-        isOwner2 ? void 0 : eq80(secureDocuments.ownerId, userId)
+        eq81(secureDocuments.documentType, "grant_application"),
+        isOwner2 ? void 0 : eq81(secureDocuments.ownerId, userId)
       )
-    ).orderBy(desc55(secureDocuments.createdAt));
+    ).orderBy(desc56(secureDocuments.createdAt));
     const byEntity = {};
     docs.forEach((doc) => {
       const metadata = doc.metadata;
@@ -63579,8 +63619,8 @@ var grantDocumentsRouter = router({
     const isOwner2 = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === "admin";
     const docs = await db7.select().from(secureDocuments).where(
       and61(
-        eq80(secureDocuments.documentType, "grant_application"),
-        isOwner2 ? void 0 : eq80(secureDocuments.ownerId, userId)
+        eq81(secureDocuments.documentType, "grant_application"),
+        isOwner2 ? void 0 : eq81(secureDocuments.ownerId, userId)
       )
     );
     const entityDocs = docs.filter((doc) => {
@@ -63631,7 +63671,7 @@ var grantDocumentsRouter = router({
     if (!userId) {
       throw new Error("Authentication required");
     }
-    const [doc] = await db7.select().from(secureDocuments).where(eq80(secureDocuments.id, input.documentId)).limit(1);
+    const [doc] = await db7.select().from(secureDocuments).where(eq81(secureDocuments.id, input.documentId)).limit(1);
     if (!doc) {
       throw new Error("Document not found");
     }
@@ -63639,7 +63679,7 @@ var grantDocumentsRouter = router({
     if (doc.ownerId !== userId && !isOwner2) {
       throw new Error("Only the owner can delete this document");
     }
-    await db7.update(secureDocuments).set({ status: "archived" }).where(eq80(secureDocuments.id, input.documentId));
+    await db7.update(secureDocuments).set({ status: "archived" }).where(eq81(secureDocuments.id, input.documentId));
     return { success: true };
   }),
   // Get document download URL
@@ -63652,7 +63692,7 @@ var grantDocumentsRouter = router({
     if (!userId) {
       throw new Error("Authentication required");
     }
-    const [doc] = await db7.select().from(secureDocuments).where(eq80(secureDocuments.id, input.documentId)).limit(1);
+    const [doc] = await db7.select().from(secureDocuments).where(eq81(secureDocuments.id, input.documentId)).limit(1);
     if (!doc) {
       throw new Error("Document not found");
     }
@@ -63681,8 +63721,8 @@ var grantDocumentsRouter = router({
     const isOwner2 = ctx.user?.openId === ENV.ownerOpenId || ctx.user?.role === "admin";
     const docs = await db7.select().from(secureDocuments).where(
       and61(
-        eq80(secureDocuments.documentType, "grant_application"),
-        isOwner2 ? void 0 : eq80(secureDocuments.ownerId, userId)
+        eq81(secureDocuments.documentType, "grant_application"),
+        isOwner2 ? void 0 : eq81(secureDocuments.ownerId, userId)
       )
     );
     const entityDocs = docs.filter((doc) => {
@@ -63726,11 +63766,11 @@ var grantDocumentsRouter = router({
     const futureDate = new Date(now.getTime() + input.daysAhead * 24 * 60 * 60 * 1e3);
     const docs = await db7.select().from(secureDocuments).where(
       and61(
-        eq80(secureDocuments.documentType, "grant_application"),
-        eq80(secureDocuments.status, "final"),
-        isOwner2 ? void 0 : eq80(secureDocuments.ownerId, userId)
+        eq81(secureDocuments.documentType, "grant_application"),
+        eq81(secureDocuments.status, "final"),
+        isOwner2 ? void 0 : eq81(secureDocuments.ownerId, userId)
       )
-    ).orderBy(desc55(secureDocuments.createdAt));
+    ).orderBy(desc56(secureDocuments.createdAt));
     const filteredDocs = input.entityId ? docs.filter((doc) => doc.metadata?.entityId === input.entityId) : docs;
     const expiring = [];
     const expired = [];
@@ -63797,7 +63837,7 @@ var grantDocumentsRouter = router({
     if (!userId) {
       throw new Error("Authentication required");
     }
-    const [doc] = await db7.select().from(secureDocuments).where(eq80(secureDocuments.id, input.documentId)).limit(1);
+    const [doc] = await db7.select().from(secureDocuments).where(eq81(secureDocuments.id, input.documentId)).limit(1);
     if (!doc) {
       throw new Error("Document not found");
     }
@@ -63815,7 +63855,7 @@ var grantDocumentsRouter = router({
     await db7.update(secureDocuments).set({
       metadata: updatedMetadata,
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq80(secureDocuments.id, input.documentId));
+    }).where(eq81(secureDocuments.id, input.documentId));
     return { success: true, expiresAt: input.expiresAt };
   }),
   // Get expiration summary for dashboard
@@ -63836,9 +63876,9 @@ var grantDocumentsRouter = router({
     const now = /* @__PURE__ */ new Date();
     const docs = await db7.select().from(secureDocuments).where(
       and61(
-        eq80(secureDocuments.documentType, "grant_application"),
-        eq80(secureDocuments.status, "final"),
-        isOwner2 ? void 0 : eq80(secureDocuments.ownerId, userId)
+        eq81(secureDocuments.documentType, "grant_application"),
+        eq81(secureDocuments.status, "final"),
+        isOwner2 ? void 0 : eq81(secureDocuments.ownerId, userId)
       )
     );
     const byEntity = {};
@@ -63897,7 +63937,7 @@ var grantDocumentsRouter = router({
 import { z as z112 } from "zod";
 init_db();
 init_schema();
-import { eq as eq81, desc as desc56 } from "drizzle-orm";
+import { eq as eq82, desc as desc57 } from "drizzle-orm";
 var resumeInput = z112.object({
   familyMemberId: z112.string(),
   fullName: z112.string(),
@@ -63974,7 +64014,7 @@ var offerPackagesRouter = router({
   saveResume: publicProcedure.input(resumeInput).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const existing = await db7.select().from(familyResumes).where(eq81(familyResumes.familyMemberId, input.familyMemberId)).limit(1);
+    const existing = await db7.select().from(familyResumes).where(eq82(familyResumes.familyMemberId, input.familyMemberId)).limit(1);
     if (existing.length > 0) {
       await db7.update(familyResumes).set({
         fullName: input.fullName,
@@ -63991,7 +64031,7 @@ var offerPackagesRouter = router({
         references: input.references,
         developmentPlan: input.developmentPlan,
         status: input.status
-      }).where(eq81(familyResumes.id, existing[0].id));
+      }).where(eq82(familyResumes.id, existing[0].id));
       return { id: existing[0].id, updated: true };
     } else {
       const result = await db7.insert(familyResumes).values({
@@ -64018,28 +64058,28 @@ var offerPackagesRouter = router({
   getResume: publicProcedure.input(z112.object({ familyMemberId: z112.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const resume = await db7.select().from(familyResumes).where(eq81(familyResumes.familyMemberId, input.familyMemberId)).limit(1);
+    const resume = await db7.select().from(familyResumes).where(eq82(familyResumes.familyMemberId, input.familyMemberId)).limit(1);
     return resume[0] || null;
   }),
   // Get resume by ID
   getResumeById: publicProcedure.input(z112.object({ id: z112.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const resume = await db7.select().from(familyResumes).where(eq81(familyResumes.id, input.id)).limit(1);
+    const resume = await db7.select().from(familyResumes).where(eq82(familyResumes.id, input.id)).limit(1);
     return resume[0] || null;
   }),
   // Get all resumes
   getAllResumes: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    const resumes = await db7.select().from(familyResumes).orderBy(desc56(familyResumes.updatedAt));
+    const resumes = await db7.select().from(familyResumes).orderBy(desc57(familyResumes.updatedAt));
     return resumes;
   }),
   // Delete resume
   deleteResume: publicProcedure.input(z112.object({ id: z112.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(familyResumes).where(eq81(familyResumes.id, input.id));
+    await db7.delete(familyResumes).where(eq82(familyResumes.id, input.id));
     return { success: true };
   }),
   // ============ OFFER PACKAGE OPERATIONS ============
@@ -64047,7 +64087,7 @@ var offerPackagesRouter = router({
   createOfferPackage: publicProcedure.input(offerPackageInput).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const resume = await db7.select().from(familyResumes).where(eq81(familyResumes.id, input.resumeId)).limit(1);
+    const resume = await db7.select().from(familyResumes).where(eq82(familyResumes.id, input.resumeId)).limit(1);
     if (!resume[0]) {
       throw new Error("Resume not found. A resume must be created before generating an offer package.");
     }
@@ -64075,10 +64115,10 @@ var offerPackagesRouter = router({
   getOfferPackage: publicProcedure.input(z112.object({ id: z112.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const offer = await db7.select().from(offerPackages).where(eq81(offerPackages.id, input.id)).limit(1);
+    const offer = await db7.select().from(offerPackages).where(eq82(offerPackages.id, input.id)).limit(1);
     if (!offer[0]) return null;
-    const documents2 = await db7.select().from(offerPackageDocuments).where(eq81(offerPackageDocuments.offerId, input.id));
-    const resume = await db7.select().from(familyResumes).where(eq81(familyResumes.id, offer[0].resumeId)).limit(1);
+    const documents2 = await db7.select().from(offerPackageDocuments).where(eq82(offerPackageDocuments.offerId, input.id));
+    const resume = await db7.select().from(familyResumes).where(eq82(familyResumes.id, offer[0].resumeId)).limit(1);
     return {
       ...offer[0],
       documents: documents2,
@@ -64089,14 +64129,14 @@ var offerPackagesRouter = router({
   getAllOfferPackages: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    const offers = await db7.select().from(offerPackages).orderBy(desc56(offerPackages.createdAt));
+    const offers = await db7.select().from(offerPackages).orderBy(desc57(offerPackages.createdAt));
     return offers;
   }),
   // Get offer packages by family member
   getOfferPackagesByMember: publicProcedure.input(z112.object({ familyMemberId: z112.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const offers = await db7.select().from(offerPackages).where(eq81(offerPackages.familyMemberId, input.familyMemberId)).orderBy(desc56(offerPackages.createdAt));
+    const offers = await db7.select().from(offerPackages).where(eq82(offerPackages.familyMemberId, input.familyMemberId)).orderBy(desc57(offerPackages.createdAt));
     return offers;
   }),
   // Update offer package status
@@ -64112,7 +64152,7 @@ var offerPackagesRouter = router({
     } else if (input.status === "accepted") {
       updates.offerAcceptedAt = /* @__PURE__ */ new Date();
     }
-    await db7.update(offerPackages).set(updates).where(eq81(offerPackages.id, input.id));
+    await db7.update(offerPackages).set(updates).where(eq82(offerPackages.id, input.id));
     return { success: true };
   }),
   // ============ DOCUMENT OPERATIONS ============
@@ -64165,7 +64205,7 @@ var offerPackagesRouter = router({
     };
     const flag = flagMap[input.documentType];
     if (flag) {
-      await db7.update(offerPackages).set({ [flag]: true }).where(eq81(offerPackages.id, input.offerId));
+      await db7.update(offerPackages).set({ [flag]: true }).where(eq82(offerPackages.id, input.offerId));
     }
     return { id: result[0].insertId };
   }),
@@ -64173,7 +64213,7 @@ var offerPackagesRouter = router({
   getDocuments: publicProcedure.input(z112.object({ offerId: z112.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const documents2 = await db7.select().from(offerPackageDocuments).where(eq81(offerPackageDocuments.offerId, input.offerId)).orderBy(offerPackageDocuments.createdAt);
+    const documents2 = await db7.select().from(offerPackageDocuments).where(eq82(offerPackageDocuments.offerId, input.offerId)).orderBy(offerPackageDocuments.createdAt);
     return documents2;
   }),
   // Sign document
@@ -64187,15 +64227,15 @@ var offerPackagesRouter = router({
       signedAt: /* @__PURE__ */ new Date(),
       signatureData: input.signatureData,
       status: "signed"
-    }).where(eq81(offerPackageDocuments.id, input.documentId));
+    }).where(eq82(offerPackageDocuments.id, input.documentId));
     return { success: true };
   }),
   // Delete offer package
   deleteOfferPackage: publicProcedure.input(z112.object({ id: z112.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(offerPackageDocuments).where(eq81(offerPackageDocuments.offerId, input.id));
-    await db7.delete(offerPackages).where(eq81(offerPackages.id, input.id));
+    await db7.delete(offerPackageDocuments).where(eq82(offerPackageDocuments.offerId, input.id));
+    await db7.delete(offerPackages).where(eq82(offerPackages.id, input.id));
     return { success: true };
   }),
   // ============ STATISTICS ============
@@ -64236,7 +64276,7 @@ var offerPackagesRouter = router({
 import { z as z113 } from "zod";
 init_db();
 init_schema();
-import { eq as eq82, desc as desc57 } from "drizzle-orm";
+import { eq as eq83, desc as desc58 } from "drizzle-orm";
 var PROGRESSION_REQUIREMENTS = {
   specialist_i: {
     minMonths: 6,
@@ -64348,21 +64388,21 @@ var specialistTracksRouter = router({
   getAllTracks: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    const tracks = await db7.select().from(specialistTracks).orderBy(desc57(specialistTracks.createdAt));
+    const tracks = await db7.select().from(specialistTracks).orderBy(desc58(specialistTracks.createdAt));
     return tracks;
   }),
   // Get track by ID
   getTrackById: publicProcedure.input(z113.object({ id: z113.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const tracks = await db7.select().from(specialistTracks).where(eq82(specialistTracks.id, input.id)).limit(1);
+    const tracks = await db7.select().from(specialistTracks).where(eq83(specialistTracks.id, input.id)).limit(1);
     return tracks[0] || null;
   }),
   // Get track by family member
   getTrackByFamilyMember: publicProcedure.input(z113.object({ familyMemberId: z113.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const tracks = await db7.select().from(specialistTracks).where(eq82(specialistTracks.familyMemberId, input.familyMemberId)).limit(1);
+    const tracks = await db7.select().from(specialistTracks).where(eq83(specialistTracks.familyMemberId, input.familyMemberId)).limit(1);
     return tracks[0] || null;
   }),
   // Update track
@@ -64386,14 +64426,14 @@ var specialistTracksRouter = router({
     await db7.update(specialistTracks).set({
       ...updates,
       hourlyRate: updates.hourlyRate?.toString()
-    }).where(eq82(specialistTracks.id, id));
+    }).where(eq83(specialistTracks.id, id));
     return { success: true };
   }),
   // Check progression eligibility
   checkProgressionEligibility: publicProcedure.input(z113.object({ trackId: z113.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return { eligible: false, reason: "Database not available" };
-    const tracks = await db7.select().from(specialistTracks).where(eq82(specialistTracks.id, input.trackId)).limit(1);
+    const tracks = await db7.select().from(specialistTracks).where(eq83(specialistTracks.id, input.trackId)).limit(1);
     const track = tracks[0];
     if (!track) return { eligible: false, reason: "Track not found" };
     const currentLevel = track.currentLevel;
@@ -64436,7 +64476,7 @@ var specialistTracksRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const tracks = await db7.select().from(specialistTracks).where(eq82(specialistTracks.id, input.trackId)).limit(1);
+    const tracks = await db7.select().from(specialistTracks).where(eq83(specialistTracks.id, input.trackId)).limit(1);
     const track = tracks[0];
     if (!track) throw new Error("Track not found");
     const currentLevel = track.currentLevel;
@@ -64451,7 +64491,7 @@ var specialistTracksRouter = router({
       currentLevelStartDate: /* @__PURE__ */ new Date(),
       // Upgrade employment type if advancing to Specialist III or Associate
       employmentType: newLevel === "specialist_iii" || newLevel === "associate" ? "part_time_30" : track.employmentType
-    }).where(eq82(specialistTracks.id, input.trackId));
+    }).where(eq83(specialistTracks.id, input.trackId));
     await db7.insert(specialistMilestones).values({
       specialistTrackId: input.trackId,
       milestoneType: "level_advancement",
@@ -64565,7 +64605,7 @@ var specialistTracksRouter = router({
       lastMaturityAssessment: /* @__PURE__ */ new Date(),
       // Enable accelerated track if score is high enough
       acceleratedTrack: totalScore >= 80
-    }).where(eq82(specialistTracks.id, input.specialistTrackId));
+    }).where(eq83(specialistTracks.id, input.specialistTrackId));
     return {
       id: result[0].insertId,
       totalScore,
@@ -64584,14 +64624,14 @@ var specialistTracksRouter = router({
   getAssessments: publicProcedure.input(z113.object({ trackId: z113.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const assessments = await db7.select().from(specialistMaturityAssessments).where(eq82(specialistMaturityAssessments.specialistTrackId, input.trackId)).orderBy(desc57(specialistMaturityAssessments.assessmentDate));
+    const assessments = await db7.select().from(specialistMaturityAssessments).where(eq83(specialistMaturityAssessments.specialistTrackId, input.trackId)).orderBy(desc58(specialistMaturityAssessments.assessmentDate));
     return assessments;
   }),
   // Get milestones for a track
   getMilestones: publicProcedure.input(z113.object({ trackId: z113.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const milestones = await db7.select().from(specialistMilestones).where(eq82(specialistMilestones.specialistTrackId, input.trackId)).orderBy(desc57(specialistMilestones.achievedAt));
+    const milestones = await db7.select().from(specialistMilestones).where(eq83(specialistMilestones.specialistTrackId, input.trackId)).orderBy(desc58(specialistMilestones.achievedAt));
     return milestones;
   }),
   // Create milestone
@@ -64668,7 +64708,7 @@ var specialistTracksRouter = router({
   deleteTrack: protectedProcedure.input(z113.object({ id: z113.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(specialistTracks).where(eq82(specialistTracks.id, input.id));
+    await db7.delete(specialistTracks).where(eq83(specialistTracks.id, input.id));
     return { success: true };
   })
 });
@@ -64731,7 +64771,7 @@ function calculateFiscalScore(budgetAdherence, reportingAccuracy, goalsMet) {
   return score;
 }
 async function getRecommendedLevel(db7, trackId) {
-  const tracks = await db7.select().from(specialistTracks).where(eq82(specialistTracks.id, trackId)).limit(1);
+  const tracks = await db7.select().from(specialistTracks).where(eq83(specialistTracks.id, trackId)).limit(1);
   const track = tracks[0];
   if (!track) return null;
   const currentLevel = track.currentLevel;
@@ -64743,7 +64783,7 @@ async function getRecommendedLevel(db7, trackId) {
 import { z as z114 } from "zod";
 init_db();
 init_schema();
-import { eq as eq83, desc as desc58, sql as sql49 } from "drizzle-orm";
+import { eq as eq84, desc as desc59, sql as sql49 } from "drizzle-orm";
 var scholarshipsRouter = router({
   // ============================================
   // FOUNDING MEMBERS
@@ -64783,13 +64823,13 @@ var scholarshipsRouter = router({
   getFoundingMembers: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return await db7.select().from(foundingMembers).orderBy(desc58(foundingMembers.foundingDate));
+    return await db7.select().from(foundingMembers).orderBy(desc59(foundingMembers.foundingDate));
   }),
   // Get founding member by ID
   getFoundingMemberById: publicProcedure.input(z114.object({ id: z114.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const members = await db7.select().from(foundingMembers).where(eq83(foundingMembers.id, input.id)).limit(1);
+    const members = await db7.select().from(foundingMembers).where(eq84(foundingMembers.id, input.id)).limit(1);
     return members[0] || null;
   }),
   // ============================================
@@ -64809,7 +64849,7 @@ var scholarshipsRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const founders = await db7.select().from(foundingMembers).where(eq83(foundingMembers.id, input.foundingMemberId)).limit(1);
+    const founders = await db7.select().from(foundingMembers).where(eq84(foundingMembers.id, input.foundingMemberId)).limit(1);
     const founder = founders[0];
     if (!founder) throw new Error("Founding member not found");
     if (!founder.heirEducationBenefit) throw new Error("Founding member does not have heir education benefits enabled");
@@ -64834,13 +64874,13 @@ var scholarshipsRouter = router({
   getHeirBenefits: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return await db7.select().from(heirEducationBenefits).orderBy(desc58(heirEducationBenefits.createdAt));
+    return await db7.select().from(heirEducationBenefits).orderBy(desc59(heirEducationBenefits.createdAt));
   }),
   // Get heir benefit by heir house ID
   getHeirBenefitByHouse: publicProcedure.input(z114.object({ houseId: z114.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const benefits = await db7.select().from(heirEducationBenefits).where(eq83(heirEducationBenefits.heirHouseId, input.houseId)).limit(1);
+    const benefits = await db7.select().from(heirEducationBenefits).where(eq84(heirEducationBenefits.heirHouseId, input.houseId)).limit(1);
     return benefits[0] || null;
   }),
   // Check if person is eligible for heir benefits
@@ -64851,7 +64891,7 @@ var scholarshipsRouter = router({
     const db7 = await getDb();
     if (!db7) return { eligible: false, reason: "Database not available" };
     if (input.houseId) {
-      const benefits = await db7.select().from(heirEducationBenefits).where(eq83(heirEducationBenefits.heirHouseId, input.houseId)).limit(1);
+      const benefits = await db7.select().from(heirEducationBenefits).where(eq84(heirEducationBenefits.heirHouseId, input.houseId)).limit(1);
       if (benefits[0]) {
         return {
           eligible: true,
@@ -64862,7 +64902,7 @@ var scholarshipsRouter = router({
       }
     }
     if (input.houseId) {
-      const founders = await db7.select().from(foundingMembers).where(eq83(foundingMembers.houseId, input.houseId)).limit(1);
+      const founders = await db7.select().from(foundingMembers).where(eq84(foundingMembers.houseId, input.houseId)).limit(1);
       if (founders[0]) {
         return {
           eligible: true,
@@ -64888,7 +64928,7 @@ var scholarshipsRouter = router({
       enrollmentDate: /* @__PURE__ */ new Date(),
       tuitionValue: input.tuitionValue.toString(),
       status: "enrolled"
-    }).where(eq83(heirEducationBenefits.id, input.benefitId));
+    }).where(eq84(heirEducationBenefits.id, input.benefitId));
     return { success: true };
   }),
   // ============================================
@@ -64966,16 +65006,16 @@ var scholarshipsRouter = router({
     if (!db7) return [];
     let query = db7.select().from(scholarshipPrograms);
     if (input?.status) {
-      query = query.where(eq83(scholarshipPrograms.status, input.status));
+      query = query.where(eq84(scholarshipPrograms.status, input.status));
     }
-    return await query.orderBy(desc58(scholarshipPrograms.createdAt));
+    return await query.orderBy(desc59(scholarshipPrograms.createdAt));
   }),
   // Get active programs (for applicants)
   getActivePrograms: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
     const now = /* @__PURE__ */ new Date();
-    return await db7.select().from(scholarshipPrograms).where(eq83(scholarshipPrograms.status, "active")).orderBy(scholarshipPrograms.applicationEndDate);
+    return await db7.select().from(scholarshipPrograms).where(eq84(scholarshipPrograms.status, "active")).orderBy(scholarshipPrograms.applicationEndDate);
   }),
   // Update program status
   updateProgramStatus: protectedProcedure.input(z114.object({
@@ -64984,7 +65024,7 @@ var scholarshipsRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.update(scholarshipPrograms).set({ status: input.status }).where(eq83(scholarshipPrograms.id, input.id));
+    await db7.update(scholarshipPrograms).set({ status: input.status }).where(eq84(scholarshipPrograms.id, input.id));
     return { success: true };
   }),
   // ============================================
@@ -65025,7 +65065,7 @@ var scholarshipsRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const programs = await db7.select().from(scholarshipPrograms).where(eq83(scholarshipPrograms.id, input.scholarshipProgramId)).limit(1);
+    const programs = await db7.select().from(scholarshipPrograms).where(eq84(scholarshipPrograms.id, input.scholarshipProgramId)).limit(1);
     const program = programs[0];
     if (!program) throw new Error("Scholarship program not found");
     if (program.status !== "active") throw new Error("Scholarship program is not accepting applications");
@@ -65067,9 +65107,9 @@ var scholarshipsRouter = router({
     if (!db7) return [];
     let query = db7.select().from(scholarshipApplications);
     if (input?.programId) {
-      query = query.where(eq83(scholarshipApplications.scholarshipProgramId, input.programId));
+      query = query.where(eq84(scholarshipApplications.scholarshipProgramId, input.programId));
     }
-    return await query.orderBy(desc58(scholarshipApplications.submittedAt));
+    return await query.orderBy(desc59(scholarshipApplications.submittedAt));
   }),
   // Score application
   scoreApplication: protectedProcedure.input(z114.object({
@@ -65091,7 +65131,7 @@ var scholarshipsRouter = router({
       totalScore,
       reviewStatus: "under_review",
       reviewNotes: input.reviewNotes
-    }).where(eq83(scholarshipApplications.id, input.applicationId));
+    }).where(eq84(scholarshipApplications.id, input.applicationId));
     return { totalScore };
   }),
   // Approve/deny application
@@ -65114,11 +65154,11 @@ var scholarshipsRouter = router({
       updateData.awardAmount = input.awardAmount.toString();
       updateData.awardedAt = /* @__PURE__ */ new Date();
     }
-    await db7.update(scholarshipApplications).set(updateData).where(eq83(scholarshipApplications.id, input.applicationId));
+    await db7.update(scholarshipApplications).set(updateData).where(eq84(scholarshipApplications.id, input.applicationId));
     if (input.decision === "approved") {
-      const apps = await db7.select().from(scholarshipApplications).where(eq83(scholarshipApplications.id, input.applicationId)).limit(1);
+      const apps = await db7.select().from(scholarshipApplications).where(eq84(scholarshipApplications.id, input.applicationId)).limit(1);
       if (apps[0]) {
-        await db7.update(scholarshipPrograms).set({ filledSlots: sql49`${scholarshipPrograms.filledSlots} + 1` }).where(eq83(scholarshipPrograms.id, apps[0].scholarshipProgramId));
+        await db7.update(scholarshipPrograms).set({ filledSlots: sql49`${scholarshipPrograms.filledSlots} + 1` }).where(eq84(scholarshipPrograms.id, apps[0].scholarshipProgramId));
       }
     }
     return { success: true };
@@ -65164,7 +65204,7 @@ var scholarshipsRouter = router({
   getFunds: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return await db7.select().from(scholarshipFund).orderBy(desc58(scholarshipFund.createdAt));
+    return await db7.select().from(scholarshipFund).orderBy(desc59(scholarshipFund.createdAt));
   }),
   // Add donation to fund
   addDonation: protectedProcedure.input(z114.object({
@@ -65177,7 +65217,7 @@ var scholarshipsRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const funds = await db7.select().from(scholarshipFund).where(eq83(scholarshipFund.id, input.fundId)).limit(1);
+    const funds = await db7.select().from(scholarshipFund).where(eq84(scholarshipFund.id, input.fundId)).limit(1);
     const fund = funds[0];
     if (!fund) throw new Error("Fund not found");
     const newPrincipal = parseFloat(fund.principalBalance?.toString() || "0") + input.amount;
@@ -65186,7 +65226,7 @@ var scholarshipsRouter = router({
       principalBalance: newPrincipal.toString(),
       availableBalance: newAvailable.toString(),
       status: fund.isEndowed && newPrincipal < parseFloat(fund.endowmentMinimum?.toString() || "0") ? "building" : "active"
-    }).where(eq83(scholarshipFund.id, input.fundId));
+    }).where(eq84(scholarshipFund.id, input.fundId));
     await db7.insert(scholarshipFundTransactions).values({
       fundId: input.fundId,
       transactionType: "donation",
@@ -65203,7 +65243,7 @@ var scholarshipsRouter = router({
   getFundTransactions: publicProcedure.input(z114.object({ fundId: z114.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    return await db7.select().from(scholarshipFundTransactions).where(eq83(scholarshipFundTransactions.fundId, input.fundId)).orderBy(desc58(scholarshipFundTransactions.processedAt));
+    return await db7.select().from(scholarshipFundTransactions).where(eq84(scholarshipFundTransactions.fundId, input.fundId)).orderBy(desc59(scholarshipFundTransactions.processedAt));
   }),
   // ============================================
   // STATISTICS
@@ -65214,12 +65254,12 @@ var scholarshipsRouter = router({
     if (!db7) return { foundingMember: null, heirBenefits: [], scholarshipApplications: [], isFoundingMember: false, hasHeirBenefits: false };
     const userId = ctx.user.id;
     const userName = ctx.user.name || "";
-    const founderResults = await db7.select().from(foundingMembers).where(eq83(foundingMembers.userId, userId)).limit(1);
+    const founderResults = await db7.select().from(foundingMembers).where(eq84(foundingMembers.userId, userId)).limit(1);
     const foundingMember = founderResults[0] || null;
-    const heirBenefits = await db7.select().from(heirEducationBenefits).where(eq83(heirEducationBenefits.heirUserId, userId));
+    const heirBenefits = await db7.select().from(heirEducationBenefits).where(eq84(heirEducationBenefits.heirUserId, userId));
     let heirBenefitsByName = [];
     if (heirBenefits.length === 0 && userName) {
-      heirBenefitsByName = await db7.select().from(heirEducationBenefits).where(eq83(heirEducationBenefits.heirFullName, userName));
+      heirBenefitsByName = await db7.select().from(heirEducationBenefits).where(eq84(heirEducationBenefits.heirFullName, userName));
     }
     const allHeirBenefits = [...heirBenefits, ...heirBenefitsByName];
     const founderIds = [...new Set(allHeirBenefits.map((b) => b.foundingMemberId))];
@@ -65227,7 +65267,7 @@ var scholarshipsRouter = router({
     if (founderIds.length > 0) {
       founderDetails = await db7.select().from(foundingMembers).where(sql49`${foundingMembers.id} IN (${sql49.join(founderIds.map((id) => sql49`${id}`), sql49`,`)})`);
     }
-    const myApplications = await db7.select().from(scholarshipApplications).where(eq83(scholarshipApplications.applicantUserId, userId)).orderBy(desc58(scholarshipApplications.createdAt));
+    const myApplications = await db7.select().from(scholarshipApplications).where(eq84(scholarshipApplications.applicantUserId, userId)).orderBy(desc59(scholarshipApplications.createdAt));
     const programIds = [...new Set(myApplications.map((a) => a.programId))];
     let programDetails = [];
     if (programIds.length > 0) {
@@ -65255,7 +65295,7 @@ var scholarshipsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const benefits = await db7.select().from(heirEducationBenefits).where(eq83(heirEducationBenefits.id, input.benefitId)).limit(1);
+    const benefits = await db7.select().from(heirEducationBenefits).where(eq84(heirEducationBenefits.id, input.benefitId)).limit(1);
     const benefit = benefits[0];
     if (!benefit) throw new Error("Benefit not found");
     if (benefit.heirUserId && benefit.heirUserId !== ctx.user.id) {
@@ -65267,7 +65307,7 @@ var scholarshipsRouter = router({
     await db7.update(heirEducationBenefits).set({
       heirUserId: ctx.user.id,
       heirFullName: ctx.user.name || benefit.heirFullName
-    }).where(eq83(heirEducationBenefits.id, input.benefitId));
+    }).where(eq84(heirEducationBenefits.id, input.benefitId));
     return { success: true };
   }),
   getStats: publicProcedure.query(async () => {
@@ -65306,7 +65346,7 @@ var scholarshipsRouter = router({
 import { z as z115 } from "zod";
 init_db();
 init_schema();
-import { eq as eq84, desc as desc59 } from "drizzle-orm";
+import { eq as eq85, desc as desc60 } from "drizzle-orm";
 var creativeEnterpriseRouter = router({
   // ============================================================================
   // STATISTICS
@@ -65387,7 +65427,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(creativeArtists).orderBy(desc59(creativeArtists.createdAt));
+      return await db7.select().from(creativeArtists).orderBy(desc60(creativeArtists.createdAt));
     } catch (error) {
       console.error("Error getting artists:", error);
       return [];
@@ -65398,9 +65438,9 @@ var creativeEnterpriseRouter = router({
     if (!db7) return [];
     try {
       if (input.entity === "both") {
-        return await db7.select().from(creativeArtists).orderBy(desc59(creativeArtists.createdAt));
+        return await db7.select().from(creativeArtists).orderBy(desc60(creativeArtists.createdAt));
       }
-      return await db7.select().from(creativeArtists).where(eq84(creativeArtists.primaryEntity, input.entity)).orderBy(desc59(creativeArtists.createdAt));
+      return await db7.select().from(creativeArtists).where(eq85(creativeArtists.primaryEntity, input.entity)).orderBy(desc60(creativeArtists.createdAt));
     } catch (error) {
       console.error("Error getting artists by entity:", error);
       return [];
@@ -65410,7 +65450,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return null;
     try {
-      const results = await db7.select().from(creativeArtists).where(eq84(creativeArtists.id, input.id)).limit(1);
+      const results = await db7.select().from(creativeArtists).where(eq85(creativeArtists.id, input.id)).limit(1);
       return results[0] || null;
     } catch (error) {
       console.error("Error getting artist:", error);
@@ -65480,7 +65520,7 @@ var creativeEnterpriseRouter = router({
         ...specializations && { specializations: JSON.stringify(specializations) },
         ...minimumGuarantee !== void 0 && { minimumGuarantee: minimumGuarantee.toString() },
         ...revenueSharePercentage !== void 0 && { revenueSharePercentage: revenueSharePercentage.toString() }
-      }).where(eq84(creativeArtists.id, id));
+      }).where(eq85(creativeArtists.id, id));
       return { success: true };
     } catch (error) {
       console.error("Error updating artist:", error);
@@ -65494,7 +65534,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(creativeProductions).orderBy(desc59(creativeProductions.createdAt));
+      return await db7.select().from(creativeProductions).orderBy(desc60(creativeProductions.createdAt));
     } catch (error) {
       console.error("Error getting productions:", error);
       return [];
@@ -65504,7 +65544,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(creativeProductions).where(eq84(creativeProductions.owningEntity, input.entity)).orderBy(desc59(creativeProductions.createdAt));
+      return await db7.select().from(creativeProductions).where(eq85(creativeProductions.owningEntity, input.entity)).orderBy(desc60(creativeProductions.createdAt));
     } catch (error) {
       console.error("Error getting productions by entity:", error);
       return [];
@@ -65514,7 +65554,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return null;
     try {
-      const results = await db7.select().from(creativeProductions).where(eq84(creativeProductions.id, input.id)).limit(1);
+      const results = await db7.select().from(creativeProductions).where(eq85(creativeProductions.id, input.id)).limit(1);
       return results[0] || null;
     } catch (error) {
       console.error("Error getting production:", error);
@@ -65614,7 +65654,7 @@ var creativeEnterpriseRouter = router({
         ...rest,
         ...productionBudget !== void 0 && { productionBudget: productionBudget.toString() },
         ...totalRevenue !== void 0 && { totalRevenue: totalRevenue.toString() }
-      }).where(eq84(creativeProductions.id, id));
+      }).where(eq85(creativeProductions.id, id));
       return { success: true };
     } catch (error) {
       console.error("Error updating production:", error);
@@ -65628,7 +65668,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(productionCredits).where(eq84(productionCredits.productionId, input.productionId));
+      return await db7.select().from(productionCredits).where(eq85(productionCredits.productionId, input.productionId));
     } catch (error) {
       console.error("Error getting production credits:", error);
       return [];
@@ -65674,7 +65714,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(creativeBookings).orderBy(desc59(creativeBookings.startDateTime));
+      return await db7.select().from(creativeBookings).orderBy(desc60(creativeBookings.startDateTime));
     } catch (error) {
       console.error("Error getting bookings:", error);
       return [];
@@ -65684,7 +65724,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      const allBookings = await db7.select().from(creativeBookings).orderBy(desc59(creativeBookings.startDateTime));
+      const allBookings = await db7.select().from(creativeBookings).orderBy(desc60(creativeBookings.startDateTime));
       return allBookings.filter(
         (b) => (b.status === "confirmed" || b.status === "pending") && new Date(b.startDateTime) > /* @__PURE__ */ new Date()
       );
@@ -65697,7 +65737,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(creativeBookings).where(eq84(creativeBookings.primaryArtistId, input.artistId)).orderBy(desc59(creativeBookings.startDateTime));
+      return await db7.select().from(creativeBookings).where(eq85(creativeBookings.primaryArtistId, input.artistId)).orderBy(desc60(creativeBookings.startDateTime));
     } catch (error) {
       console.error("Error getting artist bookings:", error);
       return [];
@@ -65760,7 +65800,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     try {
-      await db7.update(creativeBookings).set({ status: input.status }).where(eq84(creativeBookings.id, input.id));
+      await db7.update(creativeBookings).set({ status: input.status }).where(eq85(creativeBookings.id, input.id));
       return { success: true };
     } catch (error) {
       console.error("Error updating booking status:", error);
@@ -65774,7 +65814,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(artistRevenueStreams).where(eq84(artistRevenueStreams.artistId, input.artistId)).orderBy(desc59(artistRevenueStreams.createdAt));
+      return await db7.select().from(artistRevenueStreams).where(eq85(artistRevenueStreams.artistId, input.artistId)).orderBy(desc60(artistRevenueStreams.createdAt));
     } catch (error) {
       console.error("Error getting artist revenue:", error);
       return [];
@@ -65838,7 +65878,7 @@ var creativeEnterpriseRouter = router({
       if (input.entity === "all") {
         return await db7.select().from(creativeTrainingPrograms).orderBy(creativeTrainingPrograms.programName);
       }
-      return await db7.select().from(creativeTrainingPrograms).where(eq84(creativeTrainingPrograms.owningEntity, input.entity)).orderBy(creativeTrainingPrograms.programName);
+      return await db7.select().from(creativeTrainingPrograms).where(eq85(creativeTrainingPrograms.owningEntity, input.entity)).orderBy(creativeTrainingPrograms.programName);
     } catch (error) {
       console.error("Error getting training programs:", error);
       return [];
@@ -65915,7 +65955,7 @@ var creativeEnterpriseRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(artistTrainingProgress).where(eq84(artistTrainingProgress.artistId, input.artistId)).orderBy(desc59(artistTrainingProgress.enrolledAt));
+      return await db7.select().from(artistTrainingProgress).where(eq85(artistTrainingProgress.artistId, input.artistId)).orderBy(desc60(artistTrainingProgress.enrolledAt));
     } catch (error) {
       console.error("Error getting artist training progress:", error);
       return [];
@@ -65956,7 +65996,7 @@ var creativeEnterpriseRouter = router({
         ...moduleProgress && { moduleProgress: JSON.stringify(moduleProgress) },
         ...input.status === "completed" && { completedAt: /* @__PURE__ */ new Date() },
         ...input.status === "in_progress" && { startedAt: /* @__PURE__ */ new Date() }
-      }).where(eq84(artistTrainingProgress.id, id));
+      }).where(eq85(artistTrainingProgress.id, id));
       return { success: true };
     } catch (error) {
       console.error("Error updating training progress:", error);
@@ -65978,7 +66018,7 @@ var creativeEnterpriseRouter = router({
       };
     }
     try {
-      const artists = await db7.select().from(creativeArtists).where(eq84(creativeArtists.id, input.artistId)).limit(1);
+      const artists = await db7.select().from(creativeArtists).where(eq85(creativeArtists.id, input.artistId)).limit(1);
       const artist = artists[0];
       if (!artist) {
         return {
@@ -66023,7 +66063,7 @@ var creativeEnterpriseRouter = router({
 import { z as z116 } from "zod";
 init_db();
 init_schema();
-import { eq as eq85, desc as desc60 } from "drizzle-orm";
+import { eq as eq86, desc as desc61 } from "drizzle-orm";
 var designDepartmentRouter = router({
   // ============================================================================
   // STATISTICS
@@ -66096,7 +66136,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designProjects).orderBy(desc60(designProjects.createdAt));
+      return await db7.select().from(designProjects).orderBy(desc61(designProjects.createdAt));
     } catch (error) {
       console.error("Error getting design projects:", error);
       return [];
@@ -66106,7 +66146,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      const allProjects = await db7.select().from(designProjects).orderBy(desc60(designProjects.createdAt));
+      const allProjects = await db7.select().from(designProjects).orderBy(desc61(designProjects.createdAt));
       return allProjects.filter(
         (p) => p.status === "briefing" || p.status === "in_progress" || p.status === "review" || p.status === "revision"
       );
@@ -66140,7 +66180,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designProjects).where(eq85(designProjects.projectType, input.projectType)).orderBy(desc60(designProjects.createdAt));
+      return await db7.select().from(designProjects).where(eq86(designProjects.projectType, input.projectType)).orderBy(desc61(designProjects.createdAt));
     } catch (error) {
       console.error("Error getting projects by type:", error);
       return [];
@@ -66150,7 +66190,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return null;
     try {
-      const results = await db7.select().from(designProjects).where(eq85(designProjects.id, input.id)).limit(1);
+      const results = await db7.select().from(designProjects).where(eq86(designProjects.id, input.id)).limit(1);
       return results[0] || null;
     } catch (error) {
       console.error("Error getting project:", error);
@@ -66161,7 +66201,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designProjects).where(eq85(designProjects.leadDesignerId, input.designerId)).orderBy(desc60(designProjects.createdAt));
+      return await db7.select().from(designProjects).where(eq86(designProjects.leadDesignerId, input.designerId)).orderBy(desc61(designProjects.createdAt));
     } catch (error) {
       console.error("Error getting designer projects:", error);
       return [];
@@ -66251,7 +66291,7 @@ var designDepartmentRouter = router({
         ...hoursLogged !== void 0 && { hoursLogged: hoursLogged.toString() },
         ...totalBilled !== void 0 && { totalBilled: totalBilled.toString() },
         ...aiToolsUsed && { aiToolsUsed: JSON.stringify(aiToolsUsed) }
-      }).where(eq85(designProjects.id, id));
+      }).where(eq86(designProjects.id, id));
       return { success: true };
     } catch (error) {
       console.error("Error updating project:", error);
@@ -66265,7 +66305,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     try {
-      const projects2 = await db7.select().from(designProjects).where(eq85(designProjects.id, input.projectId)).limit(1);
+      const projects2 = await db7.select().from(designProjects).where(eq86(designProjects.id, input.projectId)).limit(1);
       const project = projects2[0];
       if (!project) throw new Error("Project not found");
       const currentHours = parseFloat(project.hoursLogged || "0");
@@ -66277,7 +66317,7 @@ var designDepartmentRouter = router({
       await db7.update(designProjects).set({
         hoursLogged: newHours.toString(),
         totalBilled: newBilled.toString()
-      }).where(eq85(designProjects.id, input.projectId));
+      }).where(eq86(designProjects.id, input.projectId));
       return { success: true, hoursLogged: newHours, totalBilled: newBilled };
     } catch (error) {
       console.error("Error logging hours:", error);
@@ -66291,7 +66331,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designAssets).orderBy(desc60(designAssets.createdAt));
+      return await db7.select().from(designAssets).orderBy(desc61(designAssets.createdAt));
     } catch (error) {
       console.error("Error getting design assets:", error);
       return [];
@@ -66301,7 +66341,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designAssets).where(eq85(designAssets.projectId, input.projectId)).orderBy(desc60(designAssets.createdAt));
+      return await db7.select().from(designAssets).where(eq86(designAssets.projectId, input.projectId)).orderBy(desc61(designAssets.createdAt));
     } catch (error) {
       console.error("Error getting project assets:", error);
       return [];
@@ -66328,7 +66368,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designAssets).where(eq85(designAssets.assetType, input.assetType)).orderBy(desc60(designAssets.createdAt));
+      return await db7.select().from(designAssets).where(eq86(designAssets.assetType, input.assetType)).orderBy(desc61(designAssets.createdAt));
     } catch (error) {
       console.error("Error getting assets by type:", error);
       return [];
@@ -66338,7 +66378,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return null;
     try {
-      const results = await db7.select().from(designAssets).where(eq85(designAssets.id, input.id)).limit(1);
+      const results = await db7.select().from(designAssets).where(eq86(designAssets.id, input.id)).limit(1);
       return results[0] || null;
     } catch (error) {
       console.error("Error getting asset:", error);
@@ -66429,7 +66469,7 @@ var designDepartmentRouter = router({
         ...rest,
         ...tags && { tags: JSON.stringify(tags) },
         ...colorPalette && { colorPalette: JSON.stringify(colorPalette) }
-      }).where(eq85(designAssets.id, id));
+      }).where(eq86(designAssets.id, id));
       return { success: true };
     } catch (error) {
       console.error("Error updating asset:", error);
@@ -66446,7 +66486,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     try {
-      const parentAssets = await db7.select().from(designAssets).where(eq85(designAssets.id, input.parentAssetId)).limit(1);
+      const parentAssets = await db7.select().from(designAssets).where(eq86(designAssets.id, input.parentAssetId)).limit(1);
       const parent = parentAssets[0];
       if (!parent) throw new Error("Parent asset not found");
       const result = await db7.insert(designAssets).values({
@@ -66562,7 +66602,7 @@ var designDepartmentRouter = router({
         nftTokenId: input.tokenId,
         nftChain: input.chain,
         licenseType: "nft_owned"
-      }).where(eq85(designAssets.id, input.assetId));
+      }).where(eq86(designAssets.id, input.assetId));
       return { success: true };
     } catch (error) {
       console.error("Error minting NFT:", error);
@@ -66576,7 +66616,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designProjects).where(eq85(designProjects.clientType, "internal")).orderBy(desc60(designProjects.createdAt));
+      return await db7.select().from(designProjects).where(eq86(designProjects.clientType, "internal")).orderBy(desc61(designProjects.createdAt));
     } catch (error) {
       console.error("Error getting internal projects:", error);
       return [];
@@ -66586,7 +66626,7 @@ var designDepartmentRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     try {
-      return await db7.select().from(designProjects).where(eq85(designProjects.clientType, "external")).orderBy(desc60(designProjects.createdAt));
+      return await db7.select().from(designProjects).where(eq86(designProjects.clientType, "external")).orderBy(desc61(designProjects.createdAt));
     } catch (error) {
       console.error("Error getting external projects:", error);
       return [];
@@ -67112,7 +67152,7 @@ var designDepartmentRouter = router({
 import { z as z117 } from "zod";
 init_db();
 init_schema();
-import { eq as eq86, desc as desc61 } from "drizzle-orm";
+import { eq as eq87, desc as desc62 } from "drizzle-orm";
 import { TRPCError as TRPCError43 } from "@trpc/server";
 var softwareLicensesRouter = router({
   // Categories
@@ -67160,12 +67200,12 @@ var softwareLicensesRouter = router({
   getLicenses: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(softwareLicenses).orderBy(desc61(softwareLicenses.createdAt));
+    return db7.select().from(softwareLicenses).orderBy(desc62(softwareLicenses.createdAt));
   }),
   getLicenseById: protectedProcedure.input(z117.object({ id: z117.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError43({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [license] = await db7.select().from(softwareLicenses).where(eq86(softwareLicenses.id, input.id));
+    const [license] = await db7.select().from(softwareLicenses).where(eq87(softwareLicenses.id, input.id));
     if (!license) throw new TRPCError43({ code: "NOT_FOUND", message: "License not found" });
     return license;
   }),
@@ -67227,13 +67267,13 @@ var softwareLicensesRouter = router({
     if (updates.purchaseDate) values.purchaseDate = new Date(updates.purchaseDate);
     if (updates.renewalDate) values.renewalDate = new Date(updates.renewalDate);
     if (updates.expirationDate) values.expirationDate = new Date(updates.expirationDate);
-    await db7.update(softwareLicenses).set(values).where(eq86(softwareLicenses.id, id));
+    await db7.update(softwareLicenses).set(values).where(eq87(softwareLicenses.id, id));
     return { success: true };
   }),
   deleteLicense: protectedProcedure.input(z117.object({ id: z117.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError43({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    await db7.delete(softwareLicenses).where(eq86(softwareLicenses.id, input.id));
+    await db7.delete(softwareLicenses).where(eq87(softwareLicenses.id, input.id));
     return { success: true };
   }),
   // Assignments
@@ -67241,9 +67281,9 @@ var softwareLicensesRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     if (input?.licenseId) {
-      return db7.select().from(softwareLicenseAssignments).where(eq86(softwareLicenseAssignments.licenseId, input.licenseId)).orderBy(desc61(softwareLicenseAssignments.assignedDate));
+      return db7.select().from(softwareLicenseAssignments).where(eq87(softwareLicenseAssignments.licenseId, input.licenseId)).orderBy(desc62(softwareLicenseAssignments.assignedDate));
     }
-    return db7.select().from(softwareLicenseAssignments).orderBy(desc61(softwareLicenseAssignments.assignedDate));
+    return db7.select().from(softwareLicenseAssignments).orderBy(desc62(softwareLicenseAssignments.assignedDate));
   }),
   createAssignment: protectedProcedure.input(z117.object({
     licenseId: z117.number(),
@@ -67253,24 +67293,24 @@ var softwareLicensesRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError43({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [license] = await db7.select().from(softwareLicenses).where(eq86(softwareLicenses.id, input.licenseId));
+    const [license] = await db7.select().from(softwareLicenses).where(eq87(softwareLicenses.id, input.licenseId));
     if (!license) throw new TRPCError43({ code: "NOT_FOUND", message: "License not found" });
     if (license.usedSeats >= license.totalSeats) {
       throw new TRPCError43({ code: "BAD_REQUEST", message: "No available seats" });
     }
     const [result] = await db7.insert(softwareLicenseAssignments).values(input);
-    await db7.update(softwareLicenses).set({ usedSeats: license.usedSeats + 1 }).where(eq86(softwareLicenses.id, input.licenseId));
+    await db7.update(softwareLicenses).set({ usedSeats: license.usedSeats + 1 }).where(eq87(softwareLicenses.id, input.licenseId));
     return { id: result.insertId, ...input };
   }),
   revokeAssignment: protectedProcedure.input(z117.object({ id: z117.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError43({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [assignment] = await db7.select().from(softwareLicenseAssignments).where(eq86(softwareLicenseAssignments.id, input.id));
+    const [assignment] = await db7.select().from(softwareLicenseAssignments).where(eq87(softwareLicenseAssignments.id, input.id));
     if (!assignment) throw new TRPCError43({ code: "NOT_FOUND", message: "Assignment not found" });
-    await db7.update(softwareLicenseAssignments).set({ status: "revoked", revokedDate: /* @__PURE__ */ new Date() }).where(eq86(softwareLicenseAssignments.id, input.id));
-    const [license] = await db7.select().from(softwareLicenses).where(eq86(softwareLicenses.id, assignment.licenseId));
+    await db7.update(softwareLicenseAssignments).set({ status: "revoked", revokedDate: /* @__PURE__ */ new Date() }).where(eq87(softwareLicenseAssignments.id, input.id));
+    const [license] = await db7.select().from(softwareLicenses).where(eq87(softwareLicenses.id, assignment.licenseId));
     if (license && license.usedSeats > 0) {
-      await db7.update(softwareLicenses).set({ usedSeats: license.usedSeats - 1 }).where(eq86(softwareLicenses.id, assignment.licenseId));
+      await db7.update(softwareLicenses).set({ usedSeats: license.usedSeats - 1 }).where(eq87(softwareLicenses.id, assignment.licenseId));
     }
     return { success: true };
   }),
@@ -67278,7 +67318,7 @@ var softwareLicensesRouter = router({
   getContracts: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(softwareVendorContracts).orderBy(desc61(softwareVendorContracts.createdAt));
+    return db7.select().from(softwareVendorContracts).orderBy(desc62(softwareVendorContracts.createdAt));
   }),
   createContract: protectedProcedure.input(z117.object({
     vendorName: z117.string().min(1),
@@ -67396,19 +67436,19 @@ var softwareLicensesRouter = router({
 import { z as z118 } from "zod";
 init_db();
 init_schema();
-import { eq as eq87, desc as desc62 } from "drizzle-orm";
+import { eq as eq88, desc as desc63 } from "drizzle-orm";
 import { TRPCError as TRPCError44 } from "@trpc/server";
 var onlineAcademyRouter = router({
   // Course Details
   getCourses: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(onlineCourseDetails).orderBy(desc62(onlineCourseDetails.createdAt));
+    return db7.select().from(onlineCourseDetails).orderBy(desc63(onlineCourseDetails.createdAt));
   }),
   getCourseById: protectedProcedure.input(z118.object({ id: z118.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError44({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [course] = await db7.select().from(onlineCourseDetails).where(eq87(onlineCourseDetails.id, input.id));
+    const [course] = await db7.select().from(onlineCourseDetails).where(eq88(onlineCourseDetails.id, input.id));
     if (!course) throw new TRPCError44({ code: "NOT_FOUND", message: "Course not found" });
     return course;
   }),
@@ -67452,14 +67492,14 @@ var onlineAcademyRouter = router({
     const values = { ...updates };
     if (updates.creditHours !== void 0) values.creditHours = updates.creditHours.toString();
     if (updates.approvedBy !== void 0) values.approvedAt = /* @__PURE__ */ new Date();
-    await db7.update(onlineCourseDetails).set(values).where(eq87(onlineCourseDetails.id, id));
+    await db7.update(onlineCourseDetails).set(values).where(eq88(onlineCourseDetails.id, id));
     return { success: true };
   }),
   // Curriculum Projects
   getProjects: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(curriculumProjects).orderBy(desc62(curriculumProjects.createdAt));
+    return db7.select().from(curriculumProjects).orderBy(desc63(curriculumProjects.createdAt));
   }),
   createProject: protectedProcedure.input(z118.object({
     title: z118.string().min(1),
@@ -67520,20 +67560,20 @@ var onlineAcademyRouter = router({
     if (updates.startDate) values.startDate = new Date(updates.startDate);
     if (updates.targetEndDate) values.targetEndDate = new Date(updates.targetEndDate);
     if (updates.actualEndDate) values.actualEndDate = new Date(updates.actualEndDate);
-    await db7.update(curriculumProjects).set(values).where(eq87(curriculumProjects.id, id));
+    await db7.update(curriculumProjects).set(values).where(eq88(curriculumProjects.id, id));
     return { success: true };
   }),
   deleteProject: protectedProcedure.input(z118.object({ id: z118.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError44({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    await db7.delete(curriculumProjects).where(eq87(curriculumProjects.id, input.id));
+    await db7.delete(curriculumProjects).where(eq88(curriculumProjects.id, input.id));
     return { success: true };
   }),
   // Academy Instructors
   getInstructors: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(academyInstructors).orderBy(desc62(academyInstructors.createdAt));
+    return db7.select().from(academyInstructors).orderBy(desc63(academyInstructors.createdAt));
   }),
   createInstructor: protectedProcedure.input(z118.object({
     name: z118.string().min(1),
@@ -67591,14 +67631,14 @@ var onlineAcademyRouter = router({
     if (updates.credentials) values.credentials = JSON.stringify(updates.credentials);
     if (updates.specializations) values.specializations = JSON.stringify(updates.specializations);
     if (updates.backgroundCheckDate) values.backgroundCheckDate = new Date(updates.backgroundCheckDate);
-    await db7.update(academyInstructors).set(values).where(eq87(academyInstructors.id, id));
+    await db7.update(academyInstructors).set(values).where(eq88(academyInstructors.id, id));
     return { success: true };
   }),
   // SME Contributors (Founding Members as Subject Matter Experts)
   getSMEContributors: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(smeContributors).orderBy(desc62(smeContributors.createdAt));
+    return db7.select().from(smeContributors).orderBy(desc63(smeContributors.createdAt));
   }),
   createSMEContributor: protectedProcedure.input(z118.object({
     familyMemberId: z118.number().optional(),
@@ -67635,14 +67675,14 @@ var onlineAcademyRouter = router({
     const values = { ...updates };
     if (updates.expertise) values.expertise = JSON.stringify(updates.expertise);
     if (updates.contributionTypes) values.contributionTypes = JSON.stringify(updates.contributionTypes);
-    await db7.update(smeContributors).set(values).where(eq87(smeContributors.id, id));
+    await db7.update(smeContributors).set(values).where(eq88(smeContributors.id, id));
     return { success: true };
   }),
   // Facility Plans
   getFacilityPlans: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(facilityPlans).orderBy(desc62(facilityPlans.createdAt));
+    return db7.select().from(facilityPlans).orderBy(desc63(facilityPlans.createdAt));
   }),
   createFacilityPlan: protectedProcedure.input(z118.object({
     name: z118.string().min(1),
@@ -67701,14 +67741,14 @@ var onlineAcademyRouter = router({
     if (updates.estimatedCost !== void 0) values.estimatedCost = updates.estimatedCost.toString();
     if (updates.buildingRequirements) values.buildingRequirements = JSON.stringify(updates.buildingRequirements);
     if (updates.targetOpenDate) values.targetOpenDate = new Date(updates.targetOpenDate);
-    await db7.update(facilityPlans).set(values).where(eq87(facilityPlans.id, id));
+    await db7.update(facilityPlans).set(values).where(eq88(facilityPlans.id, id));
     return { success: true };
   }),
   // Accreditation Records
   getAccreditations: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(accreditationRecords).orderBy(desc62(accreditationRecords.createdAt));
+    return db7.select().from(accreditationRecords).orderBy(desc63(accreditationRecords.createdAt));
   }),
   createAccreditation: protectedProcedure.input(z118.object({
     accreditingBody: z118.string().min(1),
@@ -67837,7 +67877,7 @@ var onlineAcademyRouter = router({
 import { z as z119 } from "zod";
 init_db();
 init_schema();
-import { eq as eq88, desc as desc63, and as and67, sql as sql51 } from "drizzle-orm";
+import { eq as eq89, desc as desc64, and as and67, sql as sql51 } from "drizzle-orm";
 import { TRPCError as TRPCError45 } from "@trpc/server";
 var ensureDb = async () => {
   const db7 = await getDb();
@@ -67851,15 +67891,15 @@ var gameCenterRouter = router({
     const db7 = await ensureDb();
     if (input?.ageGroup) {
       return db7.select().from(gameCenterGames).where(and67(
-        eq88(gameCenterGames.isActive, true),
+        eq89(gameCenterGames.isActive, true),
         sql51`${gameCenterGames.ageGroup} = ${input.ageGroup} OR ${gameCenterGames.ageGroup} = 'all_ages'`
       )).orderBy(gameCenterGames.name);
     }
-    return db7.select().from(gameCenterGames).where(eq88(gameCenterGames.isActive, true)).orderBy(gameCenterGames.name);
+    return db7.select().from(gameCenterGames).where(eq89(gameCenterGames.isActive, true)).orderBy(gameCenterGames.name);
   }),
   getGameBySlug: publicProcedure.input(z119.object({ slug: z119.string() })).query(async ({ input }) => {
     const db7 = await ensureDb();
-    const [game] = await db7.select().from(gameCenterGames).where(eq88(gameCenterGames.slug, input.slug));
+    const [game] = await db7.select().from(gameCenterGames).where(eq89(gameCenterGames.slug, input.slug));
     if (!game) throw new TRPCError45({ code: "NOT_FOUND", message: "Game not found" });
     return game;
   }),
@@ -67979,20 +68019,20 @@ var gameCenterRouter = router({
     if (updates.gameState) {
       values.gameState = JSON.stringify(updates.gameState);
     }
-    await db7.update(gameMatches).set(values).where(eq88(gameMatches.id, id));
+    await db7.update(gameMatches).set(values).where(eq89(gameMatches.id, id));
     return { success: true };
   }),
   getPlayerMatches: protectedProcedure.input(z119.object({ playerId: z119.number(), limit: z119.number().default(20) })).query(async ({ input }) => {
     const db7 = await ensureDb();
-    return db7.select().from(gameMatches).where(sql51`${gameMatches.player1Id} = ${input.playerId} OR ${gameMatches.player2Id} = ${input.playerId}`).orderBy(desc63(gameMatches.createdAt)).limit(input.limit);
+    return db7.select().from(gameMatches).where(sql51`${gameMatches.player1Id} = ${input.playerId} OR ${gameMatches.player2Id} = ${input.playerId}`).orderBy(desc64(gameMatches.createdAt)).limit(input.limit);
   }),
   // Tournaments
   getTournaments: publicProcedure.input(z119.object({ status: z119.string().optional() }).optional()).query(async ({ input }) => {
     const db7 = await ensureDb();
     if (input?.status) {
-      return db7.select().from(gameTournaments).where(eq88(gameTournaments.status, input.status)).orderBy(desc63(gameTournaments.startDate));
+      return db7.select().from(gameTournaments).where(eq89(gameTournaments.status, input.status)).orderBy(desc64(gameTournaments.startDate));
     }
-    return db7.select().from(gameTournaments).orderBy(desc63(gameTournaments.startDate));
+    return db7.select().from(gameTournaments).orderBy(desc64(gameTournaments.startDate));
   }),
   createTournament: protectedProcedure.input(z119.object({
     gameId: z119.number(),
@@ -68018,7 +68058,7 @@ var gameCenterRouter = router({
   // Player Stats
   getPlayerStats: protectedProcedure.input(z119.object({ playerId: z119.number() })).query(async ({ input }) => {
     const db7 = await ensureDb();
-    return db7.select().from(gamePlayerStats).where(eq88(gamePlayerStats.playerId, input.playerId)).orderBy(desc63(gamePlayerStats.gamesPlayed));
+    return db7.select().from(gamePlayerStats).where(eq89(gamePlayerStats.playerId, input.playerId)).orderBy(desc64(gamePlayerStats.gamesPlayed));
   }),
   updatePlayerStats: protectedProcedure.input(z119.object({
     playerId: z119.number(),
@@ -68029,8 +68069,8 @@ var gameCenterRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await ensureDb();
     const [existing] = await db7.select().from(gamePlayerStats).where(and67(
-      eq88(gamePlayerStats.playerId, input.playerId),
-      eq88(gamePlayerStats.gameId, input.gameId)
+      eq89(gamePlayerStats.playerId, input.playerId),
+      eq89(gamePlayerStats.gameId, input.gameId)
     ));
     if (existing) {
       const newStreak = input.won ? (existing.currentStreak || 0) + 1 : 0;
@@ -68044,7 +68084,7 @@ var gameCenterRouter = router({
         bestStreak: Math.max(existing.bestStreak || 0, newStreak),
         tokensEarned: (existing.tokensEarned || 0) + input.tokensEarned,
         lastPlayedAt: /* @__PURE__ */ new Date()
-      }).where(eq88(gamePlayerStats.id, existing.id));
+      }).where(eq89(gamePlayerStats.id, existing.id));
     } else {
       await db7.insert(gamePlayerStats).values({
         playerId: input.playerId,
@@ -68072,7 +68112,7 @@ var gameCenterRouter = router({
     // in seconds
   })).mutation(async ({ input, ctx }) => {
     const db7 = await ensureDb();
-    const [game] = await db7.select().from(gameCenterGames).where(eq88(gameCenterGames.slug, input.gameSlug));
+    const [game] = await db7.select().from(gameCenterGames).where(eq89(gameCenterGames.slug, input.gameSlug));
     if (!game) {
       throw new TRPCError45({ code: "NOT_FOUND", message: "Game not found" });
     }
@@ -68089,8 +68129,8 @@ var gameCenterRouter = router({
       tokenReward += Math.floor(input.score / 500);
     }
     const [existingStats] = await db7.select().from(gamePlayerStats).where(and67(
-      eq88(gamePlayerStats.playerId, ctx.user.id),
-      eq88(gamePlayerStats.gameId, game.id)
+      eq89(gamePlayerStats.playerId, ctx.user.id),
+      eq89(gamePlayerStats.gameId, game.id)
     ));
     if (existingStats) {
       const newStreak = input.won ? (existingStats.currentStreak || 0) + 1 : 0;
@@ -68107,7 +68147,7 @@ var gameCenterRouter = router({
         bestStreak: Math.max(existingStats.bestStreak || 0, newStreak),
         tokensEarned: (existingStats.tokensEarned || 0) + tokenReward,
         lastPlayedAt: /* @__PURE__ */ new Date()
-      }).where(eq88(gamePlayerStats.id, existingStats.id));
+      }).where(eq89(gamePlayerStats.id, existingStats.id));
     } else {
       await db7.insert(gamePlayerStats).values({
         playerId: ctx.user.id,
@@ -68134,7 +68174,7 @@ var gameCenterRouter = router({
   // Get user's game stats summary
   getMyGameStats: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await ensureDb();
-    const stats = await db7.select().from(gamePlayerStats).where(eq88(gamePlayerStats.playerId, ctx.user.id));
+    const stats = await db7.select().from(gamePlayerStats).where(eq89(gamePlayerStats.playerId, ctx.user.id));
     const totalGames = stats.reduce((sum5, s) => sum5 + s.gamesPlayed, 0);
     const totalWins = stats.reduce((sum5, s) => sum5 + s.gamesWon, 0);
     const totalTokens = stats.reduce((sum5, s) => sum5 + (s.tokensEarned || 0), 0);
@@ -68157,7 +68197,7 @@ var gameCenterRouter = router({
     const db7 = await ensureDb();
     let query = db7.select().from(gamePlayerStats);
     if (input.gameId) {
-      query = query.where(eq88(gamePlayerStats.gameId, input.gameId));
+      query = query.where(eq89(gamePlayerStats.gameId, input.gameId));
     }
     const orderColumn = {
       wins: gamePlayerStats.gamesWon,
@@ -68165,12 +68205,12 @@ var gameCenterRouter = router({
       tokens: gamePlayerStats.tokensEarned,
       streak: gamePlayerStats.bestStreak
     }[input.metric];
-    return query.orderBy(desc63(orderColumn)).limit(input.limit);
+    return query.orderBy(desc64(orderColumn)).limit(input.limit);
   }),
   // Trivia
   getTriviaCategories: publicProcedure.query(async () => {
     const db7 = await ensureDb();
-    return db7.select().from(triviaCategories).where(eq88(triviaCategories.isActive, true)).orderBy(triviaCategories.name);
+    return db7.select().from(triviaCategories).where(eq89(triviaCategories.isActive, true)).orderBy(triviaCategories.name);
   }),
   seedTriviaCategories: protectedProcedure.mutation(async () => {
     const db7 = await ensureDb();
@@ -68198,12 +68238,12 @@ var gameCenterRouter = router({
     limit: z119.number().default(10)
   })).query(async ({ input }) => {
     const db7 = await ensureDb();
-    let conditions = [eq88(triviaQuestions.isActive, true)];
+    let conditions = [eq89(triviaQuestions.isActive, true)];
     if (input.categoryId) {
-      conditions.push(eq88(triviaQuestions.categoryId, input.categoryId));
+      conditions.push(eq89(triviaQuestions.categoryId, input.categoryId));
     }
     if (input.difficulty) {
-      conditions.push(eq88(triviaQuestions.difficulty, input.difficulty));
+      conditions.push(eq89(triviaQuestions.difficulty, input.difficulty));
     }
     return db7.select().from(triviaQuestions).where(and67(...conditions)).orderBy(sql51`RAND()`).limit(input.limit);
   }),
@@ -68229,15 +68269,15 @@ var gameCenterRouter = router({
     const db7 = await ensureDb();
     if (input?.gameId) {
       return db7.select().from(gameAchievements).where(and67(
-        eq88(gameAchievements.isActive, true),
+        eq89(gameAchievements.isActive, true),
         sql51`${gameAchievements.gameId} = ${input.gameId} OR ${gameAchievements.gameId} IS NULL`
       ));
     }
-    return db7.select().from(gameAchievements).where(eq88(gameAchievements.isActive, true));
+    return db7.select().from(gameAchievements).where(eq89(gameAchievements.isActive, true));
   }),
   getPlayerAchievements: protectedProcedure.input(z119.object({ playerId: z119.number() })).query(async ({ input }) => {
     const db7 = await ensureDb();
-    return db7.select().from(gamePlayerAchievements).where(eq88(gamePlayerAchievements.playerId, input.playerId)).orderBy(desc63(gamePlayerAchievements.earnedAt));
+    return db7.select().from(gamePlayerAchievements).where(eq89(gamePlayerAchievements.playerId, input.playerId)).orderBy(desc64(gamePlayerAchievements.earnedAt));
   }),
   awardAchievement: protectedProcedure.input(z119.object({
     playerId: z119.number(),
@@ -68245,13 +68285,13 @@ var gameCenterRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await ensureDb();
     const [existing] = await db7.select().from(gamePlayerAchievements).where(and67(
-      eq88(gamePlayerAchievements.playerId, input.playerId),
-      eq88(gamePlayerAchievements.achievementId, input.achievementId)
+      eq89(gamePlayerAchievements.playerId, input.playerId),
+      eq89(gamePlayerAchievements.achievementId, input.achievementId)
     ));
     if (existing) {
       return { success: false, message: "Achievement already earned" };
     }
-    const [achievement] = await db7.select().from(gameAchievements).where(eq88(gameAchievements.id, input.achievementId));
+    const [achievement] = await db7.select().from(gameAchievements).where(eq89(gameAchievements.id, input.achievementId));
     if (!achievement) {
       throw new TRPCError45({ code: "NOT_FOUND", message: "Achievement not found" });
     }
@@ -68265,7 +68305,7 @@ var gameCenterRouter = router({
   // Stats overview
   getStats: publicProcedure.query(async () => {
     const db7 = await ensureDb();
-    const games = await db7.select().from(gameCenterGames).where(eq88(gameCenterGames.isActive, true));
+    const games = await db7.select().from(gameCenterGames).where(eq89(gameCenterGames.isActive, true));
     const tournaments = await db7.select().from(gameTournaments);
     const categories = await db7.select().from(triviaCategories);
     const questions = await db7.select().from(triviaQuestions);
@@ -68559,7 +68599,7 @@ var purchaseRequestsRouter = router({
 import { z as z121 } from "zod";
 init_db();
 init_schema();
-import { and as and68, gte as gte10, lte as lte11, desc as desc64 } from "drizzle-orm";
+import { and as and68, gte as gte10, lte as lte11, desc as desc65 } from "drizzle-orm";
 var TAX_CATEGORIES = {
   income: [
     { code: "W2", name: "W-2 Wages", taxRate: 0.22 },
@@ -68647,7 +68687,7 @@ var taxModuleRouter = router({
         gte10(luvLedgerTransactions.createdAt, startDate),
         lte11(luvLedgerTransactions.createdAt, endDate)
       )
-    ).orderBy(desc64(luvLedgerTransactions.createdAt));
+    ).orderBy(desc65(luvLedgerTransactions.createdAt));
     let totalIncome = 0;
     let totalDeductions = 0;
     let contractorPayments = 0;
@@ -68657,8 +68697,8 @@ var taxModuleRouter = router({
         totalIncome += amount;
       } else if (tx.transactionType === "fee" || tx.transactionType === "distribution") {
         totalDeductions += amount;
-        const desc122 = (tx.description || "").toLowerCase();
-        if (desc122.includes("contractor") || desc122.includes("1099")) {
+        const desc123 = (tx.description || "").toLowerCase();
+        if (desc123.includes("contractor") || desc123.includes("1099")) {
           contractorPayments += amount;
         }
       }
@@ -68758,12 +68798,12 @@ var taxModuleRouter = router({
         gte10(luvLedgerTransactions.createdAt, startDate),
         lte11(luvLedgerTransactions.createdAt, endDate)
       )
-    ).orderBy(desc64(luvLedgerTransactions.createdAt));
+    ).orderBy(desc65(luvLedgerTransactions.createdAt));
     const payeeMap = /* @__PURE__ */ new Map();
     for (const tx of transactions3) {
       if (tx.transactionType === "fee" || tx.transactionType === "distribution") {
-        const desc122 = (tx.description || "").toLowerCase();
-        if (desc122.includes("contractor") || desc122.includes("1099")) {
+        const desc123 = (tx.description || "").toLowerCase();
+        if (desc123.includes("contractor") || desc123.includes("1099")) {
           const payee = tx.description || "Unknown Contractor";
           const amount = Number(tx.amount) || 0;
           payeeMap.set(payee, (payeeMap.get(payee) || 0) + amount);
@@ -68833,7 +68873,7 @@ var taxModuleRouter = router({
 import { z as z122 } from "zod";
 init_db();
 init_schema();
-import { eq as eq90, and as and69, sql as sql52 } from "drizzle-orm";
+import { eq as eq91, and as and69, sql as sql52 } from "drizzle-orm";
 import crypto30 from "crypto";
 var SIMULATOR_CONFIG = {
   finance: { name: "Finance Simulator", modules: [
@@ -68995,8 +69035,8 @@ var simulatorProgressRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const progress = await db7.select().from(departmentSimulatorProgress).where(and69(
-      eq90(departmentSimulatorProgress.userId, ctx.user.id),
-      eq90(departmentSimulatorProgress.simulatorId, input.simulatorId)
+      eq91(departmentSimulatorProgress.userId, ctx.user.id),
+      eq91(departmentSimulatorProgress.simulatorId, input.simulatorId)
     ));
     return progress;
   }),
@@ -69004,14 +69044,14 @@ var simulatorProgressRouter = router({
   getAllProgress: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const progress = await db7.select().from(departmentSimulatorProgress).where(eq90(departmentSimulatorProgress.userId, ctx.user.id));
+    const progress = await db7.select().from(departmentSimulatorProgress).where(eq91(departmentSimulatorProgress.userId, ctx.user.id));
     return progress;
   }),
   // Get user's token balance
   getTokenBalance: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const [balance] = await db7.select().from(userTokenBalance).where(eq90(userTokenBalance.userId, ctx.user.id));
+    const [balance] = await db7.select().from(userTokenBalance).where(eq91(userTokenBalance.userId, ctx.user.id));
     if (!balance) {
       await db7.insert(userTokenBalance).values({
         userId: ctx.user.id,
@@ -69038,9 +69078,9 @@ var simulatorProgressRouter = router({
     const moduleConfig = config.modules.find((m) => m.id === input.moduleId);
     if (!moduleConfig) throw new Error("Invalid module ID");
     const [existing] = await db7.select().from(departmentSimulatorProgress).where(and69(
-      eq90(departmentSimulatorProgress.userId, ctx.user.id),
-      eq90(departmentSimulatorProgress.simulatorId, input.simulatorId),
-      eq90(departmentSimulatorProgress.moduleId, input.moduleId)
+      eq91(departmentSimulatorProgress.userId, ctx.user.id),
+      eq91(departmentSimulatorProgress.simulatorId, input.simulatorId),
+      eq91(departmentSimulatorProgress.moduleId, input.moduleId)
     ));
     let tokensToAward = 0;
     if (existing) {
@@ -69053,7 +69093,7 @@ var simulatorProgressRouter = router({
         isCompleted: input.isCompleted,
         tokensEarned: existing.tokensEarned + tokensToAward,
         completedAt: input.isCompleted ? /* @__PURE__ */ new Date() : null
-      }).where(eq90(departmentSimulatorProgress.id, existing.id));
+      }).where(eq91(departmentSimulatorProgress.id, existing.id));
     } else {
       if (input.isCompleted) {
         tokensToAward = moduleConfig.tokens;
@@ -69070,14 +69110,14 @@ var simulatorProgressRouter = router({
       });
     }
     if (tokensToAward > 0) {
-      const [balance] = await db7.select().from(userTokenBalance).where(eq90(userTokenBalance.userId, ctx.user.id));
+      const [balance] = await db7.select().from(userTokenBalance).where(eq91(userTokenBalance.userId, ctx.user.id));
       const newBalance = (balance?.totalTokens || 0) + tokensToAward;
       if (balance) {
         await db7.update(userTokenBalance).set({
           totalTokens: newBalance,
           lifetimeTokensEarned: (balance.lifetimeTokensEarned || 0) + tokensToAward,
           lastEarnedAt: /* @__PURE__ */ new Date()
-        }).where(eq90(userTokenBalance.userId, ctx.user.id));
+        }).where(eq91(userTokenBalance.userId, ctx.user.id));
       } else {
         await db7.insert(userTokenBalance).values({
           userId: ctx.user.id,
@@ -69105,15 +69145,15 @@ var simulatorProgressRouter = router({
     const config = SIMULATOR_CONFIG[input.simulatorId];
     if (!config) throw new Error("Invalid simulator ID");
     const [existingCert] = await db7.select().from(simulatorCertificates).where(and69(
-      eq90(simulatorCertificates.userId, ctx.user.id),
-      eq90(simulatorCertificates.simulatorId, input.simulatorId)
+      eq91(simulatorCertificates.userId, ctx.user.id),
+      eq91(simulatorCertificates.simulatorId, input.simulatorId)
     ));
     if (existingCert) {
       return { success: false, message: "Certificate already issued", certificate: existingCert };
     }
     const progress = await db7.select().from(departmentSimulatorProgress).where(and69(
-      eq90(departmentSimulatorProgress.userId, ctx.user.id),
-      eq90(departmentSimulatorProgress.simulatorId, input.simulatorId)
+      eq91(departmentSimulatorProgress.userId, ctx.user.id),
+      eq91(departmentSimulatorProgress.simulatorId, input.simulatorId)
     ));
     const completedModules = progress.filter((p) => p.isCompleted);
     if (completedModules.length < config.modules.length) {
@@ -69156,14 +69196,14 @@ var simulatorProgressRouter = router({
   getCertificates: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const certificates4 = await db7.select().from(simulatorCertificates).where(eq90(simulatorCertificates.userId, ctx.user.id));
+    const certificates4 = await db7.select().from(simulatorCertificates).where(eq91(simulatorCertificates.userId, ctx.user.id));
     return certificates4;
   }),
   // Get token transaction history
   getTokenHistory: protectedProcedure.input(z122.object({ limit: z122.number().optional().default(50) })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    const transactions3 = await db7.select().from(tokenTransactionLog).where(eq90(tokenTransactionLog.userId, ctx.user.id)).orderBy(sql52`${tokenTransactionLog.createdAt} DESC`).limit(input.limit);
+    const transactions3 = await db7.select().from(tokenTransactionLog).where(eq91(tokenTransactionLog.userId, ctx.user.id)).orderBy(sql52`${tokenTransactionLog.createdAt} DESC`).limit(input.limit);
     return transactions3;
   }),
   // Get simulator config (for frontend)
@@ -69183,7 +69223,7 @@ import { z as z123 } from "zod";
 import { TRPCError as TRPCError47 } from "@trpc/server";
 init_db();
 init_schema();
-import { eq as eq91, and as and70, gte as gte11, lte as lte12, desc as desc65, inArray as inArray5 } from "drizzle-orm";
+import { eq as eq92, and as and70, gte as gte11, lte as lte12, desc as desc66, inArray as inArray5 } from "drizzle-orm";
 var timekeepingRouter = router({
   // ==========================================
   // FUNDING SOURCES
@@ -69192,7 +69232,7 @@ var timekeepingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    return await db7.select().from(fundingSources).orderBy(desc65(fundingSources.createdAt));
+    return await db7.select().from(fundingSources).orderBy(desc66(fundingSources.createdAt));
   }),
   createFundingSource: protectedProcedure.input(z123.object({
     name: z123.string().min(1),
@@ -69237,10 +69277,10 @@ var timekeepingRouter = router({
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let query = db7.select().from(chargeCodes);
     if (input?.fundingSourceId) {
-      query = query.where(eq91(chargeCodes.fundingSourceId, input.fundingSourceId));
+      query = query.where(eq92(chargeCodes.fundingSourceId, input.fundingSourceId));
     }
     if (input?.isActive !== void 0) {
-      query = query.where(eq91(chargeCodes.isActive, input.isActive));
+      query = query.where(eq92(chargeCodes.isActive, input.isActive));
     }
     return await query.orderBy(chargeCodes.code);
   }),
@@ -69294,13 +69334,13 @@ var timekeepingRouter = router({
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let query = db7.select().from(timekeepingWorkers);
     if (input?.workerType) {
-      query = query.where(eq91(timekeepingWorkers.workerType, input.workerType));
+      query = query.where(eq92(timekeepingWorkers.workerType, input.workerType));
     }
     if (input?.status) {
-      query = query.where(eq91(timekeepingWorkers.status, input.status));
+      query = query.where(eq92(timekeepingWorkers.status, input.status));
     }
     if (input?.departmentId) {
-      query = query.where(eq91(timekeepingWorkers.departmentId, input.departmentId));
+      query = query.where(eq92(timekeepingWorkers.departmentId, input.departmentId));
     }
     return await query.orderBy(timekeepingWorkers.lastName, timekeepingWorkers.firstName);
   }),
@@ -69351,8 +69391,8 @@ var timekeepingRouter = router({
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     return await db7.select().from(workerChargeCodeAssignments).where(and70(
-      eq91(workerChargeCodeAssignments.workerId, input.workerId),
-      eq91(workerChargeCodeAssignments.isActive, true)
+      eq92(workerChargeCodeAssignments.workerId, input.workerId),
+      eq92(workerChargeCodeAssignments.isActive, true)
     ));
   }),
   assignChargeCode: protectedProcedure.input(z123.object({
@@ -69391,17 +69431,17 @@ var timekeepingRouter = router({
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let conditions = [];
-    if (input.workerId) conditions.push(eq91(timeEntries.workerId, input.workerId));
-    if (input.chargeCodeId) conditions.push(eq91(timeEntries.chargeCodeId, input.chargeCodeId));
-    if (input.timesheetId) conditions.push(eq91(timeEntries.timesheetId, input.timesheetId));
-    if (input.status) conditions.push(eq91(timeEntries.status, input.status));
+    if (input.workerId) conditions.push(eq92(timeEntries.workerId, input.workerId));
+    if (input.chargeCodeId) conditions.push(eq92(timeEntries.chargeCodeId, input.chargeCodeId));
+    if (input.timesheetId) conditions.push(eq92(timeEntries.timesheetId, input.timesheetId));
+    if (input.status) conditions.push(eq92(timeEntries.status, input.status));
     if (input.startDate) conditions.push(gte11(timeEntries.entryDate, new Date(input.startDate)));
     if (input.endDate) conditions.push(lte12(timeEntries.entryDate, new Date(input.endDate)));
     let query = db7.select().from(timeEntries);
     if (conditions.length > 0) {
       query = query.where(and70(...conditions));
     }
-    return await query.orderBy(desc65(timeEntries.entryDate));
+    return await query.orderBy(desc66(timeEntries.entryDate));
   }),
   createTimeEntry: protectedProcedure.input(z123.object({
     workerId: z123.number(),
@@ -69467,7 +69507,7 @@ var timekeepingRouter = router({
       updateData.approvedBy = updates.approvedBy;
       updateData.approvedAt = /* @__PURE__ */ new Date();
     }
-    await db7.update(timeEntries).set(updateData).where(eq91(timeEntries.id, id));
+    await db7.update(timeEntries).set(updateData).where(eq92(timeEntries.id, id));
     return { success: true };
   }),
   // ==========================================
@@ -69483,15 +69523,15 @@ var timekeepingRouter = router({
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let conditions = [];
-    if (input?.workerId) conditions.push(eq91(timesheets.workerId, input.workerId));
-    if (input?.status) conditions.push(eq91(timesheets.status, input.status));
+    if (input?.workerId) conditions.push(eq92(timesheets.workerId, input.workerId));
+    if (input?.status) conditions.push(eq92(timesheets.status, input.status));
     if (input?.startDate) conditions.push(gte11(timesheets.periodStart, new Date(input.startDate)));
     if (input?.endDate) conditions.push(lte12(timesheets.periodEnd, new Date(input.endDate)));
     let query = db7.select().from(timesheets);
     if (conditions.length > 0) {
       query = query.where(and70(...conditions));
     }
-    return await query.orderBy(desc65(timesheets.periodStart));
+    return await query.orderBy(desc66(timesheets.periodStart));
   }),
   createTimesheet: protectedProcedure.input(z123.object({
     workerId: z123.number(),
@@ -69519,7 +69559,7 @@ var timekeepingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const entries = await db7.select().from(timeEntries).where(eq91(timeEntries.timesheetId, input.id));
+    const entries = await db7.select().from(timeEntries).where(eq92(timeEntries.timesheetId, input.id));
     let totalRegular = 0;
     let totalOvertime = 0;
     let totalBillable = 0;
@@ -69545,8 +69585,8 @@ var timekeepingRouter = router({
       totalOvertimeHours: totalOvertime.toFixed(2),
       totalBillableHours: totalBillable.toFixed(2),
       totalNonBillableHours: totalNonBillable.toFixed(2)
-    }).where(eq91(timesheets.id, input.id));
-    await db7.update(timeEntries).set({ status: "submitted" }).where(eq91(timeEntries.timesheetId, input.id));
+    }).where(eq92(timesheets.id, input.id));
+    await db7.update(timeEntries).set({ status: "submitted" }).where(eq92(timeEntries.timesheetId, input.id));
     return { success: true };
   }),
   // ==========================================
@@ -69571,18 +69611,18 @@ var timekeepingRouter = router({
       approverSignature: input.approverSignature
     });
     const newStatus = input.action === "approved" ? "approved" : input.action === "rejected" ? "rejected" : "draft";
-    await db7.update(timesheets).set({ status: newStatus }).where(eq91(timesheets.id, input.timesheetId));
+    await db7.update(timesheets).set({ status: newStatus }).where(eq92(timesheets.id, input.timesheetId));
     if (input.action === "approved") {
       await db7.update(timeEntries).set({
         status: "approved",
         approvedBy: ctx.user?.id,
         approvedAt: /* @__PURE__ */ new Date()
-      }).where(eq91(timeEntries.timesheetId, input.timesheetId));
+      }).where(eq92(timeEntries.timesheetId, input.timesheetId));
     } else if (input.action === "rejected") {
       await db7.update(timeEntries).set({
         status: "rejected",
         rejectionReason: input.comments
-      }).where(eq91(timeEntries.timesheetId, input.timesheetId));
+      }).where(eq92(timeEntries.timesheetId, input.timesheetId));
     }
     return { success: true };
   }),
@@ -69590,7 +69630,7 @@ var timekeepingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    return await db7.select().from(timesheetApprovals).where(eq91(timesheetApprovals.timesheetId, input.timesheetId)).orderBy(desc65(timesheetApprovals.actionAt));
+    return await db7.select().from(timesheetApprovals).where(eq92(timesheetApprovals.timesheetId, input.timesheetId)).orderBy(desc66(timesheetApprovals.actionAt));
   }),
   // ==========================================
   // TIME OFF REQUESTS
@@ -69603,13 +69643,13 @@ var timekeepingRouter = router({
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let conditions = [];
-    if (input?.workerId) conditions.push(eq91(timeOffRequests.workerId, input.workerId));
-    if (input?.status) conditions.push(eq91(timeOffRequests.status, input.status));
+    if (input?.workerId) conditions.push(eq92(timeOffRequests.workerId, input.workerId));
+    if (input?.status) conditions.push(eq92(timeOffRequests.status, input.status));
     let query = db7.select().from(timeOffRequests);
     if (conditions.length > 0) {
       query = query.where(and70(...conditions));
     }
-    return await query.orderBy(desc65(timeOffRequests.startDate));
+    return await query.orderBy(desc66(timeOffRequests.startDate));
   }),
   createTimeOffRequest: protectedProcedure.input(z123.object({
     workerId: z123.number(),
@@ -69643,13 +69683,13 @@ var timekeepingRouter = router({
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let conditions = [];
-    if (input?.workerId) conditions.push(eq91(contractorInvoices.workerId, input.workerId));
-    if (input?.status) conditions.push(eq91(contractorInvoices.status, input.status));
+    if (input?.workerId) conditions.push(eq92(contractorInvoices.workerId, input.workerId));
+    if (input?.status) conditions.push(eq92(contractorInvoices.status, input.status));
     let query = db7.select().from(contractorInvoices);
     if (conditions.length > 0) {
       query = query.where(and70(...conditions));
     }
-    return await query.orderBy(desc65(contractorInvoices.createdAt));
+    return await query.orderBy(desc66(contractorInvoices.createdAt));
   }),
   createContractorInvoice: protectedProcedure.input(z123.object({
     workerId: z123.number(),
@@ -69690,7 +69730,7 @@ var timekeepingRouter = router({
     const entries = await db7.select().from(timeEntries).where(and70(
       gte11(timeEntries.entryDate, new Date(input.startDate)),
       lte12(timeEntries.entryDate, new Date(input.endDate)),
-      eq91(timeEntries.status, "approved")
+      eq92(timeEntries.status, "approved")
     ));
     const codes = await db7.select().from(chargeCodes);
     const codeMap = new Map(codes.map((c) => [c.id, c]));
@@ -69766,10 +69806,10 @@ var timekeepingRouter = router({
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let query = db7.select().from(employees);
     if (input?.status) {
-      query = query.where(eq91(employees.status, input.status));
+      query = query.where(eq92(employees.status, input.status));
     }
     if (input?.workerType) {
-      query = query.where(eq91(employees.workerType, input.workerType));
+      query = query.where(eq92(employees.workerType, input.workerType));
     }
     return await query.orderBy(employees.lastName, employees.firstName);
   }),
@@ -69784,11 +69824,11 @@ var timekeepingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [employee] = await db7.select().from(employees).where(eq91(employees.id, input.employeeId));
+    const [employee] = await db7.select().from(employees).where(eq92(employees.id, input.employeeId));
     if (!employee) {
       throw new TRPCError47({ code: "NOT_FOUND", message: "Employee not found in HR system" });
     }
-    const [existingWorker] = await db7.select().from(timekeepingWorkers).where(eq91(timekeepingWorkers.employeeId, input.employeeId));
+    const [existingWorker] = await db7.select().from(timekeepingWorkers).where(eq92(timekeepingWorkers.employeeId, input.employeeId));
     if (existingWorker) {
       await db7.update(timekeepingWorkers).set({
         firstName: employee.firstName,
@@ -69804,7 +69844,7 @@ var timekeepingRouter = router({
         status: employee.status === "active" ? "active" : employee.status === "terminated" ? "terminated" : "inactive",
         hireDate: employee.startDate,
         terminationDate: employee.endDate
-      }).where(eq91(timekeepingWorkers.id, existingWorker.id));
+      }).where(eq92(timekeepingWorkers.id, existingWorker.id));
       return { success: true, id: existingWorker.id, action: "updated" };
     } else {
       const result = await db7.insert(timekeepingWorkers).values({
@@ -69833,7 +69873,7 @@ var timekeepingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const hrEmployees = await db7.select().from(employees).where(eq91(employees.status, "active"));
+    const hrEmployees = await db7.select().from(employees).where(eq92(employees.status, "active"));
     const existingWorkers = await db7.select().from(timekeepingWorkers);
     const syncedEmployeeIds = new Set(existingWorkers.filter((w) => w.employeeId).map((w) => w.employeeId));
     let created = 0;
@@ -69851,7 +69891,7 @@ var timekeepingRouter = router({
           hourlyRate: employee.hourlyRate,
           status: "active",
           hireDate: employee.startDate
-        }).where(eq91(timekeepingWorkers.id, existingWorker.id));
+        }).where(eq92(timekeepingWorkers.id, existingWorker.id));
         updated++;
       } else {
         await db7.insert(timekeepingWorkers).values({
@@ -69879,13 +69919,13 @@ var timekeepingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [worker] = await db7.select().from(timekeepingWorkers).where(eq91(timekeepingWorkers.id, input.workerId));
+    const [worker] = await db7.select().from(timekeepingWorkers).where(eq92(timekeepingWorkers.id, input.workerId));
     if (!worker) {
       throw new TRPCError47({ code: "NOT_FOUND", message: "Worker not found" });
     }
     let hrEmployee = null;
     if (worker.employeeId) {
-      const [emp] = await db7.select().from(employees).where(eq91(employees.id, worker.employeeId));
+      const [emp] = await db7.select().from(employees).where(eq92(employees.id, worker.employeeId));
       hrEmployee = emp || null;
     }
     return {
@@ -69907,20 +69947,20 @@ var timekeepingRouter = router({
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     let conditions = [];
-    if (input?.status) conditions.push(eq91(contractorInvoices.status, input.status));
+    if (input?.status) conditions.push(eq92(contractorInvoices.status, input.status));
     if (input?.startDate) conditions.push(gte11(contractorInvoices.periodStart, new Date(input.startDate)));
     if (input?.endDate) conditions.push(lte12(contractorInvoices.periodEnd, new Date(input.endDate)));
     let query = db7.select().from(contractorInvoices);
     if (conditions.length > 0) {
       query = query.where(and70(...conditions));
     }
-    const invoices = await query.orderBy(desc65(contractorInvoices.createdAt));
+    const invoices = await query.orderBy(desc66(contractorInvoices.createdAt));
     const enrichedInvoices = [];
     for (const invoice of invoices) {
-      const [worker] = await db7.select().from(timekeepingWorkers).where(eq91(timekeepingWorkers.id, invoice.workerId));
+      const [worker] = await db7.select().from(timekeepingWorkers).where(eq92(timekeepingWorkers.id, invoice.workerId));
       let hrContractor = null;
       if (worker?.employeeId) {
-        const [emp] = await db7.select().from(employees).where(eq91(employees.id, worker.employeeId));
+        const [emp] = await db7.select().from(employees).where(eq92(employees.id, worker.employeeId));
         hrContractor = emp || null;
       }
       const hrData = hrContractor;
@@ -69979,14 +70019,14 @@ var timekeepingRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     if (!db7) throw new TRPCError47({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [hrContractor] = await db7.select().from(employees).where(eq91(employees.id, input.employeeId));
+    const [hrContractor] = await db7.select().from(employees).where(eq92(employees.id, input.employeeId));
     if (!hrContractor) {
       throw new TRPCError47({ code: "NOT_FOUND", message: "Contractor not found in HR system" });
     }
     if (hrContractor.workerType !== "contractor") {
       throw new TRPCError47({ code: "BAD_REQUEST", message: "Only contractors can have invoices created" });
     }
-    let [tkWorker] = await db7.select().from(timekeepingWorkers).where(eq91(timekeepingWorkers.employeeId, input.employeeId));
+    let [tkWorker] = await db7.select().from(timekeepingWorkers).where(eq92(timekeepingWorkers.employeeId, input.employeeId));
     if (!tkWorker) {
       const result2 = await db7.insert(timekeepingWorkers).values({
         userId: hrContractor.userId,
@@ -70003,11 +70043,11 @@ var timekeepingRouter = router({
         status: "active",
         hireDate: hrContractor.startDate
       });
-      [tkWorker] = await db7.select().from(timekeepingWorkers).where(eq91(timekeepingWorkers.id, result2[0].insertId));
+      [tkWorker] = await db7.select().from(timekeepingWorkers).where(eq92(timekeepingWorkers.id, result2[0].insertId));
     }
     const timeEntriesInPeriod = await db7.select().from(timeEntries).where(and70(
-      eq91(timeEntries.workerId, tkWorker.id),
-      eq91(timeEntries.status, "approved"),
+      eq92(timeEntries.workerId, tkWorker.id),
+      eq92(timeEntries.status, "approved"),
       gte11(timeEntries.entryDate, new Date(input.periodStart)),
       lte12(timeEntries.entryDate, new Date(input.periodEnd))
     ));
@@ -70041,7 +70081,7 @@ var timekeepingRouter = router({
 import { z as z124 } from "zod";
 init_db();
 init_schema();
-import { eq as eq92, and as and71, desc as desc66, sql as sql54 } from "drizzle-orm";
+import { eq as eq93, and as and71, desc as desc67, sql as sql54 } from "drizzle-orm";
 var EXPORT_FORMATS = {
   quickbooks_time: {
     name: "QuickBooks Time",
@@ -70179,7 +70219,7 @@ var dataExportRouter = router({
       conditions.push(sql54`${timeEntries.entryDate} <= ${input.endDate}`);
     }
     if (input.workerId) {
-      conditions.push(eq92(timeEntries.workerId, input.workerId));
+      conditions.push(eq93(timeEntries.workerId, input.workerId));
     }
     const entries = await db7.select({
       id: timeEntries.id,
@@ -70190,7 +70230,7 @@ var dataExportRouter = router({
       overtimeHours: timeEntries.overtimeHours,
       description: timeEntries.description,
       isBillable: timeEntries.isBillable
-    }).from(timeEntries).where(conditions.length > 0 ? and71(...conditions) : void 0).orderBy(desc66(timeEntries.entryDate));
+    }).from(timeEntries).where(conditions.length > 0 ? and71(...conditions) : void 0).orderBy(desc67(timeEntries.entryDate));
     const workers = await db7.select().from(timekeepingWorkers);
     const codes = await db7.select().from(chargeCodes);
     const workerMap = new Map(workers.map((w) => [w.id, w]));
@@ -70603,7 +70643,7 @@ var dataExportRouter = router({
 import { z as z125 } from "zod";
 init_db();
 init_schema();
-import { eq as eq93, and as and72, gte as gte13, lte as lte14, desc as desc67 } from "drizzle-orm";
+import { eq as eq94, and as and72, gte as gte13, lte as lte14, desc as desc68 } from "drizzle-orm";
 var grantLaborReportsRouter = router({
   // Get labor costs by funding source for a date range
   getLaborCostsByFundingSource: publicProcedure.input(
@@ -70631,13 +70671,13 @@ var grantLaborReportsRouter = router({
       chargeCodeName: chargeCodes.name,
       fundingSourceId: chargeCodes.fundingSourceId,
       fundingSourceName: fundingSources.name
-    }).from(timeEntries).innerJoin(timekeepingWorkers, eq93(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq93(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq93(chargeCodes.fundingSourceId, fundingSources.id)).where(
+    }).from(timeEntries).innerJoin(timekeepingWorkers, eq94(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq94(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq94(chargeCodes.fundingSourceId, fundingSources.id)).where(
       and72(
         gte13(timeEntries.entryDate, new Date(startDate)),
         lte14(timeEntries.entryDate, new Date(endDate)),
-        fundingSourceId ? eq93(chargeCodes.fundingSourceId, fundingSourceId) : void 0
+        fundingSourceId ? eq94(chargeCodes.fundingSourceId, fundingSourceId) : void 0
       )
-    ).orderBy(desc67(timeEntries.entryDate));
+    ).orderBy(desc68(timeEntries.entryDate));
     return entries.map((entry) => ({
       workerId: entry.workerId,
       workerName: `${entry.workerFirstName} ${entry.workerLastName}`,
@@ -70676,11 +70716,11 @@ var grantLaborReportsRouter = router({
       chargeCodeName: chargeCodes.name,
       fundingSourceId: chargeCodes.fundingSourceId,
       fundingSourceName: fundingSources.name
-    }).from(timeEntries).innerJoin(timekeepingWorkers, eq93(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq93(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq93(chargeCodes.fundingSourceId, fundingSources.id)).where(
+    }).from(timeEntries).innerJoin(timekeepingWorkers, eq94(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq94(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq94(chargeCodes.fundingSourceId, fundingSources.id)).where(
       and72(
         gte13(timeEntries.entryDate, new Date(startDate)),
         lte14(timeEntries.entryDate, new Date(endDate)),
-        fundingSourceId ? eq93(chargeCodes.fundingSourceId, fundingSourceId) : void 0
+        fundingSourceId ? eq94(chargeCodes.fundingSourceId, fundingSourceId) : void 0
       )
     );
     const summaryMap = /* @__PURE__ */ new Map();
@@ -70756,7 +70796,7 @@ var grantLaborReportsRouter = router({
       name: fundingSources.name,
       type: fundingSources.type,
       status: fundingSources.status
-    }).from(fundingSources).where(eq93(fundingSources.status, "active"));
+    }).from(fundingSources).where(eq94(fundingSources.status, "active"));
     return sources;
   }),
   // Generate report data for PDF export
@@ -70790,7 +70830,7 @@ var grantLaborReportsRouter = router({
     const { fundingSourceId, startDate, endDate } = input;
     let fundingSourceName = "All Funding Sources";
     if (fundingSourceId) {
-      const fs2 = await db7.select({ name: fundingSources.name }).from(fundingSources).where(eq93(fundingSources.id, fundingSourceId)).limit(1);
+      const fs2 = await db7.select({ name: fundingSources.name }).from(fundingSources).where(eq94(fundingSources.id, fundingSourceId)).limit(1);
       if (fs2.length > 0) {
         fundingSourceName = fs2[0].name;
       }
@@ -70806,13 +70846,13 @@ var grantLaborReportsRouter = router({
       chargeCode: chargeCodes.code,
       chargeCodeName: chargeCodes.name,
       fundingSourceName: fundingSources.name
-    }).from(timeEntries).innerJoin(timekeepingWorkers, eq93(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq93(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq93(chargeCodes.fundingSourceId, fundingSources.id)).where(
+    }).from(timeEntries).innerJoin(timekeepingWorkers, eq94(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq94(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq94(chargeCodes.fundingSourceId, fundingSources.id)).where(
       and72(
         gte13(timeEntries.entryDate, new Date(startDate)),
         lte14(timeEntries.entryDate, new Date(endDate)),
-        fundingSourceId ? eq93(chargeCodes.fundingSourceId, fundingSourceId) : void 0
+        fundingSourceId ? eq94(chargeCodes.fundingSourceId, fundingSourceId) : void 0
       )
-    ).orderBy(desc67(timeEntries.entryDate));
+    ).orderBy(desc68(timeEntries.entryDate));
     let totalHours = 0;
     let totalCost = 0;
     let employeeHours = 0;
@@ -70951,7 +70991,7 @@ var grantLaborReportsRouter = router({
     let grantNumber = "N/A";
     let grantorName = "N/A";
     if (fundingSourceId) {
-      const fs2 = await db7.select().from(fundingSources).where(eq93(fundingSources.id, fundingSourceId)).limit(1);
+      const fs2 = await db7.select().from(fundingSources).where(eq94(fundingSources.id, fundingSourceId)).limit(1);
       if (fs2.length > 0) {
         const fsData = fs2[0];
         fundingSourceName = fsData.name;
@@ -70970,13 +71010,13 @@ var grantLaborReportsRouter = router({
       chargeCode: chargeCodes.code,
       chargeCodeName: chargeCodes.name,
       fundingSourceName: fundingSources.name
-    }).from(timeEntries).innerJoin(timekeepingWorkers, eq93(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq93(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq93(chargeCodes.fundingSourceId, fundingSources.id)).where(
+    }).from(timeEntries).innerJoin(timekeepingWorkers, eq94(timeEntries.workerId, timekeepingWorkers.id)).innerJoin(chargeCodes, eq94(timeEntries.chargeCodeId, chargeCodes.id)).innerJoin(fundingSources, eq94(chargeCodes.fundingSourceId, fundingSources.id)).where(
       and72(
         gte13(timeEntries.entryDate, new Date(startDate)),
         lte14(timeEntries.entryDate, new Date(endDate)),
-        fundingSourceId ? eq93(chargeCodes.fundingSourceId, fundingSourceId) : void 0
+        fundingSourceId ? eq94(chargeCodes.fundingSourceId, fundingSourceId) : void 0
       )
-    ).orderBy(desc67(timeEntries.entryDate));
+    ).orderBy(desc68(timeEntries.entryDate));
     let totalHours = 0;
     let totalCost = 0;
     let employeeHours = 0;
@@ -71066,7 +71106,7 @@ var grantLaborReportsRouter = router({
 import { z as z126 } from "zod";
 init_db();
 init_schema();
-import { eq as eq94, desc as desc68 } from "drizzle-orm";
+import { eq as eq95, desc as desc69 } from "drizzle-orm";
 var bankAccountsRouter = router({
   /**
    * List bank accounts for a worker
@@ -71076,7 +71116,7 @@ var bankAccountsRouter = router({
   })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const accounts2 = await db7.select().from(workerBankAccounts).where(eq94(workerBankAccounts.workerId, input.workerId)).orderBy(workerBankAccounts.priority);
+    const accounts2 = await db7.select().from(workerBankAccounts).where(eq95(workerBankAccounts.workerId, input.workerId)).orderBy(workerBankAccounts.priority);
     return accounts2.map((acc) => ({
       ...acc,
       accountNumberMasked: `****${acc.accountNumber.slice(-4)}`
@@ -71096,7 +71136,7 @@ var bankAccountsRouter = router({
         lastName: timekeepingWorkers.lastName,
         email: timekeepingWorkers.email
       }
-    }).from(workerBankAccounts).leftJoin(timekeepingWorkers, eq94(workerBankAccounts.workerId, timekeepingWorkers.id)).where(eq94(workerBankAccounts.isActive, true)).orderBy(desc68(workerBankAccounts.createdAt));
+    }).from(workerBankAccounts).leftJoin(timekeepingWorkers, eq95(workerBankAccounts.workerId, timekeepingWorkers.id)).where(eq95(workerBankAccounts.isActive, true)).orderBy(desc69(workerBankAccounts.createdAt));
     return accounts2.map(({ account, worker }) => ({
       ...account,
       accountNumberMasked: `****${account.accountNumber.slice(-4)}`,
@@ -71121,9 +71161,9 @@ var bankAccountsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     if (input.isPrimary) {
-      await db7.update(workerBankAccounts).set({ isPrimary: false }).where(eq94(workerBankAccounts.workerId, input.workerId));
+      await db7.update(workerBankAccounts).set({ isPrimary: false }).where(eq95(workerBankAccounts.workerId, input.workerId));
     }
-    const existing = await db7.select().from(workerBankAccounts).where(eq94(workerBankAccounts.workerId, input.workerId));
+    const existing = await db7.select().from(workerBankAccounts).where(eq95(workerBankAccounts.workerId, input.workerId));
     const nextPriority = existing.length + 1;
     const result = await db7.insert(workerBankAccounts).values({
       workerId: input.workerId,
@@ -71160,14 +71200,14 @@ var bankAccountsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const { id, ...updates } = input;
-    const [current] = await db7.select().from(workerBankAccounts).where(eq94(workerBankAccounts.id, id));
+    const [current] = await db7.select().from(workerBankAccounts).where(eq95(workerBankAccounts.id, id));
     if (!current) {
       throw new Error("Bank account not found");
     }
     if (updates.isPrimary) {
-      await db7.update(workerBankAccounts).set({ isPrimary: false }).where(eq94(workerBankAccounts.workerId, current.workerId));
+      await db7.update(workerBankAccounts).set({ isPrimary: false }).where(eq95(workerBankAccounts.workerId, current.workerId));
     }
-    await db7.update(workerBankAccounts).set(updates).where(eq94(workerBankAccounts.id, id));
+    await db7.update(workerBankAccounts).set(updates).where(eq95(workerBankAccounts.id, id));
     return {
       success: true,
       message: "Bank account updated successfully"
@@ -71181,7 +71221,7 @@ var bankAccountsRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.update(workerBankAccounts).set({ isActive: false }).where(eq94(workerBankAccounts.id, input.id));
+    await db7.update(workerBankAccounts).set({ isActive: false }).where(eq95(workerBankAccounts.id, input.id));
     return {
       success: true,
       message: "Bank account removed"
@@ -71210,8 +71250,8 @@ var bankAccountsRouter = router({
   getWorkersWithoutAccounts: protectedProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const workers = await db7.select().from(timekeepingWorkers).where(eq94(timekeepingWorkers.status, "active"));
-    const accountWorkerIds = await db7.select({ workerId: workerBankAccounts.workerId }).from(workerBankAccounts).where(eq94(workerBankAccounts.isActive, true));
+    const workers = await db7.select().from(timekeepingWorkers).where(eq95(timekeepingWorkers.status, "active"));
+    const accountWorkerIds = await db7.select({ workerId: workerBankAccounts.workerId }).from(workerBankAccounts).where(eq95(workerBankAccounts.isActive, true));
     const workerIdsWithAccounts = new Set(accountWorkerIds.map((a) => a.workerId));
     return workers.filter((w) => !workerIdsWithAccounts.has(w.id));
   })
@@ -71221,7 +71261,7 @@ var bankAccountsRouter = router({
 import { z as z127 } from "zod";
 init_db();
 init_schema();
-import { eq as eq95, and as and74, desc as desc69, inArray as inArray6 } from "drizzle-orm";
+import { eq as eq96, and as and74, desc as desc70, inArray as inArray6 } from "drizzle-orm";
 var RECORD_SIZE = 94;
 var BLOCKING_FACTOR = 10;
 function padRight(str, length, char = " ") {
@@ -71382,9 +71422,9 @@ var achRouter = router({
     if (!db7) throw new Error("Database unavailable");
     let query = db7.select().from(achBatches);
     if (input.status) {
-      query = query.where(eq95(achBatches.status, input.status));
+      query = query.where(eq96(achBatches.status, input.status));
     }
-    const batches = await query.orderBy(desc69(achBatches.createdAt)).limit(input.limit);
+    const batches = await query.orderBy(desc70(achBatches.createdAt)).limit(input.limit);
     return batches;
   }),
   /**
@@ -71395,7 +71435,7 @@ var achRouter = router({
   })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const [batch] = await db7.select().from(achBatches).where(eq95(achBatches.id, input.id));
+    const [batch] = await db7.select().from(achBatches).where(eq96(achBatches.id, input.id));
     if (!batch) return null;
     const entries = await db7.select({
       entry: achEntries,
@@ -71403,7 +71443,7 @@ var achRouter = router({
         firstName: timekeepingWorkers.firstName,
         lastName: timekeepingWorkers.lastName
       }
-    }).from(achEntries).leftJoin(timekeepingWorkers, eq95(achEntries.workerId, timekeepingWorkers.id)).where(eq95(achEntries.batchId, input.id));
+    }).from(achEntries).leftJoin(timekeepingWorkers, eq96(achEntries.workerId, timekeepingWorkers.id)).where(eq96(achEntries.batchId, input.id));
     return {
       ...batch,
       entries: entries.map(({ entry, worker }) => ({
@@ -71442,15 +71482,15 @@ var achRouter = router({
     let entryCount = 0;
     for (const run of runs) {
       const [bankAccount] = await db7.select().from(workerBankAccounts).where(and74(
-        eq95(workerBankAccounts.workerId, run.workerId),
-        eq95(workerBankAccounts.isActive, true),
-        eq95(workerBankAccounts.isPrimary, true)
+        eq96(workerBankAccounts.workerId, run.workerId),
+        eq96(workerBankAccounts.isActive, true),
+        eq96(workerBankAccounts.isPrimary, true)
       ));
       if (!bankAccount) {
         console.warn(`No bank account for worker ${run.workerId}`);
         continue;
       }
-      const [worker] = await db7.select().from(timekeepingWorkers).where(eq95(timekeepingWorkers.id, run.workerId));
+      const [worker] = await db7.select().from(timekeepingWorkers).where(eq96(timekeepingWorkers.id, run.workerId));
       const netPay = parseFloat(run.netPay || "0");
       if (netPay <= 0) continue;
       const transactionCode = bankAccount.accountType === "checking" ? "22" : "32";
@@ -71473,7 +71513,7 @@ var achRouter = router({
     await db7.update(achBatches).set({
       totalCredits: String(totalCredits),
       entryCount
-    }).where(eq95(achBatches.id, batchId));
+    }).where(eq96(achBatches.id, batchId));
     return {
       success: true,
       batchId,
@@ -71495,9 +71535,9 @@ var achRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const [batch] = await db7.select().from(achBatches).where(eq95(achBatches.id, input.batchId));
+    const [batch] = await db7.select().from(achBatches).where(eq96(achBatches.id, input.batchId));
     if (!batch) throw new Error("Batch not found");
-    const entries = await db7.select().from(achEntries).where(eq95(achEntries.batchId, input.batchId));
+    const entries = await db7.select().from(achEntries).where(eq96(achEntries.batchId, input.batchId));
     if (entries.length === 0) {
       throw new Error("No entries in batch");
     }
@@ -71546,7 +71586,7 @@ var achRouter = router({
         "0",
         input.originatingDFI + String(traceNum).padStart(7, "0")
       ));
-      await db7.update(achEntries).set({ status: "included" }).where(eq95(achEntries.id, entry.id));
+      await db7.update(achEntries).set({ status: "included" }).where(eq96(achEntries.id, entry.id));
       traceNum++;
     }
     lines.push(generateBatchControl(
@@ -71581,7 +71621,7 @@ var achRouter = router({
       status: "generated",
       fileName,
       fileCreatedAt: now
-    }).where(eq95(achBatches.id, input.batchId));
+    }).where(eq96(achBatches.id, input.batchId));
     return {
       success: true,
       fileName,
@@ -71600,9 +71640,9 @@ var achRouter = router({
   })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.update(achBatches).set({ status: input.status }).where(eq95(achBatches.id, input.batchId));
+    await db7.update(achBatches).set({ status: input.status }).where(eq96(achBatches.id, input.batchId));
     if (input.status === "processed") {
-      await db7.update(achEntries).set({ status: "settled" }).where(eq95(achEntries.batchId, input.batchId));
+      await db7.update(achEntries).set({ status: "settled" }).where(eq96(achEntries.batchId, input.batchId));
     }
     return { success: true };
   }),
@@ -71620,7 +71660,7 @@ var achRouter = router({
       status: "returned",
       returnCode: input.returnCode,
       returnReason: input.returnReason
-    }).where(eq95(achEntries.id, input.entryId));
+    }).where(eq96(achEntries.id, input.entryId));
     return { success: true };
   })
 });
@@ -72170,12 +72210,12 @@ import { z as z129 } from "zod";
 // server/services/scheduledJobs.ts
 init_db();
 init_schema();
-import { eq as eq97, sql as sql58, desc as desc71 } from "drizzle-orm";
+import { eq as eq98, sql as sql58, desc as desc72 } from "drizzle-orm";
 
 // server/services/additionalJobs.ts
 init_db();
 init_schema();
-import { eq as eq96, sql as sql57, and as and75, lt as lt3, gte as gte14 } from "drizzle-orm";
+import { eq as eq97, sql as sql57, and as and75, lt as lt3, gte as gte14 } from "drizzle-orm";
 async function runDailySummaryReport() {
   const db7 = await getDb();
   const errors = [];
@@ -72202,7 +72242,7 @@ async function runDailySummaryReport() {
     details.notificationsSent = notificationsResult?.count || 0;
     const [activeUsersResult] = await db7.select({ count: sql57`COUNT(*)` }).from(users);
     details.totalActiveUsers = activeUsersResult?.count || 0;
-    const admins = await db7.select({ id: users.id }).from(users).where(eq96(users.role, "admin"));
+    const admins = await db7.select({ id: users.id }).from(users).where(eq97(users.role, "admin"));
     for (const admin of admins) {
       await db7.insert(notifications).values({
         userId: admin.id,
@@ -72257,7 +72297,7 @@ async function runWeeklyComplianceAudit() {
     }).from(electronicSignatures).where(
       and75(
         lt3(electronicSignatures.expiresAt, now),
-        eq96(electronicSignatures.requiresReAcknowledgment, true)
+        eq97(electronicSignatures.requiresReAcknowledgment, true)
       )
     );
     details.expiredSignatures = expiredSignatures.length;
@@ -72271,18 +72311,18 @@ async function runWeeklyComplianceAudit() {
     details.totalActiveProcedures = proceduresResult[0]?.count || 0;
     processed++;
     succeeded++;
-    const [employeesResult] = await db7.select({ count: sql57`COUNT(*)` }).from(employees).where(eq96(employees.status, "active"));
+    const [employeesResult] = await db7.select({ count: sql57`COUNT(*)` }).from(employees).where(eq97(employees.status, "active"));
     details.totalActiveEmployees = employeesResult?.count || 0;
     processed++;
     succeeded++;
-    const [pendingTimesheetsResult] = await db7.select({ count: sql57`COUNT(*)` }).from(timesheets).where(eq96(timesheets.status, "submitted"));
+    const [pendingTimesheetsResult] = await db7.select({ count: sql57`COUNT(*)` }).from(timesheets).where(eq97(timesheets.status, "submitted"));
     details.pendingTimesheets = pendingTimesheetsResult?.count || 0;
     processed++;
     succeeded++;
     const complianceIssues = (details.expiredSignatures || 0) + (details.pendingTimesheets || 0);
     details.complianceIssuesFound = complianceIssues;
     details.complianceStatus = complianceIssues === 0 ? "compliant" : "needs_attention";
-    const admins = await db7.select({ id: users.id }).from(users).where(eq96(users.role, "admin"));
+    const admins = await db7.select({ id: users.id }).from(users).where(eq97(users.role, "admin"));
     const statusEmoji = complianceIssues === 0 ? "\u2705" : "\u26A0\uFE0F";
     for (const admin of admins) {
       await db7.insert(notifications).values({
@@ -72347,7 +72387,7 @@ async function runMonthlyDataCleanup() {
     succeeded++;
     details.cleanupCompleted = true;
     details.cleanupTimestamp = (/* @__PURE__ */ new Date()).toISOString();
-    const admins = await db7.select({ id: users.id }).from(users).where(eq96(users.role, "admin"));
+    const admins = await db7.select({ id: users.id }).from(users).where(eq97(users.role, "admin"));
     for (const admin of admins) {
       await db7.insert(notifications).values({
         userId: admin.id,
@@ -72396,7 +72436,7 @@ async function updateJobExecution(executionId, status, result, errorMessage, err
   const db7 = await getDb();
   if (!db7) throw new Error("Database not available");
   const completedAt = /* @__PURE__ */ new Date();
-  const [execution] = await db7.select({ startedAt: systemJobExecutions.startedAt }).from(systemJobExecutions).where(eq97(systemJobExecutions.id, executionId));
+  const [execution] = await db7.select({ startedAt: systemJobExecutions.startedAt }).from(systemJobExecutions).where(eq98(systemJobExecutions.id, executionId));
   const durationMs = execution ? completedAt.getTime() - new Date(execution.startedAt).getTime() : 0;
   await db7.update(systemJobExecutions).set({
     status,
@@ -72408,7 +72448,7 @@ async function updateJobExecution(executionId, status, result, errorMessage, err
     itemsProcessed: metrics2?.processed || 0,
     itemsSucceeded: metrics2?.succeeded || 0,
     itemsFailed: metrics2?.failed || 0
-  }).where(eq97(systemJobExecutions.id, executionId));
+  }).where(eq98(systemJobExecutions.id, executionId));
 }
 function isJobRunning(jobName) {
   return runningJobs.has(jobName);
@@ -72426,9 +72466,9 @@ async function getJobHistory(jobName, limit = 20) {
     result: systemJobExecutions.result,
     errorMessage: systemJobExecutions.errorMessage,
     triggeredBy: systemJobExecutions.triggeredBy
-  }).from(systemJobExecutions).orderBy(desc71(systemJobExecutions.startedAt)).limit(limit);
+  }).from(systemJobExecutions).orderBy(desc72(systemJobExecutions.startedAt)).limit(limit);
   if (jobName) {
-    query = query.where(eq97(systemJobExecutions.jobName, jobName));
+    query = query.where(eq98(systemJobExecutions.jobName, jobName));
   }
   const results = await query;
   return results.map((r) => ({
@@ -72488,7 +72528,7 @@ async function runSignatureExpirationJob(triggeredBy = "manual", triggeredByUser
     if (result.errors.length > 0) {
       const db7 = await getDb();
       if (!db7) throw new Error("Database not available");
-      const admins = await db7.select({ id: users.id }).from(users).where(eq97(users.role, "admin"));
+      const admins = await db7.select({ id: users.id }).from(users).where(eq98(users.role, "admin"));
       for (const admin of admins) {
         await db7.insert(notifications).values({
           userId: admin.id,
@@ -72828,7 +72868,7 @@ async function getJobStats() {
     failed: sql58`SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END)`,
     avgDuration: sql58`AVG(duration_ms)`
   }).from(systemJobExecutions);
-  const [lastExecution] = await db7.select({ startedAt: systemJobExecutions.startedAt }).from(systemJobExecutions).orderBy(desc71(systemJobExecutions.startedAt)).limit(1);
+  const [lastExecution] = await db7.select({ startedAt: systemJobExecutions.startedAt }).from(systemJobExecutions).orderBy(desc72(systemJobExecutions.startedAt)).limit(1);
   return {
     totalExecutions: stats?.total || 0,
     successfulExecutions: stats?.successful || 0,
@@ -72918,13 +72958,13 @@ var systemJobsRouter = router({
 import { z as z130 } from "zod";
 init_db();
 init_schema();
-import { eq as eq99, and as and77, gte as gte15, desc as desc72, asc as asc4, or as or11, sql as sql59, inArray as inArray8 } from "drizzle-orm";
+import { eq as eq100, and as and77, gte as gte15, desc as desc73, asc as asc4, or as or11, sql as sql59, inArray as inArray8 } from "drizzle-orm";
 import { TRPCError as TRPCError48 } from "@trpc/server";
 
 // server/services/emailNotifications.ts
 init_db();
 init_schema();
-import { eq as eq98, and as and76, inArray as inArray7 } from "drizzle-orm";
+import { eq as eq99, and as and76, inArray as inArray7 } from "drizzle-orm";
 async function getEmailEnabledUsers(userIds) {
   const db7 = await getDb();
   if (!db7 || userIds.length === 0) return [];
@@ -72933,7 +72973,7 @@ async function getEmailEnabledUsers(userIds) {
     email: users.email,
     name: users.name,
     emailEnabled: notificationPreferences.emailEnabled
-  }).from(users).leftJoin(notificationPreferences, eq98(users.id, notificationPreferences.userId)).where(inArray7(users.id, userIds));
+  }).from(users).leftJoin(notificationPreferences, eq99(users.id, notificationPreferences.userId)).where(inArray7(users.id, userIds));
   return usersWithPrefs.filter((u) => u.email && (u.emailEnabled === null || u.emailEnabled === true)).map((u) => ({
     userId: u.id,
     email: u.email,
@@ -73166,7 +73206,7 @@ async function sendChatMessageNotification(notification) {
   const db7 = await getDb();
   if (!db7) return { sent: 0, failed: 0 };
   const participants = await db7.select({ userId: chatParticipants.userId }).from(chatParticipants).where(and76(
-    eq98(chatParticipants.chatId, notification.chatId)
+    eq99(chatParticipants.chatId, notification.chatId)
     // Don't notify the sender
   ));
   const recipientIds = participants.map((p) => p.userId).filter((id) => id !== notification.senderId);
@@ -73329,13 +73369,13 @@ var meetingsRouter = router({
   getById: protectedProcedure.input(z130.object({ id: z130.number() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.id)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.id)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
     const [participant] = await db7.select().from(meetingParticipants).where(and77(
-      eq99(meetingParticipants.meetingId, input.id),
-      eq99(meetingParticipants.userId, ctx.user.id)
+      eq100(meetingParticipants.meetingId, input.id),
+      eq100(meetingParticipants.userId, ctx.user.id)
     )).limit(1);
     if (!participant && meeting.hostId !== ctx.user.id) {
       throw new TRPCError48({ code: "FORBIDDEN", message: "You are not a participant of this meeting" });
@@ -73352,8 +73392,8 @@ var meetingsRouter = router({
       leftAt: meetingParticipants.leftAt,
       userName: users.name,
       userEmail: users.email
-    }).from(meetingParticipants).leftJoin(users, eq99(meetingParticipants.userId, users.id)).where(eq99(meetingParticipants.meetingId, input.id));
-    const [host] = await db7.select({ id: users.id, name: users.name, email: users.email }).from(users).where(eq99(users.id, meeting.hostId)).limit(1);
+    }).from(meetingParticipants).leftJoin(users, eq100(meetingParticipants.userId, users.id)).where(eq100(meetingParticipants.meetingId, input.id));
+    const [host] = await db7.select({ id: users.id, name: users.name, email: users.email }).from(users).where(eq100(users.id, meeting.hostId)).limit(1);
     return {
       ...meeting,
       host,
@@ -73372,7 +73412,7 @@ var meetingsRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) return { meetings: [], total: 0 };
-    const participantMeetingIds = await db7.select({ meetingId: meetingParticipants.meetingId }).from(meetingParticipants).where(eq99(meetingParticipants.userId, ctx.user.id));
+    const participantMeetingIds = await db7.select({ meetingId: meetingParticipants.meetingId }).from(meetingParticipants).where(eq100(meetingParticipants.userId, ctx.user.id));
     const meetingIds = participantMeetingIds.map((p) => p.meetingId);
     const results = await db7.select({
       id: meetings.id,
@@ -73388,12 +73428,12 @@ var meetingsRouter = router({
       isRecorded: meetings.isRecorded,
       createdAt: meetings.createdAt,
       hostName: users.name
-    }).from(meetings).leftJoin(users, eq99(meetings.hostId, users.id)).where(
+    }).from(meetings).leftJoin(users, eq100(meetings.hostId, users.id)).where(
       meetingIds.length > 0 ? or11(
-        eq99(meetings.hostId, ctx.user.id),
+        eq100(meetings.hostId, ctx.user.id),
         inArray8(meetings.id, meetingIds)
-      ) : eq99(meetings.hostId, ctx.user.id)
-    ).orderBy(desc72(meetings.scheduledAt)).limit(input.limit).offset(input.offset);
+      ) : eq100(meetings.hostId, ctx.user.id)
+    ).orderBy(desc73(meetings.scheduledAt)).limit(input.limit).offset(input.offset);
     let filteredResults = results;
     if (input.status !== "all") {
       filteredResults = results.filter((m) => m.status === input.status);
@@ -73418,7 +73458,7 @@ var meetingsRouter = router({
     const db7 = await getDb();
     if (!db7) return [];
     const now = /* @__PURE__ */ new Date();
-    const participantMeetingIds = await db7.select({ meetingId: meetingParticipants.meetingId }).from(meetingParticipants).where(eq99(meetingParticipants.userId, ctx.user.id));
+    const participantMeetingIds = await db7.select({ meetingId: meetingParticipants.meetingId }).from(meetingParticipants).where(eq100(meetingParticipants.userId, ctx.user.id));
     const meetingIds = participantMeetingIds.map((p) => p.meetingId);
     const results = await db7.select({
       id: meetings.id,
@@ -73430,14 +73470,14 @@ var meetingsRouter = router({
       roomName: meetings.roomName,
       hostId: meetings.hostId,
       hostName: users.name
-    }).from(meetings).leftJoin(users, eq99(meetings.hostId, users.id)).where(
+    }).from(meetings).leftJoin(users, eq100(meetings.hostId, users.id)).where(
       and77(
         meetingIds.length > 0 ? or11(
-          eq99(meetings.hostId, ctx.user.id),
+          eq100(meetings.hostId, ctx.user.id),
           inArray8(meetings.id, meetingIds)
-        ) : eq99(meetings.hostId, ctx.user.id),
+        ) : eq100(meetings.hostId, ctx.user.id),
         gte15(meetings.scheduledAt, now),
-        eq99(meetings.status, "scheduled")
+        eq100(meetings.status, "scheduled")
       )
     ).orderBy(asc4(meetings.scheduledAt)).limit(input.limit);
     return results;
@@ -73456,7 +73496,7 @@ var meetingsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const { id, ...updates } = input;
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, id)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, id)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
@@ -73472,7 +73512,7 @@ var meetingsRouter = router({
     if (updates.waitingRoomEnabled !== void 0) updateData.waitingRoomEnabled = updates.waitingRoomEnabled;
     if (updates.maxParticipants) updateData.maxParticipants = updates.maxParticipants;
     if (Object.keys(updateData).length > 0) {
-      await db7.update(meetings).set(updateData).where(eq99(meetings.id, id));
+      await db7.update(meetings).set(updateData).where(eq100(meetings.id, id));
     }
     return { success: true, message: "Meeting updated successfully" };
   }),
@@ -73480,14 +73520,14 @@ var meetingsRouter = router({
   cancel: protectedProcedure.input(z130.object({ id: z130.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.id)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.id)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
     if (meeting.hostId !== ctx.user.id) {
       throw new TRPCError48({ code: "FORBIDDEN", message: "Only the host can cancel the meeting" });
     }
-    await db7.update(meetings).set({ status: "cancelled" }).where(eq99(meetings.id, input.id));
+    await db7.update(meetings).set({ status: "cancelled" }).where(eq100(meetings.id, input.id));
     return { success: true, message: "Meeting cancelled" };
   }),
   // Start meeting (update status and set room URL)
@@ -73497,13 +73537,13 @@ var meetingsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.id)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.id)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
     const [participant] = await db7.select().from(meetingParticipants).where(and77(
-      eq99(meetingParticipants.meetingId, input.id),
-      eq99(meetingParticipants.userId, ctx.user.id)
+      eq100(meetingParticipants.meetingId, input.id),
+      eq100(meetingParticipants.userId, ctx.user.id)
     )).limit(1);
     const canStart = meeting.hostId === ctx.user.id || participant?.role === "co_host";
     if (!canStart) {
@@ -73513,7 +73553,7 @@ var meetingsRouter = router({
       status: "in_progress",
       startedAt: /* @__PURE__ */ new Date(),
       roomUrl: input.roomUrl || meeting.roomUrl
-    }).where(eq99(meetings.id, input.id));
+    }).where(eq100(meetings.id, input.id));
     return {
       success: true,
       roomName: meeting.roomName,
@@ -73524,7 +73564,7 @@ var meetingsRouter = router({
   end: protectedProcedure.input(z130.object({ id: z130.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.id)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.id)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
@@ -73534,20 +73574,20 @@ var meetingsRouter = router({
     await db7.update(meetings).set({
       status: "completed",
       endedAt: /* @__PURE__ */ new Date()
-    }).where(eq99(meetings.id, input.id));
+    }).where(eq100(meetings.id, input.id));
     return { success: true, message: "Meeting ended" };
   }),
   // Join meeting (record participant join)
   join: protectedProcedure.input(z130.object({ id: z130.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.id)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.id)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
     const [participant] = await db7.select().from(meetingParticipants).where(and77(
-      eq99(meetingParticipants.meetingId, input.id),
-      eq99(meetingParticipants.userId, ctx.user.id)
+      eq100(meetingParticipants.meetingId, input.id),
+      eq100(meetingParticipants.userId, ctx.user.id)
     )).limit(1);
     if (!participant && meeting.hostId !== ctx.user.id) {
       await db7.insert(meetingParticipants).values({
@@ -73561,7 +73601,7 @@ var meetingsRouter = router({
       await db7.update(meetingParticipants).set({
         joinedAt: /* @__PURE__ */ new Date(),
         inviteStatus: "accepted"
-      }).where(eq99(meetingParticipants.id, participant.id));
+      }).where(eq100(meetingParticipants.id, participant.id));
     }
     return {
       success: true,
@@ -73575,8 +73615,8 @@ var meetingsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(meetingParticipants).where(and77(
-      eq99(meetingParticipants.meetingId, input.id),
-      eq99(meetingParticipants.userId, ctx.user.id)
+      eq100(meetingParticipants.meetingId, input.id),
+      eq100(meetingParticipants.userId, ctx.user.id)
     )).limit(1);
     if (participant) {
       const joinedAt = participant.joinedAt || /* @__PURE__ */ new Date();
@@ -73584,7 +73624,7 @@ var meetingsRouter = router({
       await db7.update(meetingParticipants).set({
         leftAt: /* @__PURE__ */ new Date(),
         totalDuration: (participant.totalDuration || 0) + duration
-      }).where(eq99(meetingParticipants.id, participant.id));
+      }).where(eq100(meetingParticipants.id, participant.id));
     }
     return { success: true };
   }),
@@ -73598,7 +73638,7 @@ var meetingsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.meetingId)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.meetingId)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
@@ -73622,14 +73662,14 @@ var meetingsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.meetingId)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.meetingId)).limit(1);
     if (!meeting) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "Meeting not found" });
     }
     if (meeting.hostId !== ctx.user.id) {
       throw new TRPCError48({ code: "FORBIDDEN", message: "Only the host can remove participants" });
     }
-    await db7.delete(meetingParticipants).where(eq99(meetingParticipants.id, input.participantId));
+    await db7.delete(meetingParticipants).where(eq100(meetingParticipants.id, input.participantId));
     return { success: true, message: "Participant removed" };
   }),
   // RSVP to meeting invitation
@@ -73640,13 +73680,13 @@ var meetingsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(meetingParticipants).where(and77(
-      eq99(meetingParticipants.meetingId, input.meetingId),
-      eq99(meetingParticipants.userId, ctx.user.id)
+      eq100(meetingParticipants.meetingId, input.meetingId),
+      eq100(meetingParticipants.userId, ctx.user.id)
     )).limit(1);
     if (!participant) {
       throw new TRPCError48({ code: "NOT_FOUND", message: "You are not invited to this meeting" });
     }
-    await db7.update(meetingParticipants).set({ inviteStatus: input.response }).where(eq99(meetingParticipants.id, participant.id));
+    await db7.update(meetingParticipants).set({ inviteStatus: input.response }).where(eq100(meetingParticipants.id, participant.id));
     return { success: true, message: `RSVP updated to ${input.response}` };
   }),
   // ==========================================
@@ -73717,7 +73757,7 @@ var meetingsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.meetingId)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.meetingId)).limit(1);
     if (!meeting || meeting.hostId !== ctx.user.id) {
       throw new TRPCError48({ code: "FORBIDDEN", message: "Only the host can start a vote" });
     }
@@ -73770,7 +73810,7 @@ var meetingsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError48({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq99(meetings.id, input.meetingId)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq100(meetings.id, input.meetingId)).limit(1);
     if (!meeting || meeting.hostId !== ctx.user.id) {
       throw new TRPCError48({ code: "FORBIDDEN", message: "Only the host can end a vote" });
     }
@@ -73950,13 +73990,13 @@ var meetingsRouter = router({
     if (!db7) return { upcoming: 0, completed: 0, hostedThisMonth: 0, totalMinutes: 0, totalMeetings: 0 };
     const now = /* @__PURE__ */ new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1e3);
-    const participantMeetingIds = await db7.select({ meetingId: meetingParticipants.meetingId }).from(meetingParticipants).where(eq99(meetingParticipants.userId, ctx.user.id));
+    const participantMeetingIds = await db7.select({ meetingId: meetingParticipants.meetingId }).from(meetingParticipants).where(eq100(meetingParticipants.userId, ctx.user.id));
     const meetingIds = participantMeetingIds.map((p) => p.meetingId);
     const allMeetings = await db7.select().from(meetings).where(
       meetingIds.length > 0 ? or11(
-        eq99(meetings.hostId, ctx.user.id),
+        eq100(meetings.hostId, ctx.user.id),
         inArray8(meetings.id, meetingIds)
-      ) : eq99(meetings.hostId, ctx.user.id)
+      ) : eq100(meetings.hostId, ctx.user.id)
     );
     const upcoming = allMeetings.filter(
       (m) => m.status === "scheduled" && m.scheduledAt >= now
@@ -73982,7 +74022,7 @@ var meetingsRouter = router({
 import { z as z131 } from "zod";
 init_db();
 init_schema();
-import { eq as eq100, and as and78, desc as desc73, asc as asc5, sql as sql60, inArray as inArray9, gte as gte16, isNull as isNull5 } from "drizzle-orm";
+import { eq as eq101, and as and78, desc as desc74, asc as asc5, sql as sql60, inArray as inArray9, gte as gte16, isNull as isNull5 } from "drizzle-orm";
 import { TRPCError as TRPCError49 } from "@trpc/server";
 
 // server/services/chatSSE.ts
@@ -74090,13 +74130,13 @@ function clearUserTyping(userId) {
 async function getOrCreateDirectChat(userId1, userId2) {
   const db7 = await getDb();
   if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-  const user1Chats = await db7.select({ chatId: chatParticipants.chatId }).from(chatParticipants).where(eq100(chatParticipants.userId, userId1));
+  const user1Chats = await db7.select({ chatId: chatParticipants.chatId }).from(chatParticipants).where(eq101(chatParticipants.userId, userId1));
   const user1ChatIds = user1Chats.map((c) => c.chatId);
   if (user1ChatIds.length > 0) {
-    const existingChat = await db7.select({ chatId: chatParticipants.chatId }).from(chatParticipants).innerJoin(chats, eq100(chatParticipants.chatId, chats.id)).where(and78(
-      eq100(chatParticipants.userId, userId2),
+    const existingChat = await db7.select({ chatId: chatParticipants.chatId }).from(chatParticipants).innerJoin(chats, eq101(chatParticipants.chatId, chats.id)).where(and78(
+      eq101(chatParticipants.userId, userId2),
       inArray9(chatParticipants.chatId, user1ChatIds),
-      eq100(chats.chatType, "direct")
+      eq101(chats.chatType, "direct")
     )).limit(1);
     if (existingChat.length > 0) {
       return existingChat[0].chatId;
@@ -74120,7 +74160,7 @@ async function updateChatLastMessage(chatId, content) {
   await db7.update(chats).set({
     lastMessageAt: /* @__PURE__ */ new Date(),
     lastMessagePreview: preview
-  }).where(eq100(chats.id, chatId));
+  }).where(eq101(chats.id, chatId));
 }
 async function incrementUnreadCounts(chatId, senderId) {
   const db7 = await getDb();
@@ -74196,7 +74236,7 @@ var chatRouter = router({
       isMuted: chatParticipants.isMuted,
       isPinned: chatParticipants.isPinned
     }).from(chatParticipants).where(and78(
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     ));
     if (userChats.length === 0) {
@@ -74204,7 +74244,7 @@ var chatRouter = router({
     }
     const chatIds = userChats.map((c) => c.chatId);
     const chatMap = new Map(userChats.map((c) => [c.chatId, c]));
-    let chatResults = await db7.select().from(chats).where(inArray9(chats.id, chatIds)).orderBy(desc73(chats.lastMessageAt)).limit(input.limit).offset(input.offset);
+    let chatResults = await db7.select().from(chats).where(inArray9(chats.id, chatIds)).orderBy(desc74(chats.lastMessageAt)).limit(input.limit).offset(input.offset);
     if (input.type !== "all") {
       chatResults = chatResults.filter((c) => c.chatType === input.type);
     }
@@ -74215,8 +74255,8 @@ var chatRouter = router({
         role: chatParticipants.role,
         userName: users.name,
         userEmail: users.email
-      }).from(chatParticipants).leftJoin(users, eq100(chatParticipants.userId, users.id)).where(and78(
-        eq100(chatParticipants.chatId, chat.id),
+      }).from(chatParticipants).leftJoin(users, eq101(chatParticipants.userId, users.id)).where(and78(
+        eq101(chatParticipants.chatId, chat.id),
         isNull5(chatParticipants.leftAt)
       ));
       const userChatInfo = chatMap.get(chat.id);
@@ -74248,14 +74288,14 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.id),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, input.id),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
       throw new TRPCError49({ code: "FORBIDDEN", message: "You are not a member of this chat" });
     }
-    const [chat] = await db7.select().from(chats).where(eq100(chats.id, input.id)).limit(1);
+    const [chat] = await db7.select().from(chats).where(eq101(chats.id, input.id)).limit(1);
     if (!chat) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Chat not found" });
     }
@@ -74265,8 +74305,8 @@ var chatRouter = router({
       role: chatParticipants.role,
       userName: users.name,
       userEmail: users.email
-    }).from(chatParticipants).leftJoin(users, eq100(chatParticipants.userId, users.id)).where(and78(
-      eq100(chatParticipants.chatId, input.id),
+    }).from(chatParticipants).leftJoin(users, eq101(chatParticipants.userId, users.id)).where(and78(
+      eq101(chatParticipants.chatId, input.id),
       isNull5(chatParticipants.leftAt)
     ));
     const messages = await db7.select({
@@ -74282,11 +74322,11 @@ var chatRouter = router({
       reactions: chatMessages.reactions,
       createdAt: chatMessages.createdAt,
       senderName: users.name
-    }).from(chatMessages).leftJoin(users, eq100(chatMessages.senderId, users.id)).where(eq100(chatMessages.chatId, input.id)).orderBy(desc73(chatMessages.createdAt)).limit(input.messageLimit);
+    }).from(chatMessages).leftJoin(users, eq101(chatMessages.senderId, users.id)).where(eq101(chatMessages.chatId, input.id)).orderBy(desc74(chatMessages.createdAt)).limit(input.messageLimit);
     await db7.update(chatParticipants).set({
       lastReadAt: /* @__PURE__ */ new Date(),
       unreadCount: 0
-    }).where(eq100(chatParticipants.id, participant.id));
+    }).where(eq101(chatParticipants.id, participant.id));
     return {
       ...chat,
       participants,
@@ -74305,8 +74345,8 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
@@ -74323,7 +74363,7 @@ var chatRouter = router({
     await updateChatLastMessage(input.chatId, input.content);
     await incrementUnreadCounts(input.chatId, ctx.user.id);
     const participants = await db7.select({ userId: chatParticipants.userId }).from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.chatId, input.chatId),
       isNull5(chatParticipants.leftAt)
     ));
     const participantIds = participants.map((p) => p.userId);
@@ -74361,8 +74401,8 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) return { messages: [], hasMore: false };
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
@@ -74381,7 +74421,7 @@ var chatRouter = router({
       reactions: chatMessages.reactions,
       createdAt: chatMessages.createdAt,
       senderName: users.name
-    }).from(chatMessages).leftJoin(users, eq100(chatMessages.senderId, users.id)).where(eq100(chatMessages.chatId, input.chatId)).orderBy(desc73(chatMessages.id)).limit(input.limit);
+    }).from(chatMessages).leftJoin(users, eq101(chatMessages.senderId, users.id)).where(eq101(chatMessages.chatId, input.chatId)).orderBy(desc74(chatMessages.id)).limit(input.limit);
     let filteredMessages = messages;
     if (input.beforeId) {
       filteredMessages = messages.filter((m) => m.id < input.beforeId);
@@ -74401,7 +74441,7 @@ var chatRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [message] = await db7.select().from(chatMessages).where(eq100(chatMessages.id, input.messageId)).limit(1);
+    const [message] = await db7.select().from(chatMessages).where(eq101(chatMessages.id, input.messageId)).limit(1);
     if (!message) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Message not found" });
     }
@@ -74412,14 +74452,14 @@ var chatRouter = router({
       content: input.content,
       isEdited: true,
       editedAt: /* @__PURE__ */ new Date()
-    }).where(eq100(chatMessages.id, input.messageId));
+    }).where(eq101(chatMessages.id, input.messageId));
     return { success: true };
   }),
   // Delete a message
   deleteMessage: protectedProcedure.input(z131.object({ messageId: z131.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [message] = await db7.select().from(chatMessages).where(eq100(chatMessages.id, input.messageId)).limit(1);
+    const [message] = await db7.select().from(chatMessages).where(eq101(chatMessages.id, input.messageId)).limit(1);
     if (!message) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Message not found" });
     }
@@ -74430,7 +74470,7 @@ var chatRouter = router({
       isDeleted: true,
       deletedAt: /* @__PURE__ */ new Date(),
       content: "[Message deleted]"
-    }).where(eq100(chatMessages.id, input.messageId));
+    }).where(eq101(chatMessages.id, input.messageId));
     return { success: true };
   }),
   // Add reaction to message
@@ -74440,7 +74480,7 @@ var chatRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [message] = await db7.select().from(chatMessages).where(eq100(chatMessages.id, input.messageId)).limit(1);
+    const [message] = await db7.select().from(chatMessages).where(eq101(chatMessages.id, input.messageId)).limit(1);
     if (!message) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Message not found" });
     }
@@ -74451,7 +74491,7 @@ var chatRouter = router({
     if (!reactions[input.emoji].includes(ctx.user.id)) {
       reactions[input.emoji].push(ctx.user.id);
     }
-    await db7.update(chatMessages).set({ reactions }).where(eq100(chatMessages.id, input.messageId));
+    await db7.update(chatMessages).set({ reactions }).where(eq101(chatMessages.id, input.messageId));
     return { success: true };
   }),
   // Remove reaction from message
@@ -74461,7 +74501,7 @@ var chatRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [message] = await db7.select().from(chatMessages).where(eq100(chatMessages.id, input.messageId)).limit(1);
+    const [message] = await db7.select().from(chatMessages).where(eq101(chatMessages.id, input.messageId)).limit(1);
     if (!message) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Message not found" });
     }
@@ -74472,7 +74512,7 @@ var chatRouter = router({
         delete reactions[input.emoji];
       }
     }
-    await db7.update(chatMessages).set({ reactions }).where(eq100(chatMessages.id, input.messageId));
+    await db7.update(chatMessages).set({ reactions }).where(eq101(chatMessages.id, input.messageId));
     return { success: true };
   }),
   // Mark chat as read
@@ -74483,8 +74523,8 @@ var chatRouter = router({
       lastReadAt: /* @__PURE__ */ new Date(),
       unreadCount: 0
     }).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id)
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id)
     ));
     return { success: true };
   }),
@@ -74497,7 +74537,7 @@ var chatRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [existing] = await db7.select().from(userPresence).where(eq100(userPresence.userId, ctx.user.id)).limit(1);
+    const [existing] = await db7.select().from(userPresence).where(eq101(userPresence.userId, ctx.user.id)).limit(1);
     if (existing) {
       await db7.update(userPresence).set({
         status: input.status,
@@ -74505,7 +74545,7 @@ var chatRouter = router({
         currentActivity: input.currentActivity || "none",
         currentChatId: input.currentChatId,
         lastActiveAt: /* @__PURE__ */ new Date()
-      }).where(eq100(userPresence.userId, ctx.user.id));
+      }).where(eq101(userPresence.userId, ctx.user.id));
     } else {
       await db7.insert(userPresence).values({
         userId: ctx.user.id,
@@ -74531,7 +74571,7 @@ var chatRouter = router({
       currentActivity: userPresence.currentActivity,
       lastActiveAt: userPresence.lastActiveAt,
       userName: users.name
-    }).from(userPresence).leftJoin(users, eq100(userPresence.userId, users.id)).where(gte16(userPresence.lastActiveAt, fiveMinutesAgo));
+    }).from(userPresence).leftJoin(users, eq101(userPresence.userId, users.id)).where(gte16(userPresence.lastActiveAt, fiveMinutesAgo));
     if (input.userIds && input.userIds.length > 0) {
       return results.filter((r) => input.userIds.includes(r.userId));
     }
@@ -74541,7 +74581,7 @@ var chatRouter = router({
   leaveChat: protectedProcedure.input(z131.object({ chatId: z131.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [chat] = await db7.select().from(chats).where(eq100(chats.id, input.chatId)).limit(1);
+    const [chat] = await db7.select().from(chats).where(eq101(chats.id, input.chatId)).limit(1);
     if (!chat) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Chat not found" });
     }
@@ -74549,8 +74589,8 @@ var chatRouter = router({
       throw new TRPCError49({ code: "BAD_REQUEST", message: "Cannot leave a direct chat" });
     }
     await db7.update(chatParticipants).set({ leftAt: /* @__PURE__ */ new Date() }).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id)
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id)
     ));
     await db7.insert(chatMessages).values({
       chatId: input.chatId,
@@ -74568,21 +74608,21 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id)
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id)
     )).limit(1);
     if (!participant || participant.role !== "owner" && participant.role !== "admin") {
       throw new TRPCError49({ code: "FORBIDDEN", message: "Only admins can add participants" });
     }
     const [existing] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, input.userId)
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, input.userId)
     )).limit(1);
     if (existing && !existing.leftAt) {
       throw new TRPCError49({ code: "BAD_REQUEST", message: "User is already a participant" });
     }
     if (existing) {
-      await db7.update(chatParticipants).set({ leftAt: null, joinedAt: /* @__PURE__ */ new Date() }).where(eq100(chatParticipants.id, existing.id));
+      await db7.update(chatParticipants).set({ leftAt: null, joinedAt: /* @__PURE__ */ new Date() }).where(eq101(chatParticipants.id, existing.id));
     } else {
       await db7.insert(chatParticipants).values({
         chatId: input.chatId,
@@ -74590,7 +74630,7 @@ var chatRouter = router({
         role: "member"
       });
     }
-    const [newUser] = await db7.select({ name: users.name }).from(users).where(eq100(users.id, input.userId)).limit(1);
+    const [newUser] = await db7.select({ name: users.name }).from(users).where(eq101(users.id, input.userId)).limit(1);
     await db7.insert(chatMessages).values({
       chatId: input.chatId,
       senderId: ctx.user.id,
@@ -74607,7 +74647,7 @@ var chatRouter = router({
       chatId: chatParticipants.chatId,
       unreadCount: chatParticipants.unreadCount
     }).from(chatParticipants).where(and78(
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     ));
     const totalUnread = results.reduce((sum5, r) => sum5 + (r.unreadCount || 0), 0);
@@ -74627,7 +74667,7 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) return { messages: [] };
     const userChats = await db7.select({ chatId: chatParticipants.chatId }).from(chatParticipants).where(and78(
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     ));
     const chatIds = userChats.map((c) => c.chatId);
@@ -74643,11 +74683,11 @@ var chatRouter = router({
       senderName: users.name,
       chatName: chats.name,
       chatType: chats.chatType
-    }).from(chatMessages).leftJoin(users, eq100(chatMessages.senderId, users.id)).leftJoin(chats, eq100(chatMessages.chatId, chats.id)).where(and78(
+    }).from(chatMessages).leftJoin(users, eq101(chatMessages.senderId, users.id)).leftJoin(chats, eq101(chatMessages.chatId, chats.id)).where(and78(
       inArray9(chatMessages.chatId, input.chatId ? [input.chatId] : chatIds),
       sql60`${chatMessages.content} LIKE ${`%${input.query}%`}`,
-      eq100(chatMessages.isDeleted, false)
-    )).orderBy(desc73(chatMessages.createdAt)).limit(input.limit);
+      eq101(chatMessages.isDeleted, false)
+    )).orderBy(desc74(chatMessages.createdAt)).limit(input.limit);
     return { messages };
   }),
   // Get thread replies for a message
@@ -74657,13 +74697,13 @@ var chatRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [parentMessage] = await db7.select().from(chatMessages).where(eq100(chatMessages.id, input.messageId)).limit(1);
+    const [parentMessage] = await db7.select().from(chatMessages).where(eq101(chatMessages.id, input.messageId)).limit(1);
     if (!parentMessage) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Message not found" });
     }
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, parentMessage.chatId),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, parentMessage.chatId),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
@@ -74681,7 +74721,7 @@ var chatRouter = router({
       reactions: chatMessages.reactions,
       createdAt: chatMessages.createdAt,
       senderName: users.name
-    }).from(chatMessages).leftJoin(users, eq100(chatMessages.senderId, users.id)).where(eq100(chatMessages.replyToId, input.messageId)).orderBy(asc5(chatMessages.createdAt)).limit(input.limit);
+    }).from(chatMessages).leftJoin(users, eq101(chatMessages.senderId, users.id)).where(eq101(chatMessages.replyToId, input.messageId)).orderBy(asc5(chatMessages.createdAt)).limit(input.limit);
     return {
       parentMessage: {
         id: parentMessage.id,
@@ -74706,7 +74746,7 @@ var chatRouter = router({
       count: sql60`COUNT(*)`.as("count")
     }).from(chatMessages).where(and78(
       inArray9(chatMessages.replyToId, input.messageIds),
-      eq100(chatMessages.isDeleted, false)
+      eq101(chatMessages.isDeleted, false)
     )).groupBy(chatMessages.replyToId);
     const counts = {};
     for (const r of results) {
@@ -74735,13 +74775,13 @@ var chatRouter = router({
       reactions: chatMessages.reactions,
       createdAt: chatMessages.createdAt,
       senderName: users.name
-    }).from(chatMessages).leftJoin(users, eq100(chatMessages.senderId, users.id)).where(eq100(chatMessages.id, input.messageId)).limit(1);
+    }).from(chatMessages).leftJoin(users, eq101(chatMessages.senderId, users.id)).where(eq101(chatMessages.id, input.messageId)).limit(1);
     if (!message) {
       throw new TRPCError49({ code: "NOT_FOUND", message: "Message not found" });
     }
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, message.chatId),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, message.chatId),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
@@ -74755,7 +74795,7 @@ var chatRouter = router({
         senderId: chatMessages.senderId,
         senderName: users.name,
         isDeleted: chatMessages.isDeleted
-      }).from(chatMessages).leftJoin(users, eq100(chatMessages.senderId, users.id)).where(eq100(chatMessages.id, message.replyToId)).limit(1);
+      }).from(chatMessages).leftJoin(users, eq101(chatMessages.senderId, users.id)).where(eq101(chatMessages.id, message.replyToId)).limit(1);
       if (parent) {
         parentMessage = {
           id: parent.id,
@@ -74766,8 +74806,8 @@ var chatRouter = router({
       }
     }
     const [replyCountResult] = await db7.select({ count: sql60`COUNT(*)` }).from(chatMessages).where(and78(
-      eq100(chatMessages.replyToId, input.messageId),
-      eq100(chatMessages.isDeleted, false)
+      eq101(chatMessages.replyToId, input.messageId),
+      eq101(chatMessages.isDeleted, false)
     ));
     return {
       message,
@@ -74783,15 +74823,15 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
       throw new TRPCError49({ code: "FORBIDDEN", message: "You are not a member of this chat" });
     }
     const participants = await db7.select({ userId: chatParticipants.userId }).from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.chatId, input.chatId),
       isNull5(chatParticipants.leftAt)
     ));
     const participantIds = participants.map((p) => p.userId);
@@ -74816,8 +74856,8 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
@@ -74858,8 +74898,8 @@ var chatRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError49({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
     const [participant] = await db7.select().from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
-      eq100(chatParticipants.userId, ctx.user.id),
+      eq101(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.userId, ctx.user.id),
       isNull5(chatParticipants.leftAt)
     )).limit(1);
     if (!participant) {
@@ -74886,7 +74926,7 @@ var chatRouter = router({
     await updateChatLastMessage(input.chatId, messageContent);
     await incrementUnreadCounts(input.chatId, ctx.user.id);
     const participants = await db7.select({ userId: chatParticipants.userId }).from(chatParticipants).where(and78(
-      eq100(chatParticipants.chatId, input.chatId),
+      eq101(chatParticipants.chatId, input.chatId),
       isNull5(chatParticipants.leftAt)
     ));
     const participantIds = participants.map((p) => p.userId);
@@ -75018,7 +75058,7 @@ var chatRouter = router({
 import { z as z132 } from "zod";
 init_db();
 init_schema();
-import { eq as eq101, and as and79, gte as gte17, lte as lte16 } from "drizzle-orm";
+import { eq as eq102, and as and79, gte as gte17, lte as lte16 } from "drizzle-orm";
 import { TRPCError as TRPCError50 } from "@trpc/server";
 function generateICSContent(meeting) {
   const formatICSDate = (date2) => {
@@ -75105,13 +75145,13 @@ var calendarSyncRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError50({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
-    const [meeting] = await db7.select().from(meetings).where(eq101(meetings.id, input.meetingId)).limit(1);
+    const [meeting] = await db7.select().from(meetings).where(eq102(meetings.id, input.meetingId)).limit(1);
     if (!meeting) {
       throw new TRPCError50({ code: "NOT_FOUND", message: "Meeting not found" });
     }
     const [participant] = await db7.select().from(meetingParticipants).where(and79(
-      eq101(meetingParticipants.meetingId, input.meetingId),
-      eq101(meetingParticipants.userId, ctx.user.id)
+      eq102(meetingParticipants.meetingId, input.meetingId),
+      eq102(meetingParticipants.userId, ctx.user.id)
     )).limit(1);
     if (!participant && meeting.hostId !== ctx.user.id) {
       throw new TRPCError50({ code: "FORBIDDEN", message: "You are not a participant of this meeting" });
@@ -75147,17 +75187,17 @@ var calendarSyncRouter = router({
       location: meetings.location,
       roomName: meetings.roomName,
       hostId: meetings.hostId
-    }).from(meetings).where(eq101(meetings.id, input.meetingId)).limit(1);
+    }).from(meetings).where(eq102(meetings.id, input.meetingId)).limit(1);
     if (!meeting) {
       throw new TRPCError50({ code: "NOT_FOUND", message: "Meeting not found" });
     }
     const [host] = await db7.select({
       name: users.name,
       email: users.email
-    }).from(users).where(eq101(users.id, meeting.hostId)).limit(1);
+    }).from(users).where(eq102(users.id, meeting.hostId)).limit(1);
     const [participant] = await db7.select().from(meetingParticipants).where(and79(
-      eq101(meetingParticipants.meetingId, input.meetingId),
-      eq101(meetingParticipants.userId, ctx.user.id)
+      eq102(meetingParticipants.meetingId, input.meetingId),
+      eq102(meetingParticipants.userId, ctx.user.id)
     )).limit(1);
     if (!participant && meeting.hostId !== ctx.user.id) {
       throw new TRPCError50({ code: "FORBIDDEN", message: "You are not a participant of this meeting" });
@@ -75201,8 +75241,8 @@ var calendarSyncRouter = router({
       status: meetings.status,
       roomName: meetings.roomName,
       hostId: meetings.hostId
-    }).from(meetings).innerJoin(meetingParticipants, eq101(meetings.id, meetingParticipants.meetingId)).where(and79(
-      eq101(meetingParticipants.userId, ctx.user.id),
+    }).from(meetings).innerJoin(meetingParticipants, eq102(meetings.id, meetingParticipants.meetingId)).where(and79(
+      eq102(meetingParticipants.userId, ctx.user.id),
       gte17(meetings.scheduledAt, startDate),
       lte16(meetings.scheduledAt, endDate)
     )).orderBy(meetings.scheduledAt).limit(input?.limit || 50);
@@ -75243,8 +75283,8 @@ var calendarSyncRouter = router({
       location: meetings.location,
       roomName: meetings.roomName,
       hostId: meetings.hostId
-    }).from(meetings).innerJoin(meetingParticipants, eq101(meetings.id, meetingParticipants.meetingId)).where(and79(
-      eq101(meetingParticipants.userId, ctx.user.id),
+    }).from(meetings).innerJoin(meetingParticipants, eq102(meetings.id, meetingParticipants.meetingId)).where(and79(
+      eq102(meetingParticipants.userId, ctx.user.id),
       gte17(meetings.scheduledAt, startDate),
       lte16(meetings.scheduledAt, endDate)
     )).orderBy(meetings.scheduledAt);
@@ -75302,8 +75342,8 @@ END:VEVENT
         scheduledAt: meetings.scheduledAt,
         duration: meetings.duration,
         userName: users.name
-      }).from(meetings).innerJoin(meetingParticipants, eq101(meetings.id, meetingParticipants.meetingId)).innerJoin(users, eq101(meetingParticipants.userId, users.id)).where(and79(
-        eq101(meetingParticipants.userId, userId),
+      }).from(meetings).innerJoin(meetingParticipants, eq102(meetings.id, meetingParticipants.meetingId)).innerJoin(users, eq102(meetingParticipants.userId, users.id)).where(and79(
+        eq102(meetingParticipants.userId, userId),
         // Check for overlap: existing meeting starts before proposed ends AND existing meeting ends after proposed starts
         lte16(meetings.scheduledAt, proposedEnd)
       ));
@@ -75330,32 +75370,32 @@ END:VEVENT
 import { z as z133 } from "zod";
 init_db();
 init_schema();
-import { eq as eq102, and as and80, desc as desc75, asc as asc6 } from "drizzle-orm";
+import { eq as eq103, and as and80, desc as desc76, asc as asc6 } from "drizzle-orm";
 var swotAnalysisRouter = router({
   // Get all SWOT analyses for the current user
   list: protectedProcedure.input(z133.object({
     businessEntityId: z133.number().optional(),
     status: z133.enum(["draft", "active", "archived"]).optional()
   }).optional()).query(async ({ ctx, input }) => {
-    const conditions = [eq102(swotAnalyses.userId, ctx.user.id)];
+    const conditions = [eq103(swotAnalyses.userId, ctx.user.id)];
     if (input?.businessEntityId) {
-      conditions.push(eq102(swotAnalyses.businessEntityId, input.businessEntityId));
+      conditions.push(eq103(swotAnalyses.businessEntityId, input.businessEntityId));
     }
     if (input?.status) {
-      conditions.push(eq102(swotAnalyses.status, input.status));
+      conditions.push(eq103(swotAnalyses.status, input.status));
     }
-    return db.select().from(swotAnalyses).where(and80(...conditions)).orderBy(desc75(swotAnalyses.updatedAt));
+    return db.select().from(swotAnalyses).where(and80(...conditions)).orderBy(desc76(swotAnalyses.updatedAt));
   }),
   // Get a single SWOT analysis with its items
   get: protectedProcedure.input(z133.object({ id: z133.number() })).query(async ({ ctx, input }) => {
     const [analysis] = await db.select().from(swotAnalyses).where(and80(
-      eq102(swotAnalyses.id, input.id),
-      eq102(swotAnalyses.userId, ctx.user.id)
+      eq103(swotAnalyses.id, input.id),
+      eq103(swotAnalyses.userId, ctx.user.id)
     ));
     if (!analysis) {
       throw new Error("SWOT analysis not found");
     }
-    const items = await db.select().from(swotItems).where(eq102(swotItems.swotAnalysisId, input.id)).orderBy(asc6(swotItems.sortOrder));
+    const items = await db.select().from(swotItems).where(eq103(swotItems.swotAnalysisId, input.id)).orderBy(asc6(swotItems.sortOrder));
     return { ...analysis, items };
   }),
   // Create a new SWOT analysis
@@ -75383,17 +75423,17 @@ var swotAnalysisRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const { id, ...updates } = input;
     await db.update(swotAnalyses).set(updates).where(and80(
-      eq102(swotAnalyses.id, id),
-      eq102(swotAnalyses.userId, ctx.user.id)
+      eq103(swotAnalyses.id, id),
+      eq103(swotAnalyses.userId, ctx.user.id)
     ));
     return { success: true };
   }),
   // Delete a SWOT analysis
   delete: protectedProcedure.input(z133.object({ id: z133.number() })).mutation(async ({ ctx, input }) => {
-    await db.delete(swotItems).where(eq102(swotItems.swotAnalysisId, input.id));
+    await db.delete(swotItems).where(eq103(swotItems.swotAnalysisId, input.id));
     await db.delete(swotAnalyses).where(and80(
-      eq102(swotAnalyses.id, input.id),
-      eq102(swotAnalyses.userId, ctx.user.id)
+      eq103(swotAnalyses.id, input.id),
+      eq103(swotAnalyses.userId, ctx.user.id)
     ));
     return { success: true };
   }),
@@ -75404,15 +75444,15 @@ var swotAnalysisRouter = router({
     context: z133.string().optional()
   })).mutation(async ({ ctx, input }) => {
     const [analysis] = await db.select().from(swotAnalyses).where(and80(
-      eq102(swotAnalyses.id, input.swotAnalysisId),
-      eq102(swotAnalyses.userId, ctx.user.id)
+      eq103(swotAnalyses.id, input.swotAnalysisId),
+      eq103(swotAnalyses.userId, ctx.user.id)
     ));
     if (!analysis) {
       throw new Error("SWOT analysis not found");
     }
     let entityContext = "";
     if (input.businessEntityId) {
-      const [entity] = await db.select().from(businessEntities).where(eq102(businessEntities.id, input.businessEntityId));
+      const [entity] = await db.select().from(businessEntities).where(eq103(businessEntities.id, input.businessEntityId));
       if (entity) {
         entityContext = `
 Business Entity Information:
@@ -75552,8 +75592,8 @@ Provide the analysis in JSON format.`;
     for (const { key, category } of categories) {
       const items = generatedSwot[key];
       const existingItems = await db.select().from(swotItems).where(and80(
-        eq102(swotItems.swotAnalysisId, input.swotAnalysisId),
-        eq102(swotItems.category, category)
+        eq103(swotItems.swotAnalysisId, input.swotAnalysisId),
+        eq103(swotItems.category, category)
       ));
       let sortOrder = existingItems.reduce((max, item) => Math.max(max, item.sortOrder || 0), 0);
       for (const item of items) {
@@ -75594,15 +75634,15 @@ Provide the analysis in JSON format.`;
       actionPlan: z133.string().optional()
     })).mutation(async ({ ctx, input }) => {
       const [analysis] = await db.select().from(swotAnalyses).where(and80(
-        eq102(swotAnalyses.id, input.swotAnalysisId),
-        eq102(swotAnalyses.userId, ctx.user.id)
+        eq103(swotAnalyses.id, input.swotAnalysisId),
+        eq103(swotAnalyses.userId, ctx.user.id)
       ));
       if (!analysis) {
         throw new Error("SWOT analysis not found");
       }
       const existingItems = await db.select().from(swotItems).where(and80(
-        eq102(swotItems.swotAnalysisId, input.swotAnalysisId),
-        eq102(swotItems.category, input.category)
+        eq103(swotItems.swotAnalysisId, input.swotAnalysisId),
+        eq103(swotItems.category, input.category)
       ));
       const maxOrder = existingItems.reduce((max, item) => Math.max(max, item.sortOrder || 0), 0);
       const [result] = await db.insert(swotItems).values({
@@ -75632,35 +75672,35 @@ Provide the analysis in JSON format.`;
       actionDueDate: z133.date().optional()
     })).mutation(async ({ ctx, input }) => {
       const { id, ...updates } = input;
-      const [item] = await db.select().from(swotItems).where(eq102(swotItems.id, id));
+      const [item] = await db.select().from(swotItems).where(eq103(swotItems.id, id));
       if (!item) {
         throw new Error("Item not found");
       }
       const [analysis] = await db.select().from(swotAnalyses).where(and80(
-        eq102(swotAnalyses.id, item.swotAnalysisId),
-        eq102(swotAnalyses.userId, ctx.user.id)
+        eq103(swotAnalyses.id, item.swotAnalysisId),
+        eq103(swotAnalyses.userId, ctx.user.id)
       ));
       if (!analysis) {
         throw new Error("Not authorized");
       }
-      await db.update(swotItems).set(updates).where(eq102(swotItems.id, id));
+      await db.update(swotItems).set(updates).where(eq103(swotItems.id, id));
       await updateAnalysisScores(item.swotAnalysisId);
       return { success: true };
     }),
     // Delete an item
     delete: protectedProcedure.input(z133.object({ id: z133.number() })).mutation(async ({ ctx, input }) => {
-      const [item] = await db.select().from(swotItems).where(eq102(swotItems.id, input.id));
+      const [item] = await db.select().from(swotItems).where(eq103(swotItems.id, input.id));
       if (!item) {
         throw new Error("Item not found");
       }
       const [analysis] = await db.select().from(swotAnalyses).where(and80(
-        eq102(swotAnalyses.id, item.swotAnalysisId),
-        eq102(swotAnalyses.userId, ctx.user.id)
+        eq103(swotAnalyses.id, item.swotAnalysisId),
+        eq103(swotAnalyses.userId, ctx.user.id)
       ));
       if (!analysis) {
         throw new Error("Not authorized");
       }
-      await db.delete(swotItems).where(eq102(swotItems.id, input.id));
+      await db.delete(swotItems).where(eq103(swotItems.id, input.id));
       await updateAnalysisScores(item.swotAnalysisId);
       return { success: true };
     }),
@@ -75671,14 +75711,14 @@ Provide the analysis in JSON format.`;
       itemIds: z133.array(z133.number())
     })).mutation(async ({ ctx, input }) => {
       const [analysis] = await db.select().from(swotAnalyses).where(and80(
-        eq102(swotAnalyses.id, input.swotAnalysisId),
-        eq102(swotAnalyses.userId, ctx.user.id)
+        eq103(swotAnalyses.id, input.swotAnalysisId),
+        eq103(swotAnalyses.userId, ctx.user.id)
       ));
       if (!analysis) {
         throw new Error("Not authorized");
       }
       for (let i = 0; i < input.itemIds.length; i++) {
-        await db.update(swotItems).set({ sortOrder: i }).where(eq102(swotItems.id, input.itemIds[i]));
+        await db.update(swotItems).set({ sortOrder: i }).where(eq103(swotItems.id, input.itemIds[i]));
       }
       return { success: true };
     })
@@ -75686,13 +75726,13 @@ Provide the analysis in JSON format.`;
   // Export SWOT analysis to PDF format data
   exportToPDF: protectedProcedure.input(z133.object({ id: z133.number() })).query(async ({ ctx, input }) => {
     const [analysis] = await db.select().from(swotAnalyses).where(and80(
-      eq102(swotAnalyses.id, input.id),
-      eq102(swotAnalyses.userId, ctx.user.id)
+      eq103(swotAnalyses.id, input.id),
+      eq103(swotAnalyses.userId, ctx.user.id)
     ));
     if (!analysis) {
       throw new Error("SWOT analysis not found");
     }
-    const items = await db.select().from(swotItems).where(eq102(swotItems.swotAnalysisId, input.id)).orderBy(asc6(swotItems.sortOrder));
+    const items = await db.select().from(swotItems).where(eq103(swotItems.swotAnalysisId, input.id)).orderBy(asc6(swotItems.sortOrder));
     const groupedItems = {
       strengths: items.filter((i) => i.category === "strength"),
       weaknesses: items.filter((i) => i.category === "weakness"),
@@ -75701,7 +75741,7 @@ Provide the analysis in JSON format.`;
     };
     let entityName = null;
     if (analysis.businessEntityId) {
-      const [entity] = await db.select().from(businessEntities).where(eq102(businessEntities.id, analysis.businessEntityId));
+      const [entity] = await db.select().from(businessEntities).where(eq103(businessEntities.id, analysis.businessEntityId));
       entityName = entity?.name || null;
     }
     return {
@@ -75716,14 +75756,14 @@ Provide the analysis in JSON format.`;
   // Get SWOT summary for Business Plan integration
   getForBusinessPlan: protectedProcedure.input(z133.object({ businessEntityId: z133.number() })).query(async ({ ctx, input }) => {
     const [analysis] = await db.select().from(swotAnalyses).where(and80(
-      eq102(swotAnalyses.userId, ctx.user.id),
-      eq102(swotAnalyses.businessEntityId, input.businessEntityId),
-      eq102(swotAnalyses.status, "active")
-    )).orderBy(desc75(swotAnalyses.updatedAt)).limit(1);
+      eq103(swotAnalyses.userId, ctx.user.id),
+      eq103(swotAnalyses.businessEntityId, input.businessEntityId),
+      eq103(swotAnalyses.status, "active")
+    )).orderBy(desc76(swotAnalyses.updatedAt)).limit(1);
     if (!analysis) {
       return null;
     }
-    const items = await db.select().from(swotItems).where(eq102(swotItems.swotAnalysisId, analysis.id)).orderBy(asc6(swotItems.sortOrder));
+    const items = await db.select().from(swotItems).where(eq103(swotItems.swotAnalysisId, analysis.id)).orderBy(asc6(swotItems.sortOrder));
     const opportunities = items.filter((i) => i.category === "opportunity");
     const threats = items.filter((i) => i.category === "threat");
     const strengths = items.filter((i) => i.category === "strength");
@@ -75753,14 +75793,14 @@ Provide the analysis in JSON format.`;
   // Get SWOT summary for Marketing integration
   getForMarketing: protectedProcedure.input(z133.object({ businessEntityId: z133.number() })).query(async ({ ctx, input }) => {
     const [analysis] = await db.select().from(swotAnalyses).where(and80(
-      eq102(swotAnalyses.userId, ctx.user.id),
-      eq102(swotAnalyses.businessEntityId, input.businessEntityId),
-      eq102(swotAnalyses.status, "active")
-    )).orderBy(desc75(swotAnalyses.updatedAt)).limit(1);
+      eq103(swotAnalyses.userId, ctx.user.id),
+      eq103(swotAnalyses.businessEntityId, input.businessEntityId),
+      eq103(swotAnalyses.status, "active")
+    )).orderBy(desc76(swotAnalyses.updatedAt)).limit(1);
     if (!analysis) {
       return null;
     }
-    const items = await db.select().from(swotItems).where(eq102(swotItems.swotAnalysisId, analysis.id)).orderBy(asc6(swotItems.sortOrder));
+    const items = await db.select().from(swotItems).where(eq103(swotItems.swotAnalysisId, analysis.id)).orderBy(asc6(swotItems.sortOrder));
     const opportunities = items.filter((i) => i.category === "opportunity");
     const strengths = items.filter((i) => i.category === "strength");
     const marketValidation = opportunities.filter(
@@ -75783,7 +75823,7 @@ Provide the analysis in JSON format.`;
   })
 });
 async function updateAnalysisScores(analysisId) {
-  const items = await db.select().from(swotItems).where(eq102(swotItems.swotAnalysisId, analysisId));
+  const items = await db.select().from(swotItems).where(eq103(swotItems.swotAnalysisId, analysisId));
   const scores = {
     strengthScore: 0,
     weaknessScore: 0,
@@ -75809,14 +75849,14 @@ async function updateAnalysisScores(analysisId) {
         break;
     }
   }
-  await db.update(swotAnalyses).set(scores).where(eq102(swotAnalyses.id, analysisId));
+  await db.update(swotAnalyses).set(scores).where(eq103(swotAnalyses.id, analysisId));
 }
 
 // server/routers/performance-reviews.ts
 import { z as z134 } from "zod";
 init_db();
 init_schema();
-import { eq as eq103, desc as desc76, and as and81 } from "drizzle-orm";
+import { eq as eq104, desc as desc77, and as and81 } from "drizzle-orm";
 var performanceReviewsRouter = router({
   // List all performance reviews
   list: publicProcedure.input(z134.object({
@@ -75827,23 +75867,23 @@ var performanceReviewsRouter = router({
     if (!db7) return [];
     const conditions = [];
     if (input?.status) {
-      conditions.push(eq103(performanceReviews.status, input.status));
+      conditions.push(eq104(performanceReviews.status, input.status));
     }
     if (input?.department) {
-      conditions.push(eq103(performanceReviews.department, input.department));
+      conditions.push(eq104(performanceReviews.department, input.department));
     }
     if (conditions.length > 0) {
-      return db7.select().from(performanceReviews).where(and81(...conditions)).orderBy(desc76(performanceReviews.createdAt));
+      return db7.select().from(performanceReviews).where(and81(...conditions)).orderBy(desc77(performanceReviews.createdAt));
     }
-    return db7.select().from(performanceReviews).orderBy(desc76(performanceReviews.createdAt));
+    return db7.select().from(performanceReviews).orderBy(desc77(performanceReviews.createdAt));
   }),
   // Get single performance review with goals
   getById: publicProcedure.input(z134.object({ id: z134.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const [review] = await db7.select().from(performanceReviews).where(eq103(performanceReviews.id, input.id));
+    const [review] = await db7.select().from(performanceReviews).where(eq104(performanceReviews.id, input.id));
     if (!review) return null;
-    const goals = await db7.select().from(performanceGoals).where(eq103(performanceGoals.performanceReviewId, input.id));
+    const goals = await db7.select().from(performanceGoals).where(eq104(performanceGoals.performanceReviewId, input.id));
     return { ...review, goals };
   }),
   // Create new performance review
@@ -75880,7 +75920,7 @@ var performanceReviewsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...data } = input;
-    await db7.update(performanceReviews).set({ ...data, status: "self_assessment" }).where(eq103(performanceReviews.id, id));
+    await db7.update(performanceReviews).set({ ...data, status: "self_assessment" }).where(eq104(performanceReviews.id, id));
     return { success: true };
   }),
   // Update performance review (manager review)
@@ -75908,14 +75948,14 @@ var performanceReviewsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...data } = input;
-    await db7.update(performanceReviews).set({ ...data, status: "manager_review" }).where(eq103(performanceReviews.id, id));
+    await db7.update(performanceReviews).set({ ...data, status: "manager_review" }).where(eq104(performanceReviews.id, id));
     return { success: true };
   }),
   // Complete review
   complete: protectedProcedure.input(z134.object({ id: z134.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.update(performanceReviews).set({ status: "completed", completedAt: /* @__PURE__ */ new Date() }).where(eq103(performanceReviews.id, input.id));
+    await db7.update(performanceReviews).set({ status: "completed", completedAt: /* @__PURE__ */ new Date() }).where(eq104(performanceReviews.id, input.id));
     return { success: true };
   }),
   // Employee acknowledge review
@@ -75930,15 +75970,15 @@ var performanceReviewsRouter = router({
       employeeAcknowledged: true,
       employeeAcknowledgedAt: /* @__PURE__ */ new Date(),
       employeeComments: input.employeeComments
-    }).where(eq103(performanceReviews.id, input.id));
+    }).where(eq104(performanceReviews.id, input.id));
     return { success: true };
   }),
   // Delete performance review
   delete: protectedProcedure.input(z134.object({ id: z134.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(performanceGoals).where(eq103(performanceGoals.performanceReviewId, input.id));
-    await db7.delete(performanceReviews).where(eq103(performanceReviews.id, input.id));
+    await db7.delete(performanceGoals).where(eq104(performanceGoals.performanceReviewId, input.id));
+    await db7.delete(performanceReviews).where(eq104(performanceReviews.id, input.id));
     return { success: true };
   }),
   // Add goal to review
@@ -75969,14 +76009,14 @@ var performanceReviewsRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const { id, ...data } = input;
-    await db7.update(performanceGoals).set(data).where(eq103(performanceGoals.id, id));
+    await db7.update(performanceGoals).set(data).where(eq104(performanceGoals.id, id));
     return { success: true };
   }),
   // Delete goal
   deleteGoal: protectedProcedure.input(z134.object({ id: z134.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
-    await db7.delete(performanceGoals).where(eq103(performanceGoals.id, input.id));
+    await db7.delete(performanceGoals).where(eq104(performanceGoals.id, input.id));
     return { success: true };
   })
 });
@@ -75985,12 +76025,12 @@ var performanceReviewsRouter = router({
 import { z as z135 } from "zod";
 init_db();
 init_schema();
-import { eq as eq104, and as and82, desc as desc77 } from "drizzle-orm";
+import { eq as eq105, and as and82, desc as desc78 } from "drizzle-orm";
 var peerFeedbackRouter = router({
   // Get all feedback for a specific review
   getByReview: protectedProcedure.input(z135.object({ reviewId: z135.number() })).query(async ({ input }) => {
     const db7 = getDb();
-    const feedback = await db7.select().from(peerFeedback).where(eq104(peerFeedback.reviewId, input.reviewId)).orderBy(desc77(peerFeedback.submittedAt));
+    const feedback = await db7.select().from(peerFeedback).where(eq105(peerFeedback.reviewId, input.reviewId)).orderBy(desc78(peerFeedback.submittedAt));
     return feedback;
   }),
   // Get aggregated anonymous feedback summary for a review
@@ -75998,8 +76038,8 @@ var peerFeedbackRouter = router({
     const db7 = getDb();
     const feedback = await db7.select().from(peerFeedback).where(
       and82(
-        eq104(peerFeedback.reviewId, input.reviewId),
-        eq104(peerFeedback.status, "submitted")
+        eq105(peerFeedback.reviewId, input.reviewId),
+        eq105(peerFeedback.status, "submitted")
       )
     );
     if (feedback.length === 0) {
@@ -76117,12 +76157,12 @@ var peerFeedbackRouter = router({
       additionalComments: input.additionalComments,
       status: "submitted",
       submittedAt: /* @__PURE__ */ new Date()
-    }).where(eq104(peerFeedback.id, input.feedbackId));
-    const [feedback] = await db7.select().from(peerFeedback).where(eq104(peerFeedback.id, input.feedbackId));
+    }).where(eq105(peerFeedback.id, input.feedbackId));
+    const [feedback] = await db7.select().from(peerFeedback).where(eq105(peerFeedback.id, input.feedbackId));
     if (feedback) {
       await db7.update(feedbackRequests).set({
         totalSubmitted: db7.raw("totalSubmitted + 1")
-      }).where(eq104(feedbackRequests.reviewId, feedback.reviewId));
+      }).where(eq105(feedbackRequests.reviewId, feedback.reviewId));
     }
     return { success: true };
   }),
@@ -76131,18 +76171,18 @@ var peerFeedbackRouter = router({
     const db7 = getDb();
     const pending = await db7.select().from(peerFeedback).where(
       and82(
-        eq104(peerFeedback.responderEmail, ctx.user.email || ""),
-        eq104(peerFeedback.status, "pending")
+        eq105(peerFeedback.responderEmail, ctx.user.email || ""),
+        eq105(peerFeedback.status, "pending")
       )
-    ).orderBy(desc77(peerFeedback.requestedAt));
+    ).orderBy(desc78(peerFeedback.requestedAt));
     return pending;
   }),
   // Get feedback request status
   getRequestStatus: protectedProcedure.input(z135.object({ reviewId: z135.number() })).query(async ({ input }) => {
     const db7 = getDb();
-    const [request] = await db7.select().from(feedbackRequests).where(eq104(feedbackRequests.reviewId, input.reviewId));
+    const [request] = await db7.select().from(feedbackRequests).where(eq105(feedbackRequests.reviewId, input.reviewId));
     if (!request) return null;
-    const feedbackList = await db7.select().from(peerFeedback).where(eq104(peerFeedback.reviewId, input.reviewId));
+    const feedbackList = await db7.select().from(peerFeedback).where(eq105(peerFeedback.reviewId, input.reviewId));
     return {
       ...request,
       feedbackList: feedbackList.map((f) => ({
@@ -76157,7 +76197,7 @@ var peerFeedbackRouter = router({
   // Decline feedback request
   declineFeedback: publicProcedure.input(z135.object({ feedbackId: z135.number() })).mutation(async ({ input }) => {
     const db7 = getDb();
-    await db7.update(peerFeedback).set({ status: "declined" }).where(eq104(peerFeedback.id, input.feedbackId));
+    await db7.update(peerFeedback).set({ status: "declined" }).where(eq105(peerFeedback.id, input.feedbackId));
     return { success: true };
   })
 });
@@ -76166,7 +76206,7 @@ var peerFeedbackRouter = router({
 import { z as z136 } from "zod";
 init_db();
 init_schema();
-import { desc as desc78, eq as eq105, and as and83, sql as sql61 } from "drizzle-orm";
+import { desc as desc79, eq as eq106, and as and83, sql as sql61 } from "drizzle-orm";
 var leaderboardRouter = router({
   // Submit a game score
   submitScore: protectedProcedure.input(z136.object({
@@ -76208,9 +76248,9 @@ var leaderboardRouter = router({
       tokensEarned: gameScores.tokensEarned,
       completedAt: gameScores.completedAt,
       playerName: users.name
-    }).from(gameScores).leftJoin(users, eq105(gameScores.userId, users.id)).where(
-      input.difficulty ? and83(eq105(gameScores.gameType, input.gameType), eq105(gameScores.difficulty, input.difficulty)) : eq105(gameScores.gameType, input.gameType)
-    ).orderBy(desc78(gameScores.score)).limit(input.limit);
+    }).from(gameScores).leftJoin(users, eq106(gameScores.userId, users.id)).where(
+      input.difficulty ? and83(eq106(gameScores.gameType, input.gameType), eq106(gameScores.difficulty, input.difficulty)) : eq106(gameScores.gameType, input.gameType)
+    ).orderBy(desc79(gameScores.score)).limit(input.limit);
     const scores = await query;
     return scores.map((s, index2) => ({
       rank: index2 + 1,
@@ -76225,9 +76265,9 @@ var leaderboardRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = getDb();
     const scores = await db7.select().from(gameScores).where(and83(
-      eq105(gameScores.userId, ctx.user.id),
-      eq105(gameScores.gameType, input.gameType)
-    )).orderBy(desc78(gameScores.score)).limit(input.limit);
+      eq106(gameScores.userId, ctx.user.id),
+      eq106(gameScores.gameType, input.gameType)
+    )).orderBy(desc79(gameScores.score)).limit(input.limit);
     return scores;
   }),
   // Get user's rank for a game type
@@ -76236,17 +76276,17 @@ var leaderboardRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = getDb();
     const myBest = await db7.select({ score: sql61`MAX(${gameScores.score})` }).from(gameScores).where(and83(
-      eq105(gameScores.userId, ctx.user.id),
-      eq105(gameScores.gameType, input.gameType)
+      eq106(gameScores.userId, ctx.user.id),
+      eq106(gameScores.gameType, input.gameType)
     ));
     if (!myBest[0]?.score) {
       return { rank: null, bestScore: null, totalPlayers: 0 };
     }
     const higherScores = await db7.select({ count: sql61`COUNT(DISTINCT ${gameScores.userId})` }).from(gameScores).where(and83(
-      eq105(gameScores.gameType, input.gameType),
+      eq106(gameScores.gameType, input.gameType),
       sql61`${gameScores.score} > ${myBest[0].score}`
     ));
-    const totalPlayers = await db7.select({ count: sql61`COUNT(DISTINCT ${gameScores.userId})` }).from(gameScores).where(eq105(gameScores.gameType, input.gameType));
+    const totalPlayers = await db7.select({ count: sql61`COUNT(DISTINCT ${gameScores.userId})` }).from(gameScores).where(eq106(gameScores.gameType, input.gameType));
     return {
       rank: (higherScores[0]?.count || 0) + 1,
       bestScore: myBest[0].score,
@@ -76259,7 +76299,7 @@ var leaderboardRouter = router({
 import { z as z137 } from "zod";
 init_db();
 init_schema();
-import { desc as desc79, eq as eq106, and as and84, sql as sql62 } from "drizzle-orm";
+import { desc as desc80, eq as eq107, and as and84, sql as sql62 } from "drizzle-orm";
 import crypto31 from "crypto";
 function generateBlockchainHash6(data) {
   const dataString = JSON.stringify(data) + Date.now().toString();
@@ -76520,7 +76560,7 @@ var achievementsRouter = router({
   // Get all available achievements
   getAll: publicProcedure.query(async () => {
     const db7 = getDb();
-    const achievements2 = await db7.select().from(gameAchievements).where(eq106(gameAchievements.isActive, true)).orderBy(gameAchievements.name);
+    const achievements2 = await db7.select().from(gameAchievements).where(eq107(gameAchievements.isActive, true)).orderBy(gameAchievements.name);
     if (achievements2.length === 0) {
       return ACHIEVEMENT_DEFINITIONS.map((a, index2) => ({
         id: index2 + 1,
@@ -76558,13 +76598,13 @@ var achievementsRouter = router({
   // Get player's earned achievements
   getPlayerAchievements: protectedProcedure.query(async ({ ctx }) => {
     const db7 = getDb();
-    const playerAchievements2 = await db7.select().from(gamePlayerAchievements).where(eq106(gamePlayerAchievements.playerId, ctx.user.id)).orderBy(desc79(gamePlayerAchievements.earnedAt));
+    const playerAchievements2 = await db7.select().from(gamePlayerAchievements).where(eq107(gamePlayerAchievements.playerId, ctx.user.id)).orderBy(desc80(gamePlayerAchievements.earnedAt));
     return playerAchievements2;
   }),
   // Get player's achievement progress
   getPlayerProgress: protectedProcedure.query(async ({ ctx }) => {
     const db7 = getDb();
-    const earned = await db7.select().from(gamePlayerAchievements).where(eq106(gamePlayerAchievements.playerId, ctx.user.id));
+    const earned = await db7.select().from(gamePlayerAchievements).where(eq107(gamePlayerAchievements.playerId, ctx.user.id));
     const earnedIds = earned.map((e) => e.achievementId);
     const totalAchievements = ACHIEVEMENT_DEFINITIONS.length;
     const earnedCount = earned.length;
@@ -76597,7 +76637,7 @@ var achievementsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = getDb();
     const { gameType, gameResult } = input;
-    const earned = await db7.select().from(gamePlayerAchievements).where(eq106(gamePlayerAchievements.playerId, ctx.user.id));
+    const earned = await db7.select().from(gamePlayerAchievements).where(eq107(gamePlayerAchievements.playerId, ctx.user.id));
     const earnedDefinitionIds = /* @__PURE__ */ new Set();
     const newlyUnlocked = [];
     for (const achievement of ACHIEVEMENT_DEFINITIONS) {
@@ -76653,7 +76693,7 @@ var achievementsRouter = router({
     const insertedAchievements = [];
     for (const achievement of newlyUnlocked) {
       const existingCheck = await db7.select().from(gamePlayerAchievements).where(and84(
-        eq106(gamePlayerAchievements.playerId, ctx.user.id),
+        eq107(gamePlayerAchievements.playerId, ctx.user.id),
         sql62`JSON_EXTRACT(${gamePlayerAchievements.tokensAwarded}, '$.definitionId') = ${achievement.id}`
       ));
       try {
@@ -76705,7 +76745,7 @@ var achievementsRouter = router({
       achievementCount: sql62`COUNT(*)`,
       totalTokens: sql62`SUM(${gamePlayerAchievements.tokensAwarded})`,
       playerName: users.name
-    }).from(gamePlayerAchievements).leftJoin(users, eq106(gamePlayerAchievements.playerId, users.id)).groupBy(gamePlayerAchievements.playerId, users.name).orderBy(desc79(sql62`COUNT(*)`)).limit(input.limit);
+    }).from(gamePlayerAchievements).leftJoin(users, eq107(gamePlayerAchievements.playerId, users.id)).groupBy(gamePlayerAchievements.playerId, users.name).orderBy(desc80(sql62`COUNT(*)`)).limit(input.limit);
     return leaderboard.map((entry, index2) => ({
       rank: index2 + 1,
       playerId: entry.playerId,
@@ -76717,7 +76757,7 @@ var achievementsRouter = router({
   // Get player's achievements with tier information
   getPlayerAchievementsWithTiers: protectedProcedure.query(async ({ ctx }) => {
     const db7 = getDb();
-    const playerAchievements2 = await db7.select().from(gamePlayerAchievements).where(eq106(gamePlayerAchievements.playerId, ctx.user.id)).orderBy(desc79(gamePlayerAchievements.earnedAt));
+    const playerAchievements2 = await db7.select().from(gamePlayerAchievements).where(eq107(gamePlayerAchievements.playerId, ctx.user.id)).orderBy(desc80(gamePlayerAchievements.earnedAt));
     return playerAchievements2.map((pa) => {
       const definition = ACHIEVEMENT_DEFINITIONS[pa.achievementId - 1];
       return {
@@ -76734,8 +76774,8 @@ var achievementsRouter = router({
   upgradeTier: protectedProcedure.input(z137.object({ achievementId: z137.number() })).mutation(async ({ ctx, input }) => {
     const db7 = getDb();
     const [playerAchievement] = await db7.select().from(gamePlayerAchievements).where(and84(
-      eq106(gamePlayerAchievements.playerId, ctx.user.id),
-      eq106(gamePlayerAchievements.achievementId, input.achievementId)
+      eq107(gamePlayerAchievements.playerId, ctx.user.id),
+      eq107(gamePlayerAchievements.achievementId, input.achievementId)
     )).limit(1);
     if (!playerAchievement) {
       throw new Error("Achievement not found");
@@ -76760,7 +76800,7 @@ var achievementsRouter = router({
       currentTier: nextTier,
       tierUpgradedAt: /* @__PURE__ */ new Date(),
       tokensAwarded: (playerAchievement.tokensAwarded || 0) + bonusTokens
-    }).where(eq106(gamePlayerAchievements.id, playerAchievement.id));
+    }).where(eq107(gamePlayerAchievements.id, playerAchievement.id));
     return {
       success: true,
       newTier: nextTier,
@@ -76772,8 +76812,8 @@ var achievementsRouter = router({
   generateShareLink: protectedProcedure.input(z137.object({ achievementId: z137.number() })).mutation(async ({ ctx, input }) => {
     const db7 = getDb();
     const [playerAchievement] = await db7.select().from(gamePlayerAchievements).where(and84(
-      eq106(gamePlayerAchievements.playerId, ctx.user.id),
-      eq106(gamePlayerAchievements.achievementId, input.achievementId)
+      eq107(gamePlayerAchievements.playerId, ctx.user.id),
+      eq107(gamePlayerAchievements.achievementId, input.achievementId)
     )).limit(1);
     if (!playerAchievement) {
       throw new Error("Achievement not found");
@@ -76781,7 +76821,7 @@ var achievementsRouter = router({
     let shareCode = playerAchievement.shareCode;
     if (!shareCode) {
       shareCode = generateShareCode();
-      await db7.update(gamePlayerAchievements).set({ shareCode }).where(eq106(gamePlayerAchievements.id, playerAchievement.id));
+      await db7.update(gamePlayerAchievements).set({ shareCode }).where(eq107(gamePlayerAchievements.id, playerAchievement.id));
     }
     const definition = ACHIEVEMENT_DEFINITIONS[playerAchievement.achievementId - 1];
     return {
@@ -76798,13 +76838,13 @@ var achievementsRouter = router({
   // Get shared achievement by code
   getSharedAchievement: publicProcedure.input(z137.object({ shareCode: z137.string() })).query(async ({ input }) => {
     const db7 = getDb();
-    const [playerAchievement] = await db7.select().from(gamePlayerAchievements).where(eq106(gamePlayerAchievements.shareCode, input.shareCode)).limit(1);
+    const [playerAchievement] = await db7.select().from(gamePlayerAchievements).where(eq107(gamePlayerAchievements.shareCode, input.shareCode)).limit(1);
     if (!playerAchievement) {
       return null;
     }
-    const [player] = await db7.select({ name: users.name }).from(users).where(eq106(users.id, playerAchievement.playerId)).limit(1);
+    const [player] = await db7.select({ name: users.name }).from(users).where(eq107(users.id, playerAchievement.playerId)).limit(1);
     const definition = ACHIEVEMENT_DEFINITIONS[playerAchievement.achievementId - 1];
-    await db7.update(gamePlayerAchievements).set({ timesShared: (playerAchievement.timesShared || 0) + 1 }).where(eq106(gamePlayerAchievements.id, playerAchievement.id));
+    await db7.update(gamePlayerAchievements).set({ timesShared: (playerAchievement.timesShared || 0) + 1 }).where(eq107(gamePlayerAchievements.id, playerAchievement.id));
     return {
       playerName: player?.name || "Anonymous",
       achievement: {
@@ -76827,8 +76867,8 @@ var achievementsRouter = router({
     await db7.update(gamePlayerAchievements).set({
       timesShared: sql62`${gamePlayerAchievements.timesShared} + 1`
     }).where(and84(
-      eq106(gamePlayerAchievements.playerId, ctx.user.id),
-      eq106(gamePlayerAchievements.achievementId, input.achievementId)
+      eq107(gamePlayerAchievements.playerId, ctx.user.id),
+      eq107(gamePlayerAchievements.achievementId, input.achievementId)
     ));
     return { success: true };
   }),
@@ -76853,8 +76893,8 @@ var achievementsRouter = router({
   recordToBlockchain: protectedProcedure.input(z137.object({ playerAchievementId: z137.number() })).mutation(async ({ ctx, input }) => {
     const db7 = getDb();
     const [playerAchievement] = await db7.select().from(gamePlayerAchievements).where(and84(
-      eq106(gamePlayerAchievements.id, input.playerAchievementId),
-      eq106(gamePlayerAchievements.playerId, ctx.user.id)
+      eq107(gamePlayerAchievements.id, input.playerAchievementId),
+      eq107(gamePlayerAchievements.playerId, ctx.user.id)
     )).limit(1);
     if (!playerAchievement) {
       throw new Error("Achievement not found");
@@ -76867,7 +76907,7 @@ var achievementsRouter = router({
       };
     }
     const definition = ACHIEVEMENT_DEFINITIONS[playerAchievement.achievementId - 1];
-    const [lastRecord] = await db7.select().from(achievementBlockchainRecords).orderBy(desc79(achievementBlockchainRecords.id)).limit(1);
+    const [lastRecord] = await db7.select().from(achievementBlockchainRecords).orderBy(desc80(achievementBlockchainRecords.id)).limit(1);
     const blockchainData = {
       playerId: ctx.user.id,
       achievementId: playerAchievement.achievementId,
@@ -76897,7 +76937,7 @@ var achievementsRouter = router({
     await db7.update(gamePlayerAchievements).set({
       blockchainHash,
       blockchainRecordedAt: /* @__PURE__ */ new Date()
-    }).where(eq106(gamePlayerAchievements.id, playerAchievement.id));
+    }).where(eq107(gamePlayerAchievements.id, playerAchievement.id));
     return {
       success: true,
       blockchainHash,
@@ -76909,11 +76949,11 @@ var achievementsRouter = router({
   // Verify blockchain record
   verifyBlockchainRecord: publicProcedure.input(z137.object({ verificationCode: z137.string() })).query(async ({ input }) => {
     const db7 = getDb();
-    const [record] = await db7.select().from(achievementBlockchainRecords).where(eq106(achievementBlockchainRecords.verificationCode, input.verificationCode)).limit(1);
+    const [record] = await db7.select().from(achievementBlockchainRecords).where(eq107(achievementBlockchainRecords.verificationCode, input.verificationCode)).limit(1);
     if (!record) {
       return { verified: false, message: "Record not found" };
     }
-    const [player] = await db7.select({ name: users.name }).from(users).where(eq106(users.id, record.playerId)).limit(1);
+    const [player] = await db7.select({ name: users.name }).from(users).where(eq107(users.id, record.playerId)).limit(1);
     return {
       verified: record.isVerified,
       blockchainHash: record.blockchainHash,
@@ -76929,7 +76969,7 @@ var achievementsRouter = router({
   // Get player's blockchain records
   getPlayerBlockchainRecords: protectedProcedure.query(async ({ ctx }) => {
     const db7 = getDb();
-    const records = await db7.select().from(achievementBlockchainRecords).where(eq106(achievementBlockchainRecords.playerId, ctx.user.id)).orderBy(desc79(achievementBlockchainRecords.recordedAt));
+    const records = await db7.select().from(achievementBlockchainRecords).where(eq107(achievementBlockchainRecords.playerId, ctx.user.id)).orderBy(desc80(achievementBlockchainRecords.recordedAt));
     return records;
   }),
   // ============================================
@@ -76939,8 +76979,8 @@ var achievementsRouter = router({
   mintPlatinumNft: protectedProcedure.input(z137.object({ playerAchievementId: z137.number() })).mutation(async ({ ctx, input }) => {
     const db7 = getDb();
     const [playerAchievement] = await db7.select().from(gamePlayerAchievements).where(and84(
-      eq106(gamePlayerAchievements.id, input.playerAchievementId),
-      eq106(gamePlayerAchievements.playerId, ctx.user.id)
+      eq107(gamePlayerAchievements.id, input.playerAchievementId),
+      eq107(gamePlayerAchievements.playerId, ctx.user.id)
     )).limit(1);
     if (!playerAchievement) {
       throw new Error("Achievement not found");
@@ -76998,7 +77038,7 @@ var achievementsRouter = router({
       nftContractAddress: LUVCHAIN_NFT_CONTRACT,
       nftMintedAt: /* @__PURE__ */ new Date(),
       nftTransactionHash: transactionHash
-    }).where(eq106(gamePlayerAchievements.id, playerAchievement.id));
+    }).where(eq107(gamePlayerAchievements.id, playerAchievement.id));
     const blockchainHash = generateBlockchainHash6({
       type: "nft_mint",
       tokenId,
@@ -77028,7 +77068,7 @@ var achievementsRouter = router({
   // Get player's NFTs
   getPlayerNfts: protectedProcedure.query(async ({ ctx }) => {
     const db7 = getDb();
-    const nfts = await db7.select().from(championNfts).where(eq106(championNfts.ownerId, ctx.user.id)).orderBy(desc79(championNfts.mintedAt));
+    const nfts = await db7.select().from(championNfts).where(eq107(championNfts.ownerId, ctx.user.id)).orderBy(desc80(championNfts.mintedAt));
     return nfts.map((nft) => ({
       ...nft,
       attributes: nft.attributes ? JSON.parse(nft.attributes) : []
@@ -77037,11 +77077,11 @@ var achievementsRouter = router({
   // Get NFT by token ID
   getNftByTokenId: publicProcedure.input(z137.object({ tokenId: z137.string() })).query(async ({ input }) => {
     const db7 = getDb();
-    const [nft] = await db7.select().from(championNfts).where(eq106(championNfts.tokenId, input.tokenId)).limit(1);
+    const [nft] = await db7.select().from(championNfts).where(eq107(championNfts.tokenId, input.tokenId)).limit(1);
     if (!nft) {
       return null;
     }
-    const [owner] = await db7.select({ name: users.name }).from(users).where(eq106(users.id, nft.ownerId)).limit(1);
+    const [owner] = await db7.select({ name: users.name }).from(users).where(eq107(users.id, nft.ownerId)).limit(1);
     return {
       ...nft,
       attributes: nft.attributes ? JSON.parse(nft.attributes) : [],
@@ -77097,7 +77137,7 @@ var achievementsRouter = router({
     let query = db7.select({
       nft: championNfts,
       ownerName: users.name
-    }).from(championNfts).leftJoin(users, eq106(championNfts.ownerId, users.id)).orderBy(desc79(championNfts.mintedAt)).limit(input.limit);
+    }).from(championNfts).leftJoin(users, eq107(championNfts.ownerId, users.id)).orderBy(desc80(championNfts.mintedAt)).limit(input.limit);
     const nfts = await query;
     return nfts.map(({ nft, ownerName }) => ({
       ...nft,
@@ -77110,7 +77150,7 @@ var achievementsRouter = router({
     const db7 = getDb();
     const [recordCount] = await db7.select({ count: sql62`COUNT(*)` }).from(achievementBlockchainRecords);
     const [nftCount] = await db7.select({ count: sql62`COUNT(*)` }).from(championNfts);
-    const [latestRecord] = await db7.select().from(achievementBlockchainRecords).orderBy(desc79(achievementBlockchainRecords.id)).limit(1);
+    const [latestRecord] = await db7.select().from(achievementBlockchainRecords).orderBy(desc80(achievementBlockchainRecords.id)).limit(1);
     return {
       totalBlockchainRecords: recordCount?.count || 0,
       totalNftsMinted: nftCount?.count || 0,
@@ -77144,7 +77184,7 @@ function getProgressToNextTier(progressCount, currentTier) {
 import { z as z138 } from "zod";
 init_db();
 init_schema();
-import { eq as eq107, and as and85, gte as gte18, lte as lte17, desc as desc80, sql as sql63 } from "drizzle-orm";
+import { eq as eq108, and as and85, gte as gte18, lte as lte17, desc as desc81, sql as sql63 } from "drizzle-orm";
 var DAILY_CHALLENGES = [
   {
     name: "Quick Learner",
@@ -77315,14 +77355,14 @@ var challengesRouter = router({
     const weekEnd = getEndOfWeek(today);
     const dailyProgress = await db7.select().from(gamePlayerChallenges).where(
       and85(
-        eq107(gamePlayerChallenges.playerId, userId),
+        eq108(gamePlayerChallenges.playerId, userId),
         gte18(gamePlayerChallenges.periodStart, dayStart),
         lte17(gamePlayerChallenges.periodEnd, dayEnd)
       )
     );
     const weeklyProgress = await db7.select().from(gamePlayerChallenges).where(
       and85(
-        eq107(gamePlayerChallenges.playerId, userId),
+        eq108(gamePlayerChallenges.playerId, userId),
         gte18(gamePlayerChallenges.periodStart, weekStart),
         lte17(gamePlayerChallenges.periodEnd, weekEnd)
       )
@@ -77350,7 +77390,7 @@ var challengesRouter = router({
     const periodEnd = input.challengeType === "daily" ? getEndOfDay(today) : getEndOfWeek(today);
     const existing = await db7.select().from(gamePlayerChallenges).where(
       and85(
-        eq107(gamePlayerChallenges.playerId, userId),
+        eq108(gamePlayerChallenges.playerId, userId),
         gte18(gamePlayerChallenges.periodStart, periodStart),
         lte17(gamePlayerChallenges.periodEnd, periodEnd)
       )
@@ -77389,8 +77429,8 @@ var challengesRouter = router({
     const userId = ctx.user.id;
     const activeChallenges = await db7.select().from(gamePlayerChallenges).where(
       and85(
-        eq107(gamePlayerChallenges.playerId, userId),
-        eq107(gamePlayerChallenges.isCompleted, false)
+        eq108(gamePlayerChallenges.playerId, userId),
+        eq108(gamePlayerChallenges.isCompleted, false)
       )
     );
     const completedChallenges = [];
@@ -77452,7 +77492,7 @@ var challengesRouter = router({
           isCompleted: isNowCompleted,
           completedAt: isNowCompleted ? /* @__PURE__ */ new Date() : null,
           tokensAwarded: isNowCompleted ? challenge.tokenReward : 0
-        }).where(eq107(gamePlayerChallenges.id, playerChallenge.id));
+        }).where(eq108(gamePlayerChallenges.id, playerChallenge.id));
         if (isNowCompleted) {
           completedChallenges.push({
             name: challenge.name,
@@ -77483,14 +77523,14 @@ var challengesRouter = router({
       challengesCompleted: sql63`COUNT(*)`
     }).from(gamePlayerChallenges).where(
       and85(
-        eq107(gamePlayerChallenges.isCompleted, true),
+        eq108(gamePlayerChallenges.isCompleted, true),
         gte18(gamePlayerChallenges.periodStart, periodStart),
         lte17(gamePlayerChallenges.periodEnd, periodEnd)
       )
-    ).groupBy(gamePlayerChallenges.playerId).orderBy(desc80(sql63`SUM(${gamePlayerChallenges.tokensAwarded})`)).limit(input.limit);
+    ).groupBy(gamePlayerChallenges.playerId).orderBy(desc81(sql63`SUM(${gamePlayerChallenges.tokensAwarded})`)).limit(input.limit);
     const leaderboard = await Promise.all(
       completions.map(async (entry, index2) => {
-        const [user] = await db7.select({ name: users.name }).from(users).where(eq107(users.id, entry.playerId)).limit(1);
+        const [user] = await db7.select({ name: users.name }).from(users).where(eq108(users.id, entry.playerId)).limit(1);
         return {
           rank: index2 + 1,
           playerId: entry.playerId,
@@ -77552,7 +77592,7 @@ var challengesRouter = router({
 import { z as z139 } from "zod";
 init_db();
 init_schema();
-import { eq as eq108, desc as desc81, and as and86 } from "drizzle-orm";
+import { eq as eq109, desc as desc82, and as and86 } from "drizzle-orm";
 import { TRPCError as TRPCError51 } from "@trpc/server";
 import crypto32 from "crypto";
 var splitChangeRequestsRouter = router({
@@ -77623,7 +77663,7 @@ var splitChangeRequestsRouter = router({
     if (!db7) throw new TRPCError51({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError51({ code: "UNAUTHORIZED" });
-    let query = db7.select().from(splitChangeRequests).orderBy(desc81(splitChangeRequests.createdAt));
+    let query = db7.select().from(splitChangeRequests).orderBy(desc82(splitChangeRequests.createdAt));
     const requests2 = await query.limit(input?.limit || 50);
     return requests2.map((req) => ({
       ...req,
@@ -77637,11 +77677,11 @@ var splitChangeRequestsRouter = router({
     if (!db7) throw new TRPCError51({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError51({ code: "UNAUTHORIZED" });
-    const request = await db7.select().from(splitChangeRequests).where(eq108(splitChangeRequests.id, input.requestId)).limit(1);
+    const request = await db7.select().from(splitChangeRequests).where(eq109(splitChangeRequests.id, input.requestId)).limit(1);
     if (!request.length) {
       throw new TRPCError51({ code: "NOT_FOUND", message: "Request not found" });
     }
-    const comments = await db7.select().from(splitChangeRequestComments).where(eq108(splitChangeRequestComments.requestId, input.requestId)).orderBy(desc81(splitChangeRequestComments.createdAt));
+    const comments = await db7.select().from(splitChangeRequestComments).where(eq109(splitChangeRequestComments.requestId, input.requestId)).orderBy(desc82(splitChangeRequestComments.createdAt));
     return {
       ...request[0],
       estimatedImpact: request[0].estimatedImpact ? JSON.parse(request[0].estimatedImpact) : null,
@@ -77696,7 +77736,7 @@ var splitChangeRequestsRouter = router({
       reviewerName: userName,
       reviewedAt: /* @__PURE__ */ new Date(),
       reviewNotes: input.reviewNotes
-    }).where(eq108(splitChangeRequests.id, input.requestId));
+    }).where(eq109(splitChangeRequests.id, input.requestId));
     await db7.insert(splitChangeRequestComments).values({
       requestId: input.requestId,
       userId,
@@ -77714,7 +77754,7 @@ var splitChangeRequestsRouter = router({
     const userId = ctx.user?.id;
     const userName = ctx.user?.name || "Unknown User";
     if (!userId) throw new TRPCError51({ code: "UNAUTHORIZED" });
-    const request = await db7.select().from(splitChangeRequests).where(eq108(splitChangeRequests.id, input.requestId)).limit(1);
+    const request = await db7.select().from(splitChangeRequests).where(eq109(splitChangeRequests.id, input.requestId)).limit(1);
     if (!request.length) {
       throw new TRPCError51({ code: "NOT_FOUND", message: "Request not found" });
     }
@@ -77727,10 +77767,10 @@ var splitChangeRequestsRouter = router({
       implementedAt: /* @__PURE__ */ new Date(),
       implementedBy: userId,
       blockchainHash
-    }).where(eq108(splitChangeRequests.id, input.requestId));
+    }).where(eq109(splitChangeRequests.id, input.requestId));
     await db7.update(splitConfigurationHistory).set({ effectiveTo: /* @__PURE__ */ new Date() }).where(and86(
-      eq108(splitConfigurationHistory.houseId, request[0].houseId),
-      eq108(splitConfigurationHistory.effectiveTo, null)
+      eq109(splitConfigurationHistory.houseId, request[0].houseId),
+      eq109(splitConfigurationHistory.effectiveTo, null)
     ));
     await db7.insert(splitConfigurationHistory).values({
       houseId: request[0].houseId,
@@ -77760,7 +77800,7 @@ var splitChangeRequestsRouter = router({
     if (!db7) throw new TRPCError51({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError51({ code: "UNAUTHORIZED" });
-    const history = await db7.select().from(splitConfigurationHistory).where(eq108(splitConfigurationHistory.houseId, input.houseId)).orderBy(desc81(splitConfigurationHistory.effectiveFrom));
+    const history = await db7.select().from(splitConfigurationHistory).where(eq109(splitConfigurationHistory.houseId, input.houseId)).orderBy(desc82(splitConfigurationHistory.effectiveFrom));
     return history;
   }),
   // Get current configuration for a house
@@ -77770,8 +77810,8 @@ var splitChangeRequestsRouter = router({
     const userId = ctx.user?.id;
     if (!userId) throw new TRPCError51({ code: "UNAUTHORIZED" });
     const current = await db7.select().from(splitConfigurationHistory).where(and86(
-      eq108(splitConfigurationHistory.houseId, input.houseId),
-      eq108(splitConfigurationHistory.effectiveTo, null)
+      eq109(splitConfigurationHistory.houseId, input.houseId),
+      eq109(splitConfigurationHistory.effectiveTo, null)
     )).limit(1);
     if (current.length) {
       return current[0];
@@ -77790,7 +77830,7 @@ var splitChangeRequestsRouter = router({
 import { z as z140 } from "zod";
 init_db();
 init_schema();
-import { eq as eq109, and as and87, desc as desc82, sql as sql64 } from "drizzle-orm";
+import { eq as eq110, and as and87, desc as desc83, sql as sql64 } from "drizzle-orm";
 var DEFAULT_TEMPLATES = [
   {
     templateName: "Financial Basics",
@@ -77877,7 +77917,7 @@ var sandboxRouter = router({
   // Get all templates
   getTemplates: publicProcedure.query(async () => {
     const db7 = await getDb();
-    const templates = await db7.select().from(sandboxTemplates).where(eq109(sandboxTemplates.isPublic, true)).orderBy(sandboxTemplates.difficulty);
+    const templates = await db7.select().from(sandboxTemplates).where(eq110(sandboxTemplates.isPublic, true)).orderBy(sandboxTemplates.difficulty);
     if (templates.length === 0) {
       return DEFAULT_TEMPLATES.map((t2, idx) => ({ id: idx + 1, ...t2, createdAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }));
     }
@@ -77916,7 +77956,7 @@ var sandboxRouter = router({
       sandboxType: input.sandboxType
     };
     if (input.templateId) {
-      const [template] = await db7.select().from(sandboxTemplates).where(eq109(sandboxTemplates.id, input.templateId)).limit(1);
+      const [template] = await db7.select().from(sandboxTemplates).where(eq110(sandboxTemplates.id, input.templateId)).limit(1);
       if (template) {
         config = {
           initialBalance: template.initialBalance || "100000.00",
@@ -77948,7 +77988,7 @@ var sandboxRouter = router({
   // Get user's sandbox sessions
   getSessions: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
-    const sessions = await db7.select().from(sandboxSessions).where(eq109(sandboxSessions.userId, ctx.user.id)).orderBy(desc82(sandboxSessions.lastActivityAt));
+    const sessions = await db7.select().from(sandboxSessions).where(eq110(sandboxSessions.userId, ctx.user.id)).orderBy(desc83(sandboxSessions.lastActivityAt));
     return sessions;
   }),
   // Get active session
@@ -77956,10 +77996,10 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [session] = await db7.select().from(sandboxSessions).where(
       and87(
-        eq109(sandboxSessions.userId, ctx.user.id),
-        eq109(sandboxSessions.status, "active")
+        eq110(sandboxSessions.userId, ctx.user.id),
+        eq110(sandboxSessions.status, "active")
       )
-    ).orderBy(desc82(sandboxSessions.lastActivityAt)).limit(1);
+    ).orderBy(desc83(sandboxSessions.lastActivityAt)).limit(1);
     return session || null;
   }),
   // Get session details
@@ -77967,16 +78007,16 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [session] = await db7.select().from(sandboxSessions).where(
       and87(
-        eq109(sandboxSessions.id, input.sessionId),
-        eq109(sandboxSessions.userId, ctx.user.id)
+        eq110(sandboxSessions.id, input.sessionId),
+        eq110(sandboxSessions.userId, ctx.user.id)
       )
     ).limit(1);
     if (!session) {
       throw new Error("Sandbox session not found");
     }
-    const entities = await db7.select().from(sandboxEntities).where(eq109(sandboxEntities.sessionId, input.sessionId));
-    const transactions3 = await db7.select().from(sandboxTransactions).where(eq109(sandboxTransactions.sessionId, input.sessionId)).orderBy(desc82(sandboxTransactions.createdAt)).limit(20);
-    const operations = await db7.select().from(sandboxOperations).where(eq109(sandboxOperations.sessionId, input.sessionId)).orderBy(desc82(sandboxOperations.createdAt)).limit(20);
+    const entities = await db7.select().from(sandboxEntities).where(eq110(sandboxEntities.sessionId, input.sessionId));
+    const transactions3 = await db7.select().from(sandboxTransactions).where(eq110(sandboxTransactions.sessionId, input.sessionId)).orderBy(desc83(sandboxTransactions.createdAt)).limit(20);
+    const operations = await db7.select().from(sandboxOperations).where(eq110(sandboxOperations.sessionId, input.sessionId)).orderBy(desc83(sandboxOperations.createdAt)).limit(20);
     return {
       session,
       entities,
@@ -78009,9 +78049,9 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [session] = await db7.select().from(sandboxSessions).where(
       and87(
-        eq109(sandboxSessions.id, input.sessionId),
-        eq109(sandboxSessions.userId, ctx.user.id),
-        eq109(sandboxSessions.status, "active")
+        eq110(sandboxSessions.id, input.sessionId),
+        eq110(sandboxSessions.userId, ctx.user.id),
+        eq110(sandboxSessions.status, "active")
       )
     ).limit(1);
     if (!session) {
@@ -78043,7 +78083,7 @@ var sandboxRouter = router({
       currentBalance: newBalance.toFixed(2),
       totalTransactions: sql64`${sandboxSessions.totalTransactions} + 1`,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq109(sandboxSessions.id, input.sessionId));
+    }).where(eq110(sandboxSessions.id, input.sessionId));
     return {
       success: true,
       previousBalance: currentBalance,
@@ -78064,8 +78104,8 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [session] = await db7.select().from(sandboxSessions).where(
       and87(
-        eq109(sandboxSessions.id, input.sessionId),
-        eq109(sandboxSessions.userId, ctx.user.id)
+        eq110(sandboxSessions.id, input.sessionId),
+        eq110(sandboxSessions.userId, ctx.user.id)
       )
     ).limit(1);
     if (!session) {
@@ -78096,7 +78136,7 @@ var sandboxRouter = router({
     await db7.update(sandboxSessions).set({
       totalOperations: sql64`${sandboxSessions.totalOperations} + 1`,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq109(sandboxSessions.id, input.sessionId));
+    }).where(eq110(sandboxSessions.id, input.sessionId));
     return {
       totalAmount: input.amount,
       interHouseSplit: {
@@ -78131,9 +78171,9 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [session] = await db7.select().from(sandboxSessions).where(
       and87(
-        eq109(sandboxSessions.id, input.sessionId),
-        eq109(sandboxSessions.userId, ctx.user.id),
-        eq109(sandboxSessions.status, "active")
+        eq110(sandboxSessions.id, input.sessionId),
+        eq110(sandboxSessions.userId, ctx.user.id),
+        eq110(sandboxSessions.status, "active")
       )
     ).limit(1);
     if (!session) {
@@ -78174,14 +78214,14 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [session] = await db7.select().from(sandboxSessions).where(
       and87(
-        eq109(sandboxSessions.id, input.sessionId),
-        eq109(sandboxSessions.userId, ctx.user.id)
+        eq110(sandboxSessions.id, input.sessionId),
+        eq110(sandboxSessions.userId, ctx.user.id)
       )
     ).limit(1);
     if (!session) {
       throw new Error("Sandbox session not found");
     }
-    const entities = await db7.select().from(sandboxEntities).where(eq109(sandboxEntities.sessionId, input.sessionId));
+    const entities = await db7.select().from(sandboxEntities).where(eq110(sandboxEntities.sessionId, input.sessionId));
     const result = await db7.insert(sandboxSnapshots).values({
       sessionId: input.sessionId,
       userId: ctx.user.id,
@@ -78203,10 +78243,10 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const snapshots = await db7.select().from(sandboxSnapshots).where(
       and87(
-        eq109(sandboxSnapshots.sessionId, input.sessionId),
-        eq109(sandboxSnapshots.userId, ctx.user.id)
+        eq110(sandboxSnapshots.sessionId, input.sessionId),
+        eq110(sandboxSnapshots.userId, ctx.user.id)
       )
-    ).orderBy(desc82(sandboxSnapshots.createdAt));
+    ).orderBy(desc83(sandboxSnapshots.createdAt));
     return snapshots;
   }),
   // Restore snapshot
@@ -78214,8 +78254,8 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [snapshot] = await db7.select().from(sandboxSnapshots).where(
       and87(
-        eq109(sandboxSnapshots.id, input.snapshotId),
-        eq109(sandboxSnapshots.userId, ctx.user.id)
+        eq110(sandboxSnapshots.id, input.snapshotId),
+        eq110(sandboxSnapshots.userId, ctx.user.id)
       )
     ).limit(1);
     if (!snapshot) {
@@ -78227,8 +78267,8 @@ var sandboxRouter = router({
       totalTransactions: sessionState.totalTransactions,
       totalOperations: sessionState.totalOperations,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq109(sandboxSessions.id, snapshot.sessionId));
-    await db7.delete(sandboxEntities).where(eq109(sandboxEntities.sessionId, snapshot.sessionId));
+    }).where(eq110(sandboxSessions.id, snapshot.sessionId));
+    await db7.delete(sandboxEntities).where(eq110(sandboxEntities.sessionId, snapshot.sessionId));
     const entitiesState = snapshot.entitiesState;
     if (entitiesState && entitiesState.length > 0) {
       for (const entity of entitiesState) {
@@ -78255,22 +78295,22 @@ var sandboxRouter = router({
     const db7 = await getDb();
     const [session] = await db7.select().from(sandboxSessions).where(
       and87(
-        eq109(sandboxSessions.id, input.sessionId),
-        eq109(sandboxSessions.userId, ctx.user.id)
+        eq110(sandboxSessions.id, input.sessionId),
+        eq110(sandboxSessions.userId, ctx.user.id)
       )
     ).limit(1);
     if (!session) {
       throw new Error("Sandbox session not found");
     }
-    await db7.delete(sandboxTransactions).where(eq109(sandboxTransactions.sessionId, input.sessionId));
-    await db7.delete(sandboxEntities).where(eq109(sandboxEntities.sessionId, input.sessionId));
-    await db7.delete(sandboxOperations).where(eq109(sandboxOperations.sessionId, input.sessionId));
+    await db7.delete(sandboxTransactions).where(eq110(sandboxTransactions.sessionId, input.sessionId));
+    await db7.delete(sandboxEntities).where(eq110(sandboxEntities.sessionId, input.sessionId));
+    await db7.delete(sandboxOperations).where(eq110(sandboxOperations.sessionId, input.sessionId));
     await db7.update(sandboxSessions).set({
       currentBalance: session.initialBalance,
       totalTransactions: 0,
       totalOperations: 0,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq109(sandboxSessions.id, input.sessionId));
+    }).where(eq110(sandboxSessions.id, input.sessionId));
     return {
       success: true,
       message: "Sandbox session reset to initial state"
@@ -78284,8 +78324,8 @@ var sandboxRouter = router({
       completedAt: /* @__PURE__ */ new Date()
     }).where(
       and87(
-        eq109(sandboxSessions.id, input.sessionId),
-        eq109(sandboxSessions.userId, ctx.user.id)
+        eq110(sandboxSessions.id, input.sessionId),
+        eq110(sandboxSessions.userId, ctx.user.id)
       )
     );
     return {
@@ -78296,7 +78336,7 @@ var sandboxRouter = router({
   // Get sandbox stats
   getStats: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
-    const sessions = await db7.select().from(sandboxSessions).where(eq109(sandboxSessions.userId, ctx.user.id));
+    const sessions = await db7.select().from(sandboxSessions).where(eq110(sandboxSessions.userId, ctx.user.id));
     const activeSessions = sessions.filter((s) => s.status === "active").length;
     const completedSessions = sessions.filter((s) => s.status === "completed").length;
     const totalTransactions = sessions.reduce((sum5, s) => sum5 + (s.totalTransactions || 0), 0);
@@ -78315,7 +78355,7 @@ var sandboxRouter = router({
 import { z as z141 } from "zod";
 init_db();
 init_schema();
-import { eq as eq110, desc as desc83 } from "drizzle-orm";
+import { eq as eq111, desc as desc84 } from "drizzle-orm";
 var RELEVANT_TRADEMARK_CLASSES = [
   { code: "009", name: "Downloadable Media & Software", description: "Downloadable educational materials, podcasts, documentaries, mobile applications, software" },
   { code: "016", name: "Printed Materials", description: "Printed educational materials, workbooks, certificates, scrolls, curriculum guides" },
@@ -78488,7 +78528,7 @@ var trademarkSearchRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const searches = await db7.select().from(trademarkSearches).where(eq110(trademarkSearches.userId, ctx.user.id)).orderBy(desc83(trademarkSearches.createdAt)).limit(input.limit);
+    const searches = await db7.select().from(trademarkSearches).where(eq111(trademarkSearches.userId, ctx.user.id)).orderBy(desc84(trademarkSearches.createdAt)).limit(input.limit);
     return searches.map((search) => ({
       ...search,
       results: JSON.parse(search.resultsJson || "[]"),
@@ -78501,7 +78541,7 @@ var trademarkSearchRouter = router({
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const [search] = await db7.select().from(trademarkSearches).where(eq110(trademarkSearches.id, input.searchId)).limit(1);
+    const [search] = await db7.select().from(trademarkSearches).where(eq111(trademarkSearches.id, input.searchId)).limit(1);
     if (!search || search.userId !== ctx.user.id) {
       return null;
     }
@@ -78602,7 +78642,7 @@ var trademarkSearchRouter = router({
 import { z as z142 } from "zod";
 init_db();
 init_schema();
-import { eq as eq111, and as and88, like as like6, desc as desc84, asc as asc7, sql as sql65 } from "drizzle-orm";
+import { eq as eq112, and as and88, like as like6, desc as desc85, asc as asc7, sql as sql65 } from "drizzle-orm";
 var externalBusinessesRouter = router({
   // List all external businesses for the current user
   list: protectedProcedure.input(z142.object({
@@ -78614,21 +78654,21 @@ var externalBusinessesRouter = router({
   }).optional()).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     const filters = input || { type: "all", status: "all", limit: 50, offset: 0 };
-    let query = db7.select().from(externalBusinesses).where(eq111(externalBusinesses.userId, ctx.user.openId));
+    let query = db7.select().from(externalBusinesses).where(eq112(externalBusinesses.userId, ctx.user.openId));
     if (filters.type && filters.type !== "all") {
       query = query.where(and88(
-        eq111(externalBusinesses.userId, ctx.user.openId),
-        eq111(externalBusinesses.type, filters.type)
+        eq112(externalBusinesses.userId, ctx.user.openId),
+        eq112(externalBusinesses.type, filters.type)
       ));
     }
     if (filters.status && filters.status !== "all") {
       query = query.where(and88(
-        eq111(externalBusinesses.userId, ctx.user.openId),
-        eq111(externalBusinesses.status, filters.status)
+        eq112(externalBusinesses.userId, ctx.user.openId),
+        eq112(externalBusinesses.status, filters.status)
       ));
     }
-    const results = await query.orderBy(desc84(externalBusinesses.createdAt)).limit(filters.limit).offset(filters.offset);
-    const [countResult] = await db7.select({ count: sql65`count(*)` }).from(externalBusinesses).where(eq111(externalBusinesses.userId, ctx.user.openId));
+    const results = await query.orderBy(desc85(externalBusinesses.createdAt)).limit(filters.limit).offset(filters.offset);
+    const [countResult] = await db7.select({ count: sql65`count(*)` }).from(externalBusinesses).where(eq112(externalBusinesses.userId, ctx.user.openId));
     return {
       businesses: results,
       total: countResult?.count || 0,
@@ -78640,8 +78680,8 @@ var externalBusinessesRouter = router({
   getById: protectedProcedure.input(z142.object({ id: z142.number() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     const [business] = await db7.select().from(externalBusinesses).where(and88(
-      eq111(externalBusinesses.id, input.id),
-      eq111(externalBusinesses.userId, ctx.user.openId)
+      eq112(externalBusinesses.id, input.id),
+      eq112(externalBusinesses.userId, ctx.user.openId)
     ));
     return business || null;
   }),
@@ -78716,8 +78756,8 @@ var externalBusinessesRouter = router({
       return { success: false, message: "No fields to update" };
     }
     await db7.update(externalBusinesses).set(cleanData).where(and88(
-      eq111(externalBusinesses.id, id),
-      eq111(externalBusinesses.userId, ctx.user.openId)
+      eq112(externalBusinesses.id, id),
+      eq112(externalBusinesses.userId, ctx.user.openId)
     ));
     return { success: true };
   }),
@@ -78725,8 +78765,8 @@ var externalBusinessesRouter = router({
   delete: protectedProcedure.input(z142.object({ id: z142.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     await db7.delete(externalBusinesses).where(and88(
-      eq111(externalBusinesses.id, input.id),
-      eq111(externalBusinesses.userId, ctx.user.openId)
+      eq112(externalBusinesses.id, input.id),
+      eq112(externalBusinesses.userId, ctx.user.openId)
     ));
     return { success: true };
   }),
@@ -78738,7 +78778,7 @@ var externalBusinessesRouter = router({
     const db7 = await getDb();
     const searchPattern = `%${input.query}%`;
     let results = await db7.select().from(externalBusinesses).where(and88(
-      eq111(externalBusinesses.userId, ctx.user.openId),
+      eq112(externalBusinesses.userId, ctx.user.openId),
       like6(externalBusinesses.name, searchPattern)
     )).orderBy(asc7(externalBusinesses.name)).limit(20);
     if (input.type !== "all") {
@@ -78749,7 +78789,7 @@ var externalBusinessesRouter = router({
   // Get statistics
   getStats: protectedProcedure.query(async ({ ctx }) => {
     const db7 = await getDb();
-    const businesses = await db7.select().from(externalBusinesses).where(eq111(externalBusinesses.userId, ctx.user.openId));
+    const businesses = await db7.select().from(externalBusinesses).where(eq112(externalBusinesses.userId, ctx.user.openId));
     const stats = {
       total: businesses.length,
       byType: {},
@@ -78771,7 +78811,7 @@ var externalBusinessesRouter = router({
 import { z as z143 } from "zod";
 init_db();
 init_schema();
-import { eq as eq112, desc as desc85, and as and89 } from "drizzle-orm";
+import { eq as eq113, desc as desc86, and as and89 } from "drizzle-orm";
 var CURRENT_VERSION = "1.0.0";
 var changelogRouter = router({
   // Get the current app version
@@ -78784,15 +78824,15 @@ var changelogRouter = router({
     sinceVersion: z143.string().optional()
   })).query(async ({ input }) => {
     const db7 = getDb();
-    let query = db7.select().from(changelogEntries).where(eq112(changelogEntries.isPublished, true)).orderBy(desc85(changelogEntries.releaseDate)).limit(input.limit);
+    let query = db7.select().from(changelogEntries).where(eq113(changelogEntries.isPublished, true)).orderBy(desc86(changelogEntries.releaseDate)).limit(input.limit);
     const entries = await query;
     return entries;
   }),
   // Get unread changelog entries for a user (for What's New popup)
   getUnread: protectedProcedure.query(async ({ ctx }) => {
     const db7 = getDb();
-    const allPublished = await db7.select().from(changelogEntries).where(eq112(changelogEntries.isPublished, true)).orderBy(desc85(changelogEntries.releaseDate));
-    const userViews = await db7.select().from(changelogUserViews).where(eq112(changelogUserViews.userId, ctx.user.id));
+    const allPublished = await db7.select().from(changelogEntries).where(eq113(changelogEntries.isPublished, true)).orderBy(desc86(changelogEntries.releaseDate));
+    const userViews = await db7.select().from(changelogUserViews).where(eq113(changelogUserViews.userId, ctx.user.id));
     const viewedIds = new Set(userViews.filter((v) => v.dismissed || v.dontShowAgain).map((v) => v.changelogId));
     const unread = allPublished.filter((entry) => !viewedIds.has(entry.id));
     return {
@@ -78808,8 +78848,8 @@ var changelogRouter = router({
     const db7 = getDb();
     const existing = await db7.select().from(changelogUserViews).where(
       and89(
-        eq112(changelogUserViews.userId, ctx.user.id),
-        eq112(changelogUserViews.changelogId, input.changelogId)
+        eq113(changelogUserViews.userId, ctx.user.id),
+        eq113(changelogUserViews.changelogId, input.changelogId)
       )
     ).limit(1);
     if (existing.length === 0) {
@@ -78830,8 +78870,8 @@ var changelogRouter = router({
     const db7 = getDb();
     const existing = await db7.select().from(changelogUserViews).where(
       and89(
-        eq112(changelogUserViews.userId, ctx.user.id),
-        eq112(changelogUserViews.changelogId, input.changelogId)
+        eq113(changelogUserViews.userId, ctx.user.id),
+        eq113(changelogUserViews.changelogId, input.changelogId)
       )
     ).limit(1);
     if (existing.length === 0) {
@@ -78843,19 +78883,19 @@ var changelogRouter = router({
         dontShowAgain: false
       });
     } else {
-      await db7.update(changelogUserViews).set({ dismissed: true }).where(eq112(changelogUserViews.id, existing[0].id));
+      await db7.update(changelogUserViews).set({ dismissed: true }).where(eq113(changelogUserViews.id, existing[0].id));
     }
     return { success: true };
   }),
   // Dismiss all unread entries
   dismissAll: protectedProcedure.mutation(async ({ ctx }) => {
     const db7 = getDb();
-    const allPublished = await db7.select().from(changelogEntries).where(eq112(changelogEntries.isPublished, true));
+    const allPublished = await db7.select().from(changelogEntries).where(eq113(changelogEntries.isPublished, true));
     for (const entry of allPublished) {
       const existing = await db7.select().from(changelogUserViews).where(
         and89(
-          eq112(changelogUserViews.userId, ctx.user.id),
-          eq112(changelogUserViews.changelogId, entry.id)
+          eq113(changelogUserViews.userId, ctx.user.id),
+          eq113(changelogUserViews.changelogId, entry.id)
         )
       ).limit(1);
       if (existing.length === 0) {
@@ -78867,7 +78907,7 @@ var changelogRouter = router({
           dontShowAgain: false
         });
       } else if (!existing[0].dismissed) {
-        await db7.update(changelogUserViews).set({ dismissed: true }).where(eq112(changelogUserViews.id, existing[0].id));
+        await db7.update(changelogUserViews).set({ dismissed: true }).where(eq113(changelogUserViews.id, existing[0].id));
       }
     }
     return { success: true };
@@ -78877,9 +78917,9 @@ var changelogRouter = router({
     dontShow: z143.boolean()
   })).mutation(async ({ ctx, input }) => {
     const db7 = getDb();
-    const userViews = await db7.select().from(changelogUserViews).where(eq112(changelogUserViews.userId, ctx.user.id));
+    const userViews = await db7.select().from(changelogUserViews).where(eq113(changelogUserViews.userId, ctx.user.id));
     for (const view of userViews) {
-      await db7.update(changelogUserViews).set({ dontShowAgain: input.dontShow }).where(eq112(changelogUserViews.id, view.id));
+      await db7.update(changelogUserViews).set({ dontShowAgain: input.dontShow }).where(eq113(changelogUserViews.id, view.id));
     }
     return { success: true };
   }),
@@ -78929,7 +78969,7 @@ var changelogRouter = router({
       throw new Error("Only admins can update changelog entries");
     }
     const { id, ...updateData } = input;
-    await db7.update(changelogEntries).set(updateData).where(eq112(changelogEntries.id, id));
+    await db7.update(changelogEntries).set(updateData).where(eq113(changelogEntries.id, id));
     return { success: true };
   }),
   // Admin: Delete a changelog entry
@@ -78940,8 +78980,8 @@ var changelogRouter = router({
     if (ctx.user.role !== "admin" && ctx.user.role !== "owner") {
       throw new Error("Only admins can delete changelog entries");
     }
-    await db7.delete(changelogUserViews).where(eq112(changelogUserViews.changelogId, input.id));
-    await db7.delete(changelogEntries).where(eq112(changelogEntries.id, input.id));
+    await db7.delete(changelogUserViews).where(eq113(changelogUserViews.changelogId, input.id));
+    await db7.delete(changelogEntries).where(eq113(changelogEntries.id, input.id));
     return { success: true };
   }),
   // Admin: Get all changelog entries (including unpublished)
@@ -78952,7 +78992,7 @@ var changelogRouter = router({
     if (ctx.user.role !== "admin" && ctx.user.role !== "owner") {
       throw new Error("Only admins can view all changelog entries");
     }
-    const entries = await db7.select().from(changelogEntries).orderBy(desc85(changelogEntries.releaseDate)).limit(input.limit);
+    const entries = await db7.select().from(changelogEntries).orderBy(desc86(changelogEntries.releaseDate)).limit(input.limit);
     return entries;
   }),
   // Admin: Publish a changelog entry
@@ -78963,7 +79003,7 @@ var changelogRouter = router({
     if (ctx.user.role !== "admin" && ctx.user.role !== "owner") {
       throw new Error("Only admins can publish changelog entries");
     }
-    await db7.update(changelogEntries).set({ isPublished: true, releaseDate: /* @__PURE__ */ new Date() }).where(eq112(changelogEntries.id, input.id));
+    await db7.update(changelogEntries).set({ isPublished: true, releaseDate: /* @__PURE__ */ new Date() }).where(eq113(changelogEntries.id, input.id));
     return { success: true };
   }),
   // Get app version history
@@ -78971,7 +79011,7 @@ var changelogRouter = router({
     limit: z143.number().min(1).max(20).optional().default(10)
   })).query(async ({ input }) => {
     const db7 = getDb();
-    const versions2 = await db7.select().from(appVersions).orderBy(desc85(appVersions.releaseDate)).limit(input.limit);
+    const versions2 = await db7.select().from(appVersions).orderBy(desc86(appVersions.releaseDate)).limit(input.limit);
     return versions2;
   }),
   // Admin: Create a new app version
@@ -79164,7 +79204,7 @@ var houseParticipationRouter = router({
 // server/routers/auto-diagnostic.ts
 init_db();
 init_schema();
-import { count as count5, eq as eq113, lt as lt4, and as and90 } from "drizzle-orm";
+import { count as count5, eq as eq114, lt as lt4, and as and90 } from "drizzle-orm";
 function getOverallStatus(checks) {
   if (checks.some((c) => c.status === "critical")) return "critical";
   if (checks.some((c) => c.status === "warning")) return "warning";
@@ -79198,7 +79238,7 @@ var autoDiagnosticRouter = router({
     }
     try {
       const [totalEntities] = await db.select({ count: count5() }).from(businessEntities);
-      const [pendingEntities] = await db.select({ count: count5() }).from(businessEntities).where(eq113(businessEntities.status, "pending"));
+      const [pendingEntities] = await db.select({ count: count5() }).from(businessEntities).where(eq114(businessEntities.status, "pending"));
       const pendingCount = pendingEntities?.count || 0;
       const totalCount = totalEntities?.count || 0;
       let status = "healthy";
@@ -79225,7 +79265,7 @@ var autoDiagnosticRouter = router({
     }
     try {
       const [totalHouses] = await db.select({ count: count5() }).from(houses);
-      const [activeHouses] = await db.select({ count: count5() }).from(houses).where(eq113(houses.status, "active"));
+      const [activeHouses] = await db.select({ count: count5() }).from(houses).where(eq114(houses.status, "active"));
       checks.push({
         category: "House System",
         status: "healthy",
@@ -79249,7 +79289,7 @@ var autoDiagnosticRouter = router({
       const [upcomingDeadlines] = await db.select({ count: count5() }).from(complianceTasks).where(
         and90(
           lt4(complianceTasks.dueDate, thirtyDaysFromNow),
-          eq113(complianceTasks.status, "pending")
+          eq114(complianceTasks.status, "pending")
         )
       );
       const deadlineCount = upcomingDeadlines?.count || 0;
@@ -87136,7 +87176,7 @@ ${contractText.substring(0, 1e4)}` }
 import { z as z161 } from "zod";
 init_db();
 init_schema();
-import { eq as eq114, desc as desc86, sql as sql74 } from "drizzle-orm";
+import { eq as eq115, desc as desc87, sql as sql74 } from "drizzle-orm";
 import { TRPCError as TRPCError55 } from "@trpc/server";
 var defaultPolicies = [
   {
@@ -87360,8 +87400,8 @@ var trustGovernanceRouter = router({
     amount: z161.number().positive(),
     reason: z161.string()
   })).mutation(async ({ input, ctx }) => {
-    const fromEntity = await db.select().from(businessEntities).where(eq114(businessEntities.id, input.fromEntityId)).limit(1);
-    const toEntity = await db.select().from(businessEntities).where(eq114(businessEntities.id, input.toEntityId)).limit(1);
+    const fromEntity = await db.select().from(businessEntities).where(eq115(businessEntities.id, input.fromEntityId)).limit(1);
+    const toEntity = await db.select().from(businessEntities).where(eq115(businessEntities.id, input.toEntityId)).limit(1);
     if (!fromEntity.length || !toEntity.length) {
       throw new TRPCError55({ code: "NOT_FOUND", message: "Entity not found" });
     }
@@ -87602,12 +87642,12 @@ var trustGovernanceRouter = router({
   }).optional()).query(async ({ input }) => {
     let query = db.select().from(blockchainRecords);
     if (input?.entityId) {
-      query = query.where(eq114(blockchainRecords.entityId, input.entityId));
+      query = query.where(eq115(blockchainRecords.entityId, input.entityId));
     }
     if (input?.recordType) {
-      query = query.where(eq114(blockchainRecords.recordType, input.recordType));
+      query = query.where(eq115(blockchainRecords.recordType, input.recordType));
     }
-    const records = await query.orderBy(desc86(blockchainRecords.createdAt)).limit(input?.limit || 50);
+    const records = await query.orderBy(desc87(blockchainRecords.createdAt)).limit(input?.limit || 50);
     return records.map((r) => ({
       ...r,
       metadata: typeof r.metadata === "string" ? JSON.parse(r.metadata) : r.metadata
@@ -87620,7 +87660,7 @@ var trustGovernanceRouter = router({
     const openConflicts = conflicts.filter((c) => c.status === "open" || c.status === "mediation").length;
     const entities = await db.select().from(businessEntities);
     const trustAssets = entities.filter((e) => e.entityType === "asset").length;
-    const recentActivity = await db.select().from(blockchainRecords).orderBy(desc86(blockchainRecords.createdAt)).limit(10);
+    const recentActivity = await db.select().from(blockchainRecords).orderBy(desc87(blockchainRecords.createdAt)).limit(10);
     return {
       activePolicies,
       pendingAllocations,
@@ -87636,8 +87676,8 @@ var trustGovernanceRouter = router({
 });
 async function executeAllocation(request) {
   try {
-    const fromAccount = await db.select().from(luvLedgerAccounts).where(eq114(luvLedgerAccounts.entityId, request.fromEntityId)).limit(1);
-    const toAccount = await db.select().from(luvLedgerAccounts).where(eq114(luvLedgerAccounts.entityId, request.toEntityId)).limit(1);
+    const fromAccount = await db.select().from(luvLedgerAccounts).where(eq115(luvLedgerAccounts.entityId, request.fromEntityId)).limit(1);
+    const toAccount = await db.select().from(luvLedgerAccounts).where(eq115(luvLedgerAccounts.entityId, request.toEntityId)).limit(1);
     if (fromAccount.length && toAccount.length) {
       await db.insert(luvLedgerTransactions).values({
         fromAccountId: fromAccount[0].id,
@@ -87649,10 +87689,10 @@ async function executeAllocation(request) {
       });
       await db.update(luvLedgerAccounts).set({
         balance: sql74`${luvLedgerAccounts.balance} - ${request.amount}`
-      }).where(eq114(luvLedgerAccounts.id, fromAccount[0].id));
+      }).where(eq115(luvLedgerAccounts.id, fromAccount[0].id));
       await db.update(luvLedgerAccounts).set({
         balance: sql74`${luvLedgerAccounts.balance} + ${request.amount}`
-      }).where(eq114(luvLedgerAccounts.id, toAccount[0].id));
+      }).where(eq115(luvLedgerAccounts.id, toAccount[0].id));
     }
   } catch (error) {
     console.error("Error executing allocation:", error);
@@ -87921,7 +87961,7 @@ async function seedTickerData() {
 // server/resource-links.ts
 init_db();
 init_schema();
-import { eq as eq115, and as and92, desc as desc87, sql as sql75, gte as gte20 } from "drizzle-orm";
+import { eq as eq116, and as and92, desc as desc88, sql as sql75, gte as gte20 } from "drizzle-orm";
 var resourceLinksRouter = router({
   // Get links for a specific dashboard
   getByDashboard: publicProcedure.input(z162.object({
@@ -87931,16 +87971,16 @@ var resourceLinksRouter = router({
     limit: z162.number().default(20)
   })).query(async ({ input }) => {
     const conditions = [
-      eq115(resourceLinks.dashboard, input.dashboard),
-      eq115(resourceLinks.isActive, true)
+      eq116(resourceLinks.dashboard, input.dashboard),
+      eq116(resourceLinks.isActive, true)
     ];
     if (!input.includeAgentPending) {
-      conditions.push(eq115(resourceLinks.approvalStatus, "approved"));
+      conditions.push(eq116(resourceLinks.approvalStatus, "approved"));
     }
     if (input.category) {
-      conditions.push(eq115(resourceLinks.category, input.category));
+      conditions.push(eq116(resourceLinks.category, input.category));
     }
-    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc87(resourceLinks.isPinned), desc87(resourceLinks.priority), desc87(resourceLinks.createdAt)).limit(input.limit);
+    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc88(resourceLinks.isPinned), desc88(resourceLinks.priority), desc88(resourceLinks.createdAt)).limit(input.limit);
     return links;
   }),
   // Get categories for a dashboard
@@ -87948,8 +87988,8 @@ var resourceLinksRouter = router({
     dashboard: z162.string()
   })).query(async ({ input }) => {
     const categories = await db.select().from(resourceLinkCategories).where(and92(
-      eq115(resourceLinkCategories.dashboard, input.dashboard),
-      eq115(resourceLinkCategories.isActive, true)
+      eq116(resourceLinkCategories.dashboard, input.dashboard),
+      eq116(resourceLinkCategories.isActive, true)
     )).orderBy(resourceLinkCategories.orderIndex);
     return categories;
   }),
@@ -88031,7 +88071,7 @@ var resourceLinksRouter = router({
       approvalStatus: input.action === "approve" ? "approved" : "rejected",
       approvedBy: ctx.user.id,
       approvedAt: /* @__PURE__ */ new Date()
-    }).where(eq115(resourceLinks.id, input.id));
+    }).where(eq116(resourceLinks.id, input.id));
     return { success: true };
   }),
   // Get pending agent suggestions for review
@@ -88039,13 +88079,13 @@ var resourceLinksRouter = router({
     dashboard: z162.string().optional()
   })).query(async ({ input }) => {
     const conditions = [
-      eq115(resourceLinks.isAgentIdentified, true),
-      eq115(resourceLinks.approvalStatus, "pending")
+      eq116(resourceLinks.isAgentIdentified, true),
+      eq116(resourceLinks.approvalStatus, "pending")
     ];
     if (input.dashboard) {
-      conditions.push(eq115(resourceLinks.dashboard, input.dashboard));
+      conditions.push(eq116(resourceLinks.dashboard, input.dashboard));
     }
-    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc87(resourceLinks.createdAt));
+    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc88(resourceLinks.createdAt));
     return links;
   }),
   // Update a resource link
@@ -88062,12 +88102,12 @@ var resourceLinksRouter = router({
     isActive: z162.boolean().optional()
   })).mutation(async ({ input }) => {
     const { id, ...updates } = input;
-    await db.update(resourceLinks).set(updates).where(eq115(resourceLinks.id, id));
+    await db.update(resourceLinks).set(updates).where(eq116(resourceLinks.id, id));
     return { success: true };
   }),
   // Delete a resource link
   delete: protectedProcedure.input(z162.object({ id: z162.number() })).mutation(async ({ input }) => {
-    await db.delete(resourceLinks).where(eq115(resourceLinks.id, input.id));
+    await db.delete(resourceLinks).where(eq116(resourceLinks.id, input.id));
     return { success: true };
   }),
   // Track link click
@@ -88075,7 +88115,7 @@ var resourceLinksRouter = router({
     await db.update(resourceLinks).set({
       clickCount: sql75`${resourceLinks.clickCount} + 1`,
       lastClickedAt: /* @__PURE__ */ new Date()
-    }).where(eq115(resourceLinks.id, input.id));
+    }).where(eq116(resourceLinks.id, input.id));
     return { success: true };
   }),
   // Create category
@@ -88096,14 +88136,14 @@ var resourceLinksRouter = router({
     limit: z162.number().default(20)
   })).query(async ({ input }) => {
     const conditions = [
-      eq115(resourceLinks.swotRelevance, input.relevance),
-      eq115(resourceLinks.isActive, true),
-      eq115(resourceLinks.approvalStatus, "approved")
+      eq116(resourceLinks.swotRelevance, input.relevance),
+      eq116(resourceLinks.isActive, true),
+      eq116(resourceLinks.approvalStatus, "approved")
     ];
     if (input.industryCategory) {
-      conditions.push(eq115(resourceLinks.industryCategory, input.industryCategory));
+      conditions.push(eq116(resourceLinks.industryCategory, input.industryCategory));
     }
-    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc87(resourceLinks.priority), desc87(resourceLinks.createdAt)).limit(input.limit);
+    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc88(resourceLinks.priority), desc88(resourceLinks.createdAt)).limit(input.limit);
     return links;
   }),
   // Get industry intelligence summary
@@ -88128,14 +88168,14 @@ var resourceLinksRouter = router({
         break;
     }
     const conditions = [
-      eq115(resourceLinks.isActive, true),
-      eq115(resourceLinks.approvalStatus, "approved"),
+      eq116(resourceLinks.isActive, true),
+      eq116(resourceLinks.approvalStatus, "approved"),
       gte20(resourceLinks.createdAt, startDate)
     ];
     if (input.industryCategory) {
-      conditions.push(eq115(resourceLinks.industryCategory, input.industryCategory));
+      conditions.push(eq116(resourceLinks.industryCategory, input.industryCategory));
     }
-    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc87(resourceLinks.createdAt));
+    const links = await db.select().from(resourceLinks).where(and92(...conditions)).orderBy(desc88(resourceLinks.createdAt));
     const swotSummary = {
       strengths: links.filter((l) => l.swotRelevance === "strength"),
       weaknesses: links.filter((l) => l.swotRelevance === "weakness"),
@@ -88179,7 +88219,7 @@ var resourceLinksRouter = router({
     requiresAction: z162.boolean().optional()
   })).mutation(async ({ input }) => {
     const { id, ...updates } = input;
-    await db.update(resourceLinks).set(updates).where(eq115(resourceLinks.id, id));
+    await db.update(resourceLinks).set(updates).where(eq116(resourceLinks.id, id));
     return { success: true };
   }),
   // Record action taken on a resource link
@@ -88191,7 +88231,7 @@ var resourceLinksRouter = router({
       actionTaken: input.actionTaken,
       actionTakenBy: ctx.user.id,
       actionTakenAt: /* @__PURE__ */ new Date()
-    }).where(eq115(resourceLinks.id, input.id));
+    }).where(eq116(resourceLinks.id, input.id));
     return { success: true };
   }),
   // Get all links (admin view)
@@ -88201,12 +88241,12 @@ var resourceLinksRouter = router({
   })).query(async ({ input }) => {
     const conditions = [];
     if (input.dashboard) {
-      conditions.push(eq115(resourceLinks.dashboard, input.dashboard));
+      conditions.push(eq116(resourceLinks.dashboard, input.dashboard));
     }
     if (!input.includeInactive) {
-      conditions.push(eq115(resourceLinks.isActive, true));
+      conditions.push(eq116(resourceLinks.isActive, true));
     }
-    const links = await db.select().from(resourceLinks).where(conditions.length > 0 ? and92(...conditions) : void 0).orderBy(desc87(resourceLinks.createdAt));
+    const links = await db.select().from(resourceLinks).where(conditions.length > 0 ? and92(...conditions) : void 0).orderBy(desc88(resourceLinks.createdAt));
     return links;
   }),
   // Seed ticker with government announcements (admin only)
@@ -88220,7 +88260,7 @@ var resourceLinksRouter = router({
 import { z as z163 } from "zod";
 init_db();
 init_schema();
-import { eq as eq116, and as and93, desc as desc88, sql as sql76, inArray as inArray10, lt as lt5 } from "drizzle-orm";
+import { eq as eq117, and as and93, desc as desc89, sql as sql76, inArray as inArray10, lt as lt5 } from "drizzle-orm";
 import crypto34 from "crypto";
 var readAndSignRouter = router({
   // Create a required reading assignment
@@ -88256,14 +88296,14 @@ var readAndSignRouter = router({
     if (!employeeId) {
       return [];
     }
-    const [employee] = await db.select().from(employees).where(eq116(employees.id, employeeId)).limit(1);
+    const [employee] = await db.select().from(employees).where(eq117(employees.id, employeeId)).limit(1);
     if (!employee) {
       return [];
     }
     const allRequirements = await db.select({
       requirement: requiredReadings,
       resourceLink: resourceLinks
-    }).from(requiredReadings).innerJoin(resourceLinks, eq116(requiredReadings.resourceLinkId, resourceLinks.id)).where(eq116(requiredReadings.isActive, true));
+    }).from(requiredReadings).innerJoin(resourceLinks, eq117(requiredReadings.resourceLinkId, resourceLinks.id)).where(eq117(requiredReadings.isActive, true));
     const applicableRequirements = allRequirements.filter(({ requirement }) => {
       switch (requirement.assignmentType) {
         case "all_employees":
@@ -88281,7 +88321,7 @@ var readAndSignRouter = router({
           return false;
       }
     });
-    const acknowledgments = await db.select().from(readingAcknowledgments).where(eq116(readingAcknowledgments.employeeId, employeeId));
+    const acknowledgments = await db.select().from(readingAcknowledgments).where(eq117(readingAcknowledgments.employeeId, employeeId));
     const acknowledgedIds = new Set(acknowledgments.map((a) => a.requiredReadingId));
     const result = applicableRequirements.map(({ requirement, resourceLink }) => ({
       ...requirement,
@@ -88304,13 +88344,13 @@ var readAndSignRouter = router({
     confirmationText: z163.string().optional(),
     timeSpentSeconds: z163.number().optional()
   })).mutation(async ({ ctx, input }) => {
-    const [requirement] = await db.select().from(requiredReadings).where(eq116(requiredReadings.id, input.requiredReadingId)).limit(1);
+    const [requirement] = await db.select().from(requiredReadings).where(eq117(requiredReadings.id, input.requiredReadingId)).limit(1);
     if (!requirement) {
       throw new Error("Required reading not found");
     }
     const [existing] = await db.select().from(readingAcknowledgments).where(and93(
-      eq116(readingAcknowledgments.requiredReadingId, input.requiredReadingId),
-      eq116(readingAcknowledgments.employeeId, input.employeeId)
+      eq117(readingAcknowledgments.requiredReadingId, input.requiredReadingId),
+      eq117(readingAcknowledgments.employeeId, input.employeeId)
     )).limit(1);
     if (existing) {
       throw new Error("Already acknowledged this reading");
@@ -88335,20 +88375,20 @@ var readAndSignRouter = router({
   getComplianceStatus: protectedProcedure.input(z163.object({
     requiredReadingId: z163.number()
   })).query(async ({ input }) => {
-    const [requirement] = await db.select().from(requiredReadings).where(eq116(requiredReadings.id, input.requiredReadingId)).limit(1);
+    const [requirement] = await db.select().from(requiredReadings).where(eq117(requiredReadings.id, input.requiredReadingId)).limit(1);
     if (!requirement) {
       throw new Error("Required reading not found");
     }
     let applicableEmployees = [];
     switch (requirement.assignmentType) {
       case "all_employees":
-        applicableEmployees = await db.select().from(employees).where(eq116(employees.status, "active"));
+        applicableEmployees = await db.select().from(employees).where(eq117(employees.status, "active"));
         break;
       case "entity":
-        applicableEmployees = await db.select().from(employees).where(and93(eq116(employees.entity, requirement.scopeValue || ""), eq116(employees.status, "active")));
+        applicableEmployees = await db.select().from(employees).where(and93(eq117(employees.entity, requirement.scopeValue || ""), eq117(employees.status, "active")));
         break;
       case "department":
-        applicableEmployees = await db.select().from(employees).where(and93(eq116(employees.department, requirement.scopeValue || ""), eq116(employees.status, "active")));
+        applicableEmployees = await db.select().from(employees).where(and93(eq117(employees.department, requirement.scopeValue || ""), eq117(employees.status, "active")));
         break;
       case "individual":
         const ids = requirement.scopeEmployeeIds;
@@ -88357,7 +88397,7 @@ var readAndSignRouter = router({
         }
         break;
     }
-    const acknowledgments = await db.select().from(readingAcknowledgments).where(eq116(readingAcknowledgments.requiredReadingId, input.requiredReadingId));
+    const acknowledgments = await db.select().from(readingAcknowledgments).where(eq117(readingAcknowledgments.requiredReadingId, input.requiredReadingId));
     const acknowledgedEmployeeIds = new Set(acknowledgments.map((a) => a.employeeId));
     const completed = applicableEmployees.filter((e) => acknowledgedEmployeeIds.has(e.id));
     const pending = applicableEmployees.filter((e) => !acknowledgedEmployeeIds.has(e.id));
@@ -88390,14 +88430,14 @@ var readAndSignRouter = router({
   })).query(async ({ input }) => {
     const conditions = [];
     if (!input.includeInactive) {
-      conditions.push(eq116(requiredReadings.isActive, true));
+      conditions.push(eq117(requiredReadings.isActive, true));
     }
     const requirements = await db.select({
       requirement: requiredReadings,
       resourceLink: resourceLinks
-    }).from(requiredReadings).innerJoin(resourceLinks, eq116(requiredReadings.resourceLinkId, resourceLinks.id)).where(conditions.length > 0 ? and93(...conditions) : void 0).orderBy(desc88(requiredReadings.createdAt));
+    }).from(requiredReadings).innerJoin(resourceLinks, eq117(requiredReadings.resourceLinkId, resourceLinks.id)).where(conditions.length > 0 ? and93(...conditions) : void 0).orderBy(desc89(requiredReadings.createdAt));
     const result = await Promise.all(requirements.map(async ({ requirement, resourceLink }) => {
-      const [countResult] = await db.select({ count: sql76`count(*)` }).from(readingAcknowledgments).where(eq116(readingAcknowledgments.requiredReadingId, requirement.id));
+      const [countResult] = await db.select({ count: sql76`count(*)` }).from(readingAcknowledgments).where(eq117(readingAcknowledgments.requiredReadingId, requirement.id));
       return {
         ...requirement,
         resourceLink,
@@ -88413,7 +88453,7 @@ var readAndSignRouter = router({
   })).mutation(async ({ input }) => {
     await db.update(resourceLinks).set({
       // We'll add this field to resourceLinks schema
-    }).where(eq116(resourceLinks.id, input.resourceLinkId));
+    }).where(eq117(resourceLinks.id, input.resourceLinkId));
     return { success: true };
   }),
   // Get overdue readings for notifications
@@ -88422,27 +88462,27 @@ var readAndSignRouter = router({
     const overdueRequirements = await db.select({
       requirement: requiredReadings,
       resourceLink: resourceLinks
-    }).from(requiredReadings).innerJoin(resourceLinks, eq116(requiredReadings.resourceLinkId, resourceLinks.id)).where(and93(
-      eq116(requiredReadings.isActive, true),
+    }).from(requiredReadings).innerJoin(resourceLinks, eq117(requiredReadings.resourceLinkId, resourceLinks.id)).where(and93(
+      eq117(requiredReadings.isActive, true),
       lt5(requiredReadings.dueDate, now)
     ));
     return overdueRequirements;
   }),
   // Deactivate a requirement
   deactivateRequirement: protectedProcedure.input(z163.object({ id: z163.number() })).mutation(async ({ input }) => {
-    await db.update(requiredReadings).set({ isActive: false }).where(eq116(requiredReadings.id, input.id));
+    await db.update(requiredReadings).set({ isActive: false }).where(eq117(requiredReadings.id, input.id));
     return { success: true };
   }),
   // Get acknowledgment details
   getAcknowledgmentDetails: protectedProcedure.input(z163.object({
     acknowledgmentId: z163.number()
   })).query(async ({ input }) => {
-    const [acknowledgment] = await db.select().from(readingAcknowledgments).where(eq116(readingAcknowledgments.id, input.acknowledgmentId)).limit(1);
+    const [acknowledgment] = await db.select().from(readingAcknowledgments).where(eq117(readingAcknowledgments.id, input.acknowledgmentId)).limit(1);
     if (!acknowledgment) {
       throw new Error("Acknowledgment not found");
     }
-    const [employee] = await db.select().from(employees).where(eq116(employees.id, acknowledgment.employeeId)).limit(1);
-    const [resourceLink] = await db.select().from(resourceLinks).where(eq116(resourceLinks.id, acknowledgment.resourceLinkId)).limit(1);
+    const [employee] = await db.select().from(employees).where(eq117(employees.id, acknowledgment.employeeId)).limit(1);
+    const [resourceLink] = await db.select().from(resourceLinks).where(eq117(resourceLinks.id, acknowledgment.resourceLinkId)).limit(1);
     return {
       ...acknowledgment,
       employee,
@@ -88455,7 +88495,7 @@ var readAndSignRouter = router({
 import { z as z164 } from "zod";
 init_db();
 init_schema();
-import { eq as eq117, desc as desc89, asc as asc8, and as and94, gte as gte22, lte as lte18, sql as sql77 } from "drizzle-orm";
+import { eq as eq118, desc as desc90, asc as asc8, and as and94, gte as gte22, lte as lte18, sql as sql77 } from "drizzle-orm";
 var governmentActionsRouter = router({
   // ============================================================================
   // AGENCIES
@@ -88467,13 +88507,13 @@ var governmentActionsRouter = router({
   }).optional()).query(async ({ input }) => {
     const conditions = [];
     if (input?.activeOnly !== false) {
-      conditions.push(eq117(governmentAgencies.isActive, true));
+      conditions.push(eq118(governmentAgencies.isActive, true));
     }
     if (input?.level) {
-      conditions.push(eq117(governmentAgencies.level, input.level));
+      conditions.push(eq118(governmentAgencies.level, input.level));
     }
     if (input?.state) {
-      conditions.push(eq117(governmentAgencies.state, input.state));
+      conditions.push(eq118(governmentAgencies.state, input.state));
     }
     const agencies = await db.select().from(governmentAgencies).where(conditions.length > 0 ? and94(...conditions) : void 0).orderBy(asc8(governmentAgencies.name));
     return agencies;
@@ -88526,22 +88566,22 @@ var governmentActionsRouter = router({
   }).optional()).query(async ({ input }) => {
     const conditions = [];
     if (input?.status) {
-      conditions.push(eq117(governmentActions.status, input.status));
+      conditions.push(eq118(governmentActions.status, input.status));
     }
     if (input?.actionType) {
-      conditions.push(eq117(governmentActions.actionType, input.actionType));
+      conditions.push(eq118(governmentActions.actionType, input.actionType));
     }
     if (input?.agencyId) {
-      conditions.push(eq117(governmentActions.agencyId, input.agencyId));
+      conditions.push(eq118(governmentActions.agencyId, input.agencyId));
     }
     if (input?.impactLevel) {
-      conditions.push(eq117(governmentActions.impactLevel, input.impactLevel));
+      conditions.push(eq118(governmentActions.impactLevel, input.impactLevel));
     }
     if (input?.complianceStatus) {
-      conditions.push(eq117(governmentActions.complianceStatus, input.complianceStatus));
+      conditions.push(eq118(governmentActions.complianceStatus, input.complianceStatus));
     }
     if (input?.showInTickerOnly) {
-      conditions.push(eq117(governmentActions.showInTicker, true));
+      conditions.push(eq118(governmentActions.showInTicker, true));
     }
     if (input?.upcomingDeadlinesOnly) {
       const now = /* @__PURE__ */ new Date();
@@ -88552,7 +88592,7 @@ var governmentActionsRouter = router({
     const actions = await db.select({
       action: governmentActions,
       agency: governmentAgencies
-    }).from(governmentActions).leftJoin(governmentAgencies, eq117(governmentActions.agencyId, governmentAgencies.id)).where(conditions.length > 0 ? and94(...conditions) : void 0).orderBy(desc89(governmentActions.deadline), desc89(governmentActions.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
+    }).from(governmentActions).leftJoin(governmentAgencies, eq118(governmentActions.agencyId, governmentAgencies.id)).where(conditions.length > 0 ? and94(...conditions) : void 0).orderBy(desc90(governmentActions.deadline), desc90(governmentActions.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
     let filtered = actions;
     if (input?.department) {
       filtered = filtered.filter((a) => {
@@ -88572,9 +88612,9 @@ var governmentActionsRouter = router({
     const [result] = await db.select({
       action: governmentActions,
       agency: governmentAgencies
-    }).from(governmentActions).leftJoin(governmentAgencies, eq117(governmentActions.agencyId, governmentAgencies.id)).where(eq117(governmentActions.id, input.id));
+    }).from(governmentActions).leftJoin(governmentAgencies, eq118(governmentActions.agencyId, governmentAgencies.id)).where(eq118(governmentActions.id, input.id));
     if (!result) return null;
-    const tasks = await db.select().from(governmentActionTasks).where(eq117(governmentActionTasks.governmentActionId, input.id)).orderBy(asc8(governmentActionTasks.dueDate));
+    const tasks = await db.select().from(governmentActionTasks).where(eq118(governmentActionTasks.governmentActionId, input.id)).orderBy(asc8(governmentActionTasks.dueDate));
     return { ...result, tasks };
   }),
   create: protectedProcedure.input(z164.object({
@@ -88666,11 +88706,11 @@ var governmentActionsRouter = router({
     if (estimatedCost !== void 0) {
       updateData.estimatedCost = estimatedCost.toString();
     }
-    await db.update(governmentActions).set(updateData).where(eq117(governmentActions.id, id));
+    await db.update(governmentActions).set(updateData).where(eq118(governmentActions.id, id));
     return { success: true };
   }),
   delete: protectedProcedure.input(z164.object({ id: z164.number() })).mutation(async ({ input }) => {
-    await db.delete(governmentActions).where(eq117(governmentActions.id, input.id));
+    await db.delete(governmentActions).where(eq118(governmentActions.id, input.id));
     return { success: true };
   }),
   // ============================================================================
@@ -88694,11 +88734,11 @@ var governmentActionsRouter = router({
       affectedEntities: governmentActions.affectedEntities,
       agencyCode: governmentAgencies.code,
       agencyName: governmentAgencies.name
-    }).from(governmentActions).leftJoin(governmentAgencies, eq117(governmentActions.agencyId, governmentAgencies.id)).where(and94(
-      eq117(governmentActions.showInTicker, true),
-      eq117(governmentActions.status, "active")
+    }).from(governmentActions).leftJoin(governmentAgencies, eq118(governmentActions.agencyId, governmentAgencies.id)).where(and94(
+      eq118(governmentActions.showInTicker, true),
+      eq118(governmentActions.status, "active")
     )).orderBy(
-      desc89(sql77`CASE 
+      desc90(sql77`CASE 
             WHEN ${governmentActions.tickerPriority} = 'urgent' THEN 4
             WHEN ${governmentActions.tickerPriority} = 'high' THEN 3
             WHEN ${governmentActions.tickerPriority} = 'normal' THEN 2
@@ -88741,10 +88781,10 @@ var governmentActionsRouter = router({
     limit: z164.number().min(1).max(50).default(20)
   }).optional()).query(async ({ input }) => {
     const conditions = [
-      eq117(governmentActions.status, "active")
+      eq118(governmentActions.status, "active")
     ];
     if (input?.category) {
-      conditions.push(eq117(governmentActions.swotCategory, input.category));
+      conditions.push(eq118(governmentActions.swotCategory, input.category));
     }
     const actions = await db.select({
       id: governmentActions.id,
@@ -88757,7 +88797,7 @@ var governmentActionsRouter = router({
       deadline: governmentActions.deadline,
       affectedEntities: governmentActions.affectedEntities,
       agencyCode: governmentAgencies.code
-    }).from(governmentActions).leftJoin(governmentAgencies, eq117(governmentActions.agencyId, governmentAgencies.id)).where(and94(...conditions)).orderBy(desc89(governmentActions.createdAt)).limit(input?.limit || 20);
+    }).from(governmentActions).leftJoin(governmentAgencies, eq118(governmentActions.agencyId, governmentAgencies.id)).where(and94(...conditions)).orderBy(desc90(governmentActions.createdAt)).limit(input?.limit || 20);
     let filtered = actions;
     if (input?.entity) {
       filtered = filtered.filter((a) => {
@@ -88799,7 +88839,7 @@ var governmentActionsRouter = router({
     if (input.status === "completed") {
       updateData.completedAt = /* @__PURE__ */ new Date();
     }
-    await db.update(governmentActionTasks).set(updateData).where(eq117(governmentActionTasks.id, id));
+    await db.update(governmentActionTasks).set(updateData).where(eq118(governmentActionTasks.id, id));
     return { success: true };
   }),
   // ============================================================================
@@ -88808,29 +88848,29 @@ var governmentActionsRouter = router({
   getStats: publicProcedure.query(async () => {
     const now = /* @__PURE__ */ new Date();
     const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1e3);
-    const [totalActions] = await db.select({ count: sql77`COUNT(*)` }).from(governmentActions).where(eq117(governmentActions.status, "active"));
+    const [totalActions] = await db.select({ count: sql77`COUNT(*)` }).from(governmentActions).where(eq118(governmentActions.status, "active"));
     const [upcomingDeadlines] = await db.select({ count: sql77`COUNT(*)` }).from(governmentActions).where(and94(
-      eq117(governmentActions.status, "active"),
+      eq118(governmentActions.status, "active"),
       gte22(governmentActions.deadline, now),
       lte18(governmentActions.deadline, thirtyDaysFromNow)
     ));
     const [overdueActions] = await db.select({ count: sql77`COUNT(*)` }).from(governmentActions).where(and94(
-      eq117(governmentActions.status, "active"),
+      eq118(governmentActions.status, "active"),
       lte18(governmentActions.deadline, now),
-      eq117(governmentActions.complianceStatus, "pending")
+      eq118(governmentActions.complianceStatus, "pending")
     ));
     const [pendingCompliance] = await db.select({ count: sql77`COUNT(*)` }).from(governmentActions).where(and94(
-      eq117(governmentActions.status, "active"),
-      eq117(governmentActions.complianceStatus, "pending")
+      eq118(governmentActions.status, "active"),
+      eq118(governmentActions.complianceStatus, "pending")
     ));
     const byType = await db.select({
       type: governmentActions.actionType,
       count: sql77`COUNT(*)`
-    }).from(governmentActions).where(eq117(governmentActions.status, "active")).groupBy(governmentActions.actionType);
+    }).from(governmentActions).where(eq118(governmentActions.status, "active")).groupBy(governmentActions.actionType);
     const byImpact = await db.select({
       level: governmentActions.impactLevel,
       count: sql77`COUNT(*)`
-    }).from(governmentActions).where(eq117(governmentActions.status, "active")).groupBy(governmentActions.impactLevel);
+    }).from(governmentActions).where(eq118(governmentActions.status, "active")).groupBy(governmentActions.impactLevel);
     return {
       totalActions: totalActions?.count || 0,
       upcomingDeadlines: upcomingDeadlines?.count || 0,
@@ -88846,7 +88886,7 @@ var governmentActionsRouter = router({
 import { z as z165 } from "zod";
 init_db();
 init_schema();
-import { eq as eq118, desc as desc90, asc as asc9, and as and95, gte as gte23, lte as lte19, sql as sql78 } from "drizzle-orm";
+import { eq as eq119, desc as desc91, asc as asc9, and as and95, gte as gte23, lte as lte19, sql as sql78 } from "drizzle-orm";
 var stockTickerRouter = router({
   // ============================================================================
   // WATCHLIST / PORTFOLIO
@@ -88858,15 +88898,15 @@ var stockTickerRouter = router({
   }).optional()).query(async ({ input }) => {
     const conditions = [];
     if (input?.entityId) {
-      conditions.push(eq118(stockWatchlist.entityId, input.entityId));
+      conditions.push(eq119(stockWatchlist.entityId, input.entityId));
     }
     if (input?.holdingsOnly) {
-      conditions.push(eq118(stockWatchlist.isHolding, true));
+      conditions.push(eq119(stockWatchlist.isHolding, true));
     }
     if (input?.watchlistOnly) {
-      conditions.push(eq118(stockWatchlist.isHolding, false));
+      conditions.push(eq119(stockWatchlist.isHolding, false));
     }
-    const items = await db.select().from(stockWatchlist).where(conditions.length > 0 ? and95(...conditions) : void 0).orderBy(desc90(stockWatchlist.isHolding), asc9(stockWatchlist.symbol));
+    const items = await db.select().from(stockWatchlist).where(conditions.length > 0 ? and95(...conditions) : void 0).orderBy(desc91(stockWatchlist.isHolding), asc9(stockWatchlist.symbol));
     const portfolio = items.filter((i) => i.isHolding);
     const totalValue = portfolio.reduce((sum5, item) => {
       const shares = Number(item.shares) || 0;
@@ -88938,11 +88978,11 @@ var stockTickerRouter = router({
     if (shares !== void 0) updateData.shares = shares.toString();
     if (costBasis !== void 0) updateData.costBasis = costBasis.toString();
     if (priceChangeThreshold !== void 0) updateData.priceChangeThreshold = priceChangeThreshold.toString();
-    await db.update(stockWatchlist).set(updateData).where(eq118(stockWatchlist.id, id));
+    await db.update(stockWatchlist).set(updateData).where(eq119(stockWatchlist.id, id));
     return { success: true };
   }),
   removeFromWatchlist: protectedProcedure.input(z165.object({ id: z165.number() })).mutation(async ({ input }) => {
-    await db.delete(stockWatchlist).where(eq118(stockWatchlist.id, input.id));
+    await db.delete(stockWatchlist).where(eq119(stockWatchlist.id, input.id));
     return { success: true };
   }),
   // ============================================================================
@@ -88969,25 +89009,25 @@ var stockTickerRouter = router({
     unreadOnly: z165.boolean().optional(),
     limit: z165.number().min(1).max(100).default(50)
   }).optional()).query(async ({ input }) => {
-    const conditions = [eq118(stockAlerts.isDismissed, false)];
+    const conditions = [eq119(stockAlerts.isDismissed, false)];
     if (input?.symbol) {
-      conditions.push(eq118(stockAlerts.symbol, input.symbol.toUpperCase()));
+      conditions.push(eq119(stockAlerts.symbol, input.symbol.toUpperCase()));
     }
     if (input?.alertType) {
-      conditions.push(eq118(stockAlerts.alertType, input.alertType));
+      conditions.push(eq119(stockAlerts.alertType, input.alertType));
     }
     if (input?.unreadOnly) {
-      conditions.push(eq118(stockAlerts.isRead, false));
+      conditions.push(eq119(stockAlerts.isRead, false));
     }
-    const alerts = await db.select().from(stockAlerts).where(and95(...conditions)).orderBy(desc90(stockAlerts.createdAt)).limit(input?.limit || 50);
+    const alerts = await db.select().from(stockAlerts).where(and95(...conditions)).orderBy(desc91(stockAlerts.createdAt)).limit(input?.limit || 50);
     return alerts;
   }),
   markAlertRead: protectedProcedure.input(z165.object({ id: z165.number() })).mutation(async ({ input }) => {
-    await db.update(stockAlerts).set({ isRead: true }).where(eq118(stockAlerts.id, input.id));
+    await db.update(stockAlerts).set({ isRead: true }).where(eq119(stockAlerts.id, input.id));
     return { success: true };
   }),
   dismissAlert: protectedProcedure.input(z165.object({ id: z165.number() })).mutation(async ({ input }) => {
-    await db.update(stockAlerts).set({ isDismissed: true }).where(eq118(stockAlerts.id, input.id));
+    await db.update(stockAlerts).set({ isDismissed: true }).where(eq119(stockAlerts.id, input.id));
     return { success: true };
   }),
   // ============================================================================
@@ -88997,17 +89037,17 @@ var stockTickerRouter = router({
     entityId: z165.number().optional(),
     includeAlerts: z165.boolean().default(true)
   }).optional()).query(async ({ input }) => {
-    const conditions = [eq118(stockWatchlist.isHolding, true)];
+    const conditions = [eq119(stockWatchlist.isHolding, true)];
     if (input?.entityId) {
-      conditions.push(eq118(stockWatchlist.entityId, input.entityId));
+      conditions.push(eq119(stockWatchlist.entityId, input.entityId));
     }
     const holdings3 = await db.select().from(stockWatchlist).where(and95(...conditions)).orderBy(asc9(stockWatchlist.symbol));
     let alerts = [];
     if (input?.includeAlerts) {
       alerts = await db.select().from(stockAlerts).where(and95(
-        eq118(stockAlerts.isDismissed, false),
-        eq118(stockAlerts.showInTicker, true)
-      )).orderBy(desc90(stockAlerts.createdAt)).limit(10);
+        eq119(stockAlerts.isDismissed, false),
+        eq119(stockAlerts.showInTicker, true)
+      )).orderBy(desc91(stockAlerts.createdAt)).limit(10);
     }
     const tickerItems = holdings3.map((h) => ({
       symbol: h.symbol,
@@ -89049,10 +89089,10 @@ var stockTickerRouter = router({
       lte19(stockEvents.eventDate, futureDate)
     ];
     if (input?.symbol) {
-      conditions.push(eq118(stockEvents.symbol, input.symbol.toUpperCase()));
+      conditions.push(eq119(stockEvents.symbol, input.symbol.toUpperCase()));
     }
     if (input?.eventType) {
-      conditions.push(eq118(stockEvents.eventType, input.eventType));
+      conditions.push(eq119(stockEvents.eventType, input.eventType));
     }
     const events = await db.select().from(stockEvents).where(and95(...conditions)).orderBy(asc9(stockEvents.eventDate));
     return events;
@@ -89061,9 +89101,9 @@ var stockTickerRouter = router({
   // STATISTICS
   // ============================================================================
   getPortfolioStats: publicProcedure.input(z165.object({ entityId: z165.number().optional() }).optional()).query(async ({ input }) => {
-    const conditions = [eq118(stockWatchlist.isHolding, true)];
+    const conditions = [eq119(stockWatchlist.isHolding, true)];
     if (input?.entityId) {
-      conditions.push(eq118(stockWatchlist.entityId, input.entityId));
+      conditions.push(eq119(stockWatchlist.entityId, input.entityId));
     }
     const holdings3 = await db.select().from(stockWatchlist).where(and95(...conditions));
     const totalValue = holdings3.reduce((sum5, h) => {
@@ -89091,8 +89131,8 @@ var stockTickerRouter = router({
     const topGainers = [...withGains].sort((a, b) => b.gainPercent - a.gainPercent).slice(0, 5);
     const topLosers = [...withGains].sort((a, b) => a.gainPercent - b.gainPercent).slice(0, 5);
     const [alertCount] = await db.select({ count: sql78`COUNT(*)` }).from(stockAlerts).where(and95(
-      eq118(stockAlerts.isRead, false),
-      eq118(stockAlerts.isDismissed, false)
+      eq119(stockAlerts.isRead, false),
+      eq119(stockAlerts.isDismissed, false)
     ));
     return {
       totalValue,
@@ -89114,7 +89154,7 @@ var stockTickerRouter = router({
 import { z as z166 } from "zod";
 init_db();
 init_schema();
-import { eq as eq119, desc as desc91, and as and96, or as or16, like as like8, sql as sql79 } from "drizzle-orm";
+import { eq as eq120, desc as desc92, and as and96, or as or16, like as like8, sql as sql79 } from "drizzle-orm";
 var officeSuiteRouter = router({
   // ==================== DOCUMENTS ====================
   // Create a new document
@@ -89163,37 +89203,37 @@ var officeSuiteRouter = router({
   })).query(async ({ ctx, input }) => {
     const conditions = [
       or16(
-        eq119(officeDocuments.ownerId, ctx.user.id),
-        eq119(officeDocuments.createdBy, ctx.user.id)
+        eq120(officeDocuments.ownerId, ctx.user.id),
+        eq120(officeDocuments.createdBy, ctx.user.id)
       )
     ];
     if (input.documentType) {
-      conditions.push(eq119(officeDocuments.documentType, input.documentType));
+      conditions.push(eq120(officeDocuments.documentType, input.documentType));
     }
     if (input.status) {
-      conditions.push(eq119(officeDocuments.status, input.status));
+      conditions.push(eq120(officeDocuments.status, input.status));
     }
     if (input.department) {
-      conditions.push(eq119(officeDocuments.department, input.department));
+      conditions.push(eq120(officeDocuments.department, input.department));
     }
     if (input.category) {
-      conditions.push(eq119(officeDocuments.category, input.category));
+      conditions.push(eq120(officeDocuments.category, input.category));
     }
     if (input.search) {
       conditions.push(like8(officeDocuments.title, `%${input.search}%`));
     }
-    const docs = await db.select().from(officeDocuments).where(and96(...conditions)).orderBy(desc91(officeDocuments.updatedAt)).limit(input.limit).offset(input.offset);
+    const docs = await db.select().from(officeDocuments).where(and96(...conditions)).orderBy(desc92(officeDocuments.updatedAt)).limit(input.limit).offset(input.offset);
     return docs;
   }),
   // Get single document
   getDocument: protectedProcedure.input(z166.object({ id: z166.number() })).query(async ({ ctx, input }) => {
-    const [doc] = await db.select().from(officeDocuments).where(eq119(officeDocuments.id, input.id));
+    const [doc] = await db.select().from(officeDocuments).where(eq120(officeDocuments.id, input.id));
     if (!doc) {
       throw new Error("Document not found");
     }
-    const versions2 = await db.select().from(officeDocumentVersions).where(eq119(officeDocumentVersions.documentId, input.id)).orderBy(desc91(officeDocumentVersions.versionNumber));
-    const collaborators = await db.select().from(officeDocumentCollaborators).where(eq119(officeDocumentCollaborators.documentId, input.id));
-    const signatures4 = await db.select().from(officeDocumentSignatures).where(eq119(officeDocumentSignatures.documentId, input.id));
+    const versions2 = await db.select().from(officeDocumentVersions).where(eq120(officeDocumentVersions.documentId, input.id)).orderBy(desc92(officeDocumentVersions.versionNumber));
+    const collaborators = await db.select().from(officeDocumentCollaborators).where(eq120(officeDocumentCollaborators.documentId, input.id));
+    const signatures4 = await db.select().from(officeDocumentSignatures).where(eq120(officeDocumentSignatures.documentId, input.id));
     return { ...doc, versions: versions2, collaborators, signatures: signatures4 };
   }),
   // Update document
@@ -89208,12 +89248,12 @@ var officeSuiteRouter = router({
     createVersion: z166.boolean().default(false),
     changeDescription: z166.string().optional()
   })).mutation(async ({ ctx, input }) => {
-    const [doc] = await db.select().from(officeDocuments).where(eq119(officeDocuments.id, input.id));
+    const [doc] = await db.select().from(officeDocuments).where(eq120(officeDocuments.id, input.id));
     if (!doc) {
       throw new Error("Document not found");
     }
     if (input.createVersion && input.content) {
-      const [lastVersion] = await db.select().from(officeDocumentVersions).where(eq119(officeDocumentVersions.documentId, input.id)).orderBy(desc91(officeDocumentVersions.versionNumber)).limit(1);
+      const [lastVersion] = await db.select().from(officeDocumentVersions).where(eq120(officeDocumentVersions.documentId, input.id)).orderBy(desc92(officeDocumentVersions.versionNumber)).limit(1);
       const newVersionNumber = (lastVersion?.versionNumber ?? 0) + 1;
       await db.insert(officeDocumentVersions).values({
         documentId: input.id,
@@ -89236,12 +89276,12 @@ var officeSuiteRouter = router({
       ...input.tags && { tags: JSON.stringify(input.tags) },
       ...input.status === "final" && { finalizedAt: /* @__PURE__ */ new Date() },
       ...input.status === "archived" && { archivedAt: /* @__PURE__ */ new Date() }
-    }).where(eq119(officeDocuments.id, input.id));
+    }).where(eq120(officeDocuments.id, input.id));
     return { success: true };
   }),
   // Delete document
   deleteDocument: protectedProcedure.input(z166.object({ id: z166.number() })).mutation(async ({ ctx, input }) => {
-    await db.update(officeDocuments).set({ status: "deleted" }).where(eq119(officeDocuments.id, input.id));
+    await db.update(officeDocuments).set({ status: "deleted" }).where(eq120(officeDocuments.id, input.id));
     return { success: true };
   }),
   // ==================== COLLABORATORS ====================
@@ -89275,8 +89315,8 @@ var officeSuiteRouter = router({
     userId: z166.number()
   })).mutation(async ({ ctx, input }) => {
     await db.delete(officeDocumentCollaborators).where(and96(
-      eq119(officeDocumentCollaborators.documentId, input.documentId),
-      eq119(officeDocumentCollaborators.userId, input.userId)
+      eq120(officeDocumentCollaborators.documentId, input.documentId),
+      eq120(officeDocumentCollaborators.userId, input.userId)
     ));
     return { success: true };
   }),
@@ -89303,7 +89343,7 @@ var officeSuiteRouter = router({
   }),
   // Get comments
   getComments: protectedProcedure.input(z166.object({ documentId: z166.number() })).query(async ({ ctx, input }) => {
-    const comments = await db.select().from(officeDocumentComments).where(eq119(officeDocumentComments.documentId, input.documentId)).orderBy(desc91(officeDocumentComments.createdAt));
+    const comments = await db.select().from(officeDocumentComments).where(eq120(officeDocumentComments.documentId, input.documentId)).orderBy(desc92(officeDocumentComments.createdAt));
     return comments;
   }),
   // Resolve comment
@@ -89312,7 +89352,7 @@ var officeSuiteRouter = router({
       isResolved: true,
       resolvedBy: ctx.user.id,
       resolvedAt: /* @__PURE__ */ new Date()
-    }).where(eq119(officeDocumentComments.id, input.id));
+    }).where(eq120(officeDocumentComments.id, input.id));
     return { success: true };
   }),
   // ==================== SIGNATURES ====================
@@ -89346,7 +89386,7 @@ var officeSuiteRouter = router({
       signatureType: "drawn",
       status: "pending"
     });
-    await db.update(officeDocuments).set({ status: "pending_signature" }).where(eq119(officeDocuments.id, input.documentId));
+    await db.update(officeDocuments).set({ status: "pending_signature" }).where(eq120(officeDocuments.id, input.documentId));
     return { id: sig.insertId };
   }),
   // Sign document
@@ -89356,7 +89396,7 @@ var officeSuiteRouter = router({
     signatureData: z166.string(),
     signatureImageUrl: z166.string().optional()
   })).mutation(async ({ ctx, input }) => {
-    const [sig] = await db.select().from(officeDocumentSignatures).where(eq119(officeDocumentSignatures.id, input.signatureId));
+    const [sig] = await db.select().from(officeDocumentSignatures).where(eq120(officeDocumentSignatures.id, input.signatureId));
     if (!sig) {
       throw new Error("Signature request not found");
     }
@@ -89371,13 +89411,13 @@ var officeSuiteRouter = router({
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         userId: ctx.user.id
       }])
-    }).where(eq119(officeDocumentSignatures.id, input.signatureId));
+    }).where(eq120(officeDocumentSignatures.id, input.signatureId));
     await db.update(officeDocuments).set({
       signatureCount: sql79`${officeDocuments.signatureCount} + 1`
-    }).where(eq119(officeDocuments.id, sig.documentId));
-    const [doc] = await db.select().from(officeDocuments).where(eq119(officeDocuments.id, sig.documentId));
+    }).where(eq120(officeDocuments.id, sig.documentId));
+    const [doc] = await db.select().from(officeDocuments).where(eq120(officeDocuments.id, sig.documentId));
     if (doc && doc.signatureCount !== null && doc.requiredSignatures !== null && doc.signatureCount + 1 >= doc.requiredSignatures) {
-      await db.update(officeDocuments).set({ status: "signed" }).where(eq119(officeDocuments.id, sig.documentId));
+      await db.update(officeDocuments).set({ status: "signed" }).where(eq120(officeDocuments.id, sig.documentId));
     }
     return { success: true };
   }),
@@ -89390,20 +89430,20 @@ var officeSuiteRouter = router({
   })).query(async ({ ctx, input }) => {
     const conditions = [
       or16(
-        eq119(officeDocumentTemplates.isPublic, true),
-        eq119(officeDocumentTemplates.createdBy, ctx.user.id)
+        eq120(officeDocumentTemplates.isPublic, true),
+        eq120(officeDocumentTemplates.createdBy, ctx.user.id)
       )
     ];
     if (input.documentType) {
-      conditions.push(eq119(officeDocumentTemplates.documentType, input.documentType));
+      conditions.push(eq120(officeDocumentTemplates.documentType, input.documentType));
     }
     if (input.category) {
-      conditions.push(eq119(officeDocumentTemplates.category, input.category));
+      conditions.push(eq120(officeDocumentTemplates.category, input.category));
     }
     if (input.department) {
-      conditions.push(eq119(officeDocumentTemplates.department, input.department));
+      conditions.push(eq120(officeDocumentTemplates.department, input.department));
     }
-    const templates = await db.select().from(officeDocumentTemplates).where(and96(...conditions)).orderBy(desc91(officeDocumentTemplates.usageCount));
+    const templates = await db.select().from(officeDocumentTemplates).where(and96(...conditions)).orderBy(desc92(officeDocumentTemplates.usageCount));
     return templates;
   }),
   // Create template
@@ -89443,7 +89483,7 @@ var officeSuiteRouter = router({
     title: z166.string(),
     variables: z166.record(z166.string()).optional()
   })).mutation(async ({ ctx, input }) => {
-    const [template] = await db.select().from(officeDocumentTemplates).where(eq119(officeDocumentTemplates.id, input.templateId));
+    const [template] = await db.select().from(officeDocumentTemplates).where(eq120(officeDocumentTemplates.id, input.templateId));
     if (!template) {
       throw new Error("Template not found");
     }
@@ -89466,7 +89506,7 @@ var officeSuiteRouter = router({
       ownerId: ctx.user.id,
       status: "draft"
     });
-    await db.update(officeDocumentTemplates).set({ usageCount: sql79`${officeDocumentTemplates.usageCount} + 1` }).where(eq119(officeDocumentTemplates.id, input.templateId));
+    await db.update(officeDocumentTemplates).set({ usageCount: sql79`${officeDocumentTemplates.usageCount} + 1` }).where(eq120(officeDocumentTemplates.id, input.templateId));
     return { id: doc.insertId };
   }),
   // ==================== PDF OPERATIONS ====================
@@ -89482,7 +89522,7 @@ var officeSuiteRouter = router({
       status: "pending",
       userId: ctx.user.id
     });
-    await db.update(pdfOperations).set({ status: "processing" }).where(eq119(pdfOperations.id, op.insertId));
+    await db.update(pdfOperations).set({ status: "processing" }).where(eq120(pdfOperations.id, op.insertId));
     return { operationId: op.insertId };
   }),
   // Split PDF
@@ -89504,7 +89544,7 @@ var officeSuiteRouter = router({
   }),
   // Get PDF operation status
   getPdfOperationStatus: protectedProcedure.input(z166.object({ operationId: z166.number() })).query(async ({ ctx, input }) => {
-    const [op] = await db.select().from(pdfOperations).where(eq119(pdfOperations.id, input.operationId));
+    const [op] = await db.select().from(pdfOperations).where(eq120(pdfOperations.id, input.operationId));
     return op;
   }),
   // ==================== STATS ====================
@@ -89517,8 +89557,8 @@ var officeSuiteRouter = router({
       signed: sql79`SUM(CASE WHEN status = 'signed' THEN 1 ELSE 0 END)`,
       final: sql79`SUM(CASE WHEN status = 'final' THEN 1 ELSE 0 END)`
     }).from(officeDocuments).where(or16(
-      eq119(officeDocuments.ownerId, ctx.user.id),
-      eq119(officeDocuments.createdBy, ctx.user.id)
+      eq120(officeDocuments.ownerId, ctx.user.id),
+      eq120(officeDocuments.createdBy, ctx.user.id)
     ));
     return stats;
   })
@@ -89528,7 +89568,7 @@ var officeSuiteRouter = router({
 import { z as z167 } from "zod";
 init_db();
 init_schema();
-import { eq as eq120, and as and97, desc as desc92, sql as sql80, gte as gte24, lte as lte20 } from "drizzle-orm";
+import { eq as eq121, and as and97, desc as desc93, sql as sql80, gte as gte24, lte as lte20 } from "drizzle-orm";
 function getISOWeek(date2) {
   const d = new Date(Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate()));
   const dayNum = d.getUTCDay() || 7;
@@ -89582,8 +89622,8 @@ var employeeGamingRouter = router({
     const db7 = await getDb();
     const now = /* @__PURE__ */ new Date();
     const [session] = await db7.select().from(employeeGameSessions).where(and97(
-      eq120(employeeGameSessions.id, input.sessionId),
-      eq120(employeeGameSessions.userId, ctx.user.id)
+      eq121(employeeGameSessions.id, input.sessionId),
+      eq121(employeeGameSessions.userId, ctx.user.id)
     ));
     if (!session) {
       throw new Error("Session not found");
@@ -89594,7 +89634,7 @@ var employeeGamingRouter = router({
       durationMinutes,
       won: input.won ?? false,
       score: input.score ?? 0
-    }).where(eq120(employeeGameSessions.id, input.sessionId));
+    }).where(eq121(employeeGameSessions.id, input.sessionId));
     await (void 0).updateWeeklyProgress(ctx.user.id, session.weekNumber, session.weekYear, durationMinutes, session.gameSlug);
     return { durationMinutes, endTime: now };
   }),
@@ -89605,9 +89645,9 @@ var employeeGamingRouter = router({
     const { weekNumber, weekYear } = getISOWeek(now);
     const { start, end } = getWeekDates(weekNumber, weekYear);
     let [requirement] = await db7.select().from(weeklyGameRequirements).where(and97(
-      eq120(weeklyGameRequirements.userId, ctx.user.id),
-      eq120(weeklyGameRequirements.weekNumber, weekNumber),
-      eq120(weeklyGameRequirements.weekYear, weekYear)
+      eq121(weeklyGameRequirements.userId, ctx.user.id),
+      eq121(weeklyGameRequirements.weekNumber, weekNumber),
+      eq121(weeklyGameRequirements.weekYear, weekYear)
     ));
     if (!requirement) {
       const [newReq] = await db7.insert(weeklyGameRequirements).values({
@@ -89619,13 +89659,13 @@ var employeeGamingRouter = router({
         requiredMinutes: 300
         // 5 hours
       }).$returningId();
-      [requirement] = await db7.select().from(weeklyGameRequirements).where(eq120(weeklyGameRequirements.id, newReq.id));
+      [requirement] = await db7.select().from(weeklyGameRequirements).where(eq121(weeklyGameRequirements.id, newReq.id));
     }
     const sessions = await db7.select().from(employeeGameSessions).where(and97(
-      eq120(employeeGameSessions.userId, ctx.user.id),
-      eq120(employeeGameSessions.weekNumber, weekNumber),
-      eq120(employeeGameSessions.weekYear, weekYear)
-    )).orderBy(desc92(employeeGameSessions.startTime));
+      eq121(employeeGameSessions.userId, ctx.user.id),
+      eq121(employeeGameSessions.weekNumber, weekNumber),
+      eq121(employeeGameSessions.weekYear, weekYear)
+    )).orderBy(desc93(employeeGameSessions.startTime));
     const uniqueGames = new Set(sessions.map((s) => s.gameSlug)).size;
     const totalMinutes = sessions.reduce((sum5, s) => sum5 + (s.durationMinutes || 0), 0);
     return {
@@ -89650,7 +89690,7 @@ var employeeGamingRouter = router({
     offset: z167.number().default(0)
   })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
-    const sessions = await db7.select().from(employeeGameSessions).where(eq120(employeeGameSessions.userId, ctx.user.id)).orderBy(desc92(employeeGameSessions.startTime)).limit(input.limit).offset(input.offset);
+    const sessions = await db7.select().from(employeeGameSessions).where(eq121(employeeGameSessions.userId, ctx.user.id)).orderBy(desc93(employeeGameSessions.startTime)).limit(input.limit).offset(input.offset);
     return sessions;
   }),
   // Get leaderboard
@@ -89665,9 +89705,9 @@ var employeeGamingRouter = router({
     const { weekNumber, weekYear } = getISOWeek(now);
     const { start } = getWeekDates(weekNumber, weekYear);
     const leaderboard = await db7.select().from(gamingLeaderboards).where(and97(
-      eq120(gamingLeaderboards.leaderboardType, input.type),
-      eq120(gamingLeaderboards.period, input.period),
-      input.gameSlug ? eq120(gamingLeaderboards.gameSlug, input.gameSlug) : sql80`1=1`
+      eq121(gamingLeaderboards.leaderboardType, input.type),
+      eq121(gamingLeaderboards.period, input.period),
+      input.gameSlug ? eq121(gamingLeaderboards.gameSlug, input.gameSlug) : sql80`1=1`
     )).orderBy(gamingLeaderboards.rank).limit(input.limit);
     return leaderboard;
   }),
@@ -89680,16 +89720,16 @@ var employeeGamingRouter = router({
     const now = /* @__PURE__ */ new Date();
     const events = await db7.select().from(teamGameEvents).where(and97(
       gte24(teamGameEvents.scheduledStart, now),
-      eq120(teamGameEvents.status, "scheduled")
+      eq121(teamGameEvents.status, "scheduled")
     )).orderBy(teamGameEvents.scheduledStart).limit(input.limit);
     const eventsWithCounts = await Promise.all(events.map(async (event) => {
       const [countResult] = await db7.select({ count: sql80`count(*)` }).from(teamEventParticipants).where(and97(
-        eq120(teamEventParticipants.eventId, event.id),
-        eq120(teamEventParticipants.rsvpStatus, "accepted")
+        eq121(teamEventParticipants.eventId, event.id),
+        eq121(teamEventParticipants.rsvpStatus, "accepted")
       ));
       const [userRsvp] = await db7.select().from(teamEventParticipants).where(and97(
-        eq120(teamEventParticipants.eventId, event.id),
-        eq120(teamEventParticipants.userId, ctx.user.id)
+        eq121(teamEventParticipants.eventId, event.id),
+        eq121(teamEventParticipants.userId, ctx.user.id)
       ));
       return {
         ...event,
@@ -89706,14 +89746,14 @@ var employeeGamingRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     const [existing] = await db7.select().from(teamEventParticipants).where(and97(
-      eq120(teamEventParticipants.eventId, input.eventId),
-      eq120(teamEventParticipants.userId, ctx.user.id)
+      eq121(teamEventParticipants.eventId, input.eventId),
+      eq121(teamEventParticipants.userId, ctx.user.id)
     ));
     if (existing) {
       await db7.update(teamEventParticipants).set({
         rsvpStatus: input.status,
         rsvpAt: /* @__PURE__ */ new Date()
-      }).where(eq120(teamEventParticipants.id, existing.id));
+      }).where(eq121(teamEventParticipants.id, existing.id));
     } else {
       await db7.insert(teamEventParticipants).values({
         eventId: input.eventId,
@@ -89772,8 +89812,8 @@ var employeeGamingRouter = router({
     const now = /* @__PURE__ */ new Date();
     const { weekNumber, weekYear } = input.weekNumber && input.weekYear ? { weekNumber: input.weekNumber, weekYear: input.weekYear } : getISOWeek(now);
     const requirements = await db7.select().from(weeklyGameRequirements).where(and97(
-      eq120(weeklyGameRequirements.weekNumber, weekNumber),
-      eq120(weeklyGameRequirements.weekYear, weekYear)
+      eq121(weeklyGameRequirements.weekNumber, weekNumber),
+      eq121(weeklyGameRequirements.weekYear, weekYear)
     ));
     const totalEmployees = requirements.length;
     const compliant = requirements.filter(
@@ -89801,13 +89841,13 @@ var employeeGamingRouter = router({
     customMessage: z167.string().optional()
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
-    const [event] = await db7.select().from(teamGameEvents).where(eq120(teamGameEvents.id, input.eventId));
+    const [event] = await db7.select().from(teamGameEvents).where(eq121(teamGameEvents.id, input.eventId));
     if (!event) {
       throw new Error("Event not found");
     }
     const participants = await db7.select().from(teamEventParticipants).where(and97(
-      eq120(teamEventParticipants.eventId, input.eventId),
-      eq120(teamEventParticipants.rsvpStatus, "accepted")
+      eq121(teamEventParticipants.eventId, input.eventId),
+      eq121(teamEventParticipants.rsvpStatus, "accepted")
     ));
     const reminderMessage = input.customMessage || `Reminder: ${event.title} starts ${input.reminderType === "24h" ? "tomorrow" : input.reminderType === "1h" ? "in 1 hour" : "in 15 minutes"}!`;
     return {
@@ -89828,7 +89868,7 @@ var employeeGamingRouter = router({
     const events = await db7.select().from(teamGameEvents).where(and97(
       gte24(teamGameEvents.scheduledStart, now),
       lte20(teamGameEvents.scheduledStart, in24Hours),
-      eq120(teamGameEvents.status, "scheduled")
+      eq121(teamGameEvents.status, "scheduled")
     )).orderBy(teamGameEvents.scheduledStart);
     return events.map((event) => {
       const eventTime = new Date(event.scheduledStart).getTime();
@@ -89896,8 +89936,8 @@ var employeeGamingRouter = router({
     const now = /* @__PURE__ */ new Date();
     const { weekNumber, weekYear } = input.weekNumber && input.weekYear ? { weekNumber: input.weekNumber, weekYear: input.weekYear } : getISOWeek(now);
     const requirements = await db7.select().from(weeklyGameRequirements).where(and97(
-      eq120(weeklyGameRequirements.weekNumber, weekNumber),
-      eq120(weeklyGameRequirements.weekYear, weekYear)
+      eq121(weeklyGameRequirements.weekNumber, weekNumber),
+      eq121(weeklyGameRequirements.weekYear, weekYear)
     ));
     const headers = ["User ID", "Week", "Year", "Required Minutes", "Completed Minutes", "Compliance Status", "Unique Games", "Streak Weeks"];
     const rows = requirements.map((r) => [
@@ -89931,8 +89971,8 @@ var employeeGamingRouter = router({
     const { weekNumber, weekYear } = input.weekNumber && input.weekYear ? { weekNumber: input.weekNumber, weekYear: input.weekYear } : getISOWeek(now);
     const { start, end } = getWeekDates(weekNumber, weekYear);
     const requirements = await db7.select().from(weeklyGameRequirements).where(and97(
-      eq120(weeklyGameRequirements.weekNumber, weekNumber),
-      eq120(weeklyGameRequirements.weekYear, weekYear)
+      eq121(weeklyGameRequirements.weekNumber, weekNumber),
+      eq121(weeklyGameRequirements.weekYear, weekYear)
     ));
     const totalEmployees = requirements.length;
     const compliant = requirements.filter(
@@ -89971,7 +90011,7 @@ var employeeGamingRouter = router({
 import { z as z168 } from "zod";
 init_db();
 init_schema();
-import { eq as eq121, and as and98, desc as desc93 } from "drizzle-orm";
+import { eq as eq122, and as and98, desc as desc94 } from "drizzle-orm";
 import { TRPCError as TRPCError56 } from "@trpc/server";
 function generateCredentialId() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -90001,14 +90041,14 @@ var onboardingJourneyRouter = router({
   // Get current journey for user
   getMyJourney: protectedProcedure.query(async ({ ctx }) => {
     const journey = await db.query.onboardingJourneys.findFirst({
-      where: eq121(onboardingJourneys.userId, ctx.user.id),
-      orderBy: desc93(onboardingJourneys.createdAt)
+      where: eq122(onboardingJourneys.userId, ctx.user.id),
+      orderBy: desc94(onboardingJourneys.createdAt)
     });
     if (!journey) {
       return null;
     }
     const assessments = await db.query.onboardingAssessments.findMany({
-      where: eq121(onboardingAssessments.journeyId, journey.id)
+      where: eq122(onboardingAssessments.journeyId, journey.id)
     });
     return {
       ...journey,
@@ -90019,8 +90059,8 @@ var onboardingJourneyRouter = router({
   startJourney: protectedProcedure.mutation(async ({ ctx }) => {
     const existingJourney = await db.query.onboardingJourneys.findFirst({
       where: and98(
-        eq121(onboardingJourneys.userId, ctx.user.id),
-        eq121(onboardingJourneys.status, "in_progress")
+        eq122(onboardingJourneys.userId, ctx.user.id),
+        eq122(onboardingJourneys.status, "in_progress")
       )
     });
     if (existingJourney) {
@@ -90038,7 +90078,7 @@ var onboardingJourneyRouter = router({
     });
     const insertId = result[0]?.insertId ?? result.insertId;
     const journey = await db.query.onboardingJourneys.findFirst({
-      where: eq121(onboardingJourneys.id, insertId)
+      where: eq122(onboardingJourneys.id, insertId)
     });
     return journey;
   }),
@@ -90048,8 +90088,8 @@ var onboardingJourneyRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const journey = await db.query.onboardingJourneys.findFirst({
       where: and98(
-        eq121(onboardingJourneys.userId, ctx.user.id),
-        eq121(onboardingJourneys.status, "in_progress")
+        eq122(onboardingJourneys.userId, ctx.user.id),
+        eq122(onboardingJourneys.status, "in_progress")
       )
     });
     if (!journey) {
@@ -90061,9 +90101,9 @@ var onboardingJourneyRouter = router({
     await db.update(onboardingJourneys).set({
       currentStep: input.step,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq121(onboardingJourneys.id, journey.id));
+    }).where(eq122(onboardingJourneys.id, journey.id));
     const updated = await db.query.onboardingJourneys.findFirst({
-      where: eq121(onboardingJourneys.id, journey.id)
+      where: eq122(onboardingJourneys.id, journey.id)
     });
     return updated;
   }),
@@ -90082,8 +90122,8 @@ var onboardingJourneyRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const journey = await db.query.onboardingJourneys.findFirst({
       where: and98(
-        eq121(onboardingJourneys.userId, ctx.user.id),
-        eq121(onboardingJourneys.status, "in_progress")
+        eq122(onboardingJourneys.userId, ctx.user.id),
+        eq122(onboardingJourneys.status, "in_progress")
       )
     });
     if (!journey) {
@@ -90109,7 +90149,7 @@ var onboardingJourneyRouter = router({
         [realmField]: true,
         [scoreField]: input.score,
         lastActivityAt: /* @__PURE__ */ new Date()
-      }).where(eq121(onboardingJourneys.id, journey.id));
+      }).where(eq122(onboardingJourneys.id, journey.id));
     }
     return { success: true, passed: input.passed, score: input.score };
   }),
@@ -90122,8 +90162,8 @@ var onboardingJourneyRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const journey = await db.query.onboardingJourneys.findFirst({
       where: and98(
-        eq121(onboardingJourneys.userId, ctx.user.id),
-        eq121(onboardingJourneys.status, "in_progress")
+        eq122(onboardingJourneys.userId, ctx.user.id),
+        eq122(onboardingJourneys.status, "in_progress")
       )
     });
     if (!journey) {
@@ -90142,15 +90182,15 @@ var onboardingJourneyRouter = router({
     await db.update(onboardingJourneys).set({
       houseId,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq121(onboardingJourneys.id, journey.id));
+    }).where(eq122(onboardingJourneys.id, journey.id));
     return { success: true, houseId };
   }),
   // Agree to values
   agreeToValues: protectedProcedure.mutation(async ({ ctx }) => {
     const journey = await db.query.onboardingJourneys.findFirst({
       where: and98(
-        eq121(onboardingJourneys.userId, ctx.user.id),
-        eq121(onboardingJourneys.status, "in_progress")
+        eq122(onboardingJourneys.userId, ctx.user.id),
+        eq122(onboardingJourneys.status, "in_progress")
       )
     });
     if (!journey) {
@@ -90162,15 +90202,15 @@ var onboardingJourneyRouter = router({
     await db.update(onboardingJourneys).set({
       valuesAgreed: true,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq121(onboardingJourneys.id, journey.id));
+    }).where(eq122(onboardingJourneys.id, journey.id));
     return { success: true };
   }),
   // Complete journey and issue credential
   completeJourney: protectedProcedure.mutation(async ({ ctx }) => {
     const journey = await db.query.onboardingJourneys.findFirst({
       where: and98(
-        eq121(onboardingJourneys.userId, ctx.user.id),
-        eq121(onboardingJourneys.status, "in_progress")
+        eq122(onboardingJourneys.userId, ctx.user.id),
+        eq122(onboardingJourneys.status, "in_progress")
       )
     });
     if (!journey) {
@@ -90216,7 +90256,7 @@ var onboardingJourneyRouter = router({
       completedAt: /* @__PURE__ */ new Date(),
       credentialId,
       lastActivityAt: /* @__PURE__ */ new Date()
-    }).where(eq121(onboardingJourneys.id, journey.id));
+    }).where(eq122(onboardingJourneys.id, journey.id));
     return {
       credentialId,
       verificationCode,
@@ -90244,7 +90284,7 @@ var onboardingJourneyRouter = router({
 import { z as z169 } from "zod";
 init_db();
 init_schema();
-import { eq as eq122, and as and99, desc as desc94 } from "drizzle-orm";
+import { eq as eq123, and as and99, desc as desc95 } from "drizzle-orm";
 
 // server/credentials.ts
 function generateQRData(credentialId, verificationCode) {
@@ -90258,21 +90298,21 @@ var memberCredentialsRouter = router({
   getMyCredential: protectedProcedure.query(async ({ ctx }) => {
     const credential = await db.query.memberCredentials.findFirst({
       where: and99(
-        eq122(memberCredentials.userId, ctx.user.id),
-        eq122(memberCredentials.status, "active")
+        eq123(memberCredentials.userId, ctx.user.id),
+        eq123(memberCredentials.status, "active")
       ),
-      orderBy: desc94(memberCredentials.issuedAt)
+      orderBy: desc95(memberCredentials.issuedAt)
     });
     if (!credential) {
       return null;
     }
     const achievements2 = await db.query.credentialAchievements.findMany({
-      where: eq122(credentialAchievements.credentialId, credential.id)
+      where: eq123(credentialAchievements.credentialId, credential.id)
     });
     let house = null;
     if (credential.houseId) {
       house = await db.query.houses.findFirst({
-        where: eq122(houses.id, credential.houseId)
+        where: eq123(houses.id, credential.houseId)
       });
     }
     return {
@@ -90288,7 +90328,7 @@ var memberCredentialsRouter = router({
     verificationCode: z169.string().optional()
   })).query(async ({ input }) => {
     const credential = await db.query.memberCredentials.findFirst({
-      where: eq122(memberCredentials.credentialId, input.credentialId)
+      where: eq123(memberCredentials.credentialId, input.credentialId)
     });
     if (!credential) {
       return { valid: false, message: "Credential not found" };
@@ -90312,16 +90352,16 @@ var memberCredentialsRouter = router({
   getAchievements: protectedProcedure.query(async ({ ctx }) => {
     const credential = await db.query.memberCredentials.findFirst({
       where: and99(
-        eq122(memberCredentials.userId, ctx.user.id),
-        eq122(memberCredentials.status, "active")
+        eq123(memberCredentials.userId, ctx.user.id),
+        eq123(memberCredentials.status, "active")
       )
     });
     if (!credential) {
       return [];
     }
     return db.query.credentialAchievements.findMany({
-      where: eq122(credentialAchievements.credentialId, credential.id),
-      orderBy: desc94(credentialAchievements.earnedAt)
+      where: eq123(credentialAchievements.credentialId, credential.id),
+      orderBy: desc95(credentialAchievements.earnedAt)
     });
   }),
   // Get credential statistics (for admin)
@@ -90354,7 +90394,7 @@ var memberCredentialsRouter = router({
 import { z as z170 } from "zod";
 init_db();
 init_schema();
-import { eq as eq123, and as and100, desc as desc95, sql as sql81 } from "drizzle-orm";
+import { eq as eq124, and as and100, desc as desc96, sql as sql81 } from "drizzle-orm";
 function generateSampleQuestions(book) {
   const pillarQuestions = {
     land: [
@@ -90485,13 +90525,13 @@ var virtualLibraryRouter = router({
     }).optional()
   ).query(async ({ input }) => {
     const filters = input || {};
-    let query = db.select().from(libraryBooks).where(eq123(libraryBooks.isActive, true));
-    const books = await db.select().from(libraryBooks).where(eq123(libraryBooks.isActive, true)).orderBy(desc95(libraryBooks.isFeatured), desc95(libraryBooks.createdAt)).limit(filters.limit || 20).offset(filters.offset || 0);
+    let query = db.select().from(libraryBooks).where(eq124(libraryBooks.isActive, true));
+    const books = await db.select().from(libraryBooks).where(eq124(libraryBooks.isActive, true)).orderBy(desc96(libraryBooks.isFeatured), desc96(libraryBooks.createdAt)).limit(filters.limit || 20).offset(filters.offset || 0);
     return books;
   }),
   // Get a single book by ID
   getBook: publicProcedure.input(z170.object({ bookId: z170.number() })).query(async ({ input }) => {
-    const [book] = await db.select().from(libraryBooks).where(eq123(libraryBooks.id, input.bookId));
+    const [book] = await db.select().from(libraryBooks).where(eq124(libraryBooks.id, input.bookId));
     return book || null;
   }),
   // Get user's reading sessions
@@ -90503,7 +90543,7 @@ var virtualLibraryRouter = router({
     const sessions = await db.select({
       session: readingSessions,
       book: libraryBooks
-    }).from(readingSessions).innerJoin(libraryBooks, eq123(readingSessions.bookId, libraryBooks.id)).where(eq123(readingSessions.userId, ctx.user.id)).orderBy(desc95(readingSessions.lastReadAt));
+    }).from(readingSessions).innerJoin(libraryBooks, eq124(readingSessions.bookId, libraryBooks.id)).where(eq124(readingSessions.userId, ctx.user.id)).orderBy(desc96(readingSessions.lastReadAt));
     return sessions;
   }),
   // Start or continue reading a book
@@ -90515,15 +90555,15 @@ var virtualLibraryRouter = router({
   ).mutation(async ({ ctx, input }) => {
     const [existing] = await db.select().from(readingSessions).where(
       and100(
-        eq123(readingSessions.userId, ctx.user.id),
-        eq123(readingSessions.bookId, input.bookId)
+        eq124(readingSessions.userId, ctx.user.id),
+        eq124(readingSessions.bookId, input.bookId)
       )
     );
     if (existing) {
       await db.update(readingSessions).set({
         lastReadAt: /* @__PURE__ */ new Date(),
         sessionsCount: sql81`${readingSessions.sessionsCount} + 1`
-      }).where(eq123(readingSessions.id, existing.id));
+      }).where(eq124(readingSessions.id, existing.id));
       return existing;
     }
     const [newSession] = await db.insert(readingSessions).values({
@@ -90545,10 +90585,10 @@ var virtualLibraryRouter = router({
       readingMinutes: z170.number().optional()
     })
   ).mutation(async ({ ctx, input }) => {
-    const [session] = await db.select().from(readingSessions).innerJoin(libraryBooks, eq123(readingSessions.bookId, libraryBooks.id)).where(
+    const [session] = await db.select().from(readingSessions).innerJoin(libraryBooks, eq124(readingSessions.bookId, libraryBooks.id)).where(
       and100(
-        eq123(readingSessions.id, input.sessionId),
-        eq123(readingSessions.userId, ctx.user.id)
+        eq124(readingSessions.id, input.sessionId),
+        eq124(readingSessions.userId, ctx.user.id)
       )
     );
     if (!session) {
@@ -90565,7 +90605,7 @@ var virtualLibraryRouter = router({
       lastReadAt: /* @__PURE__ */ new Date(),
       status: isCompleted ? "completed" : "in_progress",
       completedAt: isCompleted ? /* @__PURE__ */ new Date() : void 0
-    }).where(eq123(readingSessions.id, input.sessionId));
+    }).where(eq124(readingSessions.id, input.sessionId));
     return { success: true, completed: isCompleted };
   }),
   // AI Reading Companion - Have a discussion about the book
@@ -90581,14 +90621,14 @@ var virtualLibraryRouter = router({
       gradeLevel: z170.enum(["k_2", "3_5", "6_8", "9_12"]).optional()
     })
   ).mutation(async ({ ctx, input }) => {
-    const [book] = await db.select().from(libraryBooks).where(eq123(libraryBooks.id, input.bookId));
+    const [book] = await db.select().from(libraryBooks).where(eq124(libraryBooks.id, input.bookId));
     if (!book) {
       throw new Error("Book not found");
     }
     let discussion;
     let messages = [];
     if (input.discussionId) {
-      const [existing] = await db.select().from(bookDiscussions).where(eq123(bookDiscussions.id, input.discussionId));
+      const [existing] = await db.select().from(bookDiscussions).where(eq124(bookDiscussions.id, input.discussionId));
       if (existing) {
         discussion = existing;
         messages = existing.messages || [];
@@ -90638,7 +90678,7 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
       await db.update(bookDiscussions).set({
         messages,
         messageCount: messages.length
-      }).where(eq123(bookDiscussions.id, discussion.id));
+      }).where(eq124(bookDiscussions.id, discussion.id));
     } else {
       const [newDiscussion] = await db.insert(bookDiscussions).values({
         userId: ctx.user.id,
@@ -90660,7 +90700,7 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
   }),
   // Get discussion requirements by grade level
   getDiscussionRequirements: publicProcedure.input(z170.object({ gradeLevel: z170.enum(["k_2", "3_5", "6_8", "9_12"]) })).query(async ({ input }) => {
-    const [requirements] = await db.select().from(readingDiscussionRequirements).where(eq123(readingDiscussionRequirements.gradeLevel, input.gradeLevel));
+    const [requirements] = await db.select().from(readingDiscussionRequirements).where(eq124(readingDiscussionRequirements.gradeLevel, input.gradeLevel));
     if (!requirements) {
       const defaults = {
         k_2: {
@@ -90756,17 +90796,17 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
       masteryLevel: z170.enum(["new", "learning", "familiar", "mastered"]).optional()
     }).optional()
   ).query(async ({ ctx, input }) => {
-    const words = await db.select().from(vocabularyWords).where(eq123(vocabularyWords.userId, ctx.user.id)).orderBy(desc95(vocabularyWords.createdAt));
+    const words = await db.select().from(vocabularyWords).where(eq124(vocabularyWords.userId, ctx.user.id)).orderBy(desc96(vocabularyWords.createdAt));
     return words;
   }),
   // Get reading statistics
   getReadingStats: protectedProcedure.query(async ({ ctx }) => {
-    const sessions = await db.select().from(readingSessions).where(eq123(readingSessions.userId, ctx.user.id));
+    const sessions = await db.select().from(readingSessions).where(eq124(readingSessions.userId, ctx.user.id));
     const completedBooks = sessions.filter((s) => s.status === "completed").length;
     const totalReadingMinutes = sessions.reduce((sum5, s) => sum5 + (s.totalReadingMinutes || 0), 0);
     const booksInProgress = sessions.filter((s) => s.status === "in_progress").length;
-    const vocabularyCount = await db.select({ count: sql81`count(*)` }).from(vocabularyWords).where(eq123(vocabularyWords.userId, ctx.user.id));
-    const discussionCount = await db.select({ count: sql81`count(*)` }).from(bookDiscussions).where(eq123(bookDiscussions.userId, ctx.user.id));
+    const vocabularyCount = await db.select({ count: sql81`count(*)` }).from(vocabularyWords).where(eq124(vocabularyWords.userId, ctx.user.id));
+    const discussionCount = await db.select({ count: sql81`count(*)` }).from(bookDiscussions).where(eq124(bookDiscussions.userId, ctx.user.id));
     return {
       completedBooks,
       booksInProgress,
@@ -91059,15 +91099,15 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
   getBookQuizzes: publicProcedure.input(z170.object({ bookId: z170.number() })).query(async ({ input }) => {
     const quizzes = await db.select().from(comprehensionQuizzes).where(
       and100(
-        eq123(comprehensionQuizzes.bookId, input.bookId),
-        eq123(comprehensionQuizzes.isActive, true)
+        eq124(comprehensionQuizzes.bookId, input.bookId),
+        eq124(comprehensionQuizzes.isActive, true)
       )
     ).orderBy(comprehensionQuizzes.chapterNumber);
     return quizzes;
   }),
   // Get a specific quiz
   getQuiz: publicProcedure.input(z170.object({ quizId: z170.number() })).query(async ({ input }) => {
-    const [quiz] = await db.select().from(comprehensionQuizzes).where(eq123(comprehensionQuizzes.id, input.quizId));
+    const [quiz] = await db.select().from(comprehensionQuizzes).where(eq124(comprehensionQuizzes.id, input.quizId));
     return quiz || null;
   }),
   // Start a quiz attempt
@@ -91081,8 +91121,8 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
   ).mutation(async ({ ctx, input }) => {
     const previousAttempts = await db.select({ count: sql81`count(*)` }).from(quizAttempts).where(
       and100(
-        eq123(quizAttempts.userId, ctx.user.id),
-        eq123(quizAttempts.quizId, input.quizId)
+        eq124(quizAttempts.userId, ctx.user.id),
+        eq124(quizAttempts.quizId, input.quizId)
       )
     );
     const attemptNumber = (previousAttempts[0]?.count || 0) + 1;
@@ -91111,14 +91151,14 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
   ).mutation(async ({ ctx, input }) => {
     const [attempt] = await db.select().from(quizAttempts).where(
       and100(
-        eq123(quizAttempts.id, input.attemptId),
-        eq123(quizAttempts.userId, ctx.user.id)
+        eq124(quizAttempts.id, input.attemptId),
+        eq124(quizAttempts.userId, ctx.user.id)
       )
     );
     if (!attempt) {
       throw new Error("Quiz attempt not found");
     }
-    const [quiz] = await db.select().from(comprehensionQuizzes).where(eq123(comprehensionQuizzes.id, attempt.quizId));
+    const [quiz] = await db.select().from(comprehensionQuizzes).where(eq124(comprehensionQuizzes.id, attempt.quizId));
     if (!quiz) {
       throw new Error("Quiz not found");
     }
@@ -91160,7 +91200,7 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
       durationSeconds,
       feedback,
       areasToImprove
-    }).where(eq123(quizAttempts.id, input.attemptId));
+    }).where(eq124(quizAttempts.id, input.attemptId));
     return {
       score,
       correctCount,
@@ -91181,8 +91221,8 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
     let query = db.select({
       attempt: quizAttempts,
       quiz: comprehensionQuizzes
-    }).from(quizAttempts).innerJoin(comprehensionQuizzes, eq123(quizAttempts.quizId, comprehensionQuizzes.id)).where(eq123(quizAttempts.userId, ctx.user.id));
-    const attempts = await query.orderBy(desc95(quizAttempts.createdAt));
+    }).from(quizAttempts).innerJoin(comprehensionQuizzes, eq124(quizAttempts.quizId, comprehensionQuizzes.id)).where(eq124(quizAttempts.userId, ctx.user.id));
+    const attempts = await query.orderBy(desc96(quizAttempts.createdAt));
     return attempts;
   }),
   // Generate quiz for a book using AI
@@ -91195,7 +91235,7 @@ Keep responses concise but meaningful. Always end with a question or prompt to c
       difficultyLevel: z170.enum(["basic", "intermediate", "advanced"]).default("intermediate")
     })
   ).mutation(async ({ ctx, input }) => {
-    const [book] = await db.select().from(libraryBooks).where(eq123(libraryBooks.id, input.bookId));
+    const [book] = await db.select().from(libraryBooks).where(eq124(libraryBooks.id, input.bookId));
     if (!book) {
       throw new Error("Book not found");
     }
@@ -91286,10 +91326,10 @@ Return a JSON array of questions with this structure:
   }),
   // Seed sample quizzes for books
   seedSampleQuizzes: protectedProcedure.mutation(async ({ ctx }) => {
-    const books = await db.select().from(libraryBooks).where(eq123(libraryBooks.isActive, true));
+    const books = await db.select().from(libraryBooks).where(eq124(libraryBooks.isActive, true));
     let quizzesCreated = 0;
     for (const book of books) {
-      const [existingQuiz] = await db.select().from(comprehensionQuizzes).where(eq123(comprehensionQuizzes.bookId, book.id));
+      const [existingQuiz] = await db.select().from(comprehensionQuizzes).where(eq124(comprehensionQuizzes.bookId, book.id));
       if (existingQuiz) continue;
       const sampleQuestions = generateSampleQuestions(book);
       await db.insert(comprehensionQuizzes).values({
@@ -93630,7 +93670,7 @@ var protectionLayerRouter = router({
 import { z as z172 } from "zod";
 init_db();
 init_schema();
-import { eq as eq124, and as and101, sql as sql82, desc as desc96, gte as gte25 } from "drizzle-orm";
+import { eq as eq125, and as and101, sql as sql82, desc as desc97, gte as gte25 } from "drizzle-orm";
 function isToday(date2) {
   const today = /* @__PURE__ */ new Date();
   return date2.getFullYear() === today.getFullYear() && date2.getMonth() === today.getMonth() && date2.getDate() === today.getDate();
@@ -93651,7 +93691,7 @@ var readingStreaksRouter = router({
    */
   getStreak: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
-    let [streak] = await db.select().from(readingStreaks).where(eq124(readingStreaks.userId, userId)).limit(1);
+    let [streak] = await db.select().from(readingStreaks).where(eq125(readingStreaks.userId, userId)).limit(1);
     if (!streak) {
       const [newStreak] = await db.insert(readingStreaks).values({
         userId,
@@ -93662,7 +93702,7 @@ var readingStreaksRouter = router({
         streakReminderEnabled: true,
         reminderTime: "18:00"
       });
-      [streak] = await db.select().from(readingStreaks).where(eq124(readingStreaks.userId, userId)).limit(1);
+      [streak] = await db.select().from(readingStreaks).where(eq125(readingStreaks.userId, userId)).limit(1);
     }
     if (streak.lastReadDate) {
       const lastRead = new Date(streak.lastReadDate);
@@ -93670,7 +93710,7 @@ var readingStreaksRouter = router({
         await db.update(readingStreaks).set({
           currentStreak: 0,
           streakStartDate: null
-        }).where(eq124(readingStreaks.id, streak.id));
+        }).where(eq125(readingStreaks.id, streak.id));
         streak = {
           ...streak,
           currentStreak: 0,
@@ -93683,7 +93723,7 @@ var readingStreaksRouter = router({
       totalMinutes: sql82`COALESCE(SUM(${readingSessions.totalReadingMinutes}), 0)`
     }).from(readingSessions).where(
       and101(
-        eq124(readingSessions.userId, userId),
+        eq125(readingSessions.userId, userId),
         gte25(readingSessions.updatedAt, startOfToday)
       )
     );
@@ -93708,7 +93748,7 @@ var readingStreaksRouter = router({
     })
   ).mutation(async ({ ctx, input }) => {
     const userId = ctx.user.id;
-    await db.update(readingStreaks).set(input).where(eq124(readingStreaks.userId, userId));
+    await db.update(readingStreaks).set(input).where(eq125(readingStreaks.userId, userId));
     return { success: true };
   }),
   /**
@@ -93723,7 +93763,7 @@ var readingStreaksRouter = router({
     const userId = ctx.user.id;
     const today = /* @__PURE__ */ new Date();
     const todayStr = today.toISOString().split("T")[0];
-    let [streak] = await db.select().from(readingStreaks).where(eq124(readingStreaks.userId, userId)).limit(1);
+    let [streak] = await db.select().from(readingStreaks).where(eq125(readingStreaks.userId, userId)).limit(1);
     if (!streak) {
       await db.insert(readingStreaks).values({
         userId,
@@ -93765,7 +93805,7 @@ var readingStreaksRouter = router({
       thisWeekMinutes: (streak.thisWeekMinutes || 0) + input.minutesRead,
       thisMonthMinutes: (streak.thisMonthMinutes || 0) + input.minutesRead,
       totalReadingMinutes: (streak.totalReadingMinutes || 0) + input.minutesRead
-    }).where(eq124(readingStreaks.id, streak.id));
+    }).where(eq125(readingStreaks.id, streak.id));
     if (milestone) {
       await db.insert(streakNotifications).values({
         userId,
@@ -93803,11 +93843,11 @@ var readingStreaksRouter = router({
     })
   ).query(async ({ ctx, input }) => {
     const userId = ctx.user.id;
-    const conditions = [eq124(streakNotifications.userId, userId)];
+    const conditions = [eq125(streakNotifications.userId, userId)];
     if (input.unreadOnly) {
       conditions.push(sql82`${streakNotifications.readAt} IS NULL`);
     }
-    const notifs = await db.select().from(streakNotifications).where(and101(...conditions)).orderBy(desc96(streakNotifications.sentAt)).limit(input.limit);
+    const notifs = await db.select().from(streakNotifications).where(and101(...conditions)).orderBy(desc97(streakNotifications.sentAt)).limit(input.limit);
     return notifs;
   }),
   /**
@@ -93817,8 +93857,8 @@ var readingStreaksRouter = router({
     const userId = ctx.user.id;
     await db.update(streakNotifications).set({ readAt: /* @__PURE__ */ new Date() }).where(
       and101(
-        eq124(streakNotifications.id, input.notificationId),
-        eq124(streakNotifications.userId, userId)
+        eq125(streakNotifications.id, input.notificationId),
+        eq125(streakNotifications.userId, userId)
       )
     );
     return { success: true };
@@ -93834,7 +93874,7 @@ var readingStreaksRouter = router({
     const startOfToday = getStartOfToday();
     const streaksAtRisk = await db.select().from(readingStreaks).where(
       and101(
-        eq124(readingStreaks.streakReminderEnabled, true),
+        eq125(readingStreaks.streakReminderEnabled, true),
         sql82`${readingStreaks.currentStreak} > 0`,
         sql82`${readingStreaks.lastReadDate} < ${startOfToday.toISOString().split("T")[0]}`,
         sql82`${readingStreaks.reminderTime} <= ${currentTime}`,
@@ -93862,7 +93902,7 @@ var readingStreaksRouter = router({
           priority: "high",
           category: "reminder"
         });
-        await db.update(readingStreaks).set({ lastReminderSentAt: now }).where(eq124(readingStreaks.id, streak.id));
+        await db.update(readingStreaks).set({ lastReminderSentAt: now }).where(eq125(readingStreaks.id, streak.id));
         sentCount++;
       } catch (error) {
         errors.push(`Failed to send reminder for user ${streak.userId}: ${error}`);
@@ -93901,7 +93941,7 @@ var readingStreaksRouter = router({
       longestStreak: readingStreaks.longestStreak,
       totalMinutes: readingStreaks.totalReadingMinutes,
       booksCompleted: readingStreaks.totalBooksCompleted
-    }).from(readingStreaks).orderBy(desc96(orderColumn)).limit(input.limit);
+    }).from(readingStreaks).orderBy(desc97(orderColumn)).limit(input.limit);
     return leaderboard.map((entry, index2) => ({
       rank: index2 + 1,
       ...entry
@@ -93913,7 +93953,7 @@ var readingStreaksRouter = router({
 import { z as z173 } from "zod";
 init_db();
 init_schema();
-import { eq as eq125, and as and102, sql as sql83, desc as desc97, inArray as inArray13 } from "drizzle-orm";
+import { eq as eq126, and as and102, sql as sql83, desc as desc98, inArray as inArray13 } from "drizzle-orm";
 import { TRPCError as TRPCError57 } from "@trpc/server";
 var SERVICE_CATALOG = [
   {
@@ -94310,23 +94350,23 @@ var externalOnboardingRouter = router({
     })
   ).mutation(async ({ input }) => {
     const { companyId, ...updateData } = input;
-    await db.update(externalCompanies).set(updateData).where(eq125(externalCompanies.id, companyId));
+    await db.update(externalCompanies).set(updateData).where(eq126(externalCompanies.id, companyId));
     await db.update(onboardingProgress).set({
       status: "completed",
       completedAt: /* @__PURE__ */ new Date()
     }).where(
       and102(
-        eq125(onboardingProgress.companyId, companyId),
-        eq125(onboardingProgress.stepNumber, 1)
+        eq126(onboardingProgress.companyId, companyId),
+        eq126(onboardingProgress.stepNumber, 1)
       )
     );
     await db.update(onboardingProgress).set({ status: "in_progress", startedAt: /* @__PURE__ */ new Date() }).where(
       and102(
-        eq125(onboardingProgress.companyId, companyId),
-        eq125(onboardingProgress.stepNumber, 2)
+        eq126(onboardingProgress.companyId, companyId),
+        eq126(onboardingProgress.stepNumber, 2)
       )
     );
-    await db.update(externalCompanies).set({ onboardingStep: 2 }).where(eq125(externalCompanies.id, companyId));
+    await db.update(externalCompanies).set({ onboardingStep: 2 }).where(eq126(externalCompanies.id, companyId));
     return { success: true };
   }),
   /**
@@ -94340,7 +94380,7 @@ var externalOnboardingRouter = router({
       billingCycle: z173.enum(["monthly", "annual"])
     })
   ).mutation(async ({ input }) => {
-    await db.update(externalCompanies).set({ subscriptionTier: input.tier }).where(eq125(externalCompanies.id, input.companyId));
+    await db.update(externalCompanies).set({ subscriptionTier: input.tier }).where(eq126(externalCompanies.id, input.companyId));
     const selectedServices = SERVICE_CATALOG.filter(
       (s) => input.serviceCodes.includes(s.serviceCode)
     );
@@ -94350,7 +94390,7 @@ var externalOnboardingRouter = router({
       const adjustedPrice = basePrice * tierMultiplier;
       const existing = await db.select().from(serviceSubscriptions).where(
         and102(
-          eq125(serviceSubscriptions.companyId, input.companyId),
+          eq126(serviceSubscriptions.companyId, input.companyId),
           sql83`${serviceSubscriptions.serviceId} = (SELECT id FROM service_catalog WHERE serviceCode = ${service.serviceCode} LIMIT 1)`
         )
       ).limit(1);
@@ -94368,29 +94408,29 @@ var externalOnboardingRouter = router({
     }
     await db.update(onboardingProgress).set({ status: "completed", completedAt: /* @__PURE__ */ new Date() }).where(
       and102(
-        eq125(onboardingProgress.companyId, input.companyId),
-        eq125(onboardingProgress.stepNumber, 2)
+        eq126(onboardingProgress.companyId, input.companyId),
+        eq126(onboardingProgress.stepNumber, 2)
       )
     );
     await db.update(onboardingProgress).set({ status: "in_progress", startedAt: /* @__PURE__ */ new Date() }).where(
       and102(
-        eq125(onboardingProgress.companyId, input.companyId),
-        eq125(onboardingProgress.stepNumber, 3)
+        eq126(onboardingProgress.companyId, input.companyId),
+        eq126(onboardingProgress.stepNumber, 3)
       )
     );
-    await db.update(externalCompanies).set({ onboardingStep: 3 }).where(eq125(externalCompanies.id, input.companyId));
+    await db.update(externalCompanies).set({ onboardingStep: 3 }).where(eq126(externalCompanies.id, input.companyId));
     return { success: true, servicesAdded: selectedServices.length };
   }),
   /**
    * Get company onboarding status
    */
   getOnboardingStatus: publicProcedure.input(z173.object({ companyId: z173.number() })).query(async ({ input }) => {
-    const [company] = await db.select().from(externalCompanies).where(eq125(externalCompanies.id, input.companyId)).limit(1);
+    const [company] = await db.select().from(externalCompanies).where(eq126(externalCompanies.id, input.companyId)).limit(1);
     if (!company) {
       throw new TRPCError57({ code: "NOT_FOUND", message: "Company not found" });
     }
-    const progress = await db.select().from(onboardingProgress).where(eq125(onboardingProgress.companyId, input.companyId)).orderBy(onboardingProgress.stepNumber);
-    const subscriptions = await db.select().from(serviceSubscriptions).where(eq125(serviceSubscriptions.companyId, input.companyId));
+    const progress = await db.select().from(onboardingProgress).where(eq126(onboardingProgress.companyId, input.companyId)).orderBy(onboardingProgress.stepNumber);
+    const subscriptions = await db.select().from(serviceSubscriptions).where(eq126(serviceSubscriptions.companyId, input.companyId));
     return {
       company,
       progress,
@@ -94409,13 +94449,13 @@ var externalOnboardingRouter = router({
     await db.update(externalCompanies).set({
       status: "active",
       onboardingCompletedAt: /* @__PURE__ */ new Date()
-    }).where(eq125(externalCompanies.id, input.companyId));
+    }).where(eq126(externalCompanies.id, input.companyId));
     await db.update(serviceSubscriptions).set({
       status: "active",
       startDate: (/* @__PURE__ */ new Date()).toISOString().split("T")[0]
-    }).where(eq125(serviceSubscriptions.companyId, input.companyId));
-    await db.update(onboardingProgress).set({ status: "completed", completedAt: /* @__PURE__ */ new Date() }).where(eq125(onboardingProgress.companyId, input.companyId));
-    const [company] = await db.select().from(externalCompanies).where(eq125(externalCompanies.id, input.companyId)).limit(1);
+    }).where(eq126(serviceSubscriptions.companyId, input.companyId));
+    await db.update(onboardingProgress).set({ status: "completed", completedAt: /* @__PURE__ */ new Date() }).where(eq126(onboardingProgress.companyId, input.companyId));
+    const [company] = await db.select().from(externalCompanies).where(eq126(externalCompanies.id, input.companyId)).limit(1);
     await notifyOwner({
       title: "Company Onboarding Completed",
       content: `${company.companyName} has completed onboarding and services are now active. Tier: ${company.subscriptionTier}`
@@ -94437,9 +94477,9 @@ var externalOnboardingRouter = router({
   ).query(async ({ input }) => {
     const conditions = [];
     if (input.status) {
-      conditions.push(eq125(externalCompanies.status, input.status));
+      conditions.push(eq126(externalCompanies.status, input.status));
     }
-    const companies = await db.select().from(externalCompanies).where(conditions.length > 0 ? and102(...conditions) : void 0).orderBy(desc97(externalCompanies.createdAt)).limit(input.limit).offset(input.offset);
+    const companies = await db.select().from(externalCompanies).where(conditions.length > 0 ? and102(...conditions) : void 0).orderBy(desc98(externalCompanies.createdAt)).limit(input.limit).offset(input.offset);
     return companies;
   }),
   /**
@@ -94448,7 +94488,7 @@ var externalOnboardingRouter = router({
   seedServiceCatalog: protectedProcedure.mutation(async () => {
     let seeded = 0;
     for (const service of SERVICE_CATALOG) {
-      const existing = await db.select().from(serviceCatalog).where(eq125(serviceCatalog.serviceCode, service.serviceCode)).limit(1);
+      const existing = await db.select().from(serviceCatalog).where(eq126(serviceCatalog.serviceCode, service.serviceCode)).limit(1);
       if (existing.length === 0) {
         await db.insert(serviceCatalog).values({
           serviceCode: service.serviceCode,
@@ -94479,7 +94519,7 @@ var externalOnboardingRouter = router({
   getAvailableIntegrations: protectedProcedure.input(z173.object({ companyId: z173.number() })).query(async ({ input }) => {
     const subscriptions = await db.select().from(serviceSubscriptions).where(
       and102(
-        eq125(serviceSubscriptions.companyId, input.companyId),
+        eq126(serviceSubscriptions.companyId, input.companyId),
         inArray13(serviceSubscriptions.status, ["active", "trial"])
       )
     );
@@ -94548,7 +94588,7 @@ var externalOnboardingRouter = router({
     const availableIntegrations = INTEGRATION_MATRIX.filter(
       (int2) => serviceCodes.includes(int2.source) && serviceCodes.includes(int2.target)
     );
-    const existingIntegrations = await db.select().from(serviceIntegrations).where(eq125(serviceIntegrations.companyId, input.companyId));
+    const existingIntegrations = await db.select().from(serviceIntegrations).where(eq126(serviceIntegrations.companyId, input.companyId));
     return {
       available: availableIntegrations.map((int2) => ({
         ...int2,
@@ -94583,9 +94623,9 @@ var externalOnboardingRouter = router({
     }
     const existing = await db.select().from(serviceIntegrations).where(
       and102(
-        eq125(serviceIntegrations.companyId, input.companyId),
-        eq125(serviceIntegrations.sourceServiceId, sourceIdx + 1),
-        eq125(serviceIntegrations.targetServiceId, targetIdx + 1)
+        eq126(serviceIntegrations.companyId, input.companyId),
+        eq126(serviceIntegrations.sourceServiceId, sourceIdx + 1),
+        eq126(serviceIntegrations.targetServiceId, targetIdx + 1)
       )
     ).limit(1);
     if (existing.length > 0) {
@@ -94597,7 +94637,7 @@ var externalOnboardingRouter = router({
         status: "active",
         enabledAt: /* @__PURE__ */ new Date(),
         enabledBy: ctx.user.id
-      }).where(eq125(serviceIntegrations.id, existing[0].id));
+      }).where(eq126(serviceIntegrations.id, existing[0].id));
       return { success: true, integrationId: existing[0].id, action: "updated" };
     }
     const [result] = await db.insert(serviceIntegrations).values({
@@ -94618,21 +94658,21 @@ var externalOnboardingRouter = router({
    * Disable an integration
    */
   disableIntegration: protectedProcedure.input(z173.object({ integrationId: z173.number() })).mutation(async ({ input }) => {
-    await db.update(serviceIntegrations).set({ status: "disabled" }).where(eq125(serviceIntegrations.id, input.integrationId));
+    await db.update(serviceIntegrations).set({ status: "disabled" }).where(eq126(serviceIntegrations.id, input.integrationId));
     return { success: true };
   }),
   /**
    * Get company dashboard data
    */
   getCompanyDashboard: protectedProcedure.input(z173.object({ companyId: z173.number() })).query(async ({ input }) => {
-    const [company] = await db.select().from(externalCompanies).where(eq125(externalCompanies.id, input.companyId)).limit(1);
+    const [company] = await db.select().from(externalCompanies).where(eq126(externalCompanies.id, input.companyId)).limit(1);
     if (!company) {
       throw new TRPCError57({ code: "NOT_FOUND", message: "Company not found" });
     }
-    const subscriptions = await db.select().from(serviceSubscriptions).where(eq125(serviceSubscriptions.companyId, input.companyId));
-    const integrations = await db.select().from(serviceIntegrations).where(eq125(serviceIntegrations.companyId, input.companyId));
-    const users8 = await db.select().from(companyUsers).where(eq125(companyUsers.companyId, input.companyId));
-    const progress = await db.select().from(onboardingProgress).where(eq125(onboardingProgress.companyId, input.companyId)).orderBy(onboardingProgress.stepNumber);
+    const subscriptions = await db.select().from(serviceSubscriptions).where(eq126(serviceSubscriptions.companyId, input.companyId));
+    const integrations = await db.select().from(serviceIntegrations).where(eq126(serviceIntegrations.companyId, input.companyId));
+    const users8 = await db.select().from(companyUsers).where(eq126(companyUsers.companyId, input.companyId));
+    const progress = await db.select().from(onboardingProgress).where(eq126(onboardingProgress.companyId, input.companyId)).orderBy(onboardingProgress.stepNumber);
     const activeServices = subscriptions.filter((s) => s.status === "active").length;
     const activeIntegrations = integrations.filter((i) => i.status === "active").length;
     const completedSteps = progress.filter((p) => p.status === "completed").length;
@@ -94694,7 +94734,7 @@ var externalOnboardingRouter = router({
    * Accept user invitation
    */
   acceptInvitation: publicProcedure.input(z173.object({ inviteToken: z173.string() })).mutation(async ({ input }) => {
-    const [invite] = await db.select().from(companyUsers).where(eq125(companyUsers.inviteToken, input.inviteToken)).limit(1);
+    const [invite] = await db.select().from(companyUsers).where(eq126(companyUsers.inviteToken, input.inviteToken)).limit(1);
     if (!invite) {
       throw new TRPCError57({ code: "NOT_FOUND", message: "Invalid invitation" });
     }
@@ -94708,7 +94748,7 @@ var externalOnboardingRouter = router({
       status: "active",
       acceptedAt: /* @__PURE__ */ new Date(),
       inviteToken: null
-    }).where(eq125(companyUsers.id, invite.id));
+    }).where(eq126(companyUsers.id, invite.id));
     return { success: true, companyId: invite.companyId };
   })
 });
@@ -97038,7 +97078,7 @@ var gameAchievementsRouter = router({
 import { z as z181 } from "zod";
 init_db();
 init_schema();
-import { eq as eq126, and as and103, desc as desc98, sql as sql84 } from "drizzle-orm";
+import { eq as eq127, and as and103, desc as desc99, sql as sql84 } from "drizzle-orm";
 import { TRPCError as TRPCError60 } from "@trpc/server";
 var ensureDb2 = async () => {
   const db7 = await getDb();
@@ -97104,21 +97144,21 @@ var tournamentsRouter = router({
     let query = db7.select({
       tournament: gameTournaments,
       game: gameCenterGames
-    }).from(gameTournaments).leftJoin(gameCenterGames, eq126(gameTournaments.gameId, gameCenterGames.id));
+    }).from(gameTournaments).leftJoin(gameCenterGames, eq127(gameTournaments.gameId, gameCenterGames.id));
     const conditions = [];
     if (input?.status) {
-      conditions.push(eq126(gameTournaments.status, input.status));
+      conditions.push(eq127(gameTournaments.status, input.status));
     }
     if (input?.gameId) {
-      conditions.push(eq126(gameTournaments.gameId, input.gameId));
+      conditions.push(eq127(gameTournaments.gameId, input.gameId));
     }
     if (input?.ageGroup) {
-      conditions.push(eq126(gameTournaments.ageGroup, input.ageGroup));
+      conditions.push(eq127(gameTournaments.ageGroup, input.ageGroup));
     }
     if (conditions.length > 0) {
       query = query.where(and103(...conditions));
     }
-    const results = await query.orderBy(desc98(gameTournaments.startDate));
+    const results = await query.orderBy(desc99(gameTournaments.startDate));
     return results.map((r) => ({
       ...r.tournament,
       game: r.game
@@ -97130,7 +97170,7 @@ var tournamentsRouter = router({
     const [tournament] = await db7.select({
       tournament: gameTournaments,
       game: gameCenterGames
-    }).from(gameTournaments).leftJoin(gameCenterGames, eq126(gameTournaments.gameId, gameCenterGames.id)).where(eq126(gameTournaments.id, input.tournamentId));
+    }).from(gameTournaments).leftJoin(gameCenterGames, eq127(gameTournaments.gameId, gameCenterGames.id)).where(eq127(gameTournaments.id, input.tournamentId));
     if (!tournament) {
       throw new TRPCError60({ code: "NOT_FOUND", message: "Tournament not found" });
     }
@@ -97165,7 +97205,7 @@ var tournamentsRouter = router({
   // Register for a tournament
   registerForTournament: protectedProcedure.input(z181.object({ tournamentId: z181.number() })).mutation(async ({ input, ctx }) => {
     const db7 = await ensureDb2();
-    const [tournament] = await db7.select().from(gameTournaments).where(eq126(gameTournaments.id, input.tournamentId));
+    const [tournament] = await db7.select().from(gameTournaments).where(eq127(gameTournaments.id, input.tournamentId));
     if (!tournament) {
       throw new TRPCError60({ code: "NOT_FOUND", message: "Tournament not found" });
     }
@@ -97183,8 +97223,8 @@ var tournamentsRouter = router({
       throw new TRPCError60({ code: "BAD_REQUEST", message: "Already registered for this tournament" });
     }
     const [playerStats2] = await db7.select().from(gamePlayerStats).where(and103(
-      eq126(gamePlayerStats.playerId, ctx.user.id),
-      eq126(gamePlayerStats.gameId, tournament.gameId)
+      eq127(gamePlayerStats.playerId, ctx.user.id),
+      eq127(gamePlayerStats.gameId, tournament.gameId)
     ));
     const rating = playerStats2?.rating || 1e3;
     if (tournament.entryFee > 0) {
@@ -97193,13 +97233,13 @@ var tournamentsRouter = router({
         INSERT INTO tournament_participants (tournamentId, playerId, seed)
         VALUES (${input.tournamentId}, ${ctx.user.id}, ${rating})
       `);
-    await db7.update(gameTournaments).set({ currentParticipants: tournament.currentParticipants + 1 }).where(eq126(gameTournaments.id, input.tournamentId));
+    await db7.update(gameTournaments).set({ currentParticipants: tournament.currentParticipants + 1 }).where(eq127(gameTournaments.id, input.tournamentId));
     return { success: true, message: "Successfully registered for tournament" };
   }),
   // Withdraw from tournament
   withdrawFromTournament: protectedProcedure.input(z181.object({ tournamentId: z181.number() })).mutation(async ({ input, ctx }) => {
     const db7 = await ensureDb2();
-    const [tournament] = await db7.select().from(gameTournaments).where(eq126(gameTournaments.id, input.tournamentId));
+    const [tournament] = await db7.select().from(gameTournaments).where(eq127(gameTournaments.id, input.tournamentId));
     if (!tournament) {
       throw new TRPCError60({ code: "NOT_FOUND", message: "Tournament not found" });
     }
@@ -97210,7 +97250,7 @@ var tournamentsRouter = router({
         DELETE FROM tournament_participants 
         WHERE tournamentId = ${input.tournamentId} AND playerId = ${ctx.user.id}
       `);
-    await db7.update(gameTournaments).set({ currentParticipants: Math.max(0, tournament.currentParticipants - 1) }).where(eq126(gameTournaments.id, input.tournamentId));
+    await db7.update(gameTournaments).set({ currentParticipants: Math.max(0, tournament.currentParticipants - 1) }).where(eq127(gameTournaments.id, input.tournamentId));
     return { success: true };
   }),
   // Start tournament (admin only)
@@ -97219,7 +97259,7 @@ var tournamentsRouter = router({
     if (ctx.user.role !== "admin") {
       throw new TRPCError60({ code: "FORBIDDEN", message: "Admin only" });
     }
-    const [tournament] = await db7.select().from(gameTournaments).where(eq126(gameTournaments.id, input.tournamentId));
+    const [tournament] = await db7.select().from(gameTournaments).where(eq127(gameTournaments.id, input.tournamentId));
     if (!tournament) {
       throw new TRPCError60({ code: "NOT_FOUND", message: "Tournament not found" });
     }
@@ -97249,7 +97289,7 @@ var tournamentsRouter = router({
       status: "in_progress",
       bracketData: bracket,
       startDate: /* @__PURE__ */ new Date()
-    }).where(eq126(gameTournaments.id, input.tournamentId));
+    }).where(eq127(gameTournaments.id, input.tournamentId));
     for (const match of bracket.matches) {
       if (match.status === "bye" && match.winnerId) {
         await db7.execute(sql84`
@@ -97339,7 +97379,7 @@ var tournamentsRouter = router({
           SET finalPlacement = 2
           WHERE tournamentId = ${matchData.tournamentId} AND playerId = ${loserId}
         `);
-      await db7.update(gameTournaments).set({ status: "completed", endDate: /* @__PURE__ */ new Date() }).where(eq126(gameTournaments.id, matchData.tournamentId));
+      await db7.update(gameTournaments).set({ status: "completed", endDate: /* @__PURE__ */ new Date() }).where(eq127(gameTournaments.id, matchData.tournamentId));
     }
     return { success: true };
   }),
@@ -97350,8 +97390,8 @@ var tournamentsRouter = router({
   })).mutation(async ({ input, ctx }) => {
     const db7 = await ensureDb2();
     const [playerStats2] = await db7.select().from(gamePlayerStats).where(and103(
-      eq126(gamePlayerStats.playerId, ctx.user.id),
-      eq126(gamePlayerStats.gameId, input.gameId)
+      eq127(gamePlayerStats.playerId, ctx.user.id),
+      eq127(gamePlayerStats.gameId, input.gameId)
     ));
     const rating = playerStats2?.rating || 1e3;
     const ratingRange = input.matchType === "ranked" ? 150 : 500;
@@ -101191,7 +101231,7 @@ import { TRPCError as TRPCError66 } from "@trpc/server";
 // server/services/certificate-issuance.ts
 init_db();
 init_schema();
-import { eq as eq129, and as and106, desc as desc101 } from "drizzle-orm";
+import { eq as eq130, and as and106, desc as desc102 } from "drizzle-orm";
 import crypto36 from "crypto";
 function generateCertificateHash(userId, certificateType, timestamp2) {
   const data = `${userId}-${certificateType}-${timestamp2.toISOString()}-${crypto36.randomBytes(16).toString("hex")}`;
@@ -101205,7 +101245,7 @@ async function recordCertificateToBlockchain(certificateId, certificateType, use
   const db7 = await getDb();
   if (!db7) return null;
   try {
-    const previousRecords = await db7.select().from(blockchainRecords).orderBy(desc101(blockchainRecords.id)).limit(1);
+    const previousRecords = await db7.select().from(blockchainRecords).orderBy(desc102(blockchainRecords.id)).limit(1);
     const previousHash = previousRecords.length > 0 ? previousRecords[0].blockchainHash : null;
     const recordData = {
       certificateId,
@@ -101340,7 +101380,7 @@ async function issueMasteryCertificate(studentProfileId, certificateType, title,
       metadata
     );
     if (blockchainHash) {
-      await db7.update(masteryCertificates).set({ blockchainHash }).where(eq129(masteryCertificates.id, result.id));
+      await db7.update(masteryCertificates).set({ blockchainHash }).where(eq130(masteryCertificates.id, result.id));
     }
     return {
       success: true,
@@ -101361,10 +101401,10 @@ async function verifyCertificate(certificateHash) {
     return { valid: false, message: "Database not available" };
   }
   try {
-    const generalCerts = await db7.select().from(certificates).where(eq129(certificates.certificateHash, certificateHash));
+    const generalCerts = await db7.select().from(certificates).where(eq130(certificates.certificateHash, certificateHash));
     if (generalCerts.length > 0) {
       const cert = generalCerts[0];
-      const blockchainRecord = await db7.select().from(blockchainRecords).where(eq129(blockchainRecords.referenceId, cert.id));
+      const blockchainRecord = await db7.select().from(blockchainRecords).where(eq130(blockchainRecords.referenceId, cert.id));
       return {
         valid: true,
         certificate: cert,
@@ -101372,7 +101412,7 @@ async function verifyCertificate(certificateHash) {
         message: "Certificate verified successfully"
       };
     }
-    const courseCerts = await db7.select().from(courseCompletionCertificates).where(eq129(courseCompletionCertificates.certificateHash, certificateHash));
+    const courseCerts = await db7.select().from(courseCompletionCertificates).where(eq130(courseCompletionCertificates.certificateHash, certificateHash));
     if (courseCerts.length > 0) {
       return {
         valid: true,
@@ -101380,7 +101420,7 @@ async function verifyCertificate(certificateHash) {
         message: "Course completion certificate verified successfully"
       };
     }
-    const simCerts = await db7.select().from(simulatorCertificates).where(eq129(simulatorCertificates.certificateHash, certificateHash));
+    const simCerts = await db7.select().from(simulatorCertificates).where(eq130(simulatorCertificates.certificateHash, certificateHash));
     if (simCerts.length > 0) {
       return {
         valid: true,
@@ -101388,7 +101428,7 @@ async function verifyCertificate(certificateHash) {
         message: "Simulator certificate verified successfully"
       };
     }
-    const masteryCerts = await db7.select().from(masteryCertificates).where(eq129(masteryCertificates.blockchainHash, certificateHash));
+    const masteryCerts = await db7.select().from(masteryCertificates).where(eq130(masteryCertificates.blockchainHash, certificateHash));
     if (masteryCerts.length > 0) {
       return {
         valid: true,
@@ -101409,9 +101449,9 @@ async function getUserCertificates2(userId) {
   }
   try {
     const [general, courseCompletion, simulator] = await Promise.all([
-      db7.select().from(certificates).where(eq129(certificates.userId, userId)),
-      db7.select().from(courseCompletionCertificates).where(eq129(courseCompletionCertificates.userId, userId)),
-      db7.select().from(simulatorCertificates).where(eq129(simulatorCertificates.userId, userId))
+      db7.select().from(certificates).where(eq130(certificates.userId, userId)),
+      db7.select().from(courseCompletionCertificates).where(eq130(courseCompletionCertificates.userId, userId)),
+      db7.select().from(simulatorCertificates).where(eq130(simulatorCertificates.userId, userId))
     ]);
     return {
       general,
@@ -101434,8 +101474,8 @@ async function checkCertificateEligibility(userId, certificateType, referenceId)
     if (certificateType === "simulator_completion" && referenceId) {
       const existing = await db7.select().from(simulatorCertificates).where(
         and106(
-          eq129(simulatorCertificates.userId, userId),
-          eq129(simulatorCertificates.simulatorId, referenceId.toString())
+          eq130(simulatorCertificates.userId, userId),
+          eq130(simulatorCertificates.simulatorId, referenceId.toString())
         )
       );
       if (existing.length > 0) {
@@ -101449,8 +101489,8 @@ async function checkCertificateEligibility(userId, certificateType, referenceId)
     if (certificateType === "course_completion" && referenceId) {
       const existing = await db7.select().from(courseCompletionCertificates).where(
         and106(
-          eq129(courseCompletionCertificates.userId, userId),
-          eq129(courseCompletionCertificates.courseId, referenceId)
+          eq130(courseCompletionCertificates.userId, userId),
+          eq130(courseCompletionCertificates.courseId, referenceId)
         )
       );
       if (existing.length > 0) {
@@ -101474,7 +101514,7 @@ async function revokeCertificate(certificateId, certificateType, reason, revoked
   }
   try {
     const revocationHash = crypto36.createHash("sha256").update(`revoke-${certificateId}-${certificateType}-${Date.now()}`).digest("hex");
-    const previousRecords = await db7.select().from(blockchainRecords).orderBy(desc101(blockchainRecords.id)).limit(1);
+    const previousRecords = await db7.select().from(blockchainRecords).orderBy(desc102(blockchainRecords.id)).limit(1);
     const previousHash = previousRecords.length > 0 ? previousRecords[0].blockchainHash : null;
     await db7.insert(blockchainRecords).values({
       recordType: "certificate",
@@ -101503,7 +101543,7 @@ async function revokeCertificate(certificateId, certificateType, reason, revoked
 // server/routers/certificate-issuance.ts
 init_db();
 init_schema();
-import { eq as eq130, desc as desc102, sql as sql96 } from "drizzle-orm";
+import { eq as eq131, desc as desc103, sql as sql96 } from "drizzle-orm";
 var certificateTypeSchema = z191.enum([
   "simulator_completion",
   "course_completion",
@@ -101744,7 +101784,7 @@ var certificateIssuanceRouter = router({
       title: certificates.title,
       issuedAt: certificates.issuedAt,
       certificateHash: certificates.certificateHash
-    }).from(certificates).orderBy(desc102(certificates.issuedAt)).limit(input.limit);
+    }).from(certificates).orderBy(desc103(certificates.issuedAt)).limit(input.limit);
     return recentCerts;
   }),
   /**
@@ -101758,7 +101798,7 @@ var certificateIssuanceRouter = router({
         message: "Database not available"
       });
     }
-    const [cert] = await db7.select().from(certificates).where(eq130(certificates.id, input.id));
+    const [cert] = await db7.select().from(certificates).where(eq131(certificates.id, input.id));
     if (!cert) {
       throw new TRPCError66({
         code: "NOT_FOUND",
@@ -101798,7 +101838,7 @@ import { z as z192 } from "zod";
 // server/services/house-of-tongues.ts
 init_db();
 init_schema();
-import { eq as eq131, and as and107, desc as desc103, sql as sql97 } from "drizzle-orm";
+import { eq as eq132, and as and107, desc as desc104, sql as sql97 } from "drizzle-orm";
 var INDIGENOUS_TONGUES = [
   { name: "Nahuatl", nativeName: "N\u0101huatl", slug: "nahuatl", iconEmoji: "\u{1F985}", culturalContext: "Language of the Aztec Empire, still spoken by over 1.7 million people in Mexico" },
   { name: "Yoruba", nativeName: "\xC8d\xE8 Yor\xF9b\xE1", slug: "yoruba", iconEmoji: "\u{1F30D}", culturalContext: "West African language spoken by over 40 million people, rich in proverbs and oral tradition" },
@@ -101844,7 +101884,7 @@ async function getAllLanguages() {
     return { success: false, languages: [], message: "Database not available" };
   }
   try {
-    const languages = await database.select().from(academyLanguages).where(eq131(academyLanguages.status, "active")).orderBy(academyLanguages.category, academyLanguages.name);
+    const languages = await database.select().from(academyLanguages).where(eq132(academyLanguages.status, "active")).orderBy(academyLanguages.category, academyLanguages.name);
     return { success: true, languages };
   } catch (error) {
     console.error("[HouseOfTongues] Error getting languages:", error);
@@ -101858,8 +101898,8 @@ async function getLanguagesByCategory(category) {
   }
   try {
     const languages = await database.select().from(academyLanguages).where(and107(
-      eq131(academyLanguages.category, category),
-      eq131(academyLanguages.status, "active")
+      eq132(academyLanguages.category, category),
+      eq132(academyLanguages.status, "active")
     )).orderBy(academyLanguages.name);
     return { success: true, languages, category };
   } catch (error) {
@@ -101874,7 +101914,7 @@ async function getLanguageLessons(languageId, level) {
   }
   try {
     let query = database.select().from(languageLessons).where(
-      level ? and107(eq131(languageLessons.languageId, languageId), eq131(languageLessons.level, level), eq131(languageLessons.status, "active")) : and107(eq131(languageLessons.languageId, languageId), eq131(languageLessons.status, "active"))
+      level ? and107(eq132(languageLessons.languageId, languageId), eq132(languageLessons.level, level), eq132(languageLessons.status, "active")) : and107(eq132(languageLessons.languageId, languageId), eq132(languageLessons.status, "active"))
     ).orderBy(languageLessons.level, languageLessons.orderIndex);
     const lessons = await query;
     return { success: true, lessons, languageId };
@@ -101890,14 +101930,14 @@ async function startLesson(studentProfileId, languageLessonId) {
   }
   try {
     const existing = await database.select().from(studentProgress).where(and107(
-      eq131(studentProgress.studentProfileId, studentProfileId),
-      eq131(studentProgress.languageLessonId, languageLessonId)
+      eq132(studentProgress.studentProfileId, studentProfileId),
+      eq132(studentProgress.languageLessonId, languageLessonId)
     )).limit(1);
     if (existing.length > 0) {
       await database.update(studentProgress).set({
         status: "in_progress",
         startedAt: /* @__PURE__ */ new Date()
-      }).where(eq131(studentProgress.id, existing[0].id));
+      }).where(eq132(studentProgress.id, existing[0].id));
       return { success: true, progressId: existing[0].id, message: "Lesson resumed" };
     }
     const result = await database.insert(studentProgress).values({
@@ -101920,7 +101960,7 @@ async function completeLesson(studentProfileId, languageLessonId, score) {
     return { success: false, message: "Database not available" };
   }
   try {
-    const lesson = await database.select().from(languageLessons).where(eq131(languageLessons.id, languageLessonId)).limit(1);
+    const lesson = await database.select().from(languageLessons).where(eq132(languageLessons.id, languageLessonId)).limit(1);
     if (lesson.length === 0) {
       return { success: false, message: "Lesson not found" };
     }
@@ -101937,10 +101977,10 @@ async function completeLesson(studentProfileId, languageLessonId, score) {
       tokensEarned,
       completedAt: /* @__PURE__ */ new Date()
     }).where(and107(
-      eq131(studentProgress.studentProfileId, studentProfileId),
-      eq131(studentProgress.languageLessonId, languageLessonId)
+      eq132(studentProgress.studentProfileId, studentProfileId),
+      eq132(studentProgress.languageLessonId, languageLessonId)
     ));
-    const profile = await database.select().from(studentProfiles).where(eq131(studentProfiles.id, studentProfileId)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq132(studentProfiles.id, studentProfileId)).limit(1);
     if (profile.length > 0 && score >= 70) {
       await awardLanguageTokens(profile[0].userId, tokensEarned, `Completed ${lesson[0].title}`);
     }
@@ -101960,7 +102000,7 @@ async function awardLanguageTokens(userId, amount, description) {
   const database = getDb();
   if (!database) return;
   try {
-    let account = await database.select().from(luvLedgerAccounts).where(eq131(luvLedgerAccounts.userId, userId)).limit(1);
+    let account = await database.select().from(luvLedgerAccounts).where(eq132(luvLedgerAccounts.userId, userId)).limit(1);
     if (account.length === 0) {
       await database.insert(luvLedgerAccounts).values({
         userId,
@@ -101971,7 +102011,7 @@ async function awardLanguageTokens(userId, amount, description) {
       await database.update(luvLedgerAccounts).set({
         totalTokens: sql97`${luvLedgerAccounts.totalTokens} + ${amount}`,
         lifetimeTokensEarned: sql97`${luvLedgerAccounts.lifetimeTokensEarned} + ${amount}`
-      }).where(eq131(luvLedgerAccounts.userId, userId));
+      }).where(eq132(luvLedgerAccounts.userId, userId));
     }
     await database.insert(tokenTransactions).values({
       userId,
@@ -102003,10 +102043,10 @@ async function getStudentLanguageProgress(studentProfileId) {
       lessonLevel: languageLessons.level,
       lessonType: languageLessons.lessonType,
       languageId: languageLessons.languageId
-    }).from(studentProgress).leftJoin(languageLessons, eq131(studentProgress.languageLessonId, languageLessons.id)).where(and107(
-      eq131(studentProgress.studentProfileId, studentProfileId),
-      eq131(studentProgress.progressType, "language")
-    )).orderBy(desc103(studentProgress.startedAt));
+    }).from(studentProgress).leftJoin(languageLessons, eq132(studentProgress.languageLessonId, languageLessons.id)).where(and107(
+      eq132(studentProgress.studentProfileId, studentProfileId),
+      eq132(studentProgress.progressType, "language")
+    )).orderBy(desc104(studentProgress.startedAt));
     return { success: true, progress };
   } catch (error) {
     console.error("[HouseOfTongues] Error getting progress:", error);
@@ -102019,11 +102059,11 @@ async function getLanguageMasteryStats(studentProfileId, languageId) {
     return { success: false, stats: null, message: "Database not available" };
   }
   try {
-    const allLessons = await database.select().from(languageLessons).where(eq131(languageLessons.languageId, languageId));
-    const completedProgress = await database.select().from(studentProgress).leftJoin(languageLessons, eq131(studentProgress.languageLessonId, languageLessons.id)).where(and107(
-      eq131(studentProgress.studentProfileId, studentProfileId),
-      eq131(languageLessons.languageId, languageId),
-      eq131(studentProgress.status, "completed")
+    const allLessons = await database.select().from(languageLessons).where(eq132(languageLessons.languageId, languageId));
+    const completedProgress = await database.select().from(studentProgress).leftJoin(languageLessons, eq132(studentProgress.languageLessonId, languageLessons.id)).where(and107(
+      eq132(studentProgress.studentProfileId, studentProfileId),
+      eq132(languageLessons.languageId, languageId),
+      eq132(studentProgress.status, "completed")
     ));
     const totalLessons = allLessons.length;
     const completedLessons = completedProgress.length;
@@ -102069,11 +102109,11 @@ async function createLivingScroll(studentProfileId, languageId) {
         message: `Mastery level too low (${masteryResult.stats.masteryPercentage}%). Need at least 70% to create a Living Scroll.`
       };
     }
-    const language = await database.select().from(academyLanguages).where(eq131(academyLanguages.id, languageId)).limit(1);
+    const language = await database.select().from(academyLanguages).where(eq132(academyLanguages.id, languageId)).limit(1);
     if (language.length === 0) {
       return { success: false, message: "Language not found" };
     }
-    const profile = await database.select().from(studentProfiles).where(eq131(studentProfiles.id, studentProfileId)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq132(studentProfiles.id, studentProfileId)).limit(1);
     if (profile.length === 0) {
       return { success: false, message: "Student profile not found" };
     }
@@ -102339,7 +102379,7 @@ import { z as z193 } from "zod";
 // server/services/learning-houses.ts
 init_db();
 init_schema();
-import { eq as eq132, and as and108, sql as sql98 } from "drizzle-orm";
+import { eq as eq133, and as and108, sql as sql98 } from "drizzle-orm";
 var LEARNING_HOUSES = {
   wonder: {
     name: "House of Wonder",
@@ -102488,7 +102528,7 @@ async function getAllHouses() {
     };
   }
   try {
-    const houses3 = await database.select().from(academyHouses).where(eq132(academyHouses.status, "active")).orderBy(academyHouses.gradeRange);
+    const houses3 = await database.select().from(academyHouses).where(eq133(academyHouses.status, "active")).orderBy(academyHouses.gradeRange);
     if (houses3.length === 0) {
       return {
         success: true,
@@ -102532,8 +102572,8 @@ async function getHouseCourses(houseId) {
   }
   try {
     const courses2 = await database.select().from(academyCourses).where(and108(
-      eq132(academyCourses.houseId, houseId),
-      eq132(academyCourses.status, "active")
+      eq133(academyCourses.houseId, houseId),
+      eq133(academyCourses.status, "active")
     )).orderBy(academyCourses.level, academyCourses.title);
     return { success: true, courses: courses2 };
   } catch (error) {
@@ -102548,8 +102588,8 @@ async function getCourseLessons(courseId) {
   }
   try {
     const lessons = await database.select().from(academyLessons).where(and108(
-      eq132(academyLessons.courseId, courseId),
-      eq132(academyLessons.status, "active")
+      eq133(academyLessons.courseId, courseId),
+      eq133(academyLessons.status, "active")
     )).orderBy(academyLessons.orderIndex);
     return { success: true, lessons };
   } catch (error) {
@@ -102572,14 +102612,14 @@ async function assignStudentToHouse(studentProfileId, method, value) {
     if (!houseSlug) {
       return { success: false, message: "Could not determine appropriate house for given age/grade" };
     }
-    const house = await database.select().from(academyHouses).where(eq132(academyHouses.slug, houseSlug)).limit(1);
+    const house = await database.select().from(academyHouses).where(eq133(academyHouses.slug, houseSlug)).limit(1);
     if (house.length === 0) {
       return { success: false, message: "House not found in database" };
     }
     await database.update(studentProfiles).set({
       houseId: house[0].id,
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq132(studentProfiles.id, studentProfileId));
+    }).where(eq133(studentProfiles.id, studentProfileId));
     return {
       success: true,
       house: {
@@ -102601,18 +102641,18 @@ async function getStudentHouseProgress(studentProfileId) {
     return { success: false, progress: null, message: "Database not available" };
   }
   try {
-    const profile = await database.select().from(studentProfiles).where(eq132(studentProfiles.id, studentProfileId)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq133(studentProfiles.id, studentProfileId)).limit(1);
     if (profile.length === 0) {
       return { success: false, progress: null, message: "Student profile not found" };
     }
     if (!profile[0].houseId) {
       return { success: false, progress: null, message: "Student not assigned to a house" };
     }
-    const house = await database.select().from(academyHouses).where(eq132(academyHouses.id, profile[0].houseId)).limit(1);
-    const courses2 = await database.select().from(academyCourses).where(eq132(academyCourses.houseId, profile[0].houseId));
+    const house = await database.select().from(academyHouses).where(eq133(academyHouses.id, profile[0].houseId)).limit(1);
+    const courses2 = await database.select().from(academyCourses).where(eq133(academyCourses.houseId, profile[0].houseId));
     const courseProgress2 = await database.select().from(studentProgress).where(and108(
-      eq132(studentProgress.studentProfileId, studentProfileId),
-      eq132(studentProgress.progressType, "course")
+      eq133(studentProgress.studentProfileId, studentProfileId),
+      eq133(studentProgress.progressType, "course")
     ));
     const totalCourses = courses2.length;
     const completedCourses = courseProgress2.filter((p) => p.status === "completed").length;
@@ -102643,8 +102683,8 @@ async function startCourse(studentProfileId, courseId) {
   }
   try {
     const existing = await database.select().from(studentProgress).where(and108(
-      eq132(studentProgress.studentProfileId, studentProfileId),
-      eq132(studentProgress.courseId, courseId)
+      eq133(studentProgress.studentProfileId, studentProfileId),
+      eq133(studentProgress.courseId, courseId)
     )).limit(1);
     if (existing.length > 0) {
       return { success: true, progressId: existing[0].id, message: "Course already started" };
@@ -102669,7 +102709,7 @@ async function completeLesson2(studentProfileId, lessonId, score) {
     return { success: false, message: "Database not available" };
   }
   try {
-    const lesson = await database.select().from(academyLessons).where(eq132(academyLessons.id, lessonId)).limit(1);
+    const lesson = await database.select().from(academyLessons).where(eq133(academyLessons.id, lessonId)).limit(1);
     if (lesson.length === 0) {
       return { success: false, message: "Lesson not found" };
     }
@@ -102686,11 +102726,11 @@ async function completeLesson2(studentProfileId, lessonId, score) {
       completedAt: /* @__PURE__ */ new Date()
     });
     const courseId = lesson[0].courseId;
-    const allLessons = await database.select().from(academyLessons).where(eq132(academyLessons.courseId, courseId));
-    const completedLessons = await database.select().from(studentProgress).leftJoin(academyLessons, eq132(studentProgress.lessonId, academyLessons.id)).where(and108(
-      eq132(studentProgress.studentProfileId, studentProfileId),
-      eq132(academyLessons.courseId, courseId),
-      eq132(studentProgress.status, "completed")
+    const allLessons = await database.select().from(academyLessons).where(eq133(academyLessons.courseId, courseId));
+    const completedLessons = await database.select().from(studentProgress).leftJoin(academyLessons, eq133(studentProgress.lessonId, academyLessons.id)).where(and108(
+      eq133(studentProgress.studentProfileId, studentProfileId),
+      eq133(academyLessons.courseId, courseId),
+      eq133(studentProgress.status, "completed")
     ));
     const courseProgress2 = Math.round(completedLessons.length / allLessons.length * 100);
     await database.update(studentProgress).set({
@@ -102698,10 +102738,10 @@ async function completeLesson2(studentProfileId, lessonId, score) {
       status: courseProgress2 >= 100 ? "completed" : "in_progress",
       completedAt: courseProgress2 >= 100 ? /* @__PURE__ */ new Date() : void 0
     }).where(and108(
-      eq132(studentProgress.studentProfileId, studentProfileId),
-      eq132(studentProgress.courseId, courseId)
+      eq133(studentProgress.studentProfileId, studentProfileId),
+      eq133(studentProgress.courseId, courseId)
     ));
-    const profile = await database.select().from(studentProfiles).where(eq132(studentProfiles.id, studentProfileId)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq133(studentProfiles.id, studentProfileId)).limit(1);
     if (profile.length > 0) {
       await awardHouseTokens(profile[0].userId, tokensEarned, `Completed lesson: ${lesson[0].title}`);
     }
@@ -102721,7 +102761,7 @@ async function awardHouseTokens(userId, amount, description) {
   const database = getDb();
   if (!database) return;
   try {
-    let account = await database.select().from(luvLedgerAccounts).where(eq132(luvLedgerAccounts.userId, userId)).limit(1);
+    let account = await database.select().from(luvLedgerAccounts).where(eq133(luvLedgerAccounts.userId, userId)).limit(1);
     if (account.length === 0) {
       await database.insert(luvLedgerAccounts).values({
         userId,
@@ -102732,7 +102772,7 @@ async function awardHouseTokens(userId, amount, description) {
       await database.update(luvLedgerAccounts).set({
         totalTokens: sql98`${luvLedgerAccounts.totalTokens} + ${amount}`,
         lifetimeTokensEarned: sql98`${luvLedgerAccounts.lifetimeTokensEarned} + ${amount}`
-      }).where(eq132(luvLedgerAccounts.userId, userId));
+      }).where(eq133(luvLedgerAccounts.userId, userId));
     }
     await database.insert(tokenTransactions).values({
       userId,
@@ -102764,7 +102804,7 @@ async function graduateFromHouse(studentProfileId) {
     const house = progressResult.progress.house;
     const houseSlug = house.slug;
     const graduationTokens = HOUSE_TOKEN_REWARDS[houseSlug]?.house_graduation || 500;
-    const profile = await database.select().from(studentProfiles).where(eq132(studentProfiles.id, studentProfileId)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq133(studentProfiles.id, studentProfileId)).limit(1);
     if (profile.length > 0) {
       await awardHouseTokens(
         profile[0].userId,
@@ -102774,9 +102814,9 @@ async function graduateFromHouse(studentProfileId) {
     }
     let nextHouse = null;
     if (houseSlug === "wonder") {
-      nextHouse = await database.select().from(academyHouses).where(eq132(academyHouses.slug, "form")).limit(1);
+      nextHouse = await database.select().from(academyHouses).where(eq133(academyHouses.slug, "form")).limit(1);
     } else if (houseSlug === "form") {
-      nextHouse = await database.select().from(academyHouses).where(eq132(academyHouses.slug, "mastery")).limit(1);
+      nextHouse = await database.select().from(academyHouses).where(eq133(academyHouses.slug, "mastery")).limit(1);
     }
     return {
       success: true,
@@ -103001,7 +103041,7 @@ import { z as z194 } from "zod";
 // server/services/mastery-scrolls.ts
 init_db();
 init_schema();
-import { eq as eq133, and as and109, desc as desc105, sql as sql99 } from "drizzle-orm";
+import { eq as eq134, and as and109, desc as desc106, sql as sql99 } from "drizzle-orm";
 var SCROLL_TEMPLATES = {
   course_completion: {
     name: "Scroll of Completion",
@@ -103132,7 +103172,7 @@ async function awardScrollTokens(userId, amount, description) {
   const database = getDb();
   if (!database) return;
   try {
-    let account = await database.select().from(luvLedgerAccounts).where(eq133(luvLedgerAccounts.userId, userId)).limit(1);
+    let account = await database.select().from(luvLedgerAccounts).where(eq134(luvLedgerAccounts.userId, userId)).limit(1);
     if (account.length === 0) {
       await database.insert(luvLedgerAccounts).values({
         userId,
@@ -103143,7 +103183,7 @@ async function awardScrollTokens(userId, amount, description) {
       await database.update(luvLedgerAccounts).set({
         totalTokens: sql99`${luvLedgerAccounts.totalTokens} + ${amount}`,
         lifetimeTokensEarned: sql99`${luvLedgerAccounts.lifetimeTokensEarned} + ${amount}`
-      }).where(eq133(luvLedgerAccounts.userId, userId));
+      }).where(eq134(luvLedgerAccounts.userId, userId));
     }
     await database.insert(tokenTransactions).values({
       userId,
@@ -103162,12 +103202,12 @@ async function verifyScroll(scrollHash) {
     return { success: false, verified: false, message: "Database not available" };
   }
   try {
-    const cert = await database.select().from(certificates).where(eq133(certificates.certificateHash, scrollHash)).limit(1);
+    const cert = await database.select().from(certificates).where(eq134(certificates.certificateHash, scrollHash)).limit(1);
     if (cert.length === 0) {
       return { success: true, verified: false, message: "Scroll not found" };
     }
-    const blockchainRecord = await database.select().from(blockchainRecords).where(eq133(blockchainRecords.entityId, scrollHash)).limit(1);
-    const profile = await database.select().from(studentProfiles).where(eq133(studentProfiles.userId, cert[0].userId)).limit(1);
+    const blockchainRecord = await database.select().from(blockchainRecords).where(eq134(blockchainRecords.entityId, scrollHash)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq134(studentProfiles.userId, cert[0].userId)).limit(1);
     const metadata = cert[0].metadata ? JSON.parse(cert[0].metadata) : {};
     return {
       success: true,
@@ -103195,7 +103235,7 @@ async function getUserScrolls(userId) {
     return { success: false, scrolls: [], message: "Database not available" };
   }
   try {
-    const scrolls = await database.select().from(certificates).where(eq133(certificates.userId, userId)).orderBy(desc105(certificates.issuedAt));
+    const scrolls = await database.select().from(certificates).where(eq134(certificates.userId, userId)).orderBy(desc106(certificates.issuedAt));
     const formattedScrolls = scrolls.map((scroll) => {
       const metadata = scroll.metadata ? JSON.parse(scroll.metadata) : {};
       return {
@@ -103220,7 +103260,7 @@ async function getScrollStats(userId) {
     return { success: false, stats: null, message: "Database not available" };
   }
   try {
-    const scrolls = await database.select().from(certificates).where(eq133(certificates.userId, userId));
+    const scrolls = await database.select().from(certificates).where(eq134(certificates.userId, userId));
     const stats = {
       totalScrolls: scrolls.length,
       byType: {},
@@ -103248,13 +103288,13 @@ async function checkSovereignScholarEligibility(userId) {
   }
   try {
     const graduationScrolls = await database.select().from(certificates).where(and109(
-      eq133(certificates.userId, userId),
-      eq133(certificates.certificateType, "house_graduation")
+      eq134(certificates.userId, userId),
+      eq134(certificates.certificateType, "house_graduation")
     ));
     const eligible = graduationScrolls.length >= 3;
     const existingSovereign = await database.select().from(certificates).where(and109(
-      eq133(certificates.userId, userId),
-      eq133(certificates.certificateType, "sovereign_scholar")
+      eq134(certificates.userId, userId),
+      eq134(certificates.certificateType, "sovereign_scholar")
     )).limit(1);
     if (existingSovereign.length > 0) {
       return {
@@ -103314,7 +103354,7 @@ async function createCourseCompletionScroll(userId, studentProfileId, courseId) 
     return { success: false, message: "Database not available" };
   }
   try {
-    const course = await database.select().from(academyCourses).where(eq133(academyCourses.id, courseId)).limit(1);
+    const course = await database.select().from(academyCourses).where(eq134(academyCourses.id, courseId)).limit(1);
     if (course.length === 0) {
       return { success: false, message: "Course not found" };
     }
@@ -103341,7 +103381,7 @@ async function createHouseGraduationScroll(userId, studentProfileId, houseId) {
     return { success: false, message: "Database not available" };
   }
   try {
-    const house = await database.select().from(academyHouses).where(eq133(academyHouses.id, houseId)).limit(1);
+    const house = await database.select().from(academyHouses).where(eq134(academyHouses.id, houseId)).limit(1);
     if (house.length === 0) {
       return { success: false, message: "House not found" };
     }
@@ -103368,7 +103408,7 @@ async function createLanguageMasteryScroll(userId, studentProfileId, languageId)
     return { success: false, message: "Database not available" };
   }
   try {
-    const language = await database.select().from(academyLanguages).where(eq133(academyLanguages.id, languageId)).limit(1);
+    const language = await database.select().from(academyLanguages).where(eq134(academyLanguages.id, languageId)).limit(1);
     if (language.length === 0) {
       return { success: false, message: "Language not found" };
     }
@@ -103563,7 +103603,7 @@ import { z as z195 } from "zod";
 // server/services/guardian-dashboard.ts
 init_db();
 init_schema();
-import { eq as eq134, and as and110, desc as desc106 } from "drizzle-orm";
+import { eq as eq135, and as and110, desc as desc107 } from "drizzle-orm";
 async function getGuardianStudents(guardianUserId) {
   const database = getDb();
   if (!database) {
@@ -103577,12 +103617,12 @@ async function getGuardianStudents(guardianUserId) {
       gradeLevel: studentProfiles.gradeLevel,
       houseId: studentProfiles.houseId,
       createdAt: studentProfiles.createdAt
-    }).from(studentProfiles).where(eq134(studentProfiles.guardianUserId, guardianUserId)).orderBy(studentProfiles.displayName);
+    }).from(studentProfiles).where(eq135(studentProfiles.guardianUserId, guardianUserId)).orderBy(studentProfiles.displayName);
     const studentsWithHouses = await Promise.all(
       students.map(async (student) => {
         let houseName = null;
         if (student.houseId) {
-          const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq134(academyHouses.id, student.houseId)).limit(1);
+          const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq135(academyHouses.id, student.houseId)).limit(1);
           houseName = house[0]?.name || null;
         }
         return { ...student, houseName };
@@ -103607,22 +103647,22 @@ async function getStudentsSummary(guardianUserId) {
     const summaries = await Promise.all(
       studentsResult.students.map(async (student) => {
         const courseProgress2 = await database.select().from(studentProgress).where(and110(
-          eq134(studentProgress.studentProfileId, student.id),
-          eq134(studentProgress.progressType, "course")
+          eq135(studentProgress.studentProfileId, student.id),
+          eq135(studentProgress.progressType, "course")
         ));
         const coursesCompleted = courseProgress2.filter((p) => p.status === "completed").length;
         const coursesInProgress = courseProgress2.filter((p) => p.status === "in_progress").length;
         const languageProgress = await database.select().from(studentProgress).where(and110(
-          eq134(studentProgress.studentProfileId, student.id),
-          eq134(studentProgress.progressType, "language")
+          eq135(studentProgress.studentProfileId, student.id),
+          eq135(studentProgress.progressType, "language")
         ));
         const uniqueLanguages = new Set(languageProgress.map((p) => p.languageLessonId));
-        const scrolls = await database.select().from(certificates).where(eq134(certificates.userId, student.userId));
-        const account = await database.select().from(luvLedgerAccounts).where(eq134(luvLedgerAccounts.userId, student.userId)).limit(1);
-        const lastProgress = await database.select().from(studentProgress).where(eq134(studentProgress.studentProfileId, student.id)).orderBy(desc106(studentProgress.updatedAt)).limit(1);
+        const scrolls = await database.select().from(certificates).where(eq135(certificates.userId, student.userId));
+        const account = await database.select().from(luvLedgerAccounts).where(eq135(luvLedgerAccounts.userId, student.userId)).limit(1);
+        const lastProgress = await database.select().from(studentProgress).where(eq135(studentProgress.studentProfileId, student.id)).orderBy(desc107(studentProgress.updatedAt)).limit(1);
         let houseProgress = 0;
         if (student.houseId) {
-          const houseCourses = await database.select().from(academyCourses).where(eq134(academyCourses.houseId, student.houseId));
+          const houseCourses = await database.select().from(academyCourses).where(eq135(academyCourses.houseId, student.houseId));
           if (houseCourses.length > 0) {
             houseProgress = Math.round(coursesCompleted / houseCourses.length * 100);
           }
@@ -103665,8 +103705,8 @@ async function getStudentDetailedProgress(guardianUserId, studentProfileId) {
   }
   try {
     const student = await database.select().from(studentProfiles).where(and110(
-      eq134(studentProfiles.id, studentProfileId),
-      eq134(studentProfiles.guardianUserId, guardianUserId)
+      eq135(studentProfiles.id, studentProfileId),
+      eq135(studentProfiles.guardianUserId, guardianUserId)
     )).limit(1);
     if (student.length === 0) {
       return { success: false, progress: null, message: "Student not found or access denied" };
@@ -103681,22 +103721,22 @@ async function getStudentDetailedProgress(guardianUserId, studentProfileId) {
       courseName: academyCourses.title,
       courseLevel: academyCourses.level,
       houseId: academyCourses.houseId
-    }).from(studentProgress).leftJoin(academyCourses, eq134(studentProgress.courseId, academyCourses.id)).where(and110(
-      eq134(studentProgress.studentProfileId, studentProfileId),
-      eq134(studentProgress.progressType, "course")
+    }).from(studentProgress).leftJoin(academyCourses, eq135(studentProgress.courseId, academyCourses.id)).where(and110(
+      eq135(studentProgress.studentProfileId, studentProfileId),
+      eq135(studentProgress.progressType, "course")
     ));
     const courses2 = await Promise.all(
       courseProgressData.map(async (cp) => {
         let houseName = "Unknown";
         if (cp.houseId) {
-          const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq134(academyHouses.id, cp.houseId)).limit(1);
+          const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq135(academyHouses.id, cp.houseId)).limit(1);
           houseName = house[0]?.name || "Unknown";
         }
-        const lessons = cp.courseId ? await database.select().from(academyLessons).where(eq134(academyLessons.courseId, cp.courseId)) : [];
+        const lessons = cp.courseId ? await database.select().from(academyLessons).where(eq135(academyLessons.courseId, cp.courseId)) : [];
         const completedLessons = await database.select().from(studentProgress).where(and110(
-          eq134(studentProgress.studentProfileId, studentProfileId),
-          eq134(studentProgress.progressType, "lesson"),
-          eq134(studentProgress.status, "completed")
+          eq135(studentProgress.studentProfileId, studentProfileId),
+          eq135(studentProgress.progressType, "lesson"),
+          eq135(studentProgress.status, "completed")
         ));
         const lessonIds = lessons.map((l) => l.id);
         const completedCount = completedLessons.filter(
@@ -103720,13 +103760,13 @@ async function getStudentDetailedProgress(guardianUserId, studentProfileId) {
       status: studentProgress.status,
       score: studentProgress.score
     }).from(studentProgress).where(and110(
-      eq134(studentProgress.studentProfileId, studentProfileId),
-      eq134(studentProgress.progressType, "language")
+      eq135(studentProgress.studentProfileId, studentProfileId),
+      eq135(studentProgress.progressType, "language")
     ));
     const languageMap = /* @__PURE__ */ new Map();
     for (const lp of languageProgressData) {
       if (lp.languageLessonId) {
-        const lesson = await database.select({ languageId: languageLessons.languageId }).from(languageLessons).where(eq134(languageLessons.id, lp.languageLessonId)).limit(1);
+        const lesson = await database.select({ languageId: languageLessons.languageId }).from(languageLessons).where(eq135(languageLessons.id, lp.languageLessonId)).limit(1);
         if (lesson[0]) {
           const langId = lesson[0].languageId;
           const current = languageMap.get(langId) || { completed: 0, total: 0 };
@@ -103738,8 +103778,8 @@ async function getStudentDetailedProgress(guardianUserId, studentProfileId) {
     }
     const languages = await Promise.all(
       Array.from(languageMap.entries()).map(async ([langId, counts]) => {
-        const lang = await database.select().from(academyLanguages).where(eq134(academyLanguages.id, langId)).limit(1);
-        const totalLessons = await database.select().from(languageLessons).where(eq134(languageLessons.languageId, langId));
+        const lang = await database.select().from(academyLanguages).where(eq135(academyLanguages.id, langId)).limit(1);
+        const totalLessons = await database.select().from(languageLessons).where(eq135(languageLessons.languageId, langId));
         const progressPct = totalLessons.length > 0 ? Math.round(counts.completed / totalLessons.length * 100) : 0;
         return {
           languageId: langId,
@@ -103753,7 +103793,7 @@ async function getStudentDetailedProgress(guardianUserId, studentProfileId) {
         };
       })
     );
-    const scrollsData = await database.select().from(certificates).where(eq134(certificates.userId, student[0].userId)).orderBy(desc106(certificates.issuedAt));
+    const scrollsData = await database.select().from(certificates).where(eq135(certificates.userId, student[0].userId)).orderBy(desc107(certificates.issuedAt));
     const scrolls = scrollsData.map((s) => ({
       id: s.id,
       type: s.certificateType,
@@ -103761,7 +103801,7 @@ async function getStudentDetailedProgress(guardianUserId, studentProfileId) {
       issuedAt: s.issuedAt,
       verificationUrl: `/scrolls/verify/${s.certificateHash}`
     }));
-    const tokensData = await database.select().from(tokenTransactions).where(eq134(tokenTransactions.userId, student[0].userId)).orderBy(desc106(tokenTransactions.createdAt)).limit(50);
+    const tokensData = await database.select().from(tokenTransactions).where(eq135(tokenTransactions.userId, student[0].userId)).orderBy(desc107(tokenTransactions.createdAt)).limit(50);
     const tokenHistory = tokensData.map((t2) => ({
       id: t2.id,
       amount: t2.amount,
@@ -103825,7 +103865,7 @@ async function linkStudentToGuardian(guardianUserId, studentProfileId, relations
     await database.update(studentProfiles).set({
       guardianUserId,
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq134(studentProfiles.id, studentProfileId));
+    }).where(eq135(studentProfiles.id, studentProfileId));
     return { success: true, message: "Student linked to guardian successfully" };
   } catch (error) {
     console.error("[GuardianDashboard] Error linking student:", error);
@@ -103844,7 +103884,7 @@ async function getGuardianNotifications(guardianUserId) {
     }
     const notifications5 = [];
     for (const student of studentsResult.students) {
-      const recentScrolls = await database.select().from(certificates).where(eq134(certificates.userId, student.userId)).orderBy(desc106(certificates.issuedAt)).limit(3);
+      const recentScrolls = await database.select().from(certificates).where(eq135(certificates.userId, student.userId)).orderBy(desc107(certificates.issuedAt)).limit(3);
       for (const scroll of recentScrolls) {
         const daysSinceIssued = Math.floor(
           (Date.now() - scroll.issuedAt.getTime()) / (1e3 * 60 * 60 * 24)
@@ -103859,7 +103899,7 @@ async function getGuardianNotifications(guardianUserId) {
           });
         }
       }
-      const lastProgress = await database.select().from(studentProgress).where(eq134(studentProgress.studentProfileId, student.id)).orderBy(desc106(studentProgress.updatedAt)).limit(1);
+      const lastProgress = await database.select().from(studentProgress).where(eq135(studentProgress.studentProfileId, student.id)).orderBy(desc107(studentProgress.updatedAt)).limit(1);
       if (lastProgress.length > 0 && lastProgress[0].updatedAt) {
         const daysSinceActivity = Math.floor(
           (Date.now() - lastProgress[0].updatedAt.getTime()) / (1e3 * 60 * 60 * 24)
@@ -103962,7 +104002,7 @@ import { z as z196 } from "zod";
 // server/services/eternal-flame-vault.ts
 init_db();
 init_schema();
-import { eq as eq135, desc as desc107, sql as sql101 } from "drizzle-orm";
+import { eq as eq136, desc as desc108, sql as sql101 } from "drizzle-orm";
 function generateVaultHash(record) {
   const crypto38 = __require("crypto");
   const dataString = JSON.stringify(record) + Date.now();
@@ -103974,17 +104014,17 @@ async function getStudentVaultRecords(studentProfileId) {
     return { success: false, records: [], message: "Database not available" };
   }
   try {
-    const profile = await database.select().from(studentProfiles).where(eq135(studentProfiles.id, studentProfileId)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq136(studentProfiles.id, studentProfileId)).limit(1);
     if (profile.length === 0) {
       return { success: false, records: [], message: "Student not found" };
     }
     let houseName = null;
     if (profile[0].houseId) {
-      const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq135(academyHouses.id, profile[0].houseId)).limit(1);
+      const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq136(academyHouses.id, profile[0].houseId)).limit(1);
       houseName = house[0]?.name || null;
     }
-    const certs = await database.select().from(certificates).where(eq135(certificates.userId, profile[0].userId)).orderBy(desc107(certificates.issuedAt));
-    const blockchainData = await database.select().from(blockchainRecords).where(eq135(blockchainRecords.userId, profile[0].userId));
+    const certs = await database.select().from(certificates).where(eq136(certificates.userId, profile[0].userId)).orderBy(desc108(certificates.issuedAt));
+    const blockchainData = await database.select().from(blockchainRecords).where(eq136(blockchainRecords.userId, profile[0].userId));
     const blockchainMap = new Map(
       blockchainData.map((b) => [b.entityId, b])
     );
@@ -104052,11 +104092,11 @@ async function sealVaultRecord(certificateId, userId) {
     return { success: false, message: "Database not available" };
   }
   try {
-    const cert = await database.select().from(certificates).where(eq135(certificates.id, certificateId)).limit(1);
+    const cert = await database.select().from(certificates).where(eq136(certificates.id, certificateId)).limit(1);
     if (cert.length === 0) {
       return { success: false, message: "Certificate not found" };
     }
-    const existing = await database.select().from(blockchainRecords).where(eq135(blockchainRecords.entityId, cert[0].certificateHash)).limit(1);
+    const existing = await database.select().from(blockchainRecords).where(eq136(blockchainRecords.entityId, cert[0].certificateHash)).limit(1);
     if (existing.length > 0) {
       return { success: false, message: "Record already sealed" };
     }
@@ -104094,7 +104134,7 @@ async function getGuardianVaultStats(guardianUserId) {
     return { success: false, stats: null, message: "Database not available" };
   }
   try {
-    const students = await database.select().from(studentProfiles).where(eq135(studentProfiles.guardianUserId, guardianUserId));
+    const students = await database.select().from(studentProfiles).where(eq136(studentProfiles.guardianUserId, guardianUserId));
     if (students.length === 0) {
       return {
         success: true,
@@ -104129,7 +104169,7 @@ async function getGuardianVaultStats(guardianUserId) {
     });
     for (const student of students) {
       if (student.houseId) {
-        const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq135(academyHouses.id, student.houseId)).limit(1);
+        const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq136(academyHouses.id, student.houseId)).limit(1);
         const houseName = house[0]?.name || "Unknown";
         const studentCerts = allCerts.filter((c) => c.userId === student.userId);
         stats.recordsByHouse[houseName] = (stats.recordsByHouse[houseName] || 0) + studentCerts.length;
@@ -104154,15 +104194,15 @@ async function verifyVaultRecord(recordHash) {
     return { success: false, verified: false, message: "Database not available" };
   }
   try {
-    const cert = await database.select().from(certificates).where(eq135(certificates.certificateHash, recordHash)).limit(1);
+    const cert = await database.select().from(certificates).where(eq136(certificates.certificateHash, recordHash)).limit(1);
     if (cert.length === 0) {
       return { success: true, verified: false, message: "Record not found in vault" };
     }
-    const blockchain = await database.select().from(blockchainRecords).where(eq135(blockchainRecords.entityId, recordHash)).limit(1);
-    const profile = await database.select().from(studentProfiles).where(eq135(studentProfiles.userId, cert[0].userId)).limit(1);
+    const blockchain = await database.select().from(blockchainRecords).where(eq136(blockchainRecords.entityId, recordHash)).limit(1);
+    const profile = await database.select().from(studentProfiles).where(eq136(studentProfiles.userId, cert[0].userId)).limit(1);
     let houseName = null;
     if (profile[0]?.houseId) {
-      const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq135(academyHouses.id, profile[0].houseId)).limit(1);
+      const house = await database.select({ name: academyHouses.name }).from(academyHouses).where(eq136(academyHouses.id, profile[0].houseId)).limit(1);
       houseName = house[0]?.name || null;
     }
     const metadata = cert[0].metadata ? JSON.parse(cert[0].metadata) : {};
@@ -126849,7 +126889,7 @@ var quarterlyInvestmentReportRouter = router({
 import { z as z224 } from "zod";
 init_db();
 init_schema();
-import { eq as eq136, and as and112, gte as gte29, lte as lte24, or as or20 } from "drizzle-orm";
+import { eq as eq137, and as and112, gte as gte29, lte as lte24, or as or20 } from "drizzle-orm";
 import { TRPCError as TRPCError67 } from "@trpc/server";
 
 // server/services/compliance-tracking.ts
@@ -127423,7 +127463,7 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [userHouse] = await db7.select().from(houses).where(eq136(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq137(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const task = createComplianceTask(
       houseId,
@@ -127474,15 +127514,15 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [userHouse] = await db7.select().from(houses).where(eq136(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq137(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
-    let query = db7.select().from(complianceTasks).where(eq136(complianceTasks.houseId, houseId));
-    const conditions = [eq136(complianceTasks.houseId, houseId)];
+    let query = db7.select().from(complianceTasks).where(eq137(complianceTasks.houseId, houseId));
+    const conditions = [eq137(complianceTasks.houseId, houseId)];
     if (input.status !== "all") {
-      conditions.push(eq136(complianceTasks.status, input.status));
+      conditions.push(eq137(complianceTasks.status, input.status));
     }
     if (input.businessEntityId) {
-      conditions.push(eq136(complianceTasks.businessEntityId, input.businessEntityId));
+      conditions.push(eq137(complianceTasks.businessEntityId, input.businessEntityId));
     }
     if (input.startDate) {
       conditions.push(gte29(complianceTasks.dueDate, new Date(input.startDate)));
@@ -127511,7 +127551,7 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [task] = await db7.select().from(complianceTasks).where(eq136(complianceTasks.id, input.taskId)).limit(1);
+    const [task] = await db7.select().from(complianceTasks).where(eq137(complianceTasks.id, input.taskId)).limit(1);
     if (!task) {
       throw new TRPCError67({ code: "NOT_FOUND", message: "Task not found" });
     }
@@ -127543,7 +127583,7 @@ var complianceTrackingRouter = router({
       ...rest,
       ...dueDate && { dueDate: new Date(dueDate) },
       ...reminderDate && { reminderDate: new Date(reminderDate) }
-    }).where(eq136(complianceTasks.id, taskId));
+    }).where(eq137(complianceTasks.id, taskId));
     return { success: true };
   }),
   /**
@@ -127561,7 +127601,7 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [task] = await db7.select().from(complianceTasks).where(eq136(complianceTasks.id, input.taskId)).limit(1);
+    const [task] = await db7.select().from(complianceTasks).where(eq137(complianceTasks.id, input.taskId)).limit(1);
     if (!task) {
       throw new TRPCError67({ code: "NOT_FOUND", message: "Task not found" });
     }
@@ -127570,7 +127610,7 @@ var complianceTrackingRouter = router({
       completedAt: /* @__PURE__ */ new Date(),
       completedByUserId: ctx.user.id,
       completionNotes: input.completionNotes
-    }).where(eq136(complianceTasks.id, input.taskId));
+    }).where(eq137(complianceTasks.id, input.taskId));
     if (task.isRecurring && task.recurrencePattern) {
       const nextTask = generateNextOccurrence({
         taskId: task.id.toString(),
@@ -127624,7 +127664,7 @@ var complianceTrackingRouter = router({
     await db7.update(complianceTasks).set({
       status: "skipped",
       completionNotes: `Skipped: ${input.reason}`
-    }).where(eq136(complianceTasks.id, input.taskId));
+    }).where(eq137(complianceTasks.id, input.taskId));
     return { success: true };
   }),
   /**
@@ -127637,7 +127677,7 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    await db7.delete(complianceTasks).where(eq136(complianceTasks.id, input.taskId));
+    await db7.delete(complianceTasks).where(eq137(complianceTasks.id, input.taskId));
     return { success: true };
   }),
   // ============================================
@@ -127660,13 +127700,13 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [userHouse] = await db7.select().from(houses).where(eq136(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq137(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const monthStart = new Date(input.year, input.month, 1);
     const monthEnd = new Date(input.year, input.month + 1, 0);
     const tasks = await db7.select().from(complianceTasks).where(
       and112(
-        eq136(complianceTasks.houseId, houseId),
+        eq137(complianceTasks.houseId, houseId),
         gte29(complianceTasks.dueDate, monthStart),
         lte24(complianceTasks.dueDate, monthEnd)
       )
@@ -127689,7 +127729,7 @@ var complianceTrackingRouter = router({
         }
       }
     }
-    const holders = await db7.select().from(positionHolders).where(eq136(positionHolders.status, "active"));
+    const holders = await db7.select().from(positionHolders).where(eq137(positionHolders.status, "active"));
     const documentExpirations = holders.filter((h) => h.workAuthorizationExpiration).map((h) => {
       const expDate = h.workAuthorizationExpiration;
       if (expDate >= monthStart && expDate <= monthEnd) {
@@ -127752,15 +127792,15 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [userHouse] = await db7.select().from(houses).where(eq136(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq137(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const tasks = await db7.select().from(complianceTasks).where(
       and112(
-        eq136(complianceTasks.houseId, houseId),
+        eq137(complianceTasks.houseId, houseId),
         or20(
-          eq136(complianceTasks.status, "upcoming"),
-          eq136(complianceTasks.status, "due_soon"),
-          eq136(complianceTasks.status, "overdue")
+          eq137(complianceTasks.status, "upcoming"),
+          eq137(complianceTasks.status, "due_soon"),
+          eq137(complianceTasks.status, "overdue")
         )
       )
     ).orderBy(complianceTasks.dueDate);
@@ -127783,7 +127823,7 @@ var complianceTrackingRouter = router({
       const date2 = new Date(d.dueDate);
       return date2 >= now && date2 <= ninetyDaysFromNow;
     });
-    const holders = await db7.select().from(positionHolders).where(eq136(positionHolders.status, "active"));
+    const holders = await db7.select().from(positionHolders).where(eq137(positionHolders.status, "active"));
     const expiringDocuments = holders.filter((h) => {
       if (!h.workAuthorizationExpiration) return false;
       const expDate = new Date(h.workAuthorizationExpiration);
@@ -127831,9 +127871,9 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [userHouse] = await db7.select().from(houses).where(eq136(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq137(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
-    const holders = await db7.select().from(positionHolders).where(eq136(positionHolders.status, "active"));
+    const holders = await db7.select().from(positionHolders).where(eq137(positionHolders.status, "active"));
     const employeesWithExpiration = holders.filter((h) => h.workAuthorizationExpiration).map((h) => ({
       positionHolderId: h.id,
       employeeName: h.fullName,
@@ -127844,10 +127884,10 @@ var complianceTrackingRouter = router({
     for (const task of tasks) {
       const existing = await db7.select().from(complianceTasks).where(
         and112(
-          eq136(complianceTasks.houseId, houseId),
-          eq136(complianceTasks.taskType, "i9_reverification"),
-          eq136(complianceTasks.positionHolderId, task.positionHolderId),
-          eq136(complianceTasks.status, "upcoming")
+          eq137(complianceTasks.houseId, houseId),
+          eq137(complianceTasks.taskType, "i9_reverification"),
+          eq137(complianceTasks.positionHolderId, task.positionHolderId),
+          eq137(complianceTasks.status, "upcoming")
         )
       ).limit(1);
       if (!existing.length) {
@@ -127887,16 +127927,16 @@ var complianceTrackingRouter = router({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database unavailable"
       });
-    const [userHouse] = await db7.select().from(houses).where(eq136(houses.ownerUserId, ctx.user.id)).limit(1);
+    const [userHouse] = await db7.select().from(houses).where(eq137(houses.ownerUserId, ctx.user.id)).limit(1);
     const houseId = userHouse?.id || 1;
     const deadlines = getFederalFilingDeadlines(input.year);
     let createdCount = 0;
     for (const deadline of deadlines) {
       const existing = await db7.select().from(complianceTasks).where(
         and112(
-          eq136(complianceTasks.houseId, houseId),
-          eq136(complianceTasks.taskType, deadline.taskType),
-          eq136(complianceTasks.taskName, deadline.name)
+          eq137(complianceTasks.houseId, houseId),
+          eq137(complianceTasks.taskType, deadline.taskType),
+          eq137(complianceTasks.taskName, deadline.name)
         )
       ).limit(1);
       if (!existing.length) {
@@ -127929,9 +127969,9 @@ var complianceTrackingRouter = router({
       if (stateDeadline) {
         const existing = await db7.select().from(complianceTasks).where(
           and112(
-            eq136(complianceTasks.houseId, houseId),
-            eq136(complianceTasks.taskType, "annual_report"),
-            eq136(complianceTasks.taskName, stateDeadline.name)
+            eq137(complianceTasks.houseId, houseId),
+            eq137(complianceTasks.taskType, "annual_report"),
+            eq137(complianceTasks.taskName, stateDeadline.name)
           )
         ).limit(1);
         if (!existing.length) {
@@ -127969,7 +128009,7 @@ import { z as z225 } from "zod";
 init_db();
 init_storage();
 init_schema();
-import { eq as eq137, and as and113, desc as desc109 } from "drizzle-orm";
+import { eq as eq138, and as and113, desc as desc110 } from "drizzle-orm";
 
 // server/services/document-upload.ts
 var SUPPORTED_MIME_TYPES = [
@@ -128306,14 +128346,14 @@ var documentUploadRouter = router({
     const db7 = await getDb();
     if (!db7) throw new Error("Database not available");
     const userId = ctx.user.id;
-    const conditions = [eq137(secureDocuments.ownerId, userId)];
+    const conditions = [eq138(secureDocuments.ownerId, userId)];
     if (input.houseId) {
-      conditions.push(eq137(secureDocuments.houseId, input.houseId));
+      conditions.push(eq138(secureDocuments.houseId, input.houseId));
     }
     if (input.businessEntityId) {
-      conditions.push(eq137(secureDocuments.entityId, input.businessEntityId));
+      conditions.push(eq138(secureDocuments.entityId, input.businessEntityId));
     }
-    const documents2 = await db7.select().from(secureDocuments).where(and113(...conditions)).orderBy(desc109(secureDocuments.createdAt));
+    const documents2 = await db7.select().from(secureDocuments).where(and113(...conditions)).orderBy(desc110(secureDocuments.createdAt));
     let filteredDocs = documents2;
     if (input.category && input.category !== "all") {
       filteredDocs = documents2.filter((doc) => {
@@ -128356,8 +128396,8 @@ var documentUploadRouter = router({
     const userId = ctx.user.id;
     const documents2 = await db7.select().from(secureDocuments).where(
       and113(
-        eq137(secureDocuments.ownerId, userId),
-        eq137(secureDocuments.houseId, input.houseId)
+        eq138(secureDocuments.ownerId, userId),
+        eq138(secureDocuments.houseId, input.houseId)
       )
     );
     const trustDocs = documents2.filter((doc) => {
@@ -128410,8 +128450,8 @@ var documentUploadRouter = router({
     const userId = ctx.user.id;
     const documents2 = await db7.select().from(secureDocuments).where(
       and113(
-        eq137(secureDocuments.ownerId, userId),
-        eq137(secureDocuments.entityId, input.businessEntityId)
+        eq138(secureDocuments.ownerId, userId),
+        eq138(secureDocuments.entityId, input.businessEntityId)
       )
     );
     const businessDocs = documents2.filter((doc) => {
@@ -128471,15 +128511,15 @@ var documentUploadRouter = router({
     }
     const business = await db7.select().from(businessEntities).where(
       and113(
-        eq137(businessEntities.id, input.businessEntityId),
-        eq137(businessEntities.ownerId, userId)
+        eq138(businessEntities.id, input.businessEntityId),
+        eq138(businessEntities.ownerId, userId)
       )
     ).limit(1);
     if (business.length === 0) {
       throw new Error("Business entity not found or access denied");
     }
     const house = await db7.select().from(houses).where(
-      and113(eq137(houses.id, input.houseId), eq137(houses.ownerId, userId))
+      and113(eq138(houses.id, input.houseId), eq138(houses.ownerId, userId))
     ).limit(1);
     if (house.length === 0) {
       throw new Error("House not found or access denied");
@@ -128493,7 +128533,7 @@ var documentUploadRouter = router({
         housePercentage: input.housePercentage
       }),
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq137(businessEntities.id, input.businessEntityId));
+    }).where(eq138(businessEntities.id, input.businessEntityId));
     return {
       success: true,
       message: `${business[0].name} linked to ${house[0].name} with ${input.operatingPercentage}/${input.housePercentage} split`
@@ -128524,14 +128564,14 @@ var documentUploadRouter = router({
     const userId = ctx.user.id;
     const document = await db7.select().from(secureDocuments).where(
       and113(
-        eq137(secureDocuments.id, input.documentId),
-        eq137(secureDocuments.ownerId, userId)
+        eq138(secureDocuments.id, input.documentId),
+        eq138(secureDocuments.ownerId, userId)
       )
     ).limit(1);
     if (document.length === 0) {
       throw new Error("Document not found or access denied");
     }
-    await db7.delete(secureDocuments).where(eq137(secureDocuments.id, input.documentId));
+    await db7.delete(secureDocuments).where(eq138(secureDocuments.id, input.documentId));
     return {
       success: true,
       message: "Document deleted successfully"
@@ -128548,8 +128588,8 @@ var documentUploadRouter = router({
     const userId = ctx.user.id;
     const document = await db7.select().from(secureDocuments).where(
       and113(
-        eq137(secureDocuments.id, input.documentId),
-        eq137(secureDocuments.ownerId, userId)
+        eq138(secureDocuments.id, input.documentId),
+        eq138(secureDocuments.ownerId, userId)
       )
     ).limit(1);
     if (document.length === 0) {
@@ -133566,7 +133606,7 @@ var gameCenterCompleteRouter = router({
 import { z as z234 } from "zod";
 init_db();
 init_schema();
-import { eq as eq138, desc as desc110, and as and114, or as or21, sql as sql103 } from "drizzle-orm";
+import { eq as eq139, desc as desc111, and as and114, or as or21, sql as sql103 } from "drizzle-orm";
 import { TRPCError as TRPCError68 } from "@trpc/server";
 var articleSignatureRouter = router({
   // ============================================================================
@@ -133581,19 +133621,19 @@ var articleSignatureRouter = router({
   }).optional()).query(async ({ input }) => {
     const conditions = [];
     if (input?.status) {
-      conditions.push(eq138(articles.status, input.status));
+      conditions.push(eq139(articles.status, input.status));
     }
     if (input?.category) {
-      conditions.push(eq138(articles.category, input.category));
+      conditions.push(eq139(articles.category, input.category));
     }
     if (input?.isRequired !== void 0) {
-      conditions.push(eq138(articles.isRequired, input.isRequired));
+      conditions.push(eq139(articles.isRequired, input.isRequired));
     }
-    const result = await db.select().from(articles).where(conditions.length > 0 ? and114(...conditions) : void 0).orderBy(desc110(articles.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
+    const result = await db.select().from(articles).where(conditions.length > 0 ? and114(...conditions) : void 0).orderBy(desc111(articles.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
     return result;
   }),
   getArticle: protectedProcedure.input(z234.object({ id: z234.number() })).query(async ({ input }) => {
-    const [article] = await db.select().from(articles).where(eq138(articles.id, input.id));
+    const [article] = await db.select().from(articles).where(eq139(articles.id, input.id));
     if (!article) {
       throw new TRPCError68({ code: "NOT_FOUND", message: "Article not found" });
     }
@@ -133630,7 +133670,7 @@ var articleSignatureRouter = router({
       status: "published",
       publishedAt: /* @__PURE__ */ new Date(),
       publishedBy: ctx.user.id
-    }).where(eq138(articles.id, input.id));
+    }).where(eq139(articles.id, input.id));
     return { success: true };
   }),
   // ============================================================================
@@ -133658,14 +133698,14 @@ var articleSignatureRouter = router({
   getMyAssignedArticles: protectedProcedure.input(z234.object({
     status: z234.enum(["pending", "in_progress", "completed", "overdue"]).optional()
   }).optional()).query(async ({ input, ctx }) => {
-    const conditions = [eq138(articleAssignments.assignedToUserId, ctx.user.id)];
+    const conditions = [eq139(articleAssignments.assignedToUserId, ctx.user.id)];
     if (input?.status) {
-      conditions.push(eq138(articleAssignments.status, input.status));
+      conditions.push(eq139(articleAssignments.status, input.status));
     }
     const result = await db.select({
       assignment: articleAssignments,
       article: articles
-    }).from(articleAssignments).innerJoin(articles, eq138(articleAssignments.articleId, articles.id)).where(and114(...conditions)).orderBy(desc110(articleAssignments.createdAt));
+    }).from(articleAssignments).innerJoin(articles, eq139(articleAssignments.articleId, articles.id)).where(and114(...conditions)).orderBy(desc111(articleAssignments.createdAt));
     return result;
   }),
   markArticleRead: protectedProcedure.input(z234.object({
@@ -133674,15 +133714,15 @@ var articleSignatureRouter = router({
     acknowledgmentNotes: z234.string().optional()
   })).mutation(async ({ input, ctx }) => {
     const existingProgress = await db.select().from(articleReadingProgress).where(and114(
-      eq138(articleReadingProgress.articleId, input.articleId),
-      eq138(articleReadingProgress.userId, ctx.user.id)
+      eq139(articleReadingProgress.articleId, input.articleId),
+      eq139(articleReadingProgress.userId, ctx.user.id)
     ));
     if (existingProgress.length > 0) {
       await db.update(articleReadingProgress).set({
         isCompleted: true,
         completedAt: /* @__PURE__ */ new Date(),
         progressPercent: 100
-      }).where(eq138(articleReadingProgress.id, existingProgress[0].id));
+      }).where(eq139(articleReadingProgress.id, existingProgress[0].id));
     } else {
       await db.insert(articleReadingProgress).values({
         articleId: input.articleId,
@@ -133699,7 +133739,7 @@ var articleSignatureRouter = router({
         acknowledged: true,
         acknowledgedAt: /* @__PURE__ */ new Date(),
         acknowledgmentNotes: input.acknowledgmentNotes
-      }).where(eq138(articleAssignments.id, input.assignmentId));
+      }).where(eq139(articleAssignments.id, input.assignmentId));
     }
     return { success: true };
   }),
@@ -133753,17 +133793,17 @@ var articleSignatureRouter = router({
     status: z234.enum(["pending", "in_progress", "completed", "expired", "cancelled"]).optional()
   }).optional()).query(async ({ ctx, input }) => {
     if (input?.type === "sent") {
-      const conditions = [eq138(signatureRequests.requestedBy, ctx.user.id)];
+      const conditions = [eq139(signatureRequests.requestedBy, ctx.user.id)];
       if (input?.status) {
-        conditions.push(eq138(signatureRequests.status, input.status));
+        conditions.push(eq139(signatureRequests.status, input.status));
       }
-      const requests2 = await db.select().from(signatureRequests).where(and114(...conditions)).orderBy(desc110(signatureRequests.createdAt));
+      const requests2 = await db.select().from(signatureRequests).where(and114(...conditions)).orderBy(desc111(signatureRequests.createdAt));
       return requests2;
     } else {
       const signerRecords = await db.select({
         signer: signatureRequestSigners,
         request: signatureRequests
-      }).from(signatureRequestSigners).innerJoin(signatureRequests, eq138(signatureRequestSigners.requestId, signatureRequests.id)).where(eq138(signatureRequestSigners.userId, ctx.user.id)).orderBy(desc110(signatureRequests.createdAt));
+      }).from(signatureRequestSigners).innerJoin(signatureRequests, eq139(signatureRequestSigners.requestId, signatureRequests.id)).where(eq139(signatureRequestSigners.userId, ctx.user.id)).orderBy(desc111(signatureRequests.createdAt));
       return signerRecords;
     }
   }),
@@ -133773,7 +133813,7 @@ var articleSignatureRouter = router({
     signatureData: z234.string(),
     ipAddress: z234.string().optional()
   })).mutation(async ({ input, ctx }) => {
-    const [signer] = await db.select().from(signatureRequestSigners).where(eq138(signatureRequestSigners.id, input.signerId));
+    const [signer] = await db.select().from(signatureRequestSigners).where(eq139(signatureRequestSigners.id, input.signerId));
     if (!signer) {
       throw new TRPCError68({ code: "NOT_FOUND", message: "Signer record not found" });
     }
@@ -133786,14 +133826,14 @@ var articleSignatureRouter = router({
       signatureType: input.signatureType,
       signatureData: input.signatureData,
       ipAddress: input.ipAddress
-    }).where(eq138(signatureRequestSigners.id, input.signerId));
-    const allSigners = await db.select().from(signatureRequestSigners).where(eq138(signatureRequestSigners.requestId, signer.requestId));
+    }).where(eq139(signatureRequestSigners.id, input.signerId));
+    const allSigners = await db.select().from(signatureRequestSigners).where(eq139(signatureRequestSigners.requestId, signer.requestId));
     const allSigned = allSigners.every((s) => s.status === "signed");
     if (allSigned) {
       await db.update(signatureRequests).set({
         status: "completed",
         completedAt: /* @__PURE__ */ new Date()
-      }).where(eq138(signatureRequests.id, signer.requestId));
+      }).where(eq139(signatureRequests.id, signer.requestId));
     }
     return { success: true, allSigned };
   }),
@@ -133801,7 +133841,7 @@ var articleSignatureRouter = router({
     signerId: z234.number(),
     reason: z234.string().optional()
   })).mutation(async ({ input, ctx }) => {
-    const [signer] = await db.select().from(signatureRequestSigners).where(eq138(signatureRequestSigners.id, input.signerId));
+    const [signer] = await db.select().from(signatureRequestSigners).where(eq139(signatureRequestSigners.id, input.signerId));
     if (!signer) {
       throw new TRPCError68({ code: "NOT_FOUND", message: "Signer record not found" });
     }
@@ -133812,8 +133852,8 @@ var articleSignatureRouter = router({
       status: "declined",
       declinedAt: /* @__PURE__ */ new Date(),
       declineReason: input.reason
-    }).where(eq138(signatureRequestSigners.id, input.signerId));
-    await db.update(signatureRequests).set({ status: "cancelled" }).where(eq138(signatureRequests.id, signer.requestId));
+    }).where(eq139(signatureRequestSigners.id, input.signerId));
+    await db.update(signatureRequests).set({ status: "cancelled" }).where(eq139(signatureRequests.id, signer.requestId));
     return { success: true };
   }),
   // ============================================================================
@@ -133841,7 +133881,7 @@ var articleSignatureRouter = router({
 import { z as z235 } from "zod";
 init_db();
 init_schema();
-import { eq as eq139, and as and115, desc as desc111, sql as sql104 } from "drizzle-orm";
+import { eq as eq140, and as and115, desc as desc112, sql as sql104 } from "drizzle-orm";
 var assignmentNotificationsRouter = router({
   // Send notification for article assignment
   notifyArticleAssignment: protectedProcedure.input(z235.object({
@@ -133852,8 +133892,8 @@ var assignmentNotificationsRouter = router({
     dueDate: z235.date().optional(),
     message: z235.string().optional()
   })).mutation(async ({ input, ctx }) => {
-    const [article] = await db.select().from(articles).where(eq139(articles.id, input.articleId));
-    const [assignedUser] = await db.select().from(users).where(eq139(users.id, input.assignedToUserId));
+    const [article] = await db.select().from(articles).where(eq140(articles.id, input.articleId));
+    const [assignedUser] = await db.select().from(users).where(eq140(users.id, input.assignedToUserId));
     if (!article || !assignedUser) {
       return { success: false, error: "Article or user not found" };
     }
@@ -133894,7 +133934,7 @@ var assignmentNotificationsRouter = router({
     dueDate: z235.date().optional(),
     message: z235.string().optional()
   })).mutation(async ({ input, ctx }) => {
-    const [signerUser] = await db.select().from(users).where(eq139(users.id, input.signerUserId));
+    const [signerUser] = await db.select().from(users).where(eq140(users.id, input.signerUserId));
     if (!signerUser) {
       return { success: false, error: "Signer not found" };
     }
@@ -133912,7 +133952,7 @@ var assignmentNotificationsRouter = router({
     await db.update(signatureRequestSigners).set({
       status: "notified",
       notifiedAt: /* @__PURE__ */ new Date()
-    }).where(eq139(signatureRequestSigners.id, input.signerId));
+    }).where(eq140(signatureRequestSigners.id, input.signerId));
     return { success: true };
   }),
   // Get pending notifications for current user
@@ -133921,47 +133961,47 @@ var assignmentNotificationsRouter = router({
     unreadOnly: z235.boolean().default(false),
     limit: z235.number().min(1).max(100).default(20)
   }).optional()).query(async ({ ctx, input }) => {
-    const conditions = [eq139(notifications.userId, ctx.user.id)];
+    const conditions = [eq140(notifications.userId, ctx.user.id)];
     if (input?.type && input.type !== "all") {
-      conditions.push(eq139(notifications.type, input.type));
+      conditions.push(eq140(notifications.type, input.type));
     }
     if (input?.unreadOnly) {
-      conditions.push(eq139(notifications.isRead, false));
+      conditions.push(eq140(notifications.isRead, false));
     }
-    const result = await db.select().from(notifications).where(and115(...conditions)).orderBy(desc111(notifications.createdAt)).limit(input?.limit || 20);
+    const result = await db.select().from(notifications).where(and115(...conditions)).orderBy(desc112(notifications.createdAt)).limit(input?.limit || 20);
     return result;
   }),
   // Mark notification as read
   markAsRead: protectedProcedure.input(z235.object({ notificationId: z235.number() })).mutation(async ({ input, ctx }) => {
     await db.update(notifications).set({ isRead: true, readAt: /* @__PURE__ */ new Date() }).where(and115(
-      eq139(notifications.id, input.notificationId),
-      eq139(notifications.userId, ctx.user.id)
+      eq140(notifications.id, input.notificationId),
+      eq140(notifications.userId, ctx.user.id)
     ));
     return { success: true };
   }),
   // Mark all notifications as read
   markAllAsRead: protectedProcedure.mutation(async ({ ctx }) => {
     await db.update(notifications).set({ isRead: true, readAt: /* @__PURE__ */ new Date() }).where(and115(
-      eq139(notifications.userId, ctx.user.id),
-      eq139(notifications.isRead, false)
+      eq140(notifications.userId, ctx.user.id),
+      eq140(notifications.isRead, false)
     ));
     return { success: true };
   }),
   // Get notification counts
   getNotificationCounts: protectedProcedure.query(async ({ ctx }) => {
     const unreadCount = await db.select({ count: sql104`count(*)` }).from(notifications).where(and115(
-      eq139(notifications.userId, ctx.user.id),
-      eq139(notifications.isRead, false)
+      eq140(notifications.userId, ctx.user.id),
+      eq140(notifications.isRead, false)
     ));
     const articleCount = await db.select({ count: sql104`count(*)` }).from(notifications).where(and115(
-      eq139(notifications.userId, ctx.user.id),
-      eq139(notifications.type, "article_assignment"),
-      eq139(notifications.isRead, false)
+      eq140(notifications.userId, ctx.user.id),
+      eq140(notifications.type, "article_assignment"),
+      eq140(notifications.isRead, false)
     ));
     const signatureCount = await db.select({ count: sql104`count(*)` }).from(notifications).where(and115(
-      eq139(notifications.userId, ctx.user.id),
-      eq139(notifications.type, "signature_request"),
-      eq139(notifications.isRead, false)
+      eq140(notifications.userId, ctx.user.id),
+      eq140(notifications.type, "signature_request"),
+      eq140(notifications.isRead, false)
     ));
     return {
       total: unreadCount[0]?.count || 0,
@@ -134236,11 +134276,11 @@ var foreignEntityFormsRouter = router({
 import { z as z237 } from "zod";
 init_db();
 init_schema();
-import { eq as eq140, and as and116 } from "drizzle-orm";
+import { eq as eq141, and as and116 } from "drizzle-orm";
 var biometricCredentialsRouter = router({
   // Get all credentials for current user
   list: protectedProcedure.query(async ({ ctx }) => {
-    const credentials = await db.select().from(biometricCredentials).where(eq140(biometricCredentials.userId, ctx.user.id));
+    const credentials = await db.select().from(biometricCredentials).where(eq141(biometricCredentials.userId, ctx.user.id));
     return credentials;
   }),
   // Register a new credential
@@ -134269,8 +134309,8 @@ var biometricCredentialsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     await db.update(biometricCredentials).set({ name: input.name }).where(
       and116(
-        eq140(biometricCredentials.id, input.id),
-        eq140(biometricCredentials.userId, ctx.user.id)
+        eq141(biometricCredentials.id, input.id),
+        eq141(biometricCredentials.userId, ctx.user.id)
       )
     );
     return { success: true };
@@ -134279,8 +134319,8 @@ var biometricCredentialsRouter = router({
   delete: protectedProcedure.input(z237.object({ id: z237.number() })).mutation(async ({ ctx, input }) => {
     await db.delete(biometricCredentials).where(
       and116(
-        eq140(biometricCredentials.id, input.id),
-        eq140(biometricCredentials.userId, ctx.user.id)
+        eq141(biometricCredentials.id, input.id),
+        eq141(biometricCredentials.userId, ctx.user.id)
       )
     );
     return { success: true };
@@ -134289,15 +134329,15 @@ var biometricCredentialsRouter = router({
   updateLastUsed: protectedProcedure.input(z237.object({ id: z237.number() })).mutation(async ({ ctx, input }) => {
     await db.update(biometricCredentials).set({ lastUsedAt: /* @__PURE__ */ new Date() }).where(
       and116(
-        eq140(biometricCredentials.id, input.id),
-        eq140(biometricCredentials.userId, ctx.user.id)
+        eq141(biometricCredentials.id, input.id),
+        eq141(biometricCredentials.userId, ctx.user.id)
       )
     );
     return { success: true };
   }),
   // Get credential count
   count: protectedProcedure.query(async ({ ctx }) => {
-    const credentials = await db.select().from(biometricCredentials).where(eq140(biometricCredentials.userId, ctx.user.id));
+    const credentials = await db.select().from(biometricCredentials).where(eq141(biometricCredentials.userId, ctx.user.id));
     return { count: credentials.length };
   })
 });
@@ -134306,7 +134346,7 @@ var biometricCredentialsRouter = router({
 import { z as z238 } from "zod";
 init_db();
 init_schema();
-import { eq as eq141, and as and117, desc as desc112, sql as sql105 } from "drizzle-orm";
+import { eq as eq142, and as and117, desc as desc113, sql as sql105 } from "drizzle-orm";
 var workflowTemplatesRouter = router({
   // Track template usage
   trackUsage: protectedProcedure.input(z238.object({
@@ -134330,13 +134370,13 @@ var workflowTemplatesRouter = router({
   }),
   // Get user's deployed workflows
   getUserDeployments: protectedProcedure.query(async ({ ctx }) => {
-    const deployments = await db.select().from(workflowTemplateUsage).where(eq141(workflowTemplateUsage.userId, ctx.user.id)).orderBy(desc112(workflowTemplateUsage.deployedAt));
+    const deployments = await db.select().from(workflowTemplateUsage).where(eq142(workflowTemplateUsage.userId, ctx.user.id)).orderBy(desc113(workflowTemplateUsage.deployedAt));
     return deployments;
   }),
   // Get template usage stats
   getTemplateStats: protectedProcedure.input(z238.object({ templateId: z238.string() })).query(async ({ input }) => {
-    const usageCount = await db.select({ count: sql105`count(*)` }).from(workflowTemplateUsage).where(eq141(workflowTemplateUsage.templateId, input.templateId));
-    const ratings = await db.select().from(workflowTemplateRatings).where(eq141(workflowTemplateRatings.templateId, input.templateId));
+    const usageCount = await db.select({ count: sql105`count(*)` }).from(workflowTemplateUsage).where(eq142(workflowTemplateUsage.templateId, input.templateId));
+    const ratings = await db.select().from(workflowTemplateRatings).where(eq142(workflowTemplateRatings.templateId, input.templateId));
     const avgRating = ratings.length > 0 ? ratings.reduce((sum5, r) => sum5 + r.rating, 0) / ratings.length : 0;
     return {
       usageCount: usageCount[0]?.count || 0,
@@ -134352,15 +134392,15 @@ var workflowTemplatesRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const existing = await db.select().from(workflowTemplateRatings).where(
       and117(
-        eq141(workflowTemplateRatings.templateId, input.templateId),
-        eq141(workflowTemplateRatings.userId, ctx.user.id)
+        eq142(workflowTemplateRatings.templateId, input.templateId),
+        eq142(workflowTemplateRatings.userId, ctx.user.id)
       )
     );
     if (existing.length > 0) {
       await db.update(workflowTemplateRatings).set({
         rating: input.rating,
         comment: input.comment || null
-      }).where(eq141(workflowTemplateRatings.id, existing[0].id));
+      }).where(eq142(workflowTemplateRatings.id, existing[0].id));
     } else {
       await db.insert(workflowTemplateRatings).values({
         userId: ctx.user.id,
@@ -134375,8 +134415,8 @@ var workflowTemplatesRouter = router({
   getUserRating: protectedProcedure.input(z238.object({ templateId: z238.string() })).query(async ({ ctx, input }) => {
     const [rating] = await db.select().from(workflowTemplateRatings).where(
       and117(
-        eq141(workflowTemplateRatings.templateId, input.templateId),
-        eq141(workflowTemplateRatings.userId, ctx.user.id)
+        eq142(workflowTemplateRatings.templateId, input.templateId),
+        eq142(workflowTemplateRatings.userId, ctx.user.id)
       )
     );
     return rating || null;
@@ -134392,7 +134432,7 @@ var workflowTemplatesRouter = router({
       workflowTemplateUsage.templateId,
       workflowTemplateUsage.templateName,
       workflowTemplateUsage.templateCategory
-    ).orderBy(desc112(sql105`count(*)`)).limit(10);
+    ).orderBy(desc113(sql105`count(*)`)).limit(10);
     return stats;
   })
 });
@@ -134401,17 +134441,17 @@ var workflowTemplatesRouter = router({
 import { z as z239 } from "zod";
 init_db();
 init_schema();
-import { eq as eq143, and as and119, desc as desc113, sql as sql106 } from "drizzle-orm";
+import { eq as eq144, and as and119, desc as desc114, sql as sql106 } from "drizzle-orm";
 
 // server/services/translationNotifications.ts
 init_db();
 init_schema();
-import { eq as eq142 } from "drizzle-orm";
+import { eq as eq143 } from "drizzle-orm";
 async function sendTranslationApprovedNotification(payload) {
   const db7 = await getDb();
   if (!db7) return false;
   try {
-    const [contributor] = await db7.select().from(users).where(eq142(users.id, payload.contributorUserId)).limit(1);
+    const [contributor] = await db7.select().from(users).where(eq143(users.id, payload.contributorUserId)).limit(1);
     const recipientEmail = contributor?.email || payload.contributorEmail;
     const recipientName = contributor?.name || payload.contributorName;
     const subject = `Your translation for "${payload.translationKey}" has been approved!`;
@@ -134482,7 +134522,7 @@ async function sendTranslationRejectedNotification(payload) {
   const db7 = await getDb();
   if (!db7) return false;
   try {
-    const [contributor] = await db7.select().from(users).where(eq142(users.id, payload.contributorUserId)).limit(1);
+    const [contributor] = await db7.select().from(users).where(eq143(users.id, payload.contributorUserId)).limit(1);
     const recipientEmail = contributor?.email || payload.contributorEmail;
     const recipientName = contributor?.name || payload.contributorName;
     const subject = `Update on your translation for "${payload.translationKey}"`;
@@ -134581,7 +134621,7 @@ async function getContributorNotificationPreferences(userId) {
     };
   }
   try {
-    const [contributor] = await db7.select().from(translationContributors).where(eq142(translationContributors.userId, userId)).limit(1);
+    const [contributor] = await db7.select().from(translationContributors).where(eq143(translationContributors.userId, userId)).limit(1);
     if (contributor?.notificationPreferences) {
       const prefs = contributor.notificationPreferences;
       return {
@@ -134609,7 +134649,7 @@ async function updateContributorNotificationPreferences(userId, preferences) {
   try {
     const currentPrefs = await getContributorNotificationPreferences(userId);
     const newPrefs = { ...currentPrefs, ...preferences };
-    await db7.update(translationContributors).set({ notificationPreferences: newPrefs }).where(eq142(translationContributors.userId, userId));
+    await db7.update(translationContributors).set({ notificationPreferences: newPrefs }).where(eq143(translationContributors.userId, userId));
     return true;
   } catch (error) {
     console.error("[TranslationNotification] Error updating preferences:", error);
@@ -134652,16 +134692,16 @@ var translationContributionsRouter = router({
     language: z239.string(),
     status: z239.enum(["pending", "approved", "rejected"]).optional()
   })).query(async ({ input }) => {
-    let query = db.select().from(translationSuggestions).where(eq143(translationSuggestions.language, input.language));
+    let query = db.select().from(translationSuggestions).where(eq144(translationSuggestions.language, input.language));
     if (input.status) {
       query = db.select().from(translationSuggestions).where(
         and119(
-          eq143(translationSuggestions.language, input.language),
-          eq143(translationSuggestions.status, input.status)
+          eq144(translationSuggestions.language, input.language),
+          eq144(translationSuggestions.status, input.status)
         )
       );
     }
-    const suggestions = await query.orderBy(desc113(translationSuggestions.createdAt));
+    const suggestions = await query.orderBy(desc114(translationSuggestions.createdAt));
     return suggestions;
   }),
   // Vote on a suggestion
@@ -134671,19 +134711,19 @@ var translationContributionsRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const existing = await db.select().from(translationVotes).where(
       and119(
-        eq143(translationVotes.suggestionId, input.suggestionId),
-        eq143(translationVotes.userId, ctx.user.id)
+        eq144(translationVotes.suggestionId, input.suggestionId),
+        eq144(translationVotes.userId, ctx.user.id)
       )
     );
     if (existing.length > 0) {
       if (existing[0].voteType === input.voteType) {
-        await db.delete(translationVotes).where(eq143(translationVotes.id, existing[0].id));
+        await db.delete(translationVotes).where(eq144(translationVotes.id, existing[0].id));
         const delta = input.voteType === "up" ? -1 : 1;
-        await db.update(translationSuggestions).set({ votes: sql106`votes + ${delta}` }).where(eq143(translationSuggestions.id, input.suggestionId));
+        await db.update(translationSuggestions).set({ votes: sql106`votes + ${delta}` }).where(eq144(translationSuggestions.id, input.suggestionId));
       } else {
-        await db.update(translationVotes).set({ voteType: input.voteType }).where(eq143(translationVotes.id, existing[0].id));
+        await db.update(translationVotes).set({ voteType: input.voteType }).where(eq144(translationVotes.id, existing[0].id));
         const delta = input.voteType === "up" ? 2 : -2;
-        await db.update(translationSuggestions).set({ votes: sql106`votes + ${delta}` }).where(eq143(translationSuggestions.id, input.suggestionId));
+        await db.update(translationSuggestions).set({ votes: sql106`votes + ${delta}` }).where(eq144(translationSuggestions.id, input.suggestionId));
       }
     } else {
       await db.insert(translationVotes).values({
@@ -134692,7 +134732,7 @@ var translationContributionsRouter = router({
         voteType: input.voteType
       });
       const delta = input.voteType === "up" ? 1 : -1;
-      await db.update(translationSuggestions).set({ votes: sql106`votes + ${delta}` }).where(eq143(translationSuggestions.id, input.suggestionId));
+      await db.update(translationSuggestions).set({ votes: sql106`votes + ${delta}` }).where(eq144(translationSuggestions.id, input.suggestionId));
     }
     return { success: true };
   }),
@@ -134702,7 +134742,7 @@ var translationContributionsRouter = router({
     status: z239.enum(["approved", "rejected"]),
     comment: z239.string().optional()
   })).mutation(async ({ ctx, input }) => {
-    const [suggestion] = await db.select().from(translationSuggestions).where(eq143(translationSuggestions.id, input.suggestionId));
+    const [suggestion] = await db.select().from(translationSuggestions).where(eq144(translationSuggestions.id, input.suggestionId));
     if (!suggestion) {
       throw new Error("Suggestion not found");
     }
@@ -134711,8 +134751,8 @@ var translationContributionsRouter = router({
       reviewerId: ctx.user.id,
       reviewerComment: input.comment || null,
       reviewedAt: /* @__PURE__ */ new Date()
-    }).where(eq143(translationSuggestions.id, input.suggestionId));
-    const [contributor] = await db.select().from(translationContributors).where(eq143(translationContributors.userId, suggestion.contributorId));
+    }).where(eq144(translationSuggestions.id, input.suggestionId));
+    const [contributor] = await db.select().from(translationContributors).where(eq144(translationContributors.userId, suggestion.contributorId));
     if (contributor) {
       const updates = {};
       if (input.status === "approved") {
@@ -134729,7 +134769,7 @@ var translationContributionsRouter = router({
       } else if (newApproved >= 10) {
         updates.contributorRank = "contributor";
       }
-      await db.update(translationContributors).set(updates).where(eq143(translationContributors.id, contributor.id));
+      await db.update(translationContributors).set(updates).where(eq144(translationContributors.id, contributor.id));
     }
     const prefs = await getContributorNotificationPreferences(suggestion.contributorId);
     if (input.status === "approved" && prefs.emailOnApproval) {
@@ -134770,24 +134810,24 @@ var translationContributionsRouter = router({
   }),
   // Get leaderboard
   getLeaderboard: protectedProcedure.query(async () => {
-    const contributors = await db.select().from(translationContributors).orderBy(desc113(translationContributors.score)).limit(20);
+    const contributors = await db.select().from(translationContributors).orderBy(desc114(translationContributors.score)).limit(20);
     return contributors;
   }),
   // Get language progress
   getLanguageProgress: protectedProcedure.input(z239.object({ language: z239.string() })).query(async ({ input }) => {
     const approved = await db.select({ count: sql106`count(*)` }).from(translationSuggestions).where(
       and119(
-        eq143(translationSuggestions.language, input.language),
-        eq143(translationSuggestions.status, "approved")
+        eq144(translationSuggestions.language, input.language),
+        eq144(translationSuggestions.status, "approved")
       )
     );
     const pending = await db.select({ count: sql106`count(*)` }).from(translationSuggestions).where(
       and119(
-        eq143(translationSuggestions.language, input.language),
-        eq143(translationSuggestions.status, "pending")
+        eq144(translationSuggestions.language, input.language),
+        eq144(translationSuggestions.status, "pending")
       )
     );
-    const total = await db.select({ count: sql106`count(*)` }).from(translationSuggestions).where(eq143(translationSuggestions.language, input.language));
+    const total = await db.select({ count: sql106`count(*)` }).from(translationSuggestions).where(eq144(translationSuggestions.language, input.language));
     return {
       approved: approved[0]?.count || 0,
       pending: pending[0]?.count || 0,
@@ -134796,17 +134836,17 @@ var translationContributionsRouter = router({
   }),
   // Get user's contributions
   getMyContributions: protectedProcedure.query(async ({ ctx }) => {
-    const suggestions = await db.select().from(translationSuggestions).where(eq143(translationSuggestions.contributorId, ctx.user.id)).orderBy(desc113(translationSuggestions.createdAt));
+    const suggestions = await db.select().from(translationSuggestions).where(eq144(translationSuggestions.contributorId, ctx.user.id)).orderBy(desc114(translationSuggestions.createdAt));
     return suggestions;
   }),
   // Get user's contributor profile
   getMyProfile: protectedProcedure.query(async ({ ctx }) => {
-    const [profile] = await db.select().from(translationContributors).where(eq143(translationContributors.userId, ctx.user.id));
+    const [profile] = await db.select().from(translationContributors).where(eq144(translationContributors.userId, ctx.user.id));
     return profile || null;
   })
 });
 async function updateContributorStats(userId, userName, language) {
-  const [existing] = await db.select().from(translationContributors).where(eq143(translationContributors.userId, userId));
+  const [existing] = await db.select().from(translationContributors).where(eq144(translationContributors.userId, userId));
   if (existing) {
     const languages = existing.languages || [];
     if (!languages.includes(language)) {
@@ -134815,7 +134855,7 @@ async function updateContributorStats(userId, userName, language) {
     await db.update(translationContributors).set({
       totalSuggestions: sql106`totalSuggestions + 1`,
       languages
-    }).where(eq143(translationContributors.id, existing.id));
+    }).where(eq144(translationContributors.id, existing.id));
   } else {
     await db.insert(translationContributors).values({
       userId,
@@ -135236,7 +135276,7 @@ var ALL_PRODUCTS = {
 // server/routers/course-checkout.ts
 init_db();
 init_schema();
-import { eq as eq145 } from "drizzle-orm";
+import { eq as eq146 } from "drizzle-orm";
 var stripe5 = new Stripe5(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2024-12-18.acacia"
 });
@@ -135397,7 +135437,7 @@ var courseCheckoutRouter = router({
         paymentStatus: "completed",
         accessGranted: true,
         completedAt: /* @__PURE__ */ new Date()
-      }).where(eq145(coursePurchases.stripeSessionId, input.sessionId));
+      }).where(eq146(coursePurchases.stripeSessionId, input.sessionId));
       return {
         success: true,
         productType: "course",
@@ -135409,7 +135449,7 @@ var courseCheckoutRouter = router({
       await db.update(consultingBookings).set({
         paymentStatus: "completed",
         sessionStatus: "pending_scheduling"
-      }).where(eq145(consultingBookings.stripeSessionId, input.sessionId));
+      }).where(eq146(consultingBookings.stripeSessionId, input.sessionId));
       return {
         success: true,
         productType: "consulting",
@@ -135425,7 +135465,7 @@ var courseCheckoutRouter = router({
   }),
   // Check if user has access to a course
   checkCourseAccess: publicProcedure.input(z242.object({ email: z242.string().email(), courseId: z242.string() })).query(async ({ input }) => {
-    const purchases = await db.select().from(coursePurchases).where(eq145(coursePurchases.customerEmail, input.email));
+    const purchases = await db.select().from(coursePurchases).where(eq146(coursePurchases.customerEmail, input.email));
     const hasAccess = purchases.some(
       (p) => p.productId === input.courseId && p.paymentStatus === "completed" && p.accessGranted
     );
@@ -135436,14 +135476,14 @@ var courseCheckoutRouter = router({
     if (!ctx.user.email) {
       return { courses: [], consultations: [] };
     }
-    const courses2 = await db.select().from(coursePurchases).where(eq145(coursePurchases.customerEmail, ctx.user.email));
-    const consultations = await db.select().from(consultingBookings).where(eq145(consultingBookings.customerEmail, ctx.user.email));
+    const courses2 = await db.select().from(coursePurchases).where(eq146(coursePurchases.customerEmail, ctx.user.email));
+    const consultations = await db.select().from(consultingBookings).where(eq146(consultingBookings.customerEmail, ctx.user.email));
     return { courses: courses2, consultations };
   }),
   // Get course progress for a purchase
   getCourseProgress: publicProcedure.input(z242.object({ purchaseId: z242.number(), email: z242.string().email() })).query(async ({ input }) => {
-    const progress = await db.select().from(purchasedCourseProgress).where(eq145(purchasedCourseProgress.purchaseId, input.purchaseId));
-    const purchase = await db.select().from(coursePurchases).where(eq145(coursePurchases.id, input.purchaseId));
+    const progress = await db.select().from(purchasedCourseProgress).where(eq146(purchasedCourseProgress.purchaseId, input.purchaseId));
+    const purchase = await db.select().from(coursePurchases).where(eq146(coursePurchases.id, input.purchaseId));
     if (!purchase[0] || purchase[0].customerEmail !== input.email) {
       throw new Error("Access denied");
     }
@@ -135468,11 +135508,11 @@ var courseCheckoutRouter = router({
       lessonTitle: z242.string()
     })
   ).mutation(async ({ input }) => {
-    const purchase = await db.select().from(coursePurchases).where(eq145(coursePurchases.id, input.purchaseId));
+    const purchase = await db.select().from(coursePurchases).where(eq146(coursePurchases.id, input.purchaseId));
     if (!purchase[0] || purchase[0].customerEmail !== input.email || !purchase[0].accessGranted) {
       throw new Error("Access denied");
     }
-    const existing = await db.select().from(purchasedCourseProgress).where(eq145(purchasedCourseProgress.purchaseId, input.purchaseId));
+    const existing = await db.select().from(purchasedCourseProgress).where(eq146(purchasedCourseProgress.purchaseId, input.purchaseId));
     const alreadyCompleted = existing.find(
       (p) => p.moduleId === input.moduleId && p.lessonIndex === input.lessonIndex
     );
@@ -135491,7 +135531,7 @@ var courseCheckoutRouter = router({
     });
     const course = COURSE_PRODUCTS.lawsFoundation;
     const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
-    const updatedProgress = await db.select().from(purchasedCourseProgress).where(eq145(purchasedCourseProgress.purchaseId, input.purchaseId));
+    const updatedProgress = await db.select().from(purchasedCourseProgress).where(eq146(purchasedCourseProgress.purchaseId, input.purchaseId));
     const completedLessons = updatedProgress.filter((p) => p.completed).length;
     if (completedLessons === totalLessons) {
       await db.insert(courseCompletions).values({
@@ -135512,7 +135552,7 @@ var courseCheckoutRouter = router({
   }),
   // Get course completion status and upsell info
   getCourseCompletion: publicProcedure.input(z242.object({ purchaseId: z242.number(), email: z242.string().email() })).query(async ({ input }) => {
-    const completion = await db.select().from(courseCompletions).where(eq145(courseCompletions.purchaseId, input.purchaseId));
+    const completion = await db.select().from(courseCompletions).where(eq146(courseCompletions.purchaseId, input.purchaseId));
     if (!completion[0]) {
       return { isComplete: false };
     }
@@ -135531,7 +135571,7 @@ var courseCheckoutRouter = router({
   }),
   // Mark upsell as offered
   markUpsellOffered: publicProcedure.input(z242.object({ completionId: z242.number() })).mutation(async ({ input }) => {
-    await db.update(courseCompletions).set({ upsellOffered: true }).where(eq145(courseCompletions.id, input.completionId));
+    await db.update(courseCompletions).set({ upsellOffered: true }).where(eq146(courseCompletions.id, input.completionId));
     return { success: true };
   })
 });
@@ -135540,7 +135580,7 @@ var courseCheckoutRouter = router({
 import { z as z243 } from "zod";
 init_db();
 init_schema();
-import { eq as eq146, and as and121, desc as desc115, gte as gte31, lte as lte26 } from "drizzle-orm";
+import { eq as eq147, and as and121, desc as desc116, gte as gte31, lte as lte26 } from "drizzle-orm";
 var getAllPublicChannels = publicProcedure.input(
   z243.object({
     type: z243.enum(["radio", "podcast", "audiobook", "stream"]).optional(),
@@ -135608,8 +135648,8 @@ var broadcastRadioRouter = router({
       offset: z243.number().default(0)
     })
   ).query(async ({ ctx, input }) => {
-    const channels = await db.select().from(broadcastChannels).where(eq146(broadcastChannels.userId, ctx.user.id)).limit(input.limit).offset(input.offset).orderBy(desc115(broadcastChannels.createdAt));
-    const total = await db.select().from(broadcastChannels).where(eq146(broadcastChannels.userId, ctx.user.id));
+    const channels = await db.select().from(broadcastChannels).where(eq147(broadcastChannels.userId, ctx.user.id)).limit(input.limit).offset(input.offset).orderBy(desc116(broadcastChannels.createdAt));
+    const total = await db.select().from(broadcastChannels).where(eq147(broadcastChannels.userId, ctx.user.id));
     return {
       channels,
       total: total.length,
@@ -135633,8 +135673,8 @@ var broadcastRadioRouter = router({
     const { channelId, ...updates } = input;
     await db.update(broadcastChannels).set(updates).where(
       and121(
-        eq146(broadcastChannels.id, channelId),
-        eq146(broadcastChannels.userId, ctx.user.id)
+        eq147(broadcastChannels.id, channelId),
+        eq147(broadcastChannels.userId, ctx.user.id)
       )
     );
     return {
@@ -135648,8 +135688,8 @@ var broadcastRadioRouter = router({
   deleteChannel: protectedProcedure.input(z243.object({ channelId: z243.number() })).mutation(async ({ ctx, input }) => {
     await db.delete(broadcastChannels).where(
       and121(
-        eq146(broadcastChannels.id, input.channelId),
-        eq146(broadcastChannels.userId, ctx.user.id)
+        eq147(broadcastChannels.id, input.channelId),
+        eq147(broadcastChannels.userId, ctx.user.id)
       )
     );
     return {
@@ -135697,11 +135737,11 @@ var broadcastRadioRouter = router({
       offset: z243.number().default(0)
     })
   ).query(async ({ input }) => {
-    const conditions = [eq146(broadcastEpisodes.channelId, input.channelId)];
+    const conditions = [eq147(broadcastEpisodes.channelId, input.channelId)];
     if (input.status) {
-      conditions.push(eq146(broadcastEpisodes.status, input.status));
+      conditions.push(eq147(broadcastEpisodes.status, input.status));
     }
-    const episodes = await db.select().from(broadcastEpisodes).where(and121(...conditions)).limit(input.limit).offset(input.offset).orderBy(desc115(broadcastEpisodes.publishedAt));
+    const episodes = await db.select().from(broadcastEpisodes).where(and121(...conditions)).limit(input.limit).offset(input.offset).orderBy(desc116(broadcastEpisodes.publishedAt));
     return {
       episodes,
       limit: input.limit,
@@ -135715,7 +135755,7 @@ var broadcastRadioRouter = router({
     await db.update(broadcastEpisodes).set({
       status: "published",
       publishedAt: /* @__PURE__ */ new Date()
-    }).where(eq146(broadcastEpisodes.id, input.episodeId));
+    }).where(eq147(broadcastEpisodes.id, input.episodeId));
     return {
       success: true,
       message: "Episode published successfully"
@@ -135734,7 +135774,7 @@ var broadcastRadioRouter = router({
     })
   ).mutation(async ({ input }) => {
     const { episodeId, ...updates } = input;
-    await db.update(broadcastEpisodes).set(updates).where(eq146(broadcastEpisodes.id, episodeId));
+    await db.update(broadcastEpisodes).set(updates).where(eq147(broadcastEpisodes.id, episodeId));
     return {
       success: true,
       message: "Episode updated successfully"
@@ -135775,11 +135815,11 @@ var broadcastRadioRouter = router({
       status: z243.enum(["scheduled", "live", "ended", "cancelled"]).optional()
     })
   ).query(async ({ input }) => {
-    const conditions = [eq146(liveBroadcasts.channelId, input.channelId)];
+    const conditions = [eq147(liveBroadcasts.channelId, input.channelId)];
     if (input.status) {
-      conditions.push(eq146(liveBroadcasts.status, input.status));
+      conditions.push(eq147(liveBroadcasts.status, input.status));
     }
-    const broadcasts = await db.select().from(liveBroadcasts).where(and121(...conditions)).orderBy(desc115(liveBroadcasts.scheduledStartTime));
+    const broadcasts = await db.select().from(liveBroadcasts).where(and121(...conditions)).orderBy(desc116(liveBroadcasts.scheduledStartTime));
     return broadcasts;
   }),
   /**
@@ -135797,7 +135837,7 @@ var broadcastRadioRouter = router({
       actualStartTime: /* @__PURE__ */ new Date(),
       streamUrl: input.streamUrl,
       streamKey: input.streamKey
-    }).where(eq146(liveBroadcasts.id, input.broadcastId));
+    }).where(eq147(liveBroadcasts.id, input.broadcastId));
     return {
       success: true,
       message: "Live broadcast started successfully"
@@ -135840,7 +135880,7 @@ var broadcastRadioRouter = router({
    * 13. Get schedules for channel
    */
   getSchedules: protectedProcedure.input(z243.object({ channelId: z243.number() })).query(async ({ input }) => {
-    const schedules = await db.select().from(broadcastSchedules).where(eq146(broadcastSchedules.channelId, input.channelId));
+    const schedules = await db.select().from(broadcastSchedules).where(eq147(broadcastSchedules.channelId, input.channelId));
     return schedules;
   }),
   // ============================================================================
@@ -135894,7 +135934,7 @@ var broadcastRadioRouter = router({
    * 16. Get listener statistics
    */
   getListenerStats: protectedProcedure.input(z243.object({ channelId: z243.number() })).query(async ({ input }) => {
-    const listeners = await db.select().from(broadcastListeners).where(eq146(broadcastListeners.channelId, input.channelId));
+    const listeners = await db.select().from(broadcastListeners).where(eq147(broadcastListeners.channelId, input.channelId));
     const totalListeningTime = listeners.reduce(
       (sum5, l) => sum5 + l.totalListeningTime,
       0
@@ -135924,7 +135964,7 @@ var broadcastRadioRouter = router({
   ).query(async ({ input }) => {
     const analytics = await db.select().from(broadcastAnalytics).where(
       and121(
-        eq146(broadcastAnalytics.channelId, input.channelId),
+        eq147(broadcastAnalytics.channelId, input.channelId),
         gte31(broadcastAnalytics.analyticsDate, input.startDate),
         lte26(broadcastAnalytics.analyticsDate, input.endDate)
       )
@@ -135946,8 +135986,8 @@ var broadcastRadioRouter = router({
    * 18. Get episode performance
    */
   getEpisodePerformance: publicProcedure.input(z243.object({ episodeId: z243.number() })).query(async ({ input }) => {
-    const episode = await db.select().from(broadcastEpisodes).where(eq146(broadcastEpisodes.id, input.episodeId));
-    const interactions = await db.select().from(episodeInteractions).where(eq146(episodeInteractions.episodeId, input.episodeId));
+    const episode = await db.select().from(broadcastEpisodes).where(eq147(broadcastEpisodes.id, input.episodeId));
+    const interactions = await db.select().from(episodeInteractions).where(eq147(episodeInteractions.episodeId, input.episodeId));
     const completedListens = interactions.filter(
       (i) => i.isCompleted
     ).length;
@@ -137003,7 +137043,7 @@ var workflowExecutionRouter = router({
 init_db();
 init_schema();
 import { z as z246 } from "zod";
-import { eq as eq147 } from "drizzle-orm";
+import { eq as eq148 } from "drizzle-orm";
 var landingAnalyticsRouter = router({
   /**
    * Track analytics events from the landing page
@@ -137053,7 +137093,7 @@ var landingAnalyticsRouter = router({
   ).mutation(async ({ input }) => {
     try {
       const existing = await db.query.waitlistSignups.findFirst({
-        where: eq147(waitlistSignups.email, input.email)
+        where: eq148(waitlistSignups.email, input.email)
       });
       if (existing) {
         return {
@@ -137148,7 +137188,7 @@ Source: ${input.source}`
 import { z as z247 } from "zod";
 init_db();
 init_schema();
-import { eq as eq148, sql as sql108, desc as desc116 } from "drizzle-orm";
+import { eq as eq149, sql as sql108, desc as desc117 } from "drizzle-orm";
 import { TRPCError as TRPCError69 } from "@trpc/server";
 async function requireDb12() {
   const database = await getDb();
@@ -137174,7 +137214,7 @@ var waitlistRouter = router({
   ).mutation(async ({ input }) => {
     try {
       const database = await requireDb12();
-      const [existing] = await database.select().from(waitlistSignups).where(eq148(waitlistSignups.email, input.email)).limit(1);
+      const [existing] = await database.select().from(waitlistSignups).where(eq149(waitlistSignups.email, input.email)).limit(1);
       if (existing) {
         return {
           success: true,
@@ -137219,7 +137259,7 @@ var waitlistRouter = router({
   getStatus: publicProcedure.input(z247.object({ email: z247.string().email() })).query(async ({ input }) => {
     try {
       const database = await requireDb12();
-      const [signup] = await database.select().from(waitlistSignups).where(eq148(waitlistSignups.email, input.email)).limit(1);
+      const [signup] = await database.select().from(waitlistSignups).where(eq149(waitlistSignups.email, input.email)).limit(1);
       if (!signup) {
         return { onWaitlist: false, status: null };
       }
@@ -137240,7 +137280,7 @@ var waitlistRouter = router({
     }
     try {
       const database = await requireDb12();
-      const signups = await database.select().from(waitlistSignups).orderBy(desc116(waitlistSignups.createdAt)).limit(500);
+      const signups = await database.select().from(waitlistSignups).orderBy(desc117(waitlistSignups.createdAt)).limit(500);
       return signups;
     } catch (error) {
       console.error("[Waitlist] listAll error:", error);
@@ -137254,7 +137294,7 @@ var waitlistRouter = router({
     }
     try {
       const database = await requireDb12();
-      const allSignups = await database.select().from(waitlistSignups).orderBy(desc116(waitlistSignups.createdAt));
+      const allSignups = await database.select().from(waitlistSignups).orderBy(desc117(waitlistSignups.createdAt));
       const interestCounts = {};
       allSignups.forEach((s) => {
         const categories = s.interestCategories || [];
@@ -137315,7 +137355,7 @@ var waitlistRouter = router({
     await database.update(waitlistSignups).set({
       status: input.status,
       ...input.status === "confirmed" ? { confirmedAt: /* @__PURE__ */ new Date() } : {}
-    }).where(eq148(waitlistSignups.id, input.id));
+    }).where(eq149(waitlistSignups.id, input.id));
     return { success: true };
   })
 });
@@ -147385,13 +147425,13 @@ var vodRouter = router({
   getMovieDetails: publicProcedure.input(z273.object({ movieId: z273.number() })).query(async ({ input, ctx }) => {
     try {
       const movie = await db.query.vodMovies.findFirst({
-        where: (movies, { eq: eq159 }) => eq159(movies.id, input.movieId)
+        where: (movies, { eq: eq160 }) => eq160(movies.id, input.movieId)
       });
       if (!movie) {
         throw new Error("Movie not found");
       }
       const reviews = await db.query.vodReviews.findMany({
-        where: (reviews2, { eq: eq159 }) => eq159(reviews2.movieId, input.movieId),
+        where: (reviews2, { eq: eq160 }) => eq160(reviews2.movieId, input.movieId),
         limit: 10
       });
       return {
@@ -147409,17 +147449,17 @@ var vodRouter = router({
   getSeriesDetails: publicProcedure.input(z273.object({ seriesId: z273.number() })).query(async ({ input, ctx }) => {
     try {
       const series = await db.query.vodSeries.findFirst({
-        where: (series2, { eq: eq159 }) => eq159(series2.id, input.seriesId)
+        where: (series2, { eq: eq160 }) => eq160(series2.id, input.seriesId)
       });
       if (!series) {
         throw new Error("Series not found");
       }
       const episodes = await db.query.vodEpisodes.findMany({
-        where: (eps, { eq: eq159 }) => eq159(eps.seriesId, input.seriesId),
+        where: (eps, { eq: eq160 }) => eq160(eps.seriesId, input.seriesId),
         limit: 100
       });
       const reviews = await db.query.vodReviews.findMany({
-        where: (reviews2, { eq: eq159 }) => eq159(reviews2.seriesId, input.seriesId),
+        where: (reviews2, { eq: eq160 }) => eq160(reviews2.seriesId, input.seriesId),
         limit: 10
       });
       return {
@@ -147495,7 +147535,7 @@ var vodRouter = router({
   ).query(async ({ input, ctx }) => {
     try {
       const watchlist = await db.query.vodWatchlist.findMany({
-        where: (w, { eq: eq159 }) => eq159(w.userId, ctx.user.id),
+        where: (w, { eq: eq160 }) => eq160(w.userId, ctx.user.id),
         limit: input.limit,
         offset: input.offset
       });
@@ -147568,7 +147608,7 @@ var vodRouter = router({
   ).query(async ({ input, ctx }) => {
     try {
       const history = await db.query.vodViewingHistory.findMany({
-        where: (h, { eq: eq159 }) => eq159(h.userId, ctx.user.id),
+        where: (h, { eq: eq160 }) => eq160(h.userId, ctx.user.id),
         limit: input.limit,
         offset: input.offset
       });
@@ -156486,7 +156526,7 @@ var websocketSyncRouter = router({
 init_db();
 init_schema();
 import { z as z299 } from "zod";
-import { eq as eq149, and as and122, sql as sql109 } from "drizzle-orm";
+import { eq as eq150, and as and122, sql as sql109 } from "drizzle-orm";
 
 // server/services/department-certificate-bridge.ts
 init_departmentRegistry();
@@ -156669,8 +156709,8 @@ var systemActivationRouter = router({
     const userId = ctx.user.id;
     const existing = await db.select().from(simulatorCompletion).where(
       and122(
-        eq149(simulatorCompletion.userId, userId),
-        eq149(simulatorCompletion.simulatorType, input.simulatorType)
+        eq150(simulatorCompletion.userId, userId),
+        eq150(simulatorCompletion.simulatorType, input.simulatorType)
       )
     ).limit(1);
     if (existing.length > 0) {
@@ -156688,7 +156728,7 @@ var systemActivationRouter = router({
       certificateId: input.certificateId ?? null,
       certificateUrl: input.certificateId ? `/certificates/${input.certificateId}` : null
     });
-    const completedRows = await db.select({ count: sql109`COUNT(DISTINCT simulator_type)` }).from(simulatorCompletion).where(eq149(simulatorCompletion.userId, userId));
+    const completedRows = await db.select({ count: sql109`COUNT(DISTINCT simulator_type)` }).from(simulatorCompletion).where(eq150(simulatorCompletion.userId, userId));
     const simulatorsCompleted = completedRows[0]?.count ?? 0;
     let newStatus = "in_progress";
     let readyAt = null;
@@ -156696,14 +156736,14 @@ var systemActivationRouter = router({
       newStatus = "ready_for_activation";
       readyAt = /* @__PURE__ */ new Date();
     }
-    const existingProgress = await db.select().from(activationProgress).where(eq149(activationProgress.userId, userId)).limit(1);
+    const existingProgress = await db.select().from(activationProgress).where(eq150(activationProgress.userId, userId)).limit(1);
     if (existingProgress.length > 0) {
       if (existingProgress[0].activationStatus !== "activated") {
         await db.update(activationProgress).set({
           simulatorsCompleted,
           activationStatus: newStatus,
           activationReadyAt: readyAt
-        }).where(eq149(activationProgress.userId, userId));
+        }).where(eq150(activationProgress.userId, userId));
       }
     } else {
       await db.insert(activationProgress).values({
@@ -156750,8 +156790,8 @@ var systemActivationRouter = router({
    */
   getProgress: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
-    const progress = await db.select().from(activationProgress).where(eq149(activationProgress.userId, userId)).limit(1);
-    const completedSimulators = await db.select().from(simulatorCompletion).where(eq149(simulatorCompletion.userId, userId));
+    const progress = await db.select().from(activationProgress).where(eq150(activationProgress.userId, userId)).limit(1);
+    const completedSimulators = await db.select().from(simulatorCompletion).where(eq150(simulatorCompletion.userId, userId));
     const completedTypes = completedSimulators.map((s) => s.simulatorType);
     const simulatorStatus = SIMULATOR_TYPES.map((type) => ({
       type,
@@ -156790,8 +156830,8 @@ var systemActivationRouter = router({
       };
     }
     const userId = input.userId;
-    const progress = await db.select().from(activationProgress).where(eq149(activationProgress.userId, userId)).limit(1);
-    const completedSimulators = await db.select().from(simulatorCompletion).where(eq149(simulatorCompletion.userId, userId));
+    const progress = await db.select().from(activationProgress).where(eq150(activationProgress.userId, userId)).limit(1);
+    const completedSimulators = await db.select().from(simulatorCompletion).where(eq150(simulatorCompletion.userId, userId));
     const completedTypes = completedSimulators.map((s) => s.simulatorType);
     const simulatorStatus = SIMULATOR_TYPES.map((type) => ({
       type,
@@ -156819,7 +156859,7 @@ var systemActivationRouter = router({
     })
   ).mutation(async ({ ctx, input }) => {
     const userId = ctx.user.id;
-    const completedRows = await db.select({ count: sql109`COUNT(DISTINCT simulator_type)` }).from(simulatorCompletion).where(eq149(simulatorCompletion.userId, userId));
+    const completedRows = await db.select({ count: sql109`COUNT(DISTINCT simulator_type)` }).from(simulatorCompletion).where(eq150(simulatorCompletion.userId, userId));
     const simulatorsCompleted = completedRows[0]?.count ?? 0;
     if (simulatorsCompleted < TOTAL_SIMULATORS_REQUIRED) {
       return {
@@ -156827,7 +156867,7 @@ var systemActivationRouter = router({
         error: `Not all workshops completed. ${simulatorsCompleted}/${TOTAL_SIMULATORS_REQUIRED} done.`
       };
     }
-    const existingBuild = await db.select().from(clonedBuilds).where(eq149(clonedBuilds.userId, userId)).limit(1);
+    const existingBuild = await db.select().from(clonedBuilds).where(eq150(clonedBuilds.userId, userId)).limit(1);
     if (existingBuild.length > 0 && existingBuild[0].cloneStatus === "active") {
       return {
         success: false,
@@ -156835,7 +156875,7 @@ var systemActivationRouter = router({
         clonedBuildId: existingBuild[0].id
       };
     }
-    const allCompletions = await db.select().from(simulatorCompletion).where(eq149(simulatorCompletion.userId, userId));
+    const allCompletions = await db.select().from(simulatorCompletion).where(eq150(simulatorCompletion.userId, userId));
     const simulatorDataJson = JSON.stringify(
       allCompletions.map((c) => ({
         type: c.simulatorType,
@@ -156860,8 +156900,8 @@ var systemActivationRouter = router({
       linkageType: "master_clone",
       luvledgerEntryId: `LL-CLONE-${userId}-${Date.now()}`
     });
-    await db.update(clonedBuilds).set({ cloneStatus: "active", activatedAt: /* @__PURE__ */ new Date() }).where(eq149(clonedBuilds.id, clonedBuildId));
-    await db.update(activationProgress).set({ activationStatus: "activated", activatedAt: /* @__PURE__ */ new Date() }).where(eq149(activationProgress.userId, userId));
+    await db.update(clonedBuilds).set({ cloneStatus: "active", activatedAt: /* @__PURE__ */ new Date() }).where(eq150(clonedBuilds.id, clonedBuildId));
+    await db.update(activationProgress).set({ activationStatus: "activated", activatedAt: /* @__PURE__ */ new Date() }).where(eq150(activationProgress.userId, userId));
     return {
       success: true,
       clonedBuildId,
@@ -156873,11 +156913,11 @@ var systemActivationRouter = router({
    */
   getBuildStatus: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
-    const build = await db.select().from(clonedBuilds).where(eq149(clonedBuilds.userId, userId)).limit(1);
+    const build = await db.select().from(clonedBuilds).where(eq150(clonedBuilds.userId, userId)).limit(1);
     if (!build.length) {
       return { hasBuild: false, build: null, linkage: null };
     }
-    const linkageData = await db.select().from(buildLinkage).where(eq149(buildLinkage.clonedBuildId, build[0].id)).limit(1);
+    const linkageData = await db.select().from(buildLinkage).where(eq150(buildLinkage.clonedBuildId, build[0].id)).limit(1);
     return {
       hasBuild: true,
       build: build[0],
@@ -157160,13 +157200,13 @@ var departmentDashboardRouter = router({
 init_db();
 init_schema();
 import { z as z301 } from "zod";
-import { eq as eq150, and as and123, desc as desc117, asc as asc11 } from "drizzle-orm";
+import { eq as eq151, and as and123, desc as desc118, asc as asc11 } from "drizzle-orm";
 import { TRPCError as TRPCError72 } from "@trpc/server";
 var playlistsRouter = router({
   // Get all playlists for the current user
   getMyPlaylists: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const playlists = await db.select().from(streamingPlaylists).where(eq150(streamingPlaylists.userId, ctx.user.id)).orderBy(desc117(streamingPlaylists.updatedAt));
+      const playlists = await db.select().from(streamingPlaylists).where(eq151(streamingPlaylists.userId, ctx.user.id)).orderBy(desc118(streamingPlaylists.updatedAt));
       return playlists;
     } catch (error) {
       console.error("Error getting playlists:", error);
@@ -157177,14 +157217,14 @@ var playlistsRouter = router({
   getPlaylist: protectedProcedure.input(z301.object({ id: z301.number() })).query(async ({ ctx, input }) => {
     const [playlist] = await db.select().from(streamingPlaylists).where(
       and123(
-        eq150(streamingPlaylists.id, input.id),
-        eq150(streamingPlaylists.userId, ctx.user.id)
+        eq151(streamingPlaylists.id, input.id),
+        eq151(streamingPlaylists.userId, ctx.user.id)
       )
     ).limit(1);
     if (!playlist) {
       throw new TRPCError72({ code: "NOT_FOUND", message: "Playlist not found" });
     }
-    const items = await db.select().from(playlistItems).where(eq150(playlistItems.playlistId, input.id)).orderBy(asc11(playlistItems.position));
+    const items = await db.select().from(playlistItems).where(eq151(playlistItems.playlistId, input.id)).orderBy(asc11(playlistItems.position));
     return { ...playlist, items };
   }),
   // Create a new playlist
@@ -157213,8 +157253,8 @@ var playlistsRouter = router({
   ).mutation(async ({ ctx, input }) => {
     const [playlist] = await db.select().from(streamingPlaylists).where(
       and123(
-        eq150(streamingPlaylists.id, input.id),
-        eq150(streamingPlaylists.userId, ctx.user.id)
+        eq151(streamingPlaylists.id, input.id),
+        eq151(streamingPlaylists.userId, ctx.user.id)
       )
     ).limit(1);
     if (!playlist) {
@@ -157223,21 +157263,21 @@ var playlistsRouter = router({
     const updates = {};
     if (input.name) updates.name = input.name;
     if (input.description !== void 0) updates.description = input.description;
-    await db.update(streamingPlaylists).set(updates).where(eq150(streamingPlaylists.id, input.id));
+    await db.update(streamingPlaylists).set(updates).where(eq151(streamingPlaylists.id, input.id));
     return { success: true };
   }),
   // Delete a playlist
   deletePlaylist: protectedProcedure.input(z301.object({ id: z301.number() })).mutation(async ({ ctx, input }) => {
     const [playlist] = await db.select().from(streamingPlaylists).where(
       and123(
-        eq150(streamingPlaylists.id, input.id),
-        eq150(streamingPlaylists.userId, ctx.user.id)
+        eq151(streamingPlaylists.id, input.id),
+        eq151(streamingPlaylists.userId, ctx.user.id)
       )
     ).limit(1);
     if (!playlist) {
       throw new TRPCError72({ code: "NOT_FOUND", message: "Playlist not found" });
     }
-    await db.delete(streamingPlaylists).where(eq150(streamingPlaylists.id, input.id));
+    await db.delete(streamingPlaylists).where(eq151(streamingPlaylists.id, input.id));
     return { success: true };
   }),
   // Add item to playlist
@@ -157250,14 +157290,14 @@ var playlistsRouter = router({
   ).mutation(async ({ ctx, input }) => {
     const [playlist] = await db.select().from(streamingPlaylists).where(
       and123(
-        eq150(streamingPlaylists.id, input.playlistId),
-        eq150(streamingPlaylists.userId, ctx.user.id)
+        eq151(streamingPlaylists.id, input.playlistId),
+        eq151(streamingPlaylists.userId, ctx.user.id)
       )
     ).limit(1);
     if (!playlist) {
       throw new TRPCError72({ code: "NOT_FOUND", message: "Playlist not found" });
     }
-    const items = await db.select().from(playlistItems).where(eq150(playlistItems.playlistId, input.playlistId));
+    const items = await db.select().from(playlistItems).where(eq151(playlistItems.playlistId, input.playlistId));
     const nextPosition = items.length;
     await db.insert(playlistItems).values({
       playlistId: input.playlistId,
@@ -157266,7 +157306,7 @@ var playlistsRouter = router({
       position: nextPosition,
       addedBy: ctx.user.id
     });
-    await db.update(streamingPlaylists).set({ itemCount: nextPosition + 1 }).where(eq150(streamingPlaylists.id, input.playlistId));
+    await db.update(streamingPlaylists).set({ itemCount: nextPosition + 1 }).where(eq151(streamingPlaylists.id, input.playlistId));
     return { success: true, position: nextPosition };
   }),
   // Remove item from playlist
@@ -157278,16 +157318,16 @@ var playlistsRouter = router({
   ).mutation(async ({ ctx, input }) => {
     const [playlist] = await db.select().from(streamingPlaylists).where(
       and123(
-        eq150(streamingPlaylists.id, input.playlistId),
-        eq150(streamingPlaylists.userId, ctx.user.id)
+        eq151(streamingPlaylists.id, input.playlistId),
+        eq151(streamingPlaylists.userId, ctx.user.id)
       )
     ).limit(1);
     if (!playlist) {
       throw new TRPCError72({ code: "NOT_FOUND", message: "Playlist not found" });
     }
-    await db.delete(playlistItems).where(eq150(playlistItems.id, input.itemId));
-    const remaining = await db.select().from(playlistItems).where(eq150(playlistItems.playlistId, input.playlistId));
-    await db.update(streamingPlaylists).set({ itemCount: remaining.length }).where(eq150(streamingPlaylists.id, input.playlistId));
+    await db.delete(playlistItems).where(eq151(playlistItems.id, input.itemId));
+    const remaining = await db.select().from(playlistItems).where(eq151(playlistItems.playlistId, input.playlistId));
+    await db.update(streamingPlaylists).set({ itemCount: remaining.length }).where(eq151(streamingPlaylists.id, input.playlistId));
     return { success: true };
   }),
   // Reorder items in playlist
@@ -157300,15 +157340,15 @@ var playlistsRouter = router({
   ).mutation(async ({ ctx, input }) => {
     const [playlist] = await db.select().from(streamingPlaylists).where(
       and123(
-        eq150(streamingPlaylists.id, input.playlistId),
-        eq150(streamingPlaylists.userId, ctx.user.id)
+        eq151(streamingPlaylists.id, input.playlistId),
+        eq151(streamingPlaylists.userId, ctx.user.id)
       )
     ).limit(1);
     if (!playlist) {
       throw new TRPCError72({ code: "NOT_FOUND", message: "Playlist not found" });
     }
     for (let i = 0; i < input.itemIds.length; i++) {
-      await db.update(playlistItems).set({ position: i }).where(eq150(playlistItems.id, input.itemIds[i]));
+      await db.update(playlistItems).set({ position: i }).where(eq151(playlistItems.id, input.itemIds[i]));
     }
     return { success: true };
   }),
@@ -157321,14 +157361,14 @@ var playlistsRouter = router({
   ).query(async ({ ctx, input }) => {
     const [playlist] = await db.select().from(streamingPlaylists).where(
       and123(
-        eq150(streamingPlaylists.id, input.playlistId),
-        eq150(streamingPlaylists.userId, ctx.user.id)
+        eq151(streamingPlaylists.id, input.playlistId),
+        eq151(streamingPlaylists.userId, ctx.user.id)
       )
     ).limit(1);
     if (!playlist) {
       throw new TRPCError72({ code: "NOT_FOUND", message: "Playlist not found" });
     }
-    let items = await db.select().from(playlistItems).where(eq150(playlistItems.playlistId, input.playlistId)).orderBy(asc11(playlistItems.position));
+    let items = await db.select().from(playlistItems).where(eq151(playlistItems.playlistId, input.playlistId)).orderBy(asc11(playlistItems.position));
     if (input.shuffle && items.length > 0) {
       items = items.sort(() => Math.random() - 0.5);
     }
@@ -157969,7 +158009,7 @@ var sponsorAnalytics = router({
 import { z as z304 } from "zod";
 init_db();
 init_schema();
-import { eq as eq151 } from "drizzle-orm";
+import { eq as eq152 } from "drizzle-orm";
 var FORMATION_STEPS2 = [
   { step: 1, name: "Business Type Selection", description: "Choose your entity type (LLC, Trust, Corporation, etc.)" },
   { step: 2, name: "Business Plan", description: "Complete your business plan through the simulator" },
@@ -157987,7 +158027,7 @@ var memberJourneyRouter = router({
       formationStep: users.formationStep,
       houseActivatedAt: users.houseActivatedAt,
       role: users.role
-    }).from(users).where(eq151(users.id, ctx.user.id)).then((rows) => rows[0]);
+    }).from(users).where(eq152(users.id, ctx.user.id)).then((rows) => rows[0]);
     if (!user) {
       return {
         memberStatus: "onboarding",
@@ -158022,7 +158062,7 @@ var memberJourneyRouter = router({
     if (input.memberStatus === "house_activated") {
       updateData.houseActivatedAt = /* @__PURE__ */ new Date();
     }
-    await db.update(users).set(updateData).where(eq151(users.id, ctx.user.id));
+    await db.update(users).set(updateData).where(eq152(users.id, ctx.user.id));
     return { success: true };
   }),
   // Advance formation step
@@ -158039,7 +158079,7 @@ var memberJourneyRouter = router({
       updateData.memberStatus = "house_activated";
       updateData.houseActivatedAt = /* @__PURE__ */ new Date();
     }
-    await db.update(users).set(updateData).where(eq151(users.id, ctx.user.id));
+    await db.update(users).set(updateData).where(eq152(users.id, ctx.user.id));
     return {
       success: true,
       currentStep: input.step,
@@ -158052,18 +158092,18 @@ var memberJourneyRouter = router({
 import { z as z305 } from "zod";
 init_db();
 init_schema();
-import { eq as eq152, and as and124, desc as desc118 } from "drizzle-orm";
+import { eq as eq153, and as and124, desc as desc119 } from "drizzle-orm";
 import { TRPCError as TRPCError73 } from "@trpc/server";
 var EMERGENCY_DELAY_HOURS = 72;
 var EMERGENCY_ACCESS_WINDOW_HOURS = 24;
 async function verifyUserPin(db7, userId, pin) {
   const configKey = `vault_pin_${userId}`;
-  const stored = await db7.select().from(systemConfig).where(eq152(systemConfig.configKey, configKey)).limit(1);
+  const stored = await db7.select().from(systemConfig).where(eq153(systemConfig.configKey, configKey)).limit(1);
   if (!stored.length) return false;
   return verifyVaultPin(pin, userId, stored[0].configValue);
 }
 async function verifyOwnership(db7, houseId, userId) {
-  const house = await db7.select().from(houses).where(and124(eq152(houses.id, houseId), eq152(houses.ownerUserId, userId))).limit(1);
+  const house = await db7.select().from(houses).where(and124(eq153(houses.id, houseId), eq153(houses.ownerUserId, userId))).limit(1);
   if (!house.length) throw new TRPCError73({ code: "FORBIDDEN", message: "You do not own this House" });
   return house[0];
 }
@@ -158072,14 +158112,14 @@ var vaultSuccessionRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     await verifyOwnership(db7, input.houseId, ctx.user.id);
-    const existing = await db7.select().from(houseVaultConfig).where(eq152(houseVaultConfig.houseId, input.houseId)).limit(1);
+    const existing = await db7.select().from(houseVaultConfig).where(eq153(houseVaultConfig.houseId, input.houseId)).limit(1);
     if (existing.length) throw new TRPCError73({ code: "CONFLICT", message: "Vault already initialized" });
-    const genesisHouse = await db7.select().from(houses).where(eq152(houses.isGenesis, true)).limit(1);
+    const genesisHouse = await db7.select().from(houses).where(eq153(houses.isGenesis, true)).limit(1);
     const inheritedFromId = genesisHouse.length ? genesisHouse[0].id : null;
     let delayHours = EMERGENCY_DELAY_HOURS;
     let accessWindow = EMERGENCY_ACCESS_WINDOW_HOURS;
     if (inheritedFromId) {
-      const gc = await db7.select().from(houseVaultConfig).where(eq152(houseVaultConfig.houseId, inheritedFromId)).limit(1);
+      const gc = await db7.select().from(houseVaultConfig).where(eq153(houseVaultConfig.houseId, inheritedFromId)).limit(1);
       if (gc.length) {
         delayHours = gc[0].emergencyDelayHours;
         accessWindow = gc[0].emergencyAccessWindow;
@@ -158087,7 +158127,7 @@ var vaultSuccessionRouter = router({
     }
     const pinHash = hashVaultPin(input.pin, ctx.user.id);
     const configKey = `vault_pin_${ctx.user.id}`;
-    const existingPin = await db7.select().from(systemConfig).where(eq152(systemConfig.configKey, configKey)).limit(1);
+    const existingPin = await db7.select().from(systemConfig).where(eq153(systemConfig.configKey, configKey)).limit(1);
     if (!existingPin.length) {
       await db7.insert(systemConfig).values({ configKey, configValue: pinHash, configType: "string", description: "Hashed vault access PIN", updatedByUserId: ctx.user.id });
     }
@@ -158158,7 +158198,7 @@ var vaultSuccessionRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     await verifyOwnership(db7, input.houseId, ctx.user.id);
-    const config = await db7.select().from(houseVaultConfig).where(eq152(houseVaultConfig.houseId, input.houseId)).limit(1);
+    const config = await db7.select().from(houseVaultConfig).where(eq153(houseVaultConfig.houseId, input.houseId)).limit(1);
     return { initialized: config.length > 0, config: config[0] || null };
   }),
   designateSuccessor: protectedProcedure.input(z305.object({
@@ -158194,17 +158234,17 @@ var vaultSuccessionRouter = router({
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     await verifyOwnership(db7, input.houseId, ctx.user.id);
-    const s = await db7.select().from(designatedSuccessors).where(and124(eq152(designatedSuccessors.houseId, input.houseId), eq152(designatedSuccessors.status, "active"))).orderBy(designatedSuccessors.priority);
+    const s = await db7.select().from(designatedSuccessors).where(and124(eq153(designatedSuccessors.houseId, input.houseId), eq153(designatedSuccessors.status, "active"))).orderBy(designatedSuccessors.priority);
     return { successors: s };
   }),
   revokeSuccessor: protectedProcedure.input(z305.object({ successorId: z305.number(), vaultPin: z305.string().min(6).max(20), reason: z305.string().optional() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const successor = await db7.select().from(designatedSuccessors).where(eq152(designatedSuccessors.id, input.successorId)).limit(1);
+    const successor = await db7.select().from(designatedSuccessors).where(eq153(designatedSuccessors.id, input.successorId)).limit(1);
     if (!successor.length) throw new TRPCError73({ code: "NOT_FOUND", message: "Successor not found" });
     await verifyOwnership(db7, successor[0].houseId, ctx.user.id);
     if (!await verifyUserPin(db7, ctx.user.id, input.vaultPin)) throw new TRPCError73({ code: "UNAUTHORIZED", message: "Invalid vault PIN" });
-    await db7.update(designatedSuccessors).set({ status: "revoked", revokedAt: /* @__PURE__ */ new Date(), revokedReason: input.reason || "Revoked by house owner" }).where(eq152(designatedSuccessors.id, input.successorId));
+    await db7.update(designatedSuccessors).set({ status: "revoked", revokedAt: /* @__PURE__ */ new Date(), revokedReason: input.reason || "Revoked by house owner" }).where(eq153(designatedSuccessors.id, input.successorId));
     return { status: "REVOKED", message: "Successor designation revoked." };
   }),
   requestEmergencyAccess: protectedProcedure.input(z305.object({
@@ -158214,11 +158254,11 @@ var vaultSuccessionRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const successor = await db7.select().from(designatedSuccessors).where(and124(eq152(designatedSuccessors.houseId, input.houseId), eq152(designatedSuccessors.userId, ctx.user.id), eq152(designatedSuccessors.status, "active"))).limit(1);
+    const successor = await db7.select().from(designatedSuccessors).where(and124(eq153(designatedSuccessors.houseId, input.houseId), eq153(designatedSuccessors.userId, ctx.user.id), eq153(designatedSuccessors.status, "active"))).limit(1);
     if (!successor.length) throw new TRPCError73({ code: "FORBIDDEN", message: "You are not a designated successor for this House" });
-    const pending = await db7.select().from(emergencyVaultAccess).where(and124(eq152(emergencyVaultAccess.houseId, input.houseId), eq152(emergencyVaultAccess.requestedByUserId, ctx.user.id), eq152(emergencyVaultAccess.status, "pending"))).limit(1);
+    const pending = await db7.select().from(emergencyVaultAccess).where(and124(eq153(emergencyVaultAccess.houseId, input.houseId), eq153(emergencyVaultAccess.requestedByUserId, ctx.user.id), eq153(emergencyVaultAccess.status, "pending"))).limit(1);
     if (pending.length) throw new TRPCError73({ code: "CONFLICT", message: "You already have a pending request" });
-    const vc = await db7.select().from(houseVaultConfig).where(eq152(houseVaultConfig.houseId, input.houseId)).limit(1);
+    const vc = await db7.select().from(houseVaultConfig).where(eq153(houseVaultConfig.houseId, input.houseId)).limit(1);
     const delayHours = vc.length ? vc[0].emergencyDelayHours : EMERGENCY_DELAY_HOURS;
     const accessWindowHours = vc.length ? vc[0].emergencyAccessWindow : EMERGENCY_ACCESS_WINDOW_HOURS;
     const now = /* @__PURE__ */ new Date();
@@ -158248,7 +158288,7 @@ var vaultSuccessionRouter = router({
   respondToEmergencyAccess: protectedProcedure.input(z305.object({ requestId: z305.number(), vaultPin: z305.string().min(6).max(20), action: z305.enum(["approve", "deny", "cancel"]), note: z305.string().optional() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const request = await db7.select().from(emergencyVaultAccess).where(eq152(emergencyVaultAccess.id, input.requestId)).limit(1);
+    const request = await db7.select().from(emergencyVaultAccess).where(eq153(emergencyVaultAccess.id, input.requestId)).limit(1);
     if (!request.length) throw new TRPCError73({ code: "NOT_FOUND", message: "Request not found" });
     if (request[0].status !== "pending") throw new TRPCError73({ code: "BAD_REQUEST", message: `Request is already ${request[0].status}` });
     await verifyOwnership(db7, request[0].houseId, ctx.user.id);
@@ -158256,27 +158296,27 @@ var vaultSuccessionRouter = router({
     const statusMap = { approve: "approved", deny: "denied", cancel: "cancelled" };
     const updateData = { status: statusMap[input.action], ownerResponseAt: /* @__PURE__ */ new Date(), ownerResponseNote: input.note };
     if (input.action === "approve") updateData.accessGrantedAt = /* @__PURE__ */ new Date();
-    await db7.update(emergencyVaultAccess).set(updateData).where(eq152(emergencyVaultAccess.id, input.requestId));
+    await db7.update(emergencyVaultAccess).set(updateData).where(eq153(emergencyVaultAccess.id, input.requestId));
     return { requestId: input.requestId, status: statusMap[input.action], message: `Emergency access request ${input.action}ed.` };
   }),
   getEmergencyRequests: protectedProcedure.input(z305.object({ houseId: z305.number() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
     await verifyOwnership(db7, input.houseId, ctx.user.id);
-    const requests2 = await db7.select().from(emergencyVaultAccess).where(eq152(emergencyVaultAccess.houseId, input.houseId)).orderBy(desc118(emergencyVaultAccess.requestedAt));
+    const requests2 = await db7.select().from(emergencyVaultAccess).where(eq153(emergencyVaultAccess.houseId, input.houseId)).orderBy(desc119(emergencyVaultAccess.requestedAt));
     return { requests: requests2 };
   }),
   executeEmergencyAccess: protectedProcedure.input(z305.object({ requestId: z305.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new TRPCError73({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
-    const request = await db7.select().from(emergencyVaultAccess).where(eq152(emergencyVaultAccess.id, input.requestId)).limit(1);
+    const request = await db7.select().from(emergencyVaultAccess).where(eq153(emergencyVaultAccess.id, input.requestId)).limit(1);
     if (!request.length) throw new TRPCError73({ code: "NOT_FOUND", message: "Request not found" });
     const req = request[0];
     if (req.requestedByUserId !== ctx.user.id) throw new TRPCError73({ code: "FORBIDDEN", message: "Not your request" });
     const now = /* @__PURE__ */ new Date();
     if (req.status === "pending") {
       if (now >= req.unlockAt) {
-        await db7.update(emergencyVaultAccess).set({ status: "auto_approved", accessGrantedAt: now }).where(eq152(emergencyVaultAccess.id, input.requestId));
+        await db7.update(emergencyVaultAccess).set({ status: "auto_approved", accessGrantedAt: now }).where(eq153(emergencyVaultAccess.id, input.requestId));
       } else {
         const hr = Math.ceil((req.unlockAt.getTime() - now.getTime()) / (1e3 * 60 * 60));
         throw new TRPCError73({ code: "PRECONDITION_FAILED", message: `Time-lock active. ${hr} hours remaining.` });
@@ -158285,10 +158325,10 @@ var vaultSuccessionRouter = router({
       throw new TRPCError73({ code: "BAD_REQUEST", message: `Request status is ${req.status}. Cannot access.` });
     }
     if (req.accessExpiresAt && now > req.accessExpiresAt) {
-      await db7.update(emergencyVaultAccess).set({ status: "expired" }).where(eq152(emergencyVaultAccess.id, input.requestId));
+      await db7.update(emergencyVaultAccess).set({ status: "expired" }).where(eq153(emergencyVaultAccess.id, input.requestId));
       throw new TRPCError73({ code: "PRECONDITION_FAILED", message: "Access window expired. Submit new request." });
     }
-    const entries = await db7.select().from(identityVault).where(eq152(identityVault.houseId, req.houseId));
+    const entries = await db7.select().from(identityVault).where(eq153(identityVault.houseId, req.houseId));
     const fieldsAccessible = req.fieldsAccessible || [];
     const limitedEntries = entries.map((entry) => {
       const decrypted = vaultDecryptFields({
@@ -158306,7 +158346,7 @@ var vaultSuccessionRouter = router({
     for (const entry of entries) {
       await db7.insert(vaultAccessLog).values({ houseId: req.houseId, vaultEntryId: entry.id, accessedByUserId: ctx.user.id, accessType: "emergency", fieldsAccessed: fieldsAccessible, authMethod: "emergency_key" });
     }
-    await db7.update(emergencyVaultAccess).set({ status: "used" }).where(eq152(emergencyVaultAccess.id, input.requestId));
+    await db7.update(emergencyVaultAccess).set({ status: "used" }).where(eq153(emergencyVaultAccess.id, input.requestId));
     return { requestId: input.requestId, houseId: req.houseId, entries: limitedEntries, fieldsAccessible, accessedAt: now.toISOString(), message: `Emergency vault access executed. ${limitedEntries.length} entries retrieved.` };
   })
 });
@@ -158315,7 +158355,7 @@ var vaultSuccessionRouter = router({
 import { z as z306 } from "zod";
 init_db();
 init_schema();
-import { eq as eq153, and as and125 } from "drizzle-orm";
+import { eq as eq154, and as and125 } from "drizzle-orm";
 var LAWS_STEPS = [
   { key: "join_collective", number: 1, label: "Join the Collective" },
   { key: "complete_profile", number: 2, label: "Complete Your Profile" },
@@ -158331,7 +158371,7 @@ var lawsOnboardingRouter = router({
   getProgress: protectedProcedure.query(async ({ ctx }) => {
     const db7 = getDb();
     const userId = ctx.user.id;
-    let rows = await db7.select().from(lawsOnboardingProgress).where(eq153(lawsOnboardingProgress.userId, userId)).orderBy(lawsOnboardingProgress.stepNumber);
+    let rows = await db7.select().from(lawsOnboardingProgress).where(eq154(lawsOnboardingProgress.userId, userId)).orderBy(lawsOnboardingProgress.stepNumber);
     if (rows.length === 0) {
       for (const step of LAWS_STEPS) {
         await db7.insert(lawsOnboardingProgress).values({
@@ -158341,7 +158381,7 @@ var lawsOnboardingRouter = router({
           status: "not_started"
         });
       }
-      rows = await db7.select().from(lawsOnboardingProgress).where(eq153(lawsOnboardingProgress.userId, userId)).orderBy(lawsOnboardingProgress.stepNumber);
+      rows = await db7.select().from(lawsOnboardingProgress).where(eq154(lawsOnboardingProgress.userId, userId)).orderBy(lawsOnboardingProgress.stepNumber);
     }
     const completedCount = rows.filter((r) => r.status === "completed").length;
     const totalSteps = LAWS_STEPS.length;
@@ -158361,8 +158401,8 @@ var lawsOnboardingRouter = router({
     const userId = ctx.user.id;
     const existing = await db7.select().from(lawsOnboardingProgress).where(
       and125(
-        eq153(lawsOnboardingProgress.userId, userId),
-        eq153(lawsOnboardingProgress.stepKey, input.stepKey)
+        eq154(lawsOnboardingProgress.userId, userId),
+        eq154(lawsOnboardingProgress.stepKey, input.stepKey)
       )
     ).limit(1);
     if (!existing.length) {
@@ -158371,7 +158411,7 @@ var lawsOnboardingRouter = router({
     await db7.update(lawsOnboardingProgress).set({
       status: "completed",
       completedAt: /* @__PURE__ */ new Date()
-    }).where(eq153(lawsOnboardingProgress.id, existing[0].id));
+    }).where(eq154(lawsOnboardingProgress.id, existing[0].id));
     return { success: true };
   }),
   /** Reset a step back to not_started */
@@ -158383,8 +158423,8 @@ var lawsOnboardingRouter = router({
       completedAt: null
     }).where(
       and125(
-        eq153(lawsOnboardingProgress.userId, userId),
-        eq153(lawsOnboardingProgress.stepKey, input.stepKey)
+        eq154(lawsOnboardingProgress.userId, userId),
+        eq154(lawsOnboardingProgress.stepKey, input.stepKey)
       )
     );
     return { success: true };
@@ -158395,7 +158435,7 @@ var lawsOnboardingRouter = router({
 import { z as z307 } from "zod";
 init_db();
 init_schema();
-import { eq as eq154, desc as desc119, and as and126, sql as sql110, count as count6 } from "drizzle-orm";
+import { eq as eq155, desc as desc120, and as and126, sql as sql110, count as count6 } from "drizzle-orm";
 var TECH_SUPPORT_SYSTEM_PROMPT = `You are the Technical Support Agent for the LuvOnPurpose Autonomous Wealth System. You handle escalated issues that the public Q&A agents could not resolve.
 
 You have DIAGNOSTIC-LEVEL access and can troubleshoot:
@@ -158508,7 +158548,7 @@ Set needsReview to true ONLY if you cannot resolve the issue and it needs owner 
       priority,
       category,
       status: needsReview ? "needs_review" : "in_progress"
-    }).where(eq154(supportTickets.id, ticket.id));
+    }).where(eq155(supportTickets.id, ticket.id));
     if (priority === "critical" || priority === "high" || needsReview) {
       await notifyOwner({
         title: `\u{1F527} Support Ticket #${ticket.id} \u2014 ${priority.toUpperCase()}`,
@@ -158540,8 +158580,8 @@ First message: ${input.message.substring(0, 200)}...`
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const [ticket] = await db7.select().from(supportTickets).where(and126(
-      eq154(supportTickets.id, input.ticketId),
-      eq154(supportTickets.userId, ctx.user.id)
+      eq155(supportTickets.id, input.ticketId),
+      eq155(supportTickets.userId, ctx.user.id)
     )).limit(1);
     if (!ticket) throw new Error("Ticket not found");
     if (ticket.status === "closed") throw new Error("This ticket has been closed");
@@ -158550,7 +158590,7 @@ First message: ${input.message.substring(0, 200)}...`
       role: "user",
       content: input.message
     });
-    const history = await db7.select().from(ticketMessages).where(eq154(ticketMessages.ticketId, input.ticketId)).orderBy(ticketMessages.createdAt).limit(20);
+    const history = await db7.select().from(ticketMessages).where(eq155(ticketMessages.ticketId, input.ticketId)).orderBy(ticketMessages.createdAt).limit(20);
     const contextFromOriginal = ticket.originalContext ? `
 
 ORIGINAL Q&A CONTEXT:
@@ -158589,9 +158629,9 @@ If you still cannot resolve and need owner review, end with: <!--NEEDS_REVIEW-->
         status: "resolved",
         resolutionSummary: cleanMessage.substring(0, 500),
         resolvedAt: /* @__PURE__ */ new Date()
-      }).where(eq154(supportTickets.id, input.ticketId));
+      }).where(eq155(supportTickets.id, input.ticketId));
     } else if (needsReview) {
-      await db7.update(supportTickets).set({ status: "needs_review" }).where(eq154(supportTickets.id, input.ticketId));
+      await db7.update(supportTickets).set({ status: "needs_review" }).where(eq155(supportTickets.id, input.ticketId));
       await notifyOwner({
         title: `\u{1F527} Ticket #${input.ticketId} needs owner review`,
         content: `The AI Support Agent could not resolve this issue.
@@ -158615,11 +158655,11 @@ Latest: ${cleanMessage.substring(0, 200)}...`
   }).optional()).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const conditions = [eq154(supportTickets.userId, ctx.user.id)];
+    const conditions = [eq155(supportTickets.userId, ctx.user.id)];
     if (input?.status && input.status !== "all") {
-      conditions.push(eq154(supportTickets.status, input.status));
+      conditions.push(eq155(supportTickets.status, input.status));
     }
-    const tickets = await db7.select().from(supportTickets).where(and126(...conditions)).orderBy(desc119(supportTickets.createdAt)).limit(50);
+    const tickets = await db7.select().from(supportTickets).where(and126(...conditions)).orderBy(desc120(supportTickets.createdAt)).limit(50);
     return tickets;
   }),
   /**
@@ -158628,12 +158668,12 @@ Latest: ${cleanMessage.substring(0, 200)}...`
   getMessages: protectedProcedure.input(z307.object({ ticketId: z307.number() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const [ticket] = await db7.select().from(supportTickets).where(eq154(supportTickets.id, input.ticketId)).limit(1);
+    const [ticket] = await db7.select().from(supportTickets).where(eq155(supportTickets.id, input.ticketId)).limit(1);
     if (!ticket) throw new Error("Ticket not found");
     if (ticket.userId !== ctx.user.id && ctx.user.role !== "admin" && ctx.user.role !== "owner") {
       throw new Error("Access denied");
     }
-    const messages = await db7.select().from(ticketMessages).where(eq154(ticketMessages.ticketId, input.ticketId)).orderBy(ticketMessages.createdAt);
+    const messages = await db7.select().from(ticketMessages).where(eq155(ticketMessages.ticketId, input.ticketId)).orderBy(ticketMessages.createdAt);
     return { ticket, messages };
   }),
   /**
@@ -158642,12 +158682,12 @@ Latest: ${cleanMessage.substring(0, 200)}...`
   close: protectedProcedure.input(z307.object({ ticketId: z307.number() })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const [ticket] = await db7.select().from(supportTickets).where(eq154(supportTickets.id, input.ticketId)).limit(1);
+    const [ticket] = await db7.select().from(supportTickets).where(eq155(supportTickets.id, input.ticketId)).limit(1);
     if (!ticket) throw new Error("Ticket not found");
     if (ticket.userId !== ctx.user.id && ctx.user.role !== "admin" && ctx.user.role !== "owner") {
       throw new Error("Access denied");
     }
-    await db7.update(supportTickets).set({ status: "closed" }).where(eq154(supportTickets.id, input.ticketId));
+    await db7.update(supportTickets).set({ status: "closed" }).where(eq155(supportTickets.id, input.ticketId));
     return { success: true };
   }),
   // === ADMIN/OWNER ENDPOINTS ===
@@ -158667,17 +158707,17 @@ Latest: ${cleanMessage.substring(0, 200)}...`
     }
     const conditions = [];
     if (input?.status && input.status !== "all") {
-      conditions.push(eq154(supportTickets.status, input.status));
+      conditions.push(eq155(supportTickets.status, input.status));
     }
     if (input?.priority && input.priority !== "all") {
-      conditions.push(eq154(supportTickets.priority, input.priority));
+      conditions.push(eq155(supportTickets.priority, input.priority));
     }
     const whereClause = conditions.length > 0 ? and126(...conditions) : void 0;
     const tickets = await db7.select({
       ticket: supportTickets,
       userName: users.name,
       userEmail: users.email
-    }).from(supportTickets).leftJoin(users, eq154(supportTickets.userId, users.id)).where(whereClause).orderBy(desc119(supportTickets.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
+    }).from(supportTickets).leftJoin(users, eq155(supportTickets.userId, users.id)).where(whereClause).orderBy(desc120(supportTickets.createdAt)).limit(input?.limit || 50).offset(input?.offset || 0);
     const [totalResult] = await db7.select({ total: count6() }).from(supportTickets).where(whereClause);
     return {
       tickets: tickets.map((t2) => ({
@@ -158742,7 +158782,7 @@ Latest: ${cleanMessage.substring(0, 200)}...`
         status: "resolved",
         resolutionSummary: input.message.substring(0, 500),
         resolvedAt: /* @__PURE__ */ new Date()
-      }).where(eq154(supportTickets.id, input.ticketId));
+      }).where(eq155(supportTickets.id, input.ticketId));
     }
     return { success: true };
   })
@@ -158752,7 +158792,7 @@ Latest: ${cleanMessage.substring(0, 200)}...`
 import { z as z308 } from "zod";
 init_db();
 init_schema();
-import { eq as eq155, and as and127, desc as desc120, asc as asc12 } from "drizzle-orm";
+import { eq as eq156, and as and127, desc as desc121, asc as asc12 } from "drizzle-orm";
 var academyK12Router = router({
   // ============================================
   // SUBJECTS
@@ -158760,12 +158800,12 @@ var academyK12Router = router({
   getSubjects: publicProcedure.query(async () => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(academySubjects).where(eq155(academySubjects.status, "active")).orderBy(asc12(academySubjects.orderIndex));
+    return db7.select().from(academySubjects).where(eq156(academySubjects.status, "active")).orderBy(asc12(academySubjects.orderIndex));
   }),
   getSubjectBySlug: publicProcedure.input(z308.object({ slug: z308.string() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const [subject] = await db7.select().from(academySubjects).where(eq155(academySubjects.slug, input.slug));
+    const [subject] = await db7.select().from(academySubjects).where(eq156(academySubjects.slug, input.slug));
     return subject || null;
   }),
   // ============================================
@@ -158774,16 +158814,16 @@ var academyK12Router = router({
   getUnitsBySubject: publicProcedure.input(z308.object({ subjectId: z308.number(), levelBand: z308.string().optional() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const conditions = [eq155(academyUnits.subjectId, input.subjectId)];
+    const conditions = [eq156(academyUnits.subjectId, input.subjectId)];
     if (input.levelBand) {
-      conditions.push(eq155(academyUnits.levelBand, input.levelBand));
+      conditions.push(eq156(academyUnits.levelBand, input.levelBand));
     }
     return db7.select().from(academyUnits).where(and127(...conditions)).orderBy(asc12(academyUnits.orderIndex));
   }),
   getUnitById: publicProcedure.input(z308.object({ id: z308.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const [unit] = await db7.select().from(academyUnits).where(eq155(academyUnits.id, input.id));
+    const [unit] = await db7.select().from(academyUnits).where(eq156(academyUnits.id, input.id));
     return unit || null;
   }),
   // ============================================
@@ -158792,16 +158832,16 @@ var academyK12Router = router({
   getLessonsByUnit: publicProcedure.input(z308.object({ unitId: z308.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(academyUnitLessons).where(eq155(academyUnitLessons.unitId, input.unitId)).orderBy(asc12(academyUnitLessons.orderIndex));
+    return db7.select().from(academyUnitLessons).where(eq156(academyUnitLessons.unitId, input.unitId)).orderBy(asc12(academyUnitLessons.orderIndex));
   }),
   getLessonById: publicProcedure.input(z308.object({ id: z308.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const [lesson] = await db7.select().from(academyUnitLessons).where(eq155(academyUnitLessons.id, input.id));
+    const [lesson] = await db7.select().from(academyUnitLessons).where(eq156(academyUnitLessons.id, input.id));
     const notes = await db7.select().from(academyHumanNotes).where(and127(
-      eq155(academyHumanNotes.targetType, "lesson"),
-      eq155(academyHumanNotes.targetId, input.id),
-      eq155(academyHumanNotes.isPublished, true)
+      eq156(academyHumanNotes.targetType, "lesson"),
+      eq156(academyHumanNotes.targetId, input.id),
+      eq156(academyHumanNotes.isPublished, true)
     ));
     return lesson ? { ...lesson, humanNotes: notes } : null;
   }),
@@ -159070,14 +159110,14 @@ Requirements:
     const db7 = await getDb();
     if (!db7) return [];
     return db7.select().from(academyHumanNotes).where(and127(
-      eq155(academyHumanNotes.targetType, input.targetType),
-      eq155(academyHumanNotes.targetId, input.targetId)
-    )).orderBy(desc120(academyHumanNotes.createdAt));
+      eq156(academyHumanNotes.targetType, input.targetType),
+      eq156(academyHumanNotes.targetId, input.targetId)
+    )).orderBy(desc121(academyHumanNotes.createdAt));
   }),
   publishHumanNote: protectedProcedure.input(z308.object({ noteId: z308.number() })).mutation(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    await db7.update(academyHumanNotes).set({ isPublished: true }).where(eq155(academyHumanNotes.id, input.noteId));
+    await db7.update(academyHumanNotes).set({ isPublished: true }).where(eq156(academyHumanNotes.id, input.noteId));
     return { success: true };
   }),
   reviewContent: protectedProcedure.input(z308.object({
@@ -159096,20 +159136,20 @@ Requirements:
       status: newStatus
     };
     if (input.contentType === "unit") {
-      await db7.update(academyUnits).set(reviewData).where(eq155(academyUnits.id, input.contentId));
+      await db7.update(academyUnits).set(reviewData).where(eq156(academyUnits.id, input.contentId));
     } else if (input.contentType === "lesson") {
-      await db7.update(academyUnitLessons).set(reviewData).where(eq155(academyUnitLessons.id, input.contentId));
+      await db7.update(academyUnitLessons).set(reviewData).where(eq156(academyUnitLessons.id, input.contentId));
     } else {
-      await db7.update(academyAssessments).set(reviewData).where(eq155(academyAssessments.id, input.contentId));
+      await db7.update(academyAssessments).set(reviewData).where(eq156(academyAssessments.id, input.contentId));
     }
     if (input.approved) {
       const activeData = { status: "active" };
       if (input.contentType === "unit") {
-        await db7.update(academyUnits).set(activeData).where(eq155(academyUnits.id, input.contentId));
+        await db7.update(academyUnits).set(activeData).where(eq156(academyUnits.id, input.contentId));
       } else if (input.contentType === "lesson") {
-        await db7.update(academyUnitLessons).set(activeData).where(eq155(academyUnitLessons.id, input.contentId));
+        await db7.update(academyUnitLessons).set(activeData).where(eq156(academyUnitLessons.id, input.contentId));
       } else {
-        await db7.update(academyAssessments).set(activeData).where(eq155(academyAssessments.id, input.contentId));
+        await db7.update(academyAssessments).set(activeData).where(eq156(academyAssessments.id, input.contentId));
       }
     }
     return { success: true };
@@ -159127,9 +159167,9 @@ Requirements:
   })).mutation(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
-    const [assessment] = await db7.select().from(academyAssessments).where(eq155(academyAssessments.id, input.assessmentId));
+    const [assessment] = await db7.select().from(academyAssessments).where(eq156(academyAssessments.id, input.assessmentId));
     if (!assessment) throw new Error("Assessment not found");
-    const [profile] = await db7.select().from(studentProfiles).where(eq155(studentProfiles.userId, ctx.user.id));
+    const [profile] = await db7.select().from(studentProfiles).where(eq156(studentProfiles.userId, ctx.user.id));
     if (!profile) throw new Error("Student profile not found. Please create one first.");
     const questions = assessment.questions || [];
     const scoredAnswers = input.answers.map((a) => {
@@ -159198,8 +159238,8 @@ Points possible: ${q.points || 10}`;
     const percentageScore = Math.round(totalScore / (assessment.totalPoints || 100) * 100);
     const passed = percentageScore >= (assessment.passingScore || 70);
     const existingAttempts = await db7.select().from(academyAssessmentResults).where(and127(
-      eq155(academyAssessmentResults.assessmentId, input.assessmentId),
-      eq155(academyAssessmentResults.studentProfileId, profile.id)
+      eq156(academyAssessmentResults.assessmentId, input.assessmentId),
+      eq156(academyAssessmentResults.studentProfileId, profile.id)
     ));
     let aiFeedback = "";
     let strengthAreas = [];
@@ -159281,34 +159321,34 @@ Return JSON: { "feedback": "personalized feedback paragraph", "strengths": ["top
   getMyProgress: protectedProcedure.input(z308.object({ subjectId: z308.number().optional() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) return { profile: null, mastery: [], assessmentResults: [] };
-    const [profile] = await db7.select().from(studentProfiles).where(eq155(studentProfiles.userId, ctx.user.id));
+    const [profile] = await db7.select().from(studentProfiles).where(eq156(studentProfiles.userId, ctx.user.id));
     if (!profile) return { profile: null, mastery: [], assessmentResults: [] };
-    const conditions = [eq155(academyMasteryTracking.studentProfileId, profile.id)];
-    if (input.subjectId) conditions.push(eq155(academyMasteryTracking.subjectId, input.subjectId));
-    const mastery = await db7.select().from(academyMasteryTracking).where(and127(...conditions)).orderBy(desc120(academyMasteryTracking.updatedAt));
-    const assessmentResults = await db7.select().from(academyAssessmentResults).where(eq155(academyAssessmentResults.studentProfileId, profile.id)).orderBy(desc120(academyAssessmentResults.completedAt)).limit(20);
+    const conditions = [eq156(academyMasteryTracking.studentProfileId, profile.id)];
+    if (input.subjectId) conditions.push(eq156(academyMasteryTracking.subjectId, input.subjectId));
+    const mastery = await db7.select().from(academyMasteryTracking).where(and127(...conditions)).orderBy(desc121(academyMasteryTracking.updatedAt));
+    const assessmentResults = await db7.select().from(academyAssessmentResults).where(eq156(academyAssessmentResults.studentProfileId, profile.id)).orderBy(desc121(academyAssessmentResults.completedAt)).limit(20);
     return { profile, mastery, assessmentResults };
   }),
   getAssessmentsByUnit: protectedProcedure.input(z308.object({ unitId: z308.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(academyAssessments).where(eq155(academyAssessments.unitId, input.unitId)).orderBy(asc12(academyAssessments.createdAt));
+    return db7.select().from(academyAssessments).where(eq156(academyAssessments.unitId, input.unitId)).orderBy(asc12(academyAssessments.createdAt));
   }),
   getAssessmentById: protectedProcedure.input(z308.object({ id: z308.number() })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return null;
-    const [assessment] = await db7.select().from(academyAssessments).where(eq155(academyAssessments.id, input.id));
+    const [assessment] = await db7.select().from(academyAssessments).where(eq156(academyAssessments.id, input.id));
     return assessment || null;
   }),
   getMyAssessmentResults: protectedProcedure.input(z308.object({ assessmentId: z308.number() })).query(async ({ ctx, input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    const [profile] = await db7.select().from(studentProfiles).where(eq155(studentProfiles.userId, ctx.user.id));
+    const [profile] = await db7.select().from(studentProfiles).where(eq156(studentProfiles.userId, ctx.user.id));
     if (!profile) return [];
     return db7.select().from(academyAssessmentResults).where(and127(
-      eq155(academyAssessmentResults.assessmentId, input.assessmentId),
-      eq155(academyAssessmentResults.studentProfileId, profile.id)
-    )).orderBy(desc120(academyAssessmentResults.attemptNumber));
+      eq156(academyAssessmentResults.assessmentId, input.assessmentId),
+      eq156(academyAssessmentResults.studentProfileId, profile.id)
+    )).orderBy(desc121(academyAssessmentResults.attemptNumber));
   }),
   // ============================================
   // ADMIN: CURRICULUM MANAGEMENT
@@ -159377,7 +159417,7 @@ Return JSON: { "feedback": "personalized feedback paragraph", "strengths": ["top
     const db7 = await getDb();
     if (!db7) throw new Error("Database unavailable");
     const { id, ...updates } = input;
-    await db7.update(academyUnitLessons).set(updates).where(eq155(academyUnitLessons.id, id));
+    await db7.update(academyUnitLessons).set(updates).where(eq156(academyUnitLessons.id, id));
     return { success: true };
   }),
   // ============================================
@@ -159497,7 +159537,7 @@ Use REAL educational standards. Lessons should follow a logical progression from
   getContentGenLog: protectedProcedure.input(z308.object({ limit: z308.number().default(20) })).query(async ({ input }) => {
     const db7 = await getDb();
     if (!db7) return [];
-    return db7.select().from(academyContentGenLog).orderBy(desc120(academyContentGenLog.createdAt)).limit(input.limit);
+    return db7.select().from(academyContentGenLog).orderBy(desc121(academyContentGenLog.createdAt)).limit(input.limit);
   })
 });
 
@@ -159505,7 +159545,7 @@ Use REAL educational standards. Lessons should follow a logical progression from
 import { z as z309 } from "zod";
 init_db();
 init_schema();
-import { eq as eq156, desc as desc121, and as and128, sql as sql112 } from "drizzle-orm";
+import { eq as eq157, desc as desc122, and as and128, sql as sql112 } from "drizzle-orm";
 var apprenticeshipsRouter = router({
   // ── Partners ──────────────────────────────────────────────
   listPartners: publicProcedure.input(z309.object({
@@ -159513,13 +159553,13 @@ var apprenticeshipsRouter = router({
     industry: z309.string().optional()
   }).optional()).query(async ({ input }) => {
     const conditions = [];
-    if (input?.status) conditions.push(eq156(apprenticeshipPartners.status, input.status));
-    if (input?.industry) conditions.push(eq156(apprenticeshipPartners.industry, input.industry));
-    const partners = await db.select().from(apprenticeshipPartners).where(conditions.length > 0 ? and128(...conditions) : void 0).orderBy(desc121(apprenticeshipPartners.createdAt));
+    if (input?.status) conditions.push(eq157(apprenticeshipPartners.status, input.status));
+    if (input?.industry) conditions.push(eq157(apprenticeshipPartners.industry, input.industry));
+    const partners = await db.select().from(apprenticeshipPartners).where(conditions.length > 0 ? and128(...conditions) : void 0).orderBy(desc122(apprenticeshipPartners.createdAt));
     return partners;
   }),
   getPartner: publicProcedure.input(z309.object({ id: z309.number() })).query(async ({ input }) => {
-    const [partner] = await db.select().from(apprenticeshipPartners).where(eq156(apprenticeshipPartners.id, input.id));
+    const [partner] = await db.select().from(apprenticeshipPartners).where(eq157(apprenticeshipPartners.id, input.id));
     return partner || null;
   }),
   createPartner: protectedProcedure.input(z309.object({
@@ -159571,11 +159611,11 @@ var apprenticeshipsRouter = router({
     notes: z309.string().optional()
   })).mutation(async ({ input }) => {
     const { id, ...updates } = input;
-    await db.update(apprenticeshipPartners).set(updates).where(eq156(apprenticeshipPartners.id, id));
+    await db.update(apprenticeshipPartners).set(updates).where(eq157(apprenticeshipPartners.id, id));
     return { success: true };
   }),
   deletePartner: protectedProcedure.input(z309.object({ id: z309.number() })).mutation(async ({ input }) => {
-    await db.delete(apprenticeshipPartners).where(eq156(apprenticeshipPartners.id, input.id));
+    await db.delete(apprenticeshipPartners).where(eq157(apprenticeshipPartners.id, input.id));
     return { success: true };
   }),
   // ── Applications ──────────────────────────────────────────
@@ -159585,14 +159625,14 @@ var apprenticeshipsRouter = router({
     myOnly: z309.boolean().optional()
   }).optional()).query(async ({ input, ctx }) => {
     const conditions = [];
-    if (input?.partnerId) conditions.push(eq156(apprenticeshipApplications.partnerId, input.partnerId));
-    if (input?.status) conditions.push(eq156(apprenticeshipApplications.status, input.status));
-    if (input?.myOnly) conditions.push(eq156(apprenticeshipApplications.userId, ctx.user.id));
-    const apps = await db.select().from(apprenticeshipApplications).where(conditions.length > 0 ? and128(...conditions) : void 0).orderBy(desc121(apprenticeshipApplications.createdAt));
+    if (input?.partnerId) conditions.push(eq157(apprenticeshipApplications.partnerId, input.partnerId));
+    if (input?.status) conditions.push(eq157(apprenticeshipApplications.status, input.status));
+    if (input?.myOnly) conditions.push(eq157(apprenticeshipApplications.userId, ctx.user.id));
+    const apps = await db.select().from(apprenticeshipApplications).where(conditions.length > 0 ? and128(...conditions) : void 0).orderBy(desc122(apprenticeshipApplications.createdAt));
     return apps;
   }),
   getMyApplications: protectedProcedure.query(async ({ ctx }) => {
-    const apps = await db.select().from(apprenticeshipApplications).where(eq156(apprenticeshipApplications.userId, ctx.user.id)).orderBy(desc121(apprenticeshipApplications.createdAt));
+    const apps = await db.select().from(apprenticeshipApplications).where(eq157(apprenticeshipApplications.userId, ctx.user.id)).orderBy(desc122(apprenticeshipApplications.createdAt));
     return apps;
   }),
   submitApplication: protectedProcedure.input(z309.object({
@@ -159628,15 +159668,15 @@ var apprenticeshipsRouter = router({
       updates.reviewedBy = ctx.user.id;
       updates.reviewedAt = /* @__PURE__ */ new Date();
     }
-    await db.update(apprenticeshipApplications).set(updates).where(eq156(apprenticeshipApplications.id, input.id));
+    await db.update(apprenticeshipApplications).set(updates).where(eq157(apprenticeshipApplications.id, input.id));
     return { success: true };
   }),
   // ── Stats ──────────────────────────────────────────────
   getStats: protectedProcedure.query(async () => {
     const [partnerCount] = await db.select({ count: sql112`count(*)` }).from(apprenticeshipPartners);
-    const [activePartners] = await db.select({ count: sql112`count(*)` }).from(apprenticeshipPartners).where(eq156(apprenticeshipPartners.status, "active"));
+    const [activePartners] = await db.select({ count: sql112`count(*)` }).from(apprenticeshipPartners).where(eq157(apprenticeshipPartners.status, "active"));
     const [totalApps] = await db.select({ count: sql112`count(*)` }).from(apprenticeshipApplications);
-    const [placedApps] = await db.select({ count: sql112`count(*)` }).from(apprenticeshipApplications).where(eq156(apprenticeshipApplications.status, "placed"));
+    const [placedApps] = await db.select({ count: sql112`count(*)` }).from(apprenticeshipApplications).where(eq157(apprenticeshipApplications.status, "placed"));
     return {
       totalPartners: partnerCount.count,
       activePartners: activePartners.count,
@@ -160160,13 +160200,13 @@ function serveStatic(app) {
 init_standaloneAuth();
 init_db();
 init_schema();
-import { eq as eq158 } from "drizzle-orm";
+import { eq as eq159 } from "drizzle-orm";
 
 // server/stripe/webhook.ts
 init_db();
 init_schema();
 import Stripe6 from "stripe";
-import { eq as eq157 } from "drizzle-orm";
+import { eq as eq158 } from "drizzle-orm";
 var stripe6 = new Stripe6(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2025-12-15.clover"
 });
@@ -160245,12 +160285,12 @@ async function handleCheckoutCompleted(session) {
         paymentStatus: "completed",
         accessGranted: true,
         completedAt: /* @__PURE__ */ new Date()
-      }).where(eq157(coursePurchases.stripeSessionId, session.id));
-      const academyAccount = await db7.select().from(luvLedgerAccounts).where(eq157(luvLedgerAccounts.accountName, "Academy Revenue")).limit(1);
+      }).where(eq158(coursePurchases.stripeSessionId, session.id));
+      const academyAccount = await db7.select().from(luvLedgerAccounts).where(eq158(luvLedgerAccounts.accountName, "Academy Revenue")).limit(1);
       if (academyAccount.length > 0) {
         const amount = (session.amount_total || 0) / 100;
         const newBalance = (parseFloat(academyAccount[0].balance || "0") + amount).toFixed(2);
-        await db7.update(luvLedgerAccounts).set({ balance: newBalance }).where(eq157(luvLedgerAccounts.id, academyAccount[0].id));
+        await db7.update(luvLedgerAccounts).set({ balance: newBalance }).where(eq158(luvLedgerAccounts.id, academyAccount[0].id));
         await db7.insert(luvLedgerTransactions).values({
           accountId: academyAccount[0].id,
           transactionType: "credit",
@@ -160283,7 +160323,7 @@ async function handleCheckoutCompleted(session) {
       await db7.update(consultingBookings).set({
         paymentStatus: "completed",
         sessionStatus: "pending_scheduling"
-      }).where(eq157(consultingBookings.stripeSessionId, session.id));
+      }).where(eq158(consultingBookings.stripeSessionId, session.id));
       await db7.insert(activityAuditTrail).values({
         userId: userId ? parseInt(userId) : null,
         activityType: "consulting_booking",
@@ -160312,10 +160352,10 @@ async function handleCheckoutCompleted(session) {
     console.log(`[Stripe] Donation received: $${amount.toFixed(2)}`);
     console.log(`[Stripe] Donation type: ${donationType}, designation: ${designation}`);
     try {
-      const templeAccount = await db7.select().from(luvLedgerAccounts).where(eq157(luvLedgerAccounts.accountName, "Temple Donations")).limit(1);
+      const templeAccount = await db7.select().from(luvLedgerAccounts).where(eq158(luvLedgerAccounts.accountName, "Temple Donations")).limit(1);
       if (templeAccount.length > 0) {
         const newBalance = (parseFloat(templeAccount[0].balance || "0") + amount).toFixed(2);
-        await db7.update(luvLedgerAccounts).set({ balance: newBalance }).where(eq157(luvLedgerAccounts.id, templeAccount[0].id));
+        await db7.update(luvLedgerAccounts).set({ balance: newBalance }).where(eq158(luvLedgerAccounts.id, templeAccount[0].id));
         const tributeInfo = tributeName ? ` (${tributeType}: ${tributeName})` : "";
         await db7.insert(luvLedgerTransactions).values({
           accountId: templeAccount[0].id,
@@ -160402,10 +160442,10 @@ async function handleCheckoutCompleted(session) {
   }
 }
 async function recordEntityRevenue(db7, accountId, amount, description, reference) {
-  const [account] = await db7.select().from(luvLedgerAccounts).where(eq157(luvLedgerAccounts.id, accountId)).limit(1);
+  const [account] = await db7.select().from(luvLedgerAccounts).where(eq158(luvLedgerAccounts.id, accountId)).limit(1);
   if (account) {
     const newBalance = (parseFloat(account.balance || "0") + amount).toFixed(8);
-    await db7.update(luvLedgerAccounts).set({ balance: newBalance }).where(eq157(luvLedgerAccounts.id, accountId));
+    await db7.update(luvLedgerAccounts).set({ balance: newBalance }).where(eq158(luvLedgerAccounts.id, accountId));
   }
   await db7.insert(luvLedgerTransactions).values({
     fromAccountId: accountId,
@@ -160517,7 +160557,7 @@ async function startServer() {
         res.status(500).json({ error: "Database not available" });
         return;
       }
-      const [user] = await db7.select().from(users).where(eq158(users.openId, session.openId)).limit(1);
+      const [user] = await db7.select().from(users).where(eq159(users.openId, session.openId)).limit(1);
       if (!user) {
         res.status(401).json({ error: "Invalid session" });
         return;
