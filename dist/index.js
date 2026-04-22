@@ -39918,6 +39918,32 @@ var streamingContentRouter = router({
     }
   }),
   /**
+   * Get approved channels for user display
+   */
+  getApprovedChannels: publicProcedure.input(z51.object({ category: z51.string().optional() }).optional()).query(async ({ input }) => {
+    try {
+      let channels = cachedData.channels || [];
+      if (input?.category && input.category !== "all") {
+        channels = channels.filter((c) => c.category?.toLowerCase() === input.category?.toLowerCase());
+      }
+      console.log(`[Streaming Content] Returning ${channels.length} approved channels`);
+      return {
+        success: true,
+        channels: channels.slice(0, 50),
+        // Limit to 50 for performance
+        total: channels.length
+      };
+    } catch (error) {
+      console.error("[Streaming Content] Error getting approved channels:", error);
+      return {
+        success: false,
+        channels: [],
+        total: 0,
+        error: String(error)
+      };
+    }
+  }),
+  /**
    * Get channel discovery statistics
    */
   getDiscoveryStats: publicProcedure.query(async () => {

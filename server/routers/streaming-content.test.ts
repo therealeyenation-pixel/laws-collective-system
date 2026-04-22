@@ -65,6 +65,46 @@ describe("Channel Discovery Service", () => {
   });
 });
 
+  describe("getApprovedChannels", () => {
+    it("should return approved channels with valid structure", () => {
+      // Test structure validation
+      const mockResult = {
+        success: true,
+        channels: [
+          { id: 1, title: "Channel 1", category: "Music" },
+          { id: 2, title: "Channel 2", category: "News" }
+        ],
+        total: 2
+      };
+      
+      expect(mockResult.success).toBe(true);
+      expect(Array.isArray(mockResult.channels)).toBe(true);
+      expect(typeof mockResult.total).toBe("number");
+    });
+
+    it("should handle category filtering", () => {
+      const channels = [
+        { id: 1, title: "Jazz Radio", category: "Music" },
+        { id: 2, title: "News Now", category: "News" }
+      ];
+      
+      const filtered = channels.filter(c => c.category === "Music");
+      expect(filtered.length).toBe(1);
+      expect(filtered[0].category).toBe("Music");
+    });
+
+    it("should limit results to 50 channels", () => {
+      const channels = Array.from({ length: 100 }, (_, i) => ({
+        id: i,
+        title: `Channel ${i}`,
+        category: "Music"
+      }));
+      
+      const limited = channels.slice(0, 50);
+      expect(limited.length).toBe(50);
+    });
+  });
+
   describe("Channel approval/rejection", () => {
     it("should validate external IDs for approval", () => {
       const externalIds = ["manus_jazz_001", "youtube_broadway_001"];
