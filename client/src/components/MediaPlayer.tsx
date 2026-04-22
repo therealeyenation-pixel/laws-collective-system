@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
 import {
   Play,
   Pause,
@@ -32,8 +33,10 @@ export function MediaPlayer({ channel, onClose }: MediaPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const playbackLoggedRef = useRef(false);
 
   const isAudio = channel.contentType === "radio_station" || channel.contentType === "music_track";
+  const { mutate: logPlayback } = trpc.streamingContent.logPlayback.useMutation();
 
   useEffect(() => {
     const mediaElement = isAudio ? audioRef.current : videoRef.current;
@@ -50,6 +53,12 @@ export function MediaPlayer({ channel, onClose }: MediaPlayerProps) {
       mediaElement.pause();
     } else {
       mediaElement.play().catch((err) => console.error("Playback error:", err));
+      
+      // Log playback on first play
+      if (!playbackLoggedRef.current) {
+        logPlayback({ channelId: channel.id });
+        playbackLoggedRef.current = true;
+      }
     }
     setIsPlaying(!isPlaying);
   };
